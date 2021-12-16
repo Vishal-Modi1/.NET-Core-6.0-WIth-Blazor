@@ -1,0 +1,57 @@
+﻿@using FSM.Blazor.Data.CommonServices
+@inject MenuService MenuService
+@inject NavigationManager UriHelper
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+@inject IHttpClientFactory ClientFactory
+
+<RadzenSidebar @bind-Expanded="Expanded" Style=" top: 51px; width: 250px;transform: translateX(0px);">
+    <ChildContent>
+        <div style="padding: 1rem">
+            <RadzenTextBox Placeholder="Find component ..." @oninput="@FilterPanelMenu" type="search" style="width: 100%" />
+
+        </div>
+        <RadzenPanelMenu>
+
+            @if (menuItems == null)
+            {
+
+            }
+            else
+
+            {
+                    <RadzenPanelMenuItem Text="Test" Path="/Company12" Icon="test"></RadzenPanelMenuItem>
+                @foreach (var category in menuItems)
+                {
+                    <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@category.Controller" Icon="@category.FavIconStyle">
+                        @* @if (category.Children != null)
+                            {
+                            @foreach (var example in category.Children)
+                            {
+                            if (example.Children != null)
+                            {
+                            <RadzenPanelMenuItem Text="@example.Name" @bind-Expanded="@example.Expanded" Icon="@example.Icon">
+                            @foreach (var child in example.Children)
+                            {
+                            <RadzenPanelMenuItem Text="@child.Name" Path="@child.Path" />
+                            }
+                            </RadzenPanelMenuItem>
+
+                            }
+                            else
+                            {
+                            <RadzenPanelMenuItem Text="@example.Name" Path="@example.Path" Icon="@example.Icon" />
+                            }
+                            }*@
+                    </RadzenPanelMenuItem>
+                }
+            }
+
+        </RadzenPanelMenu>
+    </ChildContent>
+</RadzenSidebar>
+
+@code {
+
+
+}

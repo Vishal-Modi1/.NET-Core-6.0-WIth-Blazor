@@ -1,0 +1,16 @@
+﻿using DataModels.VM.Company;
+using DataModels.VM.Common;
+
+namespace Service.Interface
+{
+    public interface ICompanyService
+    {
+        CurrentResponse Create(CompanyVM companyVM);
+        CurrentResponse List(DatatableParams datatableParams);
+
+        CurrentResponse ListAll();
+        CurrentResponse Edit(CompanyVM companyVM);
+        CurrentResponse GetDetails(int id);
+        CurrentResponse Delete(int id);
+    }
+}
