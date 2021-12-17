@@ -1,5 +1,5 @@
 ﻿using DataModels.VM.Common;
-using FSM.Blazor.Data.CommonServices;
+using FSM.Blazor.Data.Common;
 using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Shared

@@ -627,11 +627,11 @@ GO
 
 SET IDENTITY_INSERT [dbo].ModuleDetails ON
 GO
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (1,'Company','Company','Index','Company','fas fa-landmark nav-icon',1,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (2,'User','User','Index','User','far fa-user nav-icon',2,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (3,'InstructorType','InstructorType','Index','Instructor Type','far fa-user nav-icon',3,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (4,'Aircraft','Aircraft','Index','Aircraft','fas fa-plane nav-icon',4,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permission','fas fa-key nav-icon',5,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (1,'Company','Company','Index','Company','account_balance',1,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (2,'User','User','Index','User','accessibility',2,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (3,'InstructorType','InstructorType','Index','Instructor Type','assignment_ind',3,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (4,'Aircraft','Aircraft','Index','Aircraft','flight_takeoff',4,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permission','lock_open',5,1)
 Go
 
 --INSERT INTO UserRolePermissions VALUES(1,1,1,null,1)

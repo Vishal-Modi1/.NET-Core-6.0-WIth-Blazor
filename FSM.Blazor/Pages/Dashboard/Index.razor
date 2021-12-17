@@ -2,9 +2,6 @@
 @layout MainLayout
 @page "/"
 
-<h3>Welcome to Dashboard</h3>
-
-@code {
-
-   
-}
+<AuthorizeView>
+<h4>Hello, @context.User.Identity.Name!</h4>
+</AuthorizeView>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 
@@ -71,5 +72,7 @@ namespace Configuration
             get => MailSettingConfig.Instance;
         }
 
+        public IEnumerable<int> BlazorGridPagesizeOptions = new int[] { 10, 20, 30 };
+        public int BlazorGridDefaultPagesize = 10;
     }
 }

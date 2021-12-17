@@ -1,6 +1,39 @@
 ﻿@namespace FSM.Blazor.Pages.Company
+@using FSM.Blazor.Data.Company
+@using DataModels.VM.Company
+@using Configuration;
+@inject CompanyService CompanyService
 @layout MainLayout
+@inject DialogService DialogService
+
 
 @page "/Company"
 
-<h3>Welcome to company</h3>
+
+<div class="row mb-4">
+    <div class="col">
+        <h1>Company</h1>
+        <RadzenButton Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+    </div>
+</div>
+
+<RadzenDataGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                AllowSorting="true" Data="@data" TItem="CompanyVM" 
+                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
+                Count="@count" LoadData="@LoadData">
+    <Columns>
+
+         <RadzenDataGridColumn Width="50px" TItem="CompanyVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+            @(data.IndexOf(value) + 1)
+            </Template>
+            </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="CompanyVM" Property="Name" Title="Name">
+
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>

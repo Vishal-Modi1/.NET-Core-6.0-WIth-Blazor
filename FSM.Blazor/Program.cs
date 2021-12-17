@@ -1,7 +1,7 @@
 using Configuration;
-using FSM.Blazor.Blazor.Services.Account;
 using FSM.Blazor.Data;
-using FSM.Blazor.Data.CommonServices;
+using FSM.Blazor.Data.Common;
+using FSM.Blazor.Data.Company;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -18,10 +18,10 @@ builder.Services.AddServerSideBlazor();
 
 // Backend Services
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<LoginService>();
 
 // Blazor radzen service dependencies
 builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();

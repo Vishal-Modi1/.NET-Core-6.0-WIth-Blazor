@@ -1,25 +1,18 @@
-﻿using DataModels.Constants;
-using DataModels.Enums;
+﻿using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
-using System.Security.Claims;
 
-namespace FSM.Blazor.Data.CommonServices
+namespace FSM.Blazor.Data.Common
 {
     public class MenuService
     {
-        private List<MenuItem> menuItems;
-
-        private AuthenticationStateProvider _authenticationStateProvider;
         private readonly HttpCaller _httpCaller;
 
         public MenuService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _authenticationStateProvider = authenticationStateProvider;
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
