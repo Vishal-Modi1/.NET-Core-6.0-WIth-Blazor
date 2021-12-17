@@ -29,7 +29,11 @@ builder.Services.AddScoped<ContextMenuService>();
 
 builder.Services.AddControllers();
 
-builder.Services.AddHttpClient<HttpCaller>();
+builder.Services.AddHttpClient<HttpCaller>("FSMAPI", c =>
+{
+    c.BaseAddress = new Uri(ConfigurationSettings.Instance.APIURL);
+});
+
 builder.Services.AddScoped<HttpClient>();
 
 // Add this new line
@@ -37,7 +41,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         .AddCookie(options =>
         {
             options.Cookie.Name = "myauth";
-            options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+            options.Cookie.SameSite = SameSiteMode.Strict;
             // Add this new line
             options.EventsType = typeof(CookieAuthenticationEvents);    // <---
         });

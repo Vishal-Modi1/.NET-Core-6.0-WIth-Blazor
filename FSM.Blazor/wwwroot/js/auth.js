@@ -40,7 +40,7 @@ export function SignOut(redirect) {
     var xhr = new XMLHttpRequest();
 
     // Initialization
-    xhr.open("POST", url);
+    xhr.open("GET", url);
     xhr.setRequestHeader("Accept", "application/json");
     xhr.setRequestHeader("Content-Type", "application/json");
 

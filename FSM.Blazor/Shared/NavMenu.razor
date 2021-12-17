@@ -20,7 +20,7 @@
             else
 
             {
-                    <RadzenPanelMenuItem Text="Test" Path="/Company12" Icon="test"></RadzenPanelMenuItem>
+                    <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
                 @foreach (var category in menuItems)
                 {
                     <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@category.Controller" Icon="@category.FavIconStyle">
@@ -45,6 +45,8 @@
                             }*@
                     </RadzenPanelMenuItem>
                 }
+
+                 <RadzenPanelMenuItem Text="Logout" Path="/Logout" Icon="open_in_new"></RadzenPanelMenuItem>
             }
 
         </RadzenPanelMenu>

@@ -9,13 +9,8 @@ namespace FSM.Blazor.Pages.Account
     {
         async Task OnLoginAsync(LoginArgs args, string name)
         {
-
-            var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-            await authModule.InvokeVoidAsync("SignIn", args.Username, args.Password, "/counter");
-
-
-            _loginService.LoginAsync(args.Username, args.Password);
-            // console.Log($"{name} -> Username: {args.Username} and password: {args.Password}");
+            var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+            await authModule.InvokeVoidAsync("SignIn", args.Username, args.Password, "/");
         }
 
         void OnRegister(string name)

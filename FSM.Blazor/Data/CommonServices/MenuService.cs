@@ -15,33 +15,28 @@ namespace FSM.Blazor.Data.CommonServices
         private List<MenuItem> menuItems;
 
         private AuthenticationStateProvider _authenticationStateProvider;
+        private readonly HttpCaller _httpCaller;
 
         public MenuService(AuthenticationStateProvider authenticationStateProvider)
         {
             _authenticationStateProvider = authenticationStateProvider;
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
-
-        private HttpCaller _httpCaller = new HttpCaller();
 
         public async Task<List<MenuItem>> ListMenuItemsAsync(IHttpClientFactory _httpClient)
         {
-
             List<UserRolePermissionDataVM> userRolePermissionsList = CurrentUserPermissionManager.GetAsync().Result;
-
 
             if (userRolePermissionsList == null || userRolePermissionsList.Count == 0)
             {
-                string apiURL = @"https://localhost:7132/api/UserRolePermission/listbyroleid";
+                 CurrentResponse response = await _httpCaller.GetAsync("UserRolePermission/listbyroleid", _httpClient);
 
-                var request = new HttpRequestMessage(HttpMethod.Get, apiURL);
-                request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
 
-                var client = _httpClient.CreateClient();
+                if(response == null || response.Status != System.Net.HttpStatusCode.OK)
+                {
+                    return new List<MenuItem>();
+                }
 
-                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
-
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
                 userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
             }
 
@@ -64,14 +59,6 @@ namespace FSM.Blazor.Data.CommonServices
             return menuItemsList;
         }
 
-        public string GetClaimValue(string claimType)
-        {
-            ClaimsPrincipal cp = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
 
-            string claimValue = cp.Claims.Where(c => c.Type == claimType)
-                               .Select(c => c.Value).SingleOrDefault();
-
-            return claimValue;
-        }
     }
 }

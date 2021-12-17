@@ -25,34 +25,43 @@ namespace FSM.Blazor.Utilities
            
         }
 
+        public async Task<CurrentResponse> PostAsync(IHttpClientFactory httpClientFactory, string url, string jsonData)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Clear();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+
+                request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                var client = httpClientFactory.CreateClient("FSMAPI");
+                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
+                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+
+                return response;
+            }
+            catch (Exception exc)
+            {
+                return null;
+            }
+
+        }
+
         public async Task<CurrentResponse> GetAsync(string url, IHttpClientFactory _httpClient)
         {
 
             try
             {
-                string apiURL = @"https://localhost:7132/api/UserRolePermission/listbyroleid";
-
-                var request = new HttpRequestMessage(HttpMethod.Get, apiURL);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
                 request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
 
-                var client = _httpClient.CreateClient();
+                var client = _httpClient.CreateClient("FSMAPI");
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-                //string apiURL = $"{_configurationSettings.APIURL}{url}";
-
-                //var request = new HttpRequestMessage(HttpMethod.Get, apiURL);
-                //request.Headers.Clear();
-                //request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
-
-                //var client = _httpClient.CreateClient();
-
-                //HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
-
-                //CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
                 return response;
             }
@@ -139,6 +148,19 @@ namespace FSM.Blazor.Utilities
         //    }
         //}
 
+        public string GetClaimValue(string claimType)
+        {
+            if(_authenticationStateProvider == null)
+            {
+                return "";
+            }
 
+            ClaimsPrincipal cp = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+
+            string claimValue = cp.Claims.Where(c => c.Type == claimType)
+                               .Select(c => c.Value).SingleOrDefault();
+
+            return claimValue;
+        }
     }
 }

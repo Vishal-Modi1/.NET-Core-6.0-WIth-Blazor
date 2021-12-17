@@ -51,7 +51,6 @@ namespace FSMAPI.Controllers
             int companyId = companyIdClaim == "" ? 0 : Convert.ToInt32(companyIdClaim);
             int roleId = roleIdClaim == "" ? 0 : Convert.ToInt32(roleIdClaim);
 
-            roleId = 1;
             CurrentResponse response = _userRolePermissionService.GetByRoleId(roleId, companyId);
 
             return Ok(response);

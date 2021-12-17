@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text;
 
 namespace FSM.Blazor
 {
@@ -16,10 +18,12 @@ namespace FSM.Blazor
     public class AuthController : ControllerBase
     {
         private readonly HttpCaller _httpCaller;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public AuthController(IHttpContextAccessor httpContextAccessor)
+        public AuthController(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClientFactory)
         {
             _httpCaller = new HttpCaller();
+            _httpClientFactory = httpClientFactory;
         }
 
         private static readonly AuthenticationProperties COOKIE_EXPIRES = new AuthenticationProperties()
@@ -33,19 +37,18 @@ namespace FSM.Blazor
         public async Task<ActionResult> SignInPost(LoginVM loginVM)
         {
             string jsonData = JsonConvert.SerializeObject(loginVM);
-            //CurrentResponse response = await _httpCaller.PostAsync("Account/login", jsonData);
 
-            //if (response.Status == System.Net.HttpStatusCode.OK)
-            //{
-            //    await AddCookieAsync(response.Data);
-            //    return this.StatusCode((int)HttpStatusCode.OK);
-            //}
-            //else
-            //{
-            //    return this.StatusCode((int)HttpStatusCode.Unauthorized);
-            //}
+            var response = await _httpCaller.PostAsync( _httpClientFactory, "Account/login", jsonData);
 
-            return null;
+            if (response.Status == HttpStatusCode.OK)
+            {
+                await AddCookieAsync(response.Data);
+                return this.StatusCode((int)HttpStatusCode.OK);
+            }
+            else
+            {
+                return this.StatusCode((int)HttpStatusCode.Unauthorized);
+            }
         }
 
         [HttpGet]
@@ -92,11 +95,33 @@ namespace FSM.Blazor
 
                 var authProperties = COOKIE_EXPIRES;
 
-                await HttpContext.SignInAsync( new ClaimsPrincipal(userPrincipal));
+                await HttpContext.SignInAsync(new ClaimsPrincipal(userPrincipal));
             }
             catch (Exception ex)
             {
 
+            }
+        }
+
+        private async Task<CurrentResponse> PostAsync(string url, string jsonData)
+        {
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Clear();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "");
+
+                request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+                var client = _httpClientFactory.CreateClient("FSMAPI");
+                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
+                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+
+                return response;
+            }
+            catch (Exception exc)
+            {
+                return null;
             }
         }
     }

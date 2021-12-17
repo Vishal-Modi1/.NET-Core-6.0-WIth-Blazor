@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
 using Radzen.Blazor;
-using System.Security.Claims;
 
 namespace FSM.Blazor.Shared
 {
     public partial class MainLayout
     {
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
         RadzenSidebar sidebar0;
         RadzenBody body0;
         bool sidebarExpanded = true;
@@ -15,12 +16,12 @@ namespace FSM.Blazor.Shared
 
         dynamic themes = new[]
         {
-        new { Text = "Default Theme", Value = "default"},
-        new { Text = "Dark Theme", Value="dark" },
-        new { Text = "Software Theme", Value = "software"},
-        new { Text = "Humanistic Theme", Value = "humanistic" },
-        new { Text = "Standard Theme", Value = "standard" }
-    };
+            new { Text = "Default Theme", Value = "default"},
+            new { Text = "Dark Theme", Value="dark" },
+            new { Text = "Software Theme", Value = "software"},
+            new { Text = "Humanistic Theme", Value = "humanistic" },
+            new { Text = "Standard Theme", Value = "standard" }
+        };
 
         string Theme
         {
@@ -30,7 +31,6 @@ namespace FSM.Blazor.Shared
             }
         }
 
-        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -39,7 +39,7 @@ namespace FSM.Blazor.Shared
 
             if (!user.Identity.IsAuthenticated)
             {
-                NavigationManager.NavigateTo($"/");
+                NavigationManager.NavigateTo($"/Login");
             }
         }
 
@@ -47,9 +47,9 @@ namespace FSM.Blazor.Shared
         {
             if (!firstRender)
             {
-            //    var example = ExampleService.FindCurrent(NavigationManager.ToAbsoluteUri(NavigationManager.Uri));
+                //    var example = ExampleService.FindCurrent(NavigationManager.ToAbsoluteUri(NavigationManager.Uri));
 
-             //   await JSRuntime.InvokeVoidAsync("setTitle", ExampleService.TitleFor(example));
+                //   await JSRuntime.InvokeVoidAsync("setTitle", ExampleService.TitleFor(example));
             }
         }
 
