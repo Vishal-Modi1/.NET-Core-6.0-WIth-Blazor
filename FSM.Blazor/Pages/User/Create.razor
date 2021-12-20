@@ -1,0 +1,57 @@
+﻿@using DataModels.VM.User
+@using FSM.Blazor.Data.User
+
+@inject Radzen.DialogService dialogService
+@inject UserService UserService
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+<RadzenTemplateForm Data="@userData" Submit="@((UserDataVM args) => {  Submit(args); })">
+
+    <input type="hidden" value="@userData.Id" name="Id" />
+
+    <RadzenFieldset Text="Purchase Info">
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="First Name" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@userData.FirstName" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="true" Style="position: relative"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Last Name" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="Address" @bind-Value="@userData.LastName" />
+                <RadzenRequiredValidator Component="Address" Text="Name is required" Popup="true" Style="position: relative"/>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Email" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="ContactNo" @bind-Value="@userData.Email" />
+            </div>
+        </div>
+
+    </RadzenFieldset>
+
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+            <RadzenButton  Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            <RadzenButton ButtonType="ButtonType.Submit"  Text="Save" Style="width: 120px" />
+        </div>
+    </div>
+
+</RadzenTemplateForm>

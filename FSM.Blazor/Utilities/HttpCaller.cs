@@ -48,7 +48,7 @@ namespace FSM.Blazor.Utilities
 
         }
 
-        public async Task<CurrentResponse> GetAsync(string url, IHttpClientFactory _httpClient)
+        public async Task<CurrentResponse> GetAsync(IHttpClientFactory _httpClient, string url)
         {
 
             try

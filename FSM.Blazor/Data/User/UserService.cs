@@ -1,45 +1,45 @@
-﻿using DataModels.VM.Company;
+﻿using DataModels.VM.User;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
 
-namespace FSM.Blazor.Data.Company
+namespace FSM.Blazor.Data.User
 {
-    public class CompanyService
+    public class UserService
     {
         private readonly HttpCaller _httpCaller;
 
-        public CompanyService(AuthenticationStateProvider authenticationStateProvider)
+        public UserService(AuthenticationStateProvider authenticationStateProvider)
         {
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<CompanyVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<UserDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
         {
             string jsonData = JsonConvert.SerializeObject(datatableParams);
 
-            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "Company/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "user/List", jsonData);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
-                return new List<CompanyVM>();
+                return new List<UserDataVM>();
             }
 
-            List<CompanyVM> companies = JsonConvert.DeserializeObject<List<CompanyVM>>(response.Data);
+            List<UserDataVM> companies = JsonConvert.DeserializeObject<List<UserDataVM>>(response.Data);
 
             return companies; 
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, CompanyVM companyVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, UserDataVM userVM)
         {
-            string jsonData = JsonConvert.SerializeObject(companyVM);
+            string jsonData = JsonConvert.SerializeObject(userVM);
             
-            string url = "company/create";
+            string url = "user/create";
 
-            if (companyVM.Id > 0)
+            if (userVM.Id > 0)
             {
-                url = "company/edit";
+                url = "user/edit";
             }
 
             CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
@@ -49,7 +49,7 @@ namespace FSM.Blazor.Data.Company
 
         public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
         {
-            string url = $"company/delete?id={id}";
+            string url = $"user/delete?id={id}";
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;

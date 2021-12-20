@@ -22,7 +22,7 @@ namespace FSM.Blazor.Data.Common
 
             if (userRolePermissionsList == null || userRolePermissionsList.Count == 0)
             {
-                 CurrentResponse response = await _httpCaller.GetAsync("UserRolePermission/listbyroleid", _httpClient);
+                 CurrentResponse response = await _httpCaller.GetAsync(_httpClient, "UserRolePermission/listbyroleid");
 
 
                 if(response == null || response.Status != System.Net.HttpStatusCode.OK)
