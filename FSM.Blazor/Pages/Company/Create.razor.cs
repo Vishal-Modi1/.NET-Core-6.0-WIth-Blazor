@@ -18,6 +18,7 @@ namespace FSM.Blazor.Pages.Company
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
         public async Task Submit(CompanyVM companyData)
         {

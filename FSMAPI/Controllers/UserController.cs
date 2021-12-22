@@ -88,8 +88,8 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("Delete")]
+        [HttpDelete]
+        [Route("delete")]
         public IActionResult Delete(int id)
         {
             CurrentResponse response = _userService.Delete(id);
@@ -108,7 +108,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("list")]
-        public IActionResult List(DatatableParams datatableParams)
+        public IActionResult List(UserDatatableParams datatableParams)
         {
             if(datatableParams.CompanyId == 0)
             {
@@ -123,9 +123,9 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("getfilters")]
-        public IActionResult GetFilters()
+        public IActionResult GetFilters(int roleId)
         {
-            CurrentResponse response = _userService.GetFiltersValue();
+            CurrentResponse response = _userService.GetFiltersValue(roleId);
 
             return Ok(response);
         }

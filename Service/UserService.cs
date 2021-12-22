@@ -137,7 +137,7 @@ namespace Service
                 return _currentResponse;
             }
         }
-        public CurrentResponse List(DatatableParams datatableParams)
+        public CurrentResponse List(UserDatatableParams datatableParams)
         {
             try
             {
@@ -272,13 +272,14 @@ namespace Service
             }
         }
 
-        public CurrentResponse GetFiltersValue()
+        public CurrentResponse GetFiltersValue(int roleId)
         {
             try
             {
                 UserFilterVM userFilterVM = new UserFilterVM();
 
                 userFilterVM.Companies = _companyRepository.ListDropDownValues();
+                userFilterVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
 
                 CreateResponse(userFilterVM, HttpStatusCode.OK, "");
 

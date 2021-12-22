@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using DataModels.VM.InstructorType;
-using DataModels.VM.UserRole;
-using DataModels.VM.Company;
 using DataModels.VM.Common;
 
 namespace DataModels.VM.User
@@ -55,6 +52,8 @@ namespace DataModels.VM.User
         [Display(Name = "Date of Birth")]
         public Nullable<System.DateTime> DateofBirth { get; set; }
         public string Gender { get; set; }
+
+        public int GenderId { get; set; }
 
         [Display(Name = "Country")]
         public Nullable<int> CountryId { get; set; }

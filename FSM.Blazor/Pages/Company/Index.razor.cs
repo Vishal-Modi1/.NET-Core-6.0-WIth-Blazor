@@ -28,7 +28,7 @@ namespace FSM.Blazor.Pages.Company
         {
             isLoading = true;
 
-            DatatableParams datatableParams = DataGridFilterCreator.Create(args, "Name");
+            DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
 
             data = await CompanyService.ListAsync(_httpClient,datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;

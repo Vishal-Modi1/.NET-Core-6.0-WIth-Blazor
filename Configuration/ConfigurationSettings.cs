@@ -73,6 +73,9 @@ namespace Configuration
         }
 
         public IEnumerable<int> BlazorGridPagesizeOptions = new int[] { 10, 20, 30 };
+
         public int BlazorGridDefaultPagesize = 10;
+
+        public bool IsDiplsayValidationInPopupEffect = true;
     }
 }

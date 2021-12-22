@@ -10,47 +10,166 @@
     }
 </style>
 
-<RadzenTemplateForm Data="@userData" Submit="@((UserDataVM args) => {  Submit(args); })">
+<RadzenTemplateForm Data="@userData" Submit="@((UserVM args) => {  Submit(args); })">
 
     <input type="hidden" value="@userData.Id" name="Id" />
 
-    <RadzenFieldset Text="Purchase Info">
+    <RadzenFieldset Text="Basic Info">
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="First Name" />
             </div>
-            <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@userData.FirstName" />
-                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="true" Style="position: relative"/>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="FirtsName" @bind-Value="@userData.FirstName" />
+                <RadzenRequiredValidator Component="FirtsName" Text="Firt name is required" Popup="@isPopup" Style="position: relative" />
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="Last Name" />
             </div>
-            <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Name="Address" @bind-Value="@userData.LastName" />
-                <RadzenRequiredValidator Component="Address" Text="Name is required" Popup="true" Style="position: relative"/>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="LastName" @bind-Value="@userData.LastName" />
+                <RadzenRequiredValidator Component="LastName" Text="Last name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="Email" />
             </div>
-            <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Name="ContactNo" @bind-Value="@userData.Email" />
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" ReadOnly="@(userData.Id > 0)" Name="Email" @bind-Value="@userData.Email" />
+                <RadzenEmailValidator Component="Email" Text="Please enter valid email address" Popup="@isPopup" Style="position: relative"></RadzenEmailValidator>
+                <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Mobile No" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" ShowUpDown="false" TValue="int?" Name="Phone" @bind-Value="@userData.Phone" />
+                <RadzenRegexValidator Component="Phone" Text="Please enter 10 digits no" Pattern="\d{10}" Popup=@isPopup Style="position: relative" />
             </div>
         </div>
+
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="User Role" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Role" Data=@userData.UserRoles TextProperty="Name"
+                                ValueProperty="Id" Name="RoleId" @bind-Value="@(userData.RoleId)" />
+                <RadzenRequiredValidator DefaultValue="0" Component="RoleId" Text="Please select role" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Company" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Company" Data=@userData.Companies TextProperty="Name"
+                                ValueProperty="Id" Name="CompanyId" @bind-Value="@(userData.CompanyId)" />
+                <RadzenRequiredValidator DefaultValue="null" Component="CompanyId" Text="Please select company" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Is Instructor" />
+            </div>
+            <div class="col-md-4">
+                <RadzenSwitch @bind-Value=@userData.IsInstructor Change=@((args) => OnIsInstructorValueChange(args)) />
+            </div>
+
+            @if (isInstructorTypeDropdownVisible)
+            {
+                <div class="col-md-2 align-items-center d-flex">
+                    <RadzenLabel Text="Instructor Type" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Instructor Type" Data=@userData.InstructorTypes TextProperty="Name"
+                                ValueProperty="Id" Name="InstructorTypeId" @bind-Value="@(userData.InstructorTypeId)" />
+                    <RadzenRequiredValidator DefaultValue="null" Component="InstructorTypeId" Text="Please select instructor type"
+                                         Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+                </div>
+            }
+        </div>
+
+         <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Date of Birth" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDatePicker @bind-Value=@userData.DateofBirth DateFormat="d" Class="w-100" />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Country" />
+            </div>
+            <div class="col-md-4">
+
+                <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Country" Data=@userData.Countries TextProperty="Name"
+                                ValueProperty="Id" Name="CountryId" @bind-Value="@(userData.CountryId)" />
+
+                <RadzenRequiredValidator DefaultValue="null" Component="CountryId" Text="Please select country" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+             <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="External Id" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="ExternalId" @bind-Value="@userData.ExternalId" />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Gender" />
+            </div>
+            <div class="col-md-4">
+
+                <RadzenRadioButtonList Style="outline:none" @bind-Value=@userData.GenderId TValue="int" Change=@((args) => OnGenderValueChange(args))>
+                    <Items>
+                        <RadzenRadioButtonListItem Text="Male" Value="0" />
+                        <RadzenRadioButtonListItem Text="Female" Value="1" />
+                    </Items>
+                </RadzenRadioButtonList>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Send Email Invite" />
+            </div>
+            <div class="col-md-4">
+                <RadzenSwitch @bind-Value=@userData.IsSendEmailInvite />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Send Text Message" />
+            </div>
+            <div class="col-md-4">
+                <RadzenSwitch @bind-Value=@userData.IsSendTextMessage />
+            </div>
+        </div>
+
+      
 
     </RadzenFieldset>
 
     <div class="row" style="margin-top:4%">
         <div class="col-md-12 text-right">
-            <RadzenButton  Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
-            <RadzenButton ButtonType="ButtonType.Submit"  Text="Save" Style="width: 120px" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" Style="width: 120px" />
+            <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
         </div>
     </div>
 

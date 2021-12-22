@@ -31,7 +31,7 @@ namespace FSM.Blazor.Data.User
             return companies; 
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, UserDataVM userVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, UserVM userVM)
         {
             string jsonData = JsonConvert.SerializeObject(userVM);
             
@@ -51,6 +51,48 @@ namespace FSM.Blazor.Data.User
         {
             string url = $"user/delete?id={id}";
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UpdateIsUserActive(IHttpClientFactory httpClient, int id, bool isActive)
+        {
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/updatestatus?id={id}&isActive={isActive}");
+
+            return response;
+        }
+
+        public async Task<UserVM> GetDetailsAsync(IHttpClientFactory httpClient, int id)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"user/getDetails?id={id}");
+
+            UserVM userVM = new UserVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data);
+            }
+
+            return userVM;
+        }
+
+        public async Task<UserFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"user/getfilters");
+
+            UserFilterVM userFilterVM = new UserFilterVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                userFilterVM = JsonConvert.DeserializeObject<UserFilterVM>(response.Data);
+            }
+
+            return userFilterVM;
+        }
+
+        public async Task<CurrentResponse> IsEmailExistAsync(IHttpClientFactory httpClient, string email)
+        {
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/isemailexist?email={email}");
 
             return response;
         }

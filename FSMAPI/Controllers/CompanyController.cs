@@ -58,8 +58,8 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("Delete")]
+        [HttpDelete]
+        [Route("delete")]
         public IActionResult Delete(int id)
         {
             CurrentResponse response = _companyService.Delete(id);

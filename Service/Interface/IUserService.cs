@@ -14,7 +14,7 @@ namespace Service.Interface
 
         CurrentResponse Edit(UserVM userVM);
 
-        CurrentResponse List(DatatableParams datatableParams);
+        CurrentResponse List(UserDatatableParams datatableParams);
 
         CurrentResponse Delete(int id);
 
@@ -22,6 +22,6 @@ namespace Service.Interface
         
         CurrentResponse ResetPassword(ResetPasswordVM resetPasswordVM);
 
-        CurrentResponse GetFiltersValue();
+        CurrentResponse GetFiltersValue(int roleId);
     }
 }

@@ -35,7 +35,7 @@
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="Address" Title="Address"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="ContactNo" Title="Contact No"></RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="CompanyVM" Property="Id" Title="Order Details">
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="CompanyVM" Property="Id" Title="Actions">
             <Template Context="data">
                 <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => CompanyCreateDialog(data)) />
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"

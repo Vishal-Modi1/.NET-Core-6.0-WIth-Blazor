@@ -18,7 +18,7 @@ namespace Repository.Interface
 
         User Edit(User user);
 
-        List<UserDataVM> List(DatatableParams datatableParams);
+        List<UserDataVM> List(UserDatatableParams datatableParams);
 
         void Delete(int id);
 

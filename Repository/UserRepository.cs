@@ -101,13 +101,14 @@ namespace Repository
             }
         }
 
-        public List<UserDataVM> List(DatatableParams datatableParams)
+        public List<UserDataVM> List(UserDatatableParams datatableParams)
         {
             using (_myContext = new MyContext())
             {
                 int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<UserDataVM> list;
-                string sql = $"EXEC dbo.GetUserList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId}";
+                string sql = $"EXEC dbo.GetUserList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                    $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{datatableParams.RoleId}";
 
                 list = _myContext.UserSearchList.FromSqlRaw<UserDataVM>(sql).ToList();
                

@@ -8,6 +8,7 @@ namespace DataModels.VM.Company
         public int CompanyId { get; set; }
 
         public List<DropDownValues> Companies { get; set; }
+        public List<DropDownValues> UserRoles { get; set; }
 
     }
 }

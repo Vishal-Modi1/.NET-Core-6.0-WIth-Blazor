@@ -72,6 +72,11 @@ namespace FSM.Blazor.Utilities
 
         public static bool IsSuperAdmin()
         {
+            if(_httpContext == null)
+            {
+                return false;
+            }
+
             ClaimsPrincipal cp = _httpContext.User;
 
             string claimValue = cp.Claims.Where(c => c.Type == ClaimTypes.Role)

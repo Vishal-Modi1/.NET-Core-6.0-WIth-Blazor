@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@companyData.Name" />
-                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="true" Style="position: relative"/>
+                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative"/>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextBox style="width: 100%;" Name="Address" @bind-Value="@companyData.Address" />
-                <RadzenRequiredValidator Component="Address" Text="Name is required" Popup="true" Style="position: relative"/>
+                <RadzenRequiredValidator Component="Address" Text="Name is required" Popup="@isPopup" Style="position: relative"/>
             </div>
         </div>
 
