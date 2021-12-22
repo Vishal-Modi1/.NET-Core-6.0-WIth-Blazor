@@ -50,7 +50,7 @@ namespace FSM.Blazor.Data.User
         public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
         {
             string url = $"user/delete?id={id}";
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
 
             return response;
         }

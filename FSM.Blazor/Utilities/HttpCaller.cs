@@ -71,6 +71,29 @@ namespace FSM.Blazor.Utilities
             }
         }
 
+        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory _httpClient, string url)
+        {
+
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Delete, url);
+                request.Headers.Clear();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+
+                var client = _httpClient.CreateClient("FSMAPI");
+
+                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
+
+                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+
+                return response;
+            }
+            catch (Exception exc)
+            {
+                return null;
+            }
+        }
+
 
         //public async Task<CurrentResponse> PostAsync(string url, string jsonData)
         //{

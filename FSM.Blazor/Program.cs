@@ -2,10 +2,10 @@ using Configuration;
 using FSM.Blazor.Data;
 using FSM.Blazor.Data.Common;
 using FSM.Blazor.Data.Company;
+using FSM.Blazor.Data.InstructorType;
 using FSM.Blazor.Data.User;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +20,7 @@ builder.Services.AddServerSideBlazor();
 // Backend Services
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<InstructorTypeService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<UserService>();
 

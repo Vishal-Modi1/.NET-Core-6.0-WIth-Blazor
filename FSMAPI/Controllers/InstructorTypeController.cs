@@ -2,11 +2,13 @@
 using Service.Interface;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Common;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InstructorTypeController : ControllerBase
     {
         private readonly IInstructorTypeService _instructorTypeService;
