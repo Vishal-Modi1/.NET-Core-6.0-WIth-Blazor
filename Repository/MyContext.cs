@@ -7,6 +7,7 @@ using DataModels.VM.InstructorType;
 using DataModels.VM.UserRolePermission;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Company;
+using DataModels.VM.Aircraft;
 
 namespace Repository
 {
@@ -83,6 +84,7 @@ namespace Repository
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanyVM> CompanyData { get; set; }
 
+        public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 
         public DbSet<AircraftEquipmentDataVM> AircraftEquipmentData { get; set; }
     }

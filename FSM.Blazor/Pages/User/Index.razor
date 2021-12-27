@@ -13,7 +13,7 @@
 
 <div class="row mb-4">
     <div class="col">
-        <h1 style="float:left">Company</h1>
+       <h2 style="float:left">Manage Users Details</h2>
         <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UseCreateDialog(0, "Create")) />
     </div>
 </div>
@@ -50,7 +50,8 @@
                 PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
                 AllowSorting="true" Data="@data" TItem="UserDataVM"
                 PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
-                Count="@count" LoadData="@LoadData">
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true" 
+                PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 
         <RadzenDataGridColumn Width="50px" TItem="UserDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">

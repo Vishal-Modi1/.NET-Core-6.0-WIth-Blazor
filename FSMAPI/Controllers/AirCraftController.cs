@@ -54,9 +54,9 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("list")]
-        public IActionResult List(AircraftFilterVM aircraftFilterVM)
+        public IActionResult List(AircraftDatatableParams aircraftDatatableParams)
         {
-            CurrentResponse response = _airCraftService.List(aircraftFilterVM);
+            CurrentResponse response = _airCraftService.List(aircraftDatatableParams);
 
             return Ok(response);
         }

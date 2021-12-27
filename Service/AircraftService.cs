@@ -186,11 +186,11 @@ namespace Service
             airCraftVM.Id = airCraft.Id;
             airCraftVM.TailNo = airCraft.TailNo;
             airCraftVM.ImageName = airCraft.ImageName;
-            airCraftVM.ImagePath = $"https://localhost:44321/Uploads/AircraftImages/" + airCraftVM.ImageName;
+            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix} {airCraftVM.ImageName}";
 
             if (string.IsNullOrWhiteSpace(airCraftVM.ImageName))
             {
-                airCraftVM.ImagePath = $"https://localhost:44321/no-image-available.jpeg";
+                airCraftVM.ImagePath = Configuration.ConfigurationSettings.Instance.AircraftDefalutImagePath;
             }
 
             airCraftVM.Year = airCraft.Year;
@@ -302,14 +302,23 @@ namespace Service
             }
         }
 
-        public CurrentResponse List(AircraftFilterVM aircraftFilterVM)
+        public CurrentResponse List(AircraftDatatableParams datatableParams)
         {
             try
             {
-                List<AirCraft> airCraftList = _airCraftRepository.List(aircraftFilterVM);
-                List<AirCraftVM> airCraftVMList = ToBusinessObjectList(airCraftList);
+                List<AircraftDataVM> airCraftList = _airCraftRepository.List(datatableParams);
 
-                CreateResponse(airCraftVMList, HttpStatusCode.OK, "");
+                foreach (AircraftDataVM airCraftVM in airCraftList)
+                {
+                    airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
+
+                    if (string.IsNullOrWhiteSpace(airCraftVM.ImageName))
+                    {
+                        airCraftVM.ImagePath = Configuration.ConfigurationSettings.Instance.AircraftDefalutImagePath;
+                    }
+                }
+
+                CreateResponse(airCraftList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
             }

@@ -22,6 +22,7 @@ namespace FSM.Blazor.Pages.InstructorType
 
         IList<InstructorTypeVM> data;
         int count;
+        string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         bool isLoading;
 
         async Task LoadData(LoadDataArgs args)

@@ -76,31 +76,31 @@ namespace Repository
             }
         }
 
-        public List<AirCraft> List(AircraftFilterVM aircraftFilterVM)
+        public List<AircraftDataVM> List(AircraftDatatableParams datatableParams)
         {
             using (_myContext = new MyContext())
             {
-                //int pageNo = datatableParams.Start > 10 ? (datatableParams.Start / datatableParams.Length) : 1;
+                int pageNo = datatableParams.Start > 10 ? (datatableParams.Start / datatableParams.Length) : 1;
 
 
-                //string sql = $"EXEC dbo.GetAirCraftList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+                string sql = $"EXEC dbo.GetAircraftsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{(datatableParams.IsActive == true ? 1 : 0)}";
 
-                // list = _myContext.AirCraftVM.FromSqlRaw<AirCraftVM>(sql).ToList();
+                List<AircraftDataVM> airCraftList = _myContext.AircraftDataVMs.FromSqlRaw<AircraftDataVM>(sql).ToList();
 
-                List<AirCraft> airCraftList = new List<AirCraft>();
+                //List<AirCraft> airCraftList = new List<AirCraft>();
 
-                if (!string.IsNullOrWhiteSpace(aircraftFilterVM.TailNo))
-                {
-                    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false && p.TailNo.Contains(aircraftFilterVM.TailNo)).ToList();
-                }
-                else if (aircraftFilterVM.CompanyId > 0)
-                {
-                    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false && p.CompanyId == aircraftFilterVM.CompanyId).ToList();
-                }
-                else
-                {
-                    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false).ToList();
-                }
+                //if (!string.IsNullOrWhiteSpace(aircraftFilterVM.TailNo))
+                //{
+                //    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false && p.TailNo.Contains(aircraftFilterVM.TailNo)).ToList();
+                //}
+                //else if (aircraftFilterVM.CompanyId > 0)
+                //{
+                //    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false && p.CompanyId == aircraftFilterVM.CompanyId).ToList();
+                //}
+                //else
+                //{
+                //    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false).ToList();
+                //}
 
                 return airCraftList;
             }

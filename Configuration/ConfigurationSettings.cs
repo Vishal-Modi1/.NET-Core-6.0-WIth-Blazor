@@ -42,6 +42,16 @@ namespace Configuration
             get => configuration.GetValue<string>("APIURL");
         }
 
+        public string AircraftImagePathPrefix
+        {
+            get => configuration.GetValue<string>("AircraftImagePathPrefix");
+        }
+
+        public string AircraftDefalutImagePath
+        {
+            get => configuration.GetValue<string>("AircraftDefalutImagePath");
+        }
+
         public string JWTKey
         {
             get => configuration.GetValue<string>("JWTKey");
@@ -77,5 +87,9 @@ namespace Configuration
         public int BlazorGridDefaultPagesize = 10;
 
         public bool IsDiplsayValidationInPopupEffect = true;
+
+        public string  PagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
+
+
     }
 }

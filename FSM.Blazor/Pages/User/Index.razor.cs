@@ -1,7 +1,6 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.User;
 using FSM.Blazor.Data.User;
-using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
@@ -34,13 +33,9 @@ namespace FSM.Blazor.Pages.User
         int count;
         bool isLoading;
         string searchText;
+        string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
 
         protected override async Task OnInitializedAsync()
-        {
-            await SomeStartupTask();
-        }
-
-        private async Task SomeStartupTask()
         {
             userFilterVM = await UserService.GetFiltersAsync(_httpClient);
             CompanyFilterDropdown = userFilterVM.Companies;

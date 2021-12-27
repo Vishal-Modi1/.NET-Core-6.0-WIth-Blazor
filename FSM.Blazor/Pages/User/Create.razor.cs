@@ -23,7 +23,6 @@ namespace FSM.Blazor.Pages.User
 
         protected override void OnInitialized()
         {
-            base.OnInitialized();
             isInstructorTypeDropdownVisible = userData.IsInstructor;
         }
 

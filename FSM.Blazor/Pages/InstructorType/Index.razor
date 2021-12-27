@@ -12,7 +12,7 @@
 
 <div class="row mb-4">
     <div class="col">
-        <h1 style="float:left">InstructorType</h1>
+       <h2 style="float:left">Manage Instructor Types Details</h2>
         <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM())) />
     </div>
 </div>
@@ -22,7 +22,8 @@
                 PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
                 AllowSorting="true" Data="@data" TItem="InstructorTypeVM"
                 PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
-                Count="@count" LoadData="@LoadData">
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true" 
+                PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 
         <RadzenDataGridColumn Width="50px" TItem="InstructorTypeVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
