@@ -6,13 +6,14 @@
 @using FSM.Blazor.Data.Aircraft;
 
 @inject AircraftService AircraftService
+@inject Radzen.DialogService DialogService
 
 @page "/Aircraft"
 
 <div class="row mb-4">
     <div class="col">
         <h2 style="float:left">Manage Aircrafts Details</h2>
-        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
     </div>
 </div>
 

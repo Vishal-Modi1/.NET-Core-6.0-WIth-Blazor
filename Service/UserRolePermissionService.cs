@@ -118,7 +118,7 @@ namespace Service
             {
                 UserRolePermissionFilterVM userRolePermissionFilterVM = new UserRolePermissionFilterVM();
 
-                userRolePermissionFilterVM.UserRoleList = _userRoleRepository.ListDropDownValues(roleId);
+                userRolePermissionFilterVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
                 userRolePermissionFilterVM.ModuleList = _moduleDetailsRepo.ListDropDownValues();
                 userRolePermissionFilterVM.Companies = _companyRepository.ListDropDownValues();
 

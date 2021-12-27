@@ -24,13 +24,13 @@ namespace FSM.Blazor.Data.Aircraft
             CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
             List<AircraftDataVM> aircraftList = JsonConvert.DeserializeObject<List<AircraftDataVM>>(response.Data);
 
-            return aircraftList; 
+            return aircraftList;
         }
 
         public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AirCraftVM aircraftVM)
         {
             string jsonData = JsonConvert.SerializeObject(aircraftVM);
-            
+
             string url = "aircraft/create";
 
             if (aircraftVM.Id > 0)
@@ -63,6 +63,20 @@ namespace FSM.Blazor.Data.Aircraft
             }
 
             return aircraftFilterVM;
+        }
+
+        public async Task<AirCraftVM> GetDetailsAsync(IHttpClientFactory httpClient, int id)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"aircraft/getDetails?id={id}");
+
+            AirCraftVM airCraftVM = new AirCraftVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                airCraftVM = JsonConvert.DeserializeObject<AirCraftVM>(response.Data);
+            }
+
+            return airCraftVM;
         }
     }
 }

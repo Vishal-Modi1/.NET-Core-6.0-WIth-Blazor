@@ -1,6 +1,135 @@
 ﻿@namespace FSM.Blazor.Pages.UserRolePermission
+@using FSM.Blazor.Data.UserRolePermission
+@using DataModels.VM.UserRolePermission
+@using FSM.Blazor.Utilities;
+@using Configuration;
+@inject UserRolePermissionService UserRolePermissionService
 @layout MainLayout
+@inject DialogService DialogService
 
 @page "/UserRolePermission"
 
-<h3>Welcome to UserRolePermission</h3>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Users Permissions</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <RadzenDropDown @bind-Value="@RoleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        @ref="roleFilter" TextProperty="Name" Placeholder="Select Role"
+                        Data="@RoleFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Name="RoleId" ValueProperty="Id" AllowClear="true">
+        </RadzenDropDown>
+    </div>
+
+    @if (CurrentUserPermissionManager.IsSuperAdmin())
+    {
+        <div class="col-md-4">
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
+                        Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Name="CompanyId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    <div class="col-md-4">
+        <RadzenDropDown @bind-Value="@ModuleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        @ref="moduleFilter" TextProperty="Name" Placeholder="Select Module"
+                        Data="@ModuleFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Name="ModuleId" ValueProperty="Id" AllowClear="true">
+        </RadzenDropDown>
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                AllowSorting="true" Data="@data" TItem="UserRolePermissionDataVM"
+                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat" SelectionMode="DataGridSelectionMode.Multiple">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="UserRolePermissionDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="RoleName" Title="Role"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="DisplayName" Title="Module"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="PermissionType" Title="Permission Type"></RadzenDataGridColumn>
+      
+        <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Sortable="false"  Filterable="false" >
+            <HeaderTemplate>
+                <RadzenCheckBox TriState="false" TValue="bool" Value="@isAllow" Change="@(args => OpenUpdateUserMultiplePermissionsDialog(args))" Title="Is Allowed"  />
+            </HeaderTemplate>
+            <Template Context="value">
+                <RadzenCheckBox TriState="false" Value="@(value.IsAllowed)" TValue="bool"  Change="@(args => OpenUpdateUserPermissionDialog(args, value))" />
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+@{
+     async Task OpenUpdateUserPermissionDialog(bool value, UserRolePermissionDataVM userRolePermissionDataVM)
+    {
+        string message = "Are you sure you want to grant the ";
+        string title = "Grant Permission";
+
+        if (value == false)
+        {
+            message = "Are you sure you want to deny the ";
+            title = "Deny Permission";
+        }
+
+        var result = await DialogService.OpenAsync(title, ds =>
+    @<div>
+        <p class="mb-4">  @(message + " ")  <b> @(userRolePermissionDataVM.PermissionType + " permission to " +  userRolePermissionDataVM.RoleName + " for " + userRolePermissionDataVM.ModuleName + " module") </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+               
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdateUserPermissionAsync(value, userRolePermissionDataVM.Id)" />
+                <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+
+    async Task OpenUpdateUserMultiplePermissionsDialog(bool value)
+    {
+        isAllow = value;
+        string message = "Are you sure you want to grant the permissions for all selected modules and roles ?";
+        string title = "Grant Permission";
+
+        if (value == false)
+        {
+            message = "Are you sure you want to deny the permissions for all selected modules and roles ?";
+            title = "Deny Permission";
+        }
+
+        var result = await DialogService.OpenAsync(title, ds =>
+    @<div>
+        <p class="mb-4">  @(message)  </p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+               
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdateUserMultiplePermissionAsync(value)" />
+                <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

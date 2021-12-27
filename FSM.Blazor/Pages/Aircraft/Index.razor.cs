@@ -1,6 +1,5 @@
 ﻿using DataModels.VM.Aircraft;
 using DataModels.VM.Common;
-using FSM.Blazor.Data.User;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
@@ -59,6 +58,18 @@ namespace FSM.Blazor.Pages.Aircraft
             airCraftsVM = await AircraftService.ListAsync(_httpClient, datatableParams);
             count = airCraftsVM.Count() > 0 ? airCraftsVM[0].TotalRecords : 0;
             isLoading = false;
+        }
+
+        async Task AircraftCreateDialog(int id, string title)
+        {
+            AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+
+
+            await DialogService.OpenAsync<Create>(title,
+                  new Dictionary<string, object>() { { "aircraftData", aircraftData } },
+                  new DialogOptions() { Width = "800px", Height = "580px" });
+
+            await grid.Reload();
         }
     }
 }

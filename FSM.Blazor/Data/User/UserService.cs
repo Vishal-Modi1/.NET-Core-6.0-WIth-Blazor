@@ -26,9 +26,9 @@ namespace FSM.Blazor.Data.User
                 return new List<UserDataVM>();
             }
 
-            List<UserDataVM> companies = JsonConvert.DeserializeObject<List<UserDataVM>>(response.Data);
+            List<UserDataVM> userDataList = JsonConvert.DeserializeObject<List<UserDataVM>>(response.Data);
 
-            return companies; 
+            return userDataList; 
         }
 
         public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, UserVM userVM)

@@ -5,6 +5,7 @@ using FSM.Blazor.Data.Common;
 using FSM.Blazor.Data.Company;
 using FSM.Blazor.Data.InstructorType;
 using FSM.Blazor.Data.User;
+using FSM.Blazor.Data.UserRolePermission;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Radzen;
@@ -24,6 +25,7 @@ builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<InstructorTypeService>();
 builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserRolePermissionService>();
 builder.Services.AddScoped<AircraftService>();
 
 // Blazor radzen service dependencies

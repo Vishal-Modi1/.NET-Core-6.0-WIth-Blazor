@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Aircraft;
 using DataModels.VM.Common;
 using DataModels.VM.User;
+using DataModels.VM.UserRolePermission;
 using Radzen;
 
 namespace FSM.Blazor.Extensions
@@ -54,6 +55,28 @@ namespace FSM.Blazor.Extensions
         public static AircraftDatatableParams Create(this AircraftDatatableParams aircraftDatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
         {
             AircraftDatatableParams datatableParams = new AircraftDatatableParams();
+
+            datatableParams.Length = args.Top.GetValueOrDefault();
+            datatableParams.Start = args.Skip.GetValueOrDefault() + 1;
+
+            if (string.IsNullOrWhiteSpace(args.OrderBy))
+            {
+                datatableParams.SortOrderColumn = defaultSearchOrderColumn;
+                datatableParams.OrderType = "asc";
+
+            }
+            else
+            {
+                datatableParams.SortOrderColumn = args.OrderBy.Split(new char[] { ' ' })[0];
+                datatableParams.OrderType = args.OrderBy.Split(new char[] { ' ' })[1];
+            }
+
+            return datatableParams;
+        }
+
+        public static UserRolePermissionDatatableParams Create(this UserRolePermissionDatatableParams aircraftDatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
+        {
+            UserRolePermissionDatatableParams datatableParams = new UserRolePermissionDatatableParams();
 
             datatableParams.Length = args.Top.GetValueOrDefault();
             datatableParams.Start = args.Skip.GetValueOrDefault() + 1;
