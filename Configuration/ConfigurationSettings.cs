@@ -86,7 +86,7 @@ namespace Configuration
 
         public int BlazorGridDefaultPagesize = 10;
 
-        public bool IsDiplsayValidationInPopupEffect = true;
+        public bool IsDiplsayValidationInPopupEffect = false;
 
         public string  PagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
 

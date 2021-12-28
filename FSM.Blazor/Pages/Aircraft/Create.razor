@@ -1,7 +1,265 @@
 ﻿@using DataModels.VM.Aircraft
 @using FSM.Blazor.Data.Aircraft
+@using FSM.Blazor.Utilities;
 
 @inject Radzen.DialogService dialogService
 @inject AircraftService AircraftService
 
+<RadzenSteps @ref=@steps ShowStepsButtons="false">
+    <Steps >
+        <RadzenStepsItem Text="Basic Details" >
+            <h3 class="mt-4">1. Enter Aircraft Details</h3>
 
+            <RadzenTemplateForm @ref=@form Data="@airCraftData" Submit="@((AirCraftVM args) => {  Submit(args); })">
+
+                <input type="hidden" value="@airCraftData.Id" name="Id" />
+
+                <RadzenFieldset Text="Basic Info">
+
+                    <div class="row">
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Company" />
+                        </div>
+                        <div class="col-md-4">
+                            @if (CurrentUserPermissionManager.IsSuperAdmin())
+                            {
+                                <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Company"
+                                            Data="@airCraftData.Companies"
+                                            Name="CompanyId" ValueProperty="Id" AllowClear="true">
+                                </RadzenDropDown>
+                                <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Company is required" Popup="@isPopup" Style="position: relative" />
+
+                            }
+                            else
+                            {
+                                <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@airCraftData.CompanyName" Disabled="true" />
+                                <input type="hidden" id="CompanyId" value="@airCraftData.CompanyId" />
+                            }
+                        </div>
+
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Tail No" />
+                        </div>
+                        <div class="col-md-4">
+                            <RadzenTextBox style="width: 100%;" Name="TailNo" @bind-Value="@airCraftData.TailNo" Placeholder="Please enter tail no" />
+                            <RadzenRequiredValidator Component="TailNo" Text="Tail no is required" Popup="@isPopup" Style="position: relative" />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                      
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Year" />
+                        </div>
+                        <div class="col-md-4">
+
+                            <RadzenDropDown @bind-Value="@Year" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Year"
+                                            Data="@YearDropDown"
+                                            Name="Year" ValueProperty="Id" AllowClear="true">
+                            </RadzenDropDown>
+
+                        </div>
+
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Aircraft Image" />
+                        </div>
+                        <div class="col-md-4">
+                            <RadzenFileInput Style="outline:none" @bind-Value=@airCraftData.ImagePath TValue="string" Class="w-100"
+                                             Change=@(args => OnAircraftImageChange(args, "FileInput")) Error=@(args => OnAircraftImageError(args, "FileInput")) />
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Make" />
+                        </div>
+                        <div class="col-md-4">
+
+                            <RadzenDropDown @bind-Value="@MakeId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Make"
+                                            Data="@airCraftData.AircraftMakeList"
+                                            Name="MakeId" ValueProperty="Id" AllowClear="true">
+                            </RadzenDropDown>
+                            <RadzenRequiredValidator DefaultValue="0" Component="MakeId" Text="Make is required" Popup="@isPopup" Style="position: relative" />
+
+                        </div>
+
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Model" />
+                        </div>
+                        <div class="col-md-4">
+                            <RadzenDropDown @bind-Value="@ModelId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Model"
+                                            Data="@airCraftData.AircraftModelList"
+                                            Name="ModelId" ValueProperty="Id" AllowClear="true">
+                            </RadzenDropDown>
+                            <RadzenRequiredValidator DefaultValue="0" Component="ModelId" Text="Model is required" Popup="@isPopup" Style="position: relative" />
+
+                        </div>
+                    </div>
+
+                    @if (airCraftData.Id > 0)
+                    {
+                        <div class="row col-md-12">
+
+                            <RadzenBadge BadgeStyle="BadgeStyle.Warning" Text="Please update below information carefully it may affect loses of your old equipment information!" />
+
+                        </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Category" />
+                        </div>
+                        <div class="col-md-4">
+
+                            <RadzenDropDown @bind-Value="@CategoryId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Category"
+                                            Data="@airCraftData.AircraftCategoryList"
+                                            Name="CategoryId" ValueProperty="Id" AllowClear="true" Change=@(args => OnCategoryDropDownValueChange(args))>
+                            </RadzenDropDown>
+                            <RadzenRequiredValidator DefaultValue="0" Component="CategoryId" Text="Category is required" Popup="@isPopup" Style="position: relative" />
+
+                        </div>
+
+                        @if (isDisplayClassDropDown)
+                        {
+
+                            <div class="col-md-2 align-items-center d-flex">
+                                <RadzenLabel Text="Class" />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenDropDown @bind-Value="@ClassId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Class"
+                                            Data="@airCraftData.AircraftClassList"
+                                            Name="ClassId" ValueProperty="Id" AllowClear="true"
+                                            Change=@(args => OnClassDropDownValueChange(args))>
+                                </RadzenDropDown>
+                                <RadzenRequiredValidator DefaultValue="0" Component="ClassId" Text="Class is required" Popup="@isPopup" Style="position: relative" />
+
+                            </div>
+                        }
+
+                        @if (isDisplayFlightSimulatorDropDown)
+                        {
+                            <div class="col-md-2 align-items-center d-flex">
+                                <RadzenLabel Text="Flight Simulator" />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenDropDown @bind-Value="@FlightSimulatorId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name" Placeholder="Select Flight  Simulator"
+                                            Data="@airCraftData.FlightSimulatorClassList"
+                                            Name="FlightSimulatorId" ValueProperty="Id" AllowClear="true">
+                                </RadzenDropDown>
+                                <RadzenRequiredValidator DefaultValue="0" Component="FlightSimulatorId" Text="Flight Simulator is required" Popup="@isPopup" Style="position: relative" />
+
+                            </div>
+                        }
+
+                        @if (isDisplayNoofEnginesDropDown)
+                        {
+                            <div class="col-md-2 align-items-center d-flex">
+                                <RadzenLabel Text="Engines" />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenDropDown @bind-Value="@NoofEnginesId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name"
+                                            Data="@NoofEnginesDropDown"
+                                            Name="NoofEnginesId" ValueProperty="Id" AllowClear="true">
+                                </RadzenDropDown>
+
+                            </div>
+                        }
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Track oil and Fuel" />
+                        </div>
+                        <div class="col-md-4">
+
+                            <RadzenSwitch @bind-Value=@airCraftData.TrackOilandFuel />
+
+                        </div>
+
+                        <div class="col-md-2 align-items-center d-flex">
+                            <RadzenLabel Text="Is Identity Mismatch" />
+                        </div>
+                        <div class="col-md-4">
+                            <RadzenSwitch @bind-Value=@airCraftData.IsIdentifyMeterMismatch />
+
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        @if (isDisplayEnginesHavePropellers)
+                        {
+                            <div class="col-md-2 align-items-center d-flex">
+                                <RadzenLabel Text="Engines have Propellers" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <RadzenSwitch @bind-Value=@airCraftData.IsEngineshavePropellers />
+                            </div>
+                        }
+
+                        @if (isDisplayEnginesareTurbines)
+                        {
+                            <div class="col-md-2 align-items-center d-flex">
+                                <RadzenLabel Text="Engines are Turbines" />
+                            </div>
+
+                            <div class="col-md-4">
+                                <RadzenSwitch @bind-Value=@airCraftData.IsEnginesareTurbines />
+                            </div>
+                        }
+
+                        @if (isDisplayNoofPropellersDropDown)
+                        {
+                            <div class="col-md-2 align-items-center d-flex">
+                                <RadzenLabel Text="Propellers" />
+                            </div>
+                            <div class="col-md-4">
+                                <RadzenDropDown @bind-Value="@NoofPropellersId" Style="width:100%;" TValue="int"
+                                            TextProperty="Name"
+                                            Data="@NoofPropellersDropDown"
+                                            Name="NoofPropellersId" ValueProperty="Id" AllowClear="true">
+                                </RadzenDropDown>
+                            </div>
+                        }
+
+                    </div>
+
+                </RadzenFieldset>
+
+                <div class="row" style="margin-top:4%">
+                    <div class="col-md-12 text-right">
+                        <RadzenButton ButtonType="ButtonType.Submit" Text="Next" Style="width: 120px"  />
+                        <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                    </div>
+                </div>
+
+            </RadzenTemplateForm>
+
+        </RadzenStepsItem>
+        <RadzenStepsItem Text="Equipment Times">
+            <h3 class="mt-4">2. Enter Equipment Times</h3>
+
+             <div class="row" style="margin-top:4%">
+                    <div class="col-md-12 text-right">
+                        <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Secondary" Text="Previous" Style="width: 120px" Click=@(args => OpenPreviousTab()) />
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                    </div>
+                </div>
+
+        </RadzenStepsItem>
+
+    </Steps>
+</RadzenSteps>

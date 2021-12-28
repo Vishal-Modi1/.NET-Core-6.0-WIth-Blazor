@@ -69,7 +69,7 @@ namespace FSM.Blazor.Pages.Aircraft
                   new Dictionary<string, object>() { { "aircraftData", aircraftData } },
                   new DialogOptions() { Width = "800px", Height = "580px" });
 
-            await grid.Reload();
+           // await grid.Reload();
         }
     }
 }

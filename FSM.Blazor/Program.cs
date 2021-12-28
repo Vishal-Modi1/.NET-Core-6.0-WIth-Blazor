@@ -34,6 +34,11 @@ builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
+builder.Services.AddServerSideBlazor().AddHubOptions(o =>
+{
+    o.MaximumReceiveMessageSize = 10 * 1024 * 1024;
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddHttpClient<HttpCaller>("FSMAPI", c =>
