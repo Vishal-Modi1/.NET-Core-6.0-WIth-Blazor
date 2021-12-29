@@ -126,11 +126,11 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("isaircraftexist")]
-        public IActionResult IsAirCraftExist(AirCraftVM airCraftVM)
+        public IActionResult IsAirCraftExist(int id, string tailNo)
         {
-            CurrentResponse response = _airCraftService.IsAirCraftExist(airCraftVM);
+            CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
 
             return Ok(response);
         }

@@ -12,7 +12,7 @@ namespace Service.Interface
         CurrentResponse GetDetails(int id, int companyId);
         CurrentResponse Delete(int id);
         CurrentResponse UpdateImageName(int id, string imageName);
-        CurrentResponse IsAirCraftExist(AirCraftVM airCraftVM);
+        CurrentResponse IsAirCraftExist(int id, string tailNo);
         CurrentResponse GetFiltersValue(int companyId);
 
     }

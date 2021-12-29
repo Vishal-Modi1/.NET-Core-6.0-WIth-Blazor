@@ -47,11 +47,6 @@ namespace Configuration
             get => configuration.GetValue<string>("AircraftImagePathPrefix");
         }
 
-        public string AircraftDefalutImagePath
-        {
-            get => configuration.GetValue<string>("AircraftDefalutImagePath");
-        }
-
         public string JWTKey
         {
             get => configuration.GetValue<string>("JWTKey");

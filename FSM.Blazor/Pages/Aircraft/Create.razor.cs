@@ -4,7 +4,9 @@ using DataModels.VM.Common;
 using Radzen;
 using DataModels.Enums;
 using Radzen.Blazor;
-using Microsoft.AspNetCore.Components.Forms;
+using FSM.Blazor.Extensions;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -60,17 +62,52 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async Task Submit(AirCraftVM airCraftData)
         {
-            airCraftData.CompanyId = CompanyId;
-            airCraftData.Year = Year.ToString();
-            airCraftData.AircraftMakeId = MakeId;
-            airCraftData.AircraftModelId = ModelId;
-            airCraftData.AircraftCategoryId = CategoryId;
-            airCraftData.AircraftClassId = ClassId;
-            airCraftData.FlightSimulatorClassId = FlightSimulatorId;
-            airCraftData.NoofEngines = NoofEnginesId;
-            airCraftData.NoofPropellers = NoofPropellersId;
+            if (steps.SelectedIndex == 0)
+            {
+                CurrentResponse response = await AircraftService.IsAircraftExistAsync(_httpClient, airCraftData.Id, airCraftData.TailNo);
+                bool isAircraftExist = ManageIsAircraftExistResponse(response, "");
 
-            OpenNextTab();
+                if (isAircraftExist)
+                {
+                    return;
+                }
+
+                airCraftData.CompanyId = CompanyId;
+                airCraftData.Year = Year.ToString();
+                airCraftData.AircraftMakeId = MakeId;
+                airCraftData.AircraftModelId = ModelId;
+                airCraftData.AircraftCategoryId = CategoryId;
+                airCraftData.AircraftClassId = ClassId;
+                airCraftData.FlightSimulatorClassId = FlightSimulatorId;
+                airCraftData.NoofEngines = NoofEnginesId;
+                airCraftData.NoofPropellers = NoofPropellersId;
+
+                await OpenNextTab();
+            }
+            else
+            {
+                CurrentResponse response = await AircraftService.SaveandUpdateAsync(_httpClient, airCraftData);
+                ManageResponse(response, "Aircraft Details", false);
+
+
+                if (response != null && response.Status == System.Net.HttpStatusCode.OK)
+                {
+                    byte[] bytes = Encoding.ASCII.GetBytes(airCraftData.ImagePath);
+                    ByteArrayContent data = new ByteArrayContent(bytes);
+
+                    airCraftData = JsonConvert.DeserializeObject<AirCraftVM>(response.Data);
+
+                    MultipartFormDataContent multiContent = new MultipartFormDataContent
+                    {
+                        { data, "file", airCraftData.Id.ToString() }
+                    };
+
+                    response = await AircraftService.UploadAircraftImageAsync(_httpClient, multiContent);
+
+                    ManageFileUploadResponse(response, "Aircraft Details", true);
+                }
+
+            }
         }
 
         void OnAircraftImageChange(string value, string name)
@@ -84,8 +121,6 @@ namespace FSM.Blazor.Pages.Aircraft
 
         void OnCategoryDropDownValueChange(object value)
         {
-            string selectedCategory = airCraftData.AircraftCategoryList.Where(p => p.Id == (int)value).Select(p => p.Name).FirstOrDefault();
-
             if (Convert.ToInt16(value) == (int)AircraftCategory.Airplane)
             {
                 isDisplayClassDropDown = true;
@@ -142,16 +177,95 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async Task OpenNextTab()
         {
-            var valid = true;
-
-            valid = form.IsValid;
-
             steps.SelectedIndex = 1;
+            base.StateHasChanged();
         }
 
         void OpenPreviousTab()
         {
             steps.SelectedIndex = 0;
+
+        }
+
+
+        private bool ManageIsAircraftExistResponse(CurrentResponse response, string summary)
+        {
+            NotificationMessage message;
+            bool isAircraftExist = false;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                if (Convert.ToBoolean(response.Data))
+                {
+                    isAircraftExist = true;
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, summary, response.Message);
+                    NotificationService.Notify(message);
+                }
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, summary, response.Message);
+                NotificationService.Notify(message);
+            }
+
+            return isAircraftExist;
+        }
+
+        private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
+        {
+            NotificationMessage message;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                if (isCloseDialog)
+                {
+                    dialogService.Close(true);
+                }
+
+                message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
+                NotificationService.Notify(message);
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, summary, response.Message);
+                NotificationService.Notify(message);
+            }
+        }
+
+        private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
+        {
+            NotificationMessage message;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft detilas added successfully. Something went wrong while uploading file!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                if (isCloseDialog)
+                {
+                    dialogService.Close(true);
+                }
+
+                message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
+                NotificationService.Notify(message);
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft detilas added successfully. Something went wrong while uploading file!", response.Message);
+                NotificationService.Notify(message);
+            }
         }
     }
 }

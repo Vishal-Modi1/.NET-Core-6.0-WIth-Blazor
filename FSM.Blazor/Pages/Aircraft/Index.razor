@@ -46,7 +46,7 @@
 
 </div>
 
-<RadzenDataList WrapItems="true" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
+<RadzenDataList WrapItems="true" @ref="grid" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
                 ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
                 PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
                 PageChanged="@PageChanged" LoadData="@LoadData">
@@ -54,7 +54,7 @@
     <Template Context="airCraftVM">
         <RadzenCard Style="width:300px;">
             <div class="d-flex flex-row align-items-center">
-                <RadzenImage Path="@(string.IsNullOrWhiteSpace(airCraftVM.ImagePath) ? "../img/thumbnail-aircraft.png" : airCraftVM.ImagePath)" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
+                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(airCraftVM.ImagePath)" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
                 <div>
                     <h4 class="mb-0">@(airCraftVM.ModelName + " " + airCraftVM.MakeName)</h4>
                     <div>@airCraftVM.Category</div>

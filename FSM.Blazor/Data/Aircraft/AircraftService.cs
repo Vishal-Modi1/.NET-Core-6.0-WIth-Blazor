@@ -78,5 +78,23 @@ namespace FSM.Blazor.Data.Aircraft
 
             return airCraftVM;
         }
+
+        public async Task<CurrentResponse> IsAircraftExistAsync(IHttpClientFactory httpClient, int id, string tailNo)
+        {
+            string url = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UploadAircraftImageAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
+        {
+            string url = $"aircraft/uploadfile";
+
+            CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
+
+            return response;
+        }
     }
 }

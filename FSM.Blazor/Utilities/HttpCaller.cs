@@ -12,17 +12,17 @@ namespace FSM.Blazor.Utilities
 {
     public class HttpCaller
     {
-        
+
 
         private static AuthenticationStateProvider _authenticationStateProvider;
 
 
-        private  ConfigurationSettings _configurationSettings = ConfigurationSettings.Instance;
+        private ConfigurationSettings _configurationSettings = ConfigurationSettings.Instance;
 
         public HttpCaller(AuthenticationStateProvider authenticationStateProvider = null)
         {
             _authenticationStateProvider = authenticationStateProvider;
-           
+
         }
 
         public async Task<CurrentResponse> PostAsync(IHttpClientFactory httpClientFactory, string url, string jsonData)
@@ -94,86 +94,34 @@ namespace FSM.Blazor.Utilities
             }
         }
 
+        public async Task<CurrentResponse> PostFileAsync(IHttpClientFactory _httpClient, string url, MultipartFormDataContent fileContent)
+        {
 
-        //public async Task<CurrentResponse> PostAsync(string url, string jsonData)
-        //{
-        //    using (_httpClient = new HttpClient())
-        //    {
-        //        try
-        //        {
-        //            string apiURL = $"{_configurationSettings.APIURL}{url}";
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Clear();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
 
-        //            _httpClient.BaseAddress = new Uri(apiURL);
-        //            _httpClient.DefaultRequestHeaders.Accept.Clear();
+                request.Content = fileContent;
 
-        //            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+                var client = _httpClient.CreateClient("FSMAPI");
 
-        //            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-        //            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync(apiURL, content);
-        //            CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
+                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
-        //            return response;
-        //        }
-        //        catch (Exception exc)
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
+                return response;
+            }
+            catch (Exception exc)
+            {
+                return null;
+            }
 
-        //public async Task<CurrentResponse> DeleteAsync(string url)
-        //{
-        //    using (_httpClient = new HttpClient())
-        //    {
-        //        try
-        //        {
-        //            string apiURL = $"{_configurationSettings.APIURL}{url}";
-
-        //            _httpClient.BaseAddress = new Uri(apiURL);
-        //            _httpClient.DefaultRequestHeaders.Accept.Clear();
-
-        //            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
-
-        //            HttpResponseMessage httpResponseMessage = await _httpClient.DeleteAsync(apiURL);
-        //            CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-        //            return response;
-        //        }
-        //        catch (Exception exc)
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
-
-        //public async Task<CurrentResponse> PostFileAsync(string url, MultipartFormDataContent fileContent)
-        //{
-        //    using (_httpClient = new HttpClient())
-        //    {
-        //        try
-        //        {
-        //            string apiURL = $"{_configurationSettings.APIURL}{url}";
-
-        //            _httpClient.BaseAddress = new Uri(apiURL);
-        //            _httpClient.DefaultRequestHeaders.Accept.Clear();
-
-        //            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
-
-        //            HttpResponseMessage httpResponseMessage = await _httpClient.PostAsync(apiURL, fileContent);
-        //            CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-        //            return response;
-        //        }
-        //        catch (Exception exc)
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //}
+        }
 
         public string GetClaimValue(string claimType)
         {
-            if(_authenticationStateProvider == null)
+            if (_authenticationStateProvider == null)
             {
                 return "";
             }

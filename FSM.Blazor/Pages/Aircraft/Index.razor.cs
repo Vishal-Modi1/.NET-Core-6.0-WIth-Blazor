@@ -14,7 +14,7 @@ namespace FSM.Blazor.Pages.Aircraft
         IHttpClientFactory _httpClient { get; set; }
 
         [CascadingParameter]
-        public RadzenDataList<AirCraftVM> grid { get; set; }
+        public RadzenDataList<AircraftDataVM> grid { get; set; }
 
         [CascadingParameter]
         public RadzenDropDown<int> companyFilter { get; set; }
@@ -69,7 +69,7 @@ namespace FSM.Blazor.Pages.Aircraft
                   new Dictionary<string, object>() { { "aircraftData", aircraftData } },
                   new DialogOptions() { Width = "800px", Height = "580px" });
 
-           // await grid.Reload();
+            await grid.Reload();
         }
     }
 }

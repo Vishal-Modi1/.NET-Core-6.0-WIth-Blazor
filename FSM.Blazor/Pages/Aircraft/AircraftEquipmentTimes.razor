@@ -1,0 +1,114 @@
+﻿@using Radzen.Blazor;
+@using DataModels.VM.Aircraft;
+@using DataModels.Entities;
+
+<RadzenFieldset Text="Aircraft Equipment Times Info">
+
+    <div class="row">
+
+        <div class="col-md-2 align-items-center d-flex">
+            <RadzenLabel Text=@("Air Frame Hours") />
+        </div>
+        <div class="col-md-4">
+
+            <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[0].Hours.ToString()
+                           Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(0, args)) />
+
+        </div>
+
+    </div>
+
+    @for (int engineNo = 1; engineNo <= AircraftData.NoofEngines; engineNo++)
+    {
+        int engineIndexValue = engineNo;
+        engineIndex++;
+
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text=@("Engine " + engineIndex + " Hours") />
+            </div>
+            <div class="col-md-4">
+
+                <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[engineNo].Hours.ToString()
+                           Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(engineIndexValue, args)) />
+
+            </div>
+
+        </div>
+    }
+
+    @for (int proppellerNo = AircraftData.NoofEngines + 1; proppellerNo < (AircraftData.NoofPropellers + AircraftData.NoofEngines + 1); proppellerNo++)
+    {
+        int proppellerIndexValue = proppellerNo;
+        propellerIndex++;
+
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text=@("Propeller " + propellerIndex + " Hours") />
+            </div>
+            <div class="col-md-4">
+
+                <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours.ToString()
+                           Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(proppellerIndexValue, args)) />
+
+            </div>
+
+        </div>
+    }
+
+
+
+</RadzenFieldset>
+
+@code {
+
+    [Parameter]
+    public AirCraftVM AircraftData { get; set; }
+
+
+    int engineIndex = 0, propellerIndex = 0;
+
+    protected override Task OnInitializedAsync()
+    {
+
+        if (AircraftData.Id == 0)
+        {
+            AircraftData.AircraftEquipmentTimesList = new List<AircraftEquipmentTime>();
+        }
+
+        AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+            {
+                EquipmentName = ("Air Frame")
+            });
+
+
+        for (int engineNo = 1; engineNo <= AircraftData.NoofEngines; engineNo++)
+        {
+            AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                {
+                    EquipmentName = ("Engine " + engineNo)
+                });
+        }
+
+        int propeller = 0;
+        for (int proppellerNo = AircraftData.NoofEngines + 1; proppellerNo < (AircraftData.NoofPropellers + AircraftData.NoofEngines + 1); proppellerNo++)
+        {
+            propeller++;
+            AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                {
+                    EquipmentName = ("Propeller " + propeller )
+                });
+        }
+
+        return base.OnInitializedAsync();
+    }
+
+    async void ManageHoursChange(int engineIndex, object value)
+    {
+        AircraftData.AircraftEquipmentTimesList[engineIndex].Hours = Convert.ToInt16(value);
+
+    }
+
+}

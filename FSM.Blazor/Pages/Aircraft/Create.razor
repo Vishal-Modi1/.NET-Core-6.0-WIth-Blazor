@@ -4,13 +4,15 @@
 
 @inject Radzen.DialogService dialogService
 @inject AircraftService AircraftService
+@inject NotificationService NotificationService
 
-<RadzenSteps @ref=@steps ShowStepsButtons="false">
-    <Steps >
-        <RadzenStepsItem Text="Basic Details" >
-            <h3 class="mt-4">1. Enter Aircraft Details</h3>
+<RadzenTemplateForm @ref=@form Data="@airCraftData" Submit="@((AirCraftVM args) => {  Submit(args); })">
 
-            <RadzenTemplateForm @ref=@form Data="@airCraftData" Submit="@((AirCraftVM args) => {  Submit(args); })">
+        <RadzenSteps @ref=@steps ShowStepsButtons="false">
+            <Steps>
+                <RadzenStepsItem Text="Basic Details">
+                    <h3 class="mt-4">1. Enter Aircraft Details</h3>
+
 
                 <input type="hidden" value="@airCraftData.Id" name="Id" />
 
@@ -49,7 +51,7 @@
 
 
                     <div class="row">
-                      
+
                         <div class="col-md-2 align-items-center d-flex">
                             <RadzenLabel Text="Year" />
                         </div>
@@ -241,25 +243,31 @@
 
                 <div class="row" style="margin-top:4%">
                     <div class="col-md-12 text-right">
-                        <RadzenButton ButtonType="ButtonType.Submit" Text="Next" Style="width: 120px"  />
+                        <RadzenButton ButtonType="ButtonType.Submit" Text="Next" Style="width: 120px" />
                         <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
                     </div>
                 </div>
 
-            </RadzenTemplateForm>
 
-        </RadzenStepsItem>
-        <RadzenStepsItem Text="Equipment Times">
-            <h3 class="mt-4">2. Enter Equipment Times</h3>
+                </RadzenStepsItem>
+                <RadzenStepsItem Text="Equipment Times">
 
-             <div class="row" style="margin-top:4%">
+                <h3 class="mt-4">2. Enter Equipment Times</h3>
+
+                   <AircraftEquipmentTimes AircraftData=@airCraftData>
+
+                   </AircraftEquipmentTimes>
+
+                   <div class="row" style="margin-top:4%">
                     <div class="col-md-12 text-right">
                         <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Secondary" Text="Previous" Style="width: 120px" Click=@(args => OpenPreviousTab()) />
-                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" Style="width: 120px" Class="mr-1" />
                     </div>
                 </div>
 
-        </RadzenStepsItem>
+                </RadzenStepsItem>
 
-    </Steps>
-</RadzenSteps>
+            </Steps>
+        </RadzenSteps>
+
+</RadzenTemplateForm>

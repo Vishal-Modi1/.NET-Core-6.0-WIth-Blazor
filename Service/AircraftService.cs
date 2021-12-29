@@ -74,19 +74,19 @@ namespace Service
         //    return true;
         //}
 
-        public CurrentResponse IsAirCraftExist(AirCraftVM airCraftVM)
+        public CurrentResponse IsAirCraftExist(int id, string tailNo)
         {
             try
             {
-                AirCraft airCraft = _airCraftRepository.FindByCondition(p => p.TailNo == airCraftVM.TailNo && p.Id != airCraftVM.Id);
+                AirCraft airCraft = _airCraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id);
 
                 if (airCraft != null)
                 {
-                    CreateResponse(null, HttpStatusCode.Ambiguous, "Aircraft is already exist");
+                    CreateResponse(true, HttpStatusCode.OK, "Aircraft is already exist");
                 }
                 else
                 {
-                    CreateResponse(null, HttpStatusCode.OK, "");
+                    CreateResponse(false, HttpStatusCode.OK, "");
                 }
 
                 return _currentResponse;
@@ -188,11 +188,6 @@ namespace Service
             airCraftVM.ImageName = airCraft.ImageName;
             airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix} {airCraftVM.ImageName}";
 
-            if (string.IsNullOrWhiteSpace(airCraftVM.ImageName))
-            {
-                airCraftVM.ImagePath = Configuration.ConfigurationSettings.Instance.AircraftDefalutImagePath;
-            }
-
             airCraftVM.Year = airCraft.Year;
             airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;
             airCraftVM.AircraftModelId = airCraft.AircraftModelId;
@@ -244,8 +239,8 @@ namespace Service
             airCraft.AircraftMakeId = airCraftVM.AircraftMakeId;
             airCraft.AircraftModelId = airCraftVM.AircraftModelId;
             airCraft.AircraftCategoryId = airCraftVM.AircraftCategoryId;
-            airCraft.AircraftClassId = airCraftVM.AircraftClassId;
-            airCraft.FlightSimulatorClassId = airCraftVM.FlightSimulatorClassId;
+            airCraft.AircraftClassId = airCraftVM.AircraftClassId == 0 ? null : airCraftVM.AircraftClassId;
+            airCraft.FlightSimulatorClassId = airCraftVM.FlightSimulatorClassId == 0 ? null : airCraftVM.FlightSimulatorClassId;
             airCraft.NoofEngines = airCraftVM.NoofEngines;
             airCraft.NoofPropellers = airCraftVM.NoofPropellers;
             airCraft.IsEngineshavePropellers = airCraftVM.IsEngineshavePropellers;
@@ -311,11 +306,6 @@ namespace Service
                 foreach (AircraftDataVM airCraftVM in airCraftList)
                 {
                     airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
-
-                    if (string.IsNullOrWhiteSpace(airCraftVM.ImageName))
-                    {
-                        airCraftVM.ImagePath = Configuration.ConfigurationSettings.Instance.AircraftDefalutImagePath;
-                    }
                 }
 
                 CreateResponse(airCraftList, HttpStatusCode.OK, "");
