@@ -20,7 +20,7 @@ namespace FSM.Blazor.Pages.Account
 
         void OnResetPassword(string value, string name)
         {
-            // console.Log($"{name} -> ResetPassword for user: {value}");
+            NavigationManager.NavigateTo("/forgetpassword");
         }
 
         private async void btnLogout_Click()
