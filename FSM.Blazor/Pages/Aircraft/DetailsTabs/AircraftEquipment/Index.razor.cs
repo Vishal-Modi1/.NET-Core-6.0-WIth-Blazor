@@ -66,7 +66,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async void AircraftEquipmentCreateDialog(int id, string title)
         {
-            AirCraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetDetailsAsync(_httpClient, id);
+            AirCraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
+            airCraftEquipmentsVM.AirCraftId = AircraftId;
 
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "airCraftEquipmentsVM", airCraftEquipmentsVM } },

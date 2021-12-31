@@ -9,7 +9,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
     partial class Create
     {
         [Parameter]
-        public AirCraftEquipmentsVM AirCraftEquipmentsVM { get; set; }
+        public AirCraftEquipmentsVM AirCraftEquipmentsVM {  get; set; }
 
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
@@ -22,7 +22,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         public async Task Submit(AirCraftEquipmentsVM airCraftEquipmentsVM)
         {
             CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(_httpClient, airCraftEquipmentsVM);
-            ManageResponse(response, "User Details", true);
+            ManageResponse(response, "Aircraft Equipment Details", true);
         }
 
         private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
@@ -50,7 +50,5 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 NotificationService.Notify(message);
             }
         }
-
-
     }
 }
