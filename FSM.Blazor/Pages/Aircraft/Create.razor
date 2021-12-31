@@ -6,7 +6,7 @@
 @inject AircraftService AircraftService
 @inject NotificationService NotificationService
 
-<RadzenTemplateForm @ref=@form Data="@airCraftData" Submit="@((AirCraftVM args) => {  Submit(args); })">
+<RadzenTemplateForm @ref=@form Data="@AircraftData" Submit="@((AirCraftVM args) => {  Submit(args); })">
 
         <RadzenSteps @ref=@steps ShowStepsButtons="false">
             <Steps>
@@ -14,7 +14,7 @@
                     <h3 class="mt-4">1. Enter Aircraft Details</h3>
 
 
-                <input type="hidden" value="@airCraftData.Id" name="Id" />
+                <input type="hidden" value="@AircraftData.Id" name="Id" />
 
                 <RadzenFieldset Text="Basic Info">
 
@@ -27,7 +27,7 @@
                             {
                                 <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Company"
-                                            Data="@airCraftData.Companies"
+                                            Data="@AircraftData.Companies"
                                             Name="CompanyId" ValueProperty="Id" AllowClear="true">
                                 </RadzenDropDown>
                                 <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Company is required" Popup="@isPopup" Style="position: relative" />
@@ -35,8 +35,8 @@
                             }
                             else
                             {
-                                <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@airCraftData.CompanyName" Disabled="true" />
-                                <input type="hidden" id="CompanyId" value="@airCraftData.CompanyId" />
+                                <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@AircraftData.CompanyName" Disabled="true" />
+                                <input type="hidden" id="CompanyId" value="@AircraftData.CompanyId" />
                             }
                         </div>
 
@@ -44,7 +44,7 @@
                             <RadzenLabel Text="Tail No" />
                         </div>
                         <div class="col-md-4">
-                            <RadzenTextBox style="width: 100%;" Name="TailNo" @bind-Value="@airCraftData.TailNo" Placeholder="Please enter tail no" />
+                            <RadzenTextBox style="width: 100%;" Name="TailNo" @bind-Value="@AircraftData.TailNo" Placeholder="Please enter tail no" />
                             <RadzenRequiredValidator Component="TailNo" Text="Tail no is required" Popup="@isPopup" Style="position: relative" />
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                             <RadzenLabel Text="Aircraft Image" />
                         </div>
                         <div class="col-md-4">
-                            <RadzenFileInput Style="outline:none" @bind-Value=@airCraftData.ImagePath TValue="string" Class="w-100"
+                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath TValue="string" Class="w-100"
                                              Change=@(args => OnAircraftImageChange(args, "FileInput")) Error=@(args => OnAircraftImageError(args, "FileInput")) />
 
                         </div>
@@ -83,7 +83,7 @@
 
                             <RadzenDropDown @bind-Value="@MakeId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Make"
-                                            Data="@airCraftData.AircraftMakeList"
+                                            Data="@AircraftData.AircraftMakeList"
                                             Name="MakeId" ValueProperty="Id" AllowClear="true">
                             </RadzenDropDown>
                             <RadzenRequiredValidator DefaultValue="0" Component="MakeId" Text="Make is required" Popup="@isPopup" Style="position: relative" />
@@ -96,7 +96,7 @@
                         <div class="col-md-4">
                             <RadzenDropDown @bind-Value="@ModelId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Model"
-                                            Data="@airCraftData.AircraftModelList"
+                                            Data="@AircraftData.AircraftModelList"
                                             Name="ModelId" ValueProperty="Id" AllowClear="true">
                             </RadzenDropDown>
                             <RadzenRequiredValidator DefaultValue="0" Component="ModelId" Text="Model is required" Popup="@isPopup" Style="position: relative" />
@@ -104,7 +104,7 @@
                         </div>
                     </div>
 
-                    @if (airCraftData.Id > 0)
+                    @if (AircraftData.Id > 0)
                     {
                         <div class="row col-md-12">
 
@@ -121,7 +121,7 @@
 
                             <RadzenDropDown @bind-Value="@CategoryId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Category"
-                                            Data="@airCraftData.AircraftCategoryList"
+                                            Data="@AircraftData.AircraftCategoryList"
                                             Name="CategoryId" ValueProperty="Id" AllowClear="true" Change=@(args => OnCategoryDropDownValueChange(args))>
                             </RadzenDropDown>
                             <RadzenRequiredValidator DefaultValue="0" Component="CategoryId" Text="Category is required" Popup="@isPopup" Style="position: relative" />
@@ -137,7 +137,7 @@
                             <div class="col-md-4">
                                 <RadzenDropDown @bind-Value="@ClassId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Class"
-                                            Data="@airCraftData.AircraftClassList"
+                                            Data="@AircraftData.AircraftClassList"
                                             Name="ClassId" ValueProperty="Id" AllowClear="true"
                                             Change=@(args => OnClassDropDownValueChange(args))>
                                 </RadzenDropDown>
@@ -154,7 +154,7 @@
                             <div class="col-md-4">
                                 <RadzenDropDown @bind-Value="@FlightSimulatorId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Flight  Simulator"
-                                            Data="@airCraftData.FlightSimulatorClassList"
+                                            Data="@AircraftData.FlightSimulatorClassList"
                                             Name="FlightSimulatorId" ValueProperty="Id" AllowClear="true">
                                 </RadzenDropDown>
                                 <RadzenRequiredValidator DefaultValue="0" Component="FlightSimulatorId" Text="Flight Simulator is required" Popup="@isPopup" Style="position: relative" />
@@ -185,7 +185,7 @@
                         </div>
                         <div class="col-md-4">
 
-                            <RadzenSwitch @bind-Value=@airCraftData.TrackOilandFuel />
+                            <RadzenSwitch @bind-Value=@AircraftData.TrackOilandFuel />
 
                         </div>
 
@@ -193,7 +193,7 @@
                             <RadzenLabel Text="Is Identity Mismatch" />
                         </div>
                         <div class="col-md-4">
-                            <RadzenSwitch @bind-Value=@airCraftData.IsIdentifyMeterMismatch />
+                            <RadzenSwitch @bind-Value=@AircraftData.IsIdentifyMeterMismatch />
 
                         </div>
                     </div>
@@ -208,7 +208,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <RadzenSwitch @bind-Value=@airCraftData.IsEngineshavePropellers />
+                                <RadzenSwitch @bind-Value=@AircraftData.IsEngineshavePropellers />
                             </div>
                         }
 
@@ -219,7 +219,7 @@
                             </div>
 
                             <div class="col-md-4">
-                                <RadzenSwitch @bind-Value=@airCraftData.IsEnginesareTurbines />
+                                <RadzenSwitch @bind-Value=@AircraftData.IsEnginesareTurbines />
                             </div>
                         }
 
@@ -254,7 +254,7 @@
 
                 <h3 class="mt-4">2. Enter Equipment Times</h3>
 
-                   <AircraftEquipmentTimes AircraftData=@airCraftData>
+                   <AircraftEquipmentTimes AircraftData=@AircraftData>
 
                    </AircraftEquipmentTimes>
 

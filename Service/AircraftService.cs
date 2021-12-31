@@ -186,7 +186,7 @@ namespace Service
             airCraftVM.Id = airCraft.Id;
             airCraftVM.TailNo = airCraft.TailNo;
             airCraftVM.ImageName = airCraft.ImageName;
-            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix} {airCraftVM.ImageName}";
+            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
 
             airCraftVM.Year = airCraft.Year;
             airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;

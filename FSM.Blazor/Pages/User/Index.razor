@@ -14,7 +14,7 @@
 <div class="row mb-4">
     <div class="col">
        <h2 style="float:left">Manage Users Details</h2>
-        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UseCreateDialog(0, "Create")) />
+        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UserCreateDialog(0, "Create")) />
     </div>
 </div>
 
@@ -81,7 +81,7 @@
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="UserDataVM" Property="Id" Title="Actions">
             <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => UseCreateDialog(data.Id, "Edit")) />
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => UserCreateDialog(data.Id, "Edit")) />
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
                               Click=@(args => OpenDeleteDialog(data)) />
             </Template>

@@ -57,7 +57,7 @@ namespace FSM.Blazor.Pages.User
             isLoading = false;
         }
 
-        async Task UseCreateDialog(int id, string title)
+        async Task UserCreateDialog(int id, string title)
         {
             UserVM userData = await UserService.GetDetailsAsync(_httpClient, id);
 

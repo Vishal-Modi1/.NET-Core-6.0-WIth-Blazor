@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.Aircraft;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
@@ -74,9 +75,31 @@ namespace FSM.Blazor.Extensions
             return datatableParams;
         }
 
-        public static UserRolePermissionDatatableParams Create(this UserRolePermissionDatatableParams aircraftDatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
+        public static UserRolePermissionDatatableParams Create(this UserRolePermissionDatatableParams userRolePermissionDatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
         {
             UserRolePermissionDatatableParams datatableParams = new UserRolePermissionDatatableParams();
+
+            datatableParams.Length = args.Top.GetValueOrDefault();
+            datatableParams.Start = args.Skip.GetValueOrDefault() + 1;
+
+            if (string.IsNullOrWhiteSpace(args.OrderBy))
+            {
+                datatableParams.SortOrderColumn = defaultSearchOrderColumn;
+                datatableParams.OrderType = "asc";
+
+            }
+            else
+            {
+                datatableParams.SortOrderColumn = args.OrderBy.Split(new char[] { ' ' })[0];
+                datatableParams.OrderType = args.OrderBy.Split(new char[] { ' ' })[1];
+            }
+
+            return datatableParams;
+        }
+
+        public static AircraftEquipmentDatatableParams Create(this AircraftEquipmentDatatableParams equipmentdatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
+        {
+            AircraftEquipmentDatatableParams datatableParams = new AircraftEquipmentDatatableParams();
 
             datatableParams.Length = args.Top.GetValueOrDefault();
             datatableParams.Start = args.Skip.GetValueOrDefault() + 1;

@@ -47,6 +47,7 @@ namespace Repository
 
                 if (existingAirCraft != null)
                 {
+                    existingAirCraft.CompanyId = airCraft.CompanyId;
                     existingAirCraft.TailNo = airCraft.TailNo;
                     existingAirCraft.Year = airCraft.Year;
                     existingAirCraft.AircraftMakeId = airCraft.AircraftMakeId;

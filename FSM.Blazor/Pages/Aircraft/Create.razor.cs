@@ -13,7 +13,7 @@ namespace FSM.Blazor.Pages.Aircraft
     public partial class Create
     {
         [Parameter]
-        public AirCraftVM airCraftData { get; set; }
+        public AirCraftVM AircraftData { get; set; }
 
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
@@ -52,11 +52,22 @@ namespace FSM.Blazor.Pages.Aircraft
             }
 
             NoofEnginesId = 1;
-            airCraftData.TrackOilandFuel = true;
-            airCraftData.IsEnginesareTurbines = true;
-            airCraftData.IsEngineshavePropellers = true;
-            airCraftData.IsIdentifyMeterMismatch = true;
+            AircraftData.TrackOilandFuel = true;
+            AircraftData.IsEnginesareTurbines = true;
+            AircraftData.IsEngineshavePropellers = true;
+            AircraftData.IsIdentifyMeterMismatch = true;
 
+            CompanyId = AircraftData.CompanyId.GetValueOrDefault();
+            Year = Convert.ToInt16(AircraftData.Year);
+            MakeId = AircraftData.AircraftMakeId;
+            ModelId = AircraftData.AircraftModelId;
+            CategoryId = AircraftData.AircraftCategoryId;
+            ClassId = AircraftData.AircraftClassId.GetValueOrDefault();
+            FlightSimulatorId = AircraftData.FlightSimulatorClassId.GetValueOrDefault();
+            NoofEnginesId = AircraftData.NoofEngines;
+            NoofPropellersId = AircraftData.NoofPropellers.GetValueOrDefault();
+
+            OnCategoryDropDownValueChange(CategoryId);
             return base.OnInitializedAsync();
         }
 
@@ -128,8 +139,10 @@ namespace FSM.Blazor.Pages.Aircraft
                 isDisplayNoofPropellersDropDown = true;
                 isDisplayEnginesHavePropellers = true;
 
-                ClassId = 0; NoofEnginesId = 0;
-
+                if (AircraftData.Id == 0)
+                {
+                    ClassId = 0; NoofEnginesId = 0;
+                }
             }
             else
             {
@@ -186,8 +199,7 @@ namespace FSM.Blazor.Pages.Aircraft
             steps.SelectedIndex = 0;
 
         }
-
-
+        
         private bool ManageIsAircraftExistResponse(CurrentResponse response, string summary)
         {
             NotificationMessage message;

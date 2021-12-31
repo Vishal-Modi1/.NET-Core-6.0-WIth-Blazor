@@ -1,6 +1,7 @@
 using Configuration;
 using FSM.Blazor.Data;
 using FSM.Blazor.Data.Aircraft;
+using FSM.Blazor.Data.Aircraft.AircraftEquipment;
 using FSM.Blazor.Data.Common;
 using FSM.Blazor.Data.Company;
 using FSM.Blazor.Data.InstructorType;
@@ -27,6 +28,7 @@ builder.Services.AddScoped<CompanyService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<UserRolePermissionService>();
 builder.Services.AddScoped<AircraftService>();
+builder.Services.AddScoped<AircraftEquipmentService>();
 
 // Blazor radzen service dependencies
 builder.Services.AddScoped<DialogService>();

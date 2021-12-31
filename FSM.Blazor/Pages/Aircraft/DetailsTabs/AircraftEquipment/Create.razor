@@ -1,0 +1,86 @@
+﻿@using FSM.Blazor.Data.Aircraft.AircraftEquipment;
+@using DataModels.VM.AircraftEquipment;
+
+@inject AircraftEquipmentService AircraftEquipmentService
+@inject DialogService DialogService
+
+<RadzenTemplateForm Data="@AirCraftEquipmentsVM" Submit="@((AirCraftEquipmentsVM args) => {  Submit(args); })">
+
+    <input type="hidden" value="@AirCraftEquipmentsVM.Id" name="Id" />
+
+    <RadzenFieldset Text="Basic Info">
+
+        <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Status" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Status" Data=@AirCraftEquipmentsVM.statusList TextProperty="Name"
+                                ValueProperty="Id" Name="RoleId" @bind-Value="@(AirCraftEquipmentsVM.StatusId)" />
+
+                <RadzenRequiredValidator Component="StatusId" Text="Please select status" Popup="@isPopup" Style="position: relative" />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Item" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="Item" @bind-Value="@AirCraftEquipmentsVM.Item" />
+                <RadzenRequiredValidator Component="Item" Text="Item is required" Popup="@isPopup" Style="position: relative" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Classification" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Status" Data=@AirCraftEquipmentsVM.classificationList TextProperty="Name"
+                                ValueProperty="Id" Name="RoleId" @bind-Value="@(AirCraftEquipmentsVM.ClassificationId)" />
+
+                <RadzenRequiredValidator Component="ClassificationId" Text="Please select classification" Popup="@isPopup" Style="position: relative" />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Make" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="Make" @bind-Value="@AirCraftEquipmentsVM.Make" />
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Model" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="Model" @bind-Value="@AirCraftEquipmentsVM.Model" />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Manufacturer" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="Model" @bind-Value="@AirCraftEquipmentsVM.Manufacturer" />
+            </div>
+
+        </div>
+
+      
+
+
+    </RadzenFieldset>
+
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" Style="width: 120px" />
+            <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+        </div>
+    </div>
+
+</RadzenTemplateForm>

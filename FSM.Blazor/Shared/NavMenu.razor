@@ -23,7 +23,7 @@
                     <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
                 @foreach (var category in menuItems)
                 {
-                    <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@category.Controller" Icon="@category.FavIconStyle">
+                    <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@("/" + category.Controller)" Icon="@category.FavIconStyle">
                         @* @if (category.Children != null)
                             {
                             @foreach (var example in category.Children)

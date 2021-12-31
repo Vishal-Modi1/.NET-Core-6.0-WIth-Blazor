@@ -71,5 +71,10 @@ namespace FSM.Blazor.Pages.Aircraft
 
             await grid.Reload();
         }
+
+        async Task OpenDetailPage(int aircraftId)
+        {
+            NavManager.NavigateTo("AircraftDetails/" + aircraftId);
+        }
     }
 }

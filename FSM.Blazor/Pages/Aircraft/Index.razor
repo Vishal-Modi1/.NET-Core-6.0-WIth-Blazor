@@ -7,6 +7,7 @@
 
 @inject AircraftService AircraftService
 @inject Radzen.DialogService DialogService
+@inject NavigationManager NavManager
 
 @page "/Aircraft"
 
@@ -52,7 +53,7 @@
                 PageChanged="@PageChanged" LoadData="@LoadData">
 
     <Template Context="airCraftVM">
-        <RadzenCard Style="width:300px;">
+        <RadzenCard Style="width:300px;cursor:pointer" @onclick="@((args) => OpenDetailPage(airCraftVM.Id))">
             <div class="d-flex flex-row align-items-center">
                 <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(airCraftVM.ImagePath)" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
                 <div>
