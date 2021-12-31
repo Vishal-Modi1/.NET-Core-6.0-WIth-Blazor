@@ -7,49 +7,55 @@
 
 @if (AircraftData != null)
 {
-    <div class="row my-5">
-        <div class="col-lg-6 col-xl-4 offset-lg-3 offset-xl-4">
-
-            <RadzenCard class="m-3">
-
-                <div class="d-flex flex-row">
-                    <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(AircraftData.ImagePath)" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
-                    <div>
-                        <div>Tail No</div>
-                        <b>@AircraftData.TailNo</b>
-                        <div class="mt-3">Company</div>
-                        <b>@CompanyName</b>
-                    </div>
-                </div>
-            </RadzenCard>
-            <RadzenCard class="m-3">
-                <h3 class="h5">Detail Information</h3>
+    <div class="row my-2">
+        <div class="col-12">
+            <RadzenCard>
                 <div class="row">
-                    <div class="col-md-4">
-                        <div>Category</div>
-                        <b>@(AircraftData.AircraftCategoryList.Where(p=>p.Id == AircraftData.AircraftCategoryId).FirstOrDefault().Name)</b>
-                        <div>Model</div>
-                        <b>@(AircraftData.AircraftModelList.Where(p=>p.Id == AircraftData.AircraftModelId).FirstOrDefault().Name)</b>
-                        <div>Make</div>
-                        <b>@(AircraftData.AircraftMakeList.Where(p=>p.Id == AircraftData.AircraftMakeId).FirstOrDefault().Name)</b>
+                    <div class="col-12 m-1 align-items-right d-flex flex-row-reverse">
+                        <RadzenButton Text="Update Aircraft Details" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit")) />
                     </div>
 
-                    <div class="col-md-8">
-                        <div>Turbines  <b>@(AircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</b></div>
-
-                        <div>Propellers  <b>@(AircraftData.IsEngineshavePropellers == true ? "Available" : "Not Available")</b></div>
-
+                    <div class="col-4">
+                        <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(AircraftData.ImagePath)" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
+                        <div>
+                            <div>Tail No</div>
+                            <b>@AircraftData.TailNo</b>
+                            <div class="mt-2">Company</div>
+                            <b>@CompanyName</b>
+                        </div>
                     </div>
-
+                    <div class="col-4">
+                        <h3 class="h5">Detail Information</h3>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>Category</div>
+                                <b>@(AircraftData.AircraftCategoryList.Where(p=>p.Id == AircraftData.AircraftCategoryId).FirstOrDefault().Name)</b>
+                                <div class="mt-2">Model</div>
+                                <b>@(AircraftData.AircraftModelList.Where(p=>p.Id == AircraftData.AircraftModelId).FirstOrDefault().Name)</b>
+                                <div class="mt-2">Make</div>
+                                <b>@(AircraftData.AircraftMakeList.Where(p=>p.Id == AircraftData.AircraftMakeId).FirstOrDefault().Name)</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div>Turbines</div>
+                                <b>@(AircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</b>
+                                <div class="mt-2">Propellers</div>
+                                <b>@(AircraftData.IsEngineshavePropellers == true ? "Available" : "Not Available")</b>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <RadzenButton Text="Update Aircraft Details" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit")) />
             </RadzenCard>
-
         </div>
     </div>
 
     <div class="row">
-        <FSM.Blazor.Pages.Aircraft.DetailsTabs.Index AircraftData=@AircraftData></FSM.Blazor.Pages.Aircraft.DetailsTabs.Index>
+        <div class="col-12">
+            <FSM.Blazor.Pages.Aircraft.DetailsTabs.Index AircraftData=@AircraftData></FSM.Blazor.Pages.Aircraft.DetailsTabs.Index>
+        </div>
     </div>
 }
 
