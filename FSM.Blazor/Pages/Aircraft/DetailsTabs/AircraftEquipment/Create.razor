@@ -71,7 +71,77 @@
 
         </div>
 
-      
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Part Number" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="PartNumber" @bind-Value="@AirCraftEquipmentsVM.PartNumber" Placeholder="Please enter part number" />
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Serial Number" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox style="width: 100%;" Name="SerialNumber" @bind-Value="@AirCraftEquipmentsVM.SerialNumber" Placeholder="Please enter serial number" />
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Aircraft TT Install" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox Name="AircraftTTInstall" style="width: 100%;" @bind-Value=@AirCraftEquipmentsVM.AircraftTTInstall.ToString() Placeholder="Please enter hours" />
+
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenTextBox Text="Part TT Install" />
+            </div>
+            <div class="col-md-4">
+                <RadzenTextBox Name="PartTTInstall"  style="width: 100%;" @bind-Value=@AirCraftEquipmentsVM.PartTTInstall.ToString() Placeholder="Please enter hours" />
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Manufacturer Date" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDatePicker Name="ManufacturerDate" @bind-Value=@AirCraftEquipmentsVM.ManufacturerDate Placeholder="Please select date"
+                                  DateFormat="d" Class="w-100" />
+
+            </div>
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Log Entry Date" />
+            </div>
+            <div class="col-md-4">
+                <RadzenDatePicker  Name="LogEntryDate" @bind-Value=@AirCraftEquipmentsVM.LogEntryDate Placeholder="Please select date"
+                                  DateFormat="d" Class="w-100" />
+            </div>
+
+        </div>
+
+        
+        <div class="row">
+
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Notes" />
+            </div>
+            <div class="col-md-4">
+                 <RadzenTextArea Name="Notes" @bind-Value=@AirCraftEquipmentsVM.Notes Class="w-100" />
+
+            </div>
+
+
+        </div>
 
 
     </RadzenFieldset>

@@ -1,29 +1,18 @@
-﻿@namespace FSM.Blazor.Pages.Account
+﻿@page "/Login"
 @layout EmptyLayout
+@namespace FSM.Blazor.Pages.Account
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRunTime
 
-@page "/Login"
-
-<RadzenExample Name="Login">
-
-    <div class="row d-flex px-3">
-
-        <div class="col-xl-4 p-3">
-            <RadzenCard>
-                <h2 class="mb-4">Login</h2>
-                <RadzenTemplateForm Data=@("LoginWithRegisterAndReset")>
-                    <RadzenLogin Login=@(args => OnLoginAsync(args, "Login with register and password reset"))
-                                 ResetPassword=@(args => OnResetPassword(args, "Login with register and password reset"))
-                                 AllowRegister="false" />
-                </RadzenTemplateForm>
-            </RadzenCard>
-        </div>
-
+<div class="row vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-lg-6 col-xl-4 ">
+        <RadzenCard class="m-3">
+            <h2 class="mb-4">Login</h2>
+            <RadzenTemplateForm Data=@("LoginWithRegisterAndReset")>
+                <RadzenLogin Login=@(args => OnLoginAsync(args, "Login with register and password reset"))
+                             ResetPassword=@(args => OnResetPassword(args, "Login with register and password reset"))
+                             AllowRegister="false" />
+            </RadzenTemplateForm>
+        </RadzenCard>
     </div>
-</RadzenExample>
-
-@code {
-
-
-}
+</div>

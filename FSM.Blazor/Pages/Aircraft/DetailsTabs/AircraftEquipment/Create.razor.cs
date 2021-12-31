@@ -50,5 +50,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 NotificationService.Notify(message);
             }
         }
+
+
     }
 }
