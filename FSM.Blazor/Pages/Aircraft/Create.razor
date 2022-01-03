@@ -18,7 +18,7 @@
 
                 <RadzenFieldset Text="Basic Info">
 
-                    <div class="row">
+                    <div class="row mt-2 mb-2">
                         <div class="col-md-2 align-items-center d-flex">
                             <RadzenLabel Text="Company" />
                         </div>
@@ -50,7 +50,7 @@
                     </div>
 
 
-                    <div class="row">
+                    <div class="row mt-2 mb-2">
 
                         <div class="col-md-2 align-items-center d-flex">
                             <RadzenLabel Text="Year" />
@@ -64,18 +64,6 @@
                             </RadzenDropDown>
 
                         </div>
-
-                        <div class="col-md-2 align-items-center d-flex">
-                            <RadzenLabel Text="Aircraft Image" />
-                        </div>
-                        <div class="col-md-4">
-                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath TValue="string" Class="w-100"
-                                             Change=@(args => OnAircraftImageChange(args, "FileInput")) Error=@(args => OnAircraftImageError(args, "FileInput")) />
-
-                        </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-2 align-items-center d-flex">
                             <RadzenLabel Text="Make" />
                         </div>
@@ -89,6 +77,11 @@
                             <RadzenRequiredValidator DefaultValue="0" Component="MakeId" Text="Make is required" Popup="@isPopup" Style="position: relative" />
 
                         </div>
+                        
+                    </div>
+
+                    <div class="row mt-2 mb-2">
+                        
 
                         <div class="col-md-2 align-items-center d-flex">
                             <RadzenLabel Text="Model" />
@@ -110,11 +103,11 @@
                             <RadzenBadge BadgeStyle="BadgeStyle.Danger" Text="Please update below information carefully it may affect loses of your old equipment information!" Class="w-100" />
                         </div>
                     }
-                    <div class="row">
-                        <div class="col-md-2 align-items-center d-flex">
+                    <div class="row ">
+                        <div class="col-md-2 mt-2 mb-2 align-items-center d-flex">
                             <RadzenLabel Text="Category" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 mt-2 mb-2">
 
                             <RadzenDropDown @bind-Value="@CategoryId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Category"
@@ -128,10 +121,10 @@
                         @if (isDisplayClassDropDown)
                         {
 
-                            <div class="col-md-2 align-items-center d-flex">
+                            <div class="col-md-2  mt-2 mb-2 align-items-center d-flex">
                                 <RadzenLabel Text="Class" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4  mt-2 mb-2">
                                 <RadzenDropDown @bind-Value="@ClassId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Class"
                                             Data="@AircraftData.AircraftClassList"
@@ -145,10 +138,10 @@
 
                         @if (isDisplayFlightSimulatorDropDown)
                         {
-                            <div class="col-md-2 align-items-center d-flex">
+                            <div class="col-md-2  mt-2 mb-2 align-items-center d-flex">
                                 <RadzenLabel Text="Flight Simulator" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4  mt-2 mb-2">
                                 <RadzenDropDown @bind-Value="@FlightSimulatorId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Flight  Simulator"
                                             Data="@AircraftData.FlightSimulatorClassList"
@@ -161,10 +154,10 @@
 
                         @if (isDisplayNoofEnginesDropDown)
                         {
-                            <div class="col-md-2 align-items-center d-flex">
+                            <div class="col-md-2   mt-2 mb-2 align-items-center d-flex">
                                 <RadzenLabel Text="Engines" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4  mt-2 mb-2">
                                 <RadzenDropDown @bind-Value="@NoofEnginesId" Style="width:100%;" TValue="int"
                                             TextProperty="Name"
                                             Data="@NoofEnginesDropDown"
@@ -173,59 +166,61 @@
 
                             </div>
                         }
-
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-2 align-items-center d-flex">
+                    <div class="row mt-2 mb-2">
+                        <div class="col-md-3 align-items-center d-flex">
                             <RadzenLabel Text="Track oil and Fuel" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
 
                             <RadzenSwitch @bind-Value=@AircraftData.TrackOilandFuel />
 
                         </div>
 
-                        <div class="col-md-2 align-items-center d-flex">
+                        <div class="col-md-3 align-items-center d-flex">
                             <RadzenLabel Text="Is Identity Mismatch" />
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <RadzenSwitch @bind-Value=@AircraftData.IsIdentifyMeterMismatch />
 
                         </div>
                     </div>
 
 
-                    <div class="row">
+                    <div class="row mt-2 mb-2">
 
                         @if (isDisplayEnginesHavePropellers)
                         {
-                            <div class="col-md-2 align-items-center d-flex">
+                            <div class="col-md-3 align-items-center d-flex">
                                 <RadzenLabel Text="Engines have Propellers" />
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <RadzenSwitch @bind-Value=@AircraftData.IsEngineshavePropellers />
                             </div>
                         }
 
                         @if (isDisplayEnginesareTurbines)
                         {
-                            <div class="col-md-2 align-items-center d-flex">
+                            <div class="col-md-3 align-items-center d-flex">
                                 <RadzenLabel Text="Engines are Turbines" />
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <RadzenSwitch @bind-Value=@AircraftData.IsEnginesareTurbines />
                             </div>
                         }
 
-                        @if (isDisplayNoofPropellersDropDown)
+                       
+                    </div>
+                    <div class="row ">
+                         @if (isDisplayNoofPropellersDropDown)
                         {
-                            <div class="col-md-2 align-items-center d-flex">
+                            <div class="col-md-2 mt-2 mb-2 align-items-top d-flex">
                                 <RadzenLabel Text="Propellers" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-2 mb-2">
                                 <RadzenDropDown @bind-Value="@NoofPropellersId" Style="width:100%;" TValue="int"
                                             TextProperty="Name"
                                             Data="@NoofPropellersDropDown"
@@ -233,7 +228,14 @@
                                 </RadzenDropDown>
                             </div>
                         }
+                        <div class="col-md-2 mt-2 mb-2 align-items-top d-flex">
+                            <RadzenLabel Text="Aircraft Image" />
+                        </div>
+                        <div class="col-md-4 mt-2 mb-2">
+                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath TValue="string" Class="w-100"
+                                             Change=@(args => OnAircraftImageChange(args, "FileInput")) Error=@(args => OnAircraftImageError(args, "FileInput")) />
 
+                        </div>
                     </div>
 
                 </RadzenFieldset>
