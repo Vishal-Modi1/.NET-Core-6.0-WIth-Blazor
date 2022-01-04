@@ -7,11 +7,11 @@
 
 <RadzenSidebar @bind-Expanded="Expanded" Style=" top: 51px; width: 250px;transform: translateX(0px);">
     <ChildContent>
-        <div style="padding: 1rem">
+        @*  <div style="padding: 1rem">
             <RadzenTextBox Placeholder="Find component ..." @oninput="@FilterPanelMenu" type="search" style="width: 100%" />
 
-        </div>
-        <RadzenPanelMenu>
+            </div>*@
+        <RadzenPanelMenu Style="margin-top:8px;">
 
             @if (menuItems == null)
             {
@@ -20,33 +20,14 @@
             else
 
             {
-                    <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
                 @foreach (var category in menuItems)
                 {
                     <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@("/" + category.Controller)" Icon="@category.FavIconStyle">
-                        @* @if (category.Children != null)
-                            {
-                            @foreach (var example in category.Children)
-                            {
-                            if (example.Children != null)
-                            {
-                            <RadzenPanelMenuItem Text="@example.Name" @bind-Expanded="@example.Expanded" Icon="@example.Icon">
-                            @foreach (var child in example.Children)
-                            {
-                            <RadzenPanelMenuItem Text="@child.Name" Path="@child.Path" />
-                            }
-                            </RadzenPanelMenuItem>
-
-                            }
-                            else
-                            {
-                            <RadzenPanelMenuItem Text="@example.Name" Path="@example.Path" Icon="@example.Icon" />
-                            }
-                            }*@
                     </RadzenPanelMenuItem>
                 }
 
-                 <RadzenPanelMenuItem Text="Logout" Path="/Logout" Icon="open_in_new"></RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Log Out" Path="/Logout" Icon="open_in_new"></RadzenPanelMenuItem>
             }
 
         </RadzenPanelMenu>

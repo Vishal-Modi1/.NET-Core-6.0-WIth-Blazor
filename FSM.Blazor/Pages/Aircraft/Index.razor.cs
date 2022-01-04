@@ -30,9 +30,10 @@ namespace FSM.Blazor.Pages.Aircraft
         string searchText;
 
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
-        int pageSize = 6;
         int count;
         List<AircraftDataVM> airCraftsVM;
+        int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
+        IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
 
         protected override async Task OnInitializedAsync()
         {
@@ -54,6 +55,7 @@ namespace FSM.Blazor.Pages.Aircraft
             datatableParams.CompanyId = CompanyId;
             datatableParams.SearchText = searchText;
             datatableParams.IsActive = true;
+            pageSize = datatableParams.Length;
 
             airCraftsVM = await AircraftService.ListAsync(_httpClient, datatableParams);
             count = airCraftsVM.Count() > 0 ? airCraftsVM[0].TotalRecords : 0;
@@ -63,7 +65,6 @@ namespace FSM.Blazor.Pages.Aircraft
         async Task AircraftCreateDialog(int id, string title)
         {
             AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
-
 
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "aircraftData", aircraftData } },

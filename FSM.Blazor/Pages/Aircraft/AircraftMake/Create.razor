@@ -1,8 +1,8 @@
-﻿@using DataModels.VM.InstructorType
-@using FSM.Blazor.Data.InstructorType
+﻿@using DE = DataModels.Entities
+@using FSM.Blazor.Data.AircraftMake
 
 @inject Radzen.DialogService DialogService
-@inject InstructorTypeService InstructorTypeService
+@inject AircraftMakeService AircraftMakeService
 
 <style>
     form .row {
@@ -10,9 +10,9 @@
     }
 </style>
 
-<RadzenTemplateForm Data="@instructorTypeData" Submit="@((InstructorTypeVM args) => {  Submit(args); })">
+<RadzenTemplateForm Data="@aircraftMake" Submit="@((DE.AircraftMake args) => {  Submit(); })">
 
-    <input type="hidden" value="@instructorTypeData.Id" name="Id" />
+    <input type="hidden" value="@aircraftMake.Id" name="Id" />
 
     <RadzenFieldset Text="Purchase Info">
 
@@ -21,8 +21,8 @@
                 <RadzenLabel Text="Name" />
             </div>
             <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Placeholder="Please enter name" Name="Name" @bind-Value="@instructorTypeData.Name" />
-                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative"/>
+                <RadzenTextBox style="width: 100%;" Placeholder="Please enter make" Name="Make" @bind-Value="@aircraftMake.Name" />
+                <RadzenRequiredValidator Component="Make" Text="Make is required" Popup="@isPopup" Style="position: relative"/>
             </div>
         </div>
 

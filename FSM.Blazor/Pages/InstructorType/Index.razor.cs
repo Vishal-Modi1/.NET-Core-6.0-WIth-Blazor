@@ -24,12 +24,17 @@ namespace FSM.Blazor.Pages.InstructorType
         int count;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         bool isLoading;
+        int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
+        IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+        string searchText;
 
         async Task LoadData(LoadDataArgs args)
         {
             isLoading = true;
 
             DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
+            pageSize = datatableParams.Length;
+            datatableParams.SearchText = searchText;
 
             data = await InstructorTypeService.ListAsync(_httpClient,datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;

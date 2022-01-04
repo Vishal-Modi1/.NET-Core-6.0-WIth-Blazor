@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-md-4">
         <RadzenDropDown @bind-Value="@RoleId" Style="width:100%; margin: 8px 4px;" TValue="int"
-                        @ref="roleFilter" TextProperty="Name" Placeholder="Select Role"
+                        @ref="roleFilter" TextProperty="Name"  Placeholder="Select Role" 
                         Data="@RoleFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="RoleId" ValueProperty="Id" AllowClear="true">
         </RadzenDropDown>
@@ -31,7 +31,7 @@
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
-                        @ref="companyFilter" TextProperty="Name" Placeholder="Select User Role"
+                        @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
                         Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
             </RadzenDropDown>
@@ -40,17 +40,17 @@
 
     <div class="col-md-4" style="padding-top:0.5%">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
-                       Placeholder="Search Text" @bind-Value="@searchText" />
+                       Placeholder="Search User" @bind-Value="@searchText"  />
     </div>
 
 </div>
 
 <RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                 FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
-                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                PageSize="@pageSize" ShowPagingSummary="true" 
                 AllowSorting="true" Data="@data" TItem="UserDataVM"
-                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
-                Count="@count" LoadData="@LoadData" ShowPagingSummary="true" 
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" 
                 PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 

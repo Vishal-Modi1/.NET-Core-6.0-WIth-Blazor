@@ -1,28 +1,27 @@
 ﻿using DataModels.VM.Common;
-using DataModels.VM.InstructorType;
+using DE = DataModels.Entities;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
 
 
-namespace FSM.Blazor.Pages.InstructorType
+namespace FSM.Blazor.Pages.Aircraft.AircraftMake
 {
     public partial class Create
     {
-        [Parameter]
-        public InstructorTypeVM instructorTypeData { get; set; }
-
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        DE.AircraftMake aircraftMake = new DE.AircraftMake();
+
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
-        public async Task Submit(InstructorTypeVM instructorTypeData)
+        public async Task Submit()
         {
-            CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(_httpClient, instructorTypeData);
+            CurrentResponse response = await AircraftMakeService.SaveandUpdateAsync(_httpClient, aircraftMake);
 
             NotificationMessage message;
 
@@ -34,12 +33,12 @@ namespace FSM.Blazor.Pages.InstructorType
             else if (((int)response.Status) == 200)
             {
                 DialogService.Close(true);
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "InstructorType Details", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Make", response.Message);
                 NotificationService.Notify(message);
             }
             else
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "InstructorType Details", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Make", response.Message);
                 NotificationService.Notify(message);
             }
         }

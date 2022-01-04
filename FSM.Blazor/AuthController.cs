@@ -77,6 +77,7 @@ namespace FSM.Blazor
                 var userClaims = new List<Claim>()
              {
                   new Claim(ClaimTypes.Name, loginResponse.FirstName),
+                  new Claim(CustomClaimTypes.FullName, loginResponse.FirstName + " " + loginResponse.LastName),
                   new Claim(ClaimTypes.Email, loginResponse.Email),
                   new Claim(CustomClaimTypes.AccessToken, loginResponse.AccessToken),
                   new Claim(CustomClaimTypes.UserId, loginResponse.Id.ToString()),

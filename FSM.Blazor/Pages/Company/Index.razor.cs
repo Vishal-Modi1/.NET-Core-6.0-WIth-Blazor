@@ -23,13 +23,19 @@ namespace FSM.Blazor.Pages.Company
         IList<CompanyVM> data;
         int count;
         bool isLoading;
+        string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
+        int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
+        IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
 
         async Task LoadData(LoadDataArgs args)
         {
             isLoading = true;
 
             DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
+            
+            datatableParams.SearchText = searchText;
+            pageSize = datatableParams.Length;
 
             data = await CompanyService.ListAsync(_httpClient,datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;

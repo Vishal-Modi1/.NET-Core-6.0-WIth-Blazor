@@ -77,7 +77,7 @@ namespace Configuration
             get => MailSettingConfig.Instance;
         }
 
-        public IEnumerable<int> BlazorGridPagesizeOptions = new int[] { 10, 20, 30 };
+        public IEnumerable<int> BlazorGridPagesizeOptions = new int[] { 10, 20, 30, 50, 100 };
 
         public int BlazorGridDefaultPagesize = 10;
 

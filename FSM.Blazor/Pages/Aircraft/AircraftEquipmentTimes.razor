@@ -14,6 +14,7 @@
         </div>
     </div>
 
+    @{ engineIndex = 0;}
     @for (int engineNo = 1; engineNo <= AircraftData.NoofEngines; engineNo++)
     {
         int engineIndexValue = engineNo;
@@ -30,6 +31,7 @@
         </div>
     }
 
+    @{propellerIndex = 0;}
     @for (int proppellerNo = AircraftData.NoofEngines + 1; proppellerNo < (AircraftData.NoofPropellers + AircraftData.NoofEngines + 1); proppellerNo++)
     {
         int proppellerIndexValue = proppellerNo;

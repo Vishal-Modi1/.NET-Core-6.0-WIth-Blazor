@@ -1,17 +1,21 @@
 ﻿@using DataModels.VM.Aircraft
 @using FSM.Blazor.Data.Aircraft
+@using FSM.Blazor.Data.AircraftMake
+@using FSM.Blazor.Data.AircraftModel
 @using FSM.Blazor.Utilities;
 
-@inject Radzen.DialogService dialogService
 @inject AircraftService AircraftService
+@inject AircraftMakeService AircraftMakeService
+@inject AircraftModelService AircraftModelService
+@inject Radzen.DialogService DialogService
 @inject NotificationService NotificationService
 
 <RadzenTemplateForm @ref=@form Data="@AircraftData" Submit="@((AirCraftVM args) => {  Submit(args); })">
 
-        <RadzenSteps @ref=@steps ShowStepsButtons="false">
-            <Steps>
-                <RadzenStepsItem Text="Basic Details">
-                    <h3 class="mt-4">1. Enter Aircraft Details</h3>
+    <RadzenSteps @ref=@steps ShowStepsButtons="false">
+        <Steps>
+            <RadzenStepsItem Text="Basic Details">
+                <h3 class="mt-4">1. Enter Aircraft Details</h3>
 
 
                 <input type="hidden" value="@AircraftData.Id" name="Id" />
@@ -71,17 +75,34 @@
 
                             <RadzenDropDown @bind-Value="@MakeId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Make"
-                                            Data="@AircraftData.AircraftMakeList"
+                                            Data="@AircraftData.AircraftMakeList" Change="@(args => OnMakeValueChanged(args))"
                                             Name="MakeId" ValueProperty="Id" AllowClear="true">
+
+                                <Template Context="value">
+                                    @{
+                                        if (value.Name != "Add New ++")
+                                        {
+                                            <span> @value.Name</span>
+
+                                        }
+                                        else
+                                        {
+                                            <span style="font-weight:bold;color:#145fe8"> @value.Name</span>
+                                        }
+                                    }
+
+                                </Template>
+
                             </RadzenDropDown>
+
                             <RadzenRequiredValidator DefaultValue="0" Component="MakeId" Text="Make is required" Popup="@isPopup" Style="position: relative" />
 
                         </div>
-                        
+
                     </div>
 
                     <div class="row mt-2 mb-2">
-                        
+
 
                         <div class="col-md-2 align-items-center d-flex">
                             <RadzenLabel Text="Model" />
@@ -89,8 +110,24 @@
                         <div class="col-md-4">
                             <RadzenDropDown @bind-Value="@ModelId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Model"
-                                            Data="@AircraftData.AircraftModelList"
+                                            Data="@AircraftData.AircraftModelList" Change="@(args => OnModelValueChanged(args))"
                                             Name="ModelId" ValueProperty="Id" AllowClear="true">
+
+                                <Template Context="value">
+                                    @{
+                                        if (value.Name != "Add New ++")
+                                        {
+                                            <span> @value.Name</span>
+
+                                        }
+                                        else
+                                        {
+                                            <span style="font-weight:bold;color:#145fe8"> @value.Name</span>
+                                        }
+                                    }
+
+                                </Template>
+
                             </RadzenDropDown>
                             <RadzenRequiredValidator DefaultValue="0" Component="ModelId" Text="Model is required" Popup="@isPopup" Style="position: relative" />
 
@@ -212,10 +249,10 @@
                             </div>
                         }
 
-                       
+
                     </div>
                     <div class="row ">
-                         @if (isDisplayNoofPropellersDropDown)
+                        @if (isDisplayNoofPropellersDropDown)
                         {
                             <div class="col-md-2 mt-2 mb-2 align-items-top d-flex">
                                 <RadzenLabel Text="Propellers" />
@@ -232,8 +269,8 @@
                             <RadzenLabel Text="Aircraft Image" />
                         </div>
                         <div class="col-md-4 mt-2 mb-2">
-                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath TValue="string" Class="w-100"
-                                             Change=@(args => OnAircraftImageChange(args, "FileInput")) Error=@(args => OnAircraftImageError(args, "FileInput")) />
+                           
+                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath TValue="string" Class="w-100" />
 
                         </div>
                     </div>
@@ -243,30 +280,30 @@
                 <div class="row" style="margin-top:4%">
                     <div class="col-md-12 text-right">
                         <RadzenButton ButtonType="ButtonType.Submit" Text="Next" Style="width: 120px" />
-                        <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                        <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
                     </div>
                 </div>
 
 
-                </RadzenStepsItem>
-                <RadzenStepsItem Text="Equipment Times">
+            </RadzenStepsItem>
+            <RadzenStepsItem Text="Equipment Times">
 
                 <h3 class="mt-4">2. Enter Equipment Times</h3>
 
-                   <AircraftEquipmentTimes AircraftData=@AircraftData>
+                <AircraftEquipmentTimes AircraftData=@AircraftData>
 
-                   </AircraftEquipmentTimes>
+                </AircraftEquipmentTimes>
 
-                   <div class="row" style="margin-top:4%">
+                <div class="row" style="margin-top:4%">
                     <div class="col-md-12 text-right">
                         <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Secondary" Text="Previous" Style="width: 120px" Click=@(args => OpenPreviousTab()) />
                         <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" Style="width: 120px" Class="mr-1" />
                     </div>
                 </div>
 
-                </RadzenStepsItem>
+            </RadzenStepsItem>
 
-            </Steps>
-        </RadzenSteps>
+        </Steps>
+    </RadzenSteps>
 
 </RadzenTemplateForm>

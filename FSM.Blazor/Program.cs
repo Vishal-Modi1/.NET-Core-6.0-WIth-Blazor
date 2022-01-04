@@ -1,13 +1,5 @@
 using Configuration;
-using FSM.Blazor.Data;
-using FSM.Blazor.Data.Account;
-using FSM.Blazor.Data.Aircraft;
-using FSM.Blazor.Data.Aircraft.AircraftEquipment;
-using FSM.Blazor.Data.Common;
-using FSM.Blazor.Data.Company;
-using FSM.Blazor.Data.InstructorType;
-using FSM.Blazor.Data.User;
-using FSM.Blazor.Data.UserRolePermission;
+using FSM.Blazor.CustomServicesExtensions;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Radzen;
@@ -21,16 +13,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-// Backend Services
-builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<MenuService>();
-builder.Services.AddScoped<InstructorTypeService>();
-builder.Services.AddScoped<CompanyService>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<UserRolePermissionService>();
-builder.Services.AddScoped<AircraftService>();
-builder.Services.AddScoped<AircraftEquipmentService>();
-builder.Services.AddScoped<AccountService>();
+// Custom Backend Services
+builder.AddCustomServices();
 
 // Blazor radzen service dependencies
 builder.Services.AddScoped<DialogService>();

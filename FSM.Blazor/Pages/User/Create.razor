@@ -21,7 +21,7 @@
                 <RadzenLabel Text="First Name" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="FirtsName" @bind-Value="@userData.FirstName" />
+                <RadzenTextBox style="width: 100%;" Name="FirtsName" @bind-Value="@userData.FirstName" Placeholder="Please enter first name" />
                 <RadzenRequiredValidator Component="FirtsName" Text="Firt name is required" Popup="@isPopup" Style="position: relative" />
             </div>
 
@@ -29,7 +29,7 @@
                 <RadzenLabel Text="Last Name" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="LastName" @bind-Value="@userData.LastName" />
+                <RadzenTextBox style="width: 100%;" Name="LastName" @bind-Value="@userData.LastName" Placeholder="Please enter last name" />
                 <RadzenRequiredValidator Component="LastName" Text="Last name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <RadzenLabel Text="Email" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" ReadOnly="@(userData.Id > 0)" Name="Email" @bind-Value="@userData.Email" />
+                <RadzenTextBox style="width: 100%;" ReadOnly="@(userData.Id > 0)" Name="Email" @bind-Value="@userData.Email" Placeholder="Please enter email" />
                 <RadzenEmailValidator Component="Email" Text="Please enter valid email address" Popup="@isPopup" Style="position: relative"></RadzenEmailValidator>
                 <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
             </div>
@@ -48,7 +48,7 @@
                 <RadzenLabel Text="Mobile No" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" ShowUpDown="false" TValue="int?" Name="Phone" @bind-Value="@userData.Phone" />
+                <RadzenTextBox style="width: 100%;" ShowUpDown="false" TValue="int?" Name="Phone" @bind-Value="@userData.Phone" Placeholder="Please enter phone no" />
                 <RadzenRegexValidator Component="Phone" Text="Please enter 10 digits no" Pattern="\d{10}" Popup=@isPopup Style="position: relative" />
             </div>
         </div>
@@ -113,7 +113,8 @@
             </div>
             <div class="col-md-4">
 
-                <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowFiltering="true" Class="w-100"
                                 Placeholder="Select Country" Data=@userData.Countries TextProperty="Name"
                                 ValueProperty="Id" Name="CountryId" @bind-Value="@(userData.CountryId)" />
 
@@ -128,7 +129,7 @@
                 <RadzenLabel Text="External Id" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="ExternalId" @bind-Value="@userData.ExternalId" />
+                <RadzenTextBox style="width: 100%;" Name="ExternalId" @bind-Value="@userData.ExternalId" Placeholder="Please enter external id" />
             </div>
 
             <div class="col-md-2 align-items-center d-flex">
