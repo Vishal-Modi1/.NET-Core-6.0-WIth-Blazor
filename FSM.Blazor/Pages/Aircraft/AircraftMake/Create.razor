@@ -1,0 +1,38 @@
+﻿@using DE = DataModels.Entities
+@using FSM.Blazor.Data.AircraftMake
+
+@inject Radzen.DialogService DialogService
+@inject AircraftMakeService AircraftMakeService
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+<RadzenTemplateForm Data="@aircraftMake" Submit="@((DE.AircraftMake args) => {  Submit(); })">
+
+    <input type="hidden" value="@aircraftMake.Id" name="Id" />
+
+    <RadzenFieldset Text="Purchase Info">
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Name" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Placeholder="Please enter make" Name="Make" @bind-Value="@aircraftMake.Name" />
+                <RadzenRequiredValidator Component="Make" Text="Make is required" Popup="@isPopup" Style="position: relative"/>
+            </div>
+        </div>
+
+    </RadzenFieldset>
+
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+            <RadzenButton  Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            <RadzenButton ButtonType="ButtonType.Submit"  Text="Save" Style="width: 120px" />
+        </div>
+    </div>
+
+</RadzenTemplateForm>

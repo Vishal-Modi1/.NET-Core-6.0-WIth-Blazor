@@ -66,7 +66,6 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
 
-
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "aircraftData", aircraftData } },
                   new DialogOptions() { Width = "800px", Height = "580px" });
