@@ -3,9 +3,7 @@
 @using DataModels.Entities;
 
 <RadzenFieldset Text="Aircraft Equipment Times Info">
-
     <div class="row mt-2 mb-2">
-
         <div class="col-md-6 col-12 align-items-center d-flex">
             <RadzenLabel Text=@("Air Frame Hours") />
         </div>
@@ -14,7 +12,6 @@
                            Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(0, args)) />
 
         </div>
-
     </div>
 
     @for (int engineNo = 1; engineNo <= AircraftData.NoofEngines; engineNo++)
@@ -23,17 +20,13 @@
         engineIndex++;
 
         <div class="row mt-2 mb-2">
-
             <div class="col-md-6 col-12 align-items-center d-flex">
                 <RadzenLabel Text=@("Engine " + engineIndex + " Hours") />
             </div>
             <div class="col-md-6 col-12">
-
                 <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[engineNo].Hours.ToString()
                            Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(engineIndexValue, args)) />
-
             </div>
-
         </div>
     }
 
@@ -43,18 +36,13 @@
         propellerIndex++;
 
         <div class="row mt-2 mb-2">
-
             <div class="col-md-6 col-12 align-items-center d-flex">
                 <RadzenLabel Text=@("Propeller " + propellerIndex + " Hours") />
             </div>
             <div class="col-md-6 col-12">
-
                 <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours.ToString()
                            Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(proppellerIndexValue, args)) />
-
             </div>
-
         </div>
     }
-
 </RadzenFieldset>
