@@ -35,7 +35,9 @@ namespace FSM.Blazor.Pages.UserRolePermission
         bool isLoading, isAllow;
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
-
+        int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
+        IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+       
         protected override async Task OnInitializedAsync()
         {
             userrolePermissionFilterVM = await UserRolePermissionService.GetFiltersAsync(_httpClient);
@@ -53,6 +55,7 @@ namespace FSM.Blazor.Pages.UserRolePermission
             datatableParams.CompanyId = CompanyId;
             datatableParams.ModuleId = ModuleId;
             datatableParams.RoleId = RoleId;
+            pageSize = datatableParams.Length;
 
             data = await UserRolePermissionService.ListAsync(_httpClient, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;

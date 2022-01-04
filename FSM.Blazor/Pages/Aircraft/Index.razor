@@ -27,8 +27,8 @@
         Name="RoleId" ValueProperty="Id" AllowClear="true">
 
         </RadzenDropDown>
-        </div>*@
-
+        </div>
+*@
     @if (CurrentUserPermissionManager.IsSuperAdmin())
     {
         <div class="col-md-4">
@@ -42,14 +42,15 @@
 
     <div class="col-md-4" style="padding-top:0.5%">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
-                       Placeholder="Search Text" @bind-Value="@searchText" />
+                       Placeholder="Search Aircraft" @bind-Value="@searchText" />
     </div>
 
 </div>
 <RadzenDataList WrapItems="true" @ref="grid" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
                 ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
-                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
-                PageChanged="@PageChanged" LoadData="@LoadData">
+                PageSize="@pageSize" Count="@count"
+                PageChanged="@PageChanged" LoadData="@LoadData" 
+                PageSizeOptions="@pageSizeOptions">
 
     <Template Context="airCraftVM">
         <RadzenCard Style="width:300px;cursor:pointer" @onclick="@((args) => OpenDetailPage(airCraftVM.Id))">

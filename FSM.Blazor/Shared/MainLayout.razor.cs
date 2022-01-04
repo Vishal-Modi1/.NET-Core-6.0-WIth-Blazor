@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DataModels.Constants;
+using FSM.Blazor.Pages.MyAccount;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Radzen;
 using Radzen.Blazor;
 
 namespace FSM.Blazor.Shared
@@ -9,10 +12,10 @@ namespace FSM.Blazor.Shared
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        RadzenSidebar sidebar0;
-        RadzenBody body0;
         bool sidebarExpanded = true;
         bool bodyExpanded = false;
+        string userFullName = "";
+        string loggedUserId;
 
         dynamic themes = new[]
         {
@@ -41,6 +44,13 @@ namespace FSM.Blazor.Shared
             {
                 NavigationManager.NavigateTo($"/Login");
             }
+
+            userFullName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                               .Select(c => c.Value).SingleOrDefault();
+
+            loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
+                               .Select(c => c.Value).SingleOrDefault();
+
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -57,6 +67,20 @@ namespace FSM.Blazor.Shared
         {
             //ThemeState.CurrentTheme = value.ToString();
             NavigationManager.NavigateTo(NavigationManager.ToAbsoluteUri(NavigationManager.Uri).ToString());
+        }
+
+        async Task OpenChangePasswordDailog()
+        {
+            await DialogService.OpenAsync<ChangePassword>("Change Password",
+                 new Dictionary<string, object>() { { "Id", loggedUserId } },  new DialogOptions() { Width = "500px", Height = "380px" });
+        }
+
+        async Task ManageMenuClickEvent(MenuItemEventArgs eventArgs)
+        {
+            if (eventArgs.Text == "Change Password")
+            {
+               await OpenChangePasswordDailog();
+            }
         }
     }
 }

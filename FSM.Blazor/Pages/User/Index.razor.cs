@@ -34,6 +34,8 @@ namespace FSM.Blazor.Pages.User
         bool isLoading;
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
+        int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
+        IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,7 +52,8 @@ namespace FSM.Blazor.Pages.User
 
             datatableParams.CompanyId = CompanyId;
             datatableParams.SearchText = searchText;
-            datatableParams.RoleId = RoleId;
+            datatableParams.RoleId = RoleId; 
+            pageSize = datatableParams.Length;
 
             data = await UserService.ListAsync(_httpClient, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;

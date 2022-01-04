@@ -48,9 +48,9 @@
 
 <RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                 FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
-                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                PageSize="@pageSize"
                 AllowSorting="true" Data="@data" TItem="UserRolePermissionDataVM"
-                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
+                PageSizeOptions="@pageSizeOptions"
                 Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
                 PagingSummaryFormat="@pagingSummaryFormat" SelectionMode="DataGridSelectionMode.Multiple">
     <Columns>
@@ -65,7 +65,7 @@
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="DisplayName" Title="Module"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="PermissionType" Title="Permission Type"></RadzenDataGridColumn>
       
-        <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Sortable="false"  Filterable="false" >
+        <RadzenDataGridColumn TItem="UserRolePermissionDataVM"  Filterable="false" Property="IsAllowed" >
             <HeaderTemplate>
                 <RadzenCheckBox TriState="false" TValue="bool" Value="@isAllow" Change="@(args => OpenUpdateUserMultiplePermissionsDialog(args))" Title="Is Allowed"  />
             </HeaderTemplate>

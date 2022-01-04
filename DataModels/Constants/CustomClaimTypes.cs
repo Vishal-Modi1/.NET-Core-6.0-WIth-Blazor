@@ -7,5 +7,6 @@
         public const string Permissions = "Permissions";
         public const string CompanyName = "CompanyName";
         public const string CompanyId = "CompanyId";
+        public const string FullName = "FullName";
     }
 }

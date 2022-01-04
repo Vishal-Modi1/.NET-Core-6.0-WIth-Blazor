@@ -1,7 +1,7 @@
 ﻿@using DataModels.VM.InstructorType
 @using FSM.Blazor.Data.InstructorType
 
-@inject Radzen.DialogService dialogService
+@inject Radzen.DialogService DialogService
 @inject InstructorTypeService InstructorTypeService
 
 <style>
@@ -21,7 +21,7 @@
                 <RadzenLabel Text="Name" />
             </div>
             <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@instructorTypeData.Name" />
+                <RadzenTextBox style="width: 100%;" Placeholder="Please enter name" Name="Name" @bind-Value="@instructorTypeData.Name" />
                 <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative"/>
             </div>
         </div>
@@ -30,7 +30,7 @@
 
     <div class="row" style="margin-top:4%">
         <div class="col-md-12 text-right">
-            <RadzenButton  Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            <RadzenButton  Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
             <RadzenButton ButtonType="ButtonType.Submit"  Text="Save" Style="width: 120px" />
         </div>
     </div>

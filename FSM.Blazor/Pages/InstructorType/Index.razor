@@ -17,11 +17,20 @@
     </div>
 </div>
 
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Instructor Type" @bind-Value="@searchText"  />
+    </div>
+
+</div>
+
 <RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                 FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
-                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                PageSize="@pageSize"
                 AllowSorting="true" Data="@data" TItem="InstructorTypeVM"
-                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
+                PageSizeOptions="@pageSizeOptions"
                 Count="@count" LoadData="@LoadData" ShowPagingSummary="true" 
                 PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
@@ -32,7 +41,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="InstructorTypeVM" Property="Name" Title="Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="InstructorTypeVM" Property="Name" Filterable="false" Title="Name"></RadzenDataGridColumn>
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="InstructorTypeVM" Property="Id" Title="Actions">
             <Template Context="data">

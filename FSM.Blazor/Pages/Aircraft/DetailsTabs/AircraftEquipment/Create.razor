@@ -28,7 +28,7 @@
                 <RadzenLabel Text="Item" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="Item" @bind-Value="@AirCraftEquipmentsVM.Item" />
+                <RadzenTextBox style="width: 100%;" Placeholder="PLease enter item" Name="Item" @bind-Value="@AirCraftEquipmentsVM.Item" />
                 <RadzenRequiredValidator Component="Item" Text="Item is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -50,7 +50,7 @@
                 <RadzenLabel Text="Make" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="Make" @bind-Value="@AirCraftEquipmentsVM.Make" />
+                <RadzenTextBox style="width: 100%;" Placeholder="Please enter make" Name="Make" @bind-Value="@AirCraftEquipmentsVM.Make" />
             </div>
         </div>
 
@@ -60,14 +60,14 @@
                 <RadzenLabel Text="Model" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="Model" @bind-Value="@AirCraftEquipmentsVM.Model" />
+                <RadzenTextBox style="width: 100%;" Placeholder="Please enter model" Name="Model" @bind-Value="@AirCraftEquipmentsVM.Model" />
             </div>
 
             <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="Manufacturer" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="Model" @bind-Value="@AirCraftEquipmentsVM.Manufacturer" />
+                <RadzenTextBox style="width: 100%;"  Placeholder="Please enter manufacturer" Name="Manufacturer" @bind-Value="@AirCraftEquipmentsVM.Manufacturer" />
             </div>
 
         </div>
@@ -78,14 +78,15 @@
                 <RadzenLabel Text="Part Number" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="PartNumber" @bind-Value="@AirCraftEquipmentsVM.PartNumber" Placeholder="Please enter part number" />
+                <RadzenTextBox style="width: 100%;"  Name="PartNumber" @bind-Value="@AirCraftEquipmentsVM.PartNumber" Placeholder="Please enter part number" />
             </div>
 
             <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="Serial Number" />
             </div>
             <div class="col-md-4">
-                <RadzenTextBox style="width: 100%;" Name="SerialNumber" @bind-Value="@AirCraftEquipmentsVM.SerialNumber" Placeholder="Please enter serial number" />
+                <RadzenTextBox style="width: 100%;" Name="SerialNumber" 
+                @bind-Value="@AirCraftEquipmentsVM.SerialNumber" Placeholder="Please enter serial number" />
             </div>
 
         </div>
@@ -96,7 +97,8 @@
                 <RadzenLabel Text="Aircraft TT Install" />
             </div>
             <div class="col-md-4">
-                <RadzenNumeric  Name="AircraftTTInstall" style="width: 100%;" @bind-Value=@AirCraftEquipmentsVM.AircraftTTInstall Placeholder="Please enter hours" />
+                <RadzenNumeric  Name="AircraftTTInstall" style="width: 100%;" 
+                @bind-Value=@AirCraftEquipmentsVM.AircraftTTInstall Placeholder="Please enter hours" />
 
             </div>
 
@@ -104,7 +106,8 @@
                 <RadzenLabel Text="Part TT Install" />
             </div>
             <div class="col-md-4">
-                <RadzenNumeric  Name="PartTTInstall"  style="width: 100%;" @bind-Value=@AirCraftEquipmentsVM.PartTTInstall Placeholder="Please enter hours" />
+                <RadzenNumeric  Name="PartTTInstall"  style="width: 100%;" 
+                @bind-Value=@AirCraftEquipmentsVM.PartTTInstall Placeholder="Please enter hours" />
             </div>
 
         </div>
@@ -124,7 +127,8 @@
                 <RadzenLabel Text="Log Entry Date" />
             </div>
             <div class="col-md-4">
-                <RadzenDatePicker  Name="LogEntryDate" @bind-Value=@AirCraftEquipmentsVM.LogEntryDate Placeholder="Please select date"
+                <RadzenDatePicker  Name="LogEntryDate" @bind-Value=@AirCraftEquipmentsVM.LogEntryDate 
+                Placeholder="Please select date"
                                   DateFormat="d" Class="w-100" />
             </div>
 
@@ -137,7 +141,7 @@
                 <RadzenLabel Text="Notes" />
             </div>
             <div class="col-md-4">
-                <RadzenTextArea Name="Notes" @bind-Value=@AirCraftEquipmentsVM.Notes Class="w-100" />
+                <RadzenTextArea Name="Notes" @bind-Value=@AirCraftEquipmentsVM.Notes Class="w-100" Placeholder="Please enter notes" />
 
             </div>
 

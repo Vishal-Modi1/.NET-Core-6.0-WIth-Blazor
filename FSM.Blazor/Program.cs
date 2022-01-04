@@ -8,6 +8,7 @@ using FSM.Blazor.Data.Company;
 using FSM.Blazor.Data.InstructorType;
 using FSM.Blazor.Data.User;
 using FSM.Blazor.Data.UserRolePermission;
+using FSM.Blazor.Data.MyAccount;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Radzen;
@@ -31,6 +32,7 @@ builder.Services.AddScoped<UserRolePermissionService>();
 builder.Services.AddScoped<AircraftService>();
 builder.Services.AddScoped<AircraftEquipmentService>();
 builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<MyAccountService>();
 
 // Blazor radzen service dependencies
 builder.Services.AddScoped<DialogService>();
