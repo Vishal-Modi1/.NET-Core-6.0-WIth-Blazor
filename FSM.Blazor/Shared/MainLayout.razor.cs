@@ -1,9 +1,11 @@
 ﻿using DataModels.Constants;
 using FSM.Blazor.Pages.MyAccount;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen;
-using Radzen.Blazor;
+using DataModels.Enums;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Shared
 {
@@ -11,6 +13,11 @@ namespace FSM.Blazor.Shared
     {
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
+
+        private CurrentUserPermissionManager _currentUserPermissionManager;
 
         bool sidebarExpanded = true;
         bool bodyExpanded = false;
@@ -38,6 +45,9 @@ namespace FSM.Blazor.Shared
         protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();
+
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
             var user = (await AuthStat).User;
 
             if (!user.Identity.IsAuthenticated)

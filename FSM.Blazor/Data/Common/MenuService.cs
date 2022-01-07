@@ -1,8 +1,10 @@
-﻿using DataModels.Enums;
+﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.Common
@@ -10,27 +12,34 @@ namespace FSM.Blazor.Data.Common
     public class MenuService
     {
         private readonly HttpCaller _httpCaller;
+        private readonly CurrentUserPermissionManager _currentUserPermissionManager;
+        private readonly IHttpClientFactory _httpClient;
 
-        public MenuService(AuthenticationStateProvider authenticationStateProvider)
+        public MenuService(AuthenticationStateProvider authenticationStateProvider, IHttpClientFactory httpClient, IMemoryCache memoryCache)
         {
             _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpClient = httpClient;
+            _currentUserPermissionManager =  CurrentUserPermissionManager.GetInstance(memoryCache);
         }
 
-        public async Task<List<MenuItem>> ListMenuItemsAsync(IHttpClientFactory _httpClient)
+        public async Task<List<MenuItem>> ListMenuItemsAsync(Task<AuthenticationState> AuthStat)
         {
-            List<UserRolePermissionDataVM> userRolePermissionsList = CurrentUserPermissionManager.GetAsync().Result;
+            List<UserRolePermissionDataVM> userRolePermissionsList = await _currentUserPermissionManager.GetAsync(AuthStat);
 
-            if (userRolePermissionsList == null || userRolePermissionsList.Count == 0)
+            if(userRolePermissionsList == null || userRolePermissionsList.Count() == 0)
             {
-                 CurrentResponse response = await _httpCaller.GetAsync(_httpClient, "UserRolePermission/listbyroleid");
-
-
-                if(response == null || response.Status != System.Net.HttpStatusCode.OK)
-                {
-                    return new List<MenuItem>();
-                }
-
+                CurrentResponse response = await _httpCaller.GetAsync(_httpClient, $"UserRolePermission/listbyroleid");
                 userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
+
+                if (userRolePermissionsList != null && userRolePermissionsList.Count() > 0)
+                {
+                    var cp = (await AuthStat).User;
+
+                    string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
+                               .Select(c => c.Value).SingleOrDefault();
+
+                    _currentUserPermissionManager.AddInCache(Convert.ToInt32(claimValue), userRolePermissionsList);
+                }
             }
 
             userRolePermissionsList = userRolePermissionsList.Where(p => p.IsAllowed == true && p.PermissionType == PermissionType.View.ToString()).ToList();
@@ -51,7 +60,5 @@ namespace FSM.Blazor.Data.Common
 
             return menuItemsList;
         }
-
-
     }
 }

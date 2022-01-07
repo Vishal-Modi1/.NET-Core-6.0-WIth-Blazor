@@ -55,3 +55,12 @@
 /Blazor.Services/obj
 /API
 /PresentationLayer
+/FSM.Blazor/bin/Release/net6.0
+/FSM.Blazor/Properties
+/FSMAPI/Properties
+/FSMAPI/bin/Release/net6.0
+/Configuration/bin/Release/net6.0
+/DataModels/bin/Release/net6.0
+/Repository/bin/Release/net6.0
+/Service/bin/Release/net6.0/ref
+/Service/bin/Release/net6.0

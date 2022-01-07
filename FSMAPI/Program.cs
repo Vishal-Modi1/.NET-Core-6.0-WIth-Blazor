@@ -89,9 +89,16 @@ var app = builder.Build();
 if (_environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+    
 }
+
+string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory);
+Directory.CreateDirectory(uploadsPath);
+
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
+
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -99,6 +106,7 @@ app.UseStaticFiles(new StaticFileOptions
     Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory)),
     RequestPath = $"/{UploadDirectory.RootDirectory}"
 });
+
 //Enable directory browsing
 app.UseDirectoryBrowser(new DirectoryBrowserOptions
 {

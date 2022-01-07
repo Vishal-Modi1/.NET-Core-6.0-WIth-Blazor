@@ -1,19 +1,24 @@
 ﻿@namespace FSM.Blazor.Pages.InstructorType
+@using DataModels.Enums
 @using FSM.Blazor.Data.InstructorType
 @using DataModels.VM.InstructorType
 @using Configuration;
+
 @inject InstructorTypeService InstructorTypeService
 @layout MainLayout
 @inject DialogService DialogService
-
+@inject NavigationManager NavManager
 
 @page "/InstructorType"
 
-
 <div class="row mb-4">
     <div class="col">
-       <h2 style="float:left">Manage Instructor Types Details</h2>
-        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM())) />
+        <h2 style="float:left">Manage Instructor Types Details</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM())) />
+        }
     </div>
 </div>
 
@@ -21,7 +26,7 @@
 
     <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
-                       Placeholder="Search Instructor Type" @bind-Value="@searchText"  />
+                       Placeholder="Search Instructor Type" @bind-Value="@searchText" />
     </div>
 
 </div>
@@ -31,7 +36,7 @@
                 PageSize="@pageSize"
                 AllowSorting="true" Data="@data" TItem="InstructorTypeVM"
                 PageSizeOptions="@pageSizeOptions"
-                Count="@count" LoadData="@LoadData" ShowPagingSummary="true" 
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
                 PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 
@@ -45,9 +50,17 @@
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="InstructorTypeVM" Property="Id" Title="Actions">
             <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data)) />
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data)) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
                               Click=@(args => OpenDeleteDialog(data)) />
+                }
             </Template>
         </RadzenDataGridColumn>
     </Columns>

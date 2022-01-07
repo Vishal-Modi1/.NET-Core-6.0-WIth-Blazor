@@ -25,12 +25,34 @@ namespace Service
             {
                 User user = _accountRepository.GetValidUser(loginVM.Email, loginVM.Password);
 
-
                 if (user == null)
                 {
                     CreateResponse(null, HttpStatusCode.NotFound, "Invalid Credentials");
+                    
+                    return _currentResponse;
                 }
-                else if (!user.IsActive)
+
+                Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
+
+                if(company != null)
+                {
+                    if(!company.IsActive)
+                    {
+                        CreateResponse(null, HttpStatusCode.NotFound, "Your organisation is not activated");
+
+                        return _currentResponse;
+                    }
+
+                    if(company.IsDeleted)
+                    {
+                        CreateResponse(null, HttpStatusCode.NotFound, "Organization has been deleted");
+
+                        return _currentResponse;
+                    }
+                }
+
+               
+                if (!user.IsActive)
                 {
                     CreateResponse(null, HttpStatusCode.NotFound, "Your account is not activated");
                 }
@@ -40,9 +62,7 @@ namespace Service
                 }
                 else
                 {
-                    Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
-
-                    if(company != null)
+                    if (company != null)
                     {
                         user.CompanyName = company.Name;
                     }

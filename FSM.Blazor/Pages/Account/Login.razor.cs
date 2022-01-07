@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using DataModels.VM.Account;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Radzen;
 using System.Security.Claims;
@@ -7,26 +8,34 @@ namespace FSM.Blazor.Pages.Account
 {
     public partial class Login 
     {
-        async Task OnLoginAsync(LoginArgs args, string name)
+
+        public LoginVM loginVM = new LoginVM();
+        bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
+
+        async Task Submit()
         {
             var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-            await authModule.InvokeVoidAsync("SignIn", args.Username, args.Password, "/");
+            await authModule.InvokeVoidAsync("SignIn", loginVM.Email, loginVM.Password, "/");
         }
 
-        void OnRegister(string name)
+        protected override async void OnAfterRender(bool firstRender)
         {
-            //  console.Log($"{name} -> Register");
+            base.OnAfterRender(firstRender);
+            //if (firstRender)
+            //{
+            //    // See warning about memory above in the article
+            //    var dotNetReference = DotNetObjectReference.Create(this);
+            //    var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+
+            //    await authModule.InvokeVoidAsync("BlazorUniversity.startRandomGenerator", dotNetReference);
+            //}
         }
 
-        void OnResetPassword(string value, string name)
-        {
-            NavigationManager.NavigateTo("/forgetpassword");
-        }
 
-        private async void btnLogout_Click()
+        [JSInvokable("AddText")]
+        public void LoginFailed(string text)
         {
-            var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "./js/auth.js");
-            await authModule.InvokeVoidAsync("SignOut", "/");
+           
         }
     }
 }

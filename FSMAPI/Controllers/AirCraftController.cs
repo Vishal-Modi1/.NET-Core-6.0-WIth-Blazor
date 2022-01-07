@@ -56,6 +56,9 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(AircraftDatatableParams aircraftDatatableParams)
         {
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            aircraftDatatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
             CurrentResponse response = _airCraftService.List(aircraftDatatableParams);
 
             return Ok(response);

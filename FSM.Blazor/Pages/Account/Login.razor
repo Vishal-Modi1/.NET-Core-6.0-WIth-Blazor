@@ -1,20 +1,56 @@
-﻿@page "/Login"
+﻿@using DataModels.VM.Account
+
+@page "/Login"
 @layout EmptyLayout
 @namespace FSM.Blazor.Pages.Account
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRunTime
-@inject NavigationManager NavigationManager 
+@inject NavigationManager NavigationManager
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
 
 <div class="row vh-100 d-flex justify-content-center align-items-center">
-    <div class="col-lg-6 col-xl-4 ">
-        <RadzenCard class="m-3">
-            <h2 class="mb-4">Login</h2>
-            <RadzenTemplateForm Data=@("LoginWithRegisterAndReset")>
-                <RadzenLogin Login=@(args => OnLoginAsync(args, "Login with register and password reset"))
-                             ResetPassword=@(args => OnResetPassword(args, "Login with register and password reset"))
-                             AllowRegister="false" />
-            </RadzenTemplateForm>
-        </RadzenCard>
-    </div>
+    <div class="col-lg-6 col-xl-4">
+    <RadzenCard class="m-3">
+        <h2 class="mb-4">Login</h2>
+
+
+        <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+
+            <div class="row">
+                <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Email" />
+                </div>
+                <div class="col-md-8">
+                    <RadzenTextBox Placeholder="Please enter email" Name="Email" Class="w-100" @bind-Value=@loginVM.Email />
+                    <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
+                    <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Password" />
+                </div>
+                <div class="col-md-8">
+                <RadzenPassword Placeholder="Please enter password" Name="Password" Class="w-100" @bind-Value=@loginVM.Password />
+                <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
+            </div>
+            </div>
+
+            <div class="row">
+
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Login" />
+                <RadzenLink Path="/forgetpassword" Text="Forget Password ?" />
+
+            </div>
+        </RadzenTemplateForm>
+
+    </RadzenCard>
+</div>
 </div>

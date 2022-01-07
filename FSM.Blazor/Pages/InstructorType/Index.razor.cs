@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Pages.InstructorType
 {
@@ -14,11 +16,19 @@ namespace FSM.Blazor.Pages.InstructorType
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
         [CascadingParameter]
         public RadzenDataGrid<InstructorTypeVM> grid { get; set; }
 
         [Inject]
         NotificationService NotificationService { get; set; }
+
+        private CurrentUserPermissionManager _currentUserPermissionManager;
 
         IList<InstructorTypeVM> data;
         int count;
@@ -27,6 +37,17 @@ namespace FSM.Blazor.Pages.InstructorType
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string searchText;
+        string moduleName = "InstructorType";
+
+        protected override async Task OnInitializedAsync()
+        {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
+            {
+                NavManager.NavigateTo("/Dashboard");
+            }
+        }
 
         async Task LoadData(LoadDataArgs args)
         {

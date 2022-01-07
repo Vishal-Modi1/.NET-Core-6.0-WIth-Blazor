@@ -27,7 +27,7 @@
                             <RadzenLabel Text="Company" />
                         </div>
                         <div class="col-md-4">
-                            @if (CurrentUserPermissionManager.IsSuperAdmin())
+                            @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
                             {
                                 <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Company"

@@ -1,40 +1,52 @@
-﻿using Newtonsoft.Json;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using DataModels.VM.UserRolePermission;
 using DataModels.Enums;
-using DataModels.Constants;
 using Microsoft.Extensions.Caching.Memory;
-using DataModels.VM.Common;
+using Microsoft.AspNetCore.Components.Authorization;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Utilities
 {
     public class CurrentUserPermissionManager
     {
-        private static IHttpContextAccessor _accessor;
-        private static HttpContext _httpContext => _accessor.HttpContext;
-        private static IMemoryCache _memoryCache => _httpContext.RequestServices.GetService(typeof(IMemoryCache)) as IMemoryCache;
-        private static HttpCaller _httpCaller;
+        private readonly IMemoryCache _memoryCache;
+        private static CurrentUserPermissionManager _instance = null;
+        private static readonly object padlock = new object();
 
-        public static void Configure(IHttpContextAccessor httpContextAccessor)
+        public static CurrentUserPermissionManager GetInstance(IMemoryCache memoryCache)
         {
-            _accessor = httpContextAccessor;
-            _httpCaller = new HttpCaller();
+
+            lock (padlock)
+            {
+                if (_instance == null)
+                {
+                    _instance = new CurrentUserPermissionManager(memoryCache);
+                }
+
+                return _instance;
+            }
         }
 
-        public static void AddInCache(int loggedUserId, List<UserRolePermissionDataVM> userRolePermissionsList)
+
+        private CurrentUserPermissionManager(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
+
+        public void AddInCache(int loggedUserId, List<UserRolePermissionDataVM> userRolePermissionsList)
         {
             _memoryCache.Set(loggedUserId, userRolePermissionsList);
         }
 
-        public static async Task<List<UserRolePermissionDataVM>> GetAsync()
+        public async Task<List<UserRolePermissionDataVM>> GetAsync(Task<AuthenticationState> authenticationState)
         {
-            ClaimsPrincipal cp = _httpContext.User;
+            var cp = (await authenticationState).User;
 
             string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
                                .Select(c => c.Value).SingleOrDefault();
 
-             //cookie value has been cleare
-            if(string.IsNullOrWhiteSpace(claimValue))
+            //cookie value has been cleare
+            if (string.IsNullOrWhiteSpace(claimValue))
             {
                 return new List<UserRolePermissionDataVM>();
             }
@@ -44,40 +56,22 @@ namespace FSM.Blazor.Utilities
 
             bool isExist = _memoryCache.TryGetValue(loggedUserId, out userRolePermissionsList);
 
-            if(!isExist)
-            {
-                // Cache has been clear, need to call database for get the permission list
-
-                //CurrentResponse response = await _httpCaller.GetAsync($"UserRolePermission/listbyroleid", _httpClient);
-                //userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
-                
-                //if (userRolePermissionsList != null && userRolePermissionsList.Count() > 0)
-                //{
-                //    AddInCache(loggedUserId, userRolePermissionsList);
-                //}
-            }
-
             return userRolePermissionsList;
         }
 
-        public static bool IsAllowed(PermissionType permissionType, string moduleName)
+        public bool IsAllowed(Task<AuthenticationState> authenticationState, PermissionType permissionType, string moduleName)
         {
-            List<UserRolePermissionDataVM> userRolePermissionsList = GetAsync().Result;
+            List<UserRolePermissionDataVM> userRolePermissionsList = GetAsync(authenticationState).Result;
 
             bool isAllowed = userRolePermissionsList.Where(p => p.IsAllowed == true &&
-                              p.ModuleName.ToLower() == moduleName && p.PermissionType == permissionType.ToString()).Count() > 0;
-
+                              p.ModuleName.ToLower() == moduleName.ToLower() && p.PermissionType == permissionType.ToString()).Count() > 0;
+            
             return isAllowed;
         }
 
-        public static bool IsSuperAdmin()
+        public async Task<bool> IsSuperAdmin(Task<AuthenticationState> authenticationState)
         {
-            if(_httpContext == null)
-            {
-                return false;
-            }
-
-            ClaimsPrincipal cp = _httpContext.User;
+            var cp = (await authenticationState).User;
 
             string claimValue = cp.Claims.Where(c => c.Type == ClaimTypes.Role)
                                .Select(c => c.Value).SingleOrDefault();

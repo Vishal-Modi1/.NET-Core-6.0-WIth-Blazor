@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
+using Microsoft.AspNetCore.Components.Authorization;
+using FSM.Blazor.Utilities;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Pages.UserRolePermission
 {
@@ -12,6 +15,12 @@ namespace FSM.Blazor.Pages.UserRolePermission
     {
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
+        
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<UserRolePermissionDataVM> grid { get; set; }
@@ -28,6 +37,8 @@ namespace FSM.Blazor.Pages.UserRolePermission
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+
         IList<UserRolePermissionDataVM> data;
         UserRolePermissionFilterVM userrolePermissionFilterVM;
         IList<DropDownValues> CompanyFilterDropdown, RoleFilterDropdown, ModuleFilterDropdown;
@@ -37,9 +48,18 @@ namespace FSM.Blazor.Pages.UserRolePermission
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
-       
+        string moduleName = "UserRolePermission";
+
+
         protected override async Task OnInitializedAsync()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
+            {
+                NavManager.NavigateTo("/Dashboard");
+            }
+
             userrolePermissionFilterVM = await UserRolePermissionService.GetFiltersAsync(_httpClient);
             CompanyFilterDropdown = userrolePermissionFilterVM.Companies;
             RoleFilterDropdown = userrolePermissionFilterVM.UserRoles;

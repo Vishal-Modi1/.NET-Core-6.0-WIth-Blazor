@@ -69,10 +69,22 @@
                 <RadzenLabel Text="Company" />
             </div>
             <div class="col-md-4">
-                <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
-                                Placeholder="Select Company" Data=@userData.Companies TextProperty="Name"
-                                ValueProperty="Id" Name="CompanyId" @bind-Value="@(userData.CompanyId)" />
-                <RadzenRequiredValidator DefaultValue="null" Component="CompanyId" Text="Please select company" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+                @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+                {
+                    <RadzenDropDown @bind-Value="@(userData.CompanyId)" Style="width:100%;" TValue="int?"
+                                TextProperty="Name" Placeholder="Select Company"
+                                Data="@userData.Companies"
+                                Name="CompanyId" ValueProperty="Id" AllowClear="true">
+                    </RadzenDropDown>
+                    <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Company is required" Popup="@isPopup" Style="position: relative" />
+
+                }
+                else
+                {
+                    <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@userData.CompanyName" Disabled="true" />
+                    <input type="hidden" id="CompanyId" value="@userData.CompanyId" />
+                }
+
             </div>
 
         </div>
@@ -100,7 +112,7 @@
             }
         </div>
 
-         <div class="row">
+        <div class="row">
             <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="Date of Birth" />
             </div>
@@ -114,7 +126,7 @@
             <div class="col-md-4">
 
                 <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                AllowFiltering="true" Class="w-100"
+                                AllowFiltering="true" Class="w-100"
                                 Placeholder="Select Country" Data=@userData.Countries TextProperty="Name"
                                 ValueProperty="Id" Name="CountryId" @bind-Value="@(userData.CountryId)" />
 
@@ -125,7 +137,7 @@
 
         <div class="row">
 
-             <div class="col-md-2 align-items-center d-flex">
+            <div class="col-md-2 align-items-center d-flex">
                 <RadzenLabel Text="External Id" />
             </div>
             <div class="col-md-4">
@@ -163,7 +175,7 @@
             </div>
         </div>
 
-      
+
 
     </RadzenFieldset>
 

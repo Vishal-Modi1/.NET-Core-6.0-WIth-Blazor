@@ -12,17 +12,12 @@ namespace FSM.Blazor.Utilities
 {
     public class HttpCaller
     {
-
-
         private static AuthenticationStateProvider _authenticationStateProvider;
-
-
         private ConfigurationSettings _configurationSettings = ConfigurationSettings.Instance;
 
         public HttpCaller(AuthenticationStateProvider authenticationStateProvider = null)
         {
             _authenticationStateProvider = authenticationStateProvider;
-
         }
 
         public async Task<CurrentResponse> PostAsync(IHttpClientFactory httpClientFactory, string url, string jsonData)

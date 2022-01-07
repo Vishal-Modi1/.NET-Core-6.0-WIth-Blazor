@@ -3,6 +3,7 @@
 
 @inject Radzen.DialogService dialogService
 @inject CompanyService CompanyService
+@inject DialogService DialogService
 
 <style>
     form .row {
@@ -22,7 +23,7 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@companyData.Name" Placeholder="Please enter name" />
-                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative"/>
+                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
@@ -32,7 +33,7 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextArea style="width: 100%;" Name="Address" @bind-Value="@companyData.Address" Placeholder="Please enter address" />
-                <RadzenRequiredValidator Component="Address" Text="Address is required" Popup="@isPopup" Style="position: relative"/>
+                <RadzenRequiredValidator Component="Address" Text="Address is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
@@ -49,9 +50,25 @@
 
     <div class="row" style="margin-top:4%">
         <div class="col-md-12 text-right">
-            <RadzenButton  Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
-            <RadzenButton ButtonType="ButtonType.Submit"  Text="Save" Style="width: 120px" />
+            <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" Style="width: 120px" />
         </div>
     </div>
 
 </RadzenTemplateForm>
+
+@{
+    //if (isLoading)
+    //{
+    //     DialogService.OpenAsync("", ds =>
+    //@<div>
+    //    <div class="row">
+    //        <div class="col text-center p-5">
+    //            <RadzenImage Path="" Style="display: block; width: 200px; margin-bottom: 40px;" />
+    //            <b>Loading, please wait...</b>
+    //        </div>
+    //    </div>
+    //</div>
+    //, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto" });
+    //}
+}

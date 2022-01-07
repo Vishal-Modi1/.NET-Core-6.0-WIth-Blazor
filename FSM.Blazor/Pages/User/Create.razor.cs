@@ -3,7 +3,9 @@ using DataModels.VM.User;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
-
+using Microsoft.Extensions.Caching.Memory;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FSM.Blazor.Pages.User
 {
@@ -11,6 +13,14 @@ namespace FSM.Blazor.Pages.User
     {
         [Parameter]
         public UserVM userData { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
+
+        private CurrentUserPermissionManager _currentUserPermissionManager;
 
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
@@ -23,6 +33,7 @@ namespace FSM.Blazor.Pages.User
 
         protected override void OnInitialized()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
             isInstructorTypeDropdownVisible = userData.IsInstructor;
         }
 

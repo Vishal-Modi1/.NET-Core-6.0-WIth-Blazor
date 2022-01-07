@@ -5,6 +5,7 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
@@ -18,12 +19,14 @@ namespace FSM.Blazor
     public class AuthController : ControllerBase
     {
         private readonly HttpCaller _httpCaller;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly CurrentUserPermissionManager _currentUserPermissionManager;
+        private readonly IHttpClientFactory _httpClient;
 
-        public AuthController(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClientFactory)
+        public AuthController(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClient, IMemoryCache memoryCache)
         {
             _httpCaller = new HttpCaller();
-            _httpClientFactory = httpClientFactory;
+            _httpClient = httpClient;
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
         }
 
         private static readonly AuthenticationProperties COOKIE_EXPIRES = new AuthenticationProperties()
@@ -38,7 +41,7 @@ namespace FSM.Blazor
         {
             string jsonData = JsonConvert.SerializeObject(loginVM);
 
-            var response = await _httpCaller.PostAsync( _httpClientFactory, "Account/login", jsonData);
+            var response = await _httpCaller.PostAsync( _httpClient, "Account/login", jsonData);
 
             if (response.Status == HttpStatusCode.OK)
             {
@@ -86,7 +89,7 @@ namespace FSM.Blazor
                   new Claim(CustomClaimTypes.CompanyId, JsonConvert.SerializeObject(loginResponse.CompanyId))
              };
 
-                CurrentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
+                _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
 
                 //var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
                 var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -114,7 +117,7 @@ namespace FSM.Blazor
 
                 request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-                var client = _httpClientFactory.CreateClient("FSMAPI");
+                var client = _httpClient.CreateClient("FSMAPI");
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 

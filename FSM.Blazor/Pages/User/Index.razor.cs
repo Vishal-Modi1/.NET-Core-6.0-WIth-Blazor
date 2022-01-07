@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
+using Microsoft.AspNetCore.Components.Authorization;
+using FSM.Blazor.Utilities;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Pages.User
 {
@@ -12,6 +15,12 @@ namespace FSM.Blazor.Pages.User
     {
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<UserDataVM> grid { get; set; }
@@ -25,6 +34,8 @@ namespace FSM.Blazor.Pages.User
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+
         IList<UserDataVM> data;
         UserFilterVM userFilterVM;
         IList<DropDownValues> CompanyFilterDropdown;
@@ -36,9 +47,17 @@ namespace FSM.Blazor.Pages.User
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+        string moduleName = "User";
 
         protected override async Task OnInitializedAsync()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+         
+            if(!_currentUserPermissionManager.IsAllowed(AuthStat,DataModels.Enums.PermissionType.View,moduleName))
+            {
+                NavigationManager.NavigateTo("/Dashboard");
+            }
+
             userFilterVM = await UserService.GetFiltersAsync(_httpClient);
             CompanyFilterDropdown = userFilterVM.Companies;
             RoleFilterDropdown = userFilterVM.UserRoles;

@@ -4,6 +4,7 @@
 @using DataModels.VM.Aircraft
 @using FSM.Blazor.Utilities
 @using FSM.Blazor.Data.Aircraft;
+@using DataModels.Enums;
 
 @inject AircraftService AircraftService
 @inject Radzen.DialogService DialogService
@@ -14,7 +15,13 @@
 <div class="row mb-4">
     <div class="col">
         <h2 style="float:left">Manage Aircrafts Details</h2>
-        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat,PermissionType.Create, @moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline"
+                      ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
+        }
+
     </div>
 </div>
 
@@ -28,8 +35,9 @@
 
         </RadzenDropDown>
         </div>
-*@
-    @if (CurrentUserPermissionManager.IsSuperAdmin())
+    *@
+
+    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -49,7 +57,7 @@
 <RadzenDataList WrapItems="true" @ref="grid" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
                 ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
                 PageSize="@pageSize" Count="@count"
-                PageChanged="@PageChanged" LoadData="@LoadData" 
+                PageChanged="@PageChanged" LoadData="@LoadData"
                 PageSizeOptions="@pageSizeOptions">
 
     <Template Context="airCraftVM">

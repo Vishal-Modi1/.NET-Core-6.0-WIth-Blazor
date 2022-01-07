@@ -18,7 +18,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsActive == true && p.IsDeleted == false).Select(n => new CompanyVM { Id = n.Id, Name = n.Name }).ToList();
+                List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).Select(n => new CompanyVM { Id = n.Id, Name = n.Name }).ToList();
 
                 return companyDataList;
             
@@ -30,7 +30,7 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> companyList = (from company in _myContext.Companies
-                                                     where company.IsActive == true && company.IsDeleted == false
+                                                     where company.IsDeleted == false
                                                      select new DropDownValues()
                                                      {
                                                          Id = company.Id,

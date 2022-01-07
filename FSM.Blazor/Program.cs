@@ -80,7 +80,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapFallbackToPage("/_Host");
 });
 
-CurrentUserPermissionManager.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
+//CurrentUserPermissionManager.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 //HttpCaller.Configure(app.Services.GetRequiredService<AuthenticationStateProvider>()); 
 
 app.Run();

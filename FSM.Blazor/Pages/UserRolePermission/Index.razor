@@ -1,8 +1,11 @@
 ﻿@namespace FSM.Blazor.Pages.UserRolePermission
+@using DataModels.Enums
 @using FSM.Blazor.Data.UserRolePermission
 @using DataModels.VM.UserRolePermission
 @using FSM.Blazor.Utilities;
 @using Configuration;
+
+@inject NavigationManager NavManager
 @inject UserRolePermissionService UserRolePermissionService
 @layout MainLayout
 @inject DialogService DialogService
@@ -25,7 +28,7 @@
         </RadzenDropDown>
     </div>
 
-    @if (CurrentUserPermissionManager.IsSuperAdmin())
+    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -64,21 +67,23 @@
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="RoleName" Title="Role"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="DisplayName" Title="Module"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="PermissionType" Title="Permission Type"></RadzenDataGridColumn>
-      
-        <RadzenDataGridColumn TItem="UserRolePermissionDataVM"  Filterable="false" Property="IsAllowed" >
-            <HeaderTemplate>
-                <RadzenCheckBox TriState="false" TValue="bool" Value="@isAllow" Change="@(args => OpenUpdateUserMultiplePermissionsDialog(args))" Title="Is Allowed"  />
-            </HeaderTemplate>
-            <Template Context="value">
-                <RadzenCheckBox TriState="false" Value="@(value.IsAllowed)" TValue="bool"  Change="@(args => OpenUpdateUserPermissionDialog(args, value))" />
-            </Template>
-        </RadzenDataGridColumn>
 
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+        {
+            <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="IsAllowed">
+                <HeaderTemplate>
+                    <RadzenCheckBox TriState="false" TValue="bool" Value="@isAllow" Change="@(args => OpenUpdateUserMultiplePermissionsDialog(args))" Title="Is Allowed" />
+                </HeaderTemplate>
+                <Template Context="value">
+                    <RadzenCheckBox TriState="false" Value="@(value.IsAllowed)" TValue="bool" Change="@(args => OpenUpdateUserPermissionDialog(args, value))" />
+                </Template>
+            </RadzenDataGridColumn>
+        }
     </Columns>
 </RadzenDataGrid>
 
 @{
-     async Task OpenUpdateUserPermissionDialog(bool value, UserRolePermissionDataVM userRolePermissionDataVM)
+    async Task OpenUpdateUserPermissionDialog(bool value, UserRolePermissionDataVM userRolePermissionDataVM)
     {
         string message = "Are you sure you want to grant the ";
         string title = "Grant Permission";
@@ -94,7 +99,7 @@
         <p class="mb-4">  @(message + " ")  <b> @(userRolePermissionDataVM.PermissionType + " permission to " +  userRolePermissionDataVM.RoleName + " for " + userRolePermissionDataVM.ModuleName + " module") </b>?</p>
         <div class="row" style="text-align:right">
             <div class="col">
-               
+
                 <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdateUserPermissionAsync(value, userRolePermissionDataVM.Id)" />
                 <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
 
@@ -122,7 +127,7 @@
         <p class="mb-4">  @(message)  </p>
         <div class="row" style="text-align:right">
             <div class="col">
-               
+
                 <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdateUserMultiplePermissionAsync(value)" />
                 <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
 

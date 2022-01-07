@@ -5,6 +5,10 @@ using Radzen;
 using Radzen.Blazor;
 using FSM.Blazor.Data.Aircraft;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
+using DataModels.Enums;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -12,6 +16,12 @@ namespace FSM.Blazor.Pages.Aircraft
     {
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataList<AircraftDataVM> grid { get; set; }
@@ -25,7 +35,9 @@ namespace FSM.Blazor.Pages.Aircraft
         AircraftFilterVM aircraftFilterVM;
         IList<DropDownValues> CompanyFilterDropdown;
 
-        int CompanyId; 
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+
+        int CompanyId;
         bool isLoading;
         string searchText;
 
@@ -34,9 +46,17 @@ namespace FSM.Blazor.Pages.Aircraft
         List<AircraftDataVM> airCraftsVM;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+        string moduleName = "Aircraft";
 
         protected override async Task OnInitializedAsync()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
+            {
+                NavManager.NavigateTo("/Dashboard");
+            }
+
             aircraftFilterVM = await AircraftService.GetFiltersAsync(_httpClient);
             CompanyFilterDropdown = aircraftFilterVM.Companies;
         }
@@ -75,7 +95,10 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async Task OpenDetailPage(int aircraftId)
         {
-            NavManager.NavigateTo("AircraftDetails/" + aircraftId);
+            if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+            {
+                NavManager.NavigateTo("AircraftDetails/" + aircraftId);
+            }
         }
     }
 }

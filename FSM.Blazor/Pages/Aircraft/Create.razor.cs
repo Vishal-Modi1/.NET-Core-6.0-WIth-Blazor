@@ -11,6 +11,9 @@ using DataModels.Constants;
 using AMK = FSM.Blazor.Pages.Aircraft.AircraftMake;
 using AMD = FSM.Blazor.Pages.Aircraft.AircraftModel;
 using FSM.Blazor.Data.AircraftMake;
+using Microsoft.AspNetCore.Components.Authorization;
+using FSM.Blazor.Utilities;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -19,8 +22,16 @@ namespace FSM.Blazor.Pages.Aircraft
         [Parameter]
         public AirCraftVM AircraftData { get; set; }
 
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
+
+        private CurrentUserPermissionManager _currentUserPermissionManager; 
 
         public RadzenSteps steps;
         public RadzenTemplateForm<AirCraftVM> form;
@@ -36,6 +47,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
         protected override Task OnInitializedAsync()
         {
+            _currentUserPermissionManager =  CurrentUserPermissionManager.GetInstance(memoryCache);
             YearDropDown = new List<DropDownValues>();
             NoofEnginesDropDown = new List<DropDownValues>();
             NoofPropellersDropDown = new List<DropDownValues>();

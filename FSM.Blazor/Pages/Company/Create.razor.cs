@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
 
-
 namespace FSM.Blazor.Pages.Company
 {
     public partial class Create
@@ -19,9 +18,12 @@ namespace FSM.Blazor.Pages.Company
         NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
-
+        bool isLoading = false;
+       
         public async Task Submit(CompanyVM companyData)
         {
+            isLoading = true;
+
             CurrentResponse response = await CompanyService.SaveandUpdateAsync(_httpClient, companyData);
 
             NotificationMessage message;
@@ -42,6 +44,9 @@ namespace FSM.Blazor.Pages.Company
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Company Details", response.Message);
                 NotificationService.Notify(message);
             }
+
+            isLoading = false;
         }
+
     }
 }

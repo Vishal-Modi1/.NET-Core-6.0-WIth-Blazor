@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Common;
 using FSM.Blazor.Data.Common;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FSM.Blazor.Shared
 {
@@ -8,6 +9,9 @@ namespace FSM.Blazor.Shared
     {
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
+        
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
 
         [Parameter]
         public bool Expanded { get; set; }
@@ -33,14 +37,7 @@ namespace FSM.Blazor.Shared
                 }
             }
 
-            menuItems = await MenuService.ListMenuItemsAsync(_httpClient);
-        }
-
-        void FilterPanelMenu(ChangeEventArgs args)
-        {
-            var term = args.Value.ToString();
-
-          //  menuItems = ExampleService.Filter(term);
+            menuItems = await MenuService.ListMenuItemsAsync(AuthStat);
         }
     }
 }
