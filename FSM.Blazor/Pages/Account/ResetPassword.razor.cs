@@ -14,6 +14,10 @@ namespace FSM.Blazor.Pages.Account
         //[Parameter]
         public string Link { get; set; }
 
+        bool isBusy;
+
+        string submitButtonText = "Reset Password";
+
         [Inject]
         NotificationService NotificationService { get; set; }
 
@@ -122,6 +126,11 @@ namespace FSM.Blazor.Pages.Account
             alertMessage.BadgeStyle = badgeStyle;
             alertMessage.Text = message;
             alertMessage.Visible = true;
+        }
+        private void SetButtonState(bool isBusyState)
+        {
+            isBusy = isBusyState;
+            StateHasChanged();
         }
     }
 }
