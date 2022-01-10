@@ -1,27 +1,6 @@
 ﻿export function SignIn(email, password, redirect) {
 
     var url = "/api/auth/signin";
-    var xhr = new XMLHttpRequest();
-
-    // Initialization
-    xhr.open("POST", url);
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    // Catch response
-    xhr.onreadystatechange = function () {
-
-        if (xhr.status === 200) // 4=DONE
-        {
-            console.log("Call '" + url + "'. Status " + xhr.status);
-            if (redirect)
-                location.replace(redirect);
-        }
-        else if (xhr.status === 401) {
-
-           
-        }
-    };
 
     // Data to send
     var data = {
@@ -29,8 +8,24 @@
         password: password
     };
 
-    // Call API
-    xhr.send(JSON.stringify(data));
+
+    $.ajax({
+
+        url: url,
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType : 'application/json',
+        success: function (response) {
+
+            if (response.status == 200) {
+
+                location.replace("/");
+            }
+            else {
+                return dotnetReferenceObject.invokeMethodAsync("GetHelloMessage", response.message);
+            }
+        }
+    });
 }
 
 //var BlazorUniversity = BlazorUniversity || {};
@@ -42,6 +37,12 @@
 //        dotNetObject.invokeMethodAsync('AddText', text.toString());
 //    }, 1000);
 //};
+
+var dotnetReferenceObject = null
+export function ManageLoginResponse(dotNetHelper) {
+
+    dotnetReferenceObject = dotNetHelper;
+};
 
 export function SignOut(redirect) {
 

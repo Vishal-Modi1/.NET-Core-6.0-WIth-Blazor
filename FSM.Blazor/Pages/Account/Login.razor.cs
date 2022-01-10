@@ -1,8 +1,7 @@
 ﻿using DataModels.VM.Account;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Radzen;
-using System.Security.Claims;
+using FSM.Blazor.Extensions;
 
 namespace FSM.Blazor.Pages.Account
 {
@@ -12,30 +11,23 @@ namespace FSM.Blazor.Pages.Account
         public LoginVM loginVM = new LoginVM();
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
+        private string? result;
+        private DotNetObjectReference<Login>? objRef;
+
         async Task Submit()
         {
             var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("SignIn", loginVM.Email, loginVM.Password, "/");
+
+            objRef = DotNetObjectReference.Create(this);
+            result = await authModule.InvokeAsync<string>("ManageLoginResponse", objRef, "");
         }
 
-        protected override async void OnAfterRender(bool firstRender)
+        [JSInvokable]
+        public void ManageLoginResponse(string responseMessage)
         {
-            base.OnAfterRender(firstRender);
-            //if (firstRender)
-            //{
-            //    // See warning about memory above in the article
-            //    var dotNetReference = DotNetObjectReference.Create(this);
-            //    var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-
-            //    await authModule.InvokeVoidAsync("BlazorUniversity.startRandomGenerator", dotNetReference);
-            //}
-        }
-
-
-        [JSInvokable("AddText")]
-        public void LoginFailed(string text)
-        {
-           
+            NotificationMessage message = new NotificationMessage().Build(NotificationSeverity.Error, responseMessage, "");
+            NotificationService.Notify(message); ;
         }
     }
 }

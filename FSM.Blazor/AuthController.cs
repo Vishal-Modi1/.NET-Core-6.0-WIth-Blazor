@@ -37,21 +37,20 @@ namespace FSM.Blazor
 
         [HttpPost]
         [Route("api/auth/signin")]
-        public async Task<ActionResult> SignInPost(LoginVM loginVM)
+        public async Task<IActionResult> SignInPost(LoginVM loginVM)
         {
             string jsonData = JsonConvert.SerializeObject(loginVM);
 
             var response = await _httpCaller.PostAsync( _httpClient, "Account/login", jsonData);
 
+            jsonData = JsonConvert.SerializeObject(response);
+
             if (response.Status == HttpStatusCode.OK)
             {
                 await AddCookieAsync(response.Data);
-                return this.StatusCode((int)HttpStatusCode.OK);
             }
-            else
-            {
-                return this.StatusCode((int)HttpStatusCode.Unauthorized);
-            }
+
+            return Ok(response);
         }
 
         [HttpGet]

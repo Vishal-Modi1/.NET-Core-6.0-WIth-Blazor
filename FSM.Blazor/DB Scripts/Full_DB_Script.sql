@@ -1,87 +1,3 @@
-USE [master]
-GO
-/****** Object:  Database [FSM]    Script Date: 03-12-2021 16:50:57 ******/
-CREATE DATABASE [FSM]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'FSM', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\FSM.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'FSM_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL15.MSSQLSERVER\MSSQL\DATA\FSM_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
- WITH CATALOG_COLLATION = DATABASE_DEFAULT
-GO
-ALTER DATABASE [FSM] SET COMPATIBILITY_LEVEL = 150
-GO
-IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
-begin
-EXEC [FSM].[dbo].[sp_fulltext_database] @action = 'enable'
-end
-GO
-ALTER DATABASE [FSM] SET ANSI_NULL_DEFAULT OFF 
-GO
-ALTER DATABASE [FSM] SET ANSI_NULLS OFF 
-GO
-ALTER DATABASE [FSM] SET ANSI_PADDING OFF 
-GO
-ALTER DATABASE [FSM] SET ANSI_WARNINGS OFF 
-GO
-ALTER DATABASE [FSM] SET ARITHABORT OFF 
-GO
-ALTER DATABASE [FSM] SET AUTO_CLOSE OFF 
-GO
-ALTER DATABASE [FSM] SET AUTO_SHRINK OFF 
-GO
-ALTER DATABASE [FSM] SET AUTO_UPDATE_STATISTICS ON 
-GO
-ALTER DATABASE [FSM] SET CURSOR_CLOSE_ON_COMMIT OFF 
-GO
-ALTER DATABASE [FSM] SET CURSOR_DEFAULT  GLOBAL 
-GO
-ALTER DATABASE [FSM] SET CONCAT_NULL_YIELDS_NULL OFF 
-GO
-ALTER DATABASE [FSM] SET NUMERIC_ROUNDABORT OFF 
-GO
-ALTER DATABASE [FSM] SET QUOTED_IDENTIFIER OFF 
-GO
-ALTER DATABASE [FSM] SET RECURSIVE_TRIGGERS OFF 
-GO
-ALTER DATABASE [FSM] SET  ENABLE_BROKER 
-GO
-ALTER DATABASE [FSM] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
-GO
-ALTER DATABASE [FSM] SET DATE_CORRELATION_OPTIMIZATION OFF 
-GO
-ALTER DATABASE [FSM] SET TRUSTWORTHY OFF 
-GO
-ALTER DATABASE [FSM] SET ALLOW_SNAPSHOT_ISOLATION OFF 
-GO
-ALTER DATABASE [FSM] SET PARAMETERIZATION SIMPLE 
-GO
-ALTER DATABASE [FSM] SET READ_COMMITTED_SNAPSHOT OFF 
-GO
-ALTER DATABASE [FSM] SET HONOR_BROKER_PRIORITY OFF 
-GO
-ALTER DATABASE [FSM] SET RECOVERY FULL 
-GO
-ALTER DATABASE [FSM] SET  MULTI_USER 
-GO
-ALTER DATABASE [FSM] SET PAGE_VERIFY CHECKSUM  
-GO
-ALTER DATABASE [FSM] SET DB_CHAINING OFF 
-GO
-ALTER DATABASE [FSM] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
-GO
-ALTER DATABASE [FSM] SET TARGET_RECOVERY_TIME = 60 SECONDS 
-GO
-ALTER DATABASE [FSM] SET DELAYED_DURABILITY = DISABLED 
-GO
-ALTER DATABASE [FSM] SET ACCELERATED_DATABASE_RECOVERY = OFF  
-GO
-EXEC sys.sp_db_vardecimal_storage_format N'FSM', N'ON'
-GO
-ALTER DATABASE [FSM] SET QUERY_STORE = OFF
-GO
-USE [FSM]
-GO
 /****** Object:  User [sa1]    Script Date: 03-12-2021 16:50:57 ******/
 
 /****** Object:  Table [dbo].[AircraftCategories]    Script Date: 03-12-2021 16:50:57 ******/
@@ -591,72 +507,12 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-USE [FSM]
-GO
-/****** Object:  StoredProcedure [dbo].[GetAircraftsList]    Script Date: 04-01-2022 12:36:41 ******/
+
+/****** Object:  StoredProcedure [dbo].[GetCompanyList]    Script Date: 04-01-2022 12:36:41 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[GetCompanyList]  
-(       
-    @SearchValue NVARCHAR(50) = NULL,  
-    @PageNo INT = 1,  
-    @PageSize INT = 10,  
-    @SortColumn NVARCHAR(20) = 'Name',  
-    @SortOrder NVARCHAR(20) = 'ASC'  
-)  
-AS BEGIN  
-    SET NOCOUNT ON;  
-  
-    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
-  
-    ; WITH CTE_Results AS   
-    (  
-        SELECT * from Companies 
-		
-        WHERE  IsDeleted = 0 and ( @SearchValue= '' OR  (   
-              Name LIKE '%' + @SearchValue + '%' 
-            )  )
-  
-            ORDER BY  
-            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='ASC')  
-                        THEN [Name]  
-            END ASC,
-			CASE WHEN (@SortColumn = 'Name' AND @SortOrder='DESC')  
-                        THEN [Name]  
-            END DESC
-
-            OFFSET @PageSize * (@PageNo - 1) ROWS  
-            FETCH NEXT @PageSize ROWS ONLY  
-    ),  
-    CTE_TotalRows AS   
-    (  
-        select count(ID) as TotalRecords from Companies 
-		
-        WHERE IsDeleted = 0 and ( @SearchValue= '' OR  (   
-              Name LIKE '%' + @SearchValue + '%' 
-            )  )
-    )  
-    Select  * from CTE_Results 
-	, CTE_TotalRows   
-    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = ID)  
-   
-END
-
-/****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 03-12-2021 16:50:57 ******/
-SET ANSI_NULLS ON
-SET QUOTED_IDENTIFIER ON
-GO
-
-USE [FSM]
-GO
-/****** Object:  StoredProcedure [dbo].[GetCompanyList]    Script Date: 07-12-2021 13:58:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE PROCEDURE [dbo].[GetCompanyList]  
 (       
     @SearchValue NVARCHAR(50) = NULL,  
@@ -754,13 +610,7 @@ AS BEGIN
    
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetUserList]    Script Date: 03-12-2021 16:50:57 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-USE [FSM]
-GO
+
 /****** Object:  StoredProcedure [dbo].[GetUserList]    Script Date: 07-12-2021 16:14:27 ******/
 SET ANSI_NULLS ON
 GO
@@ -773,7 +623,8 @@ CREATE PROCEDURE [dbo].[GetUserList]
     @PageSize INT = 10,  
     @SortColumn NVARCHAR(20) = 'FirstName',  
     @SortOrder NVARCHAR(20) = 'ASC',
-	@CompanyId INT = NULL
+	@CompanyId INT = NULL,
+	@RoleId INT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -782,15 +633,18 @@ AS BEGIN
   
     ; WITH CTE_Results AS   
     (  
-        SELECT U.*,UR.Name from Users U
+        SELECT U.*,UR.Name, CP.Name CompanyName from Users U
 		LEFT JOIN  UserRoles UR on UR.Id= U.RoleId
 		LEFT JOIN  Companies CP on CP.Id = U.CompanyId
 
         WHERE
+			(CP.IsDeleted = 0 OR  CP.IsDeleted IS NULL) AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@CompanyId,0)=0)
 				OR (U.CompanyId = @CompanyId))
+				AND ((ISNULL(@RoleId,0)=0) 
+				OR (UR.Id = @RoleId))
 		      )
 			AND 
 			U.IsDeleted = 0 AND
@@ -798,7 +652,8 @@ AS BEGIN
               FirstName LIKE '%' + @SearchValue + '%' OR
 			  LastName LIKE '%' + @SearchValue + '%' OR
 			  Email LIKE '%' + @SearchValue + '%' OR
-			  UR.Name LIKE '%' + @SearchValue + '%'
+			  UR.Name LIKE '%' + @SearchValue + '%' OR
+			  CP.Name LIKE '%' + @SearchValue + '%'
             ))  
   
             ORDER BY  
@@ -826,10 +681,10 @@ AS BEGIN
             CASE WHEN (@SortColumn = 'UserRole' AND @SortOrder='DESC')  
                         THEN UR.Name  
             END DESC,
-			CASE WHEN (@SortColumn = 'IsIntructor' AND @SortOrder='ASC')  
+			CASE WHEN (@SortColumn = 'IsInstructor' AND @SortOrder='ASC')  
                         THEN U.IsInstructor 
             END ASC,  
-            CASE WHEN (@SortColumn = 'IsIntructor' AND @SortOrder='DESC')  
+            CASE WHEN (@SortColumn = 'IsInstructor' AND @SortOrder='DESC')  
                         THEN U.IsInstructor  
             END DESC, 
 			CASE WHEN (@SortColumn = 'IsActive' AND @SortOrder='ASC')  
@@ -837,7 +692,13 @@ AS BEGIN
             END ASC,  
             CASE WHEN (@SortColumn = 'IsActive' AND @SortOrder='DESC')  
                         THEN U.IsActive 
-            END DESC 
+            END DESC,
+			CASE WHEN (@SortColumn = 'CompanyName' AND @SortOrder='ASC')  
+                        THEN CP.Name
+            END ASC,  
+            CASE WHEN (@SortColumn = 'CompanyName' AND @SortOrder='DESC')  
+                        THEN CP.Name 
+            END DESC
             OFFSET @PageSize * (@PageNo - 1) ROWS  
             FETCH NEXT @PageSize ROWS ONLY  
     ),  
@@ -845,11 +706,15 @@ AS BEGIN
     (  
         select count(U.ID) as TotalRecords from Users U
 		LEFT JOIN  UserRoles UR on UR.Id =U.RoleId
+		LEFT JOIN  Companies CP on CP.Id = U.CompanyId
        WHERE
+		(CP.IsDeleted = 0 OR  CP.IsDeleted IS NULL) AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@CompanyId,0)=0)
 				OR (U.CompanyId = @CompanyId))
+				AND ((ISNULL(@RoleId,0)=0) 
+				OR (UR.Id = @RoleId))
 		      )
 			AND 
 			U.IsDeleted = 0 AND
@@ -857,24 +722,22 @@ AS BEGIN
               FirstName LIKE '%' + @SearchValue + '%' OR
 			  LastName LIKE '%' + @SearchValue + '%' OR
 			  Email LIKE '%' + @SearchValue + '%' OR
-			  UR.Name LIKE '%' + @SearchValue + '%'
+			  UR.Name LIKE '%' + @SearchValue + '%' OR
+			  CP.Name LIKE '%' + @SearchValue + '%'
             ))  
    
     )  
-    Select TotalRecords, U.Id, U.FirstName, U.LastName,U.Email,ISNULL(U.IsInstructor, 0 ) AS IsInstructor,ISNULL(U.IsActive, 0 ) AS IsActive,Ur.Name as UserRole from Users U
+    Select TotalRecords, U.Id, U.FirstName, U.LastName,U.Email,ISNULL(U.IsInstructor, 0 ) 
+	AS IsInstructor,ISNULL(U.IsActive, 0 ) AS IsActive,Ur.Name as UserRole, CP.Name AS CompanyName from Users U
 	LEFT JOIN  UserRoles UR on UR.Id=U.RoleId
+	LEFT JOIN  Companies CP on CP.Id = U.CompanyId
 	, CTE_TotalRows   
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = U.ID)  
    
 END
-GO
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 03-12-2021 16:50:57 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-USE [FSM]
-GO
+
+
+
 /****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 07-12-2021 15:12:50 ******/
 SET ANSI_NULLS ON
 GO
@@ -905,7 +768,9 @@ AS BEGIN
 		LEFT JOIN  ModuleDetails MD on MD.Id = URP.ModuleId
 		LEFT JOIN  Companies CP on CP.Id = URP.CompanyId
 		
-        WHERE 1 = 1 AND 
+        WHERE 
+			(CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND
+			1 = 1 AND 
 		      (
 				((ISNULL(@ModuleId,0)=0)
 				OR (URP.ModuleId = @ModuleId))
@@ -923,16 +788,16 @@ AS BEGIN
 			  URP.IsAllowed  LIKE '%' + @SearchValue + '%'
             ) )
             ORDER BY  
-            CASE WHEN (@SortColumn = 'UserRole' AND @SortOrder='ASC')  
+            CASE WHEN (@SortColumn = 'RoleName' AND @SortOrder='ASC')  
                         THEN UR.Name  
             END ASC,  
-            CASE WHEN (@SortColumn = 'UserRole' AND @SortOrder='DESC')  
+            CASE WHEN (@SortColumn = 'RoleName' AND @SortOrder='DESC')  
                         THEN UR.Name  
             END DESC, 
-			CASE WHEN (@SortColumn = 'Module' AND @SortOrder='ASC')  
+			CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='ASC')  
                         THEN MD.Name  
             END ASC,  
-            CASE WHEN (@SortColumn = 'Module' AND @SortOrder='DESC')  
+            CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='DESC')  
                         THEN MD.Name  
             END DESC, 
 			CASE WHEN (@SortColumn = 'PermissionType' AND @SortOrder='ASC')  
@@ -958,7 +823,9 @@ AS BEGIN
 		LEFT JOIN  ModuleDetails MD on MD.Id = URp.ModuleId
 		LEFT JOIN  Companies CP on CP.Id = URP.CompanyId
 
-        WHERE 1 = 1 AND 
+        WHERE 
+			(CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND
+			1 = 1 AND 
 		      (
 				((ISNULL(@ModuleId,0)=0)
 				OR (URP.ModuleId = @ModuleId))
@@ -985,16 +852,12 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)  
    
 END
-GO
-
-USE [master]
-GO
-ALTER DATABASE [FSM] SET  READ_WRITE 
-GO
 
 
-USE [FSM]
+
+ALTER DATABASE [FlyManagerDevDB] SET  READ_WRITE 
 GO
+
 /****** Object:  Trigger [dbo].[Trg_Company_InsertUserRolePermission]    Script Date: 03-12-2021 16:40:28 ******/
 SET ANSI_NULLS ON
 GO
@@ -1433,7 +1296,7 @@ BEGIN
 END
 GO
 
-Create PROCEDURE [dbo].[GetAircraftsList]  
+CREATE PROCEDURE [dbo].[GetAircraftsList]  
 (       
     @SearchValue NVARCHAR(50) = NULL,  
     @PageNo INT = 1,  
@@ -1457,6 +1320,7 @@ AS BEGIN
 		LEFT JOIN  AircraftCategories AC on AC.Id = A.AircraftCategoryId
 
         WHERE
+			CP.IsDeleted = 0 AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@CompanyId,0)=0)
@@ -1472,6 +1336,17 @@ AS BEGIN
 			  AC.Name LIKE '%' + @SearchValue + '%' OR
 			  CP.Name LIKE '%' + @SearchValue + '%'
             ))  
+
+			ORDER BY  
+            CASE WHEN (@SortColumn = 'TailNo' AND @SortOrder='ASC')  
+                        THEN TailNo
+            END ASC,
+			CASE WHEN (@SortColumn = 'TailNo' AND @SortOrder='DESC')  
+                        THEN TailNo  
+            END DESC
+
+			OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY 
 			
     ),  
     CTE_TotalRows AS   
@@ -1482,6 +1357,7 @@ AS BEGIN
 		LEFT JOIN  AircraftModels AMD on AMD.Id = A.AircraftModelId
 		LEFT JOIN  AircraftCategories AC on AC.Id = A.AircraftCategoryId
         WHERE
+			CP.IsDeleted = 0 AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@CompanyId,0)=0)
