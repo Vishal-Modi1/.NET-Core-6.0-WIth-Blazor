@@ -30,7 +30,7 @@ namespace FSM.Blazor.Pages.User
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isInstructorTypeDropdownVisible = false;
-
+        bool isBusy;
         protected override void OnInitialized()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
@@ -39,18 +39,30 @@ namespace FSM.Blazor.Pages.User
 
         public async Task Submit(UserVM userDataVM)
         {
+            SetButtonState(true);
+
             CurrentResponse response;
             bool isEmailExist = false;
 
             if (userDataVM.Id == 0)
             {
+                SetButtonState(true);
+
                 response = await UserService.IsEmailExistAsync(_httpClient, userData.Email);
+
+                SetButtonState(false);
+
                 isEmailExist = ManageIsEmailExistResponse(response, "", false);
             }
 
             if (!isEmailExist)
             {
+                SetButtonState(true);
+
                 response = await UserService.SaveandUpdateAsync(_httpClient, userDataVM);
+
+                SetButtonState(false);
+
                 ManageResponse(response, "User Details", true);
             }
         }
@@ -131,6 +143,12 @@ namespace FSM.Blazor.Pages.User
             }
 
             return isEmailExist;
+        }
+
+        private void SetButtonState(bool isBusyState)
+        {
+            isBusy = isBusyState;
+            StateHasChanged();
         }
     }
 }

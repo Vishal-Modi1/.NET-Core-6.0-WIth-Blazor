@@ -11,6 +11,8 @@ namespace FSM.Blazor.Pages.Account
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
+        bool isBusy;
+
         [Inject]
         NotificationService NotificationService { get; set; }
 
@@ -23,8 +25,11 @@ namespace FSM.Blazor.Pages.Account
             ForgotPasswordVM = new ForgotPasswordVM();
             base.OnInitialized();
         }
+
         public async Task Submit()
         {
+            SetButtonState(true);
+
             ForgotPasswordVM.ResetURL = NavigationManager.BaseUri + "/ResetPassword?Token=";
 
             CurrentResponse response = await AccountService.ForgetPasswordAsync(_httpClient, ForgotPasswordVM);
@@ -46,6 +51,14 @@ namespace FSM.Blazor.Pages.Account
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Forget Password", response.Message);
                 NotificationService.Notify(message);
             }
+
+            SetButtonState(false);
+        }
+
+        private void SetButtonState(bool isBusyState)
+        {
+            isBusy = isBusyState;
+            StateHasChanged();
         }
     }
 }

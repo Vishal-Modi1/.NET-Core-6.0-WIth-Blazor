@@ -18,7 +18,8 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
-            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UserCreateDialog(0, "Create")) />
+            <RadzenButton Style="float:right" Text="Add New" BusyText="Add New ..." IsBusy="@isBusyAddNewButton"
+            Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UserCreateDialog(0, "Create")) />
         }
 
     </div>
@@ -103,7 +104,7 @@
         <p class="mb-4">Are you sure, You want to delete <b> @userDataVM.FirstName  " " @userDataVM.LastName </b>?</p>
         <div class="row" style="text-align:right">
             <div class="col">
-                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(userDataVM.Id) " Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(userDataVM.Id) " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
                 <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
 
             </div>
@@ -132,7 +133,8 @@
 
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                     {
-                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => UpdateIsUserActiveAsync(value,id) " Class="mr-1" Style="width: 80px;" />
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => 
+                        UpdateIsUserActiveAsync(value,id) " Class="mr-1" Style="width: 80px;" IsBusy="@isBusyUpdateStatusButton" BusyText="Updating ..." />
                     }
 
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))

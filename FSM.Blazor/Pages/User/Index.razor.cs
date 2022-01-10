@@ -40,13 +40,20 @@ namespace FSM.Blazor.Pages.User
         UserFilterVM userFilterVM;
         IList<DropDownValues> CompanyFilterDropdown;
         IList<DropDownValues> RoleFilterDropdown;
-        int CompanyId; int RoleId;
-        int count;
-        bool isLoading;
+        int CompanyId, RoleId, count;
+
+        // Loaders
+        bool isLoading, isBusyAddNewButton, isBusyDeleteButton, isBusyUpdateStatusButton;
+
+        #region Grid Variables
+
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+
+        #endregion
+
         string moduleName = "User";
 
         protected override async Task OnInitializedAsync()
@@ -81,7 +88,11 @@ namespace FSM.Blazor.Pages.User
 
         async Task UserCreateDialog(int id, string title)
         {
+            SetAddNewButtonState(true);
+
             UserVM userData = await UserService.GetDetailsAsync(_httpClient, id);
+
+            SetAddNewButtonState(false);
 
             if (userData.InstructorTypeId == 0)
             {
@@ -102,7 +113,11 @@ namespace FSM.Blazor.Pages.User
 
         async Task DeleteAsync(int id)
         {
+            await SetDeleteButtonState(true);
+
             CurrentResponse response = await UserService.DeleteAsync(_httpClient, id);
+
+            await SetDeleteButtonState(false);
 
             NotificationMessage message;
 
@@ -128,7 +143,11 @@ namespace FSM.Blazor.Pages.User
 
         async Task UpdateIsUserActiveAsync(bool? value, int id)
         {
+            SetUpdateStatusButtonState(true);
+
             CurrentResponse response = await UserService.UpdateIsUserActive(_httpClient, id, (bool)value);
+
+            SetUpdateStatusButtonState(false);
 
             NotificationMessage message;
 
@@ -156,6 +175,24 @@ namespace FSM.Blazor.Pages.User
         {
             DialogService.Close(false);
             await grid.Reload();
+        }
+
+        private void SetAddNewButtonState(bool isBusy)
+        {
+            isBusyAddNewButton = isBusy;
+            StateHasChanged();
+        }
+
+        private async Task SetDeleteButtonState(bool isBusy)
+        {
+            isBusyDeleteButton = isBusy;
+            await InvokeAsync(() => StateHasChanged());
+        }
+
+        private void SetUpdateStatusButtonState(bool isBusy)
+        {
+            isBusyUpdateStatusButton = isBusy;
+            StateHasChanged();
         }
     }
 }

@@ -22,7 +22,7 @@
                 location.replace("/");
             }
             else {
-                return dotnetReferenceObject.invokeMethodAsync("GetHelloMessage", response.message);
+                return dotnetReferenceObject.invokeMethodAsync("ManageLoginResponse", response.message);
             }
         }
     });
