@@ -8,10 +8,13 @@ namespace FSM.Blazor.Pages.Account
 {
     partial class ForgetPassword
     {
+        bool isBusy;
+        
+        string submitButtonText = "Submit";
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
-        bool isBusy;
 
         [Inject]
         NotificationService NotificationService { get; set; }
