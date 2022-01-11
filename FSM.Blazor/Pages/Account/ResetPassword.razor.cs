@@ -31,6 +31,7 @@ namespace FSM.Blazor.Pages.Account
         bool isBusy = false;
         string busyText = "";
 
+        NotificationMessage message;
         ResetPasswordVM resetPasswordVM { get; set; }
 
         protected override async void OnInitialized()
@@ -47,18 +48,18 @@ namespace FSM.Blazor.Pages.Account
 
             if (link.Count() == 0 || string.IsNullOrWhiteSpace(link[0]))
             {
-                DisplayAlert(BadgeStyle.Danger, "Token is not exist! Please try with valid token link.");
-
-                StateHasChanged();
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
             }
             else
             {
                 resetPasswordVM.Token = link[0];
-                DisplayAlert(BadgeStyle.Info, "Validating Token..");
 
-                StateHasChanged();
+                message = new NotificationMessage().Build(NotificationSeverity.Info, "" , "Validating Token..");
+                NotificationService.Notify(message);
+
                 CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(_httpClient, link[0]);
-               
+
                 ManageResponse(response);
             }
 
@@ -66,7 +67,6 @@ namespace FSM.Blazor.Pages.Account
 
         private void ManageResponse(CurrentResponse response)
         {
-            NotificationMessage message;
 
             if (response == null)
             {
@@ -77,15 +77,18 @@ namespace FSM.Blazor.Pages.Account
             {
                 if (Convert.ToBoolean(response.Data))
                 {
-                    isDisableResetButton = false;
-                    isDisplayAlert = false;
+                    //message = new NotificationMessage().Build(NotificationSeverity.Info, "Reset Password", "Password reset successfully!");
+                    //NotificationService.Notify(message);
                     isValidToken = true;
+                    isDisableResetButton = false;
 
                     StateHasChanged();
+
                 }
                 else
                 {
-                    DisplayAlert(BadgeStyle.Danger, "Token is not exist! Please try with valid token link.");
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "", "Token is not exist! Please try with valid token link.");
+                    NotificationService.Notify(message);
 
                     StateHasChanged();
                 }
@@ -100,9 +103,9 @@ namespace FSM.Blazor.Pages.Account
         public async Task Submit(ResetPasswordVM resetPasswordVM)
         {
             isValidToken = false;
-            DisplayAlert(BadgeStyle.Info, "Validating Token..");
+           // DisplayAlert(BadgeStyle.Info, "Validating Token..");
 
-            StateHasChanged();
+           // StateHasChanged();
 
             CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(_httpClient, resetPasswordVM.Token);
 
@@ -121,7 +124,7 @@ namespace FSM.Blazor.Pages.Account
                 }
                 else if (((int)response.Status) == 200)
                 {
-                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Reset Password", "Successfuly done.");
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Reset Password", response.Message);
                     NotificationService.Notify(message);
                 }
                 else
