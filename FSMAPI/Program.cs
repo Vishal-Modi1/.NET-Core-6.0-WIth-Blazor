@@ -53,8 +53,10 @@ builder.Services.AddAuthentication(options =>
     cfg.SaveToken = true;
     cfg.TokenValidationParameters = new TokenValidationParameters
     {
+        ValidateAudience = false,
+        ValidateIssuer = true,
         ValidIssuer = _configurationSettings.JWTIssuer,
-        ValidAudience = _configurationSettings.JWTIssuer,
+      //  ValidAudience = _configurationSettings.JWTIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationSettings.JWTKey)),
         ClockSkew = TimeSpan.Zero // remove delay of token when expire
     };

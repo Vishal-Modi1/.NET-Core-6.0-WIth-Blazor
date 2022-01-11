@@ -38,14 +38,20 @@ namespace FSM.Blazor.Pages.Aircraft
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         int CompanyId;
-        bool isLoading;
-        string searchText;
 
+        bool isLoading, isBusyAddNewButton;
+
+        #region Grid Variables
+
+        string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int count;
         List<AircraftDataVM> airCraftsVM;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+
+        #endregion
+
         string moduleName = "Aircraft";
 
         protected override async Task OnInitializedAsync()
@@ -84,7 +90,11 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async Task AircraftCreateDialog(int id, string title)
         {
+            SetAddNewButtonState(true);
+
             AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+
+            SetAddNewButtonState(false);
 
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "aircraftData", aircraftData } },
@@ -99,6 +109,12 @@ namespace FSM.Blazor.Pages.Aircraft
             {
                 NavManager.NavigateTo("AircraftDetails/" + aircraftId);
             }
+        }
+
+        private void SetAddNewButtonState(bool isBusy)
+        {
+            isBusyAddNewButton = isBusy;
+            StateHasChanged();
         }
     }
 }

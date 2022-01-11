@@ -126,7 +126,7 @@ namespace FSM.Blazor.Pages.User
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
                 NotificationService.Notify(message);
             }
-            else if (((int)response.Status) == 200)
+            else if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 DialogService.Close(true);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "User Details", response.Message);
@@ -145,7 +145,7 @@ namespace FSM.Blazor.Pages.User
         {
             SetUpdateStatusButtonState(true);
 
-            CurrentResponse response = await UserService.UpdateIsUserActive(_httpClient, id, (bool)value);
+            CurrentResponse response = await UserService.UpdateIsUserActive(_httpClient, id, value.GetValueOrDefault());
 
             SetUpdateStatusButtonState(false);
 
@@ -156,7 +156,7 @@ namespace FSM.Blazor.Pages.User
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
                 NotificationService.Notify(message);
             }
-            else if (((int)response.Status) == 200)
+            else if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 DialogService.Close(true);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "", response.Message);

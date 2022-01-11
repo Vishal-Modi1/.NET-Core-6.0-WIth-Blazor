@@ -48,7 +48,8 @@ namespace FSMAPI.Utilities
 
             var token = new JwtSecurityToken(
                 _configurationSettings.JWTIssuer,
-                _configurationSettings.JWTIssuer,
+            //    _configurationSettings.JWTIssuer,
+            null,
                 claims,
                 expires: expires,
                 signingCredentials: creds

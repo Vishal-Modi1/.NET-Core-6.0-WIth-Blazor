@@ -17,7 +17,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
-            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM())) />
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM(), "Create")) />
         }
     </div>
 </div>
@@ -53,7 +53,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                 {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data, "Edit")) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))

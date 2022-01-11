@@ -1,0 +1,16 @@
+﻿@using Data.Account;
+
+@inject AccountService AccountService
+
+@page "/AccountActivation"
+@inject NavigationManager NavigationManager
+
+@layout EmptyLayout
+
+<div class="col-md-4 p-3">
+    <RadzenCard>
+        <h4 class="mb-3">@message</h4>
+        <RadzenLink Path="buttons" Text="Go to Login" />
+    </RadzenCard>
+</div>
+

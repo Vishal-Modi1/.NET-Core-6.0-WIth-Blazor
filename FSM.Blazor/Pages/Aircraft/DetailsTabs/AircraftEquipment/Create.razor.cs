@@ -18,10 +18,16 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
+        bool isBusySaveButton;
 
         public async Task Submit(AirCraftEquipmentsVM airCraftEquipmentsVM)
         {
+            SetSaveButtonState(true);
+
             CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(_httpClient, airCraftEquipmentsVM);
+
+            SetSaveButtonState(false);
+
             ManageResponse(response, "Aircraft Equipment Details", true);
         }
 
@@ -49,6 +55,12 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 message = new NotificationMessage().Build(NotificationSeverity.Error, summary, response.Message);
                 NotificationService.Notify(message);
             }
+        }
+
+        private void SetSaveButtonState(bool isBusy)
+        {
+            isBusySaveButton = isBusy;
+            StateHasChanged();
         }
     }
 }

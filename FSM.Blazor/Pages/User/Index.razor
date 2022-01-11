@@ -101,7 +101,7 @@
     {
         var result = await DialogService.OpenAsync("Delete", ds =>
     @<div>
-        <p class="mb-4">Are you sure, You want to delete <b> @userDataVM.FirstName  " " @userDataVM.LastName </b>?</p>
+        <p class="mb-4">Are you sure, You want to delete <b> @userDataVM.FirstName + "" +  @userDataVM.LastName </b>?</p>
         <div class="row" style="text-align:right">
             <div class="col">
                 <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(userDataVM.Id) " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />

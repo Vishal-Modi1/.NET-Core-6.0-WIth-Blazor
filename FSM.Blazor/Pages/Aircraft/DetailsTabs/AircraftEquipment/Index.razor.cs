@@ -23,7 +23,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         IList<AircraftEquipmentDataVM> data;
         int count;
-        bool isLoading;
+        bool isLoading, isBusyAddNewButton;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
 
         async Task LoadData(LoadDataArgs args)
@@ -66,7 +66,12 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async void AircraftEquipmentCreateDialog(int id, string title)
         {
+            SetAddNewButtonState(true);
+
             AirCraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
+
+            SetAddNewButtonState(false);
+
             airCraftEquipmentsVM.AirCraftId = AircraftId;
 
             await DialogService.OpenAsync<Create>(title,
@@ -74,6 +79,12 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
                   new DialogOptions() { Width = "800px", Height = "580px" });
 
             await grid.Reload();
+        }
+
+        private void SetAddNewButtonState(bool isBusy)
+        {
+            isBusyAddNewButton = isBusy;
+            StateHasChanged();
         }
     }
 }

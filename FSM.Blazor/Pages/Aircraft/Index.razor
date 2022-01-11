@@ -18,7 +18,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat,PermissionType.Create, @moduleName))
         {
-            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline"
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" BusyText="Add New ..." IsBusy=@isBusyAddNewButton
                       ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
         }
 

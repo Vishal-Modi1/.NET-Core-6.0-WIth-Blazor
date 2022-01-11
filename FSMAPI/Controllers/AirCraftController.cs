@@ -56,8 +56,11 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(AircraftDatatableParams aircraftDatatableParams)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            aircraftDatatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            if (aircraftDatatableParams.CompanyId == 0)
+            {
+                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                aircraftDatatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            }
 
             CurrentResponse response = _airCraftService.List(aircraftDatatableParams);
 
@@ -189,16 +192,17 @@ namespace FSMAPI.Controllers
         {
             int createdBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
-            if (aircraftEquipmentTimeVM.Count > 0) 
+            if (aircraftEquipmentTimeVM.Count > 0)
             {
                 _aircraftEquipementTimeService.DeleteAllEquipmentTimeByAirCraftId(aircraftEquipmentTimeVM.FirstOrDefault().AircraftId, createdBy);
             }
 
             CurrentResponse response = new CurrentResponse();
 
-            aircraftEquipmentTimeVM.ForEach(item => {
+            aircraftEquipmentTimeVM.ForEach(item =>
+            {
                 item.CreatedBy = createdBy;
-                response = _aircraftEquipementTimeService.Create(item); 
+                response = _aircraftEquipementTimeService.Create(item);
             });
 
             return Ok(response);

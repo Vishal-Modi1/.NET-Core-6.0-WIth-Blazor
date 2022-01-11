@@ -18,13 +18,16 @@ namespace FSM.Blazor.Pages.Company
         NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
-        bool isLoading = false;
+        bool isLoading = false, isBusy = false;
        
         public async Task Submit(CompanyVM companyData)
         {
             isLoading = true;
+            SetSaveButtonState(true);
 
             CurrentResponse response = await CompanyService.SaveandUpdateAsync(_httpClient, companyData);
+
+            SetSaveButtonState(false);
 
             NotificationMessage message;
 
@@ -46,6 +49,12 @@ namespace FSM.Blazor.Pages.Company
             }
 
             isLoading = false;
+        }
+
+        private void SetSaveButtonState(bool isBusyState)
+        {
+            isBusy = isBusyState;
+            StateHasChanged();
         }
 
     }

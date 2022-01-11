@@ -62,9 +62,9 @@ namespace FSM.Blazor.Pages.InstructorType
             isLoading = false;            
         }
 
-        async Task InstructorTypeCreateDialog(InstructorTypeVM instructorTypeData)
+        async Task InstructorTypeCreateDialog(InstructorTypeVM instructorTypeData, string title)
         {
-            await DialogService.OpenAsync<Create>($"Edit",
+            await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "instructorTypeData", instructorTypeData } },
                   new DialogOptions() { Width = "500px", Height = "380px" });
 

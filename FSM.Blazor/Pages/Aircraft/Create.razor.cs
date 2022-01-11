@@ -43,7 +43,7 @@ namespace FSM.Blazor.Pages.Aircraft
         public int CompanyId, Year, MakeId, ModelId, CategoryId, ClassId, FlightSimulatorId, NoofEnginesId, NoofPropellersId;
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isDisplayClassDropDown, isDisplayFlightSimulatorDropDown, isDisplayNoofEnginesDropDown,
-            isDisplayEnginesHavePropellers, isDisplayEnginesareTurbines, isDisplayNoofPropellersDropDown;
+            isDisplayEnginesHavePropellers, isDisplayEnginesareTurbines, isDisplayNoofPropellersDropDown, isBusySaveButton;
 
         protected override Task OnInitializedAsync()
         {
@@ -116,7 +116,11 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else
             {
+                SetSaveButtonState(true);
+
                 CurrentResponse response = await AircraftService.SaveandUpdateAsync(_httpClient, airCraftData);
+
+                SetSaveButtonState(false);
 
                 if (string.IsNullOrWhiteSpace(airCraftData.ImagePath))
                 {
@@ -333,6 +337,12 @@ namespace FSM.Blazor.Pages.Aircraft
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft details added successfully. Something went wrong while uploading file!", response.Message);
                 NotificationService.Notify(message);
             }
+        }
+
+        private void SetSaveButtonState(bool isBusy)
+        {
+            isBusySaveButton = isBusy;
+            StateHasChanged();
         }
     }
 }

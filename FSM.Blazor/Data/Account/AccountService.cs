@@ -39,5 +39,12 @@ namespace FSM.Blazor.Data.Account
 
             return response; 
         }
+
+        public async Task<CurrentResponse> ActivateAccountAsync(IHttpClientFactory httpClient, string token)
+        {
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"account/activateaccount?token={token}");
+            
+            return response;
+        }
     }
 }

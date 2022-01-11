@@ -59,6 +59,8 @@ namespace FSM.Blazor.Pages.User
             {
                 SetButtonState(true);
 
+                userDataVM.ActivationLink = NavigationManager.BaseUri + "AccountActivation?Token=";
+
                 response = await UserService.SaveandUpdateAsync(_httpClient, userDataVM);
 
                 SetButtonState(false);

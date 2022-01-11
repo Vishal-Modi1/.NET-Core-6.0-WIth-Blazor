@@ -19,10 +19,15 @@ namespace FSM.Blazor.Pages.InstructorType
         NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
+        bool isBusy = false;
 
         public async Task Submit(InstructorTypeVM instructorTypeData)
         {
+            SetSaveButtonState(true);
+
             CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(_httpClient, instructorTypeData);
+
+            SetSaveButtonState(false);
 
             NotificationMessage message;
 
@@ -42,6 +47,12 @@ namespace FSM.Blazor.Pages.InstructorType
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "InstructorType Details", response.Message);
                 NotificationService.Notify(message);
             }
+        }
+
+        private void SetSaveButtonState(bool isBusyState)
+        {
+            isBusy = isBusyState;
+            StateHasChanged();
         }
     }
 }
