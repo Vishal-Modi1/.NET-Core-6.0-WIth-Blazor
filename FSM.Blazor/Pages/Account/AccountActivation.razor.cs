@@ -11,6 +11,10 @@ namespace FSM.Blazor.Pages.Account
         string message;
         public string Link { get; set; }
 
+        public bool IsValidToken { get; set; }
+
+        public bool ShowError { get; set; }
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
@@ -29,6 +33,8 @@ namespace FSM.Blazor.Pages.Account
             if (link.Count() == 0 || string.IsNullOrWhiteSpace(Link))
             {
                 message = "Token is not exist. Please try with valid token!";
+                ShowError = true;
+                IsValidToken = false;
             }
             else
             {
@@ -37,6 +43,7 @@ namespace FSM.Blazor.Pages.Account
 
                 CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(_httpClient, Link);
                 ManageResponseAsync(response);
+                ShowError = false;
             }
         }
 
@@ -45,12 +52,14 @@ namespace FSM.Blazor.Pages.Account
             if (response == null)
             {
                 message = "Token is not valid. Please try with valid token!";
+                IsValidToken = false;
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 if (Convert.ToBoolean(response.Data))
                 {
                     response = await AccountService.ActivateAccountAsync(_httpClient, Link);
+                    IsValidToken = true;
 
                     message = response.Message;
                     StateHasChanged();
@@ -58,12 +67,14 @@ namespace FSM.Blazor.Pages.Account
                 else
                 {
                     message = "Token is not exist! Please try with valid token!";
+                    IsValidToken = false;
                     StateHasChanged();
                 }
             }
             else
             {
                 message = response.Message;
+                IsValidToken = false;
                 StateHasChanged();
             }
         }
