@@ -2,6 +2,7 @@
 using FSM.Blazor.Data.Aircraft;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using System.Net;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -18,17 +19,40 @@ namespace FSM.Blazor.Pages.Aircraft
 
         public string CompanyName;
 
-        public bool isDataLoaded = false;
+        public bool isDataLoaded = false, isBusy = false;
 
         protected override async Task OnInitializedAsync()
         {
             AircraftData = await AircraftService.GetDetailsAsync(_httpClient, Convert.ToInt32(AircraftId));
+
+            try
+            {
+                if (!string.IsNullOrEmpty(AircraftData.ImagePath))
+                {
+                    var webClient = new WebClient();
+                    byte[] imageBytes = webClient.DownloadData(AircraftData.ImagePath);
+
+                    AircraftData.ImagePath =   "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                }
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
             SetCompanyName();
         }
 
         async Task AircraftEditDialog(int id, string title)
         {
+            isBusy = true;
+            StateHasChanged();
+
             AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+
+            isBusy = false;
+            StateHasChanged();
 
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "aircraftData", AircraftData } },

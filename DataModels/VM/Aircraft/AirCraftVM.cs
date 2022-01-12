@@ -88,5 +88,7 @@ namespace DataModels.VM.Aircraft
 
         public int TotalRecords { get; set; }
 
+        public bool IsEquipmentTimesListChanged { get; set; }
+
     }
 }

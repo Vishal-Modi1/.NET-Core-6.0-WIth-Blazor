@@ -198,7 +198,8 @@
                                 <RadzenDropDown @bind-Value="@NoofEnginesId" Style="width:100%;" TValue="int"
                                             TextProperty="Name"
                                             Data="@NoofEnginesDropDown"
-                                            Name="NoofEnginesId" ValueProperty="Id" AllowClear="true">
+                                            Name="NoofEnginesId" ValueProperty="Id" AllowClear="true"
+                                Change=@(args => OnNoOfEngineDropDownValueChange())>
                                 </RadzenDropDown>
 
                             </div>
@@ -261,7 +262,8 @@
                                 <RadzenDropDown @bind-Value="@NoofPropellersId" Style="width:100%;" TValue="int"
                                             TextProperty="Name"
                                             Data="@NoofPropellersDropDown"
-                                            Name="NoofPropellersId" ValueProperty="Id" AllowClear="true">
+                                            Name="NoofPropellersId" ValueProperty="Id" AllowClear="true"
+                                Change=@(args => OnNoofPropellersDropDownValueChange())>
                                 </RadzenDropDown>
                             </div>
                         }
@@ -270,8 +272,8 @@
                         </div>
                         <div class="col-md-4 mt-2 mb-2">
                            
-                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath TValue="string" Class="w-100" />
-
+                            <RadzenFileInput Style="outline:none" @bind-Value=@AircraftData.ImagePath Change=@(args => OnFileChange()) TValue="string" Class="w-100" />
+                                
                         </div>
                     </div>
 
@@ -290,16 +292,18 @@
 
                 <h3 class="mt-4">2. Enter Equipment Times</h3>
 
-                <AircraftEquipmentTimes AircraftData=@AircraftData>
+                <AircraftEquipmentTimes AircraftData=@AircraftData >
 
                 </AircraftEquipmentTimes>
 
                 <div class="row" style="margin-top:4%">
                     <div class="col-md-12 text-right">
-                        <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Secondary" BusyText="Saving ..." 
-                        IsBusy=@isBusySaveButton
+                        <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Secondary"
                         Text="Previous" Style="width: 120px" Click=@(args => OpenPreviousTab()) />
-                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" Style="width: 120px" Class="mr-1" />
+
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save"
+                        BusyText="Saving ..." IsBusy=@isBusySaveButton
+                        Style="width: 120px" Class="mr-1" />
                     </div>
                 </div>
 

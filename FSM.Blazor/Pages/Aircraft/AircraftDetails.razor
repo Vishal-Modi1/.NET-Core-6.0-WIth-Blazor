@@ -33,7 +33,7 @@
                 </div>
                 <div class="row mt-2 mb-2">
                     <div class="col-12 m-1 align-items-right d-flex w-100 flex-row-reverse">
-                        <RadzenButton Text="Update Aircraft Details" Icon="edit" class="w-100" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit")) />
+                        <RadzenButton Text="Update Aircraft Details" BusyText="Update Aircraft Details ..." IsBusy="@isBusy"  Icon="edit" class="w-100" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit")) />
                     </div>
                 </div>
                 <div class="row">

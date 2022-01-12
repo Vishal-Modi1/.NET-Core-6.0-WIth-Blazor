@@ -18,6 +18,7 @@
                 </tr>
             }
         }
+
         @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Engine") && x.IsDeleted == false).Count() > 0)
         {
             foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Engine") && x.IsDeleted == false).ToList())
@@ -28,6 +29,7 @@
                 </tr>
             }
         }
+
         @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Propeller") && x.IsDeleted == false).Count() > 0)
         {
             foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Propeller") && x.IsDeleted == false).ToList())

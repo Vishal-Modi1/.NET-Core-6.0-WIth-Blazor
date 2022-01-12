@@ -39,6 +39,16 @@ namespace FSM.Blazor.Data.Aircraft
             }
 
             CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+           
+            return response;
+        }
+
+        public async Task<CurrentResponse> SaveandUpdateEquipmentTimeListAsync(IHttpClientFactory httpClient, AirCraftVM aircraftVM)
+        {
+            string url = "aircraft/createaircraftequipment";
+
+            string jsonData = JsonConvert.SerializeObject(aircraftVM.AircraftEquipmentTimesList);
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
 
             return response;
         }
