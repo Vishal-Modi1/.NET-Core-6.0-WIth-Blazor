@@ -7,10 +7,22 @@
 
 @layout EmptyLayout
 
-<div class="col-md-4 p-3">
-    <RadzenCard>
-        <h4 class="mb-3">@message</h4>
-        <RadzenLink Path="buttons" Text="Go to Login" />
-    </RadzenCard>
+
+
+
+<div class="row vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-lg-6 col-xl-4">
+        <RadzenCard class="m-3 text-center">
+            <lottie-player src="../json/simple-circle-success-or-approved.json"
+                           background="transparent"
+                           speed="0.5"
+                           loop autoplay>
+            </lottie-player>
+            <h4 class="mb-3">@message</h4>
+            <RadzenLink Path="buttons" Text="Go to Login" />
+        </RadzenCard>
+    </div>
 </div>
+
+
 
