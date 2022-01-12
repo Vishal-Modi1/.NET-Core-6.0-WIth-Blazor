@@ -20,11 +20,18 @@ namespace FSM.Blazor.Pages.MyAccount
         private ChangePasswordVM changePasswordVM = new ChangePasswordVM();
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
+        bool isBusy = false;
 
         public async Task Submit()
         {
+            isBusy = true;
+            StateHasChanged();
+
             changePasswordVM.UserId = Convert.ToInt32(Id);
             CurrentResponse response = await MyAccountService.ChangePassword(_httpClient, changePasswordVM);
+
+            isBusy = false;
+            StateHasChanged();
 
             NotificationMessage message;
 

@@ -24,14 +24,14 @@ namespace FSM.Blazor.Pages.Account
 
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out link);
 
-            Link = link[0];
 
-            if (link.Count() == 0 || string.IsNullOrWhiteSpace(Link))
+            if (link.Count() == 0)
             {
                 message = "Token is not exist. Please try with valid token!";
             }
             else
             {
+                Link = link[0];
                 message = "Validating token ...";
                 StateHasChanged();
 

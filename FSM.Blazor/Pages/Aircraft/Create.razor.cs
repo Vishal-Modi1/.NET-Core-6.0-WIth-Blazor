@@ -5,7 +5,6 @@ using Radzen;
 using DataModels.Enums;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
-using DE = DataModels.Entities;
 using Newtonsoft.Json;
 using DataModels.Constants;
 using AMK = FSM.Blazor.Pages.Aircraft.AircraftMake;
@@ -31,7 +30,7 @@ namespace FSM.Blazor.Pages.Aircraft
         [Inject]
         protected IMemoryCache memoryCache { get; set; }
 
-        private CurrentUserPermissionManager _currentUserPermissionManager; 
+        private CurrentUserPermissionManager _currentUserPermissionManager;
 
         public RadzenSteps steps;
         public RadzenTemplateForm<AirCraftVM> form;
@@ -45,12 +44,17 @@ namespace FSM.Blazor.Pages.Aircraft
         bool isDisplayClassDropDown, isDisplayFlightSimulatorDropDown, isDisplayNoofEnginesDropDown,
             isDisplayEnginesHavePropellers, isDisplayEnginesareTurbines, isDisplayNoofPropellersDropDown, isBusySaveButton;
 
+        bool isAircraftImageChanged;
+
         protected override Task OnInitializedAsync()
         {
-            _currentUserPermissionManager =  CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
             YearDropDown = new List<DropDownValues>();
             NoofEnginesDropDown = new List<DropDownValues>();
             NoofPropellersDropDown = new List<DropDownValues>();
+
+            isAircraftImageChanged = false;
+            AircraftData.IsEquipmentTimesListChanged = false;
 
             for (int year = 1; year <= 5; year++)
             {
@@ -83,10 +87,13 @@ namespace FSM.Blazor.Pages.Aircraft
             NoofEnginesId = AircraftData.NoofEngines;
             NoofPropellersId = AircraftData.NoofPropellers.GetValueOrDefault();
 
-            AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
-            AircraftData.AircraftModelList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
+            if (AircraftData.AircraftMakeList.Where(p => p.Id == int.MaxValue).Count() == 0)
+            {
+                AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
+                AircraftData.AircraftModelList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
+            }
 
-            OnCategoryDropDownValueChange(CategoryId);
+            OnCategoryDropDownValueChange(CategoryId, true);
             return base.OnInitializedAsync();
         }
 
@@ -120,38 +127,55 @@ namespace FSM.Blazor.Pages.Aircraft
 
                 CurrentResponse response = await AircraftService.SaveandUpdateAsync(_httpClient, airCraftData);
 
+                if (response != null)
+                {
+                    AirCraftVM aircraft = JsonConvert.DeserializeObject<AirCraftVM>(response.Data);
+
+                    if (aircraft.Id > 0)
+                    {
+                        airCraftData.AircraftEquipmentTimesList.ForEach(z => z.AircraftId = aircraft.Id);
+                        airCraftData.Id = aircraft.Id;
+
+                        if (AircraftData.IsEquipmentTimesListChanged)
+                        {
+                            response = await AircraftService.SaveandUpdateEquipmentTimeListAsync(_httpClient, airCraftData);
+                        }
+                    }
+                }
+
                 SetSaveButtonState(false);
 
-                if (string.IsNullOrWhiteSpace(airCraftData.ImagePath))
+                if (!isAircraftImageChanged)
                 {
                     ManageResponse(response, "Aircraft Details", true);
                 }
                 else
                 {
+                    SetSaveButtonState(true);
+
                     string uploadsPath = Path.Combine("", UploadDirectory.RootDirectory);
                     Directory.CreateDirectory(uploadsPath);
 
                     Directory.CreateDirectory(uploadsPath + "\\" + "uploads");
 
-                    if (response != null && response.Status == System.Net.HttpStatusCode.OK)
+                    if (response != null && response.Status == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(airCraftData.ImagePath))
                     {
                         //data:image/gif;base64,
                         //this image is a single pixel (black)
                         byte[] bytes = Convert.FromBase64String(airCraftData.ImagePath.Substring(airCraftData.ImagePath.IndexOf(",") + 1));
 
-
                         ByteArrayContent data = new ByteArrayContent(bytes);
 
-                        airCraftData = JsonConvert.DeserializeObject<AirCraftVM>(response.Data);
-
                         MultipartFormDataContent multiContent = new MultipartFormDataContent
-                    {
-                        { data, "file", airCraftData.Id.ToString() }
-                    };
+                        {
+                          { data, "file", airCraftData.Id.ToString() }
+                        };
 
                         response = await AircraftService.UploadAircraftImageAsync(_httpClient, multiContent);
 
                         ManageFileUploadResponse(response, "Aircraft Details", true);
+
+                        SetSaveButtonState(false);
                     }
                 }
             }
@@ -182,15 +206,30 @@ namespace FSM.Blazor.Pages.Aircraft
 
                 CurrentResponse response = await AircraftMakeService.ListDropdownValues(_httpClient);
                 AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data);
-                
+
                 AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
 
                 MakeId = 0;
             }
         }
 
-        void OnCategoryDropDownValueChange(object value)
+        void OnNoofPropellersDropDownValueChange()
         {
+            AircraftData.IsEquipmentTimesListChanged = true;
+        }
+
+        void OnNoOfEngineDropDownValueChange()
+        {
+            AircraftData.IsEquipmentTimesListChanged = true;
+        }
+
+        void OnCategoryDropDownValueChange(object value, bool isManualTriggerdEvent = false)
+        {
+            if (!isManualTriggerdEvent)
+            {
+                AircraftData.IsEquipmentTimesListChanged = true;
+            }
+
             if (Convert.ToInt16(value) == (int)AircraftCategory.Airplane)
             {
                 isDisplayClassDropDown = true;
@@ -231,6 +270,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
         void OnClassDropDownValueChange(object value)
         {
+            AircraftData.IsEquipmentTimesListChanged = true;
             ManageNoofEngineDropdown();
         }
 
@@ -256,7 +296,6 @@ namespace FSM.Blazor.Pages.Aircraft
         void OpenPreviousTab()
         {
             steps.SelectedIndex = 0;
-
         }
 
         private bool ManageIsAircraftExistResponse(CurrentResponse response, string summary)
@@ -343,6 +382,11 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             isBusySaveButton = isBusy;
             StateHasChanged();
+        }
+
+        void OnFileChange()
+        {
+            isAircraftImageChanged = true;
         }
     }
 }
