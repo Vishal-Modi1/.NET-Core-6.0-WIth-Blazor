@@ -44,7 +44,7 @@
                                 <span>Category</span>
                             </div>
                             <div class="col-md-6 float-end text-right">
-                                <b>@(AircraftData.AircraftCategoryList.Where(p=>p.Id == AircraftData.AircraftCategoryId).FirstOrDefault().Name)</b>
+                                <b>@(AircraftData.AircraftCategoryList?.Where(p=>p.Id == AircraftData.AircraftCategoryId).FirstOrDefault()?.Name.Replace("/"," / "))</b>
                             </div>
                         </div>
                         <div class="row mt-2">
@@ -52,7 +52,7 @@
                                 Model
                             </div>
                             <div class="col-md-6 float-end text-right">
-                                <b>@(AircraftData.AircraftModelList.Where(p=>p.Id == AircraftData.AircraftModelId).FirstOrDefault().Name)</b>
+                                <b>@(AircraftData.AircraftModelList?.Where(p=>p.Id == AircraftData.AircraftModelId).FirstOrDefault()?.Name)</b>
                             </div>
                         </div>
                         <div class="row mt-2">
@@ -60,7 +60,7 @@
                                 Make
                             </div>
                             <div class="col-md-6 float-end text-right">
-                                <b>@(AircraftData.AircraftMakeList.Where(p=>p.Id == AircraftData.AircraftMakeId).FirstOrDefault().Name)</b>
+                                <b>@(AircraftData.AircraftMakeList?.Where(p=>p.Id == AircraftData.AircraftMakeId).FirstOrDefault()?.Name)</b>
                             </div>
                         </div>
                     </div>
