@@ -82,7 +82,7 @@ namespace FSM.Blazor.Pages.UserRolePermission
             isLoading = false;
         }
 
-        async Task UpdateUserPermissionAsync(bool? value, int id)
+        async Task UpdateUserPermissionAsync(bool? value, long id)
         {
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(_httpClient, id, (bool)value);
 

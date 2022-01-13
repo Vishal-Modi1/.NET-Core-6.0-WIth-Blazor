@@ -27,7 +27,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
             return aircraftEquipmentsList;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AirCraftEquipmentsVM airCraftEquipmentsVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AircraftEquipmentsVM airCraftEquipmentsVM)
         {
             string jsonData = JsonConvert.SerializeObject(airCraftEquipmentsVM);
 
@@ -43,7 +43,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, long id)
         {
             string url = $"airCraftequipment/delete?id={id}";
             CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
@@ -52,23 +52,23 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
         }
 
        
-        private async Task<AirCraftEquipmentsVM> GetDetailsAsync(IHttpClientFactory httpClient, int id)
+        private async Task<AircraftEquipmentsVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
         {
             var response = await _httpCaller.GetAsync(httpClient, $"airCraftequipment/fetchbyid?id={id}");
 
-            AirCraftEquipmentsVM airCraftEquipmentsVM = new AirCraftEquipmentsVM();
+            AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                airCraftEquipmentsVM = JsonConvert.DeserializeObject<AirCraftEquipmentsVM>(response.Data);
+                airCraftEquipmentsVM = JsonConvert.DeserializeObject<AircraftEquipmentsVM>(response.Data);
             }
 
             return airCraftEquipmentsVM;
         }
 
-        public async Task<AirCraftEquipmentsVM> GetEquipmentDetailsAsync(IHttpClientFactory httpClient, int id)
+        public async Task<AircraftEquipmentsVM> GetEquipmentDetailsAsync(IHttpClientFactory httpClient, long id)
         {
-            AirCraftEquipmentsVM airCraftEquipmentsVM = new AirCraftEquipmentsVM();
+            AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
             airCraftEquipmentsVM.Id = id;
             airCraftEquipmentsVM.statusList = new List<StatusVM>();
             airCraftEquipmentsVM.classificationList = new List<EquipmentClassificationVM>();

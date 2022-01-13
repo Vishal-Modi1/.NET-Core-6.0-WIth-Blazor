@@ -34,9 +34,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AirCraftEquipments](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[StatusId] [int] NOT NULL,
-	[AirCraftId] [int] NOT NULL,
+	[AirCraftId] [BIGINT] NOT NULL,
 	[ClassificationId] [int] NOT NULL,
 	[Item] [nvarchar](500) NOT NULL,
 	[Model] [nvarchar](500) NULL,
@@ -69,10 +69,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[AircraftEquipmentTimes](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[EquipmentName] [varchar](200) NOT NULL,
 	[Hours] [int] NOT NULL,
-	[AircraftId] [int] NOT NULL,
+	[AircraftId] [BIGINT] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
 	[CreatedBy] [int] NULL,
@@ -120,7 +120,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Aircrafts](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[ImageName] [varchar](200) NULL,
 	[TailNo] [varchar](30) NOT NULL,
 	[Year] [varchar](4) NULL,
@@ -196,11 +196,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[EmailTokens](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[Token] [varchar](500) NULL,
 	[CreatedOn] [datetime] NOT NULL,
 	[ExpireOn] [datetime] NULL,
-	[UserId] [int] NULL,
+	[UserId] [BIGINT] NULL,
 	[EmailType] [varchar](25) NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -306,7 +306,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[UserRolePermissions](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[RoleId] [int] NULL,
 	[PermissionId] [int] NULL,
 	[ModuleId] [int] NULL,
@@ -346,7 +346,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Users](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[FirstName] [varchar](150) NOT NULL,
 	[LastName] [varchar](150) NOT NULL,
 	[Email] [varchar](150) NOT NULL,

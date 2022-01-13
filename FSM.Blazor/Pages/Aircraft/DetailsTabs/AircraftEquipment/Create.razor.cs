@@ -9,7 +9,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
     partial class Create
     {
         [Parameter]
-        public AirCraftEquipmentsVM AirCraftEquipmentsVM {  get; set; }
+        public AircraftEquipmentsVM AirCraftEquipmentsVM {  get; set; }
 
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
@@ -20,7 +20,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isBusySaveButton;
 
-        public async Task Submit(AirCraftEquipmentsVM airCraftEquipmentsVM)
+        public async Task Submit(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
             SetSaveButtonState(true);
 

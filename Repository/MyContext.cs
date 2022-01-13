@@ -55,7 +55,7 @@ namespace Repository
 
         public DbSet<InstructorTypeVM> InstructorType { get; set; }
 
-        public DbSet<AirCraft> AirCrafts { get; set; }
+        public DbSet<Aircraft> AirCrafts { get; set; }
 
         public DbSet<AircraftMake> AircraftMakes { get; set; }
 
@@ -71,7 +71,7 @@ namespace Repository
 
         public DbSet<EquipmentClassification> EquipmentClassifications { get; set; }
 
-        public DbSet<AirCraftEquipment> AircraftEquipments { get; set; }
+        public DbSet<AircraftEquipment> AircraftEquipments { get; set; }
 
         public DbSet<FlightSimulatorClass> FlightSimulatorClasses { get; set; }
 

@@ -2,9 +2,9 @@
 
 namespace DataModels.Entities
 {
-    public class AirCraft
+    public class Aircraft
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string TailNo { get; set; }
         public string ImageName { get; set; }
         public string Year { get; set; }

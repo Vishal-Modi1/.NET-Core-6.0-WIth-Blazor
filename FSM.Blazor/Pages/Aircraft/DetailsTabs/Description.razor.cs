@@ -6,6 +6,6 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs
     partial class Description
     {
         [Parameter]
-        public AirCraftVM AircraftData { get; set; }
+        public AircraftVM AircraftData { get; set; }
     }
 }

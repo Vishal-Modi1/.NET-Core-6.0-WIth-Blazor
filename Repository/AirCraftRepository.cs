@@ -14,7 +14,7 @@ namespace Repository
     {
         private MyContext _myContext;
 
-        public AirCraft Create(AirCraft airCraft)
+        public Aircraft Create(Aircraft airCraft)
         {
             using (_myContext = new MyContext())
             {
@@ -29,7 +29,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                AirCraft airCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+                Aircraft airCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
 
                 if (airCraft != null)
                 {
@@ -39,11 +39,11 @@ namespace Repository
             }
         }
 
-        public AirCraft Edit(AirCraft airCraft)
+        public Aircraft Edit(Aircraft airCraft)
         {
             using (_myContext = new MyContext())
             {
-                AirCraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == airCraft.Id).FirstOrDefault();
+                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == airCraft.Id).FirstOrDefault();
 
                 if (existingAirCraft != null)
                 {
@@ -69,7 +69,7 @@ namespace Repository
             }
         }
 
-        public AirCraft FindByCondition(Expression<Func<AirCraft, bool>> predicate)
+        public Aircraft FindByCondition(Expression<Func<Aircraft, bool>> predicate)
         {
             using (_myContext = new MyContext())
             {
@@ -134,7 +134,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                AirCraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
 
                 if (existingAirCraft != null)
                 {

@@ -10,7 +10,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
     partial class Index
     {
         [Parameter]
-        public int AircraftId { get; set; }
+        public long AircraftId { get; set; }
 
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
@@ -38,7 +38,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             isLoading = false;
         }
 
-        async Task DeleteAsync(int id)
+        async Task DeleteAsync(long id)
         {
             CurrentResponse response = await AircraftEquipmentService.DeleteAsync(_httpClient, id);
 
@@ -64,11 +64,11 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             await grid.Reload();
         }
 
-        async void AircraftEquipmentCreateDialog(int id, string title)
+        async void AircraftEquipmentCreateDialog(long id, string title)
         {
             SetAddNewButtonState(true);
 
-            AirCraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
+            AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
 
             SetAddNewButtonState(false);
 

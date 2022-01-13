@@ -6,8 +6,8 @@ namespace Service.Interface
 {
     public interface IAirCraftEquipmentService
     {
-        CurrentResponse Create(AirCraftEquipmentsVM airCraftEquipmentsVM);
-        CurrentResponse Edit(AirCraftEquipmentsVM airCraftEquipmentsVM);
+        CurrentResponse Create(AircraftEquipmentsVM airCraftEquipmentsVM);
+        CurrentResponse Edit(AircraftEquipmentsVM airCraftEquipmentsVM);
         CurrentResponse List(int airCraftId);
         CurrentResponse Delete(int id);
         CurrentResponse Get(int id);

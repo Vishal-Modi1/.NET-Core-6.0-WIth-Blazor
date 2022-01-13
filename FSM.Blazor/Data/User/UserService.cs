@@ -47,7 +47,7 @@ namespace FSM.Blazor.Data.User
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, long id)
         {
             string url = $"user/delete?id={id}";
             CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
@@ -55,14 +55,14 @@ namespace FSM.Blazor.Data.User
             return response;
         }
 
-        public async Task<CurrentResponse> UpdateIsUserActive(IHttpClientFactory httpClient, int id, bool isActive)
+        public async Task<CurrentResponse> UpdateIsUserActive(IHttpClientFactory httpClient, long id, bool isActive)
         {
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/updatestatus?id={id}&isActive={isActive}");
 
             return response;
         }
 
-        public async Task<UserVM> GetDetailsAsync(IHttpClientFactory httpClient, int id)
+        public async Task<UserVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
         {
             var response = await _httpCaller.GetAsync(httpClient, $"user/getDetails?id={id}");
 

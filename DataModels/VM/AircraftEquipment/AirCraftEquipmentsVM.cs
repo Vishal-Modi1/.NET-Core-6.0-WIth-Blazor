@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataModels.VM.AircraftEquipment
 {
-    public class AirCraftEquipmentsVM
+    public class AircraftEquipmentsVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Display(Name = "Status")]
         public int StatusId { get; set; }
 
-        public int AirCraftId { get; set; }
+        public long AirCraftId { get; set; }
         
         [Required]
         [Display(Name = "Classification")]

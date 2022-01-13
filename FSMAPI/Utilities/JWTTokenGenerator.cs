@@ -22,7 +22,7 @@ namespace FSMAPI.Utilities
             _httpContext = httpContext;
         }
 
-        public string Generate(int id, int? companyId, int roleId)
+        public string Generate(long id, int? companyId, int roleId)
         {
             List<Claim> claims = new List<Claim>
             {

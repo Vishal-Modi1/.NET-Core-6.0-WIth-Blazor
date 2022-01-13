@@ -7,7 +7,7 @@ namespace FSM.Blazor.Pages.Aircraft
     public partial class AircraftEquipmentTimes
     {
         [Parameter]
-        public AirCraftVM AircraftData { get; set; }
+        public AircraftVM AircraftData { get; set; }
 
 
         int engineIndex = 0, propellerIndex = 0;

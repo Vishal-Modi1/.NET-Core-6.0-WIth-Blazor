@@ -4,7 +4,7 @@ namespace DataModels.VM.Aircraft
 {
     public  class AircraftDataVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string TailNo { get; set; }
         public string ImageName { get; set; }
         [NotMapped]

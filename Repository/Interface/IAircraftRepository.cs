@@ -10,13 +10,13 @@ namespace Repository.Interface
     public interface IAircraftRepository
     {
 
-        AirCraft Create(AirCraft airCraft);
+        Aircraft Create(Aircraft airCraft);
 
         List<AircraftDataVM> List(AircraftDatatableParams datatableParams);
 
-        AirCraft Edit(AirCraft airCraft);
+        Aircraft Edit(Aircraft airCraft);
 
-        AirCraft FindByCondition(Expression<Func<AirCraft, bool>> predicate);
+        Aircraft FindByCondition(Expression<Func<Aircraft, bool>> predicate);
 
         void Delete(int id);
 

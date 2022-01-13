@@ -9,6 +9,7 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.Enums;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -92,7 +93,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             SetAddNewButtonState(true);
 
-            AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
 
             SetAddNewButtonState(false);
 
@@ -103,11 +104,13 @@ namespace FSM.Blazor.Pages.Aircraft
             await grid.Reload();
         }
 
-        async Task OpenDetailPage(int aircraftId)
+        async Task OpenDetailPage(long aircraftId)
         {
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
             {
-                NavManager.NavigateTo("AircraftDetails/" + aircraftId);
+                byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
+                var data  = Encoding.Default.GetBytes(aircraftId.ToString());
+                NavManager.NavigateTo("AircraftDetails?AircraftId=" + System.Convert.ToBase64String(encodedBytes));
             }
         }
 

@@ -34,9 +34,9 @@ namespace Service
             _companyRepository = companyRepository; 
         }
 
-        public CurrentResponse Create(AirCraftVM airCraftVM)
+        public CurrentResponse Create(AircraftVM airCraftVM)
         {
-            AirCraft airCraft = ToDataObject(airCraftVM);
+            Aircraft airCraft = ToDataObject(airCraftVM);
 
             try
             {
@@ -78,7 +78,7 @@ namespace Service
         {
             try
             {
-                AirCraft airCraft = _airCraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id);
+                Aircraft airCraft = _airCraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id);
 
                 if (airCraft != null)
                 {
@@ -118,9 +118,9 @@ namespace Service
             }
         }
 
-        public CurrentResponse Edit(AirCraftVM airCraftVM)
+        public CurrentResponse Edit(AircraftVM airCraftVM)
         {
-            AirCraft airCraft = ToDataObject(airCraftVM);
+            Aircraft airCraft = ToDataObject(airCraftVM);
 
             try
             {
@@ -149,8 +149,8 @@ namespace Service
 
         public CurrentResponse GetDetails(int id, int companyId)
         {
-            AirCraft airCraft = _airCraftRepository.FindByCondition(p => p.Id == id && (companyId == 0 ? true : p.CompanyId == companyId));
-            AirCraftVM airCraftVM = new AirCraftVM();
+            Aircraft airCraft = _airCraftRepository.FindByCondition(p => p.Id == id && (companyId == 0 ? true : p.CompanyId == companyId));
+            AircraftVM airCraftVM = new AircraftVM();
 
             if (airCraft != null)
             {
@@ -179,9 +179,9 @@ namespace Service
             return _currentResponse;
         }
 
-        private AirCraftVM ToBusinessObject(AirCraft airCraft)
+        private AircraftVM ToBusinessObject(Aircraft airCraft)
         {
-            AirCraftVM airCraftVM = new AirCraftVM();
+            AircraftVM airCraftVM = new AircraftVM();
 
             airCraftVM.Id = airCraft.Id;
             airCraftVM.TailNo = airCraft.TailNo;
@@ -214,13 +214,13 @@ namespace Service
             return airCraftVM;
         }
 
-        public List<AirCraftVM> ToBusinessObjectList(List<AirCraft> aircraftList)
+        public List<AircraftVM> ToBusinessObjectList(List<Aircraft> aircraftList)
         {
-            List<AirCraftVM> airCraftVMList = new List<AirCraftVM>();
+            List<AircraftVM> airCraftVMList = new List<AircraftVM>();
 
-            foreach (AirCraft aircraft in aircraftList)
+            foreach (Aircraft aircraft in aircraftList)
             {
-                AirCraftVM airCraftVM = ToBusinessObject(aircraft);
+                AircraftVM airCraftVM = ToBusinessObject(aircraft);
 
                 airCraftVMList.Add(airCraftVM);
             }
@@ -228,9 +228,9 @@ namespace Service
             return airCraftVMList;
         }
 
-        public AirCraft ToDataObject(AirCraftVM airCraftVM)
+        public Aircraft ToDataObject(AircraftVM airCraftVM)
         {
-            AirCraft airCraft = new AirCraft();
+            Aircraft airCraft = new Aircraft();
 
             airCraft.Id = airCraftVM.Id;
             airCraft.TailNo = airCraftVM.TailNo;

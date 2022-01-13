@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataModels.Entities
 {
     public class AircraftEquipmentTime
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string EquipmentName { get; set; }
         public int Hours { get; set; }
-        public int AircraftId { get; set; }
+        public long AircraftId { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<int> DeletedBy { get; set; }
         public Nullable<System.DateTime> DeletedOn { get; set; }

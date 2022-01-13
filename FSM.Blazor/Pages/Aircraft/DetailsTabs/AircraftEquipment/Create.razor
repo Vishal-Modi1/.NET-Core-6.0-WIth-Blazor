@@ -4,7 +4,7 @@
 @inject AircraftEquipmentService AircraftEquipmentService
 @inject DialogService DialogService
 
-<RadzenTemplateForm Data="@AirCraftEquipmentsVM" Submit="@((AirCraftEquipmentsVM args) => {  Submit(args); })">
+<RadzenTemplateForm Data="@AirCraftEquipmentsVM" Submit="@((AircraftEquipmentsVM args) => {  Submit(args); })">
 
     <input type="hidden" value="@AirCraftEquipmentsVM.Id" name="Id" />
     <input type="hidden" value="@AirCraftEquipmentsVM.AirCraftId" name="AirCraftId" />

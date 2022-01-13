@@ -33,7 +33,7 @@ namespace FSM.Blazor.Utilities
             _memoryCache = memoryCache;
         }
 
-        public void AddInCache(int loggedUserId, List<UserRolePermissionDataVM> userRolePermissionsList)
+        public void AddInCache(long loggedUserId, List<UserRolePermissionDataVM> userRolePermissionsList)
         {
             _memoryCache.Set(loggedUserId, userRolePermissionsList);
         }
@@ -51,7 +51,7 @@ namespace FSM.Blazor.Utilities
                 return new List<UserRolePermissionDataVM>();
             }
 
-            int loggedUserId = Convert.ToInt32(claimValue);
+            long loggedUserId = Convert.ToInt64(claimValue);
             List<UserRolePermissionDataVM> userRolePermissionsList;
 
             bool isExist = _memoryCache.TryGetValue(loggedUserId, out userRolePermissionsList);

@@ -86,7 +86,7 @@ namespace FSM.Blazor.Pages.User
             isLoading = false;
         }
 
-        async Task UserCreateDialog(int id, string title)
+        async Task UserCreateDialog(long id, string title)
         {
             SetAddNewButtonState(true);
 
@@ -111,7 +111,7 @@ namespace FSM.Blazor.Pages.User
             await grid.Reload();
         }
 
-        async Task DeleteAsync(int id)
+        async Task DeleteAsync(long id)
         {
             await SetDeleteButtonState(true);
 
@@ -141,7 +141,7 @@ namespace FSM.Blazor.Pages.User
             await grid.Reload();
         }
 
-        async Task UpdateIsUserActiveAsync(bool? value, int id)
+        async Task UpdateIsUserActiveAsync(bool? value, long id)
         {
             SetUpdateStatusButtonState(true);
 

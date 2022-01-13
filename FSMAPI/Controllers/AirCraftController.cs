@@ -2,14 +2,8 @@
 using DataModels.Constants;
 using DataModels.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
@@ -19,7 +13,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AirCraftController : ControllerBase
+    public class AircraftController : ControllerBase
     {
         private readonly IAircraftService _airCraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
@@ -28,7 +22,7 @@ namespace FSMAPI.Controllers
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public AirCraftController(IAircraftService airCraftService, IAircraftMakeService aircraftMakeService,
+        public AircraftController(IAircraftService airCraftService, IAircraftMakeService aircraftMakeService,
             IAircraftModelService aircraftModelService, IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
@@ -69,7 +63,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public IActionResult Create(AirCraftVM airCraftVM)
+        public IActionResult Create(AircraftVM airCraftVM)
         {
             airCraftVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Create(airCraftVM);
@@ -79,7 +73,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("edit")]
-        public IActionResult Edit(AirCraftVM airCraftVM)
+        public IActionResult Edit(AircraftVM airCraftVM)
         {
             airCraftVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Edit(airCraftVM);

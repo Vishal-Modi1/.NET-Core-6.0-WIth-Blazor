@@ -141,7 +141,7 @@ namespace Service
             return mailSettings;
         }
 
-        private EmailToken SaveEmailToken(string emailType, string token, int userId)
+        private EmailToken SaveEmailToken(string emailType, string token, long userId)
         {
             EmailToken emailToken = new EmailToken();
 

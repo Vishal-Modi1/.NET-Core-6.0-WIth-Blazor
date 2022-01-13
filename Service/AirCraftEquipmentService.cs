@@ -10,18 +10,18 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Service
 {
-    public class AirCraftEquipmentService : BaseService, IAirCraftEquipmentService
+    public class AircraftEquipmentService : BaseService, IAirCraftEquipmentService
     {
-        private readonly IAirCraftEquipmentRepository _aircraftEquipementRepository;
+        private readonly IAircraftEquipmentRepository _aircraftEquipementRepository;
 
-        public AirCraftEquipmentService(IAirCraftEquipmentRepository airCraftEquipementRepository)
+        public AircraftEquipmentService(IAircraftEquipmentRepository airCraftEquipementRepository)
         {
             _aircraftEquipementRepository = airCraftEquipementRepository;
         }
 
-        public CurrentResponse Create(AirCraftEquipmentsVM aircraftEquipmentVM)
+        public CurrentResponse Create(AircraftEquipmentsVM aircraftEquipmentVM)
         {
-            AirCraftEquipment aircraftEquipment = ToDataObject(aircraftEquipmentVM);
+            AircraftEquipment aircraftEquipment = ToDataObject(aircraftEquipmentVM);
             try
             {
                 aircraftEquipment.IsActive = true;
@@ -38,9 +38,9 @@ namespace Service
             }
         }
         
-        public CurrentResponse Edit(AirCraftEquipmentsVM aircraftEquipmentVM)
+        public CurrentResponse Edit(AircraftEquipmentsVM aircraftEquipmentVM)
         {
-            AirCraftEquipment aircraftEquipment = ToDataObject(aircraftEquipmentVM);
+            AircraftEquipment aircraftEquipment = ToDataObject(aircraftEquipmentVM);
 
             try
             {
@@ -58,8 +58,8 @@ namespace Service
         }
         public CurrentResponse Get(int id)
         {
-            AirCraftEquipment airCraft = _aircraftEquipementRepository.FindByCondition(p => p.Id == id);
-            AirCraftEquipmentsVM airCraftVM = new AirCraftEquipmentsVM();
+            AircraftEquipment airCraft = _aircraftEquipementRepository.FindByCondition(p => p.Id == id);
+            AircraftEquipmentsVM airCraftVM = new AircraftEquipmentsVM();
 
             if (airCraft != null)
             {
@@ -92,8 +92,8 @@ namespace Service
         {
             try
             {
-                List<AirCraftEquipment> airCraft = _aircraftEquipementRepository.FindListByCondition(p => p.AirCraftId == airCraftId  && p.IsDeleted != true);
-                List<AirCraftEquipmentsVM> airCraftVM = new List<AirCraftEquipmentsVM>();
+                List<AircraftEquipment> airCraft = _aircraftEquipementRepository.FindListByCondition(p => p.AirCraftId == airCraftId  && p.IsDeleted != true);
+                List<AircraftEquipmentsVM> airCraftVM = new List<AircraftEquipmentsVM>();
 
                 if (airCraft != null && airCraft.Count() > 0)
                 {
@@ -139,9 +139,9 @@ namespace Service
             }
         }
 
-        private AirCraftEquipment ToDataObject(AirCraftEquipmentsVM airCraftEquipmentsVM)
+        private AircraftEquipment ToDataObject(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
-            AirCraftEquipment aircraftEquipment = new AirCraftEquipment();
+            AircraftEquipment aircraftEquipment = new AircraftEquipment();
 
             aircraftEquipment.Id = airCraftEquipmentsVM.Id;
             aircraftEquipment.AirCraftId = airCraftEquipmentsVM.AirCraftId;
@@ -174,9 +174,9 @@ namespace Service
 
             return aircraftEquipment;
         }
-        private AirCraftEquipmentsVM ToBusinessObject(AirCraftEquipment airCraftEquipment)
+        private AircraftEquipmentsVM ToBusinessObject(AircraftEquipment airCraftEquipment)
         {
-            AirCraftEquipmentsVM airCraftEquipmentsVM = new AirCraftEquipmentsVM();
+            AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
             airCraftEquipmentsVM.Id = airCraftEquipment.Id;
             airCraftEquipmentsVM.AirCraftId = airCraftEquipment.AirCraftId;
             airCraftEquipmentsVM.StatusId = airCraftEquipment.StatusId;

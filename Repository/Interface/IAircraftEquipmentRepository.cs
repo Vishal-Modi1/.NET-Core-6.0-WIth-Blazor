@@ -9,19 +9,19 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Repository.Interface
 {
-    public interface IAirCraftEquipmentRepository
+    public interface IAircraftEquipmentRepository
     {
-        AirCraftEquipment Create(AirCraftEquipment airCraft);
+        AircraftEquipment Create(AircraftEquipment airCraft);
 
-        AirCraftEquipment Edit(AirCraftEquipment airCraft);
+        AircraftEquipment Edit(AircraftEquipment airCraft);
         
         void Delete(int id);
 
-        List<AirCraftEquipment> List();
+        List<AircraftEquipment> List();
 
-        AirCraftEquipment FindByCondition(Expression<Func<AirCraftEquipment, bool>> predicate);
+        AircraftEquipment FindByCondition(Expression<Func<AircraftEquipment, bool>> predicate);
 
-        List<AirCraftEquipment> FindListByCondition(Expression<Func<AirCraftEquipment, bool>> predicate);
+        List<AircraftEquipment> FindListByCondition(Expression<Func<AircraftEquipment, bool>> predicate);
 
         List<AircraftEquipmentDataVM> List(AircraftEquipmentDatatableParams datatableParams);
     }

@@ -45,7 +45,7 @@ namespace FSM.Blazor.Data.UserRolePermission
             return userrolePermissions;
         }
 
-        public async Task<CurrentResponse> UpdatePermissionAsync(IHttpClientFactory httpClient, int id, bool isAllow)
+        public async Task<CurrentResponse> UpdatePermissionAsync(IHttpClientFactory httpClient, long id, bool isAllow)
         {
             CurrentResponse response = await _httpCaller.GetAsync(httpClient,$"userrolepermission/updatepermission?id={id}&isAllow={isAllow}");
 

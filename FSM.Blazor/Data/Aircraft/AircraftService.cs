@@ -3,12 +3,17 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Components;
+using FSM.Blazor.Shared;
 
 namespace FSM.Blazor.Data.Aircraft
 {
     public class AircraftService
     {
         private readonly HttpCaller _httpCaller;
+        
+        [CascadingParameter]
+        public Error? Error { get; set; }
 
         public AircraftService(AuthenticationStateProvider authenticationStateProvider)
         {
@@ -17,17 +22,25 @@ namespace FSM.Blazor.Data.Aircraft
 
         public async Task<List<AircraftDataVM>> ListAsync(IHttpClientFactory httpClient, AircraftDatatableParams datatableParams)
         {
-            string url = "aircraft/list";
+            try
+            {
+                string url = "aircraft/list";
 
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+                string jsonData = JsonConvert.SerializeObject(datatableParams);
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
-            List<AircraftDataVM> aircraftList = JsonConvert.DeserializeObject<List<AircraftDataVM>>(response.Data);
+                CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+                List<AircraftDataVM> aircraftList = JsonConvert.DeserializeObject<List<AircraftDataVM>>(response.Data);
 
-            return aircraftList;
+                return aircraftList;
+            }
+            catch(Exception exc)
+            {
+                Error?.ProcessError(exc);
+                return null;
+            }
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AirCraftVM aircraftVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AircraftVM aircraftVM)
         {
             string jsonData = JsonConvert.SerializeObject(aircraftVM);
 
@@ -43,7 +56,7 @@ namespace FSM.Blazor.Data.Aircraft
             return response;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateEquipmentTimeListAsync(IHttpClientFactory httpClient, AirCraftVM aircraftVM)
+        public async Task<CurrentResponse> SaveandUpdateEquipmentTimeListAsync(IHttpClientFactory httpClient, AircraftVM aircraftVM)
         {
             string url = "aircraft/createaircraftequipment";
 
@@ -75,21 +88,21 @@ namespace FSM.Blazor.Data.Aircraft
             return aircraftFilterVM;
         }
 
-        public async Task<AirCraftVM> GetDetailsAsync(IHttpClientFactory httpClient, int id)
+        public async Task<AircraftVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
         {
             var response = await _httpCaller.GetAsync(httpClient, $"aircraft/getDetails?id={id}");
 
-            AirCraftVM airCraftVM = new AirCraftVM();
+            AircraftVM airCraftVM = new AircraftVM();
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                airCraftVM = JsonConvert.DeserializeObject<AirCraftVM>(response.Data);
+                airCraftVM = JsonConvert.DeserializeObject<AircraftVM>(response.Data);
             }
 
             return airCraftVM;
         }
 
-        public async Task<CurrentResponse> IsAircraftExistAsync(IHttpClientFactory httpClient, int id, string tailNo)
+        public async Task<CurrentResponse> IsAircraftExistAsync(IHttpClientFactory httpClient, long id, string tailNo)
         {
             string url = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";
 

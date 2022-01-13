@@ -19,7 +19,7 @@ namespace FSM.Blazor.Pages.Aircraft
     public partial class Create
     {
         [Parameter]
-        public AirCraftVM AircraftData { get; set; }
+        public AircraftVM AircraftData { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
@@ -33,7 +33,7 @@ namespace FSM.Blazor.Pages.Aircraft
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         public RadzenSteps steps;
-        public RadzenTemplateForm<AirCraftVM> form;
+        public RadzenTemplateForm<AircraftVM> form;
 
         public List<DropDownValues> YearDropDown { get; set; }
         public List<DropDownValues> NoofEnginesDropDown { get; set; }
@@ -97,7 +97,7 @@ namespace FSM.Blazor.Pages.Aircraft
             return base.OnInitializedAsync();
         }
 
-        async Task Submit(AirCraftVM airCraftData)
+        async Task Submit(AircraftVM airCraftData)
         {
             if (steps.SelectedIndex == 0)
             {
@@ -129,7 +129,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
                 if (response != null)
                 {
-                    AirCraftVM aircraft = JsonConvert.DeserializeObject<AirCraftVM>(response.Data);
+                    AircraftVM aircraft = JsonConvert.DeserializeObject<AircraftVM>(response.Data);
 
                     if (aircraft.Id > 0)
                     {

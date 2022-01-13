@@ -1,6 +1,8 @@
 ﻿using DataModels.VM.Aircraft;
 using FSM.Blazor.Data.Aircraft;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 using Radzen;
 using System.Net;
 
@@ -8,14 +10,13 @@ namespace FSM.Blazor.Pages.Aircraft
 {
     partial class AircraftDetails
     {
-        [Parameter]
         public string AircraftId { get; set; }
 
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
         [Parameter]
-        public AirCraftVM AircraftData { get; set; }
+        public AircraftVM AircraftData { get; set; }
 
         public string CompanyName;
 
@@ -23,7 +24,19 @@ namespace FSM.Blazor.Pages.Aircraft
 
         protected override async Task OnInitializedAsync()
         {
-            AircraftData = await AircraftService.GetDetailsAsync(_httpClient, Convert.ToInt32(AircraftId));
+            StringValues link;
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
+
+            if(link.Count() == 0 || link[0] == "")
+            {
+                NavigationManager.NavigateTo("/Dashboard");
+            }
+
+            var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager","");
+            
+            AircraftData = await AircraftService.GetDetailsAsync(_httpClient, Convert.ToInt64(AircraftId));
 
             try
             {
@@ -34,7 +47,6 @@ namespace FSM.Blazor.Pages.Aircraft
 
                     AircraftData.ImagePath =   "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
-
             }
             catch (Exception e)
             {
@@ -49,7 +61,7 @@ namespace FSM.Blazor.Pages.Aircraft
             isBusy = true;
             StateHasChanged();
 
-            AirCraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
 
             isBusy = false;
             StateHasChanged();

@@ -12,12 +12,12 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AirCraftEquipmentController : Controller
+    public class AircraftEquipmentController : Controller
     {
         private readonly IAirCraftEquipmentService _airCraftEquipmentService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public AirCraftEquipmentController(IAirCraftEquipmentService airCraftEquipmentService, IHttpContextAccessor httpContextAccessor)
+        public AircraftEquipmentController(IAirCraftEquipmentService airCraftEquipmentService, IHttpContextAccessor httpContextAccessor)
         {
             _airCraftEquipmentService = airCraftEquipmentService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
@@ -25,7 +25,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("create")]
-        public IActionResult Create(AirCraftEquipmentsVM airCraftEquipmentsVM)
+        public IActionResult Create(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
             airCraftEquipmentsVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue("Id"));
             CurrentResponse response = _airCraftEquipmentService.Create(airCraftEquipmentsVM);
@@ -35,7 +35,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("edit")]
-        public IActionResult Edit(AirCraftEquipmentsVM airCraftEquipmentsVM)
+        public IActionResult Edit(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
             airCraftEquipmentsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue("Id"));
             CurrentResponse response = _airCraftEquipmentService.Edit(airCraftEquipmentsVM);

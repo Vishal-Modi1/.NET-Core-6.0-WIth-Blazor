@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataModels.VM.Aircraft
 {
-    public class AirCraftVM
+    public class AircraftVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [Required]
         [Display(Name = "Tail No")]
@@ -84,7 +84,7 @@ namespace DataModels.VM.Aircraft
         public List<DropDownValues> Companies { get; set; }
         public List<AircraftEquipmentTime> AircraftEquipmentTimesList { get; set; }
 
-        public List<AirCraftEquipment>  AirCraftEquipmentList { get; set; }
+        public List<Entities.AircraftEquipment>  AirCraftEquipmentList { get; set; }
 
         public int TotalRecords { get; set; }
 

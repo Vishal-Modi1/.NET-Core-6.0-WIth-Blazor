@@ -4,7 +4,7 @@ namespace DataModels.VM.AircraftEquipment
 {
     public class AircraftEquipmentDataVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public int StatusId { get; set; }
 

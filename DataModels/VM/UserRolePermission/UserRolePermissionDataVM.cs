@@ -1,8 +1,10 @@
-﻿namespace DataModels.VM.UserRolePermission
+﻿using System;
+
+namespace DataModels.VM.UserRolePermission
 {
     public class UserRolePermissionDataVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public int RoleId { get; set; }
         public string RoleName { get; set; }
         public int ModuleId { get; set; }

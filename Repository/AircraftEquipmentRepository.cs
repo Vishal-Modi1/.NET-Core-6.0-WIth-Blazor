@@ -9,11 +9,11 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Repository
 {
-    public class AirCraftEquipmentRepository : IAirCraftEquipmentRepository
+    public class AirCraftEquipmentRepository : IAircraftEquipmentRepository
     {
         private MyContext _myContext;
 
-        public AirCraftEquipment Create(AirCraftEquipment aircraftEquipment)
+        public AircraftEquipment Create(AircraftEquipment aircraftEquipment)
         {
             using (_myContext = new MyContext())
             {
@@ -24,11 +24,11 @@ namespace Repository
             }
         }
 
-        public AirCraftEquipment Edit(AirCraftEquipment aircraftEquipment)
+        public AircraftEquipment Edit(AircraftEquipment aircraftEquipment)
         {
             using (_myContext = new MyContext())
             {
-                AirCraftEquipment existingAircraftEquipment = _myContext.AircraftEquipments.Where(p => p.Id == aircraftEquipment.Id).FirstOrDefault();
+                AircraftEquipment existingAircraftEquipment = _myContext.AircraftEquipments.Where(p => p.Id == aircraftEquipment.Id).FirstOrDefault();
 
                 if (existingAircraftEquipment != null)
                 {
@@ -62,7 +62,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                AirCraftEquipment aircraftEquipment = _myContext.AircraftEquipments.Where(p => p.Id == id).FirstOrDefault();
+                AircraftEquipment aircraftEquipment = _myContext.AircraftEquipments.Where(p => p.Id == id).FirstOrDefault();
 
                 if (aircraftEquipment != null)
                 {
@@ -72,7 +72,7 @@ namespace Repository
             }
         }
 
-        public List<AirCraftEquipment> List()
+        public List<AircraftEquipment> List()
         {
             using (_myContext = new MyContext())
             {
@@ -95,7 +95,7 @@ namespace Repository
             }
         }
 
-        public AirCraftEquipment FindByCondition(Expression<Func<AirCraftEquipment, bool>> predicate)
+        public AircraftEquipment FindByCondition(Expression<Func<AircraftEquipment, bool>> predicate)
         {
             using (_myContext = new MyContext())
             {
@@ -103,7 +103,7 @@ namespace Repository
             }
         }
 
-        public List<AirCraftEquipment> FindListByCondition(Expression<Func<AirCraftEquipment, bool>> predicate)
+        public List<AircraftEquipment> FindListByCondition(Expression<Func<AircraftEquipment, bool>> predicate)
         {
             using (_myContext = new MyContext())
             {
