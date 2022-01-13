@@ -29,7 +29,7 @@ namespace FSM.Blazor.Pages.Account
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out link);
 
 
-            if (link.Count() == 0)
+            if (link.Count() == 0 || link[0] == "")
             {
                 message = "Token is not exist. Please try with valid token!";
                 ShowError = true;
