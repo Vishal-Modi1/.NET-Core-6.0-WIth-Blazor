@@ -72,6 +72,11 @@ namespace Configuration
             get => configuration.GetValue<int>("EmailTokenExpirationDays");
         }
 
+        public string SyncFusionLicenseKey
+        {
+            get => configuration.GetValue<string>("SyncfusionLicenseKey");
+        }
+
         public MailSettingConfig MailSetting
         {
             get => MailSettingConfig.Instance;

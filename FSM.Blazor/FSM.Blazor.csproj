@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="6.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Radzen.Blazor" Version="3.13.6" />
+    <PackageReference Include="Syncfusion.Blazor.Schedule" Version="19.4.0.42" />
   </ItemGroup>
 
   <ItemGroup>

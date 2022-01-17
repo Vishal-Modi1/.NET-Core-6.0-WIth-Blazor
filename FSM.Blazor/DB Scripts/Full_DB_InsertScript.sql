@@ -632,6 +632,7 @@ INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,Ord
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (3,'InstructorType','InstructorType','Index','Instructor Type','assignment_ind',3,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (4,'Aircraft','Aircraft','Index','Aircraft','flight_takeoff',4,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permission','lock_open',5,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Schedular','Schedular','Index','Schedule','event_note',6,1)
 Go
 
 --INSERT INTO UserRolePermissions VALUES(1,1,1,null,1)

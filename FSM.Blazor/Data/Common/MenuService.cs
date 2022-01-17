@@ -29,16 +29,20 @@ namespace FSM.Blazor.Data.Common
             if(userRolePermissionsList == null || userRolePermissionsList.Count() == 0)
             {
                 CurrentResponse response = await _httpCaller.GetAsync(_httpClient, $"UserRolePermission/listbyroleid");
-                userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
 
-                if (userRolePermissionsList != null && userRolePermissionsList.Count() > 0)
+                if (response != null)
                 {
-                    var cp = (await AuthStat).User;
+                    userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
 
-                    string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
-                               .Select(c => c.Value).SingleOrDefault();
+                    if (userRolePermissionsList != null && userRolePermissionsList.Count() > 0)
+                    {
+                        var cp = (await AuthStat).User;
 
-                    _currentUserPermissionManager.AddInCache(Convert.ToInt32(claimValue), userRolePermissionsList);
+                        string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
+                                   .Select(c => c.Value).SingleOrDefault();
+
+                        _currentUserPermissionManager.AddInCache(Convert.ToInt32(claimValue), userRolePermissionsList);
+                    }
                 }
             }
 
