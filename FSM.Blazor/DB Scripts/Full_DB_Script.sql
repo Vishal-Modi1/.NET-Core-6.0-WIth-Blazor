@@ -340,6 +340,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[Users]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
 GO
@@ -1384,3 +1385,233 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = A.ID)  
    
 END
+
+/****** Object:  Table [dbo].[ScheduleActivityTypes]    Script Date: 18-01-2022 11:35:11 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ScheduleActivityTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](100) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_ScheduleActivityTypes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ScheduleActivityTypes] ADD  CONSTRAINT [DF_ScheduleActivityTypes_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+
+
+
+
+/****** Object:  Table [dbo].[UserRoleVsScheduleActivityType]    Script Date: 18-01-2022 10:38:32 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[UserRoleVsScheduleActivityType](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserRoleId] [int] NOT NULL,
+	[ActivityTypeIds] [varchar](50) NULL,
+ CONSTRAINT [PK_UserRoleVsScheduleActivityType] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[UserRoleVsScheduleActivityType]  WITH CHECK ADD  CONSTRAINT [FK_UserRoleVsScheduleActivityType_UserRoles] FOREIGN KEY([UserRoleId])
+REFERENCES [dbo].[UserRoles] ([Id])
+GO
+
+ALTER TABLE [dbo].[UserRoleVsScheduleActivityType] CHECK CONSTRAINT [FK_UserRoleVsScheduleActivityType_UserRoles]
+GO
+
+/****** Object:  Table [dbo].[AircraftSchedules]    Script Date: 18-01-2022 15:08:20 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[AircraftSchedules](
+	[Id] [bigint] NOT NULL,
+	[SchedulActivityTypeId] [int] NULL,
+	[ReservationId] [varchar](15) NOT NULL,
+	[StartDateTime] [datetime] NOT NULL,
+	[EndDateTime] [datetime] NOT NULL,
+	[IsRecurring] [bit] NOT NULL,
+	[Member1Id] [bigint] NULL,
+	[Member2Id] [bigint] NULL,
+	[InstructorId] [bigint] NULL,
+	[ScheduleTitle] [varchar](100) NULL,
+	[AircraftId] [bigint] NULL,
+	[FlightType] [varchar](10) NULL,
+	[FlightRules] [varchar](10) NULL,
+	[EstFlightHours] [decimal](5, 2) NULL,
+	[FlightRoutes] [varchar](max) NULL,
+	[Comments] [varchar](max) NULL,
+	[PrivateComments] [varchar](max) NULL,
+	[StandBy] [bit] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_AircraftSchedules] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [IX_AircraftSchedules] UNIQUE NONCLUSTERED 
+(
+	[ReservationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] ADD  CONSTRAINT [DF_AircraftSchedules_IsRecurring]  DEFAULT ((0)) FOR [IsRecurring]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] ADD  CONSTRAINT [DF_AircraftSchedules_StandBy]  DEFAULT ((0)) FOR [StandBy]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] ADD  CONSTRAINT [DF_AircraftSchedules_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] ADD  CONSTRAINT [DF_AircraftSchedules_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_Aircrafts] FOREIGN KEY([AircraftId])
+REFERENCES [dbo].[Aircrafts] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_Aircrafts]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_ScheduleActivityTypes] FOREIGN KEY([SchedulActivityTypeId])
+REFERENCES [dbo].[ScheduleActivityTypes] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_ScheduleActivityTypes]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_UsersCreatedBy] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersCreatedBy]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_UsersDeletedBy] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersDeletedBy]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_UsersInstructorId] FOREIGN KEY([InstructorId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersInstructorId]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_UsersMember1Id] FOREIGN KEY([Member1Id])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersMember1Id]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_UsersMember2Id] FOREIGN KEY([Member2Id])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersMember2Id]
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSchedules_UsersUpdatedBy] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersUpdatedBy]
+GO
+
+
+/****** Object:  Table [dbo].[AircraftScheduleDetails]    Script Date: 18-01-2022 16:11:01 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[AircraftScheduleDetails](
+	[Id] [bigint] NOT NULL,
+	[AircraftScheduleId] [bigint] NOT NULL,
+	[FlightStatus] [varchar](15) NULL,
+	[CheckInTime] [datetime] NULL,
+	[CheckOutTime] [datetime] NULL,
+	[CheckInBy] [bigint] NULL,
+	[CheckOutBy] [bigint] NULL,
+ CONSTRAINT [PK_AircraftScheduleDetails] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleDetails]  WITH CHECK ADD  CONSTRAINT [FK_AircraftScheduleDetails_AircraftSchedules] FOREIGN KEY([AircraftScheduleId])
+REFERENCES [dbo].[AircraftSchedules] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleDetails] CHECK CONSTRAINT [FK_AircraftScheduleDetails_AircraftSchedules]
+GO
+
+/****** Object:  Table [dbo].[AircraftScheduleHobbsTimes]    Script Date: 18-01-2022 16:11:16 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[AircraftScheduleHobbsTimes](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[AircraftScheduleId] [bigint] NOT NULL,
+	[AircraftEquipmentTimeId] [bigint] NULL,
+	[OutTime] [decimal](8, 2) NULL,
+	[InTime] [decimal](8, 2) NULL,
+	[TotalTime] [decimal](8, 2) NULL,
+ CONSTRAINT [PK_AircraftScheduleHobbsTimes] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleHobbsTimes]  WITH CHECK ADD  CONSTRAINT [FK_AircraftScheduleHobbsTimes_AircraftEquipmentTimes] FOREIGN KEY([AircraftEquipmentTimeId])
+REFERENCES [dbo].[AircraftEquipmentTimes] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleHobbsTimes] CHECK CONSTRAINT [FK_AircraftScheduleHobbsTimes_AircraftEquipmentTimes]
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleHobbsTimes]  WITH CHECK ADD  CONSTRAINT [FK_AircraftScheduleHobbsTimes_AircraftSchedules] FOREIGN KEY([AircraftScheduleId])
+REFERENCES [dbo].[AircraftSchedules] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleHobbsTimes] CHECK CONSTRAINT [FK_AircraftScheduleHobbsTimes_AircraftSchedules]
+GO
+
+
+
