@@ -14,6 +14,8 @@ namespace Repository.Interface
 
         List<AircraftDataVM> List(AircraftDatatableParams datatableParams);
 
+        List<Aircraft> ListAllByCompanyId(int companyId);
+
         Aircraft Edit(Aircraft airCraft);
 
         Aircraft FindByCondition(Expression<Func<Aircraft, bool>> predicate);
@@ -25,5 +27,7 @@ namespace Repository.Interface
         bool UpdateImageName(int id, string imageName);
 
         List<DropDownValues> ListFlightSimulatorClassDropDownValues();
+
+        List<DropDownLargeValues> ListDropDownValues(int companyId);
     }
 }

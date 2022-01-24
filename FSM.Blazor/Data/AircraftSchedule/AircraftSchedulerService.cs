@@ -1,0 +1,48 @@
+﻿using DataModels.VM.Common;
+using DataModels.VM.Scheduler;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json;
+
+namespace FSM.Blazor.Data.AircraftSchedule
+{
+    public class AircraftSchedulerService
+    {
+        private readonly HttpCaller _httpCaller;
+
+        public AircraftSchedulerService(AuthenticationStateProvider authenticationStateProvider)
+        {
+            _httpCaller = new HttpCaller(authenticationStateProvider);
+        }
+
+        public async Task<SchedulerVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"aircraftscheduler/getDetails?id={id}");
+
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                schedulerVM = JsonConvert.DeserializeObject<SchedulerVM>(response.Data);
+            }
+
+            return schedulerVM;
+        }
+
+        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, SchedulerVM schedulerVM)
+        {
+            string jsonData = JsonConvert.SerializeObject(schedulerVM);
+
+            string url = "aircraftscheduler/create";
+
+            if (schedulerVM.Id > 0)
+            {
+                url = "aircraftscheduler/edit";
+            }
+
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+
+            return response;
+        }
+    }
+}

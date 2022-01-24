@@ -8,6 +8,7 @@ namespace Service.Interface
     {
         CurrentResponse Create(AircraftVM airCraftVM);
         CurrentResponse List(AircraftDatatableParams datatableParams);
+        CurrentResponse ListAllByCompanyId(int companyId);
         CurrentResponse Edit(AircraftVM airCraftVM);
         CurrentResponse GetDetails(int id, int companyId);
         CurrentResponse Delete(int id);

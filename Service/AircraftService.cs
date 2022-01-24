@@ -321,6 +321,30 @@ namespace Service
             }
         }
 
+        public CurrentResponse ListAllByCompanyId(int companyId)
+        {
+            try
+            {
+                List<Aircraft> airCraftList = _airCraftRepository.ListAllByCompanyId(companyId);
+
+                foreach (Aircraft airCraftVM in airCraftList)
+                {
+                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
+                }
+
+                CreateResponse(airCraftList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse UpdateImageName(int id, string imageName)
         {
             try

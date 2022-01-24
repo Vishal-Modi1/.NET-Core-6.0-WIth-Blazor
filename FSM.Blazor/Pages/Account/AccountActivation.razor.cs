@@ -66,7 +66,7 @@ namespace FSM.Blazor.Pages.Account
                 }
                 else
                 {
-                    message = "Token is not exist! Please try with valid token!";
+                    message = response.Message;
                     IsValidToken = false;
                     StateHasChanged();
                 }

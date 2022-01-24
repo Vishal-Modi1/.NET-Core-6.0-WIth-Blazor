@@ -92,6 +92,17 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("listAll")]
+        public IActionResult ListAll()
+        {
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
+            CurrentResponse response = _airCraftService.ListAllByCompanyId(companyIdValue);
+            return Ok(response);
+        }
+
         [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(int id)

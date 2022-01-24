@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Repository;
+﻿using Repository;
 using Repository.Interface;
 using Service;
 using Service.Interface;
@@ -26,6 +25,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAirCraftEquipmentService, AircraftEquipmentService>();
             services.AddScoped<IUserRolePermissionService, UserRolePermissionService>();
             services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<IAircraftScheduleService, AircraftScheduleService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -49,6 +49,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserRolePermissionRepository, UserRolePermissionRepository>();
             services.AddScoped<IModuleDetailsRepository, ModuleDetailsRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IAircraftScheduleRepository, AircraftScheduleRepository>();
         }
     }
 }

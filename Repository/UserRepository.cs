@@ -101,6 +101,14 @@ namespace Repository
             }
         }
 
+        public List<DropDownLargeValues> ListDropdownValuesbyCondition(Expression<Func<User, bool>> predicate)
+        {
+            using (_myContext = new MyContext())
+            {
+                return _myContext.Users.Where(predicate).Select(p=> new DropDownLargeValues() {Id = p.Id, Name = p.FirstName + " " + p.LastName }).ToList();
+            }
+        }
+
         public List<UserDataVM> List(UserDatatableParams datatableParams)
         {
             using (_myContext = new MyContext())

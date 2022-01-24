@@ -23,7 +23,10 @@ namespace Repository.Interface
         void Delete(int id);
 
         void UpdateActiveStatus(int id, bool isActive);
+
         bool ResetUserPassword(ResetPasswordVM resetPasswordVM);
+
+        List<DropDownLargeValues> ListDropdownValuesbyCondition(Expression<Func<User, bool>> predicate);
 
     }
 }

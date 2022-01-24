@@ -5,6 +5,7 @@ using DataModels.VM.Common;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Shared;
+using DE = DataModels.Entities;
 
 namespace FSM.Blazor.Data.Aircraft
 {
@@ -34,6 +35,24 @@ namespace FSM.Blazor.Data.Aircraft
                 return aircraftList;
             }
             catch(Exception exc)
+            {
+                Error?.ProcessError(exc);
+                return null;
+            }
+        }
+
+        public async Task<List<DE.Aircraft>> ListAllAsync(IHttpClientFactory httpClient)
+        {
+            try
+            {
+                string url = "aircraft/listall";
+
+                CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+                List<DE.Aircraft> aircraftList = JsonConvert.DeserializeObject<List<DE.Aircraft>>(response.Data);
+
+                return aircraftList;
+            }
+            catch (Exception exc)
             {
                 Error?.ProcessError(exc);
                 return null;

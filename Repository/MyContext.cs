@@ -1,13 +1,13 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.Aircraft;
+using DataModels.VM.AircraftEquipment;
+using DataModels.VM.Company;
+using DataModels.VM.InstructorType;
+using DataModels.VM.User;
+using DataModels.VM.UserRolePermission;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using DataModels.VM.User;
-using DataModels.VM.InstructorType;
-using DataModels.VM.UserRolePermission;
-using DataModels.VM.AircraftEquipment;
-using DataModels.VM.Company;
-using DataModels.VM.Aircraft;
 
 namespace Repository
 {
@@ -82,11 +82,21 @@ namespace Repository
         public DbSet<ModuleDetail> ModuleDetails { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+
         public DbSet<CompanyVM> CompanyData { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 
         public DbSet<AircraftEquipmentDataVM> AircraftEquipmentData { get; set; }
+        public DbSet<ScheduleActivityType> ScheduleActivityTypes { get; set; }
+
+        public DbSet<UserRoleVsScheduleActivityType> UserRoleVsScheduleActivityType { get; set; }
+
+        public DbSet<AircraftSchedule> AircraftSchedules { get; set; }
+
+        public DbSet<AircraftScheduleDetail> AircraftScheduleDetails { get; set; }
+
+        public DbSet<AircraftScheduleHobbsTime> AircraftScheduleHobbsTimes { get; set; }
     }
 
 }

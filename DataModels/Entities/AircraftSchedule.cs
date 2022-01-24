@@ -16,11 +16,11 @@ namespace DataModels.Entities
 
         public bool IsRecurring { get; set; }
 
-        public long Member1Id { get; set; }
+        public long? Member1Id { get; set; }
 
-        public long Member2Id { get; set; }
+        public long? Member2Id { get; set; }
 
-        public long InstructorId { get; set; }
+        public long? InstructorId { get; set; }
 
         public long AircraftId { get; set; }
 

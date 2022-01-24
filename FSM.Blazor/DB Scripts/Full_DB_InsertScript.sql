@@ -632,7 +632,7 @@ INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,Ord
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (3,'InstructorType','InstructorType','Index','Instructor Type','assignment_ind',3,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (4,'Aircraft','Aircraft','Index','Aircraft','flight_takeoff',4,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permission','lock_open',5,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Schedular','Schedular','Index','Schedule','event_note',6,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Scheduler','Scheduler','Index','Schedule','event_note',6,1)
 Go
 
 --INSERT INTO UserRolePermissions VALUES(1,1,1,null,1)
@@ -663,4 +663,26 @@ GO
 
 INSERT INTO Users Values('Israel', 'Denis', 'idenis@cendien.com', 1,'(214) 202-5896',1,0,null,null,null,'1994-10-21','Male',
 						236,'VGVzdEAxMjQ=',1,1,0,SYSDATETIME(),null,null,null,null,null)
+GO
+
+SET IDENTITY_INSERT [dbo].ScheduleActivityTypes ON
+GO
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (1,'Charter Flight',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (2,'Discovery Flight',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (3,'Dual Flight Training',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (4,'Ground Training',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (5,'Maintenance',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (6,'Renter Flight',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (7,'Student Solo',1)
+INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (8,'Tour Flight',1)
+Go
+
+SET IDENTITY_INSERT [dbo].UserRoleVsScheduleActivityType ON
+GO
+
+Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityTypeIds) values (1, 2, '1,2,3,4,5,6,7,8')
+Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityTypeIds) values (2, 3, '1,2,3,4,5,6,7,8')
+Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityTypeIds) values (3, 4, '2,3,4,7')
+Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityTypeIds) values (4, 6, '3,6')
+
 GO

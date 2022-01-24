@@ -83,27 +83,18 @@ namespace Repository
             {
                 int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
 
-
                 string sql = $"EXEC dbo.GetAircraftsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{(datatableParams.IsActive == true ? 1 : 0)}";
-
                 List<AircraftDataVM> airCraftList = _myContext.AircraftDataVMs.FromSqlRaw<AircraftDataVM>(sql).ToList();
 
-                //List<AirCraft> airCraftList = new List<AirCraft>();
-
-                //if (!string.IsNullOrWhiteSpace(aircraftFilterVM.TailNo))
-                //{
-                //    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false && p.TailNo.Contains(aircraftFilterVM.TailNo)).ToList();
-                //}
-                //else if (aircraftFilterVM.CompanyId > 0)
-                //{
-                //    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false && p.CompanyId == aircraftFilterVM.CompanyId).ToList();
-                //}
-                //else
-                //{
-                //    airCraftList = _myContext.AirCrafts.Where(p => p.IsActive == aircraftFilterVM.IsActive && p.IsDeleted == false).ToList();
-                //}
-
                 return airCraftList;
+            }
+        }
+
+        public List<Aircraft> ListAllByCompanyId(int companyId)
+        {
+            using (_myContext = new MyContext())
+            {
+                return _myContext.AirCrafts.Where(p=> p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false).ToList();
             }
         }
 
@@ -145,6 +136,25 @@ namespace Repository
                 }
 
                 return false ;
+            }
+        }
+
+        public List<DropDownLargeValues> ListDropDownValues(int companyId)
+        {
+            using (_myContext = new MyContext())
+            {
+                List<DropDownLargeValues> aircraftsList = (from aircraft in _myContext.AirCrafts
+                                                    where aircraft.IsDeleted == false
+                                                    && aircraft.IsActive == true
+                                                    && aircraft.CompanyId == companyId
+                                                    select new DropDownLargeValues()
+                                                    {
+                                                        Id = aircraft.Id,
+                                                        Name = aircraft.TailNo
+
+                                                    }).ToList();
+
+                return aircraftsList;
             }
         }
     }

@@ -1443,7 +1443,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[AircraftSchedules](
-	[Id] [bigint] NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[SchedulActivityTypeId] [int] NULL,
 	[ReservationId] [varchar](15) NOT NULL,
 	[StartDateTime] [datetime] NOT NULL,
@@ -1557,7 +1557,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[AircraftScheduleDetails](
-	[Id] [bigint] NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[AircraftScheduleId] [bigint] NOT NULL,
 	[FlightStatus] [varchar](15) NULL,
 	[CheckInTime] [datetime] NULL,
