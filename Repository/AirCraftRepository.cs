@@ -61,6 +61,9 @@ namespace Repository
                     existingAirCraft.IsEnginesareTurbines = airCraft.IsEnginesareTurbines;
                     existingAirCraft.TrackOilandFuel = airCraft.TrackOilandFuel;
                     existingAirCraft.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
+
+                    existingAirCraft.UpdatedBy = airCraft.UpdatedBy;
+                    existingAirCraft.UpdatedOn = airCraft.UpdatedOn;
                 }
 
                 _myContext.SaveChanges();

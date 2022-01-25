@@ -8,7 +8,7 @@ namespace DataModels.Entities
 
         public int SchedulActivityTypeId { get; set; }
 
-        public string ReservationId { get; set; }
+        public Guid ReservationId { get; set; }
     
         public DateTime StartDateTime { get; set; }
 
@@ -46,7 +46,7 @@ namespace DataModels.Entities
 
         public DateTime CreatedOn { get; set; }
 
-        public int CreatedBy { get; set; }
+        public long CreatedBy { get; set; }
 
         public Nullable<System.DateTime> UpdatedOn { get; set; }
 

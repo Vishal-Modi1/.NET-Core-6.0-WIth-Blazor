@@ -5,6 +5,7 @@ using DataModels.VM.Scheduler;
 using Repository.Interface;
 using Service.Interface;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Service
@@ -23,9 +24,16 @@ namespace Service
             _aircraftRepository = aircraftRepository;
         }
 
-        public CurrentResponse GetDetails(int roleId, int companyId)
+        public CurrentResponse GetDetails(int roleId, int companyId, long id)
         {
+            AircraftSchedule aircraftSchedule = _aircraftScheduleRepository.FindByCondition(p => p.Id == id);
+            
             SchedulerVM schedulerVM = new SchedulerVM();
+
+            if(aircraftSchedule != null)
+            {
+                schedulerVM = ToBusinessObject(aircraftSchedule);
+            }
 
             try
             {
@@ -51,10 +59,48 @@ namespace Service
             try
             {
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
-                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Aircraft scheduled successfully");
+                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Aircraft Appointment created successfully");
 
                 return _currentResponse;
             }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse Edit(SchedulerVM schedulerVM)
+        {
+            try
+            {
+                AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
+                aircraftSchedule = _aircraftScheduleRepository.Edit(aircraftSchedule);
+
+                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment updated successfully");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse List(SchedulerFilter schedulerFilter)
+        {
+            try
+            {
+                List<SchedulerVM> schedulersList = _aircraftScheduleRepository.List(schedulerFilter);
+
+                CreateResponse(schedulersList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
             catch (Exception exc)
             {
                 CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
@@ -70,10 +116,11 @@ namespace Service
             Random rnd = new Random();
 
             aircraftSchedule.SchedulActivityTypeId = schedulerVM.ScheduleActivityId.GetValueOrDefault();
+            aircraftSchedule.Id = schedulerVM.Id;
 
             if (schedulerVM.Id == 0)
             {
-                aircraftSchedule.ReservationId = "#" + DateTime.Now.ToString("ddMMyyyyhhmmss") + rnd.Next();
+                aircraftSchedule.ReservationId = Guid.NewGuid();
             }
             
             aircraftSchedule.StartDateTime = schedulerVM.StartTime;
@@ -106,6 +153,33 @@ namespace Service
             }
 
             return aircraftSchedule;
+        }
+
+        private SchedulerVM ToBusinessObject(AircraftSchedule aircraftSchedule)
+        {
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            schedulerVM.Id = aircraftSchedule.Id;
+            schedulerVM.ScheduleActivityId = aircraftSchedule.SchedulActivityTypeId;
+            schedulerVM.ReservationId = aircraftSchedule.ReservationId;
+
+            schedulerVM.StartTime = aircraftSchedule.StartDateTime;
+            schedulerVM.EndTime = aircraftSchedule.EndDateTime;
+            schedulerVM.IsRecurring = aircraftSchedule.IsRecurring;
+            schedulerVM.Member1Id = aircraftSchedule.Member1Id;
+            schedulerVM.Member2Id = aircraftSchedule.Member2Id;
+            schedulerVM.InstructorId = aircraftSchedule.InstructorId;
+            schedulerVM.DisplayTitle = aircraftSchedule.ScheduleTitle;
+            schedulerVM.AircraftId = aircraftSchedule.AircraftId;
+            schedulerVM.FlightType = aircraftSchedule.FlightType;
+            schedulerVM.FlightRules = aircraftSchedule.FlightRules;
+            schedulerVM.EstHours = aircraftSchedule.EstFlightHours;
+            schedulerVM.Comments = aircraftSchedule.Comments;
+            schedulerVM.InternalComments = aircraftSchedule.PrivateComments;
+            schedulerVM.FlightRoutes = aircraftSchedule.FlightRoutes;
+            schedulerVM.IsStandBy = aircraftSchedule.StandBy;
+
+            return schedulerVM;
         }
     }
 }

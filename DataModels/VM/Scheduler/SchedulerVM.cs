@@ -49,7 +49,7 @@ namespace DataModels.VM.Scheduler
 
         public decimal EstHours { get; set; }
 
-        public string ReservationId { get; set; }
+        public Guid ReservationId { get; set; }
 
         public bool IsActive { get; set; }
 

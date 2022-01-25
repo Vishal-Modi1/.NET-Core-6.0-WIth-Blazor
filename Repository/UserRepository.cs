@@ -58,6 +58,9 @@ namespace Repository
 
                 existingDetails.Gender = user.Gender;
 
+                existingDetails.UpdatedBy = user.UpdatedBy;
+                existingDetails.UpdatedOn = user.UpdatedOn;
+
                 _myContext.SaveChanges();
 
                 return user;

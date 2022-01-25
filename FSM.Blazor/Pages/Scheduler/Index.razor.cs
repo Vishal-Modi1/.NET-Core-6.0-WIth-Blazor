@@ -10,6 +10,8 @@ using DE = DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.Enums;
 using Syncfusion.Blazor.DropDowns;
+using Radzen;
+using FSM.Blazor.Extensions;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -40,6 +42,9 @@ namespace FSM.Blazor.Pages.Scheduler
         public bool IsDisplayRecurring, IsDisplayMember1Dropdown, IsDisplayMember2Dropdown, IsDisplayStandBy,
             IsDisplayAircraftDropDown, IsDisplayFlightRoutes, IsDisplayInstructor, IsDisplayFlightInfo, DialogVisibility;
 
+        public bool isBusy;
+        DateTime CurrentDate = DateTime.Now;
+        
         protected override async Task OnInitializedAsync()
         {
             InitializeValues();
@@ -56,7 +61,13 @@ namespace FSM.Blazor.Pages.Scheduler
 
             ObservableAircraftsData = new ObservableCollection<ResourceData>(await GetAircraftData());
 
-            DataSource = new List<SchedulerVM>() { new SchedulerVM() { Id = 1, StartTime = DateTime.Now, EndTime = DateTime.Now.AddHours(1)  } };
+            await LoadDataAsync();
+        }
+
+        public async Task LoadDataAsync()
+        {
+            DataSource = await AircraftSchedulerService.ListAsync(_httpClient, new SchedulerFilter());
+
             base.StateHasChanged();
         }
 
@@ -78,7 +89,7 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             InitializeValues();
 
-            if(args.Value == (int)ScheduleActivityType.CharterFlight)
+            if (args.Value == (int)ScheduleActivityType.CharterFlight)
             {
                 IsDisplayMember2Dropdown = true;
                 IsDisplayFlightRoutes = true;
@@ -151,18 +162,51 @@ namespace FSM.Blazor.Pages.Scheduler
 
             args.Cancel = true;
             DialogVisibility = true;
-           // await ScheduleRef.OpenEditorAsync(args, CurrentAction.Add);   //To open editor window on cell click
+        }
+
+        public async Task OnEventClick(EventClickArgs<SchedulerVM> args)
+        {
+            schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, args.Event.Id);
+
+            args.Cancel = true;
+            DialogVisibility = true;
         }
 
         private async void OnValidSubmit() //triggers on save button click
         {
-           await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM);
+            isBusy = true;
+            base.StateHasChanged();
+
+            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM);
+
+            NotificationMessage message;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (((int)response.Status) == 200)
+            {
+                DialogVisibility = false ;
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+
+            isBusy = false;
+
+            await LoadDataAsync();
         }
 
         public class ResourceData : INotifyPropertyChanged
         {
             public long Id { get; set; }
-           
+
             private string aircraftTailNo { get; set; }
 
             public string AircraftTailNo

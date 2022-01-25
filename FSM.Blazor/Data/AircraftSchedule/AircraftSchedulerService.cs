@@ -44,5 +44,21 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
             return response;
         }
+
+        public async Task<List<SchedulerVM>> ListAsync(IHttpClientFactory httpClient, SchedulerFilter schedulerFilter)
+        {
+            string jsonData = JsonConvert.SerializeObject(schedulerFilter);
+
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "aircraftscheduler/list", jsonData);
+
+            if (response == null || response.Status != System.Net.HttpStatusCode.OK)
+            {
+                return new List<SchedulerVM>();
+            }
+
+            List<SchedulerVM> appointmentsList = JsonConvert.DeserializeObject<List<SchedulerVM>>(response.Data);
+
+            return appointmentsList;
+        }
     }
 }

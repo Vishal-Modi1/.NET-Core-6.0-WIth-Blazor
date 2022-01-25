@@ -63,6 +63,9 @@ namespace Repository
                     existingCompany.Name = company.Name;
                     existingCompany.Address = company.Address;
                     existingCompany.ContactNo = company.ContactNo;
+
+                    existingCompany.UpdatedBy = company.UpdatedBy;
+                    existingCompany.UpdatedOn = company.UpdatedOn;
                 }
 
                 _myContext.SaveChanges();

@@ -1445,7 +1445,7 @@ GO
 CREATE TABLE [dbo].[AircraftSchedules](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[SchedulActivityTypeId] [int] NULL,
-	[ReservationId] [varchar](15) NOT NULL,
+	[ReservationId] [uniqueidentifier] NOT NULL,
 	[StartDateTime] [datetime] NOT NULL,
 	[EndDateTime] [datetime] NOT NULL,
 	[IsRecurring] [bit] NOT NULL,
