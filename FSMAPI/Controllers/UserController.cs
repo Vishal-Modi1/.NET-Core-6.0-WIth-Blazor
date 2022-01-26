@@ -1,9 +1,7 @@
 ﻿using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
-using System;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.Constants;
@@ -33,7 +31,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("getDetails")]
-        public IActionResult GetDetails(int id)
+        public IActionResult GetDetails(long id)
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
@@ -90,7 +88,7 @@ namespace FSMAPI.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
             CurrentResponse response = _userService.Delete(id);
 
@@ -99,7 +97,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("updatestatus")]
-        public IActionResult UpdateStatus(int id, bool isActive)
+        public IActionResult UpdateStatus(long id, bool isActive)
         {
             CurrentResponse response = _userService.UpdateActiveStatus(id, isActive);
 

@@ -12,5 +12,7 @@ namespace Service.Interface
         CurrentResponse List(SchedulerFilter schedulerFilter);
 
         CurrentResponse Edit(SchedulerVM schedulerVM);
+
+        CurrentResponse Delete(long id);
     }
 }

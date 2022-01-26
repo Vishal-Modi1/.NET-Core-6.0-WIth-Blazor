@@ -28,7 +28,7 @@ namespace Service
             _companyRepository = companyRepository;
         }
 
-        public CurrentResponse GetDetails(int id, int companyId, int roleId)
+        public CurrentResponse GetDetails(long id, int companyId, int roleId)
         {
             User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true);
 
@@ -227,7 +227,7 @@ namespace Service
 
         #endregion
 
-        public CurrentResponse Delete(int id)
+        public CurrentResponse Delete(long id)
         {
             try
             {
@@ -245,7 +245,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse UpdateActiveStatus(int id, bool isActive)
+        public CurrentResponse UpdateActiveStatus(long id, bool isActive)
         {
             try
             {

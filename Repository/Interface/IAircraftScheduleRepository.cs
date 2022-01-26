@@ -22,5 +22,7 @@ namespace Repository.Interface
         AircraftSchedule FindByCondition(Expression<Func<AircraftSchedule, bool>> predicate);
 
         AircraftSchedule Edit(AircraftSchedule aircraftSchedule);
+
+        void Delete(long id);
     }
 }

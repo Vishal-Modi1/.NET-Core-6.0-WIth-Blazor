@@ -20,7 +20,8 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
-            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM(), "Create")) />
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
+            Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM(), "Create")) />
         }
     </div>
 </div>

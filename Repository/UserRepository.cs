@@ -129,7 +129,7 @@ namespace Repository
 
         }
 
-        public void Delete(int id)
+        public void Delete(long id)
         {
             using (_myContext = new MyContext())
             {
@@ -143,7 +143,7 @@ namespace Repository
             }
         }
 
-        public void UpdateActiveStatus(int id, bool isActive)
+        public void UpdateActiveStatus(long id, bool isActive)
         {
             using (_myContext = new MyContext())
             {

@@ -22,7 +22,7 @@ namespace DataModels.Entities
 
         public long? InstructorId { get; set; }
 
-        public long AircraftId { get; set; }
+        public long? AircraftId { get; set; }
 
         public string ScheduleTitle { get; set; }
 

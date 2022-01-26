@@ -37,6 +37,7 @@ namespace DataModels.VM.Scheduler
 
         public List<DropDownLargeValues> AircraftsList { get; set; }
 
+        [Required]
         public long? AircraftId { get; set; }
 
         [Required]
@@ -66,5 +67,7 @@ namespace DataModels.VM.Scheduler
         public Nullable<System.DateTime> DeletedOn { get; set; }
 
         public Nullable<int> DeletedBy { get; set; }
+
+        public bool IsCheckOut { get; set; }
     }
 }

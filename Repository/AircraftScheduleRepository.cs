@@ -90,6 +90,20 @@ namespace Repository
             }
         }
 
+        public void Delete(long id)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftSchedule aircraftSchedule = _myContext.AircraftSchedules.Where(p => p.Id == id).FirstOrDefault();
+
+                if (aircraftSchedule != null)
+                {
+                    aircraftSchedule.IsDeleted = true;
+                    _myContext.SaveChanges();
+                }
+            }
+        }
+
         #region ActivityType
         public List<DropDownValues> ListActivityTypeDropDownValues(int roleId)
         {

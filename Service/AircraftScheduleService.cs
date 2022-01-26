@@ -109,6 +109,25 @@ namespace Service
             }
         }
 
+        public CurrentResponse Delete(long id)
+        {
+            try
+            {
+                _aircraftScheduleRepository.Delete(id);
+                CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        #region Object Mapping
         private AircraftSchedule ToDataObject(SchedulerVM schedulerVM)
         {
             AircraftSchedule aircraftSchedule = new AircraftSchedule();
@@ -130,7 +149,7 @@ namespace Service
             aircraftSchedule.Member2Id = schedulerVM.Member2Id;
             aircraftSchedule.InstructorId = schedulerVM.InstructorId;
             aircraftSchedule.ScheduleTitle = schedulerVM.DisplayTitle;
-            aircraftSchedule.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
+            aircraftSchedule.AircraftId = schedulerVM.AircraftId;
             aircraftSchedule.FlightType = schedulerVM.FlightType;
             aircraftSchedule.FlightRules = schedulerVM.FlightRules;
             aircraftSchedule.EstFlightHours = schedulerVM.EstHours;
@@ -181,5 +200,7 @@ namespace Service
 
             return schedulerVM;
         }
+
+        #endregion
     }
 }

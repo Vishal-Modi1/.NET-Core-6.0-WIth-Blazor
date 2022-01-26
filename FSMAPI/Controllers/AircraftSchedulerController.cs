@@ -2,7 +2,6 @@
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using FSMAPI.Utilities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using System.Security.Claims;
@@ -67,6 +66,15 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(SchedulerVM schedulerVM)
         {
             CurrentResponse response = _aircraftScheduleService.Edit(schedulerVM);
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("delete")]
+        public IActionResult Delete(long id)
+        {
+            CurrentResponse response = _aircraftScheduleService.Delete(id);
+
             return Ok(response);
         }
     }

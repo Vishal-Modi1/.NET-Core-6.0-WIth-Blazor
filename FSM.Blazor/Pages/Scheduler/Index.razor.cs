@@ -12,6 +12,7 @@ using DataModels.Enums;
 using Syncfusion.Blazor.DropDowns;
 using Radzen;
 using FSM.Blazor.Extensions;
+using Newtonsoft.Json;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -40,11 +41,12 @@ namespace FSM.Blazor.Pages.Scheduler
         string moduleName = "Scheduler";
 
         public bool IsDisplayRecurring, IsDisplayMember1Dropdown, IsDisplayMember2Dropdown, IsDisplayStandBy,
-            IsDisplayAircraftDropDown, IsDisplayFlightRoutes, IsDisplayInstructor, IsDisplayFlightInfo, DialogVisibility;
+            IsDisplayAircraftDropDown, IsDisplayFlightRoutes, IsDisplayInstructor, IsDisplayFlightInfo, DialogVisibility,
+            IsDisplayForm, IsDisplayCheckoutOption, isBusyDeleteButton, IsVisibleDeleteDialog;
 
         public bool isBusy;
         DateTime CurrentDate = DateTime.Now;
-        
+
         protected override async Task OnInitializedAsync()
         {
             InitializeValues();
@@ -60,8 +62,14 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerVM.ScheduleActivitiesList = new List<DropDownValues>();
 
             ObservableAircraftsData = new ObservableCollection<ResourceData>(await GetAircraftData());
+        }
 
-            await LoadDataAsync();
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadDataAsync();
+            }
         }
 
         public async Task LoadDataAsync()
@@ -134,10 +142,16 @@ namespace FSM.Blazor.Pages.Scheduler
 
             else if (args.Value == (int)ScheduleActivityType.GroundTraining)
             {
-                IsDisplayAircraftDropDown = false;
+                //IsDisplayAircraftDropDown = false;
                 IsDisplayInstructor = true;
             }
 
+            base.StateHasChanged();
+        }
+
+        private void CloseDialog()
+        {
+            DialogVisibility = false;
             base.StateHasChanged();
         }
 
@@ -151,14 +165,22 @@ namespace FSM.Blazor.Pages.Scheduler
             IsDisplayInstructor = false;
             IsDisplayFlightInfo = false;
             IsDisplayStandBy = true;
+            IsDisplayForm = true;
+            IsDisplayCheckoutOption = false;
         }
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
         {
+            InitializeValues();
+
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, 0);
 
             schedulerVM.StartTime = args.StartTime;
             schedulerVM.EndTime = args.EndTime;
+
+            var SelectedResource = ScheduleRef.GetResourceByIndex(args.GroupIndex);
+            var groupData = JsonConvert.DeserializeObject<SchedulerVM>(JsonConvert.SerializeObject(SelectedResource.GroupData));
+            schedulerVM.AircraftId = groupData.AircraftId;
 
             args.Cancel = true;
             DialogVisibility = true;
@@ -170,12 +192,30 @@ namespace FSM.Blazor.Pages.Scheduler
 
             args.Cancel = true;
             DialogVisibility = true;
+
+            IsDisplayForm = false;
+            IsDisplayCheckoutOption = true;
         }
 
-        private async void OnValidSubmit() //triggers on save button click
+        private void OpenForm()
         {
-            isBusy = true;
+            IsDisplayForm = true;
             base.StateHasChanged();
+        }
+
+        private async void OnValidSubmit()
+        {
+            IsDisplayCheckoutOption = false;
+
+            if (IsDisplayForm)
+            {
+                IsDisplayForm = false;
+                base.StateHasChanged();
+
+                return;
+            }
+
+            isBusy = true;
 
             CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM);
 
@@ -188,7 +228,7 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (((int)response.Status) == 200)
             {
-                DialogVisibility = false ;
+                DialogVisibility = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -201,6 +241,54 @@ namespace FSM.Blazor.Pages.Scheduler
             isBusy = false;
 
             await LoadDataAsync();
+        }
+
+        async Task DeleteAsync()
+        {
+            await SetDeleteButtonState(true);
+
+            CurrentResponse response = await AircraftSchedulerService.DeleteAsync(_httpClient, schedulerVM.Id);
+
+            await SetDeleteButtonState(false);
+
+            NotificationMessage message;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                DialogService.Close();
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+
+           await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
+        }
+
+        private void CloseDeleteDialog()
+        {
+            //IsVisibleDeleteDialog = false; 
+            DialogVisibility = true;
+        }
+
+        private void OpenDeleteDialog()
+        {
+            IsVisibleDeleteDialog = true;
+           // DialogVisibility = false;
+        }
+
+        private async Task SetDeleteButtonState(bool isBusy)
+        {
+            isBusyDeleteButton = isBusy;
+            await InvokeAsync(() => StateHasChanged());
         }
 
         public class ResourceData : INotifyPropertyChanged

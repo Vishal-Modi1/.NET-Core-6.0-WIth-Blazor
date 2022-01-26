@@ -60,5 +60,13 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
             return appointmentsList;
         }
+
+        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, long id)
+        {
+            string url = $"aircraftscheduler/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+
+            return response;
+        }
     }
 }

@@ -20,9 +20,9 @@ namespace Repository.Interface
 
         List<UserDataVM> List(UserDatatableParams datatableParams);
 
-        void Delete(int id);
+        void Delete(long id);
 
-        void UpdateActiveStatus(int id, bool isActive);
+        void UpdateActiveStatus(long id, bool isActive);
 
         bool ResetUserPassword(ResetPasswordVM resetPasswordVM);
 

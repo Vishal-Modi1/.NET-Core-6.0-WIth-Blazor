@@ -8,7 +8,7 @@ namespace Service.Interface
     {
         CurrentResponse Create(UserVM userVM);
 
-        CurrentResponse GetDetails(int id, int companyId, int roleId);
+        CurrentResponse GetDetails(long id, int companyId, int roleId);
 
         CurrentResponse IsEmailExist(string email);
 
@@ -16,9 +16,9 @@ namespace Service.Interface
 
         CurrentResponse List(UserDatatableParams datatableParams);
 
-        CurrentResponse Delete(int id);
+        CurrentResponse Delete(long id);
 
-        CurrentResponse UpdateActiveStatus(int id, bool isActive);
+        CurrentResponse UpdateActiveStatus(long id, bool isActive);
         
         CurrentResponse ResetPassword(ResetPasswordVM resetPasswordVM);
 
