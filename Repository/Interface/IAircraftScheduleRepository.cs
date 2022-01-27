@@ -24,5 +24,7 @@ namespace Repository.Interface
         AircraftSchedule Edit(AircraftSchedule aircraftSchedule);
 
         void Delete(long id);
+
+        bool IsAircraftAlreadyCheckOut(long aircraftId);
     }
 }

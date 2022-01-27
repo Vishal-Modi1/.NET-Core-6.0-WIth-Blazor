@@ -104,6 +104,20 @@ namespace Repository
             }
         }
 
+        public bool IsAircraftAlreadyCheckOut(long aircraftId)
+        {
+            using (_myContext = new MyContext())
+            {
+                bool isAlreadyCheckOut = (from aircraftSchedule in _myContext.AircraftSchedules
+                            join aircraftScheduleDetails in _myContext.AircraftScheduleDetails
+                            on aircraftSchedule.Id equals aircraftScheduleDetails.AircraftScheduleId
+                            where aircraftSchedule.AircraftId == aircraftId
+                            && aircraftScheduleDetails.IsCheckOut == true select new { Id = aircraftSchedule.Id } ).Count() > 0;
+
+                return isAlreadyCheckOut;
+            }
+        }
+
         #region ActivityType
         public List<DropDownValues> ListActivityTypeDropDownValues(int roleId)
         {

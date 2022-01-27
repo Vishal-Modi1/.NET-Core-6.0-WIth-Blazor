@@ -24,7 +24,7 @@
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
 
-<SfSchedule TValue="SchedulerVM" Height="800px" @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@CurrentDate">
+<SfSchedule TValue="SchedulerVM" Height="800px" @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate">
 
     <ScheduleGroup EnableCompactView="false" Resources="@Resources"></ScheduleGroup>
 
@@ -55,7 +55,7 @@
     </ScheduleViews>
 </SfSchedule>
 
-<SfDialog @bind-Visible="@DialogVisibility" IsModal="true" Width="575px" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@dialogVisibility" IsModal="true" Width="575px" ShowCloseIcon="true">
 
     <DialogTemplates>
         <Header> <div>Schedule Appointment</div> </Header>
@@ -63,7 +63,7 @@
 
             <EditForm Model="schedulerVM" OnValidSubmit="@OnValidSubmit">
 
-                @if (IsDisplayForm)
+                @if (isDisplayForm)
                 {
                     <DataAnnotationsValidator />
                     <ValidationSummary />
@@ -116,7 +116,7 @@
                                 </td>
                             </tr>
 
-                            @if (IsDisplayAircraftDropDown)
+                            @if (isDisplayAircraftDropDown)
                             {
                                 <tr>
                                     <td class="e-textlabel">Aircraft</td>
@@ -134,7 +134,7 @@
 
                             @if (schedulerVM.ScheduleActivityId > 0)
                             {
-                                @if (IsDisplayRecurring)
+                                @if (isDisplayRecurring)
                                 {
                                     <tr>
                                         <td class="e-textlabel">Recurring ?</td>
@@ -146,7 +146,7 @@
                                     </tr>
                                 }
 
-                                @if (IsDisplayMember1Dropdown)
+                                @if (isDisplayMember1Dropdown)
                                 {
                                     <tr>
                                         <td class="e-textlabel">Member 1</td>
@@ -160,7 +160,7 @@
                                     </tr>
                                 }
 
-                                @if (IsDisplayMember2Dropdown)
+                                @if (isDisplayMember2Dropdown)
                                 {
                                     <tr>
                                         <td class="e-textlabel">Member 2</td>
@@ -175,7 +175,7 @@
 
                                 }
 
-                                @if (IsDisplayFlightInfo)
+                                @if (isDisplayFlightInfo)
                                 {
                                     <tr>
                                         <td class="e-textlabel">Flight Type</td>
@@ -208,7 +208,7 @@
                                     </tr>
 
                                 }
-                                @if (IsDisplayInstructor)
+                                @if (isDisplayInstructor)
                                 {
                                     <tr>
                                         <td class="e-textlabel">Instructor</td>
@@ -222,7 +222,7 @@
                                     </tr>
                                 }
 
-                                @if (IsDisplayFlightRoutes)
+                                @if (isDisplayFlightRoutes)
                                 {
                                     <tr>
                                         <td class="e-textlabel">Flight Routes</td>
@@ -252,7 +252,7 @@
                                 </tr>
 
                             }
-                            @if (IsDisplayStandBy)
+                            @if (isDisplayStandBy)
                             {
                                 <tr>
                                     <td class="e-textlabel">StandBy</td>
@@ -350,11 +350,11 @@
                         </label>
                     </div>
 
-                    @if (IsDisplayCheckoutOption)
+                    @if (isDisplayCheckoutOption)
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Primary" Text="Check Out" Style="width: 130px" />
-                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 130px" />
-                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 130px" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..." IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
                     }
 
                     else
@@ -374,7 +374,7 @@
 
 </SfDialog>
 
-<SfDialog ID="DeleteDialog" Width="360px" MinHeight="150px" Target="Body" ShowCloseIcon="true" @bind-Visible="@IsVisibleDeleteDialog">
+<SfDialog ID="DeleteDialog" Width="360px" MinHeight="150px" Target="Body" ShowCloseIcon="true" @bind-Visible="@isVisibleDeleteDialog">
    
     <DialogTemplates>
        
@@ -400,7 +400,7 @@
 @{
  async Task OpenDeleteDialog()
     {
-        DialogVisibility = false;
+        dialogVisibility = false;
         var result = await DialogService.OpenAsync("Delete", ds =>
     @<div>
         <p class="mb-4">Are you sure, You want to delete appointment ?</p>

@@ -16,8 +16,8 @@ namespace DataModels.Entities
 
         public long? CheckInBy { get; set; }
 
-
         public long? CheckOutBy { get; set; }
 
+        public bool IsCheckOut { get; set; }
     }
 }

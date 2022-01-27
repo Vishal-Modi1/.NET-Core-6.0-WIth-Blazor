@@ -14,5 +14,7 @@ namespace Service.Interface
         CurrentResponse Edit(SchedulerVM schedulerVM);
 
         CurrentResponse Delete(long id);
+
+        CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId);
     }
 }

@@ -1564,6 +1564,7 @@ CREATE TABLE [dbo].[AircraftScheduleDetails](
 	[CheckOutTime] [datetime] NULL,
 	[CheckInBy] [bigint] NULL,
 	[CheckOutBy] [bigint] NULL,
+	[IsCheckOut] [bit] NOT NULL,
  CONSTRAINT [PK_AircraftScheduleDetails] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

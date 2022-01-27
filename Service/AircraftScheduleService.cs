@@ -127,6 +127,32 @@ namespace Service
             }
         }
 
+        public CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId)
+        {
+            try
+            {
+                bool response = _aircraftScheduleRepository.IsAircraftAlreadyCheckOut(aircraftId);
+
+                if (response)
+                {
+                    CreateResponse(true, HttpStatusCode.OK, "Aircraft is already checked-out. The aircraft must be checked-in before you can check it out.");
+                }
+                else
+                {
+                    CreateResponse(false, HttpStatusCode.OK, "");
+                }
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         #region Object Mapping
         private AircraftSchedule ToDataObject(SchedulerVM schedulerVM)
         {

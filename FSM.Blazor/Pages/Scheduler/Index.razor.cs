@@ -40,12 +40,12 @@ namespace FSM.Blazor.Pages.Scheduler
 
         string moduleName = "Scheduler";
 
-        public bool IsDisplayRecurring, IsDisplayMember1Dropdown, IsDisplayMember2Dropdown, IsDisplayStandBy,
-            IsDisplayAircraftDropDown, IsDisplayFlightRoutes, IsDisplayInstructor, IsDisplayFlightInfo, DialogVisibility,
-            IsDisplayForm, IsDisplayCheckoutOption, isBusyDeleteButton, IsVisibleDeleteDialog;
+        public bool isDisplayRecurring, isDisplayMember1Dropdown, isDisplayMember2Dropdown, isDisplayStandBy,
+            isDisplayAircraftDropDown, isDisplayFlightRoutes, isDisplayInstructor, isDisplayFlightInfo, dialogVisibility,
+            isDisplayForm, isDisplayCheckoutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton;
 
         public bool isBusy;
-        DateTime CurrentDate = DateTime.Now;
+        DateTime currentDate = DateTime.Now;
 
         protected override async Task OnInitializedAsync()
         {
@@ -99,74 +99,109 @@ namespace FSM.Blazor.Pages.Scheduler
 
             if (args.Value == (int)ScheduleActivityType.CharterFlight)
             {
-                IsDisplayMember2Dropdown = true;
-                IsDisplayFlightRoutes = true;
+                isDisplayMember2Dropdown = true;
+                isDisplayFlightRoutes = true;
             }
 
             else if (args.Value == (int)ScheduleActivityType.RenterFlight)
             {
-                IsDisplayMember2Dropdown = true;
-                IsDisplayFlightRoutes = true;
-                IsDisplayFlightInfo = true;
+                isDisplayMember2Dropdown = true;
+                isDisplayFlightRoutes = true;
+                isDisplayFlightInfo = true;
             }
 
             else if (args.Value == (int)ScheduleActivityType.TourFlight)
             {
-                IsDisplayMember2Dropdown = true;
-                IsDisplayFlightRoutes = true;
-                IsDisplayFlightInfo = true;
+                isDisplayMember2Dropdown = true;
+                isDisplayFlightRoutes = true;
+                isDisplayFlightInfo = true;
             }
 
             else if (args.Value == (int)ScheduleActivityType.StudentSolo)
             {
-                IsDisplayFlightRoutes = true;
-                IsDisplayFlightInfo = true;
+                isDisplayFlightRoutes = true;
+                isDisplayFlightInfo = true;
             }
 
             else if (args.Value == (int)ScheduleActivityType.Maintenance)
             {
-                IsDisplayRecurring = false;
-                IsDisplayMember1Dropdown = false;
-                IsDisplayStandBy = false;
+                isDisplayRecurring = false;
+                isDisplayMember1Dropdown = false;
+                isDisplayStandBy = false;
             }
 
             else if (args.Value == (int)ScheduleActivityType.DiscoveryFlight)
             {
-                IsDisplayInstructor = true;
+                isDisplayInstructor = true;
             }
 
             else if (args.Value == (int)ScheduleActivityType.DualFlightTraining)
             {
-                IsDisplayInstructor = true;
+                isDisplayInstructor = true;
             }
 
             else if (args.Value == (int)ScheduleActivityType.GroundTraining)
             {
                 //IsDisplayAircraftDropDown = false;
-                IsDisplayInstructor = true;
+                isDisplayInstructor = true;
             }
 
             base.StateHasChanged();
         }
 
+        private async Task CheckOutAircraft()
+        {
+            await SetCheckOutButtonState(true);
+
+            // check if someone else already checked out it 
+            CurrentResponse response = await AircraftSchedulerService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
+
+            NotificationMessage message;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (((int)response.Status) == 200)
+            {
+                if (response.Data == "false")
+                {
+                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                    NotificationService.Notify(message);
+                }
+                else
+                {
+                    // Enter details in details table
+                }
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+
+            await SetCheckOutButtonState(false);
+        }
+
         private void CloseDialog()
         {
-            DialogVisibility = false;
+            dialogVisibility = false;
             base.StateHasChanged();
         }
 
         public void InitializeValues()
         {
-            IsDisplayRecurring = true;
-            IsDisplayMember1Dropdown = true;
-            IsDisplayAircraftDropDown = true;
-            IsDisplayMember2Dropdown = false;
-            IsDisplayFlightRoutes = false;
-            IsDisplayInstructor = false;
-            IsDisplayFlightInfo = false;
-            IsDisplayStandBy = true;
-            IsDisplayForm = true;
-            IsDisplayCheckoutOption = false;
+            isDisplayRecurring = true;
+            isDisplayMember1Dropdown = true;
+            isDisplayAircraftDropDown = true;
+            isDisplayMember2Dropdown = false;
+            isDisplayFlightRoutes = false;
+            isDisplayInstructor = false;
+            isDisplayFlightInfo = false;
+            isDisplayStandBy = true;
+            isDisplayForm = true;
+            isDisplayCheckoutOption = false;
         }
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
@@ -183,33 +218,32 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerVM.AircraftId = groupData.AircraftId;
 
             args.Cancel = true;
-            DialogVisibility = true;
+            dialogVisibility = true;
         }
 
         public async Task OnEventClick(EventClickArgs<SchedulerVM> args)
         {
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, args.Event.Id);
-
             args.Cancel = true;
-            DialogVisibility = true;
+            dialogVisibility = true;
 
-            IsDisplayForm = false;
-            IsDisplayCheckoutOption = true;
+            isDisplayForm = false;
+            isDisplayCheckoutOption = true;
         }
 
         private void OpenForm()
         {
-            IsDisplayForm = true;
+            isDisplayForm = true;
             base.StateHasChanged();
         }
 
         private async void OnValidSubmit()
         {
-            IsDisplayCheckoutOption = false;
+            isDisplayCheckoutOption = false;
 
-            if (IsDisplayForm)
+            if (isDisplayForm)
             {
-                IsDisplayForm = false;
+                isDisplayForm = false;
                 base.StateHasChanged();
 
                 return;
@@ -228,7 +262,7 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (((int)response.Status) == 200)
             {
-                DialogVisibility = false;
+                dialogVisibility = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -276,18 +310,18 @@ namespace FSM.Blazor.Pages.Scheduler
         private void CloseDeleteDialog()
         {
             //IsVisibleDeleteDialog = false; 
-            DialogVisibility = true;
-        }
-
-        private void OpenDeleteDialog()
-        {
-            IsVisibleDeleteDialog = true;
-           // DialogVisibility = false;
+            dialogVisibility = true;
         }
 
         private async Task SetDeleteButtonState(bool isBusy)
         {
             isBusyDeleteButton = isBusy;
+            await InvokeAsync(() => StateHasChanged());
+        }
+
+        private async Task SetCheckOutButtonState(bool isBusy)
+        {
+            isBusyCheckOutButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
         }
 

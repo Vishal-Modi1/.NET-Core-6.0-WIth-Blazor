@@ -77,5 +77,14 @@ namespace FSMAPI.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("isaircraftalreadycheckout")]
+        public IActionResult IsAircraftAlreadyCheckOut(long aircraftId)
+        {
+            CurrentResponse response = _aircraftScheduleService.IsAircraftAlreadyCheckOut(aircraftId);
+
+            return Ok(response);
+        }
     }
 }
