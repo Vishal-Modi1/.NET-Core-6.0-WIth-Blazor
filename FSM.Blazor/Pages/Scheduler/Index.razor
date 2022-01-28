@@ -1,4 +1,5 @@
-﻿@using DataModels.VM.Common
+﻿@using DataModels.VM.AircraftEquipment
+@using DataModels.VM.Common
 @using FSM.Blazor.Data.AircraftSchedule
 @using FSM.Blazor.Data.Aircraft
 @using Syncfusion.Blazor
@@ -13,6 +14,7 @@
 @using DataModels.VM.Scheduler;
 @using Syncfusion.Blazor.Popups;
 @using DataModels.Entities;
+@using DataModels.VM;
 
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AircraftService AircraftService
@@ -429,7 +431,7 @@
 
                             <tbody>
 
-                                @foreach (AircraftEquipmentTime aircraftEquipmentTime in schedulerVM.AircraftEquipmentsTimeList)
+                                @foreach (AircraftEquipmentTimeVM aircraftEquipmentTime in schedulerVM.AircraftEquipmentsTimeList)
                                 {
                                     <tr>
                                         <td>@aircraftEquipmentTime.EquipmentName</td>
@@ -449,15 +451,62 @@
             {
                 <EditForm Model="aircraftEquipmentTime" OnValidSubmit="@OnEquipmentsTimeSubmit">
 
-                    <div>
-                        <h3>Aircraft : @schedulerVM.AircraftsList.Where(p => p.Id == @schedulerVM.AircraftId).First().Name </h3>
-                    </div>
+                    <table class="custom-event-editor" width="100%" cellpadding="5">
+
+                        <thead>
+
+                            <tr>
+                                <th>Meter</th>
+                                <th>Time Out</th>
+                                <th>Time In</th>
+                                <th>Total</th>
+                            </tr>
+
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @for (int index = 0; index < schedulerVM.AircraftEquipmentsTimeList.Count(); index++)
+                            {
+                               //  var textValue = value.Value; 
+                               int indexValue = index;
+
+                                <tr>
+                                    <td class="e-textlabel">@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
+                                    <td>
+
+                                        @schedulerVM.AircraftEquipmentsTimeList[index].Hours
+
+                                    </td>
+
+                                    <td>
+
+                                        <SfTextBox Type="InputType.Number"  Width="70%" Placeholder="Enter Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].Hours.ToString()"
+                                        ValueChange="((ChangedEventArgs args)=> TextBoxChangeEvent( args, indexValue))">
+                                        </SfTextBox>
+
+                                    </td>
+
+                                    <td>
+                                       
+                                        @schedulerVM.AircraftEquipmentsTimeList[index].TotalHours
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
 
                     <div>
                         <div class="row" style="text-align:right">
                             <div class="col">
-                                <RadzenButton Text="Check In" ButtonStyle="ButtonStyle.Primary" Click="() => DeleteAsync() " 
-                                           Class="mr-1" Style="width: 163px;" />
+                                <RadzenButton Text="Check In" ButtonType="Radzen.ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"
+                                  BusyText="Checking In..."   Class="mr-1" Style="width: 163px;" />
 
                                 <RadzenButton Text="Cancel" Click="() => OpenMainForm()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 120px;" />
                             </div>

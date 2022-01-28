@@ -1,4 +1,5 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,6 @@ namespace DataModels.VM.Scheduler
 
         public string CssClass { get; set; } 
 
-        public List<AircraftEquipmentTime> AircraftEquipmentsTimeList { get; set;}
+        public List<AircraftEquipmentTimeVM> AircraftEquipmentsTimeList { get; set;}
     }
 }

@@ -71,7 +71,7 @@ GO
 CREATE TABLE [dbo].[AircraftEquipmentTimes](
 	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
 	[EquipmentName] [varchar](200) NOT NULL,
-	[Hours] [int] NOT NULL,
+	[Hours] decimal(18,2) NOT NULL,
 	[AircraftId] [BIGINT] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
@@ -506,6 +506,97 @@ GO
 /****** Object:  StoredProcedure [dbo].[GetAircraftEquipmentList]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
 GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetAircraftEquipmentList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'Status',  
+    @SortOrder NVARCHAR(20) = 'ASC',
+	@AircraftId INT
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+        SELECT AE.*,AES.Name [Status], EC.Name [Classification] from AirCraftEquipments AE
+		LEFT JOIN  EquipmentStatuses AES on AE.StatusId = AES.Id
+		LEFT JOIN  EquipmentClassifications EC on AE.ClassificationId = EC.Id
+
+        WHERE AE.AirCraftId = @AircraftId AND AE.IsDeleted = 0 AND (@SearchValue= '' OR  (   
+              AES.Name LIKE '%' + @SearchValue + '%' OR
+			  EC.Name LIKE '%' + @SearchValue + '%' OR
+			  AE.Item LIKE '%' + @SearchValue + '%' OR
+			  AE.Model LIKE '%' + @SearchValue + '%' OR
+			  AE.Make LIKE '%' + @SearchValue + '%'
+            ) ) 
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'Status' AND @SortOrder='ASC')  
+                        THEN AES.Name  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Status' AND @SortOrder='DESC')  
+                        THEN AES.Name  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Classification' AND @SortOrder='ASC')  
+                        THEN EC.Name  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Classification' AND @SortOrder='DESC')  
+                        THEN EC.Name  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Item' AND @SortOrder='ASC')  
+                        THEN AE.Item  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Item' AND @SortOrder='DESC')  
+                        THEN AE.Item  
+            END DESC, 
+            CASE WHEN (@SortColumn = 'Model' AND @SortOrder='ASC')  
+                        THEN AE.Model  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Model' AND @SortOrder='DESC')  
+                        THEN AE.Model  
+            END DESC,
+			CASE WHEN (@SortColumn = 'Make' AND @SortOrder='ASC')  
+                        THEN AE.Make 
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Make' AND @SortOrder='DESC')  
+                        THEN AE.Make  
+            END DESC
+			
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(AE.ID) as TotalRecords from AirCraftEquipments AE
+		LEFT JOIN  EquipmentStatuses AES on AE.StatusId = AES.Id
+		LEFT JOIN  EquipmentClassifications EC on AE.ClassificationId = EC.Id
+
+       
+         WHERE AE.AirCraftId = @AircraftId AND AE.IsDeleted = 0 AND (@SearchValue= '' OR  (   
+              AES.Name LIKE '%' + @SearchValue + '%' OR
+			  EC.Name LIKE '%' + @SearchValue + '%' OR
+			  AE.Item LIKE '%' + @SearchValue + '%' OR
+			  AE.Model LIKE '%' + @SearchValue + '%' OR
+			  AE.Make LIKE '%' + @SearchValue + '%'
+            ) ) 
+    )  
+
+    Select TotalRecords, AE.*,AES.Name [Status], EC.Name [Classification] from AirCraftEquipments AE
+		LEFT JOIN  EquipmentStatuses AES on AE.StatusId = AES.Id
+		LEFT JOIN  EquipmentClassifications EC on AE.ClassificationId = EC.Id
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = AE.ID)  
+   
+END
+GO
+
+
 SET QUOTED_IDENTIFIER ON
 GO
 

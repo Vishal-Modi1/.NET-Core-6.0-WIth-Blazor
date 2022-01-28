@@ -1,4 +1,5 @@
 ﻿using DataModels.VM;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -19,7 +20,18 @@ namespace FSM.Blazor.Data.AircraftSchedule
         {
             string jsonData = JsonConvert.SerializeObject(scheduleId);
 
-            string url = "aircraftschedulerdetail/create";
+            string url = "aircraftschedulerdetail/checkout";
+
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> CheckIn(IHttpClientFactory httpClient, List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
+        {
+            string jsonData = JsonConvert.SerializeObject(aircraftEquipmentsTimeList);
+
+            string url = "aircraftschedulerdetail/checkin";
 
             CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
 

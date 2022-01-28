@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Repository
 {
-    public  class AircraftScheduleDetailRepository : IAircraftScheduleDetailRepository
+    public class AircraftScheduleDetailRepository : IAircraftScheduleDetailRepository
     {
         private MyContext _myContext;
 
@@ -26,7 +26,7 @@ namespace Repository
             }
         }
 
-        public AircraftScheduleDetail Create(AircraftScheduleDetail aircraftScheduleDetail)
+        public AircraftScheduleDetail CheckOut(AircraftScheduleDetail aircraftScheduleDetail)
         {
             using (_myContext = new MyContext())
             {
@@ -34,6 +34,26 @@ namespace Repository
                 _myContext.SaveChanges();
 
                 return aircraftScheduleDetail;
+            }
+        }
+
+        public AircraftScheduleDetail CheckIn(long checkInBy, DateTime checkInTime, long aircraftScheduleId)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftScheduleDetail aircraftScheduleDetail = _myContext.AircraftScheduleDetails.Where(p => p.AircraftScheduleId == aircraftScheduleId).FirstOrDefault();
+
+                if (aircraftScheduleDetail != null)
+                {
+                    aircraftScheduleDetail.CheckInBy = checkInBy;
+                    aircraftScheduleDetail.CheckInTime = checkInTime;
+                    aircraftScheduleDetail.IsCheckOut = false;
+
+                    _myContext.SaveChanges();
+                }
+
+                return aircraftScheduleDetail;
+
             }
         }
 

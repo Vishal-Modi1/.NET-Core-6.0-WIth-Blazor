@@ -6,7 +6,7 @@ namespace DataModels.Entities
     {
         public long Id { get; set; }
         public string EquipmentName { get; set; }
-        public int Hours { get; set; }
+        public decimal Hours { get; set; }
         public long AircraftId { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<int> DeletedBy { get; set; }

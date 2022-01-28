@@ -1,4 +1,5 @@
 ﻿using DataModels.Constants;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using FSMAPI.Utilities;

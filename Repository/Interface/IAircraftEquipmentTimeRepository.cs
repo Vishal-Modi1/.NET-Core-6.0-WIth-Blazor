@@ -1,4 +1,5 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.AircraftEquipment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,12 @@ namespace Repository.Interface
         AircraftEquipmentTime Edit(AircraftEquipmentTime airCraft);
         
         void Delete(int id);
-        void DeleteEquipmentTimes(int airCraftId,int UpdatedBy);
+        void DeleteEquipmentTimes(long airCraftId,int UpdatedBy);
 
         AircraftEquipmentTime FindByCondition(Expression<Func<AircraftEquipmentTime, bool>> predicate);
+
         List<AircraftEquipmentTime> FindListByCondition(Expression<Func<AircraftEquipmentTime, bool>> predicate);
+
+        List<AircraftEquipmentTimeVM> ListByCondition(Expression<Func<AircraftEquipmentTime, bool>> predicate);
     }
 }

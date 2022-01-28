@@ -1,6 +1,8 @@
 ﻿using DataModels.Entities;
 using DataModels.VM;
 using DataModels.VM.Common;
+using DataModels.VM.AircraftEquipment;
+using System.Collections.Generic;
 
 namespace Service.Interface
 {
@@ -8,6 +10,8 @@ namespace Service.Interface
     {
         CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId);
 
-        CurrentResponse Create(AircraftScheduleDetailVM aircraftScheduleDetailVM);
+        CurrentResponse CheckOut(AircraftScheduleDetailVM aircraftScheduleDetailVM);
+
+        CurrentResponse CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList, long checkInBy);
     }
 }

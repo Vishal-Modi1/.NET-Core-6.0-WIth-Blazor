@@ -8,8 +8,10 @@ namespace Repository.Interface
     {
         bool IsAircraftAlreadyCheckOut(long aircraftId);
 
-        AircraftScheduleDetail Create(AircraftScheduleDetail aircraftScheduleDetail);
+        AircraftScheduleDetail CheckOut(AircraftScheduleDetail aircraftScheduleDetail);
 
         AircraftScheduleDetail FindByCondition(Expression<Func<AircraftScheduleDetail, bool>> predicate);
+
+        AircraftScheduleDetail CheckIn(long checkInBy, DateTime checkInTime, long aircraftScheduleId);
     }
 }

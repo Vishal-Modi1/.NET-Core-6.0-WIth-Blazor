@@ -47,7 +47,8 @@ namespace Service
                         schedulerVM.IsCheckOut = aircraftScheduleDetail.IsCheckOut;
                     }
 
-                    schedulerVM.AircraftEquipmentsTimeList = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == schedulerVM.AircraftId && p.IsDeleted == false);
+                    schedulerVM.AircraftEquipmentsTimeList = _aircraftEquipmentTimeRepository.ListByCondition(p => p.AircraftId == schedulerVM.AircraftId && p.IsDeleted == false);
+                    schedulerVM.AircraftEquipmentsTimeList.ForEach(p => { p.AircraftScheduleId = aircraftSchedule.Id; });
                 }
 
                 schedulerVM.ScheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);

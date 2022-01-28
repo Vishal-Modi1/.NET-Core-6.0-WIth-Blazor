@@ -13,6 +13,7 @@ using Syncfusion.Blazor.DropDowns;
 using Radzen;
 using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
+using Syncfusion.Blazor.Inputs;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -239,9 +240,35 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayMainForm = true;
         }
 
-        private void OnEquipmentsTimeSubmit()
-        { 
-        
+        private async Task OnEquipmentsTimeSubmit()
+        {
+            NotificationMessage message;
+
+            CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(_httpClient, schedulerVM.AircraftEquipmentsTimeList);
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                dialogVisibility = false;
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+
+               // schedulerVM.IsCheckOut = true;
+              //  DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.IsCheckOut = true; });
+                base.StateHasChanged();
+
+             //   await ScheduleRef.RefreshEventsAsync();
+
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
         }
 
         public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
@@ -398,6 +425,13 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             isBusyCheckOutButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
+        }
+
+        public void TextBoxChangeEvent(ChangedEventArgs args, int index)
+        {
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+
+            base.StateHasChanged();
         }
 
         public class ResourceData : INotifyPropertyChanged

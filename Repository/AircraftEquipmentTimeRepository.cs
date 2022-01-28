@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using DataModels.VM;
+using DataModels.VM.AircraftEquipment;
 
 namespace Repository
 {
@@ -41,6 +42,7 @@ namespace Repository
                 return aircraftEquipmentTime;
             }
         }
+
         public void Delete(int id)
         {
             using (_myContext = new MyContext())
@@ -55,7 +57,7 @@ namespace Repository
             }
         }
 
-        public void DeleteEquipmentTimes(int airCraftId, int UpdatedBy)
+        public void DeleteEquipmentTimes(long airCraftId, int UpdatedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -86,6 +88,21 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 return _myContext.AircraftEquipmentTimes.Where(predicate).ToList();
+            }
+        }
+
+        public List<AircraftEquipmentTimeVM> ListByCondition(Expression<Func<AircraftEquipmentTime, bool>> predicate)
+        {
+            using (_myContext = new MyContext())
+            {
+                return _myContext.AircraftEquipmentTimes.Where(predicate).ToList().Select(p=> new AircraftEquipmentTimeVM()
+                {
+                    AircraftId = p.AircraftId,
+                    EquipmentName = p.EquipmentName,
+                    Hours = p.Hours,
+                    Id = p.Id
+                    
+                }).ToList();
             }
         }
     }

@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
+using System.Collections.Generic;
 
 namespace Service
 {
@@ -96,7 +97,21 @@ namespace Service
             return aircraftEquipmentTime;
         }
 
-        public bool DeleteAllEquipmentTimeByAirCraftId(int AirCraftId,int UpdatedBy)
+        public List<AircraftEquipmentTime> ToDataObjectList(List<AircraftEquipmentTimeVM> aircraftEquipmentTimesVMList)
+        {
+            List<AircraftEquipmentTime> aircraftEquipmentTimesList = new List<AircraftEquipmentTime>();
+
+            foreach (AircraftEquipmentTimeVM aircraftEquipmentTimesVM in aircraftEquipmentTimesVMList)
+            {
+                AircraftEquipmentTime aircraftEquipmentTime = ToDataObject(aircraftEquipmentTimesVM);
+
+                aircraftEquipmentTimesList.Add(aircraftEquipmentTime);
+            }
+
+            return aircraftEquipmentTimesList;
+        }
+
+        public bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId,int UpdatedBy)
         {
             try
             {

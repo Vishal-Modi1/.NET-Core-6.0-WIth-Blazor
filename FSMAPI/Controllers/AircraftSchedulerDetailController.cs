@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
+using DataModels.VM.AircraftEquipment;
 
 namespace FSMAPI.Controllers
 {
@@ -30,14 +31,24 @@ namespace FSMAPI.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
-        public IActionResult Create([FromBody] long scheduleId)
+        [Route("checkout")]
+        public IActionResult Checkout([FromBody] long scheduleId)
         {
             AircraftScheduleDetailVM aircraftScheduleDetailVM = new AircraftScheduleDetailVM();
             aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
 
             aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _aircraftScheduleDetailService.Create(aircraftScheduleDetailVM);
+            CurrentResponse response = _aircraftScheduleDetailService.CheckOut(aircraftScheduleDetailVM);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("checkin")]
+        public IActionResult CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
+        {
+            long checkInBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _aircraftScheduleDetailService.CheckIn(aircraftEquipmentsTimeList, checkInBy);
 
             return Ok(response);
         }
