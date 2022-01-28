@@ -26,7 +26,7 @@ namespace FSM.Blazor.Data.InstructorType
                 return new List<InstructorTypeVM>();
             }
 
-            List<InstructorTypeVM> instructorTypes = JsonConvert.DeserializeObject<List<InstructorTypeVM>>(response.Data);
+            List<InstructorTypeVM> instructorTypes = JsonConvert.DeserializeObject<List<InstructorTypeVM>>(response.Data.ToString());
 
             return instructorTypes; 
         }

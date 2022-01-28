@@ -13,7 +13,6 @@ using Syncfusion.Blazor.DropDowns;
 using Radzen;
 using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
-using DataModels.VM;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -33,6 +32,7 @@ namespace FSM.Blazor.Pages.Scheduler
         public SfSchedule<SchedulerVM> ScheduleRef;
 
         SchedulerVM schedulerVM;
+        DE.AircraftEquipmentTime aircraftEquipmentTime = new DE.AircraftEquipmentTime();
 
         List<SchedulerVM> DataSource;
 
@@ -43,7 +43,8 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public bool isDisplayRecurring, isDisplayMember1Dropdown, isDisplayMember2Dropdown, isDisplayStandBy,
             isDisplayAircraftDropDown, isDisplayFlightRoutes, isDisplayInstructor, isDisplayFlightInfo, dialogVisibility,
-            isDisplayForm, isDisplayCheckOutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton;
+            isDisplayForm, isDisplayCheckOutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton,
+            isDisplayMainForm;
 
         public bool isBusy;
         DateTime currentDate = DateTime.Now;
@@ -230,7 +231,17 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private async Task CheckInAircraft()
         {
+            isDisplayMainForm = false;
+        }
 
+        private async Task OpenMainForm()
+        {
+            isDisplayMainForm = true;
+        }
+
+        private void OnEquipmentsTimeSubmit()
+        { 
+        
         }
 
         public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
@@ -263,6 +274,7 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayStandBy = true;
             isDisplayForm = true;
             isDisplayCheckOutOption = false;
+            isDisplayMainForm = true;
         }
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)

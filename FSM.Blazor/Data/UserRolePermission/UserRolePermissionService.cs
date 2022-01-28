@@ -23,7 +23,7 @@ namespace FSM.Blazor.Data.UserRolePermission
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                userFilterVM = JsonConvert.DeserializeObject<UserRolePermissionFilterVM>(response.Data);
+                userFilterVM = JsonConvert.DeserializeObject<UserRolePermissionFilterVM>(response.Data.ToString());
             }
 
             return userFilterVM;
@@ -40,7 +40,7 @@ namespace FSM.Blazor.Data.UserRolePermission
                 return new List<UserRolePermissionDataVM>();
             }
 
-            List<UserRolePermissionDataVM> userrolePermissions = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
+            List<UserRolePermissionDataVM> userrolePermissions = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data.ToString());
 
             return userrolePermissions;
         }

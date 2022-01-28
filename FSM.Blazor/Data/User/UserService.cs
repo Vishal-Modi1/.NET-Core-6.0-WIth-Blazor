@@ -26,7 +26,7 @@ namespace FSM.Blazor.Data.User
                 return new List<UserDataVM>();
             }
 
-            List<UserDataVM> userDataList = JsonConvert.DeserializeObject<List<UserDataVM>>(response.Data);
+            List<UserDataVM> userDataList = JsonConvert.DeserializeObject<List<UserDataVM>>(response.Data.ToString());
 
             return userDataList; 
         }
@@ -70,7 +70,7 @@ namespace FSM.Blazor.Data.User
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data);
+                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
             }
 
             return userVM;
@@ -84,7 +84,7 @@ namespace FSM.Blazor.Data.User
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                userFilterVM = JsonConvert.DeserializeObject<UserFilterVM>(response.Data);
+                userFilterVM = JsonConvert.DeserializeObject<UserFilterVM>(response.Data.ToString());
             }
 
             return userFilterVM;

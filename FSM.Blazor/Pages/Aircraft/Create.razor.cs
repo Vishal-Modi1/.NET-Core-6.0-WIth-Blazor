@@ -129,7 +129,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
                 if (response != null)
                 {
-                    AircraftVM aircraft = JsonConvert.DeserializeObject<AircraftVM>(response.Data);
+                    AircraftVM aircraft = JsonConvert.DeserializeObject<AircraftVM>(response.Data.ToString());
 
                     if (aircraft.Id > 0)
                     {
@@ -189,7 +189,7 @@ namespace FSM.Blazor.Pages.Aircraft
                   null, new DialogOptions() { Width = "500px", Height = "380px" });
 
                 CurrentResponse response = await AircraftModelService.ListDropdownValues(_httpClient);
-                AircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data);
+                AircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 
                 AircraftData.AircraftModelList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
 
@@ -205,7 +205,7 @@ namespace FSM.Blazor.Pages.Aircraft
                   null, new DialogOptions() { Width = "500px", Height = "380px" });
 
                 CurrentResponse response = await AircraftMakeService.ListDropdownValues(_httpClient);
-                AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data);
+                AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 
                 AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
 

@@ -32,7 +32,7 @@ namespace FSM.Blazor.Data.Common
 
                 if (response != null)
                 {
-                    userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
+                    userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data.ToString());
 
                     if (userRolePermissionsList != null && userRolePermissionsList.Count() > 0)
                     {

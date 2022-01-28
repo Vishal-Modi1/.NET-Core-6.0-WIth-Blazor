@@ -22,7 +22,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
             string jsonData = JsonConvert.SerializeObject(datatableParams);
 
             CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
-            List<AircraftEquipmentDataVM> aircraftEquipmentsList = JsonConvert.DeserializeObject<List<AircraftEquipmentDataVM>>(response.Data);
+            List<AircraftEquipmentDataVM> aircraftEquipmentsList = JsonConvert.DeserializeObject<List<AircraftEquipmentDataVM>>(response.Data.ToString());
 
             return aircraftEquipmentsList;
         }
@@ -60,7 +60,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                airCraftEquipmentsVM = JsonConvert.DeserializeObject<AircraftEquipmentsVM>(response.Data);
+                airCraftEquipmentsVM = JsonConvert.DeserializeObject<AircraftEquipmentsVM>(response.Data.ToString());
             }
 
             return airCraftEquipmentsVM;
@@ -91,7 +91,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                statusVMList = JsonConvert.DeserializeObject<List<StatusVM>>(response.Data);
+                statusVMList = JsonConvert.DeserializeObject<List<StatusVM>>(response.Data.ToString());
             }
 
             return statusVMList;
@@ -104,7 +104,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                ClassificationVMList = JsonConvert.DeserializeObject<List<EquipmentClassificationVM>>(response.Data);
+                ClassificationVMList = JsonConvert.DeserializeObject<List<EquipmentClassificationVM>>(response.Data.ToString());
             }
 
             return ClassificationVMList;

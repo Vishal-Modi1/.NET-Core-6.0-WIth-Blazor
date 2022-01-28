@@ -43,7 +43,7 @@ namespace FSM.Blazor
 
             var response = await _httpCaller.PostAsync( _httpClient, "Account/login", jsonData);
 
-            jsonData = JsonConvert.SerializeObject(response);
+            jsonData = JsonConvert.SerializeObject(response.Data);
 
             if (response.Status == HttpStatusCode.OK)
             {
@@ -70,11 +70,11 @@ namespace FSM.Blazor
             return this.Ok();
         }
 
-        private async Task AddCookieAsync(string response)
+        private async Task AddCookieAsync(object response)
         {
             try
             {
-                LoginResponseVM loginResponse = JsonConvert.DeserializeObject<LoginResponseVM>(response);
+                LoginResponseVM loginResponse = JsonConvert.DeserializeObject<LoginResponseVM>(response.ToString());
 
                 var userClaims = new List<Claim>()
              {

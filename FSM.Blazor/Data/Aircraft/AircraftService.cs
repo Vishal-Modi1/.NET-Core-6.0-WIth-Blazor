@@ -30,7 +30,7 @@ namespace FSM.Blazor.Data.Aircraft
                 string jsonData = JsonConvert.SerializeObject(datatableParams);
 
                 CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
-                List<AircraftDataVM> aircraftList = JsonConvert.DeserializeObject<List<AircraftDataVM>>(response.Data);
+                List<AircraftDataVM> aircraftList = JsonConvert.DeserializeObject<List<AircraftDataVM>>(response.Data.ToString());
 
                 return aircraftList;
             }
@@ -48,7 +48,7 @@ namespace FSM.Blazor.Data.Aircraft
                 string url = "aircraft/listall";
 
                 CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
-                List<DE.Aircraft> aircraftList = JsonConvert.DeserializeObject<List<DE.Aircraft>>(response.Data);
+                List<DE.Aircraft> aircraftList = JsonConvert.DeserializeObject<List<DE.Aircraft>>(response.Data.ToString());
 
                 return aircraftList;
             }
@@ -101,7 +101,7 @@ namespace FSM.Blazor.Data.Aircraft
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                aircraftFilterVM = JsonConvert.DeserializeObject<AircraftFilterVM>(response.Data);
+                aircraftFilterVM = JsonConvert.DeserializeObject<AircraftFilterVM>(response.Data.ToString());
             }
 
             return aircraftFilterVM;
@@ -115,7 +115,7 @@ namespace FSM.Blazor.Data.Aircraft
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                airCraftVM = JsonConvert.DeserializeObject<AircraftVM>(response.Data);
+                airCraftVM = JsonConvert.DeserializeObject<AircraftVM>(response.Data.ToString());
             }
 
             return airCraftVM;

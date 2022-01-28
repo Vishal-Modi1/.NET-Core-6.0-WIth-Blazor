@@ -78,369 +78,394 @@
         <Header> <div>Schedule Appointment</div> </Header>
         <Content>
 
-            <EditForm Model="schedulerVM" OnValidSubmit="@OnValidSubmit">
+            @if (isDisplayMainForm)
+            {
 
-                @if (isDisplayForm)
-                {
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
+                <EditForm Model="schedulerVM" OnValidSubmit="@OnValidSubmit">
 
-                    <table class="custom-event-editor" width="100%" cellpadding="5">
-                        <tbody>
+                    @if (isDisplayForm)
+                    {
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
 
-                            <tr>
-                                <td class="e-textlabel">Display Title</td>
-                                <td colspan="4">
+                        <table class="custom-event-editor" width="100%" cellpadding="5">
+                            <tbody>
 
-                                    <SfTextBox Placeholder="Enter Title" @bind-Value="schedulerVM.DisplayTitle">
-                                    </SfTextBox>
+                                <tr>
+                                    <td class="e-textlabel">Display Title</td>
+                                    <td colspan="4">
 
-                                    <ValidationMessage For="@(() => schedulerVM.DisplayTitle)" />
-                                </td>
-                            </tr>
+                                        <SfTextBox Placeholder="Enter Title" @bind-Value="schedulerVM.DisplayTitle">
+                                        </SfTextBox>
 
-                            <tr>
-                                <td class="e-textlabel">Activity Type</td>
-                                <td colspan="4">
+                                        <ValidationMessage For="@(() => schedulerVM.DisplayTitle)" />
+                                    </td>
+                                </tr>
 
-                                    <SfDropDownList TValue="int?" @bind-Value="schedulerVM.ScheduleActivityId" TItem="DropDownValues"
+                                <tr>
+                                    <td class="e-textlabel">Activity Type</td>
+                                    <td colspan="4">
+
+                                        <SfDropDownList TValue="int?" @bind-Value="schedulerVM.ScheduleActivityId" TItem="DropDownValues"
                                                 Placeholder="Select Activity" DataSource="@schedulerVM.ScheduleActivitiesList" ShowClearButton="true">
 
-                                        <DropDownListEvents TItem="DropDownValues" TValue="int?" ValueChange="@OnActivityTypeValueChanged"></DropDownListEvents>
-                                        <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
-
-                                    </SfDropDownList>
-
-                                    <ValidationMessage For="@(() => schedulerVM.ScheduleActivityId)" />
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="e-textlabel">Start Time</td>
-                                <td colspan="4">
-
-                                    <SfDateTimePicker TValue="DateTime" Value="@schedulerVM.StartTime"></SfDateTimePicker>
-                                    <ValidationMessage For="@(() => schedulerVM.StartTime)" />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="e-textlabel">End Time</td>
-                                <td colspan="4">
-                                    <SfDateTimePicker TValue="DateTime" Value="@schedulerVM.EndTime"></SfDateTimePicker>
-                                    <ValidationMessage For="@(() => schedulerVM.EndTime)" />
-                                </td>
-                            </tr>
-
-                            @if (isDisplayAircraftDropDown)
-                            {
-                                <tr>
-                                    <td class="e-textlabel">Aircraft</td>
-                                    <td colspan="4">
-
-                                        <SfDropDownList TValue="long?" @bind-Value="schedulerVM.AircraftId" TItem="DropDownLargeValues" Placeholder="Select Aircraft" DataSource="@schedulerVM.AircraftsList">
+                                            <DropDownListEvents TItem="DropDownValues" TValue="int?" ValueChange="@OnActivityTypeValueChanged"></DropDownListEvents>
                                             <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+
                                         </SfDropDownList>
 
-                                        <ValidationMessage For="@(() => schedulerVM.AircraftId)" />
-
-                                    </td>
-                                </tr>
-                            }
-
-                            @if (schedulerVM.ScheduleActivityId > 0)
-                            {
-                                @if (isDisplayRecurring)
-                                {
-                                    <tr>
-                                        <td class="e-textlabel">Recurring ?</td>
-                                        <td colspan="4">
-
-                                            <SfCheckBox TValue="bool" @bind-Checked="@schedulerVM.IsRecurring"></SfCheckBox>
-
-                                        </td>
-                                    </tr>
-                                }
-
-                                @if (isDisplayMember1Dropdown)
-                                {
-                                    <tr>
-                                        <td class="e-textlabel">Member 1</td>
-                                        <td colspan="4">
-
-                                            <SfDropDownList TValue="long?" TItem="DropDownLargeValues" @bind-Value="schedulerVM.Member1Id" Placeholder="Select Member 1" DataSource="@schedulerVM.Member1List">
-                                                <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
-                                            </SfDropDownList>
-
-                                        </td>
-                                    </tr>
-                                }
-
-                                @if (isDisplayMember2Dropdown)
-                                {
-                                    <tr>
-                                        <td class="e-textlabel">Member 2</td>
-                                        <td colspan="4">
-
-                                            <SfDropDownList TValue="long?" @bind-Value="schedulerVM.Member2Id" TItem="DropDownLargeValues" Placeholder="Select Member 2" DataSource="@schedulerVM.Member2List">
-                                                <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
-                                            </SfDropDownList>
-
-                                        </td>
-                                    </tr>
-
-                                }
-
-                                @if (isDisplayFlightInfo)
-                                {
-                                    <tr>
-                                        <td class="e-textlabel">Flight Type</td>
-                                        <td colspan="4">
-
-                                            <SfRadioButton Label="Local" Name="FlightType" Value="Local" @bind-Checked="@schedulerVM.FlightType"></SfRadioButton>
-                                            <SfRadioButton Label="Cross Country" Name="FlightType" Value="Cross Country" @bind-Checked="@schedulerVM.FlightType"></SfRadioButton>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="e-textlabel">Flight Rules</td>
-                                        <td colspan="4">
-
-                                            <SfRadioButton Label="VFR" Name="FlightRules" Value="VFR" @bind-Checked="@schedulerVM.FlightRules"></SfRadioButton>
-                                            <SfRadioButton Label="IFR" Name="FlightRules" Value="IFR" @bind-Checked="@schedulerVM.FlightRules"></SfRadioButton>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="e-textlabel">Est Hours</td>
-                                        <td colspan="4">
-
-                                            <SfTextBox Placeholder="Enter Hours" DataSource="@schedulerVM.EstHours" Type="InputType.Number">
-                                            </SfTextBox>
-
-                                        </td>
-                                    </tr>
-
-                                }
-                                @if (isDisplayInstructor)
-                                {
-                                    <tr>
-                                        <td class="e-textlabel">Instructor</td>
-                                        <td colspan="4">
-
-                                            <SfDropDownList TValue="long?" @bind-Value="schedulerVM.InstructorId" TItem="DropDownLargeValues" Placeholder="Select Instructor" DataSource="@schedulerVM.InstructorsList">
-                                                <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
-                                            </SfDropDownList>
-
-                                        </td>
-                                    </tr>
-                                }
-
-                                @if (isDisplayFlightRoutes)
-                                {
-                                    <tr>
-                                        <td class="e-textlabel">Flight Routes</td>
-                                        <td colspan="4">
-
-                                            <SfTextBox Multiline=true Placeholder="Enter fligt routes" @bind-Value="@schedulerVM.FlightRoutes"></SfTextBox>
-                                        </td>
-                                    </tr>
-                                }
-
-                                <tr>
-                                    <td class="e-textlabel">Comments</td>
-                                    <td colspan="4">
-
-                                        <SfTextBox Multiline=true Placeholder="Enter comments" @bind-Value="@schedulerVM.Comments"></SfTextBox>
+                                        <ValidationMessage For="@(() => schedulerVM.ScheduleActivityId)" />
 
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="e-textlabel">Internal Comments</td>
+                                    <td class="e-textlabel">Start Time</td>
                                     <td colspan="4">
 
-                                        <SfTextBox Multiline=true Placeholder="Enter internal comments" @bind-Value="@schedulerVM.InternalComments"></SfTextBox>
-
+                                        <SfDateTimePicker TValue="DateTime" Value="@schedulerVM.StartTime"></SfDateTimePicker>
+                                        <ValidationMessage For="@(() => schedulerVM.StartTime)" />
                                     </td>
                                 </tr>
 
-                            }
-                            @if (isDisplayStandBy)
-                            {
                                 <tr>
-                                    <td class="e-textlabel">StandBy</td>
+                                    <td class="e-textlabel">End Time</td>
                                     <td colspan="4">
-
-                                        <SfCheckBox TValue="bool" @bind-Checked="@schedulerVM.IsStandBy"></SfCheckBox>
-
+                                        <SfDateTimePicker TValue="DateTime" Value="@schedulerVM.EndTime"></SfDateTimePicker>
+                                        <ValidationMessage For="@(() => schedulerVM.EndTime)" />
                                     </td>
                                 </tr>
-                            }
 
-                        </tbody>
-                    </table>
+                                @if (isDisplayAircraftDropDown)
+                                {
+                                    <tr>
+                                        <td class="e-textlabel">Aircraft</td>
+                                        <td colspan="4">
 
-                    <div class="row" style="margin-top:4%">
-                        <div class="col-md-12 text-right">
-                            <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Continue" Style="width: 130px" />
-                            <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
-                        </div>
-                    </div>
-                }
+                                            <SfDropDownList TValue="long?" @bind-Value="schedulerVM.AircraftId" TItem="DropDownLargeValues" Placeholder="Select Aircraft" DataSource="@schedulerVM.AircraftsList">
+                                                <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                            </SfDropDownList>
 
-                else
-                {
-                    <div>
-                        <label>
-                            <h3>
-                                @schedulerVM.StartTime.ToString("MMM dd yyyy hh:mm tt")
-                                @schedulerVM.EndTime.ToString("MMM dd yyyy hh:mm tt")
-                            </h3>
-                        </label>
-                    </div>
+                                            <ValidationMessage For="@(() => schedulerVM.AircraftId)" />
 
-                    <div>
-                        <label>Activity : @schedulerVM.ScheduleActivitiesList.Where(p => p.Id == @schedulerVM.ScheduleActivityId).First().Name </label>
-                    </div>
+                                        </td>
+                                    </tr>
+                                }
 
+                                @if (schedulerVM.ScheduleActivityId > 0)
+                                {
+                                    @if (isDisplayRecurring)
+                                    {
+                                        <tr>
+                                            <td class="e-textlabel">Recurring ?</td>
+                                            <td colspan="4">
 
-                    <div>
-                        <label>Aircraft : @schedulerVM.AircraftsList.Where(p => p.Id == @schedulerVM.AircraftId).First().Name </label>
-                    </div>
+                                                <SfCheckBox TValue="bool" @bind-Checked="@schedulerVM.IsRecurring"></SfCheckBox>
 
-                    <div>
-                        <label>Title : @schedulerVM.DisplayTitle </label>
-                    </div>
+                                            </td>
+                                        </tr>
+                                    }
 
-                    <div>
-                        <label>
+                                    @if (isDisplayMember1Dropdown)
+                                    {
+                                        <tr>
+                                            <td class="e-textlabel">Member 1</td>
+                                            <td colspan="4">
 
-                            Reservation Id :
-                            @if (schedulerVM.ReservationId != Guid.Empty)
-                            {
-                                @schedulerVM.ReservationId
-                            }
+                                                <SfDropDownList TValue="long?" TItem="DropDownLargeValues" @bind-Value="schedulerVM.Member1Id" Placeholder="Select Member 1" DataSource="@schedulerVM.Member1List">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                                </SfDropDownList>
 
-                        </label>
-                    </div>
+                                            </td>
+                                        </tr>
+                                    }
 
-                    <div>
-                        <label>
+                                    @if (isDisplayMember2Dropdown)
+                                    {
+                                        <tr>
+                                            <td class="e-textlabel">Member 2</td>
+                                            <td colspan="4">
 
-                            Member 1 :
+                                                <SfDropDownList TValue="long?" @bind-Value="schedulerVM.Member2Id" TItem="DropDownLargeValues" Placeholder="Select Member 2" DataSource="@schedulerVM.Member2List">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                                </SfDropDownList>
 
-                            @if (@schedulerVM.Member1Id != null)
-                            {
-                                @schedulerVM.Member1List.Where(p=>p.Id == @schedulerVM.Member1Id).First().Name
-                            }
+                                            </td>
+                                        </tr>
 
-                        </label>
-                    </div>
+                                    }
 
-                    <div>
-                        <label>
+                                    @if (isDisplayFlightInfo)
+                                    {
+                                        <tr>
+                                            <td class="e-textlabel">Flight Type</td>
+                                            <td colspan="4">
 
-                            Member 2 :
+                                                <SfRadioButton Label="Local" Name="FlightType" Value="Local" @bind-Checked="@schedulerVM.FlightType"></SfRadioButton>
+                                                <SfRadioButton Label="Cross Country" Name="FlightType" Value="Cross Country" @bind-Checked="@schedulerVM.FlightType"></SfRadioButton>
 
-                            @if (@schedulerVM.Member2Id != null)
-                            {
-                                @schedulerVM.Member2List.Where(p=>p.Id == @schedulerVM.Member2Id).First().Name
-                            }
+                                            </td>
+                                        </tr>
 
-                        </label>
-                    </div>
+                                        <tr>
+                                            <td class="e-textlabel">Flight Rules</td>
+                                            <td colspan="4">
 
-                    <div>
-                        <label>
+                                                <SfRadioButton Label="VFR" Name="FlightRules" Value="VFR" @bind-Checked="@schedulerVM.FlightRules"></SfRadioButton>
+                                                <SfRadioButton Label="IFR" Name="FlightRules" Value="IFR" @bind-Checked="@schedulerVM.FlightRules"></SfRadioButton>
 
-                            Instructor :
+                                            </td>
+                                        </tr>
 
-                            @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p => p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
-                            {
-                                @schedulerVM.InstructorsList.Where(p=>p.Id == @schedulerVM.InstructorId).First().Name
-                            }
+                                        <tr>
+                                            <td class="e-textlabel">Est Hours</td>
+                                            <td colspan="4">
 
-                        </label>
-                    </div>
+                                                <SfTextBox Placeholder="Enter Hours" DataSource="@schedulerVM.EstHours" Type="InputType.Number">
+                                                </SfTextBox>
 
-                    <div>
-                        <label>
+                                            </td>
+                                        </tr>
 
-                            Comments : @schedulerVM.Comments
+                                    }
+                                    @if (isDisplayInstructor)
+                                    {
+                                        <tr>
+                                            <td class="e-textlabel">Instructor</td>
+                                            <td colspan="4">
 
-                        </label>
-                    </div>
+                                                <SfDropDownList TValue="long?" @bind-Value="schedulerVM.InstructorId" TItem="DropDownLargeValues" Placeholder="Select Instructor" DataSource="@schedulerVM.InstructorsList">
+                                                    <DropDownListFieldSettings Value="Id" Text="Name"></DropDownListFieldSettings>
+                                                </SfDropDownList>
 
-                     <div>
-                        <label>
+                                            </td>
+                                        </tr>
+                                    }
 
-                            Internal Comments : @schedulerVM.InternalComments
+                                    @if (isDisplayFlightRoutes)
+                                    {
+                                        <tr>
+                                            <td class="e-textlabel">Flight Routes</td>
+                                            <td colspan="4">
 
-                        </label>
-                    </div>
+                                                <SfTextBox Multiline=true Placeholder="Enter fligt routes" @bind-Value="@schedulerVM.FlightRoutes"></SfTextBox>
+                                            </td>
+                                        </tr>
+                                    }
 
+                                    <tr>
+                                        <td class="e-textlabel">Comments</td>
+                                        <td colspan="4">
 
-                    @if (isDisplayCheckOutOption)
-                    {
-                        if (isDisplayCheckInButton)
-                        {
-                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckInAircraft())" BusyText="Checking In ..."
-                              IsBusy="@isBusyCheckOutButton" Text="Check In" Style="width: 164px" />
-                        }
-                        else
-                        {
-                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..."
-                              IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
-                        }
+                                            <SfTextBox Multiline=true Placeholder="Enter comments" @bind-Value="@schedulerVM.Comments"></SfTextBox>
 
-                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
-                    }
+                                        </td>
+                                    </tr>
 
-                    else
-                    {
+                                    <tr>
+                                        <td class="e-textlabel">Internal Comments</td>
+                                        <td colspan="4">
+
+                                            <SfTextBox Multiline=true Placeholder="Enter internal comments" @bind-Value="@schedulerVM.InternalComments"></SfTextBox>
+
+                                        </td>
+                                    </tr>
+
+                                }
+                                @if (isDisplayStandBy)
+                                {
+                                    <tr>
+                                        <td class="e-textlabel">StandBy</td>
+                                        <td colspan="4">
+
+                                            <SfCheckBox TValue="bool" @bind-Checked="@schedulerVM.IsStandBy"></SfCheckBox>
+
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+
                         <div class="row" style="margin-top:4%">
                             <div class="col-md-12 text-right">
-                                <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Save" Style="width: 130px" />
+                                <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Continue" Style="width: 130px" />
                                 <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
                             </div>
                         </div>
                     }
-                }
 
-                @if(schedulerVM.IsCheckOut)
-                {
-                    <table style="width:100%;">
-                        <thead>
-                            <tr>
-                                <th>Meter</th>
-                                <th>Time Out</th>
-                                <th>Time In</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
+                    else
+                    {
+                        <div>
+                            <label>
+                                <h3>
+                                    @schedulerVM.StartTime.ToString("MMM dd yyyy hh:mm tt")
+                                    @schedulerVM.EndTime.ToString("MMM dd yyyy hh:mm tt")
+                                </h3>
+                            </label>
+                        </div>
 
-                        <tbody>
+                        <div>
+                            <label>Activity : @schedulerVM.ScheduleActivitiesList.Where(p => p.Id == @schedulerVM.ScheduleActivityId).First().Name </label>
+                        </div>
 
-                            @foreach (AircraftEquipmentTime aircraftEquipmentTime in  schedulerVM.AircraftEquipmentsTimeList)
+
+                        <div>
+                            <label>Aircraft : @schedulerVM.AircraftsList.Where(p => p.Id == @schedulerVM.AircraftId).First().Name </label>
+                        </div>
+
+                        <div>
+                            <label>Title : @schedulerVM.DisplayTitle </label>
+                        </div>
+
+                        <div>
+                            <label>
+
+                                Reservation Id :
+                                @if (schedulerVM.ReservationId != Guid.Empty)
+                                {
+                                    @schedulerVM.ReservationId
+                                }
+
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+
+                                Member 1 :
+
+                                @if (@schedulerVM.Member1Id != null)
+                                {
+                                    @schedulerVM.Member1List.Where(p=>p.Id == @schedulerVM.Member1Id).First().Name
+                                }
+
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+
+                                Member 2 :
+
+                                @if (@schedulerVM.Member2Id != null)
+                                {
+                                    @schedulerVM.Member2List.Where(p=>p.Id == @schedulerVM.Member2Id).First().Name
+                                }
+
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+
+                                Instructor :
+
+                                @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p => p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
+                                {
+                                    @schedulerVM.InstructorsList.Where(p=>p.Id == @schedulerVM.InstructorId).First().Name
+                                }
+
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+
+                                Comments : @schedulerVM.Comments
+
+                            </label>
+                        </div>
+
+                        <div>
+                            <label>
+
+                                Internal Comments : @schedulerVM.InternalComments
+
+                            </label>
+                        </div>
+
+
+                        @if (isDisplayCheckOutOption)
+                        {
+                            if (isDisplayCheckInButton)
                             {
-                                <tr>
-                                    <td>@aircraftEquipmentTime.EquipmentName</td>
-                                    <td>@aircraftEquipmentTime.Hours</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
+                                <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckInAircraft())" BusyText="Checking In ..."
+                              IsBusy="@isBusyCheckOutButton" Text="Check In" Style="width: 164px" />
                             }
-                        </tbody>
+                            else
+                            {
+                                <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..."
+                              IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
+                            }
 
-                    </table>
-                }
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
+                        }
 
-            </EditForm>
+                        else
+                        {
+                            <div class="row" style="margin-top:4%">
+                                <div class="col-md-12 text-right">
+                                    <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Save" Style="width: 130px" />
+                                    <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    @if (schedulerVM.IsCheckOut)
+                    {
+                        <table style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Meter</th>
+                                    <th>Time Out</th>
+                                    <th>Time In</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (AircraftEquipmentTime aircraftEquipmentTime in schedulerVM.AircraftEquipmentsTimeList)
+                                {
+                                    <tr>
+                                        <td>@aircraftEquipmentTime.EquipmentName</td>
+                                        <td>@aircraftEquipmentTime.Hours</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    }
+
+                </EditForm>
+            }
+            else
+            {
+                <EditForm Model="aircraftEquipmentTime" OnValidSubmit="@OnEquipmentsTimeSubmit">
+
+                    <div>
+                        <h3>Aircraft : @schedulerVM.AircraftsList.Where(p => p.Id == @schedulerVM.AircraftId).First().Name </h3>
+                    </div>
+
+                    <div>
+                        <div class="row" style="text-align:right">
+                            <div class="col">
+                                <RadzenButton Text="Check In" ButtonStyle="ButtonStyle.Primary" Click="() => DeleteAsync() " 
+                                           Class="mr-1" Style="width: 163px;" />
+
+                                <RadzenButton Text="Cancel" Click="() => OpenMainForm()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 120px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                </EditForm>
+            }
         </Content>
     </DialogTemplates>
 
@@ -458,7 +483,7 @@
                 <p class="mb-4">Are you sure, You want to delete appointment?</p>
                 <div class="row" style="text-align:right">
                     <div class="col">
-                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync() " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => DeleteAsync() " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
                         <RadzenButton Text="No" Click="() => CloseDeleteDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
                     </div>
                 </div>

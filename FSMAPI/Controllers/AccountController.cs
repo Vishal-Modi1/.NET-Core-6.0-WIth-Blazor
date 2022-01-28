@@ -9,6 +9,7 @@ using DataModels.VM.Account;
 using DataModels.VM.User;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
+using DataModels.Entities;
 
 namespace FSMAPI.Controllers
 {
@@ -43,12 +44,12 @@ namespace FSMAPI.Controllers
             loginVM.Password = loginVM.Password.Encrypt();
             CurrentResponse response = _accountService.GetValidUser(loginVM);//try now 
 
-            UserVM user = JsonConvert.DeserializeObject<UserVM>(response.Data);
+            User user = (User)(response.Data);
 
             if (user != null)
             {
                 response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
-                List<UserRolePermissionDataVM> userRolePermissionsList = JsonConvert.DeserializeObject<List<UserRolePermissionDataVM>>(response.Data);
+                List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
                 //List<string> getRoles(int RoleId)
                 //{
@@ -83,7 +84,7 @@ namespace FSMAPI.Controllers
 
                 string accessToken = _jWTTokenGenerator.Generate(user.Id, user.CompanyId, user.RoleId);
 
-                response.Data = JsonConvert.SerializeObject(new LoginResponseVM
+                response.Data = new LoginResponseVM
                 {
                     AccessToken = accessToken,
                     CompanyName = user.CompanyName,
@@ -95,7 +96,7 @@ namespace FSMAPI.Controllers
                     RoleId = user.RoleId,
                     Id = user.Id,
                     UserPermissionList = userRolePermissionsList
-                });
+                };
 
                 return Ok(response);
             }

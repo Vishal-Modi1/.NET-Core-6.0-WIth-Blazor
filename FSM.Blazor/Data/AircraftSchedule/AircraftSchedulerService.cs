@@ -23,7 +23,7 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                schedulerVM = JsonConvert.DeserializeObject<SchedulerVM>(response.Data);
+                schedulerVM = JsonConvert.DeserializeObject<SchedulerVM>(response.Data.ToString());
             }
 
             return schedulerVM;
@@ -56,7 +56,7 @@ namespace FSM.Blazor.Data.AircraftSchedule
                 return new List<SchedulerVM>();
             }
 
-            List<SchedulerVM> appointmentsList = JsonConvert.DeserializeObject<List<SchedulerVM>>(response.Data);
+            List<SchedulerVM> appointmentsList = JsonConvert.DeserializeObject<List<SchedulerVM>>(response.Data.ToString());
 
             return appointmentsList;
         }

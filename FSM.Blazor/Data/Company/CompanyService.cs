@@ -26,7 +26,7 @@ namespace FSM.Blazor.Data.Company
                 return new List<CompanyVM>();
             }
 
-            List<CompanyVM> companies = JsonConvert.DeserializeObject<List<CompanyVM>>(response.Data);
+            List<CompanyVM> companies = JsonConvert.DeserializeObject<List<CompanyVM>>(response.Data.ToString());
 
             return companies; 
         }
