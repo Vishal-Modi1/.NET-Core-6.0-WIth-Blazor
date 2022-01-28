@@ -13,6 +13,7 @@ using Syncfusion.Blazor.DropDowns;
 using Radzen;
 using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
+using DataModels.VM;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -42,7 +43,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public bool isDisplayRecurring, isDisplayMember1Dropdown, isDisplayMember2Dropdown, isDisplayStandBy,
             isDisplayAircraftDropDown, isDisplayFlightRoutes, isDisplayInstructor, isDisplayFlightInfo, dialogVisibility,
-            isDisplayForm, isDisplayCheckoutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton;
+            isDisplayForm, isDisplayCheckOutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton;
 
         public bool isBusy;
         DateTime currentDate = DateTime.Now;
@@ -75,6 +76,18 @@ namespace FSM.Blazor.Pages.Scheduler
         public async Task LoadDataAsync()
         {
             DataSource = await AircraftSchedulerService.ListAsync(_httpClient, new SchedulerFilter());
+
+            DataSource.ForEach(x =>
+            {
+                if (x.IsCheckOut)
+                {
+                    x.CssClass = "checkedout";
+                }
+                else
+                {
+                    x.CssClass = "scheduled";
+                }
+            });
 
             base.StateHasChanged();
         }
@@ -163,16 +176,16 @@ namespace FSM.Blazor.Pages.Scheduler
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
                 NotificationService.Notify(message);
             }
-            else if (((int)response.Status) == 200)
+            else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (response.Data == "false")
+                if (response.Data == "true")
                 {
-                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
                     NotificationService.Notify(message);
                 }
                 else
                 {
-                    // Enter details in details table
+                    await CheckOut();
                 }
             }
             else
@@ -182,6 +195,54 @@ namespace FSM.Blazor.Pages.Scheduler
             }
 
             await SetCheckOutButtonState(false);
+        }
+
+        private async Task CheckOut()
+        {
+            NotificationMessage message;
+
+            CurrentResponse response = await AircraftSchedulerDetailService.CheckOut(_httpClient, schedulerVM.Id);
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                dialogVisibility = false;
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+
+                schedulerVM.IsCheckOut = true;
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.IsCheckOut = true; });
+                base.StateHasChanged();
+
+                await ScheduleRef.RefreshEventsAsync();
+
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+        }
+
+        private async Task CheckInAircraft()
+        {
+
+        }
+
+        public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
+        {
+            if (args.Data.IsCheckOut)
+            {
+                args.CssClasses = new List<string>() { "checkedout" };
+            }
+            else
+            {
+                args.CssClasses = new List<string>() { "scheduled" };
+            }
         }
 
         private void CloseDialog()
@@ -201,7 +262,7 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayFlightInfo = false;
             isDisplayStandBy = true;
             isDisplayForm = true;
-            isDisplayCheckoutOption = false;
+            isDisplayCheckOutOption = false;
         }
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
@@ -228,7 +289,9 @@ namespace FSM.Blazor.Pages.Scheduler
             dialogVisibility = true;
 
             isDisplayForm = false;
-            isDisplayCheckoutOption = true;
+            isDisplayCheckOutOption = true;
+
+            isDisplayCheckInButton = schedulerVM.IsCheckOut;
         }
 
         private void OpenForm()
@@ -239,7 +302,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private async void OnValidSubmit()
         {
-            isDisplayCheckoutOption = false;
+            isDisplayCheckOutOption = false;
 
             if (isDisplayForm)
             {
@@ -260,7 +323,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
                 NotificationService.Notify(message);
             }
-            else if (((int)response.Status) == 200)
+            else if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 dialogVisibility = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
@@ -304,7 +367,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 NotificationService.Notify(message);
             }
 
-           await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
+            await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
         }
 
         private void CloseDeleteDialog()

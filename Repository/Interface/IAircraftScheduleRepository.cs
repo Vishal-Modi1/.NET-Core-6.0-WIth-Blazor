@@ -25,6 +25,5 @@ namespace Repository.Interface
 
         void Delete(long id);
 
-        bool IsAircraftAlreadyCheckOut(long aircraftId);
     }
 }

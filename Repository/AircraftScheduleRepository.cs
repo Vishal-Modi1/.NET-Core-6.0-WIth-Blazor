@@ -20,6 +20,9 @@ namespace Repository
                 List<SchedulerVM> companyDataList = (from aircraft in _myContext.AirCrafts
                                                      join aircraftSchedules in _myContext.AircraftSchedules
                                                      on aircraft.Id equals aircraftSchedules.AircraftId
+                                                     join aircraftScheduleDetail in _myContext.AircraftScheduleDetails 
+                                                     on aircraftSchedules.Id equals aircraftScheduleDetail.AircraftScheduleId into asd
+                                                     from details in asd.DefaultIfEmpty()
                                                      where aircraft.CompanyId == schedulerFilter.CompanyId && aircraftSchedules.IsActive == true
                                                      && aircraftSchedules.IsDeleted == false
                                                      select new SchedulerVM()
@@ -29,7 +32,8 @@ namespace Repository
                                                          StartTime = aircraftSchedules.StartDateTime,
                                                          EndTime = aircraftSchedules.EndDateTime,
                                                          Comments = aircraftSchedules.Comments,
-                                                         AircraftId = aircraftSchedules.AircraftId
+                                                         AircraftId = aircraftSchedules.AircraftId,
+                                                         IsCheckOut = details == null ? false : details.IsCheckOut,
 
                                                      }).ToList();
 
@@ -104,20 +108,7 @@ namespace Repository
             }
         }
 
-        public bool IsAircraftAlreadyCheckOut(long aircraftId)
-        {
-            using (_myContext = new MyContext())
-            {
-                bool isAlreadyCheckOut = (from aircraftSchedule in _myContext.AircraftSchedules
-                            join aircraftScheduleDetails in _myContext.AircraftScheduleDetails
-                            on aircraftSchedule.Id equals aircraftScheduleDetails.AircraftScheduleId
-                            where aircraftSchedule.AircraftId == aircraftId
-                            && aircraftScheduleDetails.IsCheckOut == true select new { Id = aircraftSchedule.Id } ).Count() > 0;
-
-                return isAlreadyCheckOut;
-            }
-        }
-
+      
         #region ActivityType
         public List<DropDownValues> ListActivityTypeDropDownValues(int roleId)
         {

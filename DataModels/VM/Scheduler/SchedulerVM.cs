@@ -1,4 +1,5 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.Entities;
+using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,7 +33,6 @@ namespace DataModels.VM.Scheduler
 
         public List<DropDownLargeValues> InstructorsList { get; set; }
 
-        
         public long? InstructorId { get; set; }
 
         public List<DropDownLargeValues> AircraftsList { get; set; }
@@ -42,10 +42,15 @@ namespace DataModels.VM.Scheduler
 
         [Required]
         public string DisplayTitle { get; set; }
+
         public string FlightRoutes { get; set; }
+
         public string Comments { get; set; }
+
         public string InternalComments { get; set; }
+
         public string FlightType { get; set; }
+
         public string FlightRules { get; set; }
 
         public decimal EstHours { get; set; }
@@ -69,5 +74,9 @@ namespace DataModels.VM.Scheduler
         public Nullable<int> DeletedBy { get; set; }
 
         public bool IsCheckOut { get; set; }
+
+        public string CssClass { get; set; } 
+
+        public List<AircraftEquipmentTime> AircraftEquipmentsTimeList { get; set;}
     }
 }

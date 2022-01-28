@@ -1549,7 +1549,7 @@ ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_Use
 GO
 
 
-/****** Object:  Table [dbo].[AircraftScheduleDetails]    Script Date: 18-01-2022 16:11:01 ******/
+/****** Object:  Table [dbo].[AircraftScheduleDetails]    Script Date: 27-01-2022 13:29:34 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -1572,12 +1572,30 @@ CREATE TABLE [dbo].[AircraftScheduleDetails](
 ) ON [PRIMARY]
 GO
 
+ALTER TABLE [dbo].[AircraftScheduleDetails] ADD  CONSTRAINT [DF_AircraftScheduleDetails_IsCheckout]  DEFAULT ((0)) FOR [IsCheckOut]
+GO
+
 ALTER TABLE [dbo].[AircraftScheduleDetails]  WITH CHECK ADD  CONSTRAINT [FK_AircraftScheduleDetails_AircraftSchedules] FOREIGN KEY([AircraftScheduleId])
 REFERENCES [dbo].[AircraftSchedules] ([Id])
 GO
 
 ALTER TABLE [dbo].[AircraftScheduleDetails] CHECK CONSTRAINT [FK_AircraftScheduleDetails_AircraftSchedules]
 GO
+
+ALTER TABLE [dbo].[AircraftScheduleDetails]  WITH CHECK ADD  CONSTRAINT [FK_AircraftScheduleDetails_Users] FOREIGN KEY([CheckInBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleDetails] CHECK CONSTRAINT [FK_AircraftScheduleDetails_Users]
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleDetails]  WITH CHECK ADD  CONSTRAINT [FK_AircraftScheduleDetails_Users1] FOREIGN KEY([CheckOutBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftScheduleDetails] CHECK CONSTRAINT [FK_AircraftScheduleDetails_Users1]
+GO
+
 
 /****** Object:  Table [dbo].[AircraftScheduleHobbsTimes]    Script Date: 18-01-2022 16:11:16 ******/
 SET ANSI_NULLS ON

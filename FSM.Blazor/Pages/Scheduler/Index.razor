@@ -12,6 +12,7 @@
 @using Syncfusion.Blazor.Buttons;
 @using DataModels.VM.Scheduler;
 @using Syncfusion.Blazor.Popups;
+@using DataModels.Entities;
 
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AircraftService AircraftService
@@ -19,8 +20,23 @@
 @inject NavigationManager NavigationManager
 @inject NotificationService NotificationService
 @inject DialogService DialogService
+@inject AircraftSchedulerDetailService AircraftSchedulerDetailService
 
 @page "/Scheduler"
+
+<style>
+    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.scheduled,
+    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.scheduled,
+    .e-schedule .e-month-view .e-appointment.scheduled {
+        background: #007bff;
+    }
+
+    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.checkedout,
+    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.checkedout,
+    .e-schedule .e-month-view .e-appointment.checkedout {
+        background: #33ff81;
+    }
+</style>
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
 
@@ -37,7 +53,8 @@
         </ScheduleField>
 
     </ScheduleEventSettings>
-    <ScheduleEvents TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" OnCellDoubleClick="OpenCreateAppointmentDialog" OnCellClick="OpenCreateAppointmentDialog" OnEventClick="OnEventClick"></ScheduleEvents>
+    <ScheduleEvents TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" EventRendered="OnEventRendered"
+                    OnCellDoubleClick="OpenCreateAppointmentDialog" OnCellClick="OpenCreateAppointmentDialog" OnEventClick="OnEventClick"></ScheduleEvents>
 
     <ScheduleResources>
 
@@ -342,7 +359,7 @@
 
                             Instructor :
 
-                            @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p=>p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
+                            @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p => p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
                             {
                                 @schedulerVM.InstructorsList.Where(p=>p.Id == @schedulerVM.InstructorId).First().Name
                             }
@@ -350,9 +367,36 @@
                         </label>
                     </div>
 
-                    @if (isDisplayCheckoutOption)
+                    <div>
+                        <label>
+
+                            Comments : @schedulerVM.Comments
+
+                        </label>
+                    </div>
+
+                     <div>
+                        <label>
+
+                            Internal Comments : @schedulerVM.InternalComments
+
+                        </label>
+                    </div>
+
+
+                    @if (isDisplayCheckOutOption)
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..." IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
+                        if (isDisplayCheckInButton)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckInAircraft())" BusyText="Checking In ..."
+                              IsBusy="@isBusyCheckOutButton" Text="Check In" Style="width: 164px" />
+                        }
+                        else
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..."
+                              IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
+                        }
+
                         <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
                         <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
                     }
@@ -368,6 +412,34 @@
                     }
                 }
 
+                @if(schedulerVM.IsCheckOut)
+                {
+                    <table style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Meter</th>
+                                <th>Time Out</th>
+                                <th>Time In</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (AircraftEquipmentTime aircraftEquipmentTime in  schedulerVM.AircraftEquipmentsTimeList)
+                            {
+                                <tr>
+                                    <td>@aircraftEquipmentTime.EquipmentName</td>
+                                    <td>@aircraftEquipmentTime.Hours</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                }
+
             </EditForm>
         </Content>
     </DialogTemplates>
@@ -375,11 +447,11 @@
 </SfDialog>
 
 <SfDialog ID="DeleteDialog" Width="360px" MinHeight="150px" Target="Body" ShowCloseIcon="true" @bind-Visible="@isVisibleDeleteDialog">
-   
+
     <DialogTemplates>
-       
+
         <Header> Delete Appointment </Header>
-      
+
         <Content>
 
             <div>
@@ -398,7 +470,7 @@
 </SfDialog>
 
 @{
- async Task OpenDeleteDialog()
+    async Task OpenDeleteDialog()
     {
         dialogVisibility = false;
         var result = await DialogService.OpenAsync("Delete", ds =>

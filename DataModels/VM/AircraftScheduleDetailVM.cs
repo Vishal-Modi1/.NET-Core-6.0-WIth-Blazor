@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DataModels.Entities
+namespace DataModels.VM
 {
-    public class AircraftScheduleDetail
+    public class AircraftScheduleDetailVM
     {
         public long Id { get; set; }
 
@@ -10,9 +14,9 @@ namespace DataModels.Entities
 
         public string FlightStatus { get; set; }
 
-        public DateTime? CheckInTime { get; set; }
+        public DateTime CheckInTime { get; set; }
 
-        public DateTime? CheckOutTime { get; set; }
+        public DateTime CheckOutTime { get; set; }
 
         public long? CheckInBy { get; set; }
 

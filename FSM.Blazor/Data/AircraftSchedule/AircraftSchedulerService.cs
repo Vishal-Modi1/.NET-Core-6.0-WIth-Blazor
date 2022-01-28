@@ -71,7 +71,7 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
         public async Task<CurrentResponse> IsAircraftAlreadyCheckOutAsync(IHttpClientFactory httpClient, long aircraftId)
         {
-            string url = $"aircraftscheduler/isaircraftalreadycheckout?aircraftId={aircraftId}";
+            string url = $"aircraftschedulerdetail/isaircraftalreadycheckout?aircraftId={aircraftId}";
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;

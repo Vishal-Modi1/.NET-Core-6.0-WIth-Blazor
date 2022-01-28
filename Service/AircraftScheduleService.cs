@@ -13,30 +13,43 @@ namespace Service
     public class AircraftScheduleService : BaseService, IAircraftScheduleService
     {
         private readonly IAircraftScheduleRepository _aircraftScheduleRepository;
+        private readonly IAircraftScheduleDetailRepository _aircraftScheduleDetailRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAircraftRepository _aircraftRepository;
+        private readonly IAircraftEquipmentTimeRepository _aircraftEquipmentTimeRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
-            IAircraftRepository aircraftRepository)
+            IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
+            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
             _aircraftRepository = aircraftRepository;
+            _aircraftScheduleDetailRepository = aircraftScheduleDetailRepository;
+            _aircraftEquipmentTimeRepository = aircraftEquipmentTimeRepository;
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id)
         {
-            AircraftSchedule aircraftSchedule = _aircraftScheduleRepository.FindByCondition(p => p.Id == id);
-            
             SchedulerVM schedulerVM = new SchedulerVM();
-
-            if(aircraftSchedule != null)
-            {
-                schedulerVM = ToBusinessObject(aircraftSchedule);
-            }
 
             try
             {
+                AircraftSchedule aircraftSchedule = _aircraftScheduleRepository.FindByCondition(p => p.Id == id);
+
+                if (aircraftSchedule != null)
+                {
+                    schedulerVM = ToBusinessObject(aircraftSchedule);
+                    AircraftScheduleDetail aircraftScheduleDetail = _aircraftScheduleDetailRepository.FindByCondition(p => p.AircraftScheduleId == schedulerVM.Id);
+
+                    if (aircraftScheduleDetail != null)
+                    {
+                        schedulerVM.IsCheckOut = aircraftScheduleDetail.IsCheckOut;
+                    }
+
+                    schedulerVM.AircraftEquipmentsTimeList = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == schedulerVM.AircraftId && p.IsDeleted == false);
+                }
+
                 schedulerVM.ScheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
                 schedulerVM.Member1List = schedulerVM.Member2List = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false && p.RoleId != (int)DataModels.Enums.UserRole.Instructors && p.CompanyId == companyId);
                 schedulerVM.InstructorsList = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false && p.RoleId == (int)DataModels.Enums.UserRole.Instructors && p.CompanyId == companyId);
@@ -127,32 +140,6 @@ namespace Service
             }
         }
 
-        public CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId)
-        {
-            try
-            {
-                bool response = _aircraftScheduleRepository.IsAircraftAlreadyCheckOut(aircraftId);
-
-                if (response)
-                {
-                    CreateResponse(true, HttpStatusCode.OK, "Aircraft is already checked-out. The aircraft must be checked-in before you can check it out.");
-                }
-                else
-                {
-                    CreateResponse(false, HttpStatusCode.OK, "");
-                }
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
         #region Object Mapping
         private AircraftSchedule ToDataObject(SchedulerVM schedulerVM)
         {
@@ -167,7 +154,7 @@ namespace Service
             {
                 aircraftSchedule.ReservationId = Guid.NewGuid();
             }
-            
+
             aircraftSchedule.StartDateTime = schedulerVM.StartTime;
             aircraftSchedule.EndDateTime = schedulerVM.EndTime;
             aircraftSchedule.IsRecurring = schedulerVM.IsRecurring;

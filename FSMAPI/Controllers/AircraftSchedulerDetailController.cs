@@ -1,0 +1,45 @@
+﻿using DataModels.Constants;
+using DataModels.VM;
+using DataModels.VM.Common;
+using FSMAPI.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interface;
+
+namespace FSMAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AircraftSchedulerDetailController : ControllerBase
+    {
+        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly IAircraftScheduleDetailService _aircraftScheduleDetailService;
+
+        public AircraftSchedulerDetailController(IAircraftScheduleDetailService aircraftScheduleDetailService, IHttpContextAccessor httpContextAccessor)
+        {
+            _aircraftScheduleDetailService = aircraftScheduleDetailService;
+            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+        }
+
+        [HttpGet]
+        [Route("isaircraftalreadycheckout")]
+        public IActionResult IsAircraftAlreadyCheckOut(long aircraftId)
+        {
+            CurrentResponse response = _aircraftScheduleDetailService.IsAircraftAlreadyCheckOut(aircraftId);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public IActionResult Create([FromBody] long scheduleId)
+        {
+            AircraftScheduleDetailVM aircraftScheduleDetailVM = new AircraftScheduleDetailVM();
+            aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
+
+            aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _aircraftScheduleDetailService.Create(aircraftScheduleDetailVM);
+
+            return Ok(response);
+        }
+    }
+}

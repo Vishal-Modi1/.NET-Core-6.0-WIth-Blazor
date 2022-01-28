@@ -31,6 +31,7 @@ namespace FSM.Blazor.CustomServicesExtensions
             builder.Services.AddScoped<AircraftMakeService>();
             builder.Services.AddScoped<AircraftModelService>();
             builder.Services.AddScoped<AircraftSchedulerService>();
+            builder.Services.AddScoped<AircraftSchedulerDetailService>();
         }
     }
 }

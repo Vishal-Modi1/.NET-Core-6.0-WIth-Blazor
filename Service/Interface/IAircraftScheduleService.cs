@@ -15,6 +15,5 @@ namespace Service.Interface
 
         CurrentResponse Delete(long id);
 
-        CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId);
     }
 }
