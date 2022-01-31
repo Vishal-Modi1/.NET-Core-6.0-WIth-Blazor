@@ -16,10 +16,12 @@ namespace DataModels.VM.Company
         public string ContactNo { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTime? UpdatedOn { get; set; }
-        public string UpdatedBy { get; set; }
+        public Nullable<System.DateTime> CreatedOn { get; set; }
+        public long CreatedBy { get; set; }
+        public Nullable<System.DateTime> UpdatedOn { get; set; }
+        public Nullable<long> UpdatedBy { get; set; }
+        public Nullable<System.DateTime> DeletedOn { get; set; }
+        public Nullable<long> DeletedBy { get; set; }
         public int TotalRecords { get; set; }
     }
 }

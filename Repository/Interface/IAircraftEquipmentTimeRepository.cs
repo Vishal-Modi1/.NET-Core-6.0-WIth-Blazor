@@ -16,7 +16,7 @@ namespace Repository.Interface
         AircraftEquipmentTime Edit(AircraftEquipmentTime airCraft);
         
         void Delete(int id);
-        void DeleteEquipmentTimes(long airCraftId,int UpdatedBy);
+        void DeleteEquipmentTimes(long airCraftId,long UpdatedBy);
 
         AircraftEquipmentTime FindByCondition(Expression<Func<AircraftEquipmentTime, bool>> predicate);
 

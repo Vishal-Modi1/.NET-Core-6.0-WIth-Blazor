@@ -47,7 +47,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async void ManageHoursChange(int engineIndex, object value)
         {
-            AircraftData.AircraftEquipmentTimesList[engineIndex].Hours = Convert.ToInt16(value);
+            AircraftData.AircraftEquipmentTimesList[engineIndex].Hours = Convert.ToDecimal(value);
 
         }
     }

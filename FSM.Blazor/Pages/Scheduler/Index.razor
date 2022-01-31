@@ -408,8 +408,16 @@
                               IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
                             }
 
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
-                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
+                            if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+                            {
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit End Time" Style="width: 164px" />
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenDeleteDialog())" Text="Un-Check Out" Style="width: 164px" />
+                            }
+                            else
+                            {
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
+                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
+                            }
                         }
                         else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
                         {

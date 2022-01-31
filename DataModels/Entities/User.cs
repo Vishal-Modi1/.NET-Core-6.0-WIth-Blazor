@@ -27,8 +27,10 @@ namespace DataModels.Entities
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<System.DateTime> CreatedOn { get; set; }
-        public Nullable<int> CreatedBy { get; set; }
+        public Nullable<long> CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
-        public Nullable<int> UpdatedBy { get; set; }
+        public Nullable<long> UpdatedBy { get; set; }
+        public Nullable<System.DateTime> DeletedOn { get; set; }
+        public Nullable<long> DeletedBy { get; set; }
     }
 }

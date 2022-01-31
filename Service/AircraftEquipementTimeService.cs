@@ -111,7 +111,7 @@ namespace Service
             return aircraftEquipmentTimesList;
         }
 
-        public bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId,int UpdatedBy)
+        public bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId,long UpdatedBy)
         {
             try
             {

@@ -57,7 +57,7 @@ namespace Repository
             }
         }
 
-        public void DeleteEquipmentTimes(long airCraftId, int UpdatedBy)
+        public void DeleteEquipmentTimes(long airCraftId, long UpdatedBy)
         {
             using (_myContext = new MyContext())
             {

@@ -195,7 +195,7 @@ namespace FSMAPI.Controllers
         [Route("createaircraftequipment")]
         public IActionResult CreateAircraftEquipment(List<AircraftEquipmentTimeVM> aircraftEquipmentTimeVM)
         {
-            int createdBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long createdBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             if (aircraftEquipmentTimeVM.Count > 0)
             {

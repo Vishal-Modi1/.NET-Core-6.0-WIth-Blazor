@@ -50,10 +50,10 @@ namespace DataModels.Entities
 
         public Nullable<System.DateTime> UpdatedOn { get; set; }
 
-        public Nullable<int> UpdatedBy { get; set; }
+        public Nullable<long> UpdatedBy { get; set; }
 
         public Nullable<System.DateTime> DeletedOn { get; set; }
 
-        public Nullable<int> DeletedBy { get; set; }
+        public Nullable<long> DeletedBy { get; set; }
     }
 }

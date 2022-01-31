@@ -14,7 +14,9 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[AircraftClasses]    Script Date: 03-12-2021 16:50:57 ******/
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -28,15 +30,17 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AirCraftEquipments]    Script Date: 03-12-2021 16:50:57 ******/
+/****** Object:  Table [dbo].[AirCraftEquipments]    Script Date: 31-01-2022 17:13:53 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[AirCraftEquipments](
-	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[StatusId] [int] NOT NULL,
-	[AirCraftId] [BIGINT] NOT NULL,
+	[AirCraftId] [bigint] NOT NULL,
 	[ClassificationId] [int] NOT NULL,
 	[Item] [nvarchar](500) NOT NULL,
 	[Model] [nvarchar](500) NULL,
@@ -52,40 +56,96 @@ CREATE TABLE [dbo].[AirCraftEquipments](
 	[IsActive] [bit] NULL,
 	[IsDeleted] [bit] NULL,
 	[CreatedOn] [datetime2](7) NULL,
-	[CreatedBy] [int] NULL,
+	[CreatedBy] [bigint] NOT NULL,
 	[DeletedOn] [datetime2](7) NULL,
-	[DeletedBy] [int] NULL,
+	[DeletedBy] [bigint] NULL,
 	[UpdatedOn] [datetime2](7) NULL,
-	[UpdatedBy] [int] NULL,
+	[UpdatedBy] [bigint] NULL,
  CONSTRAINT [PK_AirCraftEquipments] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[AircraftEquipmentTimes]    Script Date: 03-12-2021 16:50:57 ******/
+
+ALTER TABLE [dbo].[AirCraftEquipments] ADD  CONSTRAINT [DF_AirCraftEquipments_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments]  WITH CHECK ADD  CONSTRAINT [FK_AirCraftEquipments_Classifications] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments] CHECK CONSTRAINT [FK_AirCraftEquipments_Classifications]
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments]  WITH CHECK ADD  CONSTRAINT [FK_AirCraftEquipments_Statuses] FOREIGN KEY([StatusId])
+REFERENCES [dbo].[EquipmentStatuses] ([Id])
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments] CHECK CONSTRAINT [FK_AirCraftEquipments_Statuses]
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments]  WITH CHECK ADD  CONSTRAINT [FK_AirCraftEquipments_Users] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments] CHECK CONSTRAINT [FK_AirCraftEquipments_Users]
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments]  WITH CHECK ADD  CONSTRAINT [FK_AirCraftEquipments_Users1] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AirCraftEquipments] CHECK CONSTRAINT [FK_AirCraftEquipments_Users1]
+GO
+
+/****** Object:  Table [dbo].[AircraftEquipmentTimes]    Script Date: 31-01-2022 17:16:02 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[AircraftEquipmentTimes](
-	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[EquipmentName] [varchar](200) NOT NULL,
-	[Hours] decimal(18,2) NOT NULL,
-	[AircraftId] [BIGINT] NOT NULL,
+	[Hours] [decimal](18, 2) NOT NULL,
+	[AircraftId] [bigint] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
-	[CreatedBy] [int] NULL,
+	[CreatedBy] [bigint] NOT NULL,
 	[UpdatedOn] [datetime] NULL,
-	[UpdatedBy] [int] NULL,
+	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,
-	[DeletedBy] [int] NULL,
+	[DeletedBy] [bigint] NULL,
  CONSTRAINT [PK_AircraftEquipementTimes] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+ALTER TABLE [dbo].[AircraftEquipmentTimes]  WITH CHECK ADD  CONSTRAINT [FK_AircraftEquipmentTimes_AircraftId] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftEquipmentTimes] CHECK CONSTRAINT [FK_AircraftEquipmentTimes_AircraftId]
+GO
+
+ALTER TABLE [dbo].[AircraftEquipmentTimes]  WITH CHECK ADD  CONSTRAINT [FK_AircraftEquipmentTimes_Users] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftEquipmentTimes] CHECK CONSTRAINT [FK_AircraftEquipmentTimes_Users]
+GO
+
+ALTER TABLE [dbo].[AircraftEquipmentTimes]  WITH CHECK ADD  CONSTRAINT [FK_AircraftEquipmentTimes_Users1] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[AircraftEquipmentTimes] CHECK CONSTRAINT [FK_AircraftEquipmentTimes_Users1]
+GO
+
 /****** Object:  Table [dbo].[AircraftMakes]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
 GO
@@ -114,13 +174,16 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Aircrafts]    Script Date: 03-12-2021 16:50:57 ******/
+
+/****** Object:  Table [dbo].[Aircrafts]    Script Date: 31-01-2022 17:11:50 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE TABLE [dbo].[Aircrafts](
-	[Id] [BIGINT] IDENTITY(1,1) NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[ImageName] [varchar](200) NULL,
 	[TailNo] [varchar](30) NOT NULL,
 	[Year] [varchar](4) NULL,
@@ -139,41 +202,203 @@ CREATE TABLE [dbo].[Aircrafts](
 	[IsActive] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
-	[CreatedBy] [int] NULL,
+	[CreatedBy] [bigint] NOT NULL,
 	[UpdatedOn] [datetime] NULL,
-	[UpdatedBy] [int] NULL,
+	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,
-	[DeletedBy] [int] NULL,
+	[DeletedBy] [bigint] NULL,
  CONSTRAINT [PK__Aircraft__3214EC07C1A8802D] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Companies]    Script Date: 03-12-2021 16:50:57 ******/
+
+ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__IsEng__47DBAE45]  DEFAULT ((0)) FOR [IsEngineshavePropellers]
+GO
+
+ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__IsEng__48CFD27E]  DEFAULT ((0)) FOR [IsEnginesareTurbines]
+GO
+
+ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__Track__49C3F6B7]  DEFAULT ((0)) FOR [TrackOilandFuel]
+GO
+
+ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__IsIde__4AB81AF0]  DEFAULT ((0)) FOR [IsIdentifyMeterMismatch]
+GO
+
+ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__IsAct__4BAC3F29]  DEFAULT ((0)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__IsDel__4CA06362]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_AircraftCategory_Aircraft] FOREIGN KEY([AircraftCategoryId])
+REFERENCES [dbo].[AircraftCategories] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_AircraftCategory_Aircraft]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_AircraftClass_Aircraft] FOREIGN KEY([AircraftClassId])
+REFERENCES [dbo].[AircraftClasses] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_AircraftClass_Aircraft]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_AircraftMake_Aircraft] FOREIGN KEY([AircraftMakeId])
+REFERENCES [dbo].[AircraftMakes] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_AircraftMake_Aircraft]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_AircraftModel_Aircraft] FOREIGN KEY([AircraftModelId])
+REFERENCES [dbo].[AircraftModels] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_AircraftModel_Aircraft]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_Aircrafts_Companies] FOREIGN KEY([CompanyId])
+REFERENCES [dbo].[Companies] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_Aircrafts_Companies]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_Aircrafts_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_Aircrafts_Users]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_Aircrafts_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_Aircrafts_Users1]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_Aircrafts_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_Aircrafts_Users2]
+GO
+
+ALTER TABLE [dbo].[Aircrafts]  WITH CHECK ADD  CONSTRAINT [FK_FlightSimulatorClass_Aircraft] FOREIGN KEY([FlightSimulatorClassId])
+REFERENCES [dbo].[FlightSimulatorClasses] ([Id])
+GO
+
+ALTER TABLE [dbo].[Aircrafts] CHECK CONSTRAINT [FK_FlightSimulatorClass_Aircraft]
+GO
+
+/****** Object:  Table [dbo].[Users]    Script Date: 31-01-2022 17:20:52 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[Companies](
-	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [varchar](200) NOT NULL,
-	[Address] [varchar](300) NOT NULL,
-	[ContactNo] [varchar](20) NULL,
+
+CREATE TABLE [dbo].[Users](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[FirstName] [varchar](150) NOT NULL,
+	[LastName] [varchar](150) NOT NULL,
+	[Email] [varchar](150) NOT NULL,
+	[IsSendEmailInvite] [bit] NOT NULL,
+	[Phone] [varchar](20) NULL,
+	[RoleId] [int] NOT NULL,
+	[IsInstructor] [bit] NULL,
+	[InstructorTypeId] [int] NULL,
+	[CompanyId] [int] NULL,
+	[ExternalId] [varchar](50) NULL,
+	[DateofBirth] [datetime] NULL,
+	[Gender] [varchar](6) NULL,
+	[CountryId] [int] NULL,
+	[Password] [varchar](100) NULL,
+	[IsSendTextMessage] [bit] NOT NULL,
 	[IsActive] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
-	[CreatedBy] [int] NULL,
+	[CreatedBy] [bigint] NULL,
 	[UpdatedOn] [datetime] NULL,
-	[UpdatedBy] [int] NULL,
+	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,
-	[DeletedBy] [int] NULL,
- CONSTRAINT [PK_Companies] PRIMARY KEY CLUSTERED 
+	[DeletedBy] [bigint] NULL,
+ CONSTRAINT [PK__Users__3214EC0734F10733] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ__Users__A9D1053466EBF258] UNIQUE NONCLUSTERED 
+(
+	[Email] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+ALTER TABLE [dbo].[Users] ADD  CONSTRAINT [df_IsSendEmailInvite]  DEFAULT ((0)) FOR [IsSendEmailInvite]
+GO
+
+ALTER TABLE [dbo].[Users] ADD  CONSTRAINT [df_IsActive]  DEFAULT ((0)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[Users] ADD  CONSTRAINT [df_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+
+ALTER TABLE [dbo].[Users] ADD  CONSTRAINT [DF__Users__IsSendTex__52593CB8]  DEFAULT ((0)) FOR [DeletedOn]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Country_User] FOREIGN KEY([CountryId])
+REFERENCES [dbo].[Countries] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Country_User]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_InstructorType_User] FOREIGN KEY([InstructorTypeId])
+REFERENCES [dbo].[InstructorTypes] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_InstructorType_User]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_UserRole_User] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[UserRoles] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_UserRole_User]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Companies] FOREIGN KEY([CompanyId])
+REFERENCES [dbo].[Companies] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Companies]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Users]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Users1]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD  CONSTRAINT [FK_Users_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Users2]
+GO
+
 /****** Object:  Table [dbo].[Countries]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
 GO
@@ -366,11 +591,11 @@ CREATE TABLE [dbo].[Users](
 	[IsActive] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
-	[CreatedBy] [int] NULL,
+	CreatedBy BigInt ,
 	[UpdatedOn] [datetime] NULL,
-	[UpdatedBy] [int] NULL,
+	[UpdatedBy] BigInt NULL,
 	[DeletedOn] [datetime] NULL,
-	[DeletedBy] [bit] NULL,
+	[DeletedBy] BigInt NULL,
  CONSTRAINT [PK__Users__3214EC0734F10733] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

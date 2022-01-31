@@ -9,7 +9,7 @@ namespace Service.Interface
     public interface IAircraftEquipementTimeService
     {
         CurrentResponse Create(AircraftEquipmentTimeVM aircraftEquipmentTimeVM);
-        bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId,int UpdatedBy);
+        bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId, long UpdatedBy);
 
         List<AircraftEquipmentTime> ToDataObjectList(List<AircraftEquipmentTimeVM> aircraftEquipmentTimesVMList);
     }

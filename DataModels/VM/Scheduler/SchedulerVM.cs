@@ -9,6 +9,13 @@ namespace DataModels.VM.Scheduler
 {
     public class SchedulerVM
     {
+        public SchedulerVM()
+        {
+            AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
+            AircraftEquipmentHobbsTimeList = new List<AircraftScheduleHobbsTime>();
+            AircraftEquipmentsTimeList = new List<AircraftEquipmentTimeVM>();
+        }
+
         public long Id { get; set; }
         public List<DropDownValues> ScheduleActivitiesList { get; set; }
 
@@ -64,15 +71,15 @@ namespace DataModels.VM.Scheduler
 
         public DateTime CreatedOn { get; set; }
 
-        public int CreatedBy { get; set; }
+        public long CreatedBy { get; set; }
 
         public Nullable<System.DateTime> UpdatedOn { get; set; }
 
-        public Nullable<int> UpdatedBy { get; set; }
+        public Nullable<long> UpdatedBy { get; set; }
 
         public Nullable<System.DateTime> DeletedOn { get; set; }
 
-        public Nullable<int> DeletedBy { get; set; }
+        public Nullable<long> DeletedBy { get; set; }
 
         public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
