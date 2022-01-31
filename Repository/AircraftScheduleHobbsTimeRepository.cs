@@ -1,6 +1,9 @@
 ﻿using DataModels.Entities;
 using Repository.Interface;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Repository
 {
@@ -16,6 +19,14 @@ namespace Repository
                 _myContext.SaveChanges();
 
                 return aircraftScheduleHobbsTimesList;
+            }
+        }
+
+        public List<AircraftScheduleHobbsTime> ListByCondition(Expression<Func<AircraftScheduleHobbsTime, bool>> predicate)
+        {
+            using (_myContext = new MyContext())
+            {
+                return _myContext.AircraftScheduleHobbsTimes.Where(predicate).ToList();
             }
         }
     }

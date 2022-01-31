@@ -6,6 +6,7 @@ using Repository.Interface;
 using Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace Service
@@ -17,16 +18,19 @@ namespace Service
         private readonly IUserRepository _userRepository;
         private readonly IAircraftRepository _aircraftRepository;
         private readonly IAircraftEquipmentTimeRepository _aircraftEquipmentTimeRepository;
+        private readonly IAircraftScheduleHobbsTimeRepository _aircraftScheduleHobbsTimeRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
-            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository)
+            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
+            IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
             _aircraftRepository = aircraftRepository;
             _aircraftScheduleDetailRepository = aircraftScheduleDetailRepository;
             _aircraftEquipmentTimeRepository = aircraftEquipmentTimeRepository;
+            _aircraftScheduleHobbsTimeRepository = aircraftScheduleHobbsTimeRepository;
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id)
@@ -46,6 +50,8 @@ namespace Service
 
                     schedulerVM.AircraftEquipmentsTimeList = _aircraftEquipmentTimeRepository.ListByCondition(p => p.AircraftId == schedulerVM.AircraftId && p.IsDeleted == false);
                     schedulerVM.AircraftEquipmentsTimeList.ForEach(p => { p.AircraftScheduleId = aircraftSchedule.Id; });
+                  
+                    SetAircraftEquipmentHobbsTime(schedulerVM);
                 }
 
                 schedulerVM.ScheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
@@ -61,6 +67,15 @@ namespace Service
             }
 
             return _currentResponse;
+        }
+
+        private void SetAircraftEquipmentHobbsTime(SchedulerVM schedulerVM)
+        {
+            schedulerVM.AircraftEquipmentHobbsTimeList = new List<AircraftScheduleHobbsTime>();
+
+            List<long> equipmentIdsList = schedulerVM.AircraftEquipmentsTimeList.Select(p => p.Id).ToList();
+
+            schedulerVM.AircraftEquipmentHobbsTimeList = _aircraftScheduleHobbsTimeRepository.ListByCondition(p => equipmentIdsList.Contains(p.AircraftEquipmentTimeId) && p.AircraftScheduleId == schedulerVM.Id);
         }
 
         public CurrentResponse Create(SchedulerVM schedulerVM)

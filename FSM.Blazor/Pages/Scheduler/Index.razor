@@ -443,15 +443,28 @@
 
                                 @foreach (AircraftEquipmentTimeVM aircraftEquipmentTime in schedulerVM.AircraftEquipmentsTimeList)
                                 {
+                                    AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == aircraftEquipmentTime.Id).FirstOrDefault();
+
                                     <tr>
+
                                         <td>@aircraftEquipmentTime.EquipmentName</td>
-                                        <td>@aircraftEquipmentTime.Hours</td>
-                                        <td>-</td>
-                                        <td>-</td>
+
+                                        @if (aircraftScheduleHobbsTime != null)
+                                        {
+                                            <td>@aircraftScheduleHobbsTime.OutTime</td>
+                                            <td>@aircraftScheduleHobbsTime.InTime</td>
+                                            <td>@aircraftScheduleHobbsTime.TotalTime</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@aircraftEquipmentTime.Hours</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        }
+
                                     </tr>
                                 }
                             </tbody>
-
                         </table>
                     }
 
@@ -462,7 +475,8 @@
                     <div>
                         <label>
 
-                           <b>Checked Out :</b>  @schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName
+                            <b>Checked Out :</b>  @schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName
+                            <br>@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("MM/dd/yyyy hh:mm tt")
 
                         </label>
                     </div>
@@ -474,7 +488,7 @@
                         <label>
 
                             <b>Checked In :</b>  @schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName
-
+                            <br>@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("MM/dd/yyyy hh:mm tt")
                         </label>
                     </div>
                 }

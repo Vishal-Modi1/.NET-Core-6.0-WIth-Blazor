@@ -79,5 +79,7 @@ namespace DataModels.VM.Scheduler
         public string CssClass { get; set; } 
 
         public List<AircraftEquipmentTimeVM> AircraftEquipmentsTimeList { get; set;}
+
+        public List<AircraftScheduleHobbsTime> AircraftEquipmentHobbsTimeList { get; set; }
     }
 }
