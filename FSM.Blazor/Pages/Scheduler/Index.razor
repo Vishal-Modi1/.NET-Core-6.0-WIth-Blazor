@@ -38,6 +38,12 @@
     .e-schedule .e-month-view .e-appointment.checkedout {
         background: #33ff81;
     }
+
+    .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.checkedin,
+    .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.checkedin,
+    .e-schedule .e-month-view .e-appointment.checkedin {
+        background: #B8B8B8;
+    }
 </style>
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
@@ -405,7 +411,11 @@
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
                         }
-
+                        else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                        {
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit End Time" Style="width: 164px" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenDeleteDialog())" Text="Edit Flight Hours" Style="width: 164px" />
+                        }
                         else
                         {
                             <div class="row" style="margin-top:4%">
@@ -417,7 +427,7 @@
                         }
                     }
 
-                    @if (schedulerVM.IsCheckOut)
+                    @if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut || schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
                     {
                         <table style="width:100%;">
                             <thead>
@@ -446,10 +456,32 @@
                     }
 
                 </EditForm>
+
+                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
+                {
+                    <div>
+                        <label>
+
+                           <b>Checked Out :</b>  @schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName
+
+                        </label>
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
+                {
+                    <div>
+                        <label>
+
+                            <b>Checked In :</b>  @schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName
+
+                        </label>
+                    </div>
+                }
             }
             else
             {
-                <EditForm Model="aircraftEquipmentTime" OnValidSubmit="@OnEquipmentsTimeSubmit">
+                <EditForm Model="aircraftEquipmentTime" OnValidSubmit="@CheckIn">
 
                     <table class="custom-event-editor" width="100%" cellpadding="5">
 
@@ -470,8 +502,8 @@
 
                             @for (int index = 0; index < schedulerVM.AircraftEquipmentsTimeList.Count(); index++)
                             {
-                               //  var textValue = value.Value; 
-                               int indexValue = index;
+                                //  var textValue = value.Value;
+                                int indexValue = index;
 
                                 <tr>
                                     <td class="e-textlabel">@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
@@ -483,14 +515,14 @@
 
                                     <td>
 
-                                        <SfTextBox Type="InputType.Number"  Width="70%" Placeholder="Enter Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].Hours.ToString()"
-                                        ValueChange="((ChangedEventArgs args)=> TextBoxChangeEvent( args, indexValue))">
+                                        <SfTextBox Type="InputType.Number" Width="70%" Placeholder="Enter Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].Hours.ToString()"
+                                           ValueChange="((ChangedEventArgs args)=> TextBoxChangeEvent( args, indexValue))">
                                         </SfTextBox>
 
                                     </td>
 
                                     <td>
-                                       
+
                                         @schedulerVM.AircraftEquipmentsTimeList[index].TotalHours
 
                                     </td>
@@ -506,7 +538,7 @@
                         <div class="row" style="text-align:right">
                             <div class="col">
                                 <RadzenButton Text="Check In" ButtonType="Radzen.ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"
-                                  BusyText="Checking In..."   Class="mr-1" Style="width: 163px;" />
+                                          BusyText="Checking In..." Class="mr-1" Style="width: 163px;" />
 
                                 <RadzenButton Text="Cancel" Click="() => OpenMainForm()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 120px;" />
                             </div>

@@ -33,8 +33,17 @@ namespace Repository
                                                          EndTime = aircraftSchedules.EndDateTime,
                                                          Comments = aircraftSchedules.Comments,
                                                          AircraftId = aircraftSchedules.AircraftId,
-                                                         IsCheckOut = details == null ? false : details.IsCheckOut,
-
+                                                         AircraftSchedulerDetailsVM = details == null ? 
+                                                         new AircraftSchedulerDetailsVM() : 
+                                                         new AircraftSchedulerDetailsVM()
+                                                         {
+                                                             IsCheckOut =  details.IsCheckOut,
+                                                             CheckInTime = details.CheckInTime,
+                                                             CheckOutTime = details.CheckOutTime,
+                                                             CheckInBy = details.CheckInBy,
+                                                             AircraftScheduleId = details.AircraftScheduleId,
+                                                             Id = details.Id
+                                                         }
                                                      }).ToList();
 
                 return companyDataList;

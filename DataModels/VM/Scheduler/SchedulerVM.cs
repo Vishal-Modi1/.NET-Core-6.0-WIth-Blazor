@@ -74,7 +74,7 @@ namespace DataModels.VM.Scheduler
 
         public Nullable<int> DeletedBy { get; set; }
 
-        public bool IsCheckOut { get; set; }
+        public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
         public string CssClass { get; set; } 
 

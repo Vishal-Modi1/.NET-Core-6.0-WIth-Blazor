@@ -42,10 +42,7 @@ namespace Service
                     schedulerVM = ToBusinessObject(aircraftSchedule);
                     AircraftScheduleDetail aircraftScheduleDetail = _aircraftScheduleDetailRepository.FindByCondition(p => p.AircraftScheduleId == schedulerVM.Id);
 
-                    if (aircraftScheduleDetail != null)
-                    {
-                        schedulerVM.IsCheckOut = aircraftScheduleDetail.IsCheckOut;
-                    }
+                    SetAircraftScheduleDetails(schedulerVM, aircraftScheduleDetail);
 
                     schedulerVM.AircraftEquipmentsTimeList = _aircraftEquipmentTimeRepository.ListByCondition(p => p.AircraftId == schedulerVM.AircraftId && p.IsDeleted == false);
                     schedulerVM.AircraftEquipmentsTimeList.ForEach(p => { p.AircraftScheduleId = aircraftSchedule.Id; });
@@ -138,6 +135,33 @@ namespace Service
                 CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
 
                 return _currentResponse;
+            }
+        }
+
+        private void SetAircraftScheduleDetails(SchedulerVM schedulerVM, AircraftScheduleDetail aircraftScheduleDetail)
+        {
+            schedulerVM.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
+            
+            if (aircraftScheduleDetail != null)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = aircraftScheduleDetail.IsCheckOut;
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = aircraftScheduleDetail.CheckInTime;
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = aircraftScheduleDetail.CheckOutTime;
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInBy = aircraftScheduleDetail.CheckInBy;
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutBy = aircraftScheduleDetail.CheckOutBy;
+
+                User checkInByUser = _userRepository.FindByCondition(p => p.Id == schedulerVM.AircraftSchedulerDetailsVM.CheckInBy);
+                User checkOutByUser = _userRepository.FindByCondition(p => p.Id == schedulerVM.AircraftSchedulerDetailsVM.CheckOutBy);
+         
+                if(checkInByUser != null)
+                {
+                    schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName = $"{checkInByUser.FirstName} {checkInByUser.LastName}";
+                }
+
+                if (checkOutByUser != null)
+                {
+                    schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName = $"{checkOutByUser.FirstName} {checkOutByUser.LastName}";
+                }
             }
         }
 

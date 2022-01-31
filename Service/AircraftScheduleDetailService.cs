@@ -98,7 +98,7 @@ namespace Service
             }
         }
 
-        private AircraftScheduleDetail ToDataObject(AircraftScheduleDetailVM aircraftScheduleDetailVM)
+        public AircraftScheduleDetail ToDataObject(AircraftScheduleDetailVM aircraftScheduleDetailVM)
         {
             AircraftScheduleDetail aircraftScheduleDetail = new AircraftScheduleDetail();
 

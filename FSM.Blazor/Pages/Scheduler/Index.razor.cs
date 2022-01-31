@@ -81,9 +81,13 @@ namespace FSM.Blazor.Pages.Scheduler
 
             DataSource.ForEach(x =>
             {
-                if (x.IsCheckOut)
+                if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
                     x.CssClass = "checkedout";
+                }
+                if (x.AircraftSchedulerDetailsVM.CheckInTime != null)
+                {
+                    x.CssClass = "checkedin";
                 }
                 else
                 {
@@ -180,7 +184,7 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (response.Data == "true")
+                if ((bool)response.Data == true)
                 {
                     message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
                     NotificationService.Notify(message);
@@ -216,8 +220,8 @@ namespace FSM.Blazor.Pages.Scheduler
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
 
-                schedulerVM.IsCheckOut = true;
-                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.IsCheckOut = true; });
+                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = true;
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM.IsCheckOut = true; });
                 base.StateHasChanged();
 
                 await ScheduleRef.RefreshEventsAsync();
@@ -240,7 +244,7 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayMainForm = true;
         }
 
-        private async Task OnEquipmentsTimeSubmit()
+        private async Task CheckIn()
         {
             NotificationMessage message;
 
@@ -257,11 +261,11 @@ namespace FSM.Blazor.Pages.Scheduler
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
 
-               // schedulerVM.IsCheckOut = true;
-              //  DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.IsCheckOut = true; });
+                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = false;
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM.IsCheckOut = false; p.AircraftSchedulerDetailsVM.CheckInTime = DateTime.Now; });
                 base.StateHasChanged();
 
-             //   await ScheduleRef.RefreshEventsAsync();
+                await ScheduleRef.RefreshEventsAsync();
 
             }
             else
@@ -273,13 +277,20 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
         {
-            if (args.Data.IsCheckOut)
+            if (args.Data.AircraftSchedulerDetailsVM.IsCheckOut)
             {
                 args.CssClasses = new List<string>() { "checkedout" };
             }
             else
             {
-                args.CssClasses = new List<string>() { "scheduled" };
+                if (args.Data.AircraftSchedulerDetailsVM.CheckInTime != null)
+                {
+                    args.CssClasses = new List<string>() { "checkedin" };
+                }
+                else
+                {
+                    args.CssClasses = new List<string>() { "scheduled" };
+                }
             }
         }
 
@@ -328,9 +339,14 @@ namespace FSM.Blazor.Pages.Scheduler
             dialogVisibility = true;
 
             isDisplayForm = false;
-            isDisplayCheckOutOption = true;
+            isDisplayCheckOutOption = false;
 
-            isDisplayCheckInButton = schedulerVM.IsCheckOut;
+            if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime == null)
+            {
+                isDisplayCheckOutOption = true;
+            }
+
+            isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
         }
 
         private void OpenForm()
