@@ -634,6 +634,8 @@ INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,Ord
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permission','lock_open',5,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Scheduler','Scheduler','Index','Schedule','event_note',6,1)
 Go
+SET IDENTITY_INSERT [dbo].ModuleDetails OFF
+GO
 
 --INSERT INTO UserRolePermissions VALUES(1,1,1,null,1)
 --INSERT INTO UserRolePermissions VALUES(1,2,1,null,1)
@@ -676,6 +678,8 @@ INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (6,'Renter Flight',1)
 INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (7,'Student Solo',1)
 INSERT INTO ScheduleActivityTypes(Id,Name,IsActive) VALUES (8,'Tour Flight',1)
 Go
+SET IDENTITY_INSERT [dbo].ScheduleActivityTypes OFF
+GO
 
 SET IDENTITY_INSERT [dbo].UserRoleVsScheduleActivityType ON
 GO
@@ -685,4 +689,6 @@ Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityType
 Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityTypeIds) values (3, 4, '2,3,4,7')
 Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityTypeIds) values (4, 6, '3,6')
 
+GO
+SET IDENTITY_INSERT [dbo].UserRoleVsScheduleActivityType OFF
 GO

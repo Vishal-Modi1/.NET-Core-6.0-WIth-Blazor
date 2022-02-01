@@ -1,12 +1,8 @@
 ﻿using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Service.Interface;
-using System.Collections.Generic;
 using DataModels.VM.Account;
-using DataModels.VM.User;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 using DataModels.Entities;
