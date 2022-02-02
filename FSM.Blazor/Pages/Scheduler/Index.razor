@@ -410,7 +410,7 @@
 
                             if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
                             {
-                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CheckInAircraft())" Text="Edit End Time" Style="width: 164px" />
+                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
                                 <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => EditFlightTime())" Text="Un-Check Out" Style="width: 164px" />
                             }
                             else
@@ -421,7 +421,7 @@
                         }
                         else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
                         {
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CheckInAircraft())" Text="Edit End Time" Style="width: 164px" />
+                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
                             <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => EditFlightTime())" Text="Edit Flight Time" Style="width: 164px" />
                         }
                         else
@@ -501,6 +501,33 @@
                     </div>
                 }
             }
+            else if (isDisplayEditEndTimeForm)
+            {
+                <EditForm Model="schedulerVM" OnValidSubmit="@UpdateEndTime">
+
+                <div>
+                    <label>
+                     
+                        <b>Start Time : </b>  
+                            @schedulerVM.StartTime.ToString("dd//MM//yyyy hh:mm tt")
+                           
+                    </label>
+                </div>
+
+                <div>
+                    <label>
+
+                        <b>End Time</b>  
+                        <SfDateTimePicker TValue="DateTime" @bind-value="@schedulerVM.EndTime"></SfDateTimePicker>
+                        <ValidationMessage For="@(() => schedulerVM.EndTime)" />
+                    </label>
+                </div>
+
+                <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Update" Style="width: 130px" />
+                <RadzenButton Click="@((args) => HideEditEndTimeForm())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+
+                </EditForm>
+            }
             else
             {
                 @*  <EditForm Model="aircraftEquipmentTime" OnValidSubmit="@CheckIn">*@
@@ -539,15 +566,15 @@
 
                                 <td>
 
-                                 
+
                                     @if (aircraftScheduleHobbsTime == null)
                                     {
-                                         <RadzenNumeric style="width: 70%;" Name="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName" TValue="decimal"
+                                        <RadzenNumeric style="width: 70%;" Name="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName" TValue="decimal"
                                                Placeholder="Please enter hours" ValueChanged=@(args => TextBoxChangeEvent(args, indexValue)) />
                                     }
                                     else
                                     {
-                                         <RadzenNumeric style="width: 70%;" Value="@aircraftScheduleHobbsTime.InTime" Name="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName" TValue="decimal"
+                                        <RadzenNumeric style="width: 70%;" Value="@aircraftScheduleHobbsTime.InTime" Name="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName" TValue="decimal"
                                                Placeholder="Please enter hours" ValueChanged=@(args => EditFlightTimeTextBoxChangeEvent(args, indexValue)) />
                                     }
 

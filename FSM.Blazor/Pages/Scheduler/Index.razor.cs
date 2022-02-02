@@ -47,7 +47,7 @@ namespace FSM.Blazor.Pages.Scheduler
         public bool isDisplayRecurring, isDisplayMember1Dropdown, isDisplayMember2Dropdown, isDisplayStandBy,
             isDisplayAircraftDropDown, isDisplayFlightRoutes, isDisplayInstructor, isDisplayFlightInfo, dialogVisibility,
             isDisplayForm, isDisplayCheckOutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton,
-            isDisplayMainForm;
+            isDisplayMainForm, isDisplayEditEndTimeForm;
 
         public bool isBusy;
         DateTime currentDate = DateTime.Now;
@@ -175,7 +175,7 @@ namespace FSM.Blazor.Pages.Scheduler
             await SetCheckOutButtonState(true);
 
             // check if someone else already checked out it 
-            CurrentResponse response = await AircraftSchedulerService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
+            CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
 
             NotificationMessage message;
 
@@ -239,6 +239,66 @@ namespace FSM.Blazor.Pages.Scheduler
         private async Task CheckInAircraft()
         {
             isDisplayMainForm = false;
+        }
+
+        private async Task HideEditEndTimeForm()
+        {
+            isDisplayEditEndTimeForm = false;
+            isDisplayMainForm = true;
+        }
+
+        private async Task ShowEditEndTimeForm()
+        {
+            isDisplayMainForm = false;
+            isDisplayEditEndTimeForm = true;
+        }
+
+        private async Task UpdateEndTime()
+        {
+            isBusy = true;
+
+            NotificationMessage message;
+
+            SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
+            
+            schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
+            schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
+            schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
+
+            CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(_httpClient, schedulerEndTimeDetailsVM);
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                if (Convert.ToBoolean(response.Data) == true)
+                {
+                    isDisplayEditEndTimeForm = false;
+                    isDisplayMainForm = true;
+                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                    NotificationService.Notify(message);
+
+                    DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.EndTime = schedulerVM.EndTime; });
+
+                    await ScheduleRef.RefreshEventsAsync();
+                    base.StateHasChanged();
+                }
+                else
+                {
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                    NotificationService.Notify(message);
+                }
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+
+            isBusy = false ;
         }
 
         private async Task EditFlightTime()

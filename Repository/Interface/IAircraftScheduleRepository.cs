@@ -25,5 +25,8 @@ namespace Repository.Interface
 
         void Delete(long id);
 
+        void EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM);
+
+        bool IsAircraftAvailable(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM);
     }
 }

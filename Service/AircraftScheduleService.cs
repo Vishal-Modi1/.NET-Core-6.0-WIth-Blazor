@@ -116,6 +116,35 @@ namespace Service
             }
         }
 
+        public CurrentResponse EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
+        {
+            try
+            {
+                bool isAircraftAvailable =_aircraftScheduleRepository.IsAircraftAvailable(schedulerEndTimeDetailsVM);
+
+                if(!isAircraftAvailable)
+                {
+                    CreateResponse(false, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+
+                    return _currentResponse;
+                }
+
+                schedulerEndTimeDetailsVM.UpdatedOn = DateTime.UtcNow;
+
+                _aircraftScheduleRepository.EditEndTime(schedulerEndTimeDetailsVM);
+
+                CreateResponse(true, HttpStatusCode.OK, "Appointment updated successfully");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse List(SchedulerFilter schedulerFilter)
         {
             try

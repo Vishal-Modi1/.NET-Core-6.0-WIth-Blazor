@@ -37,5 +37,14 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
             return response;
         }
+
+
+        public async Task<CurrentResponse> IsAircraftAlreadyCheckOutAsync(IHttpClientFactory httpClient, long aircraftId)
+        {
+            string url = $"aircraftschedulerdetail/isaircraftalreadycheckout?aircraftId={aircraftId}";
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+
+            return response;
+        }
     }
 }

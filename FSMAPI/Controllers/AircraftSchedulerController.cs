@@ -66,6 +66,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(SchedulerVM schedulerVM)
         {
+            schedulerVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.Edit(schedulerVM);
             return Ok(response);
         }
@@ -76,6 +77,15 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftScheduleService.Delete(id);
 
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("editendtime")]
+        public IActionResult EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
+        {
+            schedulerEndTimeDetailsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _aircraftScheduleService.EditEndTime(schedulerEndTimeDetailsVM);
             return Ok(response);
         }
     }

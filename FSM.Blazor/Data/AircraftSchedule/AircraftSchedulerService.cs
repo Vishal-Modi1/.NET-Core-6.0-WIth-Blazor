@@ -69,10 +69,12 @@ namespace FSM.Blazor.Data.AircraftSchedule
             return response;
         }
 
-        public async Task<CurrentResponse> IsAircraftAlreadyCheckOutAsync(IHttpClientFactory httpClient, long aircraftId)
+        public async Task<CurrentResponse> UpdateScheduleEndTime(IHttpClientFactory httpClient, SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
         {
-            string url = $"aircraftschedulerdetail/isaircraftalreadycheckout?aircraftId={aircraftId}";
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            string url = $"aircraftscheduler/editendtime";
+            string jsonData = JsonConvert.SerializeObject(schedulerEndTimeDetailsVM);
+
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
 
             return response;
         }

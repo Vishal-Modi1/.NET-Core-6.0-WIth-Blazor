@@ -84,6 +84,40 @@ namespace Repository
                 return aircraftSchedule;
             }
         }
+
+        public void EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftSchedule existingAppointment = _myContext.AircraftSchedules.Where(p => p.Id == schedulerEndTimeDetailsVM.ScheduleId).FirstOrDefault();
+
+                if (existingAppointment != null)
+                {
+                    existingAppointment.EndDateTime = schedulerEndTimeDetailsVM.EndTime;
+                    existingAppointment.UpdatedOn = schedulerEndTimeDetailsVM.UpdatedOn;
+                    existingAppointment.UpdatedBy = schedulerEndTimeDetailsVM.UpdatedBy;
+                }
+
+                _myContext.SaveChanges();
+            }
+        }
+
+        public bool IsAircraftAvailable(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftSchedule aircraftSchedule = _myContext.AircraftSchedules.Where(p => p.Id == schedulerEndTimeDetailsVM.ScheduleId).First();
+
+                bool isAircraftAvailable = _myContext.AircraftSchedules.Where(p=> p.Id != schedulerEndTimeDetailsVM.ScheduleId && p.AircraftId == aircraftSchedule.AircraftId 
+                && p.StartDateTime < schedulerEndTimeDetailsVM.EndTime && p.StartDateTime > schedulerEndTimeDetailsVM.StartTime).Count() == 0;
+
+                var data = _myContext.AircraftSchedules.Where(p=> p.Id != schedulerEndTimeDetailsVM.ScheduleId && p.AircraftId == aircraftSchedule.AircraftId 
+                && p.StartDateTime < schedulerEndTimeDetailsVM.EndTime && p.StartDateTime > schedulerEndTimeDetailsVM.StartTime).Count() == 0;
+
+                return isAircraftAvailable;
+            }
+        }
+
         public AircraftSchedule Create(AircraftSchedule aircraftSchedule)
         {
             using (_myContext = new MyContext())
