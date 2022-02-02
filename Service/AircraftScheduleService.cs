@@ -193,6 +193,7 @@ namespace Service
                 schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = aircraftScheduleDetail.CheckOutTime;
                 schedulerVM.AircraftSchedulerDetailsVM.CheckInBy = aircraftScheduleDetail.CheckInBy;
                 schedulerVM.AircraftSchedulerDetailsVM.CheckOutBy = aircraftScheduleDetail.CheckOutBy;
+                schedulerVM.AircraftSchedulerDetailsVM.Id = aircraftScheduleDetail.Id;
 
                 User checkInByUser = _userRepository.FindByCondition(p => p.Id == schedulerVM.AircraftSchedulerDetailsVM.CheckInBy);
                 User checkOutByUser = _userRepository.FindByCondition(p => p.Id == schedulerVM.AircraftSchedulerDetailsVM.CheckOutBy);

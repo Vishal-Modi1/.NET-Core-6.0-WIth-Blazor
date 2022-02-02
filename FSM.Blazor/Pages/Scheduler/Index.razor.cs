@@ -236,6 +236,37 @@ namespace FSM.Blazor.Pages.Scheduler
             }
         }
 
+        private async Task UnCheckOut()
+        {
+            NotificationMessage message;
+
+            CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(_httpClient, schedulerVM.AircraftSchedulerDetailsVM.Id);
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                dialogVisibility = false;
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+
+                schedulerVM.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM(); });
+                base.StateHasChanged();
+
+                await ScheduleRef.RefreshEventsAsync();
+
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                NotificationService.Notify(message);
+            }
+        }
+
         private async Task CheckInAircraft()
         {
             isDisplayMainForm = false;

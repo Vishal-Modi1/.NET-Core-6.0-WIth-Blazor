@@ -13,5 +13,7 @@ namespace Repository.Interface
         AircraftScheduleDetail FindByCondition(Expression<Func<AircraftScheduleDetail, bool>> predicate);
 
         AircraftScheduleDetail CheckIn(long checkInBy, DateTime checkInTime, long aircraftScheduleId);
+
+        AircraftScheduleDetail UnCheckOut(long id);
     }
 }

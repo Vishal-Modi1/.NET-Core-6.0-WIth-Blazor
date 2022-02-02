@@ -44,6 +44,15 @@ namespace FSMAPI.Controllers
         }
 
         [HttpPost]
+        [Route("uncheckout")]
+        public IActionResult UnCheckout([FromBody] long scheduleId)
+        {
+            CurrentResponse response = _aircraftScheduleDetailService.UnCheckOut(scheduleId);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
         [Route("checkin")]
         public IActionResult CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
         {

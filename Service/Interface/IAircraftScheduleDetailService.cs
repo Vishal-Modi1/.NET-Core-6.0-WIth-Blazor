@@ -11,6 +11,7 @@ namespace Service.Interface
         CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId);
 
         CurrentResponse CheckOut(AircraftScheduleDetailVM aircraftScheduleDetailVM);
+        CurrentResponse UnCheckOut(long id);
 
         CurrentResponse CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList, long checkInBy);
     }

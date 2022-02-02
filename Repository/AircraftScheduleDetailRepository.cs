@@ -37,6 +37,17 @@ namespace Repository
             }
         }
 
+        public AircraftScheduleDetail UnCheckOut(long id)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftScheduleDetail aircraftScheduleDetail =  _myContext.AircraftScheduleDetails.Where(p=> p.Id == id).FirstOrDefault();
+                _myContext.Remove(aircraftScheduleDetail);
+
+                return aircraftScheduleDetail;
+            }
+        }
+
         public AircraftScheduleDetail CheckIn(long checkInBy, DateTime checkInTime, long aircraftScheduleId)
         {
             using (_myContext = new MyContext())

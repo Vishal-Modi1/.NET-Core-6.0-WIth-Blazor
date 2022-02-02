@@ -17,7 +17,7 @@ namespace Service
         private readonly IAircraftScheduleHobbsTimeRepository _aircraftScheduleHobbsTimeRepository;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
         private readonly IAircraftEquipmentTimeRepository _aircraftEquipmentTimeRepository;
-        public AircraftScheduleDetailService(IAircraftScheduleDetailRepository aircraftScheduleDetailRepository, 
+        public AircraftScheduleDetailService(IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
             IAircraftEquipementTimeService aircraftEquipementTimeService,
             IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository)
@@ -53,6 +53,23 @@ namespace Service
             }
         }
 
+        public CurrentResponse UnCheckOut(long id)
+        {
+            try
+            {
+                _aircraftScheduleDetailRepository.UnCheckOut(id);
+                CreateResponse(true, HttpStatusCode.OK, "Aircraft uncheck out successfully");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList, long checkInBy)
         {
             try
@@ -63,14 +80,14 @@ namespace Service
 
                 foreach (AircraftEquipmentTime aircraftEquipmentTime in aircraftEquipmentTimesList)
                 {
-                    var data = aircraftEquipmentsTimeList.Where(p=> p.Id == aircraftEquipmentTime.Id).First();
+                    var data = aircraftEquipmentsTimeList.Where(p => p.Id == aircraftEquipmentTime.Id).First();
 
                     aircraftEquipmentTime.Hours = data.Hours + data.TotalHours;
                     _aircraftEquipmentTimeRepository.Edit(aircraftEquipmentTime);
                 }
 
                 AircraftScheduleDetail aircraftScheduleDetail = _aircraftScheduleDetailRepository.CheckIn(checkInBy, DateTime.UtcNow, aircraftEquipmentsTimeList.First().AircraftScheduleId);
-                
+
                 CreateResponse(null, HttpStatusCode.OK, "Aircraft check in successfully");
 
                 return _currentResponse;

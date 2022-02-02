@@ -27,6 +27,17 @@ namespace FSM.Blazor.Data.AircraftSchedule
             return response;
         }
 
+        public async Task<CurrentResponse> UnCheckOut(IHttpClientFactory httpClient, long scheduleId)
+        {
+            string jsonData = JsonConvert.SerializeObject(scheduleId);
+
+            string url = "aircraftschedulerdetail/uncheckout";
+
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+
+            return response;
+        }
+
         public async Task<CurrentResponse> CheckIn(IHttpClientFactory httpClient, List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
         {
             string jsonData = JsonConvert.SerializeObject(aircraftEquipmentsTimeList);
