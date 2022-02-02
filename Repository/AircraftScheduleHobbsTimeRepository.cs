@@ -22,6 +22,29 @@ namespace Repository
             }
         }
 
+        public List<AircraftScheduleHobbsTime> Edit(List<AircraftScheduleHobbsTime> aircraftScheduleHobbsTimesList)
+        {
+            using (_myContext = new MyContext())
+            {
+                var idsList = aircraftScheduleHobbsTimesList.Select(p => p.Id).ToList();
+
+                List<AircraftScheduleHobbsTime> existingDataList = _myContext.AircraftScheduleHobbsTimes.Where(p=> idsList.Contains(p.Id)).ToList();
+
+                foreach (AircraftScheduleHobbsTime aircraftScheduleHobbsTime in existingDataList)
+                {
+                    AircraftScheduleHobbsTime updatedTimeData = aircraftScheduleHobbsTimesList.Where(p => p.Id == aircraftScheduleHobbsTime.Id).First();
+
+                    aircraftScheduleHobbsTime.InTime = updatedTimeData.InTime;
+                    aircraftScheduleHobbsTime.OutTime = updatedTimeData.OutTime;
+                    aircraftScheduleHobbsTime.TotalTime = updatedTimeData.TotalTime;
+                }
+
+                _myContext.SaveChanges();
+
+                return aircraftScheduleHobbsTimesList;
+            }
+        }
+
         public List<AircraftScheduleHobbsTime> ListByCondition(Expression<Func<AircraftScheduleHobbsTime, bool>> predicate)
         {
             using (_myContext = new MyContext())

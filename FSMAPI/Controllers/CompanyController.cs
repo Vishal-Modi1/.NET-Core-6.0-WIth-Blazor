@@ -2,6 +2,8 @@
 using Service.Interface;
 using DataModels.VM.Company;
 using DataModels.VM.Common;
+using FSMAPI.Utilities;
+using DataModels.Constants;
 
 namespace FSMAPI.Controllers
 {
@@ -10,10 +12,12 @@ namespace FSMAPI.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;
+        private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public CompanyController(ICompanyService companyService)
+        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor)
         {
             _companyService = companyService;
+            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -38,6 +42,8 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(CompanyVM companyVM)
         {
+            companyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
             CurrentResponse response = _companyService.Create(companyVM);
             return Ok(response);
         }
@@ -46,6 +52,8 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(CompanyVM companyVM)
         {
+            companyVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
             CurrentResponse response = _companyService.Edit(companyVM);
             return Ok(response);
         }

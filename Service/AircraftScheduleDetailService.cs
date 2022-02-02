@@ -57,22 +57,7 @@ namespace Service
         {
             try
             {
-                List<AircraftScheduleHobbsTime> aircraftScheduleHobbsTimesList = new List<AircraftScheduleHobbsTime>();
-
-                foreach (AircraftEquipmentTimeVM aircraftEquipmentTime in aircraftEquipmentsTimeList)
-                {
-                    AircraftScheduleHobbsTime aircraftScheduleHobbsTime = new AircraftScheduleHobbsTime();
-
-                    aircraftScheduleHobbsTime.AircraftScheduleId = aircraftEquipmentTime.AircraftScheduleId;
-                    aircraftScheduleHobbsTime.AircraftEquipmentTimeId = aircraftEquipmentTime.Id;
-                    aircraftScheduleHobbsTime.OutTime = aircraftEquipmentTime.Hours;
-                    aircraftScheduleHobbsTime.InTime = aircraftEquipmentTime.Hours + aircraftEquipmentTime.TotalHours;
-                    aircraftScheduleHobbsTime.TotalTime = aircraftEquipmentTime.TotalHours;
-
-                    aircraftScheduleHobbsTimesList.Add(aircraftScheduleHobbsTime);
-                }
-
-                aircraftScheduleHobbsTimesList = _aircraftScheduleHobbsTimeRepository.Create(aircraftScheduleHobbsTimesList);
+                ManageAircraftEquipmentHobbsTime(aircraftEquipmentsTimeList);
 
                 List<AircraftEquipmentTime> aircraftEquipmentTimesList = _aircraftEquipementTimeService.ToDataObjectList(aircraftEquipmentsTimeList);
 
@@ -95,6 +80,44 @@ namespace Service
                 CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
 
                 return _currentResponse;
+            }
+        }
+
+        private void ManageAircraftEquipmentHobbsTime(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
+        {
+            long aircraftScheduleId = aircraftEquipmentsTimeList.First().AircraftScheduleId;
+
+            List<AircraftScheduleHobbsTime> aircraftScheduleHobbsTimesList = _aircraftScheduleHobbsTimeRepository.ListByCondition(p => p.AircraftScheduleId == aircraftScheduleId);
+
+            bool isUpdateTime = aircraftScheduleHobbsTimesList.Count() > 0;
+
+            foreach (AircraftEquipmentTimeVM aircraftEquipmentTime in aircraftEquipmentsTimeList)
+            {
+                AircraftScheduleHobbsTime aircraftScheduleHobbsTime = new AircraftScheduleHobbsTime();
+
+                if (isUpdateTime)
+                {
+                    aircraftScheduleHobbsTime = aircraftScheduleHobbsTimesList.Where(p => p.AircraftEquipmentTimeId == aircraftEquipmentTime.Id).FirstOrDefault();
+                }
+
+                aircraftScheduleHobbsTime.AircraftScheduleId = aircraftEquipmentTime.AircraftScheduleId;
+                aircraftScheduleHobbsTime.AircraftEquipmentTimeId = aircraftEquipmentTime.Id;
+                aircraftScheduleHobbsTime.OutTime = aircraftEquipmentTime.Hours;
+                aircraftScheduleHobbsTime.InTime = aircraftEquipmentTime.Hours + aircraftEquipmentTime.TotalHours;
+                aircraftScheduleHobbsTime.TotalTime = aircraftEquipmentTime.TotalHours;
+
+                if (!isUpdateTime)
+                {
+                    aircraftScheduleHobbsTimesList.Add(aircraftScheduleHobbsTime);
+                }
+            }
+            if (isUpdateTime)
+            {
+                aircraftScheduleHobbsTimesList = _aircraftScheduleHobbsTimeRepository.Edit(aircraftScheduleHobbsTimesList);
+            }
+            else
+            {
+                aircraftScheduleHobbsTimesList = _aircraftScheduleHobbsTimeRepository.Create(aircraftScheduleHobbsTimesList);
             }
         }
 

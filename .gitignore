@@ -64,3 +64,9 @@
 /Repository/bin/Release/net6.0
 /Service/bin/Release/net6.0/ref
 /Service/bin/Release/net6.0
+/Configuration/bin/x64/Debug/net6.0
+/DataModels/bin/x64/Debug/net6.0
+/FSM.Blazor/bin/x64/Debug/net6.0
+/FSMAPI/bin/x64/Debug/net6.0
+/Repository/bin/x64/Debug/net6.0
+/Service/bin/x64/Debug/net6.0

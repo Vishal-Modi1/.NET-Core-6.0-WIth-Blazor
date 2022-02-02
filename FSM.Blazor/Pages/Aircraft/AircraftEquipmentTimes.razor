@@ -9,7 +9,8 @@
             <RadzenLabel Text=@("Air Frame Hours") />
         </div>
         <div class="col-md-6 col-12">
-            <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[0].Hours.ToString()
+
+            <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[0].Hours
                            Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(0, args)) />
 
         </div>
@@ -27,7 +28,7 @@
                 <RadzenLabel Text=@("Engine " + engineIndex + " Hours") />
             </div>
             <div class="col-md-6 col-12">
-                <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[engineNo].Hours.ToString()
+                <RadzenNumeric style="width: 100%;"  TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[engineNo].Hours
                            Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(engineIndexValue, args)) />
             </div>
         </div>
@@ -44,7 +45,7 @@
                 <RadzenLabel Text=@("Propeller " + propellerIndex + " Hours") />
             </div>
             <div class="col-md-6 col-12">
-                <RadzenTextBox style="width: 100%;" TValue="int" Value=@AircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours.ToString()
+                <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours
                            Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(proppellerIndexValue, args)) />
             </div>
         </div>

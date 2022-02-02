@@ -9,6 +9,8 @@ namespace Repository.Interface
     {
         List<AircraftScheduleHobbsTime> Create(List<AircraftScheduleHobbsTime> aircraftScheduleHobbsTimesList);
 
+        List<AircraftScheduleHobbsTime> Edit(List<AircraftScheduleHobbsTime> aircraftScheduleHobbsTimesList);
+
         List<AircraftScheduleHobbsTime> ListByCondition(Expression<Func<AircraftScheduleHobbsTime, bool>> predicate);
     }
 }

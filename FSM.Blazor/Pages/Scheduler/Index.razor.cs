@@ -14,6 +14,8 @@ using Radzen;
 using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
 using Syncfusion.Blazor.Inputs;
+using DataModels.VM.AircraftEquipment;
+using DataModels.Entities;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -116,50 +118,50 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             InitializeValues();
 
-            if (args.Value == (int)ScheduleActivityType.CharterFlight)
+            if (args.Value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
             {
                 isDisplayMember2Dropdown = true;
                 isDisplayFlightRoutes = true;
             }
 
-            else if (args.Value == (int)ScheduleActivityType.RenterFlight)
-            {
-                isDisplayMember2Dropdown = true;
-                isDisplayFlightRoutes = true;
-                isDisplayFlightInfo = true;
-            }
-
-            else if (args.Value == (int)ScheduleActivityType.TourFlight)
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
             {
                 isDisplayMember2Dropdown = true;
                 isDisplayFlightRoutes = true;
                 isDisplayFlightInfo = true;
             }
 
-            else if (args.Value == (int)ScheduleActivityType.StudentSolo)
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
+            {
+                isDisplayMember2Dropdown = true;
+                isDisplayFlightRoutes = true;
+                isDisplayFlightInfo = true;
+            }
+
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
             {
                 isDisplayFlightRoutes = true;
                 isDisplayFlightInfo = true;
             }
 
-            else if (args.Value == (int)ScheduleActivityType.Maintenance)
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
             {
                 isDisplayRecurring = false;
                 isDisplayMember1Dropdown = false;
                 isDisplayStandBy = false;
             }
 
-            else if (args.Value == (int)ScheduleActivityType.DiscoveryFlight)
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
             {
                 isDisplayInstructor = true;
             }
 
-            else if (args.Value == (int)ScheduleActivityType.DualFlightTraining)
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
             {
                 isDisplayInstructor = true;
             }
 
-            else if (args.Value == (int)ScheduleActivityType.GroundTraining)
+            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
             {
                 //IsDisplayAircraftDropDown = false;
                 isDisplayInstructor = true;
@@ -237,6 +239,22 @@ namespace FSM.Blazor.Pages.Scheduler
         private async Task CheckInAircraft()
         {
             isDisplayMainForm = false;
+        }
+
+        private async Task EditFlightTime()
+        {
+            isDisplayMainForm = false;
+
+            foreach (AircraftEquipmentTimeVM aircraftEquipmentTimeVM in schedulerVM.AircraftEquipmentsTimeList)
+            {
+                AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == aircraftEquipmentTimeVM.Id).FirstOrDefault();
+
+                if (aircraftScheduleHobbsTime != null)
+                {
+                    aircraftEquipmentTimeVM.TotalHours = aircraftScheduleHobbsTime.TotalTime;
+                    aircraftEquipmentTimeVM.Hours = aircraftScheduleHobbsTime.OutTime;
+                }
+            }
         }
 
         private async Task OpenMainForm()
@@ -346,6 +364,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 isDisplayCheckOutOption = true;
             }
 
+            isDisplayMainForm = true;
             isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
         }
 
@@ -427,7 +446,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private void CloseDeleteDialog()
         {
-            //IsVisibleDeleteDialog = false; 
+            DialogService.Close(true);
             dialogVisibility = true;
         }
 
@@ -443,9 +462,18 @@ namespace FSM.Blazor.Pages.Scheduler
             await InvokeAsync(() => StateHasChanged());
         }
 
-        public void TextBoxChangeEvent(ChangedEventArgs args, int index)
+        public void TextBoxChangeEvent(object value, int index)
         {
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+
+            base.StateHasChanged();
+        }
+
+        public void EditFlightTimeTextBoxChangeEvent(object value, int index)
+        {
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value);
+
 
             base.StateHasChanged();
         }
