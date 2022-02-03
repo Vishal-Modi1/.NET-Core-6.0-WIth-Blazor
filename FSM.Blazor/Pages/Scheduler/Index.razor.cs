@@ -46,8 +46,8 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public bool isDisplayRecurring, isDisplayMember1Dropdown, isDisplayMember2Dropdown, isDisplayStandBy,
             isDisplayAircraftDropDown, isDisplayFlightRoutes, isDisplayInstructor, isDisplayFlightInfo, dialogVisibility,
-            isDisplayForm, isDisplayCheckOutOption, isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton,
-            isDisplayMainForm, isDisplayEditEndTimeForm;
+            isDisplayForm, isDisplayCheckOutOption, @isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton,
+            isDisplayMainForm, isDisplayEditEndTimeForm, isBusyUnCheckOutButton;
 
         public bool isBusy;
         DateTime currentDate = DateTime.Now;
@@ -176,7 +176,9 @@ namespace FSM.Blazor.Pages.Scheduler
 
             // check if someone else already checked out it 
             CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
-
+          
+            await SetCheckOutButtonState(false);
+          
             NotificationMessage message;
 
             if (response == null)
@@ -202,7 +204,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 NotificationService.Notify(message);
             }
 
-            await SetCheckOutButtonState(false);
+          
         }
 
         private async Task CheckOut()
@@ -236,11 +238,15 @@ namespace FSM.Blazor.Pages.Scheduler
             }
         }
 
-        private async Task UnCheckOut()
+        private async Task UnCheckOutAppointment()
         {
             NotificationMessage message;
 
+            await SetUnCheckOutButtonState(true);
+
             CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(_httpClient, schedulerVM.AircraftSchedulerDetailsVM.Id);
+
+            await SetUnCheckOutButtonState(false);
 
             if (response == null)
             {
@@ -249,7 +255,6 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                dialogVisibility = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
 
@@ -258,6 +263,8 @@ namespace FSM.Blazor.Pages.Scheduler
                 base.StateHasChanged();
 
                 await ScheduleRef.RefreshEventsAsync();
+
+                DialogService.Close(true); 
 
             }
             else
@@ -535,7 +542,7 @@ namespace FSM.Blazor.Pages.Scheduler
             await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
         }
 
-        private void CloseDeleteDialog()
+        private void CloseChildDialog()
         {
             DialogService.Close(true);
             dialogVisibility = true;
@@ -544,6 +551,12 @@ namespace FSM.Blazor.Pages.Scheduler
         private async Task SetDeleteButtonState(bool isBusy)
         {
             isBusyDeleteButton = isBusy;
+            await InvokeAsync(() => StateHasChanged());
+        }
+
+        private async Task SetUnCheckOutButtonState(bool isBusy)
+        {
+            isBusyUnCheckOutButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
         }
 

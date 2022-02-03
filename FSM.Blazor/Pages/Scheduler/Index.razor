@@ -505,33 +505,31 @@
             {
                 <EditForm Model="schedulerVM" OnValidSubmit="@UpdateEndTime">
 
-                <div>
-                    <label>
-                     
-                        <b>Start Time : </b>  
+                    <div>
+                        <label>
+
+                            <b>Start Time : </b>
                             @schedulerVM.StartTime.ToString("dd//MM//yyyy hh:mm tt")
-                           
-                    </label>
-                </div>
 
-                <div>
-                    <label>
+                        </label>
+                    </div>
 
-                        <b>End Time</b>  
-                        <SfDateTimePicker TValue="DateTime" @bind-value="@schedulerVM.EndTime"></SfDateTimePicker>
-                        <ValidationMessage For="@(() => schedulerVM.EndTime)" />
-                    </label>
-                </div>
+                    <div>
+                        <label>
 
-                <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Update" Style="width: 130px" />
-                <RadzenButton Click="@((args) => HideEditEndTimeForm())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                            <b>End Time</b>
+                            <SfDateTimePicker TValue="DateTime" @bind-value="@schedulerVM.EndTime"></SfDateTimePicker>
+                            <ValidationMessage For="@(() => schedulerVM.EndTime)" />
+                        </label>
+                    </div>
+
+                    <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Update" Style="width: 130px" />
+                    <RadzenButton Click="@((args) => HideEditEndTimeForm())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
 
                 </EditForm>
             }
             else
             {
-                @*  <EditForm Model="aircraftEquipmentTime" OnValidSubmit="@CheckIn">*@
-
                 <RadzenTemplateForm Data="@schedulerVM" Submit="@((SchedulerVM args) => {  CheckIn(); })">
 
                     <table class="custom-event-editor" width="100%" cellpadding="5">
@@ -606,8 +604,6 @@
                     </div>
                 </div>
 
-                @*  </EditForm>*@
-
             </RadzenTemplateForm>
             }
         </Content>
@@ -628,7 +624,7 @@
                 <div class="row" style="text-align:right">
                     <div class="col">
                         <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => DeleteAsync() " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
-                        <RadzenButton Text="No" Click="() => CloseDeleteDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                        <RadzenButton Text="No" Click="() => CloseChildDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
                     </div>
                 </div>
             </div>
@@ -648,7 +644,25 @@
         <div class="row" style="text-align:right">
             <div class="col">
                 <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync() " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
-                <RadzenButton Text="No" Click="() => CloseDeleteDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => CloseChildDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+
+    async Task UnCheckOut()
+    {
+        dialogVisibility = false;
+        var result = await DialogService.OpenAsync("Un-Check out appointment", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to un-check out appointment ?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Un-Checkout" ButtonStyle="ButtonStyle.Primary" Click="() => UnCheckOutAppointment() " BusyText="un-checking out ..." IsBusy=@isBusyUnCheckOutButton Class="mr-1" Style="width: 160px;" />
+                <RadzenButton Text="Cancel" Click="() => CloseChildDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
 
             </div>
         </div>

@@ -44,6 +44,8 @@ namespace Repository
                 AircraftScheduleDetail aircraftScheduleDetail =  _myContext.AircraftScheduleDetails.Where(p=> p.Id == id).FirstOrDefault();
                 _myContext.Remove(aircraftScheduleDetail);
 
+                _myContext.SaveChanges();
+
                 return aircraftScheduleDetail;
             }
         }
