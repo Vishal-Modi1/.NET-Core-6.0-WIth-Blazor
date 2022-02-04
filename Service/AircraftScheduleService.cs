@@ -80,10 +80,19 @@ namespace Service
 
         public CurrentResponse Create(SchedulerVM schedulerVM)
         {
-            AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
-
             try
             {
+                bool isAircraftAvailable = IsAircraftAvailable(schedulerVM);
+
+                if (!isAircraftAvailable)
+                {
+                    CreateResponse(null, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+
+                    return _currentResponse;
+                }
+
+                AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
+
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Aircraft Appointment created successfully");
 
@@ -101,6 +110,15 @@ namespace Service
         {
             try
             {
+                bool isAircraftAvailable = IsAircraftAvailable(schedulerVM);
+
+                if (!isAircraftAvailable)
+                {
+                    CreateResponse(null, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+
+                    return _currentResponse;
+                } 
+
                 AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
                 aircraftSchedule = _aircraftScheduleRepository.Edit(aircraftSchedule);
 
@@ -114,6 +132,19 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        private bool IsAircraftAvailable(SchedulerVM schedulerVM)
+        {
+            SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
+            schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
+            schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
+            schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
+            schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
+
+            bool isAircraftAvailable = _aircraftScheduleRepository.IsAircraftAvailable(schedulerEndTimeDetailsVM);
+
+            return isAircraftAvailable;
         }
 
         public CurrentResponse EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)

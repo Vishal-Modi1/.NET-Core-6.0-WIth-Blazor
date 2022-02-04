@@ -114,54 +114,54 @@ namespace FSM.Blazor.Pages.Scheduler
             return aircraftResourceList;
         }
 
-        public void OnActivityTypeValueChanged(ChangeEventArgs<int?, DropDownValues> args)
+        public void OnActivityTypeValueChanged(object value)
         {
             InitializeValues();
 
-            if (args.Value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
+            if ((int)value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
             {
                 isDisplayMember2Dropdown = true;
                 isDisplayFlightRoutes = true;
             }
 
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
-            {
-                isDisplayMember2Dropdown = true;
-                isDisplayFlightRoutes = true;
-                isDisplayFlightInfo = true;
-            }
-
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
             {
                 isDisplayMember2Dropdown = true;
                 isDisplayFlightRoutes = true;
                 isDisplayFlightInfo = true;
             }
 
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
+            {
+                isDisplayMember2Dropdown = true;
+                isDisplayFlightRoutes = true;
+                isDisplayFlightInfo = true;
+            }
+
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
             {
                 isDisplayFlightRoutes = true;
                 isDisplayFlightInfo = true;
             }
 
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
             {
                 isDisplayRecurring = false;
                 isDisplayMember1Dropdown = false;
                 isDisplayStandBy = false;
             }
 
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
             {
                 isDisplayInstructor = true;
             }
 
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
             {
                 isDisplayInstructor = true;
             }
 
-            else if (args.Value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
+            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
             {
                 //IsDisplayAircraftDropDown = false;
                 isDisplayInstructor = true;
@@ -302,6 +302,7 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
             schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
             schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
+            schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
 
             CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(_httpClient, schedulerEndTimeDetailsVM);
 
@@ -497,9 +498,17 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                dialogVisibility = false;
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
+                if (response.Data == null)
+                {
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
+                    NotificationService.Notify(message);
+                }
+                else
+                {
+                    dialogVisibility = false;
+                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
+                    NotificationService.Notify(message);
+                }
             }
             else
             {
@@ -573,10 +582,10 @@ namespace FSM.Blazor.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        public void EditFlightTimeTextBoxChangeEvent(object value, int index)
+        public void EditFlightTimeTextBoxChangeEvent(ChangeEventArgs value, int index)
         {
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value);
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value.Value);
 
 
             base.StateHasChanged();

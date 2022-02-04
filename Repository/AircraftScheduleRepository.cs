@@ -106,10 +106,11 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                AircraftSchedule aircraftSchedule = _myContext.AircraftSchedules.Where(p => p.Id == schedulerEndTimeDetailsVM.ScheduleId).First();
-
-                bool isAircraftAvailable = _myContext.AircraftSchedules.Where(p=> p.Id != schedulerEndTimeDetailsVM.ScheduleId && p.AircraftId == aircraftSchedule.AircraftId 
-                && p.StartDateTime < schedulerEndTimeDetailsVM.EndTime && p.StartDateTime > schedulerEndTimeDetailsVM.StartTime && p.IsDeleted == false && p.IsActive == true).Count() == 0;
+                bool isAircraftAvailable = _myContext.AircraftSchedules.Where(p=> p.Id != schedulerEndTimeDetailsVM.ScheduleId && 
+                p.AircraftId == schedulerEndTimeDetailsVM.AircraftId && p.IsDeleted == false && p.IsActive == true
+                && ((p.StartDateTime > schedulerEndTimeDetailsVM.StartTime && p.StartDateTime < schedulerEndTimeDetailsVM.EndTime)
+                || (p.EndDateTime < schedulerEndTimeDetailsVM.EndTime && p.EndDateTime > schedulerEndTimeDetailsVM.StartTime)
+                || (p.EndDateTime == schedulerEndTimeDetailsVM.EndTime && p.StartDateTime == schedulerEndTimeDetailsVM.StartTime))).Count() == 0;
 
                 return isAircraftAvailable;
             }
