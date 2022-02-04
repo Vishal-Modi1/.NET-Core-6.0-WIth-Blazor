@@ -39,6 +39,8 @@ namespace FSM.Blazor.Pages.Scheduler
 
         List<SchedulerVM> DataSource;
 
+        public View CurrentView { get; set; } = View.TimelineWeek;
+
         public string[] Resources { get; set; } = { "Aircrafts" };
         public ObservableCollection<ResourceData> ObservableAircraftsData { get; set; }
 
