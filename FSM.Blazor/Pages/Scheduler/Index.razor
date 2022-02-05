@@ -306,19 +306,19 @@
 
                     else
                     {
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center align-items-center alert alert-danger">
                             <div class="col-4 d-flex flex-column">
                                 <h4 class="d-flex justify-content-center">@schedulerVM.StartTime.ToString("ddd, MMM dd")</h4>
                                 <h4 class="d-flex justify-content-center">@schedulerVM.StartTime.ToString("%h:mm tt")</h4>
                             </div>
                             <div class="col-4 d-flex flex-column">
                                 <span class="d-flex justify-content-center">
-                                      <h6>
+                                    <h6>
                                         <MaterialIcon Theme="@MaterialIcon.Themes.TwoTone" Size="28">arrow_forward</MaterialIcon>
                                     </h6>
-                                   <h6>
+                                    <h6>
                                         <MaterialIcon Theme="@MaterialIcon.Themes.TwoTone" Size="48">flight_takeoff</MaterialIcon>
-                                   </h6>
+                                    </h6>
                                     <h6>
                                         <MaterialIcon Theme="@MaterialIcon.Themes.TwoTone" Size="28">arrow_forward</MaterialIcon>
                                     </h6>
@@ -329,14 +329,21 @@
                                 <h4 class="d-flex justify-content-center">@schedulerVM.EndTime.ToString("%h:mm tt")</h4>
                             </div>
                         </div>
-                        @*  <div>
-                            <label>
-                            <h3>
-                            @schedulerVM.StartTime.ToString("MMM dd yyyy hh:mm tt")
-                            @schedulerVM.EndTime.ToString("MMM dd yyyy hh:mm tt")
-                            </h3>
-                            </label>
-                            </div>*@
+                        <div class="row justify-content-center align-items-center alert alert-warning">
+                            <div class="col-12 d-flex flex-column">
+                                <h4 class="d-flex justify-content-center popup-title">Reservation Id</h4>
+                                <h6 class="d-flex justify-content-center">
+                                    @if (schedulerVM.ReservationId != Guid.Empty)
+                                    {
+                                        @schedulerVM.ReservationId
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </h6>
+                            </div>
+                        </div>
                         <hr />
                         <div class="row justify-content-center mt-2">
                             <div class="col-4 d-flex flex-column">
@@ -345,47 +352,26 @@
                             </div>
                             <div class="col-4 d-flex flex-column">
                                 <h4 class="d-flex justify-content-center popup-title">Aircraft</h4>
-                                <h6 class="d-flex justify-content-center">@(@schedulerVM.AircraftsList.FirstOrDefault(p => p.Id == @schedulerVM.AircraftId)?.Name)</h6>
+                                <h6 class="d-flex justify-content-center">@(@schedulerVM.AircraftsList.FirstOrDefault(p => p.Id == @schedulerVM.AircraftId)?.Name ?? "-")</h6>
                             </div>
                             <div class="col-4 d-flex flex-column">
                                 <h4 class="d-flex justify-content-center popup-title">Title</h4>
                                 <h6 class="d-flex justify-content-center"> @(schedulerVM.DisplayTitle)</h6>
                             </div>
                         </div>
-                      @*  <div>
-                            <label>Activity : @schedulerVM.ScheduleActivitiesList.Where(p => p.Id == @schedulerVM.ScheduleActivityId).First().Name </label>
-                        </div>
-
-
-                        <div>
-                            <label>Aircraft : @schedulerVM.AircraftsList.Where(p => p.Id == @schedulerVM.AircraftId).First().Name </label>
-                        </div>
-
-                        <div>
-                            <label>Title : @schedulerVM.DisplayTitle </label>
-                        </div>*@
-
-                        <div>
-                            <label>
-
-                                Reservation Id :
-                                @if (schedulerVM.ReservationId != Guid.Empty)
-                                {
-                                    @schedulerVM.ReservationId
-                                }
-
-                            </label>
-                        </div>
-
                         <hr />
-                        <div class="row justify-content-center mt-2">
+                        <div class="row justify-content-center mt-2 d-flex align-items-start">
                             <div class="col-6 d-flex flex-column">
                                 <h4 class="d-flex justify-content-center popup-title">Member 1</h4>
                                 <h6 class="d-flex justify-content-center">
                                     @if (@schedulerVM.Member1Id != null)
                                     {
                                         var member1 = @schedulerVM.Member1List.FirstOrDefault(p => p.Id == @schedulerVM.Member1Id);
-                                         <span>@(member1 != null && !@String.IsNullOrEmpty(member1.Name) ? member1.Name : "-" )</span>
+                                        <span>@(member1 != null && !@String.IsNullOrEmpty(member1.Name) ? member1.Name : "-" )</span>
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
                                     }
                                 </h6>
                             </div>
@@ -397,103 +383,85 @@
                                         var member2 = @schedulerVM.Member2List.FirstOrDefault(p => p.Id == @schedulerVM.Member2Id);
                                         <span>@(member2 != null && !@String.IsNullOrEmpty(member2.Name) ? member2.Name : "-" )</span>
                                     }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
                                 </h6>
                             </div>
                         </div>
-                        @*<div>
-                            <label>
-
-                                Member 1 :
-
-                                @if (@schedulerVM.Member1Id != null)
-                                {
-                                    @schedulerVM.Member1List.Where(p=>p.Id == @schedulerVM.Member1Id).First().Name
-                                }
-
-                            </label>
-                        </div>
-
-                        <div>
-                            <label>
-
-                                Member 2 :
-
-                                @if (@schedulerVM.Member2Id != null)
-                                {
-                                    @schedulerVM.Member2List.Where(p=>p.Id == @schedulerVM.Member2Id).First().Name
-                                }
-
-                            </label>
-                        </div>*@
-
-                        <div>
-                            <label>
-
-                                Instructor :
-
+                        <div class="row justify-content-center mt-2 d-flex align-items-start alert alert-primary">
+                            <div class="col-6 d-flex flex-column">
+                                <strong>Instructor </strong>
+                            </div>
+                            <div class="col-6 d-flex flex-column">
                                 @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p => p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
                                 {
                                     @schedulerVM.InstructorsList.Where(p=>p.Id == @schedulerVM.InstructorId).First().Name
                                 }
-
-                            </label>
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </div>
                         </div>
-
-                        <div>
-                            <label>
-
-                                Comments : @schedulerVM.Comments
-
-                            </label>
+                        <div class="row justify-content-center mt-2 d-flex align-items-start alert alert-primary">
+                            <div class="col-6 d-flex flex-column">
+                                <strong>Comments </strong>
+                            </div>
+                            <div class="col-6 d-flex flex-column">
+                                @(schedulerVM.Comments ?? "-")
+                            </div>
                         </div>
-
-                        <div>
-                            <label>
-
-                                Internal Comments : @schedulerVM.InternalComments
-
-                            </label>
+                        <div class="row justify-content-center d-flex align-items-start mt-2 alert alert-primary">
+                            <div class="col-6 d-flex flex-column">
+                                <strong>Internal Comments </strong>
+                            </div>
+                            <div class="col-6 d-flex flex-column">
+                                @(schedulerVM.InternalComments ?? "-")
+                            </div>
                         </div>
+                        <div class="d-flex justify-content-evenly">
+                            <div class="row">
+                                <div class="col-12">
+                                    @if (isDisplayCheckOutOption)
+                                    {
+                                        @if (isDisplayCheckInButton)
+                                        {
+                                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckInAircraft())" BusyText="Checking In ..."
+                                          IsBusy="@isBusyCheckOutButton" Text="Check In" Style="width: 164px" />
+                                        }
+                                        else
+                                        {
+                                            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..."
+                                          IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
+                                        }
 
-
-                        @if (isDisplayCheckOutOption)
-                        {
-                            if (isDisplayCheckInButton)
-                            {
-                                <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckInAircraft())" BusyText="Checking In ..."
-                              IsBusy="@isBusyCheckOutButton" Text="Check In" Style="width: 164px" />
-                            }
-                            else
-                            {
-                                <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="@((args) => CheckOutAircraft())" BusyText="Checking Out ..."
-                              IsBusy="@isBusyCheckOutButton" Text="Check Out" Style="width: 164px" />
-                            }
-
-                            if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
-                            {
-                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
-                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => UnCheckOut())" Text="Un-Check Out" Style="width: 164px" />
-                            }
-                            else
-                            {
-                                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
-                                <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
-                            }
-                        }
-                        else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
-                        {
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
-                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => EditFlightTime())" Text="Edit Flight Time" Style="width: 164px" />
-                        }
-                        else
-                        {
-                            <div class="row" style="margin-top:4%">
-                                <div class="col-md-12 text-right">
-                                    <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Save" Style="width: 130px" />
-                                    <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                                        @if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+                                        {
+                                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
+                                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => UnCheckOut())" Text="Un-Check Out" Style="width: 164px" />
+                                        }
+                                        else
+                                        {
+                                            <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
+                                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
+                                        }
+                                    }
+                                    else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                                    {
+                                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
+                                        <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => EditFlightTime())" Text="Edit Flight Time" Style="width: 164px" />
+                                    }
+                                    else
+                                    {
+                                        <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Save" Style="width: 130px" />
+                                        <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                                    }
                                 </div>
                             </div>
-                        }
+                        </div>
+
                     }
 
                     @if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut || schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
