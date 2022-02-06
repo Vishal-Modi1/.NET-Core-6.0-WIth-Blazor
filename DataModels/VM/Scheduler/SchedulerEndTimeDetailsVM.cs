@@ -5,6 +5,7 @@ namespace DataModels.VM.Scheduler
     public class SchedulerEndTimeDetailsVM
     {
         public long ScheduleId { get; set; }
+        public long AircraftId { get; set; }
 
         public DateTime StartTime { get; set; }
 
