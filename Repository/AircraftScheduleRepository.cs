@@ -24,6 +24,8 @@ namespace Repository
                                                      on aircraftSchedules.Id equals aircraftScheduleDetail.AircraftScheduleId into asd
                                                      from details in asd.DefaultIfEmpty()
                                                      where aircraft.CompanyId == schedulerFilter.CompanyId && aircraftSchedules.IsActive == true
+                                                     && aircraftSchedules.StartDateTime.Date >= schedulerFilter.StartTime.Date
+                                                     && aircraftSchedules.EndDateTime.Date <= schedulerFilter.EndTime.Date
                                                      && aircraftSchedules.IsDeleted == false
                                                      select new SchedulerVM()
                                                      {
