@@ -519,24 +519,22 @@
                 {
                     <div class="alert alert-warning">
                         <div class="row justify-content-center align-items-center ">
-                        @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
-                        {
-                            
-                            <div class="col-6 d-flex flex-column">
-                                <h5 class="d-flex justify-content-center">Checked Out</h5>
-                                <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) @(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
-                            </div>
-                        }
+                            @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
+                            {
+                                <div class="col-12 d-flex flex-column">
+                                    <strong class="d-flex justify-content-center">Checked Out</strong>
+                                    <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) @(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
+                                </div>
+                            }
 
-                        @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
-                        { 
-                            <div class="col-6 d-flex flex-column">
-                                <h5 class="d-flex justify-content-center">Checked In</h5>
-                                <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName) @(@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
-                            </div>
-                           
-                        }
-                         </div>
+                            @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
+                            {
+                                <div class="col-12 d-flex flex-column">
+                                    <strong class="d-flex justify-content-center">Checked In</strong>
+                                    <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName) @(@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
+                                </div>
+                            }
+                        </div>
                     </div>
                 }
             }
