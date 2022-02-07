@@ -39,7 +39,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         List<SchedulerVM> DataSource;
 
-        public View CurrentView { get; set; } = View.TimelineWeek;
+        public View CurrentView { get; set; } = View.TimelineDay;
 
         public string[] Resources { get; set; } = { "Aircrafts" };
         public ObservableCollection<ResourceData> ObservableAircraftsData { get; set; }
@@ -53,6 +53,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public bool isBusy;
         DateTime currentDate = DateTime.Now;
+        SchedulerFilter schedulerFilter = new SchedulerFilter();
 
         protected override async Task OnInitializedAsync()
         {
@@ -79,15 +80,29 @@ namespace FSM.Blazor.Pages.Scheduler
             }
         }
 
+        public async Task OnActionCompletedAsync(ActionEventArgs<SchedulerVM> args)
+        {
+            if (args.ActionType == ActionType.ViewNavigate || args.ActionType == ActionType.DateNavigate)
+            {
+                await LoadDataAsync();
+            }
+        }
+
         public async Task LoadDataAsync()
         {
-            DataSource = await AircraftSchedulerService.ListAsync(_httpClient, new SchedulerFilter());
+            List<DateTime> viewDates = ScheduleRef.GetCurrentViewDates();
+
+            schedulerFilter.StartTime = viewDates.First();
+            schedulerFilter.EndTime = viewDates.Last();
+
+            DataSource = await AircraftSchedulerService.ListAsync(_httpClient, schedulerFilter);
 
             DataSource.ForEach(x =>
             {
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
                     x.CssClass = "checkedout";
+                   // x.Color = "#33ff81";
                 }
                 if (x.AircraftSchedulerDetailsVM.CheckInTime != null)
                 {
@@ -119,6 +134,11 @@ namespace FSM.Blazor.Pages.Scheduler
         public void OnActivityTypeValueChanged(object value)
         {
             InitializeValues();
+
+            if(value == null)
+            {
+                return;
+            }
 
             if ((int)value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
             {

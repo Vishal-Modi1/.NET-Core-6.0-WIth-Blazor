@@ -49,7 +49,9 @@
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
 
-<SfSchedule TValue="SchedulerVM" Height="800px" @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate" @bind-CurrentView="@CurrentView">
+<SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="800px"
+            @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate"
+            @bind-CurrentView="@CurrentView">
 
     <ScheduleGroup EnableCompactView="false" Resources="@Resources"></ScheduleGroup>
 
@@ -62,7 +64,7 @@
         </ScheduleField>
 
     </ScheduleEventSettings>
-    <ScheduleEvents TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" EventRendered="OnEventRendered"
+    <ScheduleEvents  ActionCompleted="OnActionCompletedAsync" TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" EventRendered="OnEventRendered"
                     OnCellDoubleClick="OpenCreateAppointmentDialog" OnCellClick="OpenCreateAppointmentDialog" OnEventClick="OnEventClick"></ScheduleEvents>
 
     <ScheduleResources>
@@ -73,16 +75,12 @@
 
     </ScheduleResources>
 
-
     <ScheduleViews>
         <ScheduleView Option="View.TimelineDay"></ScheduleView>
         <ScheduleView Option="View.TimelineWeek"></ScheduleView>
-        <ScheduleView Option="View.TimelineWorkWeek"></ScheduleView>
         <ScheduleView Option="View.TimelineMonth"></ScheduleView>
-        <ScheduleView Option="View.Agenda"></ScheduleView>
         <ScheduleView Option="View.Day"></ScheduleView>
         <ScheduleView Option="View.Week"></ScheduleView>
-        <ScheduleView Option="View.WorkWeek"></ScheduleView>
         <ScheduleView Option="View.Month"></ScheduleView>
     </ScheduleViews>
 
@@ -232,15 +230,34 @@
 
                                 @if (isDisplayFlightInfo)
                                 {
+                                    string local = "Local";
+                                    string crossCountry = "Cross Country";
+                                    string vfr = "VFR";
+                                    string ifr = "IFR";
+                                   
                                     <tr>
                                         <td class="e-textlabel">Flight Type</td>
                                         <td colspan="4">
+                                            <RadzenRadioButtonList @bind-Value=@schedulerVM.FlightType TValue="string">
+                                                <Items>
+                                                    <RadzenRadioButtonListItem Text="Local" Value="@local" />
+                                                    <RadzenRadioButtonListItem Text="Cross Country" Value="@crossCountry" />
+                                                </Items>
+                                            </RadzenRadioButtonList>
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td class="e-textlabel">Flight Rules</td>
                                         <td colspan="4">
+
+                                          <RadzenRadioButtonList @bind-Value=@schedulerVM.FlightRules TValue="string">
+                                                <Items>
+                                                    <RadzenRadioButtonListItem Text="VFR" Value="@vfr" />
+                                                    <RadzenRadioButtonListItem Text="IFR" Value="@ifr" />
+                                                </Items>
+                                            </RadzenRadioButtonList>
+
                                         </td>
                                     </tr>
 

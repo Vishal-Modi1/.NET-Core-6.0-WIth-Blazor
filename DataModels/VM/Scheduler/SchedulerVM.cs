@@ -84,6 +84,7 @@ namespace DataModels.VM.Scheduler
         public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
         public string CssClass { get; set; } 
+        public string Color { get; set; }
 
         public List<AircraftEquipmentTimeVM> AircraftEquipmentsTimeList { get; set;}
 
