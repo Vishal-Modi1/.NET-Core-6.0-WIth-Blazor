@@ -431,19 +431,19 @@
                             </span>
                         </div>
                     </div>
-                    <div class="row justify-content-center d-flex align-items-start mt-1 bg-gray alert" style="background:#CBCBCB;">
+                    <div class="row justify-content-center d-flex align-items-start mt-1 mb-1 bg-gray alert">
                         <strong>Comments </strong>
                     </div>
-                    <div class="row justify-content-baseline d-flex align-items-start mt-1 alert">
+                    <div class="row justify-content-baseline d-flex align-items-start m-3">
                         <div class="col-12 d-flex flex-column">
                             @(schedulerVM.Comments ?? "-")
                         </div>
 
                     </div>
-                    <div class="row justify-content-center d-flex align-items-start mt-1 bg-gray alert" style="background:#CBCBCB;">
+                    <div class="row justify-content-center d-flex align-items-start mt-1 mb-1 bg-gray alert" >
                         <strong>Internal Comments </strong>
                     </div>
-                    <div class="row justify-content-baseline d-flex align-items-start mt-1 alert">
+                    <div class="row justify-content-baseline d-flex align-items-start m-3">
                         <div class="col-12 d-flex flex-column">
                             @(schedulerVM.InternalComments ?? "-")
                         </div>
@@ -538,7 +538,7 @@
                         <div class="row justify-content-center align-items-center ">
                             @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                             {
-                                <div class="col-12 d-flex flex-column">
+                                <div class="col-6 d-flex flex-column">
                                     <strong class="d-flex justify-content-center">Checked Out</strong>
                                     <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) @(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
                                 </div>
@@ -546,7 +546,7 @@
 
                             @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
                             {
-                                <div class="col-12 d-flex flex-column">
+                                <div class="col-6 d-flex flex-column">
                                     <strong class="d-flex justify-content-center">Checked In</strong>
                                     <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName) @(@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
                                 </div>
