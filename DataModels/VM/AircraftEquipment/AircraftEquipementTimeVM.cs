@@ -16,6 +16,7 @@ namespace DataModels.VM.AircraftEquipment
         [Required]
         public long AircraftId { get; set; }
         public long AircraftScheduleId { get; set; }
+        public decimal InTime { get; set; }
         public decimal TotalHours { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<long> DeletedBy { get; set; }

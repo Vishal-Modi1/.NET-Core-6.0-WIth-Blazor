@@ -597,9 +597,9 @@ namespace FSM.Blazor.Pages.Scheduler
             await InvokeAsync(() => StateHasChanged());
         }
 
-        public void TextBoxChangeEvent(object value, int index)
+        public void TextBoxChangeEvent(ChangeEventArgs args, int index)
         {
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
 
             base.StateHasChanged();
         }
@@ -608,7 +608,6 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
             schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value.Value);
-
 
             base.StateHasChanged();
         }
