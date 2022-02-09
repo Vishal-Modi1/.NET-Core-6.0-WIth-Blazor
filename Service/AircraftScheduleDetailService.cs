@@ -8,6 +8,7 @@ using System.Net;
 using DataModels.VM.AircraftEquipment;
 using System.Collections.Generic;
 using System.Linq;
+using DataModels.VM.Scheduler;
 
 namespace Service
 {
@@ -28,7 +29,7 @@ namespace Service
             _aircraftEquipmentTimeRepository = aircraftEquipmentTimeRepository;
         }
 
-        public CurrentResponse CheckOut(AircraftScheduleDetailVM aircraftScheduleDetailVM)
+        public CurrentResponse CheckOut(AircraftSchedulerDetailsVM aircraftScheduleDetailVM)
         {
             AircraftScheduleDetail aircraftScheduleDetail = new AircraftScheduleDetail();
 
@@ -138,7 +139,7 @@ namespace Service
             }
         }
 
-        public AircraftScheduleDetail ToDataObject(AircraftScheduleDetailVM aircraftScheduleDetailVM)
+        public AircraftScheduleDetail ToDataObject(AircraftSchedulerDetailsVM aircraftScheduleDetailVM)
         {
             AircraftScheduleDetail aircraftScheduleDetail = new AircraftScheduleDetail();
 

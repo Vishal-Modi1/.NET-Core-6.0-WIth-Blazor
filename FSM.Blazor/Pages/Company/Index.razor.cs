@@ -8,6 +8,7 @@ using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using System.Collections.ObjectModel;
 
 namespace FSM.Blazor.Pages.Company
 {
@@ -47,6 +48,8 @@ namespace FSM.Blazor.Pages.Company
             {
                 NavManager.NavigateTo("/Dashboard");
             }
+
+            
         }
 
         async Task LoadData(LoadDataArgs args)
@@ -97,6 +100,5 @@ namespace FSM.Blazor.Pages.Company
 
             await grid.Reload();
         }
-
     }
 }

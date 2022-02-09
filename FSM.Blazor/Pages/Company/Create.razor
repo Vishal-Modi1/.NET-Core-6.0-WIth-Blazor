@@ -39,6 +39,19 @@
 
         <div class="row">
             <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Address" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select timezone" Data=@timeZoneInfos TextProperty="DisplayName"
+                                ValueProperty="StandardName" Name="TimeZone" @bind-Value="@companyData.TimeZone" />
+                <RadzenRequiredValidator Component="TimeZone" Text="TimeZone is required" Popup="@isPopup" Style="position: relative" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
                 <RadzenLabel Text="Contact No" />
             </div>
             <div class="col-md-8">
@@ -57,19 +70,3 @@
     </div>
 
 </RadzenTemplateForm>
-
-@{
-    //if (isLoading)
-    //{
-    //     DialogService.OpenAsync("", ds =>
-    //@<div>
-    //    <div class="row">
-    //        <div class="col text-center p-5">
-    //            <RadzenImage Path="" Style="display: block; width: 200px; margin-bottom: 40px;" />
-    //            <b>Loading, please wait...</b>
-    //        </div>
-    //    </div>
-    //</div>
-    //, new DialogOptions() { ShowTitle = false, Style = "min-height:auto;min-width:auto;width:auto" });
-    //}
-}

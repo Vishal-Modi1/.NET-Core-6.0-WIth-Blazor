@@ -31,7 +31,7 @@ namespace Repository
                                                      {
                                                          Id = aircraftSchedules.Id,
                                                          DisplayTitle = aircraftSchedules.ScheduleTitle,
-                                                         StartTime = aircraftSchedules.StartDateTime,
+                                                         StartTime = Convert.ToDateTime(aircraftSchedules.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss")),
                                                          EndTime = aircraftSchedules.EndDateTime,
                                                          Comments = aircraftSchedules.Comments,
                                                          AircraftId = aircraftSchedules.AircraftId,
@@ -49,7 +49,6 @@ namespace Repository
                                                      }).ToList();
 
                 return companyDataList;
-
             }
         }
 

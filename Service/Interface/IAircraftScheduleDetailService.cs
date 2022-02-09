@@ -1,8 +1,7 @@
-﻿using DataModels.Entities;
-using DataModels.VM;
-using DataModels.VM.Common;
+﻿using DataModels.VM.Common;
 using DataModels.VM.AircraftEquipment;
 using System.Collections.Generic;
+using DataModels.VM.Scheduler;
 
 namespace Service.Interface
 {
@@ -10,7 +9,7 @@ namespace Service.Interface
     {
         CurrentResponse IsAircraftAlreadyCheckOut(long aircraftId);
 
-        CurrentResponse CheckOut(AircraftScheduleDetailVM aircraftScheduleDetailVM);
+        CurrentResponse CheckOut(AircraftSchedulerDetailsVM aircraftScheduleDetailVM);
         CurrentResponse UnCheckOut(long id);
 
         CurrentResponse CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList, long checkInBy);

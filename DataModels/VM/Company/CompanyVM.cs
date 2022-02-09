@@ -1,5 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using DataModels.VM.Common;
+using System;
+using System.Collections.Generic;
 
 namespace DataModels.VM.Company
 {
@@ -7,11 +8,11 @@ namespace DataModels.VM.Company
     {
         public int Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
      
-        [Required]
         public string Address { get; set; }
+
+        public string TimeZone { get; set; }
 
         public string ContactNo { get; set; }
         public bool IsActive { get; set; }

@@ -154,6 +154,7 @@ namespace Service
             companyVM.Name = company.Name;
             companyVM.Address = company.Address;
             companyVM.ContactNo = company.ContactNo;
+            companyVM.TimeZone = company.TimeZone;
 
             return companyVM;
         }
@@ -166,6 +167,7 @@ namespace Service
             company.Name = companyVM.Name;
             company.Address = companyVM.Address;
             company.ContactNo = companyVM.ContactNo;
+            company.TimeZone = companyVM.TimeZone;
             company.CreatedBy = companyVM.CreatedBy;
             company.UpdatedBy = companyVM.UpdatedBy;
             company.IsActive = true;

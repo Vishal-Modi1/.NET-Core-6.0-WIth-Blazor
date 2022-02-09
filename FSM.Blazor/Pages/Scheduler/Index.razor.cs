@@ -8,12 +8,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using DE = DataModels.Entities;
 using DataModels.VM.Common;
-using DataModels.Enums;
-using Syncfusion.Blazor.DropDowns;
 using Radzen;
 using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
-using Syncfusion.Blazor.Inputs;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
 
@@ -101,16 +98,36 @@ namespace FSM.Blazor.Pages.Scheduler
             {
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
-                    x.CssClass = "checkedout";
-                   // x.Color = "#33ff81";
+                    if (CurrentView == View.Day || CurrentView == View.Week || CurrentView == View.Month)
+                    {
+                        x.CssClass = "checkedouthorizontally";
+                    }
+                    else
+                    {
+                        x.CssClass = "checkedout";
+                    }
                 }
                 if (x.AircraftSchedulerDetailsVM.CheckInTime != null)
                 {
-                    x.CssClass = "checkedin";
+                    if (CurrentView == View.Day || CurrentView == View.Week || CurrentView == View.Month)
+                    {
+                        x.CssClass = "checkedinhorizontally";
+                    }
+                    else
+                    {
+                        x.CssClass = "checkedin";
+                    }
                 }
                 else
                 {
-                    x.CssClass = "scheduled";
+                    if (CurrentView == View.Day || CurrentView == View.Week || CurrentView == View.Month)
+                    {
+                        x.CssClass = "scheduledhorizontally";
+                    }
+                    else
+                    {
+                        x.CssClass = "scheduled";
+                    }
                 }
             });
 
@@ -170,6 +187,7 @@ namespace FSM.Blazor.Pages.Scheduler
             {
                 isDisplayRecurring = false;
                 isDisplayMember1Dropdown = false;
+                schedulerVM.Member1Id = 0;
                 isDisplayStandBy = false;
             }
 
@@ -359,7 +377,8 @@ namespace FSM.Blazor.Pages.Scheduler
                 NotificationService.Notify(message);
             }
 
-            isBusy = false ;
+            isBusy = false;
+            base.StateHasChanged();
         }
 
         private async Task EditFlightTime()
@@ -418,17 +437,17 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             if (args.Data.AircraftSchedulerDetailsVM.IsCheckOut)
             {
-                args.CssClasses = new List<string>() { "checkedout" };
+                args.CssClasses = new List<string>() { "checkedout" , "checkedouthorizontally" };
             }
             else
             {
                 if (args.Data.AircraftSchedulerDetailsVM.CheckInTime != null)
                 {
-                    args.CssClasses = new List<string>() { "checkedin" };
+                    args.CssClasses = new List<string>() { "checkedin", "checkedinhorizontally" };
                 }
                 else
                 {
-                    args.CssClasses = new List<string>() { "scheduled" };
+                    args.CssClasses = new List<string>() { "scheduled", "scheduledhorizontally" };
                 }
             }
         }
@@ -452,6 +471,12 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayForm = true;
             isDisplayCheckOutOption = false;
             isDisplayMainForm = true;
+
+            if(schedulerVM == null)
+            {
+                return;
+            }
+
         }
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
@@ -491,6 +516,11 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private void OpenForm()
         {
+            if(schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
+            {
+                OnActivityTypeValueChanged(schedulerVM.ScheduleActivityId);
+            }
+
             isDisplayForm = true;
             base.StateHasChanged();
         }
@@ -501,6 +531,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
             if (isDisplayForm)
             {
+                ManageValues();
                 isDisplayForm = false;
                 base.StateHasChanged();
 
@@ -541,6 +572,30 @@ namespace FSM.Blazor.Pages.Scheduler
             isBusy = false;
 
             await LoadDataAsync();
+        }
+
+        private void ManageValues()
+        {
+            if (!isDisplayMember2Dropdown)
+            {
+                schedulerVM.Member2Id = null;
+            }
+
+            if (!isDisplayFlightInfo)
+            {
+                schedulerVM.FlightRules = "";
+                schedulerVM.FlightType = "";
+            }
+
+            if(!isDisplayFlightRoutes)
+            {
+                schedulerVM.FlightRoutes = "";
+            }
+
+            if(!isDisplayInstructor)
+            {
+                schedulerVM.InstructorId = null;
+            }
         }
 
         async Task DeleteAsync()

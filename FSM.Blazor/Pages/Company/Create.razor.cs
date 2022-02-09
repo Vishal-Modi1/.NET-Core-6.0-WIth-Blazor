@@ -3,6 +3,7 @@ using DataModels.VM.Company;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
+using System.Collections.ObjectModel;
 
 namespace FSM.Blazor.Pages.Company
 {
@@ -19,7 +20,9 @@ namespace FSM.Blazor.Pages.Company
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isLoading = false, isBusy = false;
-       
+
+        ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
+
         public async Task Submit(CompanyVM companyData)
         {
             isLoading = true;
@@ -56,6 +59,5 @@ namespace FSM.Blazor.Pages.Company
             isBusy = isBusyState;
             StateHasChanged();
         }
-
     }
 }

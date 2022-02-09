@@ -5,6 +5,7 @@ using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using DataModels.VM.AircraftEquipment;
+using DataModels.VM.Scheduler;
 
 namespace FSMAPI.Controllers
 {
@@ -34,7 +35,7 @@ namespace FSMAPI.Controllers
         [Route("checkout")]
         public IActionResult Checkout([FromBody] long scheduleId)
         {
-            AircraftScheduleDetailVM aircraftScheduleDetailVM = new AircraftScheduleDetailVM();
+            AircraftSchedulerDetailsVM aircraftScheduleDetailVM = new AircraftSchedulerDetailsVM();
             aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
 
             aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));

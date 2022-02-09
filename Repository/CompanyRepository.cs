@@ -18,7 +18,9 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).Select(n => new CompanyVM { Id = n.Id, Name = n.Name }).ToList();
+                List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).
+                                                   Select(n => new CompanyVM 
+                                                   { Id = n.Id, Name = n.Name }).ToList();
 
                 return companyDataList;
             
@@ -63,6 +65,7 @@ namespace Repository
                     existingCompany.Name = company.Name;
                     existingCompany.Address = company.Address;
                     existingCompany.ContactNo = company.ContactNo;
+                    existingCompany.TimeZone = company.TimeZone;
 
                     existingCompany.UpdatedBy = company.UpdatedBy;
                     existingCompany.UpdatedOn = company.UpdatedOn;

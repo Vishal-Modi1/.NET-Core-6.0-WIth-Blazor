@@ -149,6 +149,7 @@ CREATE TABLE [dbo].[Aircrafts](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[AircraftScheduleDetails]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO
@@ -240,6 +241,7 @@ CREATE TABLE [dbo].[Companies](
 	[Address] [varchar](300) NOT NULL,
 	[ContactNo] [varchar](20) NULL,
 	[IsActive] [bit] NOT NULL,
+	[TimeZone] varchar(100) NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
 	[CreatedBy] [bigint] NOT NULL,
@@ -1176,10 +1178,6 @@ AS BEGIN
 END
 
 
-
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 07-12-2021 15:12:50 ******/
-SET ANSI_NULLS ON
-GO
 /****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO

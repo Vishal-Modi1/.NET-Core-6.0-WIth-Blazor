@@ -18,7 +18,6 @@ namespace FSM.Blazor.CustomServicesExtensions
     {
         public static void AddCustomServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<WeatherForecastService>();
             builder.Services.AddScoped<MenuService>();
             builder.Services.AddScoped<InstructorTypeService>();
             builder.Services.AddScoped<CompanyService>();
