@@ -15,8 +15,10 @@ namespace Repository.Interface
 
         void UpdatePermission(int id, bool isAllow);
 
-        void UpdateFullPermission(int id, bool isAllow);
+        void UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM);
 
-        void UpdateMultiplePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM);
+        void UpdateMobileAppPermission(int id, bool isAllow);
+
+        void UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM);
     }
 }

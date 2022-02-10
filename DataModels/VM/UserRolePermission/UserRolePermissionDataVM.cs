@@ -15,6 +15,7 @@ namespace DataModels.VM.UserRolePermission
         public string ActionName { get; set; }
         public string DisplayName { get; set; }
         public bool IsAllowed { get; set; }
+        public bool IsAllowedForMobileApp { get; set; }
         public string Icon { get; set; }
         public int OrderNo { get; set; }
         public int TotalRecords { get; set; }

@@ -79,8 +79,8 @@ namespace FSMAPI.Controllers
 
 
         [HttpPost]
-        [Route("updatemultiplepermissions")]
-        public IActionResult UpdateMultiplePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
+        [Route("updatepermissions")]
+        public IActionResult UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
             if (userRolePermissionFilterVM.CompanyId == 0)
             {
@@ -88,7 +88,32 @@ namespace FSMAPI.Controllers
                 userRolePermissionFilterVM.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
             }
 
-            CurrentResponse response = _userRolePermissionService.UpdateMultiplePermissions(userRolePermissionFilterVM);
+            CurrentResponse response = _userRolePermissionService.UpdatePermissions(userRolePermissionFilterVM);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("updatemobileapppermission")]
+        public IActionResult UpdateMobileAppPermission(int id, bool isAllow)
+        {
+            CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermission(id, isAllow);
+
+            return Ok(response);
+        }
+
+
+        [HttpPost]
+        [Route("updatemobileapppermissions")]
+        public IActionResult UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
+        {
+            if (userRolePermissionFilterVM.CompanyId == 0)
+            {
+                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                userRolePermissionFilterVM.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            }
+
+            CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermissions(userRolePermissionFilterVM);
 
             return Ok(response);
         }

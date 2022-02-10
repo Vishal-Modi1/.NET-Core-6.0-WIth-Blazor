@@ -11,10 +11,12 @@ namespace Service.Interface
 
         CurrentResponse UpdatePermission(int id, bool isAllow);
 
-        CurrentResponse UpdateFullPermission(int id, bool isAllow);
-
         CurrentResponse GetFiltersValue(int roleId);
 
-        CurrentResponse UpdateMultiplePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM);
+        CurrentResponse UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM);
+       
+        CurrentResponse UpdateMobileAppPermission(int id, bool isAllow);
+
+        CurrentResponse UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM);
     }
 }

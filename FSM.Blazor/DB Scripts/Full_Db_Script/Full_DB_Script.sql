@@ -396,7 +396,9 @@ CREATE TABLE [dbo].[ScheduleActivityTypes](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[UserRolePermissions]    Script Date: 01-02-2022 09:37:22 ******/
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -408,6 +410,7 @@ CREATE TABLE [dbo].[UserRolePermissions](
 	[ModuleId] [int] NULL,
 	[CompanyId] [int] NULL,
 	[IsAllowed] [bit] NOT NULL,
+	[IsAllowedForMobileApp] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -421,6 +424,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[UserRoles]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO
@@ -526,6 +530,8 @@ GO
 ALTER TABLE [dbo].[ScheduleActivityTypes] ADD  CONSTRAINT [DF_ScheduleActivityTypes_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
 ALTER TABLE [dbo].[UserRolePermissions] ADD  DEFAULT ((0)) FOR [IsAllowed]
+GO
+ALTER TABLE [dbo].[UserRolePermissions] ADD  DEFAULT ((0)) FOR [IsAllowedForMobileApp]
 GO
 ALTER TABLE [dbo].[Users] ADD  CONSTRAINT [df_IsSendEmailInvite]  DEFAULT ((0)) FOR [IsSendEmailInvite]
 GO
@@ -1250,6 +1256,12 @@ AS BEGIN
                         THEN URP.IsAllowed
             END ASC,  
             CASE WHEN (@SortColumn = 'IsAllowed' AND @SortOrder='DESC')  
+                         THEN URP.IsAllowed
+            END DESC, 
+			CASE WHEN (@SortColumn = 'IsAllowedForMobileApp' AND @SortOrder='ASC')  
+                        THEN URP.IsAllowed
+            END ASC,  
+            CASE WHEN (@SortColumn = 'IsAllowedForMobileApp' AND @SortOrder='DESC')  
                          THEN URP.IsAllowed
             END DESC 
             OFFSET @PageSize * (@PageNo - 1) ROWS  

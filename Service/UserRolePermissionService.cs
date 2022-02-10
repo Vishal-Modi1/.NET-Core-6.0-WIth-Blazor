@@ -69,34 +69,6 @@ namespace Service
                 if (!isAllow)
                 {
                     message = "Permission denied successfully.";
-
-                }
-
-                CreateResponse(true, HttpStatusCode.OK, message);
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
-        public CurrentResponse UpdateFullPermission(int id, bool isAllow)
-        {
-            try
-            {
-                _userRolePermissionRepository.UpdateFullPermission(id, isAllow);
-
-                string message = "Permission granted successfully.";
-
-                if (!isAllow)
-                {
-                    message = "Permission denied successfully.";
-
                 }
 
                 CreateResponse(true, HttpStatusCode.OK, message);
@@ -135,18 +107,69 @@ namespace Service
             }
         }
 
-        public CurrentResponse UpdateMultiplePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
+        public CurrentResponse UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
             try
             {
-                _userRolePermissionRepository.UpdateMultiplePermissions(userRolePermissionFilterVM);
+                _userRolePermissionRepository.UpdatePermissions(userRolePermissionFilterVM);
 
                 string message = "Permissions granted successfully.";
 
                 if (!userRolePermissionFilterVM.IsAllow)
                 {
                     message = "Permissions denied successfully.";
+                }
 
+                CreateResponse(true, HttpStatusCode.OK, message);
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateMobileAppPermission(int id, bool isAllow)
+        {
+            try
+            {
+                _userRolePermissionRepository.UpdateMobileAppPermission(id, isAllow);
+
+                string message = "Permission granted successfully.";
+
+                if (!isAllow)
+                {
+                    message = "Permission denied successfully.";
+                }
+
+                CreateResponse(true, HttpStatusCode.OK, message);
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
+        {
+            try
+            {
+                _userRolePermissionRepository.UpdateMobileAppPermissions(userRolePermissionFilterVM);
+
+                string message = "Permissions granted successfully.";
+
+                if (!userRolePermissionFilterVM.IsAllow)
+                {
+                    message = "Permissions denied successfully.";
                 }
 
                 CreateResponse(true, HttpStatusCode.OK, message);

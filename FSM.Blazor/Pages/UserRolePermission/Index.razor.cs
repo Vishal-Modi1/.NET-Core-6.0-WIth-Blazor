@@ -43,7 +43,7 @@ namespace FSM.Blazor.Pages.UserRolePermission
         UserRolePermissionFilterVM userrolePermissionFilterVM;
         IList<DropDownValues> CompanyFilterDropdown, RoleFilterDropdown, ModuleFilterDropdown;
         int CompanyId, RoleId, ModuleId, count;
-        bool isLoading, isAllow;
+        bool isLoading, isAllow, isAllowForMobileApp;
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
@@ -82,9 +82,9 @@ namespace FSM.Blazor.Pages.UserRolePermission
             isLoading = false;
         }
 
-        async Task UpdateUserPermissionAsync(bool? value, long id)
+        async Task UpdatePermissionAsync(bool? value, long id, bool isForWeb)
         {
-            CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(_httpClient, id, (bool)value);
+            CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(_httpClient, id, value.GetValueOrDefault(), isForWeb);
 
             NotificationMessage message;
 
@@ -108,14 +108,21 @@ namespace FSM.Blazor.Pages.UserRolePermission
             await grid.Reload();
         }
 
-        async Task UpdateUserMultiplePermissionAsync(bool value)
+        async Task UpdatePermissionsAsync(bool value, bool isForWeb)
         {
-            userrolePermissionFilterVM.IsAllow = value;
+            if (isForWeb)
+            {
+                userrolePermissionFilterVM.IsAllow = value;
+            }
+            else
+            {
+                userrolePermissionFilterVM.IsAllowForMobileApp = value;
+            }
             userrolePermissionFilterVM.CompanyId = CompanyId;
             userrolePermissionFilterVM.ModuleId = ModuleId;
             userrolePermissionFilterVM.UserRoleId = RoleId;
 
-            CurrentResponse response = await UserRolePermissionService.UpdateMultiplePermissionsAsync(_httpClient, userrolePermissionFilterVM);
+            CurrentResponse response = await UserRolePermissionService.UpdatePermissionsAsync(_httpClient, userrolePermissionFilterVM, isForWeb);
 
             NotificationMessage message;
 

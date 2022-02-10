@@ -38,7 +38,8 @@ namespace Repository
                                                                           ModuleId = module.Id,
                                                                           PermissionId = permission.Id,
                                                                           PermissionType = permission.PermissionType,
-                                                                          IsAllowed = userRolePermission.IsAllowed
+                                                                          IsAllowed = userRolePermission.IsAllowed,
+                                                                          IsAllowedForMobileApp = userRolePermission.IsAllowedForMobileApp
                                                                       }).OrderBy(p=>p.OrderNo).ToList();
 
                 return userRolePermissionsList;
@@ -83,7 +84,7 @@ namespace Repository
             }
         }
 
-        public void UpdateMultiplePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
+        public void UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
             using (_myContext = new MyContext())
             {
@@ -101,7 +102,7 @@ namespace Repository
             }
         }
 
-        public void UpdateFullPermission(int id, bool isAllow)
+        public void UpdateMobileAppPermission(int id, bool isAllow)
         {
             using (_myContext = new MyContext())
             {
@@ -109,11 +110,25 @@ namespace Repository
 
                 if (userRolePermission != null)
                 {
-                    // userRolePermission.CanCreate = isAllow;
-                    //  userRolePermission.CanView = isAllow;
-                    //   userRolePermission.CanUpdate = isAllow;
-                    //   userRolePermission.CanDelete = isAllow;
+                    userRolePermission.IsAllowedForMobileApp = isAllow;
+                    _myContext.SaveChanges();
+                }
+            }
+        }
 
+        public void UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
+        {
+            using (_myContext = new MyContext())
+            {
+                List<UserRolePermission> userRolePermissionsList = _myContext.UserRolePermissions.Where(p =>
+                                                        (userRolePermissionFilterVM.CompanyId == 0 ? true : p.CompanyId == userRolePermissionFilterVM.CompanyId)
+                                                        && (userRolePermissionFilterVM.UserRoleId == 0 ? true : p.RoleId == userRolePermissionFilterVM.UserRoleId)
+                                                        && (userRolePermissionFilterVM.ModuleId == 0 ? true : p.ModuleId == userRolePermissionFilterVM.ModuleId)
+                                                        ).ToList();
+
+                if (userRolePermissionsList.Count() > 0)
+                {
+                    userRolePermissionsList.ForEach(l => { l.IsAllowedForMobileApp = userRolePermissionFilterVM.IsAllowForMobileApp; });
                     _myContext.SaveChanges();
                 }
             }

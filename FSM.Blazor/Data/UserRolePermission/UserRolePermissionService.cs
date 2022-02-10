@@ -45,17 +45,30 @@ namespace FSM.Blazor.Data.UserRolePermission
             return userrolePermissions;
         }
 
-        public async Task<CurrentResponse> UpdatePermissionAsync(IHttpClientFactory httpClient, long id, bool isAllow)
+        public async Task<CurrentResponse> UpdatePermissionAsync(IHttpClientFactory httpClient, long id, bool isAllow, bool isForWeb)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient,$"userrolepermission/updatepermission?id={id}&isAllow={isAllow}");
+            string url = $"userrolepermission/updatepermission?id={id}&isAllow={isAllow}";
+
+            if(!isForWeb)
+            {
+                url = $"userrolepermission/updatemobileapppermission?id={id}&isAllow={isAllow}";
+            }
+
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UpdateMultiplePermissionsAsync(IHttpClientFactory httpClient, UserRolePermissionFilterVM userRolePermissionFilterVM)
+        public async Task<CurrentResponse> UpdatePermissionsAsync(IHttpClientFactory httpClient, UserRolePermissionFilterVM userRolePermissionFilterVM, bool isForWeb)
         {
+            string url = $"userrolepermission/updatepermissions";
+            
+            if (!isForWeb)
+            {
+                url = $"userrolepermission/updatemobileapppermissions";
+            }
             string jsonData = JsonConvert.SerializeObject(userRolePermissionFilterVM);
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, $"userrolepermission/updatemultiplepermissions", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient,  url, jsonData);
 
             return response;
         }

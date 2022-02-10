@@ -12,5 +12,7 @@ namespace DataModels.VM.UserRolePermission
         public int UserRoleId { get; set; }
 
         public bool IsAllow { get; set; }
+
+        public bool IsAllowForMobileApp { get; set; }
     }
 }

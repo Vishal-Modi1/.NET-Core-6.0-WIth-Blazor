@@ -152,7 +152,7 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             InitializeValues();
 
-            if(value == null)
+            if (value == null)
             {
                 return;
             }
@@ -216,9 +216,9 @@ namespace FSM.Blazor.Pages.Scheduler
 
             // check if someone else already checked out it 
             CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
-          
+
             await SetCheckOutButtonState(false);
-          
+
             NotificationMessage message;
 
             if (response == null)
@@ -244,7 +244,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 NotificationService.Notify(message);
             }
 
-          
+
         }
 
         private async Task CheckOut()
@@ -304,7 +304,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
                 await ScheduleRef.RefreshEventsAsync();
 
-                DialogService.Close(true); 
+                DialogService.Close(true);
 
             }
             else
@@ -338,7 +338,7 @@ namespace FSM.Blazor.Pages.Scheduler
             NotificationMessage message;
 
             SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
-            
+
             schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
             schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
             schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
@@ -437,7 +437,7 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             if (args.Data.AircraftSchedulerDetailsVM.IsCheckOut)
             {
-                args.CssClasses = new List<string>() { "checkedout" , "checkedouthorizontally" };
+                args.CssClasses = new List<string>() { "checkedout", "checkedouthorizontally" };
             }
             else
             {
@@ -472,7 +472,7 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayCheckOutOption = false;
             isDisplayMainForm = true;
 
-            if(schedulerVM == null)
+            if (schedulerVM == null)
             {
                 return;
             }
@@ -516,7 +516,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private void OpenForm()
         {
-            if(schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
+            if (schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
             {
                 OnActivityTypeValueChanged(schedulerVM.ScheduleActivityId);
             }
@@ -587,12 +587,12 @@ namespace FSM.Blazor.Pages.Scheduler
                 schedulerVM.FlightType = "";
             }
 
-            if(!isDisplayFlightRoutes)
+            if (!isDisplayFlightRoutes)
             {
                 schedulerVM.FlightRoutes = "";
             }
 
-            if(!isDisplayInstructor)
+            if (!isDisplayInstructor)
             {
                 schedulerVM.InstructorId = null;
             }
