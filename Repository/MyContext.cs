@@ -3,6 +3,7 @@ using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Company;
 using DataModels.VM.InstructorType;
+using DataModels.VM.Reservation;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
 using Microsoft.EntityFrameworkCore;
@@ -84,6 +85,7 @@ namespace Repository
         public DbSet<Company> Companies { get; set; }
 
         public DbSet<CompanyVM> CompanyData { get; set; }
+        public DbSet<ReservationDataVM> ReservationDataVM { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 

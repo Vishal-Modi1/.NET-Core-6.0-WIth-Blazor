@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
+using DataModels.VM.Reservation;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
 using Radzen;
@@ -100,6 +101,28 @@ namespace FSM.Blazor.Extensions
         public static AircraftEquipmentDatatableParams Create(this AircraftEquipmentDatatableParams equipmentdatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
         {
             AircraftEquipmentDatatableParams datatableParams = new AircraftEquipmentDatatableParams();
+
+            datatableParams.Length = args.Top.GetValueOrDefault();
+            datatableParams.Start = args.Skip.GetValueOrDefault() + 1;
+
+            if (string.IsNullOrWhiteSpace(args.OrderBy))
+            {
+                datatableParams.SortOrderColumn = defaultSearchOrderColumn;
+                datatableParams.OrderType = "asc";
+
+            }
+            else
+            {
+                datatableParams.SortOrderColumn = args.OrderBy.Split(new char[] { ' ' })[0];
+                datatableParams.OrderType = args.OrderBy.Split(new char[] { ' ' })[1];
+            }
+
+            return datatableParams;
+        }
+
+        public static ReservationDataTableParams Create(this ReservationDataTableParams reservationDataTableParams, LoadDataArgs args, string defaultSearchOrderColumn)
+        {
+            ReservationDataTableParams datatableParams = new ReservationDataTableParams();
 
             datatableParams.Length = args.Top.GetValueOrDefault();
             datatableParams.Start = args.Skip.GetValueOrDefault() + 1;

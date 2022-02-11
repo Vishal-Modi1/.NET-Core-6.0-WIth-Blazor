@@ -11,6 +11,7 @@ using FSM.Blazor.Data.AircraftMake;
 using FSM.Blazor.Data.MyAccount;
 using FSM.Blazor.Data.AircraftModel;
 using FSM.Blazor.Data.AircraftSchedule;
+using FSM.Blazor.Data.Reservation;
 
 namespace FSM.Blazor.CustomServicesExtensions
 {
@@ -31,6 +32,7 @@ namespace FSM.Blazor.CustomServicesExtensions
             builder.Services.AddScoped<AircraftModelService>();
             builder.Services.AddScoped<AircraftSchedulerService>();
             builder.Services.AddScoped<AircraftSchedulerDetailService>();
+            builder.Services.AddScoped<ReservationService>();
         }
     }
 }

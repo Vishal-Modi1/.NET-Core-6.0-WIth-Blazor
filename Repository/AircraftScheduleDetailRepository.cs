@@ -61,12 +61,12 @@ namespace Repository
                     aircraftScheduleDetail.CheckInBy = checkInBy;
                     aircraftScheduleDetail.CheckInTime = checkInTime;
                     aircraftScheduleDetail.IsCheckOut = false;
+                    aircraftScheduleDetail.FlightStatus = "CheckedIn";
 
                     _myContext.SaveChanges();
                 }
 
                 return aircraftScheduleDetail;
-
             }
         }
 

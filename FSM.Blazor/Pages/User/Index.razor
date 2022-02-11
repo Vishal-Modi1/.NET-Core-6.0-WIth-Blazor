@@ -40,7 +40,7 @@
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
-                        @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
+                        TextProperty="Name" Placeholder="Select Company"
                         Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
             </RadzenDropDown>

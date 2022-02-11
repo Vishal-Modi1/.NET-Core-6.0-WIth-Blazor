@@ -8,6 +8,7 @@ using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using FSM.Blazor.Utilities;
 using Microsoft.Extensions.Caching.Memory;
+using DataModels.VM.Reservation;
 
 namespace FSM.Blazor.Pages.User
 {
@@ -24,9 +25,6 @@ namespace FSM.Blazor.Pages.User
 
         [CascadingParameter]
         public RadzenDataGrid<UserDataVM> grid { get; set; }
-
-        [CascadingParameter]
-        public RadzenDropDown<int> companyFilter { get; set; }
 
         [CascadingParameter]
         public RadzenDropDown<int> roleFilter { get; set; }
@@ -74,11 +72,11 @@ namespace FSM.Blazor.Pages.User
         {
             isLoading = true;
 
-            UserDatatableParams datatableParams = new UserDatatableParams().Create(args, "Name");
+            ReservationDataTableParams datatableParams = new ReservationDataTableParams().Create(args, "StartDateTime");
 
             datatableParams.CompanyId = CompanyId;
             datatableParams.SearchText = searchText;
-            datatableParams.RoleId = RoleId; 
+           
             pageSize = datatableParams.Length;
 
             data = await UserService.ListAsync(_httpClient, datatableParams);

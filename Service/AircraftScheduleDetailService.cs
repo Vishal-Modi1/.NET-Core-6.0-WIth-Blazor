@@ -36,7 +36,7 @@ namespace Service
             aircraftScheduleDetail.AircraftScheduleId = aircraftScheduleDetailVM.AircraftScheduleId;
             aircraftScheduleDetail.CheckOutBy = aircraftScheduleDetailVM.CheckOutBy;
             aircraftScheduleDetail.CheckOutTime = DateTime.UtcNow;
-            aircraftScheduleDetail.FlightStatus = "CheckOut";
+            aircraftScheduleDetail.FlightStatus = "CheckedOut";
             aircraftScheduleDetail.IsCheckOut = true;
 
             try
