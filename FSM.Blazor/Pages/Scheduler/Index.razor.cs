@@ -134,6 +134,36 @@ namespace FSM.Blazor.Pages.Scheduler
             base.StateHasChanged();
         }
 
+        private string GetSchedulerStatusClass() {
+            int SchedulerStatus = 1;
+            switch (SchedulerStatus)
+            {
+                case 1:
+                    //success
+                    return "badge-primary";
+                default:
+                    return string.Empty; 
+            }
+            //<span class="badge badge-primary">Primary</span>
+            //<span class="badge badge-secondary">Secondary</span>
+            //<span class="badge badge-success">Success</span>
+            //<span class="badge badge-danger">Danger</span>
+            //<span class="badge badge-warning">Warning</span>
+            //<span class="badge badge-info">Info</span>
+            //<span class="badge badge-light">Light</span>
+            //<span class="badge badge-dark">Dark</span>
+        } 
+        private string GetSchedulerStatusText() {
+
+            int SchedulerStatus = 1;
+            switch (SchedulerStatus)
+            {
+                case 1:
+                    return "success";
+                default:
+                    return string.Empty;
+            }
+        } 
         private async Task<List<ResourceData>> GetAircraftData()
         {
             List<DE.Aircraft> aircraftList = await AircraftService.ListAllAsync(_httpClient);
