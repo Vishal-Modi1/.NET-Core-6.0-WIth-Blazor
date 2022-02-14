@@ -83,7 +83,7 @@
                 {
                     <RadzenBadge BadgeStyle="BadgeStyle.Primary" Text="Scheduled" Style="width:88px;" />
                 }
-                else if (value.FlightStatus == "CheckedOut")
+                else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
                 {
                     <RadzenBadge BadgeStyle="BadgeStyle.Success" Text="Checked Out" Style="width:88px;" />
                 }

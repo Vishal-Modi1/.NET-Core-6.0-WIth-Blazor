@@ -43,12 +43,9 @@ namespace FSM.Blazor.Pages.Scheduler
 
         string moduleName = "Scheduler";
 
-        public bool isDisplayRecurring, isDisplayMember1Dropdown, isDisplayMember2Dropdown, isDisplayStandBy,
-            isDisplayAircraftDropDown, isDisplayFlightRoutes, isDisplayInstructor, isDisplayFlightInfo, dialogVisibility,
-            isDisplayForm, isDisplayCheckOutOption, @isBusyDeleteButton, isVisibleDeleteDialog, isBusyCheckOutButton, isDisplayCheckInButton,
-            isDisplayMainForm, isDisplayEditEndTimeForm, isBusyUnCheckOutButton;
+        public UIOptions uiOptions = new UIOptions();
 
-        public bool isBusy;
+       
         DateTime currentDate = DateTime.Now;
         SchedulerFilter schedulerFilter = new SchedulerFilter();
 
@@ -134,36 +131,6 @@ namespace FSM.Blazor.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        private string GetSchedulerStatusClass() {
-            int SchedulerStatus = 1;
-            switch (SchedulerStatus)
-            {
-                case 1:
-                    //success
-                    return "badge-primary";
-                default:
-                    return string.Empty; 
-            }
-            //<span class="badge badge-primary">Primary</span>
-            //<span class="badge badge-secondary">Secondary</span>
-            //<span class="badge badge-success">Success</span>
-            //<span class="badge badge-danger">Danger</span>
-            //<span class="badge badge-warning">Warning</span>
-            //<span class="badge badge-info">Info</span>
-            //<span class="badge badge-light">Light</span>
-            //<span class="badge badge-dark">Dark</span>
-        } 
-        private string GetSchedulerStatusText() {
-
-            int SchedulerStatus = 1;
-            switch (SchedulerStatus)
-            {
-                case 1:
-                    return "success";
-                default:
-                    return string.Empty;
-            }
-        } 
         private async Task<List<ResourceData>> GetAircraftData()
         {
             List<DE.Aircraft> aircraftList = await AircraftService.ListAllAsync(_httpClient);
@@ -177,292 +144,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
             return aircraftResourceList;
         }
-
-        public void OnActivityTypeValueChanged(object value)
-        {
-            InitializeValues();
-
-            if (value == null)
-            {
-                return;
-            }
-
-            if ((int)value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
-            {
-                isDisplayMember2Dropdown = true;
-                isDisplayFlightRoutes = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
-            {
-                isDisplayMember2Dropdown = true;
-                isDisplayFlightRoutes = true;
-                isDisplayFlightInfo = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
-            {
-                isDisplayMember2Dropdown = true;
-                isDisplayFlightRoutes = true;
-                isDisplayFlightInfo = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
-            {
-                isDisplayFlightRoutes = true;
-                isDisplayFlightInfo = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
-            {
-                isDisplayRecurring = false;
-                isDisplayMember1Dropdown = false;
-                schedulerVM.Member1Id = 0;
-                isDisplayStandBy = false;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
-            {
-                isDisplayInstructor = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
-            {
-                isDisplayInstructor = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
-            {
-                //IsDisplayAircraftDropDown = false;
-                isDisplayInstructor = true;
-            }
-
-            base.StateHasChanged();
-        }
-
-        private async Task CheckOutAircraft()
-        {
-            await SetCheckOutButtonState(true);
-
-            // check if someone else already checked out it 
-            CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
-
-            await SetCheckOutButtonState(false);
-
-            NotificationMessage message;
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                if ((bool)response.Data == true)
-                {
-                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                    NotificationService.Notify(message);
-                }
-                else
-                {
-                    await CheckOut();
-                }
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-
-
-        }
-
-        private async Task CheckOut()
-        {
-            NotificationMessage message;
-
-            CurrentResponse response = await AircraftSchedulerDetailService.CheckOut(_httpClient, schedulerVM.Id);
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                dialogVisibility = false;
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-
-                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = true;
-                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM.IsCheckOut = true; });
-                base.StateHasChanged();
-
-                await ScheduleRef.RefreshEventsAsync();
-
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-        }
-
-        private async Task UnCheckOutAppointment()
-        {
-            NotificationMessage message;
-
-            await SetUnCheckOutButtonState(true);
-
-            CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(_httpClient, schedulerVM.AircraftSchedulerDetailsVM.Id);
-
-            await SetUnCheckOutButtonState(false);
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-
-                schedulerVM.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
-                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM(); });
-                base.StateHasChanged();
-
-                await ScheduleRef.RefreshEventsAsync();
-
-                DialogService.Close(true);
-
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-        }
-
-        private async Task CheckInAircraft()
-        {
-            isDisplayMainForm = false;
-        }
-
-        private async Task HideEditEndTimeForm()
-        {
-            isDisplayEditEndTimeForm = false;
-            isDisplayMainForm = true;
-        }
-
-        private async Task ShowEditEndTimeForm()
-        {
-            isDisplayMainForm = false;
-            isDisplayEditEndTimeForm = true;
-        }
-
-        private async Task UpdateEndTime()
-        {
-            isBusy = true;
-
-            NotificationMessage message;
-
-            SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
-
-            schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
-            schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
-            schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
-            schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
-
-            CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(_httpClient, schedulerEndTimeDetailsVM);
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                if (Convert.ToBoolean(response.Data) == true)
-                {
-                    isDisplayEditEndTimeForm = false;
-                    isDisplayMainForm = true;
-                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                    NotificationService.Notify(message);
-
-                    DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.EndTime = schedulerVM.EndTime; });
-
-                    await ScheduleRef.RefreshEventsAsync();
-                    base.StateHasChanged();
-                }
-                else
-                {
-                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                    NotificationService.Notify(message);
-                }
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-
-            isBusy = false;
-            base.StateHasChanged();
-        }
-
-        private async Task EditFlightTime()
-        {
-            isDisplayMainForm = false;
-
-            foreach (AircraftEquipmentTimeVM aircraftEquipmentTimeVM in schedulerVM.AircraftEquipmentsTimeList)
-            {
-                AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == aircraftEquipmentTimeVM.Id).FirstOrDefault();
-
-                if (aircraftScheduleHobbsTime != null)
-                {
-                    aircraftEquipmentTimeVM.TotalHours = aircraftScheduleHobbsTime.TotalTime;
-                    aircraftEquipmentTimeVM.Hours = aircraftScheduleHobbsTime.OutTime;
-                }
-            }
-        }
-
-        private async Task OpenMainForm()
-        {
-            isDisplayMainForm = true;
-        }
-
-        private async Task CheckIn()
-        {
-            NotificationMessage message;
-
-            CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(_httpClient, schedulerVM.AircraftEquipmentsTimeList);
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                dialogVisibility = false;
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-
-                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = false;
-                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM.IsCheckOut = false; p.AircraftSchedulerDetailsVM.CheckInTime = DateTime.Now; });
-                base.StateHasChanged();
-
-                await ScheduleRef.RefreshEventsAsync();
-
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-        }
-
+ 
         public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
         {
             if (args.Data.AircraftSchedulerDetailsVM.IsCheckOut)
@@ -482,25 +164,19 @@ namespace FSM.Blazor.Pages.Scheduler
             }
         }
 
-        private void CloseDialog()
-        {
-            dialogVisibility = false;
-            base.StateHasChanged();
-        }
-
         public void InitializeValues()
         {
-            isDisplayRecurring = true;
-            isDisplayMember1Dropdown = true;
-            isDisplayAircraftDropDown = true;
-            isDisplayMember2Dropdown = false;
-            isDisplayFlightRoutes = false;
-            isDisplayInstructor = false;
-            isDisplayFlightInfo = false;
-            isDisplayStandBy = true;
-            isDisplayForm = true;
-            isDisplayCheckOutOption = false;
-            isDisplayMainForm = true;
+            uiOptions.isDisplayRecurring = true;
+            uiOptions.isDisplayMember1Dropdown = true;
+            uiOptions.isDisplayAircraftDropDown = true;
+            uiOptions.isDisplayMember2Dropdown = false;
+            uiOptions.isDisplayFlightRoutes = false;
+            uiOptions.isDisplayInstructor = false;
+            uiOptions.isDisplayFlightInfo = false;
+            uiOptions.isDisplayStandBy = true;
+            uiOptions.isDisplayForm = true;
+            uiOptions.isDisplayCheckOutOption = false;
+            uiOptions.isDisplayMainForm = true;
 
             if (schedulerVM == null)
             {
@@ -523,176 +199,50 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerVM.AircraftId = groupData.AircraftId;
 
             args.Cancel = true;
-            dialogVisibility = true;
+            uiOptions.dialogVisibility = true;
         }
 
         public async Task OnEventClick(EventClickArgs<SchedulerVM> args)
         {
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, args.Event.Id);
             args.Cancel = true;
-            dialogVisibility = true;
+            uiOptions.dialogVisibility = true;
 
-            isDisplayForm = false;
-            isDisplayCheckOutOption = false;
+            uiOptions.isDisplayForm = false;
+            uiOptions.isDisplayCheckOutOption = false;
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime == null)
             {
-                isDisplayCheckOutOption = true;
+                uiOptions.isDisplayCheckOutOption = true;
             }
 
-            isDisplayMainForm = true;
-            isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
+            uiOptions.isDisplayMainForm = true;
+            uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
         }
-
-        private void OpenForm()
+   
+        public async Task RefreshSchedulerDataSourceAsync(bool? isCheckOut)
         {
-            if (schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
+            DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM(); });
+
+            if (isCheckOut != null)
             {
-                OnActivityTypeValueChanged(schedulerVM.ScheduleActivityId);
+                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = isCheckOut.GetValueOrDefault();
             }
 
-            isDisplayForm = true;
+            await ScheduleRef.RefreshEventsAsync();
+
             base.StateHasChanged();
         }
 
-        private async void OnValidSubmit()
+        private void CloseDialog()
         {
-            isDisplayCheckOutOption = false;
-
-            if (isDisplayForm)
-            {
-                ManageValues();
-                isDisplayForm = false;
-                base.StateHasChanged();
-
-                return;
-            }
-
-            isBusy = true;
-
-            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM);
-
-            NotificationMessage message;
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                if (response.Data == null)
-                {
-                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                    NotificationService.Notify(message);
-                }
-                else
-                {
-                    dialogVisibility = false;
-                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                    NotificationService.Notify(message);
-                }
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-
-            isBusy = false;
-
-            await LoadDataAsync();
+            uiOptions.dialogVisibility = false;
+            base.StateHasChanged();
         }
 
-        private void ManageValues()
+        public async Task DeleteEventAsync()
         {
-            if (!isDisplayMember2Dropdown)
-            {
-                schedulerVM.Member2Id = null;
-            }
-
-            if (!isDisplayFlightInfo)
-            {
-                schedulerVM.FlightRules = "";
-                schedulerVM.FlightType = "";
-            }
-
-            if (!isDisplayFlightRoutes)
-            {
-                schedulerVM.FlightRoutes = "";
-            }
-
-            if (!isDisplayInstructor)
-            {
-                schedulerVM.InstructorId = null;
-            }
-        }
-
-        async Task DeleteAsync()
-        {
-            await SetDeleteButtonState(true);
-
-            CurrentResponse response = await AircraftSchedulerService.DeleteAsync(_httpClient, schedulerVM.Id);
-
-            await SetDeleteButtonState(false);
-
-            NotificationMessage message;
-
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                DialogService.Close();
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Appointment Details", response.Message);
-                NotificationService.Notify(message);
-            }
-
             await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
-        }
-
-        private void CloseChildDialog()
-        {
-            DialogService.Close(true);
-            dialogVisibility = true;
-        }
-
-        private async Task SetDeleteButtonState(bool isBusy)
-        {
-            isBusyDeleteButton = isBusy;
-            await InvokeAsync(() => StateHasChanged());
-        }
-
-        private async Task SetUnCheckOutButtonState(bool isBusy)
-        {
-            isBusyUnCheckOutButton = isBusy;
-            await InvokeAsync(() => StateHasChanged());
-        }
-
-        private async Task SetCheckOutButtonState(bool isBusy)
-        {
-            isBusyCheckOutButton = isBusy;
-            await InvokeAsync(() => StateHasChanged());
-        }
-
-        public void TextBoxChangeEvent(ChangeEventArgs args, int index)
-        {
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-
-            base.StateHasChanged();
-        }
-
-        public void EditFlightTimeTextBoxChangeEvent(ChangeEventArgs value, int index)
-        {
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value.Value);
 
             base.StateHasChanged();
         }
@@ -724,5 +274,27 @@ namespace FSM.Blazor.Pages.Scheduler
             }
 
         }
+    }
+
+    public class UIOptions
+    {
+        public bool isDisplayRecurring { get; set; }
+        public bool isDisplayCheckInButton { get; set; }
+        public bool isDisplayMainForm { get; set; }
+        public bool isDisplayEditEndTimeForm { get; set; }
+        public bool isBusyUnCheckOutButton { get; set; }
+        public bool isBusyCheckOutButton { get; set; }
+        public bool isVisibleDeleteDialog { get; set; }
+        public bool isBusyDeleteButton { get; set; }
+        public bool isDisplayCheckOutOption { get; set; }
+        public bool isDisplayForm { get; set; }
+        public bool dialogVisibility { get; set; }
+        public bool isDisplayFlightInfo { get; set; }
+        public bool isDisplayInstructor { get; set; }
+        public bool isDisplayFlightRoutes { get; set; }
+        public bool isDisplayAircraftDropDown { get; set; }
+        public bool isDisplayStandBy { get; set; }
+        public bool isDisplayMember2Dropdown { get; set; }
+        public bool isDisplayMember1Dropdown { get; set; }
     }
 }

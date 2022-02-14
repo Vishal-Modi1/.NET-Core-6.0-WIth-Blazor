@@ -9,6 +9,7 @@ namespace DataModels.VM.Reservation
         public Guid ReservationId { get; set; }
         public string ScheduleTitle { get; set; }
         public string FlightStatus { get; set; }
+        public bool? IsCheckOut { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public DateTime CreatedOn { get; set; }

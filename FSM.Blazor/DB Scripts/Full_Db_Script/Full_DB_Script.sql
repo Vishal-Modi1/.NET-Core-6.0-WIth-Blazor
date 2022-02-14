@@ -1305,6 +1305,129 @@ AS BEGIN
    
 END
 
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 14-02-2022 15:44:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetReservationList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'StartDateTime',  
+    @SortOrder NVARCHAR(20) = 'ASC',
+	@CompanyId INT = NULL,
+	@StartDate DATETIME = NULL,
+	@EndDate DATETIME = NULL
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+        Select acs.Id, acs.ScheduleTitle, acs.CreatedOn, 
+		acs.StartDateTime, acs.EndDateTime, acd.FlightStatus,
+		u.FirstName + '' + u.LastName as Member1, acd.IsCheckOut,
+		acs.ReservationId, a.TailNo, cp.Name as CompanyName
+		From AircraftSchedules acs
+		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
+		LEFT JOIN Users u ON ACS.Member1Id = u.Id
+		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
+		LEFT JOIN  Companies cp on u.CompanyId = cp.Id  
+
+        WHERE
+			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
+			1 = 1 AND 
+		      (
+				((ISNULL(@CompanyId,0)=0)
+				OR (U.CompanyId = @CompanyId))
+				AND
+				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
+				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
+				AND
+				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
+				OR (cast(acs.EndDateTime as date) <= cast(@EndDate as date)))
+		      )
+			AND 
+			acs.IsDeleted = 0 AND
+			(@SearchValue= '' OR  (   
+              ScheduleTitle LIKE '%' + @SearchValue + '%' OR
+			  ReservationId LIKE '%' + @SearchValue + '%' OR
+			  TailNo LIKE '%' + @SearchValue + '%' 
+            ))  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'StartDateTime' AND @SortOrder='ASC')  
+                        THEN acs.StartDateTime  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'StartDateTime' AND @SortOrder='DESC')  
+                        THEN acs.StartDateTime  
+            END DESC,
+			 CASE WHEN (@SortColumn = 'EndDateTime' AND @SortOrder='ASC')  
+                        THEN acs.EndDateTime  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'EndDateTime' AND @SortOrder='DESC')  
+                        THEN acs.EndDateTime  
+            END DESC,
+			CASE WHEN (@SortColumn = 'ScheduleTitle' AND @SortOrder='ASC')  
+                        THEN acs.ScheduleTitle  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'ScheduleTitle' AND @SortOrder='DESC')  
+                        THEN acs.ScheduleTitle   
+            END DESC,
+			CASE WHEN (@SortColumn = 'TailNo' AND @SortOrder='ASC')  
+                        THEN a.TailNo  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'TailNo' AND @SortOrder='DESC')  
+                        THEN a.TailNo   
+            END DESC,
+			CASE WHEN (@SortColumn = 'FlightStatus' AND @SortOrder='ASC')  
+                        THEN acd.FlightStatus  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'FlightStatus' AND @SortOrder='DESC')  
+                        THEN acd.FlightStatus 
+            END DESC
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(acs.Id) as TotalRecords 
+		From AircraftSchedules acs
+		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
+		LEFT JOIN Users u ON ACS.Member1Id = u.Id
+		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
+		LEFT JOIN  Companies cp on u.CompanyId = cp.Id  
+
+        WHERE
+			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
+			1 = 1 AND 
+		      (
+				((ISNULL(@CompanyId,0)=0)
+				OR (U.CompanyId = @CompanyId))
+				AND
+				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
+				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
+				AND
+				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
+				OR (cast(acs.EndDateTime as date) <= cast(@EndDate as date)))
+		      )
+			AND 
+			acs.IsDeleted = 0 AND
+			(@SearchValue= '' OR  (   
+              ScheduleTitle LIKE '%' + @SearchValue + '%' OR
+			  ReservationId LIKE '%' + @SearchValue + '%' OR
+			  TailNo LIKE '%' + @SearchValue + '%' 
+            ))  
+    )
+	
+    SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
+
+END
+
 
 /****** Object:  Trigger [dbo].[Trg_Company_InsertUserRolePermission]    Script Date: 03-12-2021 16:40:28 ******/
 SET ANSI_NULLS ON

@@ -633,6 +633,7 @@ INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,Ord
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (4,'Aircraft','Aircraft','Index','Aircraft','flight_takeoff',4,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permission','lock_open',5,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Scheduler','Scheduler','Index','Schedule','event_note',6,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (7,'Reservation', 'Reservation', 'Index', 'Reservation', 'book_online',7,1)
 Go
 SET IDENTITY_INSERT [dbo].ModuleDetails OFF
 GO
