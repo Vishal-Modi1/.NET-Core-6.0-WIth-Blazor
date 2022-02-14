@@ -3,14 +3,9 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
-using Syncfusion.Blazor.Schedule;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using DE = DataModels.Entities;
 using DataModels.VM.Common;
 using Radzen;
 using FSM.Blazor.Extensions;
-using Newtonsoft.Json;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
 
@@ -27,14 +22,12 @@ namespace FSM.Blazor.Pages.Scheduler
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        private CurrentUserPermissionManager _currentUserPermissionManager;
-
         [Parameter]
         public SchedulerVM schedulerVM { get; set; }
 
         [Parameter]
         public UIOptions uiOptions { get; set; }
-        
+
         [Parameter]
         public EventCallback InitializeValuesParentEvent { get; set; }
 
@@ -46,6 +39,9 @@ namespace FSM.Blazor.Pages.Scheduler
 
         [Parameter]
         public EventCallback CloseDialogParentEvent { get; set; }
+
+        [Parameter]
+        public EventCallback LoadDataParentEvent { get; set; }
 
         public bool isBusy;
 
@@ -95,7 +91,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
             isBusy = false;
 
-            //   await LoadDataAsync();
+            await LoadDataAsync();
         }
 
         private void CloseDialog()
@@ -526,6 +522,11 @@ namespace FSM.Blazor.Pages.Scheduler
         public void InitializeValues()
         {
             InitializeValuesParentEvent.InvokeAsync();
+        }
+
+        public async Task LoadDataAsync()
+        {
+            await LoadDataParentEvent.InvokeAsync();
         }
     }
 }

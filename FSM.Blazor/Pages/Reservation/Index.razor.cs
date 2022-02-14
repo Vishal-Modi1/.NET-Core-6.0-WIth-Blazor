@@ -8,6 +8,8 @@ using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using FSM.Blazor.Pages.Scheduler;
+using DataModels.VM.Scheduler;
 
 namespace FSM.Blazor.Pages.Reservation
 {
@@ -36,6 +38,8 @@ namespace FSM.Blazor.Pages.Reservation
         ReservationFilterVM reservationFilterVM = new ReservationFilterVM();
         IList<DropDownValues> CompanyFilterDropdown;
 
+        SchedulerVM schedulerVM;
+
         #region Filters
         public int CompanyId;
         public DateTime? startDate, endDate; 
@@ -50,6 +54,8 @@ namespace FSM.Blazor.Pages.Reservation
         #endregion
 
         string moduleName = "Reservation";
+
+        UIOptions uiOptions = new UIOptions();
 
         protected override async Task OnInitializedAsync()
         {
@@ -98,7 +104,44 @@ namespace FSM.Blazor.Pages.Reservation
             base.StateHasChanged();
         }
 
-        async Task OpenSchedulerDialog()
+        async Task OpenSchedulerDialog(long id)
+        {
+            schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, id);
+            uiOptions.dialogVisibility = true;
+
+            uiOptions.isDisplayForm = false;
+            uiOptions.isDisplayCheckOutOption = false;
+
+            if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime == null)
+            {
+                uiOptions.isDisplayCheckOutOption = true;
+            }
+
+            uiOptions.isDisplayMainForm = true;
+            uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
+        }
+
+        public async Task RefreshSchedulerDataSourceAsync(bool? isCheckOut)
+        {
+            // refresh grids
+
+            base.StateHasChanged();
+        }
+
+        private void CloseDialog()
+        {
+            uiOptions.dialogVisibility = false;
+            base.StateHasChanged();
+        }
+
+        public async Task DeleteEventAsync()
+        {
+           // await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
+
+            base.StateHasChanged();
+        }
+
+        public async Task InitializeValues()
         {
 
         }
