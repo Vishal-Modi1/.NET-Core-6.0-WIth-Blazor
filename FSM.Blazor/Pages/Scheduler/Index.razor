@@ -72,7 +72,7 @@
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
 
-<SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="450px"
+<SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"
             @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate"
             @bind-CurrentView="@CurrentView">
 
@@ -110,7 +110,7 @@
 </SfSchedule>
 
 
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" Height="auto" ShowCloseIcon="true" style="min-height: 95%;">
 
     <DialogTemplates>
         <Header> <h5>Schedule Appointment</h5> </Header>
