@@ -39,7 +39,7 @@
                         <tbody>
 
                             <tr>
-                                <td class="e-textlabel">Display Title</td>
+                                <td class="e-textlabel d-flex align-items-start">Display Title</td>
                                 <td colspan="4">
 
                                     <RadzenTextBox Placeholder="Enter Title" Name="Title" @bind-Value="schedulerVM.DisplayTitle" Class="w-100">
@@ -50,7 +50,7 @@
                             </tr>
 
                             <tr>
-                                <td class="e-textlabel">Activity Type</td>
+                                <td class="e-textlabel d-flex align-items-start">Activity Type</td>
                                 <td colspan="4">
 
                                     <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -67,7 +67,7 @@
                             </tr>
 
                             <tr>
-                                <td class="e-textlabel">Start Time</td>
+                                <td class="e-textlabel d-flex align-items-start">Start Time</td>
                                 <td colspan="4">
 
                                     <RadzenDatePicker style="width: 150px;" TValue="DateTime" ShowTime="true" Name="StartTime"
@@ -80,7 +80,7 @@
                             </tr>
 
                             <tr>
-                                <td class="e-textlabel">End Time</td>
+                                <td class="e-textlabel d-flex align-items-start">End Time</td>
                                 <td colspan="4">
                                     <RadzenDatePicker style="width: 150px;" TValue="DateTime" ShowTime="true" Name="EndTime"
                                                   HoursStep="1" MinutesStep="30" @bind-Value="@schedulerVM.EndTime"
@@ -97,7 +97,7 @@
                             @if (uiOptions.isDisplayAircraftDropDown)
                             {
                                 <tr>
-                                    <td class="e-textlabel">Aircraft</td>
+                                    <td class="e-textlabel d-flex align-items-start">Aircraft</td>
                                     <td colspan="4">
 
                                         <RadzenDropDown AllowClear="true" TValue="long?"
@@ -119,7 +119,7 @@
                                 @if (uiOptions.isDisplayRecurring)
                                 {
                                     <tr>
-                                        <td class="e-textlabel">Recurring ?</td>
+                                        <td class="e-textlabel d-flex align-items-start">Recurring ?</td>
                                         <td colspan="4">
 
                                             <RadzenCheckBox @bind-Value=@schedulerVM.IsRecurring Name="IsRecurring" TValue="bool" />
@@ -131,7 +131,7 @@
                                 @if (uiOptions.isDisplayMember1Dropdown)
                                 {
                                     <tr>
-                                        <td class="e-textlabel">Member 1</td>
+                                        <td class="e-textlabel d-flex align-items-start">Member 1</td>
                                         <td colspan="4">
 
                                             <RadzenDropDown AllowClear="true" TValue="long?"
@@ -147,7 +147,7 @@
                                 @if (uiOptions.isDisplayMember2Dropdown)
                                 {
                                     <tr>
-                                        <td class="e-textlabel">Member 2</td>
+                                        <td class="e-textlabel d-flex align-items-start">Member 2</td>
                                         <td colspan="4">
 
                                             <RadzenDropDown AllowClear="true" TValue="long?"
@@ -171,7 +171,7 @@
                                     string ifr = "IFR";
 
                                     <tr>
-                                        <td class="e-textlabel">Flight Type</td>
+                                        <td class="e-textlabel d-flex align-items-start">Flight Type</td>
                                         <td colspan="4">
                                             <RadzenRadioButtonList @bind-Value=@schedulerVM.FlightType TValue="string">
                                                 <Items>
@@ -183,7 +183,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="e-textlabel">Flight Rules</td>
+                                        <td class="e-textlabel d-flex align-items-start">Flight Rules</td>
                                         <td colspan="4">
 
                                             <RadzenRadioButtonList @bind-Value=@schedulerVM.FlightRules TValue="string">
@@ -197,7 +197,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="e-textlabel">Est Hours</td>
+                                        <td class="e-textlabel d-flex align-items-start">Est Hours</td>
                                         <td colspan="4">
 
                                             <RadzenNumeric Placeholder="Enter Hours" @bind-Value="schedulerVM.EstHours">
@@ -210,7 +210,7 @@
                                 @if (uiOptions.isDisplayInstructor)
                                 {
                                     <tr>
-                                        <td class="e-textlabel">Instructor</td>
+                                        <td class="e-textlabel d-flex align-items-start">Instructor</td>
                                         <td colspan="4">
 
                                             <RadzenDropDown AllowClear="true" TValue="long?"
@@ -226,7 +226,7 @@
                                 @if (uiOptions.isDisplayFlightRoutes)
                                 {
                                     <tr>
-                                        <td class="e-textlabel">Flight Routes</td>
+                                        <td class="e-textlabel d-flex align-items-start">Flight Routes</td>
                                         <td colspan="4">
                                             <RadzenTextArea Class="w-100" Placeholder="Enter fligt routes" @bind-Value="@schedulerVM.FlightRoutes"></RadzenTextArea>
                                         </td>
@@ -234,14 +234,14 @@
                                 }
 
                                 <tr>
-                                    <td class="e-textlabel">Comments</td>
+                                    <td class="e-textlabel d-flex align-items-start">Comments</td>
                                     <td colspan="4">
                                         <RadzenTextArea Class="w-100" Placeholder="Enter comments" @bind-Value="@schedulerVM.Comments"></RadzenTextArea>
                                     </td>
                                 </tr>
 
                                 <tr>
-                                    <td class="e-textlabel">Internal Comments</td>
+                                    <td class="e-textlabel d-flex align-items-start">Internal Comments</td>
                                     <td colspan="4">
 
                                         <RadzenTextArea Class="w-100" Placeholder="Enter internal comments" @bind-Value="@schedulerVM.InternalComments"></RadzenTextArea>
@@ -252,7 +252,7 @@
                             @if (uiOptions.isDisplayStandBy)
                             {
                                 <tr>
-                                    <td class="e-textlabel">StandBy</td>
+                                    <td class="e-textlabel d-flex align-items-start">StandBy</td>
                                     <td colspan="4">
 
                                         <RadzenCheckBox @bind-Value="@schedulerVM.IsStandBy" Name="IsRecurring" TValue="bool" />
@@ -265,10 +265,10 @@
 
                     <div class="row" style="margin-top:4%">
                         <div class="col-md-12 text-right">
-                <div class="d-flex btn-grp justify-content-evenly">
-                    <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Continue" Style="width: 130px" />
-                    <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
-                </div>
+                            <div class="d-flex btn-grp justify-content-evenly">
+                                <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Continue" Style="width: 130px" />
+                                <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                            </div>
                         </div>
                     </div>
                 }
@@ -568,7 +568,7 @@
 
                                 AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
                                 <tr>
-                                    <td class="e-textlabel">@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
+                                    <td class="e-textlabel d-flex align-items-start">@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
                                     <td>
 
                                         @schedulerVM.AircraftEquipmentsTimeList[index].Hours
