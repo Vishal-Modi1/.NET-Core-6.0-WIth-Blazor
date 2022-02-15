@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using FSM.Blazor.Pages.Scheduler;
 using DataModels.VM.Scheduler;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.Reservation
 {
@@ -106,6 +107,8 @@ namespace FSM.Blazor.Pages.Reservation
 
         async Task OpenSchedulerDialog(long id)
         {
+            InitializeValues();
+
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, id);
             uiOptions.dialogVisibility = true;
 
@@ -121,11 +124,9 @@ namespace FSM.Blazor.Pages.Reservation
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
         }
 
-        public async Task RefreshSchedulerDataSourceAsync(bool? isCheckOut)
+        public async Task RefreshSchedulerDataSourceAsync(ScheduleOperations scheduleOperations)
         {
-            // refresh grids
-
-            base.StateHasChanged();
+            await LoadDataAsync();
         }
 
         private void CloseDialog()
@@ -134,16 +135,30 @@ namespace FSM.Blazor.Pages.Reservation
             base.StateHasChanged();
         }
 
-        public async Task DeleteEventAsync()
+        private void OpenDialog()
         {
-           // await ScheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
-
+            uiOptions.dialogVisibility = true;
             base.StateHasChanged();
         }
 
-        public async Task InitializeValues()
+        public async Task DeleteEventAsync()
         {
+            await LoadDataAsync();
+        }
 
+        public void InitializeValues()
+        {
+            uiOptions.isDisplayRecurring = true;
+            uiOptions.isDisplayMember1Dropdown = true;
+            uiOptions.isDisplayAircraftDropDown = true;
+            uiOptions.isDisplayMember2Dropdown = false;
+            uiOptions.isDisplayFlightRoutes = false;
+            uiOptions.isDisplayInstructor = false;
+            uiOptions.isDisplayFlightInfo = false;
+            uiOptions.isDisplayStandBy = true;
+            uiOptions.isDisplayForm = true;
+            uiOptions.isDisplayCheckOutOption = false;
+            uiOptions.isDisplayMainForm = true;
         }
     }
 }

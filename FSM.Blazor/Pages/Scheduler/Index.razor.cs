@@ -13,6 +13,7 @@ using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -45,7 +46,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public UIOptions uiOptions = new UIOptions();
 
-       
+
         DateTime currentDate = DateTime.Now;
         SchedulerFilter schedulerFilter = new SchedulerFilter();
 
@@ -144,7 +145,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
             return aircraftResourceList;
         }
- 
+
         public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
         {
             if (args.Data.AircraftSchedulerDetailsVM.IsCheckOut)
@@ -177,12 +178,6 @@ namespace FSM.Blazor.Pages.Scheduler
             uiOptions.isDisplayForm = true;
             uiOptions.isDisplayCheckOutOption = false;
             uiOptions.isDisplayMainForm = true;
-
-            if (schedulerVM == null)
-            {
-                return;
-            }
-
         }
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
@@ -219,24 +214,48 @@ namespace FSM.Blazor.Pages.Scheduler
             uiOptions.isDisplayMainForm = true;
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
         }
-   
-        public async Task RefreshSchedulerDataSourceAsync(bool? isCheckOut)
-        {
-            DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM(); });
 
-            if (isCheckOut != null)
+        public async Task RefreshSchedulerDataSourceAsync(ScheduleOperations scheduleOperations)
+        {
+            if (scheduleOperations == ScheduleOperations.Schedule)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = isCheckOut.GetValueOrDefault();
+                await LoadDataAsync();
+                return;
             }
 
+            if (scheduleOperations == ScheduleOperations.CheckOut)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = true;
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM.IsCheckOut = true; });
+            }
+            else if (scheduleOperations == ScheduleOperations.CheckIn)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = false;
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM.IsCheckOut = false; p.AircraftSchedulerDetailsVM.CheckInTime = DateTime.Now; });
+            }
+            else if (scheduleOperations == ScheduleOperations.UnCheckOut)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM(); });
+            }
+            else
+            {
+                DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.EndTime = schedulerVM.EndTime; });
+            }
+           
             await ScheduleRef.RefreshEventsAsync();
-
             base.StateHasChanged();
         }
 
         private void CloseDialog()
         {
             uiOptions.dialogVisibility = false;
+            base.StateHasChanged();
+        }
+
+        private void OpenDialog()
+        {
+            uiOptions.dialogVisibility = true;
             base.StateHasChanged();
         }
 

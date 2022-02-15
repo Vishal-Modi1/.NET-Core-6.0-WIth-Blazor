@@ -644,6 +644,7 @@
 
 async Task OpenDeleteDialog()
 {
+    CloseDialog();
     uiOptions.dialogVisibility = false;
     var result = await DialogService.OpenAsync("Delete", ds =>
     @<div>
@@ -657,14 +658,14 @@ async Task OpenDeleteDialog()
             </div>
         </div>
     </div>
-    , new DialogOptions { Width = "360px" });
+        , new DialogOptions { Width = "360px" });
 
-}
+    }
 
-async Task UnCheckOut()
-{
-    uiOptions.dialogVisibility = false;
-    var result = await DialogService.OpenAsync("Un-Check out appointment", ds =>
+    async Task UnCheckOut()
+    {
+        CloseDialog();
+        var result = await DialogService.OpenAsync("Un-Check out appointment", ds =>
     @<div>
         <p class="mb-4">Are you sure, You want to un-check out appointment ?</p>
         <div class="row m-2">

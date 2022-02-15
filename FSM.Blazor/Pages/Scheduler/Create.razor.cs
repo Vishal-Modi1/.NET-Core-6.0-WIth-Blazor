@@ -8,6 +8,7 @@ using Radzen;
 using FSM.Blazor.Extensions;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -35,10 +36,13 @@ namespace FSM.Blazor.Pages.Scheduler
         public EventCallback DeleteParentEvent { get; set; }
 
         [Parameter]
-        public EventCallback<bool?> RefreshSchedulerDataSourceParentEvent { get; set; }
+        public EventCallback<ScheduleOperations> RefreshSchedulerDataSourceParentEvent { get; set; }
 
         [Parameter]
         public EventCallback CloseDialogParentEvent { get; set; }
+        
+        [Parameter]
+        public EventCallback OpenDialogParentEvent { get; set; }
 
         [Parameter]
         public EventCallback LoadDataParentEvent { get; set; }
@@ -78,7 +82,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 }
                 else
                 {
-                    //dialogVisibility = false;
+                    CloseDialog();
                     message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                     NotificationService.Notify(message);
                 }
@@ -91,12 +95,18 @@ namespace FSM.Blazor.Pages.Scheduler
 
             isBusy = false;
 
+            CloseDialog();
             await LoadDataAsync();
         }
 
         private void CloseDialog()
         {
             CloseDialogParentEvent.InvokeAsync();
+        }
+
+        private void OpenDialog()
+        {
+            OpenDialogParentEvent.InvokeAsync();
         }
 
         private async Task CheckInAircraft()
@@ -145,7 +155,7 @@ namespace FSM.Blazor.Pages.Scheduler
                     message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                     NotificationService.Notify(message);
 
-                    RefreshSchedulerDataSource(null);
+                    RefreshSchedulerDataSource(ScheduleOperations.UpdateEndTime);
                     base.StateHasChanged();
                 }
                 else
@@ -198,13 +208,13 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                uiOptions.dialogVisibility = false;
+                CloseDialog();
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
 
                 schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = false;
 
-                RefreshSchedulerDataSource(schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut);
+                RefreshSchedulerDataSource(ScheduleOperations.CheckIn);
             }
             else
             {
@@ -359,12 +369,12 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                uiOptions.dialogVisibility = false;
+                CloseDialog();
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Appointment Details", response.Message);
                 NotificationService.Notify(message);
 
                 schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = true;
-                RefreshSchedulerDataSource(schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut);
+                RefreshSchedulerDataSource(ScheduleOperations.CheckOut);
             }
             else
             {
@@ -451,7 +461,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 schedulerVM.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
                 base.StateHasChanged();
 
-                RefreshSchedulerDataSource(false);
+                RefreshSchedulerDataSource(ScheduleOperations.UnCheckOut);
                 DialogService.Close(true);
             }
             else
@@ -461,9 +471,9 @@ namespace FSM.Blazor.Pages.Scheduler
             }
         }
 
-        private void RefreshSchedulerDataSource(bool? isCheckOut)
+        private void RefreshSchedulerDataSource(ScheduleOperations scheduleOperations)
         {
-            RefreshSchedulerDataSourceParentEvent.InvokeAsync(isCheckOut);
+            RefreshSchedulerDataSourceParentEvent.InvokeAsync(scheduleOperations);
         }
 
         private void DeleteEvent()
@@ -474,7 +484,7 @@ namespace FSM.Blazor.Pages.Scheduler
         private void CloseChildDialog()
         {
             DialogService.Close(true);
-            uiOptions.dialogVisibility = true;
+            OpenDialog();
         }
 
         private async Task SetUnCheckOutButtonState(bool isBusy)
@@ -521,7 +531,19 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public void InitializeValues()
         {
-            InitializeValuesParentEvent.InvokeAsync();
+            uiOptions.isDisplayRecurring = true;
+            uiOptions.isDisplayMember1Dropdown = true;
+            uiOptions.isDisplayAircraftDropDown = true;
+            uiOptions.isDisplayMember2Dropdown = false;
+            uiOptions.isDisplayFlightRoutes = false;
+            uiOptions.isDisplayInstructor = false;
+            uiOptions.isDisplayFlightInfo = false;
+            uiOptions.isDisplayStandBy = true;
+            uiOptions.isDisplayForm = true;
+            uiOptions.isDisplayCheckOutOption = false;
+            uiOptions.isDisplayMainForm = true;
+
+            base.StateHasChanged();
         }
 
         public async Task LoadDataAsync()
