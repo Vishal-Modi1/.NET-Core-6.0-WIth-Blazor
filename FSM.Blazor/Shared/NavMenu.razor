@@ -6,11 +6,23 @@
 @inject IHttpClientFactory ClientFactory
 
 <RadzenSidebar @bind-Expanded="Expanded" Style=" top: 51px; width: 250px;transform: translateX(0px);">
-    <ChildContent>
-        @*  <div style="padding: 1rem">
-            <RadzenTextBox Placeholder="Find component ..." @oninput="@FilterPanelMenu" type="search" style="width: 100%" />
 
-            </div>*@
+    <ChildContent>
+     
+        <div class="profile clearfix">
+              <div class="profile_pic" style="width:35%;float:left;">
+                                   <RadzenImage Path="../img/thumbnail-aircraft.png" Style="width:70%;background:#fff;margin-left:15%;z-index:1000;position:inherit;margin-top:20px;border:1px solid rgba(52,73,94,0.44);padding:4px;border-radius:50%" />
+
+@*                <img src="../img/thumbnail-aircraft.png" alt="..." class="img-circle profile_img" style="width:70%;background:#fff;margin-left:15%;z-index:1000;position:inherit;margin-top:20px;border:1px solid rgba(52,73,94,0.44);padding:4px;border-radius:50%">
+*@              </div>
+              <div class="profile_info" style="padding:40px 10px 10px;width:65%;float:left">
+                                  <RadzenLink Path="/MyProfile" Text="Vishal" Style="font-size:14px;color:#fff;margin:0;font-weight:300" />
+
+@*                <h2 style="font-size:14px;color:#fff;margin:0;font-weight:300">Vishal</h2>
+*@              </div>
+            </div>
+            <hr>
+
         <RadzenPanelMenu Style="margin-top:8px;">
 
             @if (menuItems == null)
@@ -18,8 +30,8 @@
 
             }
             else
-
             {
+
                 <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
                 @foreach (var category in menuItems)
                 {
