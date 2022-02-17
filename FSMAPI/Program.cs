@@ -98,6 +98,7 @@ string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirecto
 Directory.CreateDirectory(uploadsPath);
 
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.UserProfileImage);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));

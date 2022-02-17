@@ -293,5 +293,48 @@ namespace Service
                 return _currentResponse;
             }
         }
+
+        public CurrentResponse FindById(long id)
+        {
+            try
+            {
+                UserVM userVM = _userRepository.FindById(id);
+                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UserProfileImagePathPrefix}{userVM.ImageName}";
+
+                userVM.Countries = _countryRepository.ListDropDownValues();
+                userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
+                userVM.UserRoles = _userRoleRepository.ListDropDownValues(userVM.RoleId);
+
+                CreateResponse(userVM, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new UserVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateImageName(long id, string imageName)
+        {
+            try
+            {
+                bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
+
+                CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
     }
 }
