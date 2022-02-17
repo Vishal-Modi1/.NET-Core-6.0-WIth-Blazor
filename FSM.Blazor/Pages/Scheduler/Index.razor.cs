@@ -105,7 +105,7 @@ namespace FSM.Blazor.Pages.Scheduler
                         x.CssClass = "checkedout";
                     }
                 }
-                if (x.AircraftSchedulerDetailsVM.CheckInTime != null)
+                else if (x.AircraftSchedulerDetailsVM.CheckInTime != null)
                 {
                     if (CurrentView == View.Day || CurrentView == View.Week || CurrentView == View.Month)
                     {

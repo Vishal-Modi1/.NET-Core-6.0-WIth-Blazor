@@ -404,17 +404,29 @@ namespace FSM.Blazor.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        private string GetSchedulerStatusClass()
+        private BadgeStyle GetSchedulerStatusClass()
         {
-            int SchedulerStatus = 1;
-            switch (SchedulerStatus)
+            if(schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
             {
-                case 1:
-                    //success
-                    return "badge-primary";
-                default:
-                    return string.Empty;
+                return BadgeStyle.Success;
             }
+            else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+            {
+                return BadgeStyle.Light;
+            }
+            else
+            {
+                return BadgeStyle.Primary;
+            }
+            //    int SchedulerStatus = 1;
+            //switch (SchedulerStatus)
+            //{
+            //    case 1:
+            //        //success
+            //        return "badge-primary";
+            //    default:
+            //        return string.Empty;
+            //}
             //<span class="badge badge-primary">Primary</span>
             //<span class="badge badge-secondary">Secondary</span>
             //<span class="badge badge-success">Success</span>
@@ -427,14 +439,17 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private string GetSchedulerStatusText()
         {
-
-            int SchedulerStatus = 1;
-            switch (SchedulerStatus)
+            if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
             {
-                case 1:
-                    return "success";
-                default:
-                    return string.Empty;
+                return "Checked Out";
+            }
+            else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+            {
+                return "Checked In";
+            }
+            else
+            {
+                return "Scheduled";
             }
         }
 

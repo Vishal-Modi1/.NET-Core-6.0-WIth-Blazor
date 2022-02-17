@@ -47,37 +47,6 @@ namespace FSMAPI.Controllers
                 response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
                 List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
-                //List<string> getRoles(int RoleId)
-                //{
-                //    List<string> roles = new List<string>();
-                //    if (RoleId == 1)
-                //    {
-                //        roles.Add("Admin");
-                //    }
-                //    if (RoleId == 2)
-                //    {
-                //        roles.Add("OfficeStaff");
-                //    }
-                //    if (RoleId == 3)
-                //    {
-                //        roles.Add("Instructors");
-                //    }
-                //    if (RoleId == 4)
-                //    {
-                //        roles.Add("Rentors");
-                //    }
-                //    if (RoleId == 5)
-                //    {
-                //        roles.Add("Students");
-                //    }
-                //    if (RoleId == 6)
-                //    {
-                //        roles.Add("ReadOnly");
-                //    }
-
-                //    return roles;
-                //}
-
                 string accessToken = _jWTTokenGenerator.Generate(user.Id, user.CompanyId, user.RoleId);
 
                 response.Data = new LoginResponseVM

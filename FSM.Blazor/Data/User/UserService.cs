@@ -96,5 +96,21 @@ namespace FSM.Blazor.Data.User
 
             return response;
         }
+
+        public async Task<CurrentResponse> FindById(IHttpClientFactory httpClient, long id)
+        {
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findbyid?id={id}");
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UploadProfileImageAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
+        {
+            string url = $"user/uploadprofileimage";
+
+            CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
+
+            return response;
+        }
     }
 }

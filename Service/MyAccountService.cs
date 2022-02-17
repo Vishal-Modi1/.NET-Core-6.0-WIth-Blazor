@@ -31,5 +31,10 @@ namespace Service
 
             return _currentResponse;
         }
+
+        public CurrentResponse FindById(long id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

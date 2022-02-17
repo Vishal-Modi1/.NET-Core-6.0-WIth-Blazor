@@ -28,5 +28,8 @@ namespace Repository.Interface
 
         List<DropDownLargeValues> ListDropdownValuesbyCondition(Expression<Func<User, bool>> predicate);
 
+        UserVM FindById(long id);
+
+        bool UpdateImageName(long id, string imageName);
     }
 }

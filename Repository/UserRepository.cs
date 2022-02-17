@@ -156,5 +156,61 @@ namespace Repository
                 }
             }
         }
+
+        public UserVM FindById(long id)
+        {
+            using (_myContext = new MyContext())
+            {
+                UserVM userVM = (from user in _myContext.Users
+                                 join company in _myContext.Companies
+                                 on user.CompanyId equals company.Id into usersCompany
+                                 from userCompany in usersCompany.DefaultIfEmpty()
+                                 join userRole in _myContext.UserRoles
+                                 on user.RoleId equals userRole.Id into usersRole
+                                 from role in usersRole.DefaultIfEmpty()
+                                 join country in _myContext.Countries
+                                 on user.CountryId equals country.Id into usersCountry
+                                 from userCountry in usersCountry.DefaultIfEmpty()
+                                 where user.Id == id
+
+                                 select new UserVM()
+                                 {
+                                     Id = user.Id,
+                                     Email = user.Email,
+                                     FirstName = user.FirstName,
+                                     LastName = user.LastName,
+                                     DateofBirth = user.DateofBirth,
+                                     Gender = user.Gender,
+                                     Role = role.Name,
+                                     CompanyName = userCompany != null ? userCompany.Name : "",
+                                     Phone = user.Phone,
+                                     Country = userCountry.Name,
+                                     ImageName = user.ImageName,
+                                     CountryId = userCountry.Id,
+                                     CompanyId = userCompany.Id,
+                                     RoleId = role.Id,
+                                 }).FirstOrDefault();
+
+                return userVM;
+            }
+        }
+
+        public bool UpdateImageName(long id, string imageName)
+        {
+            using (_myContext = new MyContext())
+            {
+                User existingUser = _myContext.Users.Where(p => p.Id == id).FirstOrDefault();
+
+                if (existingUser != null)
+                {
+                    existingUser.ImageName = imageName;
+                    _myContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

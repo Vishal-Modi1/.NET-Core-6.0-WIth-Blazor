@@ -153,11 +153,6 @@ namespace FSM.Blazor.Pages.Aircraft
                 {
                     SetSaveButtonState(true);
 
-                    string uploadsPath = Path.Combine("", UploadDirectory.RootDirectory);
-                    Directory.CreateDirectory(uploadsPath);
-
-                    Directory.CreateDirectory(uploadsPath + "\\" + "uploads");
-
                     if (response != null && response.Status == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(airCraftData.ImagePath))
                     {
                         //data:image/gif;base64,

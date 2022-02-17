@@ -66,28 +66,30 @@
                 <RadzenRequiredValidator DefaultValue="0" Component="RoleId" Text="Please select role" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
             </div>
 
-            <div class="col-md-2 align-items-center d-flex">
-                <RadzenLabel Text="Company" />
-            </div>
-            <div class="col-md-4">
-                @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
-                {
-                    <RadzenDropDown @bind-Value="@(userData.CompanyId)" Style="width:100%;" TValue="int?"
+            @if (!userData.IsFromMyProfile)
+            {
+                <div class="col-md-2 align-items-center d-flex">
+                    <RadzenLabel Text="Company" />
+                </div>
+                <div class="col-md-4">
+                    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+                    {
+                        <RadzenDropDown @bind-Value="@(userData.CompanyId)" Style="width:100%;" TValue="int?"
                                 TextProperty="Name" Placeholder="Select Company"
                                 Data="@userData.Companies"
                                 Name="CompanyId" ValueProperty="Id" AllowClear="true">
-                    </RadzenDropDown>
-                    <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Company is required" Popup="@isPopup" Style="position: relative" />
+                        </RadzenDropDown>
+                        <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Company is required" Popup="@isPopup" Style="position: relative" />
 
-                }
-                else
-                {
-                    <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@userData.CompanyName" Disabled="true" />
-                    <input type="hidden" id="CompanyId" value="@userData.CompanyId" />
-                }
+                    }
+                    else
+                    {
+                        <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@userData.CompanyName" Disabled="true" />
+                        <input type="hidden" id="CompanyId" value="@userData.CompanyId" />
+                    }
 
-            </div>
-
+                </div>
+            }
         </div>
 
         <div class="row">

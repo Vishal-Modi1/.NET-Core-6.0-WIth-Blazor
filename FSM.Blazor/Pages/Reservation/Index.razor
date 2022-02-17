@@ -38,7 +38,7 @@
 
     <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
-                       Placeholder="Search Reservation" @bind-Value="@searchText" />
+                       Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
     </div>
 
     <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">

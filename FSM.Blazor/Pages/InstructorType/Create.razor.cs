@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
 
-
 namespace FSM.Blazor.Pages.InstructorType
 {
     public partial class Create

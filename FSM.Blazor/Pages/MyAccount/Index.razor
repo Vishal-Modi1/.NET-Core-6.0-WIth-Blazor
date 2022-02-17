@@ -1,8 +1,120 @@
-﻿@page "/MyProfile"
+﻿@using FSM.Blazor.Data.User
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Spinner
+
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavManager
+@inject UserService UserService
+
+@page "/MyProfile"
+
 <PageTitle>My Profile | Fly Manager </PageTitle>
 
 <h3>Index</h3>
 
-@code {
 
-}
+<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
+<div class="m-4">
+    <div class="card" style="max-width: 900px;">
+
+        <div class="row g-0">
+            <div class="col-sm-3" style="background: #868e96;">
+                <RadzenImage Path="@userVM.ImageName" Style="card-img-top h-100" />
+
+                <RadzenFileInput Style="outline:none" @bind-Value=@userVM.ImageName Change=@(args => OnChangeAsync()) TValue="string" Class="w-100" />
+            </div>
+
+            <div class="col-sm-3">
+                <RadzenButton Text="Update Details" Click="@OpenUpdateProfileDialog"></RadzenButton>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="card-body">
+                    <div>
+                        <label>Name : </label> @userVM.FirstName  @userVM.LastName
+                    </div>
+
+                    <div>
+                        <label>Email : </label> @userVM.Email
+                    </div>
+
+                    <div>
+                        <label>Phone No : </label> @userVM.Phone
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card-body">
+
+                    <div>
+                        <label>Date of Birth : </label> @(userVM.DateofBirth != null ? userVM.DateofBirth.Value.ToShortDateString() : "" )
+                    </div>
+
+                    <div>
+                        <label>Gender : </label> @userVM.Gender
+                    </div>
+
+                    <div>
+                        <label>Country : </label> @userVM.Country
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card-body">
+
+                    <div>
+                        <label>Role : </label> @userVM.Role
+                    </div>
+
+
+                    <div>
+                        <label>Company Name : </label> @userVM.CompanyName
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="row g-0">
+            <div class="card-footer">
+                <RadzenTabs RenderMode="TabRenderMode.Client">
+                    <Tabs>
+                        <RadzenTabsItem Text="Aircraft Times">
+
+
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Description">
+
+
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Equipments">
+
+
+
+                        </RadzenTabsItem>
+
+                        <RadzenTabsItem Text="Specs">
+
+
+                        </RadzenTabsItem>
+                    </Tabs>
+                </RadzenTabs>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+

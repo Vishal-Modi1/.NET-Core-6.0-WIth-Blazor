@@ -462,6 +462,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Users](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[ImageName] [varchar](200) NULL,
 	[FirstName] [varchar](150) NOT NULL,
 	[LastName] [varchar](150) NOT NULL,
 	[Email] [varchar](150) NOT NULL,
@@ -1305,7 +1306,7 @@ AS BEGIN
    
 END
 
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 14-02-2022 15:44:54 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 15-02-2022 15:34:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1427,6 +1428,7 @@ AS BEGIN
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
+
 
 
 /****** Object:  Trigger [dbo].[Trg_Company_InsertUserRolePermission]    Script Date: 03-12-2021 16:40:28 ******/

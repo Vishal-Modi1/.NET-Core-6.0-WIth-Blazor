@@ -296,7 +296,8 @@
                         <div class="col-3 d-flex flex-column">
                             <h5 class="d-flex justify-content-center">Status</h5>
                             <div class="d-flex justify-content-center">
-                                <span class="badge @(GetSchedulerStatusClass())">@(GetSchedulerStatusText())</span>
+                               
+                                 <RadzenBadge BadgeStyle="@GetSchedulerStatusClass()" Text="@GetSchedulerStatusText()" />
                             </div>
                         </div>
                     </div>

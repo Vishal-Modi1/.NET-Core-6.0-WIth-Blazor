@@ -23,5 +23,9 @@ namespace Service.Interface
         CurrentResponse ResetPassword(ResetPasswordVM resetPasswordVM);
 
         CurrentResponse GetFiltersValue(int roleId);
+
+        CurrentResponse FindById(long id);
+
+        CurrentResponse UpdateImageName(long id, string imageName);
     }
 }

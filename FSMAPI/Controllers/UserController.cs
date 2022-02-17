@@ -19,14 +19,17 @@ namespace FSMAPI.Controllers
         private readonly RandomPasswordGenerator _randomPasswordGenerator;
         private readonly RandomTextGenerator _randomTextGenerator;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly FileUploader _fileUploader;
 
-        public UserController(IUserService userService, ISendMailService sendMailService, IHttpContextAccessor httpContextAccessor)
+        public UserController(IUserService userService, ISendMailService sendMailService, 
+            IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
             _sendMailService = sendMailService;
             _randomPasswordGenerator = new RandomPasswordGenerator();
             _randomTextGenerator = new RandomTextGenerator();
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpGet]
@@ -124,6 +127,40 @@ namespace FSMAPI.Controllers
         public IActionResult GetFilters(int roleId)
         {
             CurrentResponse response = _userService.GetFiltersValue(roleId);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("findbyid")]
+        public IActionResult FindById(long id)
+        {
+            CurrentResponse response = _userService.FindById(id);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("uploadprofileimage")]
+        public async Task<IActionResult> UploadFileAsync()
+        {
+            if (!Request.HasFormContentType)
+            {
+                return Ok(false);
+            }
+
+            IFormCollection form = Request.Form;
+
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].FileName}.jpeg";
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage, form, fileName);
+
+            CurrentResponse response = new CurrentResponse();
+            response.Data = "false";
+
+            if (isFileUploaded)
+            {
+                response = _userService.UpdateImageName(Convert.ToInt32(form.Files[0].FileName), fileName);
+            }
 
             return Ok(response);
         }
