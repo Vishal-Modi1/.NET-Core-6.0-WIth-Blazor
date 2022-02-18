@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Scheduler;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AircraftSchedulerDetailController : ControllerBase
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;

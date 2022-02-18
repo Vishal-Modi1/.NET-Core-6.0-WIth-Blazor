@@ -60,7 +60,8 @@ namespace FSMAPI.Controllers
                     Phone = user.Phone,
                     RoleId = user.RoleId,
                     Id = user.Id,
-                    UserPermissionList = userRolePermissionsList
+                    UserPermissionList = userRolePermissionsList,
+                    ImageURL = user.ImageName
                 };
 
                 return Ok(response);

@@ -16,6 +16,7 @@ namespace DataModels.VM.Account
         public string CompanyName { get; set; }
         public int CompanyId { get; set; }
         public string ExternalId { get; set; }
+        public string ImageURL { get; set; }
         public Nullable<System.DateTime> DateofBirth { get; set; }
         public string Gender { get; set; }
         public List<UserRolePermissionDataVM> UserPermissionList { get; set; }

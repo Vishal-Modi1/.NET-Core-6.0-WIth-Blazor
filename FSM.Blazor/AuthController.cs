@@ -83,9 +83,10 @@ namespace FSM.Blazor
                   new Claim(ClaimTypes.Email, loginResponse.Email),
                   new Claim(CustomClaimTypes.AccessToken, loginResponse.AccessToken),
                   new Claim(CustomClaimTypes.UserId, loginResponse.Id.ToString()),
-                  new Claim(ClaimTypes.Role, JsonConvert.SerializeObject(loginResponse.RoleId)),
-                  new Claim(CustomClaimTypes.CompanyName, JsonConvert.SerializeObject(loginResponse.CompanyName)),
-                  new Claim(CustomClaimTypes.CompanyId, JsonConvert.SerializeObject(loginResponse.CompanyId))
+                  new Claim(ClaimTypes.Role, loginResponse.RoleId.ToString()),
+                  new Claim(CustomClaimTypes.CompanyName, loginResponse.CompanyName == null ? "" : loginResponse.CompanyName),
+                  new Claim(CustomClaimTypes.CompanyId, loginResponse.CompanyId.ToString()),
+                  new Claim(CustomClaimTypes.ProfileImageURL, loginResponse.ImageURL)
              };
 
                 _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);

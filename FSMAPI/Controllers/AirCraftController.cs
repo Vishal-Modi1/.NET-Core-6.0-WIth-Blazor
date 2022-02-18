@@ -7,6 +7,7 @@ using Service.Interface;
 using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
+using System.Security.Claims;
 
 namespace FSMAPI.Controllers
 {
@@ -143,6 +144,17 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
 
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("listdropdownvalues")]
+        public IActionResult ListActivityTypeDropDownValues()
+        {
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
+            CurrentResponse response = _airCraftService.ListAircraftDropdownValues(companyIdValue);
             return Ok(response);
         }
 

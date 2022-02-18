@@ -97,8 +97,9 @@ namespace FSM.Blazor.Data.User
             return response;
         }
 
-        public async Task<CurrentResponse> FindById(IHttpClientFactory httpClient, long id)
+        public async Task<CurrentResponse> FindById(IHttpClientFactory httpClient)
         {
+            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id"));
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findbyid?id={id}");
 
             return response;

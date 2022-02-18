@@ -16,5 +16,7 @@ namespace Service.Interface
         CurrentResponse IsAirCraftExist(int id, string tailNo);
         CurrentResponse GetFiltersValue(int companyId);
 
+        CurrentResponse ListAircraftDropdownValues(int companyId);
+
     }
 }

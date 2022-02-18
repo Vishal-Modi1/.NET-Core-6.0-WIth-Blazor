@@ -83,6 +83,7 @@ namespace Repository
         public DbSet<ModuleDetail> ModuleDetails { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+        public DbSet<UserPreference> UserPreferences { get; set; }
 
         public DbSet<CompanyVM> CompanyData { get; set; }
         public DbSet<ReservationDataVM> ReservationDataVM { get; set; }

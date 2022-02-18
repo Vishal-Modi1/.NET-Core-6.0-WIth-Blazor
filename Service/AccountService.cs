@@ -32,6 +32,8 @@ namespace Service
                     return _currentResponse;
                 }
 
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UserProfileImagePathPrefix}{user.ImageName}";
+
                 Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
 
                 if(company != null)

@@ -121,6 +121,20 @@ namespace FSM.Blazor.Data.Aircraft
             return airCraftVM;
         }
 
+        public async Task<List<DropDownLargeValues>> ListDropdownValues(IHttpClientFactory httpClient)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"aircraft/listdropdownvalues");
+
+            List<DropDownLargeValues> airCraftList = new List<DropDownLargeValues>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                airCraftList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return airCraftList;
+        }
+
         public async Task<CurrentResponse> IsAircraftExistAsync(IHttpClientFactory httpClient, long id, string tailNo)
         {
             string url = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";

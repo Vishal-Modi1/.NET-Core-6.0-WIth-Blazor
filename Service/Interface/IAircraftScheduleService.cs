@@ -17,5 +17,7 @@ namespace Service.Interface
 
         CurrentResponse EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM);
 
+        CurrentResponse ListActivityTypeDropDownValues(int roleId);
+
     }
 }

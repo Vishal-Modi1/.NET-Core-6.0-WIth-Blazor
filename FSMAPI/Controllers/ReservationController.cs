@@ -2,6 +2,7 @@
 using DataModels.VM.Common;
 using DataModels.VM.Reservation;
 using FSMAPI.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 
@@ -9,6 +10,7 @@ namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReservationController : ControllerBase
     {
         private readonly IReservationService _reservationService;

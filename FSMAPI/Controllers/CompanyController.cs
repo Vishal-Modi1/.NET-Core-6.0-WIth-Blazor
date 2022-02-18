@@ -4,11 +4,13 @@ using DataModels.VM.Company;
 using DataModels.VM.Common;
 using FSMAPI.Utilities;
 using DataModels.Constants;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;

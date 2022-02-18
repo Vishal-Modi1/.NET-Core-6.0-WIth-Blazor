@@ -28,6 +28,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAircraftScheduleService, AircraftScheduleService>();
             services.AddScoped<IAircraftScheduleDetailService, AircraftScheduleDetailService>();
             services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IUserPreferenceService, UserPreferenceService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -55,6 +56,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAircraftScheduleDetailRepository, AircraftScheduleDetailRepository>();
             services.AddScoped<IAircraftScheduleHobbsTimeRepository, AircraftScheduleHobbsTimeRepository>();
             services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IUserPreferenceRepository, UserPreferenceRepository>();
         }
     }
 }

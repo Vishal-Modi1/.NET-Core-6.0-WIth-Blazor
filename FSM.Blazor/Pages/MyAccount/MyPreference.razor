@@ -1,0 +1,58 @@
+﻿@using DataModels.VM.Common
+@using DataModels.VM.UserPreference
+@using FSM.Blazor.Data.MyAccount
+@using FSM.Blazor.Data.Aircraft
+@using FSM.Blazor.Data.AircraftSchedule
+@using Syncfusion.Blazor.Spinner
+
+<h3>MyPreference</h3>
+
+@inject DialogService DialogService
+@inject MyAccountService MyAccountService 
+@inject AircraftService AircraftService
+@inject AircraftSchedulerService AircraftSchedulerService
+
+@*<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>*@
+
+
+<RadzenTemplateForm Data="@userPreferenceVM" Submit="@((UserPreferenceVM args) => {  Submit(); })">
+
+    <input type="hidden" value="@userPreferenceVM.Id" name="Id" />
+
+    <RadzenFieldset Text="Preference Type">
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Preference Type" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                AllowFiltering="true" Class="w-100" Change="@(args => GetPreferenceValues(args))"
+                                Placeholder="Select Preference Type" Data=@preferenceTypesList TextProperty="Name"
+                                ValueProperty="Name" Name="PreferenceType" />
+                <RadzenRequiredValidator DefaultValue="0" Component="PreferenceType" 
+                Text="Please select preference type"  Style="position: relative">
+            </RadzenRequiredValidator>
+           
+
+             <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                             Multiple="true" Placeholder="Select..." Data=@aircraftList TextProperty="Name" ValueProperty="Id"
+                             Class="w-100" TValue="DropDownLargeValues" />
+
+            </div>
+        </div>
+
+    </RadzenFieldset>
+
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+            
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" Style="width: 120px" IsBusy=@isBusy BusyText="Saving ..." />
+            
+        </div>
+    </div>
+
+</RadzenTemplateForm>

@@ -69,6 +69,23 @@ namespace Service
             return _currentResponse;
         }
 
+        public CurrentResponse ListActivityTypeDropDownValues(int roleId)
+        {
+            try
+            {
+                List<DropDownValues> scheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
+                CreateResponse(scheduleActivitiesList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         private void SetAircraftEquipmentHobbsTime(SchedulerVM schedulerVM)
         {
             schedulerVM.AircraftEquipmentHobbsTimeList = new List<AircraftScheduleHobbsTime>();

@@ -353,7 +353,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
             if (response == null)
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft details added successfully. Something went wrong while uploading file!", "Please try again later.");
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went wrong while uploading file!", "Please try again later.");
                 NotificationService.Notify(message);
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
@@ -368,7 +368,7 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft details added successfully. Something went wrong while uploading file!", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went wrong while uploading file!", response.Message);
                 NotificationService.Notify(message);
             }
         }

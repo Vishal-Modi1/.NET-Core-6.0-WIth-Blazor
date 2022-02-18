@@ -44,7 +44,7 @@ namespace FSM.Blazor.Pages.MyAccount
         {
             isDisplayLoader = true;
 
-            CurrentResponse response = await UserService.FindById(_httpClient, 1);
+            CurrentResponse response = await UserService.FindById(_httpClient);
 
             NotificationMessage message;
 
@@ -70,24 +70,29 @@ namespace FSM.Blazor.Pages.MyAccount
             userVM.Country = userVM.Countries.Where(p => p.Id == userVM.CountryId).First().Name;
         }
 
-        public async Task UploadProfileImage()
+        private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            if (!string.IsNullOrWhiteSpace(userVM.ImageName))
+            NotificationMessage message;
+
+            if (response == null)
             {
-                byte[] bytes = Convert.FromBase64String(userVM.ImageName.Substring(userVM.ImageName.IndexOf(",") + 1));
-
-                ByteArrayContent data = new ByteArrayContent(bytes);
-
-                MultipartFormDataContent multiContent = new MultipartFormDataContent
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went wrong while uploading file!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                if (isCloseDialog)
                 {
-                   { data, "file", userVM.Id.ToString() }
-                };
+                    DialogService.Close(true);
+                }
 
-                CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
-
-               // ManageFileUploadResponse(response, "Aircraft Details", true);
-
-               // SetSaveButtonState(false);
+                message = new NotificationMessage().Build(NotificationSeverity.Success, summary, "");
+                NotificationService.Notify(message);
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went wrong while uploading file!", response.Message);
+                NotificationService.Notify(message);
             }
         }
 
@@ -110,6 +115,8 @@ namespace FSM.Blazor.Pages.MyAccount
                 };
 
             CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
+
+            ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
 
             isDisplayLoader = false;
         }

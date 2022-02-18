@@ -8,5 +8,6 @@
         public const string CompanyName = "CompanyName";
         public const string CompanyId = "CompanyId";
         public const string FullName = "FullName";
+        public const string ProfileImageURL = "ProfileImage";
     }
 }

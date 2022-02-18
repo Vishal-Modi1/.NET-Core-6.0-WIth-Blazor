@@ -78,5 +78,19 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
             return response;
         }
+
+        public async Task<List<DropDownValues>> ListActivityTypeDropDownValues(IHttpClientFactory httpClient)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"aircraftscheduler/listactivitytypedropdownvalues");
+
+            List<DropDownValues> activityList = new List<DropDownValues>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                activityList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+            }
+
+            return activityList;
+        }
     }
 }

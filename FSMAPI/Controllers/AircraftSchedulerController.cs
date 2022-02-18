@@ -3,6 +3,7 @@ using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using FSMAPI.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using System.Security.Claims;
@@ -11,6 +12,7 @@ namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AircraftSchedulerController : ControllerBase
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -86,6 +88,17 @@ namespace FSMAPI.Controllers
         {
             schedulerEndTimeDetailsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.EditEndTime(schedulerEndTimeDetailsVM);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("listactivitytypedropdownvalues")]
+        public IActionResult ListActivityTypeDropDownValues()
+        {
+            string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
+
+            CurrentResponse response = _aircraftScheduleService.ListActivityTypeDropDownValues(roleIdValue);
             return Ok(response);
         }
     }

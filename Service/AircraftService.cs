@@ -179,6 +179,23 @@ namespace Service
             return _currentResponse;
         }
 
+        public CurrentResponse ListAircraftDropdownValues(int companyId)
+        {
+            try
+            {
+                List<DropDownLargeValues> aircraftList = _airCraftRepository.ListDropDownValues(companyId);
+                CreateResponse(aircraftList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         private AircraftVM ToBusinessObject(Aircraft airCraft)
         {
             AircraftVM airCraftVM = new AircraftVM();
@@ -270,7 +287,6 @@ namespace Service
             try
             {
                 AircraftFilterVM aircraftFilterVM = new AircraftFilterVM();
-
 
                 if (companyId > 0)
                 {
