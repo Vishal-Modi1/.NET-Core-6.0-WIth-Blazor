@@ -8,6 +8,8 @@ using System.Linq.Expressions;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.VM.Account;
+using DataModels.VM.UserPreference;
+using DataModels.Enums;
 
 namespace Repository
 {
@@ -84,7 +86,7 @@ namespace Repository
                              on u.Id equals token.UserId
                              where token.Token == resetPasswordVM.Token
                              select u).FirstOrDefault();
-               
+
                 if (user != null)
                 {
                     user.Password = resetPasswordVM.Password;
@@ -108,7 +110,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                return _myContext.Users.Where(predicate).Select(p=> new DropDownLargeValues() {Id = p.Id, Name = p.FirstName + " " + p.LastName }).ToList();
+                return _myContext.Users.Where(predicate).Select(p => new DropDownLargeValues() { Id = p.Id, Name = p.FirstName + " " + p.LastName }).ToList();
             }
         }
 
@@ -122,7 +124,7 @@ namespace Repository
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{datatableParams.RoleId}";
 
                 list = _myContext.UserSearchList.FromSqlRaw<UserDataVM>(sql).ToList();
-               
+
                 return list;
 
             }
@@ -135,7 +137,7 @@ namespace Repository
             {
                 User user = _myContext.Users.Where(p => p.Id == id).FirstOrDefault();
 
-                if(user != null)
+                if (user != null)
                 {
                     user.IsDeleted = true;
                     _myContext.SaveChanges();
@@ -188,8 +190,23 @@ namespace Repository
                                      ImageName = user.ImageName,
                                      CountryId = userCountry.Id,
                                      CompanyId = userCompany.Id,
-                                     RoleId = role.Id,
+                                     RoleId = role.Id
+
                                  }).FirstOrDefault();
+
+                List<UserPreference> userPreferences = _myContext.UserPreferences.Where(p => p.UserId == id).ToList();
+                userVM.UserPreferences = new List<UserPreferenceVM>();
+                userPreferences.ForEach(p =>
+                {
+                    userVM.UserPreferences.Add(new UserPreferenceVM()
+                    {
+                        Id = p.Id,
+                        UserId = p.UserId,
+                        PreferenceType = (PreferenceType)Enum.Parse(typeof(PreferenceType), p.PreferenceType, true),
+                        ListPreferencesIds = p.PreferencesIds.Split(new char[] { ',' }).ToList(),
+
+                    });
+                });
 
                 return userVM;
             }

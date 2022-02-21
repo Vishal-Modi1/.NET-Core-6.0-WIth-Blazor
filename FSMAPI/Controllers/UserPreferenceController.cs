@@ -1,4 +1,5 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.Constants;
+using DataModels.VM.Common;
 using DataModels.VM.UserPreference;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,8 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(UserPreferenceVM userPreferenceVM)
         {
+            userPreferenceVM.UserId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
             CurrentResponse response = _userPreferenceService.Create(userPreferenceVM);
 
             return Ok(response);

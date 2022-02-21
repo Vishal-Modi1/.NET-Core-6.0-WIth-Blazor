@@ -149,7 +149,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("listdropdownvalues")]
-        public IActionResult ListActivityTypeDropDownValues()
+        public IActionResult ListAircraftDropdownValues()
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);

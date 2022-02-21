@@ -10,6 +10,8 @@ namespace Repository.Interface
     {
         UserPreference Create(UserPreference userPreference);
 
+        List<UserPreference> ListByUserId(long userId);
+
         //List<AircraftModel> List();
 
         //AircraftModel FindByCondition(Expression<Func<AircraftModel, bool>> predicate);

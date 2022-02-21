@@ -31,10 +31,13 @@ namespace FSMAPI.Controllers
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
+            string userId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            long userIdValue = userId == "" ? 0 : Convert.ToInt64(userId);
+
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
-            CurrentResponse response = _aircraftScheduleService.GetDetails(roleIdValue, companyIdValue, id);
+            CurrentResponse response = _aircraftScheduleService.GetDetails(roleIdValue, companyIdValue, id, userIdValue);
             return Ok(response);
         }
 

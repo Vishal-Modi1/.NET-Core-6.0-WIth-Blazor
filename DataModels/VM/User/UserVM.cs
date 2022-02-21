@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataModels.VM.Common;
+using DataModels.VM.UserPreference;
 
 namespace DataModels.VM.User
 {
@@ -56,6 +57,7 @@ namespace DataModels.VM.User
         public List<DropDownValues> Countries { get; set; }
         public List<DropDownValues> Companies { get; set; }
 
+        public List<UserPreferenceVM> UserPreferences { get; set; }
         public bool IsFromMyProfile { get; set; }
     }
 }

@@ -781,7 +781,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[UserPreferences](
-	[Id] [bigint] NOT NULL,
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[UserId] [bigint] NOT NULL,
 	[PreferenceType] [varchar](100) NOT NULL,
 	[PreferencesIds] [varchar](500) NULL,

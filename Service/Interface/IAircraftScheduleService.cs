@@ -5,7 +5,7 @@ namespace Service.Interface
 {
     public interface IAircraftScheduleService
     {
-        CurrentResponse GetDetails(int roleId, int companyId, long id);
+        CurrentResponse GetDetails(int roleId, int companyId, long id, long userId);
 
         CurrentResponse Create(SchedulerVM schedulerVM);
 
