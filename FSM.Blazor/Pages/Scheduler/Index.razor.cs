@@ -46,12 +46,15 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public UIOptions uiOptions = new UIOptions();
 
-
         DateTime currentDate = DateTime.Now;
         SchedulerFilter schedulerFilter = new SchedulerFilter();
 
+        private bool isDisplayLoader { get; set; } = false;
+        private bool isDisplayScheduler { get; set; } = false;
+
         protected override async Task OnInitializedAsync()
         {
+            isDisplayLoader = true;
             InitializeValues();
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
@@ -71,7 +74,14 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             if (firstRender)
             {
+                isDisplayScheduler = false;
+
                 await LoadDataAsync();
+
+                isDisplayScheduler = true;
+
+                isDisplayLoader = false;
+                base.StateHasChanged();
             }
         }
 
@@ -85,10 +95,21 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public async Task LoadDataAsync()
         {
-            List<DateTime> viewDates = ScheduleRef.GetCurrentViewDates();
+            isDisplayLoader = true;
+            base.StateHasChanged();
 
-            schedulerFilter.StartTime = viewDates.First();
-            schedulerFilter.EndTime = viewDates.Last();
+            if (ScheduleRef != null)
+            {
+                List<DateTime> viewDates = ScheduleRef.GetCurrentViewDates();
+
+                schedulerFilter.StartTime = viewDates.First();
+                schedulerFilter.EndTime = viewDates.Last();
+            }
+            else
+            {
+                schedulerFilter.StartTime = DateTime.Now.Date;
+                schedulerFilter.EndTime = DateTime.Now.Date;
+            }
 
             DataSource = await AircraftSchedulerService.ListAsync(_httpClient, schedulerFilter);
 
@@ -128,6 +149,8 @@ namespace FSM.Blazor.Pages.Scheduler
                     }
                 }
             });
+
+            isDisplayLoader = false;
 
             base.StateHasChanged();
         }
@@ -182,6 +205,17 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
         {
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler"))
+            {
+                await DialogService.OpenAsync<UnAuthorized>("Un Authorized",
+                  new Dictionary<string, object>() { { "UnAuthorizedMessage", "You are not authorized to create new reservation. Please contact to your administartor" } },
+                  new DialogOptions() { Width = "410px", Height = "165px" });
+
+                return;
+            }
+
+            isDisplayLoader = true;
+
             InitializeValues();
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, 0);
@@ -195,10 +229,14 @@ namespace FSM.Blazor.Pages.Scheduler
 
             args.Cancel = true;
             uiOptions.dialogVisibility = true;
+
+            isDisplayLoader = false;
         }
 
         public async Task OnEventClick(EventClickArgs<SchedulerVM> args)
         {
+            isDisplayLoader = true;
+
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, args.Event.Id);
             args.Cancel = true;
             uiOptions.dialogVisibility = true;
@@ -213,6 +251,8 @@ namespace FSM.Blazor.Pages.Scheduler
 
             uiOptions.isDisplayMainForm = true;
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
+
+            isDisplayLoader = false;
         }
 
         public async Task RefreshSchedulerDataSourceAsync(ScheduleOperations scheduleOperations)
@@ -242,7 +282,7 @@ namespace FSM.Blazor.Pages.Scheduler
             {
                 DataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.EndTime = schedulerVM.EndTime; });
             }
-           
+
             await ScheduleRef.RefreshEventsAsync();
             base.StateHasChanged();
         }
@@ -250,7 +290,6 @@ namespace FSM.Blazor.Pages.Scheduler
         private void CloseDialog()
         {
             uiOptions.dialogVisibility = false;
-            base.StateHasChanged();
         }
 
         private void OpenDialog()

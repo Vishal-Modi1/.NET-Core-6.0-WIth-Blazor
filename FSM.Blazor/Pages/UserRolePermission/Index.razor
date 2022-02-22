@@ -69,6 +69,10 @@
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="DisplayName" Title="Module"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="PermissionType" Title="Permission Type"></RadzenDataGridColumn>
 
+        @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+        {
+            <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="CompanyName" Title="Company"></RadzenDataGridColumn>
+        }
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
         {
             <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="IsAllowed">
@@ -113,7 +117,7 @@
         {
             message = "Are you sure you want to deny the ";
             title = "Deny Permission";
-            
+
             if (!isForWeb)
             {
                 title = "Deny Mobile App Permission";

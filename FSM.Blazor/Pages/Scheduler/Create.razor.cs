@@ -49,6 +49,13 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public bool isBusy;
 
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+
+        protected override async Task OnInitializedAsync()
+        {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+        }
+
         private async void OnValidSubmit()
         {
             uiOptions.isDisplayCheckOutOption = false;

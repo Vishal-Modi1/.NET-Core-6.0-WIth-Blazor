@@ -124,7 +124,7 @@ namespace FSM.Blazor.Pages.Account
                 }
                 else if (((int)response.Status) == 200)
                 {
-                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Reset Password", response.Message);
+                    message = new NotificationMessage().Build(NotificationSeverity.Success, "Reset Password", response.Message);
                     NotificationService.Notify(message);
                 }
                 else

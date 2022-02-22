@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataModels.VM.UserRolePermission
+﻿namespace DataModels.VM.UserRolePermission
 {
     public class UserRolePermissionDataVM
     {
@@ -14,6 +12,7 @@ namespace DataModels.VM.UserRolePermission
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string DisplayName { get; set; }
+        public string CompanyName { get; set; }
         public bool IsAllowed { get; set; }
         public bool IsAllowedForMobileApp { get; set; }
         public string Icon { get; set; }

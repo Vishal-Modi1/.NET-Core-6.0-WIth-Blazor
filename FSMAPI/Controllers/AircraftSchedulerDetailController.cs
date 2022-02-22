@@ -33,9 +33,9 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("checkout")]
-        public IActionResult Checkout([FromBody] long scheduleId)
+        public IActionResult Checkout(long scheduleId)
         {
             AircraftSchedulerDetailsVM aircraftScheduleDetailVM = new AircraftSchedulerDetailsVM();
             aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
@@ -46,9 +46,9 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("uncheckout")]
-        public IActionResult UnCheckout([FromBody] long scheduleId)
+        public IActionResult UnCheckout(long scheduleId)
         {
             CurrentResponse response = _aircraftScheduleDetailService.UnCheckOut(scheduleId);
 

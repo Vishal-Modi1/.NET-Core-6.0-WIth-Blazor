@@ -20,20 +20,18 @@ namespace FSM.Blazor.Data.AircraftSchedule
         {
             string jsonData = JsonConvert.SerializeObject(scheduleId);
 
-            string url = "aircraftschedulerdetail/checkout";
+            string url = "aircraftschedulerdetail/checkout?scheduleId="+scheduleId;
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;
         }
 
         public async Task<CurrentResponse> UnCheckOut(IHttpClientFactory httpClient, long scheduleId)
         {
-            string jsonData = JsonConvert.SerializeObject(scheduleId);
+            string url = "aircraftschedulerdetail/uncheckout?scheduleId=" + scheduleId;
 
-            string url = "aircraftschedulerdetail/uncheckout";
-
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;
         }
