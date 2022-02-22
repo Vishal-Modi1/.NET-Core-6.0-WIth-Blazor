@@ -1,0 +1,11 @@
+﻿@namespace FSM.Blazor.Pages.Dashboard
+@layout MainLayout
+@page "/"
+
+
+<PageTitle>Dashboard | Fly Manager </PageTitle>
+
+<AuthorizeView>
+
+<h4>Hello, @context.User.Identity.Name!</h4>
+</AuthorizeView>

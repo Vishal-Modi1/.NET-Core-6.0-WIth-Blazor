@@ -1,0 +1,47 @@
+﻿@using FSM.Blazor.Data.Common
+@inject MenuService MenuService
+@inject NavigationManager UriHelper
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+@inject IHttpClientFactory ClientFactory
+
+<RadzenSidebar @bind-Expanded="Expanded" Style=" top: 51px; width: 250px;transform: translateX(0px);">
+
+    <ChildContent>
+
+        <div class="profile clearfix">
+            <div class="profile_pic" style="width:35%;float:left;">
+                <RadzenImage Path=@profileImageURL
+                             onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                             Style="width:70%;background:#fff;margin-left:15%;z-index:1000;position:inherit;margin-top:20px;border:1px solid rgba(52,73,94,0.44);padding:4px;border-radius:50%" />
+
+            </div>
+            <div class="profile_info" style="padding:40px 10px 10px;width:65%;float:left">
+                <RadzenLink Path="/MyProfile" Text="@fullName" Style="font-size:14px;color:#fff;margin:0;font-weight:300" />
+
+            </div>
+        </div>
+        <hr>
+
+        <RadzenPanelMenu Style="margin-top:8px;">
+
+            @if (menuItems != null)
+            {
+                <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
+                @foreach (var category in menuItems)
+                {
+                    <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@("/" + category.Controller)" Icon="@category.FavIconStyle">
+                    </RadzenPanelMenuItem>
+                }
+
+                <RadzenPanelMenuItem Text="Log Out" Path="/Logout" Icon="open_in_new"></RadzenPanelMenuItem>
+            }
+
+        </RadzenPanelMenu>
+    </ChildContent>
+</RadzenSidebar>
+
+@code {
+
+
+}

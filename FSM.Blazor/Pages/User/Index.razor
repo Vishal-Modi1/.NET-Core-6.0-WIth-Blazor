@@ -1,0 +1,153 @@
+﻿@namespace FSM.Blazor.Pages.User
+@using DataModels.Enums
+@using FSM.Blazor.Data.User
+@using DataModels.VM.User
+@using Configuration;
+@using FSM.Blazor.Utilities;
+
+@inject UserService UserService
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavigationManager
+
+@page "/User"
+
+<PageTitle>User | Fly Manager </PageTitle>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Users Details</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" BusyText="Add New ..." IsBusy="@isBusyAddNewButton"
+            Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UserCreateDialog(0, "Create")) />
+        }
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <RadzenDropDown @bind-Value="@RoleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        @ref="roleFilter" TextProperty="Name" Placeholder="Select Role"
+                        Data="@RoleFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Name="RoleId" ValueProperty="Id" AllowClear="true">
+        </RadzenDropDown>
+    </div>
+
+    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    {
+        <div class="col-md-4">
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        TextProperty="Name" Placeholder="Select Company"
+                        Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Name="CompanyId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    <div class="col-md-4" style="padding-top:0.5%">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search User" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize" ShowPagingSummary="true"
+                AllowSorting="true" Data="@data" TItem="UserDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="UserDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="FirstName" Title="First Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="LastName" Title="Last Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="Email" Title="Email"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="UserRole" Title="User Role"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Visible="true" TItem="UserDataVM" Filterable="false" Title="Company Name" Property="CompanyName">
+
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="IsActive" Width="80px" Title="Is Active">
+
+            <Template Context="value">
+                <RadzenCheckBox TriState="false" TValue="bool" Change=@(args => OpenUpdateUserStatusDialog(args,value.FirstName, value.Id))
+                                Name="@("chkIsActive"+ value.Id)" @bind-Value="@(value.IsActive)" />
+
+            </Template>
+
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="UserDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => UserCreateDialog(data.Id, "Edit")) />
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@{
+    async Task OpenDeleteDialog(UserDataVM userDataVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @userDataVM.FirstName + "" +  @userDataVM.LastName </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(userDataVM.Id) " BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+
+    async Task OpenUpdateUserStatusDialog(bool? value, string userName, long id)
+    {
+        string message = "Are you sure, you want to activate ";
+        string title = "Actiavate";
+
+        if (value == false)
+        {
+            message = "Are you sure, you want to deactivate ";
+            title = "Deactivate";
+        }
+
+        var result = await DialogService.OpenAsync(title, ds =>
+    @<div>
+        <p class="mb-4"> @message <b> @userName </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                    {
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => 
+                        UpdateIsUserActiveAsync(value,id) " Class="mr-1" Style="width: 80px;" IsBusy="@isBusyUpdateStatusButton" BusyText="Updating ..." />
+                    }
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                    {
+                        <RadzenButton Text="No" Click="() => CloseUserStatusUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                    }
+
+                </div>
+            </div>
+        </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

@@ -1,0 +1,29 @@
+﻿
+<RadzenTabs RenderMode="TabRenderMode.Client">
+    <Tabs>
+        <RadzenTabsItem Text="Aircraft Times">
+
+            <AircraftEquipmentsTimes AircraftData=@AircraftData></AircraftEquipmentsTimes>
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Description">
+
+            <Description AircraftData=@AircraftData></Description>
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Equipments">
+
+            <FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index AircraftId=@AircraftData.Id>
+
+            </FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index>
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Specs">
+
+
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>

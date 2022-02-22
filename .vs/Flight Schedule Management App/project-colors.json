@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "d8abd86c-65e1-4d05-8f4d-21b33c13f3cd": {
+      "ProjectGuid": "d8abd86c-65e1-4d05-8f4d-21b33c13f3cd",
+      "DisplayName": "API1",
+      "ColorIndex": 0
+    },
+    "1316698c-ac7e-47e3-ab3b-2169b74c434f": {
+      "ProjectGuid": "1316698c-ac7e-47e3-ab3b-2169b74c434f",
+      "DisplayName": "PresentationLayer",
+      "ColorIndex": 1
+    },
+    "aa1941d9-71c0-493e-8954-f6faaed90ab0": {
+      "ProjectGuid": "aa1941d9-71c0-493e-8954-f6faaed90ab0",
+      "DisplayName": "ViewModels",
+      "ColorIndex": 2
+    },
+    "7a4db409-c12d-4a05-840c-f8d1fc1d1672": {
+      "ProjectGuid": "7a4db409-c12d-4a05-840c-f8d1fc1d1672",
+      "DisplayName": "DataModels",
+      "ColorIndex": 3
+    },
+    "b413ed59-22e3-4d07-b789-ba26b6a2b911": {
+      "ProjectGuid": "b413ed59-22e3-4d07-b789-ba26b6a2b911",
+      "DisplayName": "Repository",
+      "ColorIndex": 4
+    },
+    "af4e7fe1-5feb-47df-a326-32be694590e1": {
+      "ProjectGuid": "af4e7fe1-5feb-47df-a326-32be694590e1",
+      "DisplayName": "Service",
+      "ColorIndex": 5
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "ea75d60b-67d5-4d44-96dc-7033a3cd328d": {
+      "ProjectGuid": "ea75d60b-67d5-4d44-96dc-7033a3cd328d",
+      "DisplayName": "Configuration",
+      "ColorIndex": 6
+    },
+    "02ccb0f8-aeb7-41de-951d-b9d0e2459a18": {
+      "ProjectGuid": "02ccb0f8-aeb7-41de-951d-b9d0e2459a18",
+      "DisplayName": "WebApplication1",
+      "ColorIndex": 7
+    },
+    "facdd143-3fa7-44d6-99a6-6cc0673afae1": {
+      "ProjectGuid": "facdd143-3fa7-44d6-99a6-6cc0673afae1",
+      "DisplayName": "FSMAPI",
+      "ColorIndex": 8
+    },
+    "f6a0f01f-b259-45ee-b6a0-816ba6725530": {
+      "ProjectGuid": "f6a0f01f-b259-45ee-b6a0-816ba6725530",
+      "DisplayName": "PresentationLayer",
+      "ColorIndex": 9
+    },
+    "8d2fc407-52fe-484b-bc84-ca7e6ec2cd67": {
+      "ProjectGuid": "8d2fc407-52fe-484b-bc84-ca7e6ec2cd67",
+      "DisplayName": "FSM.Blazor",
+      "ColorIndex": 10
+    },
+    "ae93494f-d59a-4d30-9dfd-c2fd4b69b9f8": {
+      "ProjectGuid": "ae93494f-d59a-4d30-9dfd-c2fd4b69b9f8",
+      "DisplayName": "Blazor.Services",
+      "ColorIndex": 11
+    }
+  },
+  "NextColorIndex": 12
+}

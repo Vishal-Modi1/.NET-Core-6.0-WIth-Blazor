@@ -1,0 +1,130 @@
+﻿@namespace FSM.Blazor.Pages.Reservation
+@using DataModels.Enums
+@using FSM.Blazor.Data.AircraftSchedule
+@using FSM.Blazor.Data.Reservation
+@using DataModels.VM.Reservation
+@using Configuration;
+@using Syncfusion.Blazor.Popups;
+@using FSM.Blazor.Pages.Scheduler;
+
+@inject ReservationService ReservationService
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavManager
+@inject AircraftSchedulerService AircraftSchedulerService
+
+@page "/Reservation"
+<PageTitle>Reservation | Fly Manager </PageTitle>
+
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Reservations</h2>
+    </div>
+</div>
+
+<div class="row">
+
+    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    {
+         <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
+            <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
+                        TextProperty="Name" Placeholder="Select Company" style="width: 100%;"
+                        Data="@reservationFilterVM.Companies" Change="@(args =>  grid.Reload())"
+                        Name="CompanyId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
+    </div>
+
+    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+
+        <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
+                          @bind-Value="@startDate" Placeholder="Select Start Date"
+                          Change=@(args => OnStartDateChange(args))
+                          DateFormat="dd/MM/yyyy" Class="w-100" />
+    </div>
+
+    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+
+        <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
+                          @bind-Value="@endDate" Placeholder="Select End Date"
+                          Change=@(args => OnEndDateChange(args))
+                          DateFormat="dd/MM/yyyy" Class="w-100" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="ReservationDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="ReservationDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="ScheduleTitle" Filterable="false" Title="Title"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="StartDateTime" Filterable="false" Title="From"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="ReservationId" Sortable="false" Filterable="false" Title="Reservation Id"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="FlightStatus" Filterable="false" Title="FlightStatus" TextAlign="TextAlign.Center">
+            <Template Context="value">
+
+                @if (string.IsNullOrWhiteSpace(value.FlightStatus))
+                {
+                    <RadzenBadge BadgeStyle="BadgeStyle.Primary" Text="Scheduled" Style="width:88px;" />
+                }
+                else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
+                {
+                    <RadzenBadge BadgeStyle="BadgeStyle.Success" Text="Checked Out" Style="width:88px;" />
+                }
+                else
+                {
+                    <RadzenBadge BadgeStyle="BadgeStyle.Light" Text="Checked In" Style="width:88px;" />
+                }
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Sortable="false" Filterable="false" TItem="ReservationDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+
+                <RadzenButton Text="View" ButtonStyle="ButtonStyle.Primary" Click="@((args) => OpenSchedulerDialog(data.Id))">
+                </RadzenButton>
+
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" ShowCloseIcon="true">
+
+    <DialogTemplates>
+        <Header> <h5>Schedule Appointment</h5> </Header>
+        <Content>
+
+            <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
+            InitializeValuesParentEvent="@InitializeValues"
+            OpenDialogParentEvent = "@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
+            RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+            CloseDialogParentEvent = "@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
+            ></Create>
+           
+        </Content>
+    </DialogTemplates>
+
+</SfDialog>

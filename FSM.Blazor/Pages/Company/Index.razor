@@ -1,0 +1,92 @@
+﻿@namespace FSM.Blazor.Pages.Company
+@using DataModels.Enums
+@using FSM.Blazor.Data.Company
+@using DataModels.VM.Company
+@using FSM.Blazor.Utilities;
+@using Configuration;
+
+@inject NavigationManager NavManager
+@inject CompanyService CompanyService
+@layout MainLayout
+@inject DialogService DialogService
+
+@page "/Company"
+
+<PageTitle>Company | Fly Manager </PageTitle>
+
+@{
+    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+    {
+        <div class="row mb-4">
+            <div class="col">
+                <h2 style="float:left">Manage Companies Details</h2>
+                <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => CompanyCreateDialog(new CompanyVM())) />
+            </div>
+        </div>
+    }
+}
+
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Company" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="CompanyVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="CompanyVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Property="Name" Title="Name"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="Address" Title="Address"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="TimeZone" Title="TimeZone"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="ContactNo" Title="Contact No"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="CompanyVM" Property="Id" Title="Actions">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => CompanyCreateDialog(data)) />
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@{
+    async Task OpenDeleteDialog(CompanyVM companyVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @companyVM.Name </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                    {
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(companyVM.Id) " Class="mr-1" Style="width: 80px;" />
+                    }
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                    {
+                        <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                    }
+                </div>
+            </div>
+        </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

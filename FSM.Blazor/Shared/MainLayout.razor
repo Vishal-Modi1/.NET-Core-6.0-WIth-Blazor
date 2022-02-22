@@ -1,0 +1,57 @@
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inject DialogService DialogService
+
+<PageTitle>FSM.Blazor</PageTitle>
+
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+
+<RadzenLayout>
+
+    <RadzenHeader>
+        <ChildContent>
+            <div class="row justify-content-start align-items-center">
+                <div class="col-5 d-flex align-items-center">
+                    <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
+                    </RadzenSidebarToggle>
+                    <RadzenLabel Text="Flight Schedule Management">
+                    </RadzenLabel>
+                </div>
+                <div class="col-7 d-flex align-items-center justify-content-end"  style="margin-left:-60px;">
+                    <RadzenMenu Click=@(args => ManageMenuClickEvent(args))>
+                        <RadzenMenuItem Text="@userFullName" Icon="account_circle" >
+                            <RadzenMenuItem Text="My Profile" Path="" Icon="manage_accounts"></RadzenMenuItem>
+                            <RadzenMenuItem Text="Change Password" Icon="vpn_key"></RadzenMenuItem>
+                            <RadzenMenuItem Text="Log Out" Path="/logout" Icon="open_in_new"></RadzenMenuItem>
+                        </RadzenMenuItem>
+                    </RadzenMenu>
+                </div>
+            </div>
+        </ChildContent>
+    </RadzenHeader>
+
+    <RadzenBody @bind-Expanded="@bodyExpanded">
+        <ChildContent>
+            <RadzenContentContainer Name="main">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 pt-4 pb-5 px-3 px-lg-5">
+                            @Body
+
+                        </div>
+                    </div>
+                </div>
+            </RadzenContentContainer>
+        </ChildContent>
+    </RadzenBody>
+
+    <NavMenu Expanded="@sidebarExpanded" />
+
+</RadzenLayout>

@@ -1,0 +1,86 @@
+﻿@namespace FSM.Blazor.Pages.Aircraft
+@using Configuration;
+@layout MainLayout
+@using DataModels.VM.Aircraft
+@using FSM.Blazor.Utilities
+@using FSM.Blazor.Data.Aircraft;
+@using DataModels.Enums;
+
+@inject AircraftService AircraftService
+@inject Radzen.DialogService DialogService
+@inject NavigationManager NavManager
+
+@page "/Aircraft"
+
+<PageTitle>Aircraft | Fly Manager </PageTitle>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Aircrafts Details</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat,PermissionType.Create, @moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" BusyText="Add New ..." IsBusy=@isBusyAddNewButton
+                      ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
+        }
+
+    </div>
+</div>
+
+<div class="row">
+
+    @*    <div class="col-md-4">
+        <RadzenDropDown @bind-Value="@aircraftStatus" Style="width:100%; margin: 8px 4px;" TValue="bool"
+        TextProperty="Name" Placeholder="Select Role"
+        Data="@(new List(){new DropdownValues(){ Id = "1", Text = "YourText"}})" Change="@(args =>  grid.Reload())"
+        Name="RoleId" ValueProperty="Id" AllowClear="true">
+
+        </RadzenDropDown>
+        </div>
+    *@
+
+    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    {
+        <div class="col-md-4">
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
+                        Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Name="CompanyId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    <div class="col-md-4" style="padding-top:0.5%">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Aircraft" @bind-Value="@searchText" />
+    </div>
+
+</div>
+<RadzenDataList WrapItems="true" @ref="grid" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
+                ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
+                PageSize="@pageSize" Count="@count"
+                PageChanged="@PageChanged" LoadData="@LoadData"
+                PageSizeOptions="@pageSizeOptions">
+
+    <Template Context="airCraftVM">
+        <RadzenCard Style="width:300px;cursor:pointer" @onclick="@((args) => OpenDetailPage(airCraftVM.Id))">
+            <div class="d-flex flex-row align-items-center">
+                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(airCraftVM.ImagePath)" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
+                <div>
+                    <h4 class="mb-0">@(airCraftVM.ModelName + " " + airCraftVM.MakeName)</h4>
+                    <div>@airCraftVM.Category</div>
+                    <div style="font-size: .8em">@(airCraftVM.CompanyName)</div>
+                </div>
+            </div>
+            <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+            <div class="row">
+                <div class="col-md-6 text-truncate">
+                    <b>@(airCraftVM.TailNo)</b>
+                </div>
+                <div class="col-md-6 text-right">
+                    <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", airCraftVM.CompanyName)}") />
+                </div>
+            </div>
+        </RadzenCard>
+    </Template>
+</RadzenDataList>

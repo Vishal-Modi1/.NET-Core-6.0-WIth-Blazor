@@ -1,0 +1,72 @@
+﻿@using DataModels.VM.Company
+@using FSM.Blazor.Data.Company
+
+@inject Radzen.DialogService dialogService
+@inject CompanyService CompanyService
+@inject DialogService DialogService
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+<RadzenTemplateForm Data="@companyData" Submit="@((CompanyVM args) => {  Submit(args); })">
+
+    <input type="hidden" value="@companyData.Id" name="Id" />
+
+    <RadzenFieldset Text="Purchase Info">
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Name" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@companyData.Name" Placeholder="Please enter name" />
+                <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Address" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextArea style="width: 100%;" Name="Address" @bind-Value="@companyData.Address" Placeholder="Please enter address" />
+                <RadzenRequiredValidator Component="Address" Text="Address is required" Popup="@isPopup" Style="position: relative" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Address" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
+                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select timezone" Data=@timeZoneInfos TextProperty="DisplayName"
+                                ValueProperty="StandardName" Name="TimeZone" @bind-Value="@companyData.TimeZone" />
+                <RadzenRequiredValidator Component="TimeZone" Text="TimeZone is required" Popup="@isPopup" Style="position: relative" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Contact No" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="ContactNo" @bind-Value="@companyData.ContactNo" Placeholder="Please enter contact" />
+            </div>
+        </div>
+
+    </RadzenFieldset>
+
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />
+            <RadzenButton Click="@((args) => dialogService.Close(false))"
+                          ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+        </div>
+    </div>
+
+</RadzenTemplateForm>

@@ -1,0 +1,64 @@
+﻿@using DataModels.VM.AircraftEquipment;
+@using FSM.Blazor.Data.Aircraft.AircraftEquipment;
+
+@inject AircraftEquipmentService AircraftEquipmentService
+@inject DialogService DialogService
+
+<div class="row mb-4">
+    <div class="col">
+       <h2 style="float:left">Manage Aircraft Equipment Details</h2>
+        <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" 
+        BusyText="Add New ..." IsBusy="@isBusyAddNewButton" Click=@(() => AircraftEquipmentCreateDialog(0, "Create")) />
+    </div>
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                AllowSorting="true" Data="@data" TItem="AircraftEquipmentDataVM"
+                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true" 
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="AircraftEquipmentDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="AircraftEquipmentDataVM" Filterable="false"  Property="Status" Title="Status"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AircraftEquipmentDataVM" Filterable="false" Property="Item" Title="Item"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AircraftEquipmentDataVM" Filterable="false" Property="Classification" Title="Classification"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AircraftEquipmentDataVM" Filterable="false" Property="Make" Title="Make"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AircraftEquipmentDataVM" Filterable="false" Property="Model" Title="Model"></RadzenDataGridColumn>
+       
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="AircraftEquipmentDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => AircraftEquipmentCreateDialog(data.Id, "Edit")) />
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+@{
+    async Task OpenDeleteDialog(AircraftEquipmentDataVM aircraftEquipmentDataVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @aircraftEquipmentDataVM.Item </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(aircraftEquipmentDataVM.Id)" Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

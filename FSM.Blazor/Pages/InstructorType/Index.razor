@@ -1,0 +1,90 @@
+﻿@namespace FSM.Blazor.Pages.InstructorType
+@using DataModels.Enums
+@using FSM.Blazor.Data.InstructorType
+@using DataModels.VM.InstructorType
+@using Configuration;
+
+@inject InstructorTypeService InstructorTypeService
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavManager
+
+@page "/InstructorType"
+
+
+<PageTitle>Instructor Type | Fly Manager </PageTitle>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Instructor Types Details</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
+            Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM(), "Create")) />
+        }
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Instructor Type" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="InstructorTypeVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="InstructorTypeVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="InstructorTypeVM" Property="Name" Filterable="false" Title="Name"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="InstructorTypeVM" Property="Id" Title="Actions">
+            <Template Context="data">
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data, "Edit")) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+                }
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@{
+    async Task OpenDeleteDialog(InstructorTypeVM instructorTypeVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @instructorTypeVM.Name </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(instructorTypeVM.Id) " Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

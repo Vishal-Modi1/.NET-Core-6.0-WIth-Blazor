@@ -1,0 +1,157 @@
+﻿@using FSM.Blazor.Data.User
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Spinner
+
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavManager
+@inject UserService UserService
+
+@page "/MyProfile"
+
+<PageTitle>My Profile | Fly Manager </PageTitle>
+<style>
+
+    .description {
+        font-size: 14px;
+        font-weight: 530;
+    }
+
+    .rz-fileupload-row {
+        display: none
+    }
+
+    .rz-fileupload {
+        outline: none;
+        margin-bottom: 0;
+    }
+
+    .rz-fileupload-buttonbar {
+        position: absolute;
+        top: 90%;
+        left: 24%;
+        opacity: 0.8;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        size: 53px;
+    }
+
+   
+</style>
+
+
+<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
+<div class="m-4">
+    <div class="card">
+        <div class="row g-0">
+
+            <div class="col-sm-3" style="position: relative;width: 50%;">
+
+                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                Path="@userVM.ImageName" class="card-img-top h-100" />
+
+                <RadzenFileInput Style="outline:none" @bind-Value=@userVM.ImageName
+                                 Change=@(args => OnChangeAsync()) TValue="string" />
+
+            </div>
+            <div class="col-sm-3">
+                <div class="card-body">
+                    <div>
+                        <label class="description">Name : </label> @userVM.FirstName  @userVM.LastName
+                    </div>
+
+                    <div>
+                        <label class="description">Email : </label> @userVM.Email
+                    </div>
+                    <div>
+                        <label class="description">Phone No : </label> @userVM.Phone
+                    </div>
+                    <br />
+
+                    <div>
+                        <RadzenButton Text="Update Details" Click="@OpenUpdateProfileDialog"></RadzenButton>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card-body">
+                    <div>
+                        <label class="description">Date of Birth : </label> @(userVM.DateofBirth != null ? userVM.DateofBirth.Value.ToShortDateString() : "" )
+                    </div>
+
+                    <div>
+                        <label class="description">Gender : </label> @userVM.Gender
+                    </div>
+
+                    <div>
+                        <label class="description">Country : </label> @userVM.Country
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="card-body">
+                    <div>
+                        <label class="description">Role : </label> @userVM.Role
+                    </div>
+
+
+                    <div>
+                        <label class="description">Company Name : </label> @userVM.CompanyName
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="card-header" style="margin-top:5px">
+            <RadzenTabs RenderMode="TabRenderMode.Client">
+                <Tabs>
+                    <RadzenTabsItem Text="My Preference">
+
+                        <MyPreference UserPreferencesList=@userVM.UserPreferences></MyPreference>
+
+                    </RadzenTabsItem>
+
+                    <RadzenTabsItem Text="Description">
+
+
+                    </RadzenTabsItem>
+
+                    <RadzenTabsItem Text="Equipments">
+
+
+                    </RadzenTabsItem>
+
+                    <RadzenTabsItem Text="Specs">
+
+
+                    </RadzenTabsItem>
+                </Tabs>
+            </RadzenTabs>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
