@@ -4,6 +4,9 @@ using Radzen;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using DataModels.VM.Common;
+using Utilities;
+using FSM.Blazor.Utilities;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 {
@@ -21,10 +24,18 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         [Inject]
         NotificationService NotificationService { get; set; }
 
-        IList<AircraftEquipmentDataVM> data;
+        List<AircraftEquipmentDataVM> data;
         int count;
         bool isLoading, isBusyAddNewButton;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
+
+        string timeZone = "";
+
+        protected override void OnInitialized()
+        {
+            timeZone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            base.OnInitialized();
+        }
 
         async Task LoadData(LoadDataArgs args)
         {
@@ -34,6 +45,13 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             datatableParams.AircraftId = AircraftId;
 
             data = await AircraftEquipmentService.ListAsync(_httpClient, datatableParams);
+
+            data.ForEach(p =>
+            {
+                p.LogEntryDate = DateConverter.ToLocal(p.LogEntryDate.Value, timeZone);
+                p.ManufacturerDate = DateConverter.ToLocal(p.ManufacturerDate.Value, timeZone);
+            });
+
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
         }
@@ -69,6 +87,24 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             SetAddNewButtonState(true);
 
             AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
+
+            if (airCraftEquipmentsVM.LogEntryDate == null)
+            {
+                airCraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+            }
+            else
+            {
+                airCraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(airCraftEquipmentsVM.LogEntryDate.Value, timeZone);
+            }
+
+            if (airCraftEquipmentsVM.ManufacturerDate == null)
+            {
+                airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+            }
+            else
+            {
+                airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(airCraftEquipmentsVM.ManufacturerDate.Value, timeZone);
+            }
 
             SetAddNewButtonState(false);
 

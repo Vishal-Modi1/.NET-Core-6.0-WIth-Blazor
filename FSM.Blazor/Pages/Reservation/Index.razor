@@ -6,12 +6,14 @@
 @using Configuration;
 @using Syncfusion.Blazor.Popups;
 @using FSM.Blazor.Pages.Scheduler;
+@using Syncfusion.Blazor.Spinner;
 
 @inject ReservationService ReservationService
 @layout MainLayout
 @inject DialogService DialogService
 @inject NavigationManager NavManager
 @inject AircraftSchedulerService AircraftSchedulerService
+@inject AuthenticationStateProvider authenticationStateProvider
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
@@ -23,9 +25,14 @@
     </div>
 </div>
 
+<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
 <div class="row">
 
-    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
          <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
@@ -36,12 +43,12 @@
         </div>
     }
 
-    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
     </div>
 
-    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
 
         <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
                           @bind-Value="@startDate" Placeholder="Select Start Date"
@@ -49,7 +56,7 @@
                           DateFormat="dd/MM/yyyy" Class="w-100" />
     </div>
 
-    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
 
         <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
                           @bind-Value="@endDate" Placeholder="Select End Date"

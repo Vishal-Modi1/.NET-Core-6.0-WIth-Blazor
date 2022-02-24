@@ -29,7 +29,7 @@
         </RadzenDropDown>
     </div>
 
-    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -69,7 +69,7 @@
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="DisplayName" Title="Module"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="PermissionType" Title="Permission Type"></RadzenDataGridColumn>
 
-        @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
             <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="CompanyName" Title="Company"></RadzenDataGridColumn>
         }

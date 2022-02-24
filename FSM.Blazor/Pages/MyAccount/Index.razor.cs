@@ -23,9 +23,6 @@ namespace FSM.Blazor.Pages.MyAccount
         [Inject]
         NotificationService NotificationService { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         #endregion

@@ -3,6 +3,7 @@
 
 @inject AircraftEquipmentService AircraftEquipmentService
 @inject DialogService DialogService
+@inject AuthenticationStateProvider authenticationStateProvider
 
 <RadzenTemplateForm Data="@AirCraftEquipmentsVM" Submit="@((AircraftEquipmentsVM args) => {  Submit(args); })">
 

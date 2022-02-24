@@ -1,10 +1,11 @@
-﻿using FSMAPI.Utilities;
+﻿using Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.Constants;
+using FSMAPI.Utilities;
 
 namespace FSMAPI.Controllers
 {

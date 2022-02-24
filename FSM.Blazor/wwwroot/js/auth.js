@@ -5,7 +5,8 @@
     // Data to send
     var data = {
         email: email,
-        password: password
+        password: password,
+        timeZone: GetTimeZone()
     };
 
 
@@ -66,4 +67,12 @@ export function SignOut(redirect) {
 
     // Call API
     xhr.send();
+}
+
+export function GetTimeZone() {
+
+    const split = new Date().toString().split(" ");
+    const timeZone = split.slice(-3).join(' ')
+
+    return timeZone;
 }

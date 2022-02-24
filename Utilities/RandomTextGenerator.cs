@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace FSMAPI.Utilities
+namespace Utilities
 {
     public class RandomTextGenerator
     {

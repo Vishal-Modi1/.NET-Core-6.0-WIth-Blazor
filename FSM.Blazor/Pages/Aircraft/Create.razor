@@ -3,6 +3,7 @@
 @using FSM.Blazor.Data.AircraftMake
 @using FSM.Blazor.Data.AircraftModel
 @using FSM.Blazor.Utilities;
+@using DataModels.Enums;
 
 @inject AircraftService AircraftService
 @inject AircraftMakeService AircraftMakeService
@@ -27,7 +28,7 @@
                             <RadzenLabel Text="Company" />
                         </div>
                         <div class="col-md-4">
-                            @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+                            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                             {
                                 <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                                             TextProperty="Name" Placeholder="Select Company"

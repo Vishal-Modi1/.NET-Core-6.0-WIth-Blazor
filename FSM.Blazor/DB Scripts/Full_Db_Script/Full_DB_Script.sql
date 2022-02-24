@@ -1346,7 +1346,7 @@ AS BEGIN
      
 END  
 
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 15-02-2022 15:34:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 24-02-2022 12:33:32 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1377,14 +1377,14 @@ AS BEGIN
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
-		LEFT JOIN  Companies cp on u.CompanyId = cp.Id  
+		LEFT JOIN  Companies cp on a.CompanyId = cp.Id   
 
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@CompanyId,0)=0)
-				OR (U.CompanyId = @CompanyId))
+				OR (cp.Id = @CompanyId))
 				AND
 				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
 				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
@@ -1441,14 +1441,14 @@ AS BEGIN
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
-		LEFT JOIN  Companies cp on u.CompanyId = cp.Id  
+		LEFT JOIN  Companies cp on a.CompanyId = cp.Id  
 
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@CompanyId,0)=0)
-				OR (U.CompanyId = @CompanyId))
+				OR (cp.Id = @CompanyId))
 				AND
 				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
 				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
@@ -1468,6 +1468,7 @@ AS BEGIN
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
+
 
 
 

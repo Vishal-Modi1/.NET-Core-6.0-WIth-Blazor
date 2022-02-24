@@ -9,5 +9,6 @@
         public const string CompanyId = "CompanyId";
         public const string FullName = "FullName";
         public const string ProfileImageURL = "ProfileImage";
+        public const string TimeZone = "TimeZone";
     }
 }

@@ -69,14 +69,14 @@ namespace FSM.Blazor.Utilities
             return isAllowed;
         }
 
-        public async Task<bool> IsSuperAdmin(Task<AuthenticationState> authenticationState)
+        public async Task<bool> IsValidUser(Task<AuthenticationState> authenticationState, UserRole userRole)
         {
             var cp = (await authenticationState).User;
 
             string claimValue = cp.Claims.Where(c => c.Type == ClaimTypes.Role)
                                .Select(c => c.Value).SingleOrDefault();
 
-            return Convert.ToInt32(claimValue) == ((int)UserRole.SuperAdmin);
+            return Convert.ToInt32(claimValue) == ((int)userRole);
         }
     }
 }

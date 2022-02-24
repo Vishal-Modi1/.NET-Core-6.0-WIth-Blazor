@@ -9,6 +9,8 @@ using FSM.Blazor.Extensions;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
 using DataModels.Enums;
+using Utilities;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -23,6 +25,7 @@ namespace FSM.Blazor.Pages.Scheduler
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
+        #region Params
         [Parameter]
         public SchedulerVM schedulerVM { get; set; }
 
@@ -47,12 +50,16 @@ namespace FSM.Blazor.Pages.Scheduler
         [Parameter]
         public EventCallback LoadDataParentEvent { get; set; }
 
+        #endregion
+
         public bool isBusy;
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
+        string timezone = "";
 
         protected override async Task OnInitializedAsync()
         {
+            timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
         }
 
@@ -71,7 +78,10 @@ namespace FSM.Blazor.Pages.Scheduler
 
             isBusy = true;
 
-            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM);
+            //schedulerVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
+            //schedulerVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
+
+            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
 
             NotificationMessage message;
 
@@ -142,8 +152,8 @@ namespace FSM.Blazor.Pages.Scheduler
             SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
 
             schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
-            schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
-            schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
+            schedulerEndTimeDetailsVM.EndTime =  DateConverter.ToUTC(schedulerVM.EndTime, timezone);
+            schedulerEndTimeDetailsVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
 
             CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(_httpClient, schedulerEndTimeDetailsVM);

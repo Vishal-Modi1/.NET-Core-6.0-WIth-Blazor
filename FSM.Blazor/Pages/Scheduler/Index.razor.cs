@@ -14,6 +14,8 @@ using Newtonsoft.Json;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
 using DataModels.Enums;
+using Utilities;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -46,7 +48,9 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public UIOptions uiOptions = new UIOptions();
 
+        string timezone = "";
         DateTime currentDate = DateTime.Now;
+
         SchedulerFilter schedulerFilter = new SchedulerFilter();
 
         private bool isDisplayLoader { get; set; } = false;
@@ -54,6 +58,9 @@ namespace FSM.Blazor.Pages.Scheduler
 
         protected override async Task OnInitializedAsync()
         {
+            timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+
+            DateTime currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
             isDisplayLoader = true;
             InitializeValues();
 
@@ -107,14 +114,27 @@ namespace FSM.Blazor.Pages.Scheduler
             }
             else
             {
-                schedulerFilter.StartTime = DateTime.Now.Date;
-                schedulerFilter.EndTime = DateTime.Now.Date;
+                schedulerFilter.StartTime = DateTime.UtcNow.Date;
+                schedulerFilter.EndTime = DateTime.UtcNow.Date;
+            }
+
+            if (schedulerFilter.StartTime != null)
+            {
+                schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, timezone);
+            }
+
+            if (schedulerFilter.EndTime != null)
+            {
+                schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
             }
 
             DataSource = await AircraftSchedulerService.ListAsync(_httpClient, schedulerFilter);
 
             DataSource.ForEach(x =>
             {
+                x.StartTime = DateConverter.ToLocal(x.StartTime, timezone);
+                x.EndTime = DateConverter.ToLocal(x.EndTime, timezone);
+
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
                     if (CurrentView == View.Day || CurrentView == View.Week || CurrentView == View.Month)
@@ -149,6 +169,16 @@ namespace FSM.Blazor.Pages.Scheduler
                     }
                 }
             });
+
+            if (schedulerFilter.StartTime != null)
+            {
+                schedulerFilter.StartTime = DateConverter.ToLocal(schedulerFilter.StartTime, timezone);
+            }
+
+            if (schedulerFilter.EndTime != null)
+            {
+                schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
+            }
 
             isDisplayLoader = false;
 
@@ -238,6 +268,20 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayLoader = true;
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, args.Event.Id);
+
+            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
+            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
+
+            if (schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime != null)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, timezone);
+            }
+
+            if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
+            }
+
             args.Cancel = true;
             uiOptions.dialogVisibility = true;
 

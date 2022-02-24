@@ -6,6 +6,7 @@ using DataModels.VM.Account;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 using DataModels.Entities;
+using Utilities;
 
 namespace FSMAPI.Controllers
 {
@@ -38,7 +39,7 @@ namespace FSMAPI.Controllers
         public IActionResult Login([FromBody] LoginVM loginVM)
         {
             loginVM.Password = loginVM.Password.Encrypt();
-            CurrentResponse response = _accountService.GetValidUser(loginVM);//try now 
+            CurrentResponse response = _accountService.GetValidUser(loginVM);
 
             User user = (User)(response.Data);
 
@@ -48,6 +49,13 @@ namespace FSMAPI.Controllers
                 List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
                 string accessToken = _jWTTokenGenerator.Generate(user.Id, user.CompanyId, user.RoleId);
+                
+                string timeZone = "";
+
+                if(!string.IsNullOrWhiteSpace(loginVM.TimeZone))
+                {
+                    timeZone =  loginVM.TimeZone.Substring(1, loginVM.TimeZone.Length - 2);
+                }
 
                 response.Data = new LoginResponseVM
                 {
@@ -61,7 +69,8 @@ namespace FSMAPI.Controllers
                     RoleId = user.RoleId,
                     Id = user.Id,
                     UserPermissionList = userRolePermissionsList,
-                    ImageURL = user.ImageName
+                    ImageURL = user.ImageName,
+                    LocalTimeZone = timeZone
                 };
 
                 return Ok(response);

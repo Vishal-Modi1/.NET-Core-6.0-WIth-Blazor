@@ -17,6 +17,7 @@
 @using Syncfusion.Blazor.Popups;
 @using DataModels.Entities;
 @using DataModels.VM;
+@using Utilities;
 
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AircraftService AircraftService
@@ -25,12 +26,10 @@
 @inject NotificationService NotificationService
 @inject DialogService DialogService
 @inject AircraftSchedulerDetailService AircraftSchedulerDetailService
+@inject AuthenticationStateProvider authenticationStateProvider
 
-
-      @if (uiOptions.isDisplayMainForm)
+@if (uiOptions.isDisplayMainForm)
 {
-
-    @*<EditForm Model="schedulerVM" OnValidSubmit="@OnValidSubmit">*@
 
     <RadzenTemplateForm Data="@schedulerVM" Submit="@((SchedulerVM args) => {  OnValidSubmit(); })">
 

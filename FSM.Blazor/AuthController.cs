@@ -77,7 +77,7 @@ namespace FSM.Blazor
                 LoginResponseVM loginResponse = JsonConvert.DeserializeObject<LoginResponseVM>(response.ToString());
 
                 var userClaims = new List<Claim>()
-             {
+                {
                   new Claim(ClaimTypes.Name, loginResponse.FirstName),
                   new Claim(CustomClaimTypes.FullName, loginResponse.FirstName + " " + loginResponse.LastName),
                   new Claim(ClaimTypes.Email, loginResponse.Email),
@@ -86,8 +86,9 @@ namespace FSM.Blazor
                   new Claim(ClaimTypes.Role, loginResponse.RoleId.ToString()),
                   new Claim(CustomClaimTypes.CompanyName, loginResponse.CompanyName == null ? "" : loginResponse.CompanyName),
                   new Claim(CustomClaimTypes.CompanyId, loginResponse.CompanyId.ToString()),
-                  new Claim(CustomClaimTypes.ProfileImageURL, loginResponse.ImageURL)
-             };
+                  new Claim(CustomClaimTypes.ProfileImageURL, loginResponse.ImageURL),
+                  new Claim(CustomClaimTypes.TimeZone, loginResponse.LocalTimeZone)
+               };
 
                 _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
 
