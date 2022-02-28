@@ -68,6 +68,11 @@
     .e-schedule .e-timeline-month-view .e-appointment.checkedin {
         background: #B8B8B8;
     }
+    .e-dialog
+    {
+        max-height:588px!important;
+    }
+    
 
 </style>
 
@@ -118,7 +123,7 @@
     </SfSchedule>
 }
 
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" Height="auto" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility"  AllowDragging="true" IsModal="true" Width="624px" Height="auto" ShowCloseIcon="true">
 
     <DialogTemplates>
         <Header> <h5>Schedule Appointment</h5> </Header>

@@ -28,6 +28,15 @@
 @inject AircraftSchedulerDetailService AircraftSchedulerDetailService
 @inject AuthenticationStateProvider authenticationStateProvider
 
+
+<style>
+    .rz-textbox, .rz-dropdown
+    {
+        margin-bottom:0;
+    }
+</style>
+    
+
 @if (uiOptions.isDisplayMainForm)
 {
 
@@ -584,7 +593,7 @@ else
 
                 AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
                 <tr>
-                    <td class="e-textlabel d-flex align-items-start">@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
+                    <td>@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
                     <td>
 
                         @schedulerVM.AircraftEquipmentsTimeList[index].Hours

@@ -17,6 +17,11 @@
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
+<style>.e-dialog
+    {
+        max-height:588px!important;
+    }
+    </style>
 
 
 <div class="row mb-4">
@@ -118,7 +123,7 @@
 </RadzenDataGrid>
 
 
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" ShowCloseIcon="true">
 
     <DialogTemplates>
         <Header> <h5>Schedule Appointment</h5> </Header>
