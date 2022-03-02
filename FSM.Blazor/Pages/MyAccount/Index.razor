@@ -55,18 +55,18 @@
 <div class="m-4">
     <div class="card">
         <div class="row g-0">
-
-            <div class="col-sm-3" style="position: relative;width: 50%;height:176px;">
+          
+            <div class="col-sm-3" style="position: relative;height:176px;">
 
                 <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
-                Path="@userVM.ImageName" class="card-img-top h-100" />
+                Path="@userVM.ImageName" class="card-img-top h-100" style="width:80%!important" />
 
                 <RadzenFileInput Style="outline:none" @bind-Value=@userVM.ImageName
                                  Change=@(args => OnChangeAsync()) TValue="string" />
 
             </div>
             <div class="col-sm-3">
-                <div class="card-body">
+                <div class="card-body" style="margin-left:-40px;">
                     <div>
                         <label class="description">Name : </label> @userVM.FirstName  @userVM.LastName
                     </div>
