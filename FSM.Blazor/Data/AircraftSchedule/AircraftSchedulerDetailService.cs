@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using Utilities;
 
 namespace FSM.Blazor.Data.AircraftSchedule
 {
@@ -38,7 +39,10 @@ namespace FSM.Blazor.Data.AircraftSchedule
 
         public async Task<CurrentResponse> CheckIn(IHttpClientFactory httpClient, List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
         {
-            string jsonData = JsonConvert.SerializeObject(aircraftEquipmentsTimeList);
+            AircraftEquipmentTimeRequestVM aircraftEquipmentTimeRequestVM = new AircraftEquipmentTimeRequestVM();
+            aircraftEquipmentTimeRequestVM.Data = aircraftEquipmentsTimeList;
+
+            string jsonData = JsonConvert.SerializeObject(aircraftEquipmentTimeRequestVM);
 
             string url = "aircraftschedulerdetail/checkin";
 

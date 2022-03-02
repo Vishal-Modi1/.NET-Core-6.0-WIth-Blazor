@@ -57,6 +57,7 @@ namespace FSM.Blazor.Data.Common
                 menuItem.Action = userRolePermission.ActionName;
                 menuItem.Controller = userRolePermission.ControllerName;
                 menuItem.DisplayName = userRolePermission.DisplayName;
+                menuItem.IsAdministrationModule = userRolePermission.IsAdministrationModule;
                 menuItem.FavIconStyle = userRolePermission.Icon;
 
                 menuItemsList.Add(menuItem);

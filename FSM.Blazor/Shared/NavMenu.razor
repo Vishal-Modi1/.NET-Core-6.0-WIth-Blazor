@@ -28,10 +28,19 @@
             @if (menuItems != null)
             {
                 <RadzenPanelMenuItem Text="Dashboard" Path="/" Icon="dashboard"></RadzenPanelMenuItem>
+
+                if (menuItems.Where(p => p.IsAdministrationModule == true).Count() > 0)
+                {
+                    <RadzenPanelMenuItem Text="Administration" Path="/administration" Icon="admin_panel_settings"></RadzenPanelMenuItem>
+                }
+
                 @foreach (var category in menuItems)
                 {
-                    <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@("/" + category.Controller)" Icon="@category.FavIconStyle">
-                    </RadzenPanelMenuItem>
+                    if (!category.IsAdministrationModule)
+                    {
+                        <RadzenPanelMenuItem @bind-Expanded="@category.Expanded" Text="@category.DisplayName" Path="@("/" + category.Controller)" Icon="@category.FavIconStyle">
+                        </RadzenPanelMenuItem>
+                    }
                 }
 
                 <RadzenPanelMenuItem Text="Log Out" Path="/Logout" Icon="open_in_new"></RadzenPanelMenuItem>

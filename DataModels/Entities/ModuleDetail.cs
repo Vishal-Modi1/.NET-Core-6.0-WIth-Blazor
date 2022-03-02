@@ -9,5 +9,6 @@
         public string DisplayName { get; set; }
         public string Icon { get; set; }
         public int OrderNo { get; set; }
+        public bool IsAdministrationModule { get; set; }
     }
 }

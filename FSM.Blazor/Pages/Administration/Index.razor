@@ -1,0 +1,54 @@
+﻿@using FSM.Blazor.Data.Common
+@using Syncfusion.Blazor.Spinner
+
+@inject MenuService MenuService
+@inject NavigationManager UriHelper
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+@inject IHttpClientFactory ClientFactory
+
+@page "/administration"
+
+<div id="container">
+
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+
+    @if (menuItems == null)
+    {
+        return;
+    }
+
+    <RadzenTabs RenderMode="TabRenderMode.Client">
+        <Tabs>
+
+            @foreach (var tab in menuItems)
+            {
+                string name = tab.DisplayName;
+
+                <RadzenTabsItem Text=@name>
+
+                    @if(name == "Company")
+                    {
+                        <FSM.Blazor.Pages.Company.Index></FSM.Blazor.Pages.Company.Index>
+                    }
+                    else if(name == "User") 
+                    {
+                        <FSM.Blazor.Pages.User.Index></FSM.Blazor.Pages.User.Index>
+                    }
+                     else if(name == "Instructor Type") 
+                    {
+                        <FSM.Blazor.Pages.InstructorType.Index></FSM.Blazor.Pages.InstructorType.Index>
+                    }
+                     else if(name == "User Role Permission") 
+                    {
+                        <FSM.Blazor.Pages.UserRolePermission.Index></FSM.Blazor.Pages.UserRolePermission.Index>
+                    }
+
+                </RadzenTabsItem>
+            }
+
+        </Tabs>
+    </RadzenTabs>
+
+</div>

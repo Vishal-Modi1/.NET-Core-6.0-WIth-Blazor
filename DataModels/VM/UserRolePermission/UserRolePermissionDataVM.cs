@@ -18,5 +18,6 @@
         public string Icon { get; set; }
         public int OrderNo { get; set; }
         public int TotalRecords { get; set; }
+        public bool IsAdministrationModule { get; set; }
     }
 }

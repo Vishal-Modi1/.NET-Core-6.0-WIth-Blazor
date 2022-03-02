@@ -408,6 +408,11 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public void TextBoxChangeEvent(ChangeEventArgs args, int index)
         {
+            if(string.IsNullOrWhiteSpace(args.Value.ToString()))
+            {
+                return;
+            }
+
             schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
 
             base.StateHasChanged();
@@ -415,6 +420,11 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public void EditFlightTimeTextBoxChangeEvent(ChangeEventArgs value, int index)
         {
+            if (string.IsNullOrWhiteSpace(value.ToString()))
+            {
+                return;
+            }
+
             schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
             schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value.Value);
 

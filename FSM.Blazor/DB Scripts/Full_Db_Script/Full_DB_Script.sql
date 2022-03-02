@@ -352,6 +352,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+/****** Object:  Table [dbo].[ModuleDetails]    Script Date: 28-02-2022 13:23:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[ModuleDetails](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](100) NULL,
@@ -361,12 +368,14 @@ CREATE TABLE [dbo].[ModuleDetails](
 	[Icon] [varchar](50) NULL,
 	[OrderNo] [int] NOT NULL,
 	[IsActive] [bit] NOT NULL,
+	[IsAdministrationModule] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[Permissions]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO
@@ -527,6 +536,8 @@ GO
 ALTER TABLE [dbo].[ModuleDetails] ADD  CONSTRAINT [DF_ModuleDetails_OrderNo]  DEFAULT ((0)) FOR [OrderNo]
 GO
 ALTER TABLE [dbo].[ModuleDetails] ADD  CONSTRAINT [DF_ModuleDetails_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[ModuleDetails] ADD  DEFAULT ((0)) FOR [IsAdministrationModule]
 GO
 ALTER TABLE [dbo].[ScheduleActivityTypes] ADD  CONSTRAINT [DF_ScheduleActivityTypes_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
@@ -1218,7 +1229,7 @@ AS BEGIN
 END
 
 
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 22-02-2022 17:33:05 ******/
+/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 02-03-2022 09:02:52 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1241,12 +1252,12 @@ AS BEGIN
     
     ; WITH CTE_Results AS     
     (    
-        SELECT URP.*,UR.Name,PR.PermissionType,MD.Name AS ModuleName,  
-  MD.OrderNo from UserRolePermissions URP  
-  LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId  
-  LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId   
-  LEFT JOIN  ModuleDetails MD on MD.Id = URP.ModuleId  
-  LEFT JOIN  Companies CP on CP.Id = URP.CompanyId  
+        SELECT URP.*,UR.Name,PR.PermissionType,MD.Name AS ModuleName, MD.IsAdministrationModule, 
+	    MD.OrderNo from UserRolePermissions URP  
+	    LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId  
+	    LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId   
+	    LEFT JOIN  ModuleDetails MD on MD.Id = URP.ModuleId  
+	    LEFT JOIN  Companies CP on CP.Id = URP.CompanyId  
     
         WHERE   
    (CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND  
@@ -1334,7 +1345,7 @@ AS BEGIN
             ))     
     )    
   
-    Select TotalRecords, URP.*,UR.Name  AS RoleName,PR.PermissionType, CP.Name AS CompanyName,
+    Select TotalRecords, URP.*,UR.Name  AS RoleName,PR.PermissionType, CP.Name AS CompanyName,MD.IsAdministrationModule, 
     MD.Name ModuleName,MD.ControllerName, MD.ActionName, MD.Icon, MD.DisplayName,  
     MD.OrderNo from UserRolePermissions URP  
   LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId  
@@ -1345,7 +1356,6 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)    
      
 END  
-
 /****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 24-02-2022 12:33:32 ******/
 SET ANSI_NULLS ON
 GO
