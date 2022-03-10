@@ -124,15 +124,23 @@ namespace FSMAPI.Controllers
 
             IFormCollection form = Request.Form;
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].FileName}.jpeg";
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.AircraftImage, form, fileName);
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].Name}.jpeg";
+
+            if(string.IsNullOrWhiteSpace(companyId))
+            {
+                companyId = form.Files[0].FileName;
+            }
+
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.AircraftImage + "\\" + companyId , form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "false";
 
             if (isFileUploaded)
             {
-                response = _airCraftService.UpdateImageName(Convert.ToInt32(form.Files[0].FileName), fileName);
+                response = _airCraftService.UpdateImageName(Convert.ToInt32(form.Files[0].Name), fileName);
             }
 
             return Ok(response);

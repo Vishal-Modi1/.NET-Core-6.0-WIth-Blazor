@@ -42,14 +42,9 @@ namespace Configuration
             get => configuration.GetValue<string>("APIURL");
         }
 
-        public string AircraftImagePathPrefix
+        public string UploadDirectoryPath
         {
-            get => configuration.GetValue<string>("AircraftImagePathPrefix");
-        }
-
-        public string UserProfileImagePathPrefix
-        {
-            get => configuration.GetValue<string>("UserProfileImagePathPrefix");
+            get => configuration.GetValue<string>("UploadDirectoryPath");
         }
 
         public string JWTKey
@@ -80,6 +75,11 @@ namespace Configuration
         public string SyncFusionLicenseKey
         {
             get => configuration.GetValue<string>("SyncfusionLicenseKey");
+        }
+
+        public long MaxDocumentUploadSize
+        {
+            get => configuration.GetValue<long>("MaxDocumentUploadSize");
         }
 
         public MailSettingConfig MailSetting

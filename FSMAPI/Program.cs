@@ -91,7 +91,6 @@ var app = builder.Build();
 if (_environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    
 }
 
 string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory);
@@ -99,6 +98,7 @@ Directory.CreateDirectory(uploadsPath);
 
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.UserProfileImage);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.Document);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));

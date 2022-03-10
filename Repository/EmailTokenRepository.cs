@@ -1,8 +1,9 @@
 ﻿using DataModels.Entities;
+using Repository.Interface;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Repository.Interface
+namespace Repository
 {
     public class EmailTokenRepository : IEmailTokenRepository
     {

@@ -6,6 +6,7 @@ using System.Net;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.VM.Account;
+using DataModels.Constants;
 
 namespace Service
 {
@@ -299,7 +300,15 @@ namespace Service
             try
             {
                 UserVM userVM = _userRepository.FindById(id);
-                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UserProfileImagePathPrefix}{userVM.ImageName}";
+
+                string companyId = "0";
+
+                if(!string.IsNullOrWhiteSpace(userVM.CompanyId.ToString()))
+                {
+                    companyId = userVM.CompanyId.ToString();    
+                }
+
+                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{userVM.ImageName}";
 
                 userVM.Countries = _countryRepository.ListDropDownValues();
                 userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();

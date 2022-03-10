@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using DataModels.VM.Account;
 using DataModels.VM.Common;
+using DataModels.Constants;
 
 namespace Service
 {
@@ -32,7 +33,14 @@ namespace Service
                     return _currentResponse;
                 }
 
-                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UserProfileImagePathPrefix}{user.ImageName}";
+                string companyId = "0";
+
+                if(!string.IsNullOrWhiteSpace(user.CompanyId.ToString()))
+                {
+                    companyId = user.CompanyId.ToString();
+                }
+
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{user.ImageName}";
 
                 Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
 
@@ -52,7 +60,6 @@ namespace Service
                         return _currentResponse;
                     }
                 }
-
                
                 if (!user.IsActive)
                 {

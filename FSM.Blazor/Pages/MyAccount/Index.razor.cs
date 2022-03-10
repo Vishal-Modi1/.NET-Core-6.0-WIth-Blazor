@@ -17,6 +17,9 @@ namespace FSM.Blazor.Pages.MyAccount
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
         [Inject]
         protected IMemoryCache memoryCache { get; set; }
 
@@ -106,15 +109,21 @@ namespace FSM.Blazor.Pages.MyAccount
 
             ByteArrayContent data = new ByteArrayContent(bytes);
 
-            MultipartFormDataContent multiContent = new MultipartFormDataContent
+            try
+            {
+                MultipartFormDataContent multiContent = new MultipartFormDataContent
                 {
-                   { data, "file", userVM.Id.ToString() }
+                   { data, userVM.Id.ToString(), userVM.CompanyId == null ? "0" : userVM.CompanyId.ToString() }
                 };
 
-            CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
+                CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
 
-            ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
+                ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
+            }
+            catch (Exception ex)
+            {
 
+            }
             isDisplayLoader = false;
         }
     }

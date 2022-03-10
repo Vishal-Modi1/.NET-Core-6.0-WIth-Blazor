@@ -1,0 +1,99 @@
+﻿@using DataModels.VM.Document
+@using DataModels.Enums
+@using FSM.Blazor.Data.Document
+@using Syncfusion.Blazor.Inputs
+@using DataModels.VM.Common;
+@using DataModels.Constants;
+
+@inject Radzen.DialogService DialogService
+@inject DocumentService DocumentService
+@inject NavigationManager NavigationManager
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+<RadzenTemplateForm Data="@documentData" Submit="@((DocumentVM args) => {  Submit(); })">
+
+    <input type="hidden" value="@documentData.Id" name="Id" />
+
+    <RadzenFieldset Text="Document Info">
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Upload" />
+            </div>
+            <div class="col-md-8">
+
+                <InputFile OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName"
+                           accept=".csv,.xlsx,.pdf,.txt,.doc,.docx,.png,.jpg ,.jpeg,.jfif,.pjpeg,.pjp,ppt,.pptx,.svg" />
+
+                @* <RadzenTextBox Name="DisplayName" @bind-Value="@documentData.DisplayName"  Placeholder="Please upload document" />
+
+                    <RadzenRequiredValidator Component="DisplayName" Text="Please upload document" Style="position: relative"></RadzenRequiredValidator>
+                *@
+            </div>
+        </div>
+
+        @if (!documentData.IsFromParentModule)
+        {
+            <div class="row">
+
+                <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Document Type" />
+                </div>
+
+                <div class="col-md-8">
+
+                    <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Type" Data=@documentData.ModulesList TextProperty="Name"
+                                ValueProperty="Id" Name="ModuleId" @bind-Value="@(documentData.ModuleId)" />
+
+                    <RadzenRequiredValidator DefaultValue="0" Component="ModuleId" Text="Please select type" Style="position: relative"></RadzenRequiredValidator>
+
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Expiration Date" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDatePicker @bind-Value=@documentData.ExpirationDate DateFormat="d" Class="w-100" />
+            </div>
+
+        </div>
+
+    </RadzenFieldset>
+
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
+            <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+        </div>
+    </div>
+
+</RadzenTemplateForm>
+
+@code {
+
+    async Task OpenErrorDialog(string message)
+    {
+        var result = await DialogService.OpenAsync("Error", ds =>
+    @<div>
+        <p class="mb-4"> @message </p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                <RadzenButton Text="Close" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+    }
+}

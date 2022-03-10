@@ -15,9 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSMAPI", "FSMAPI\FSMAPI.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSM.Blazor", "FSM.Blazor\FSM.Blazor.csproj", "{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "TestProject1\TestProject1.csproj", "{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

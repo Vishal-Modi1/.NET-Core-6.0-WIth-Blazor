@@ -8,12 +8,12 @@ using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
-using System.Collections.ObjectModel;
 
 namespace FSM.Blazor.Pages.Company
 {
     partial class Index
     {
+        #region Params
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
@@ -30,6 +30,8 @@ namespace FSM.Blazor.Pages.Company
         NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
+
+        #endregion
 
         IList<CompanyVM> data;
         int count;
@@ -48,8 +50,6 @@ namespace FSM.Blazor.Pages.Company
             {
                 NavManager.NavigateTo("/Dashboard");
             }
-
-            
         }
 
         async Task LoadData(LoadDataArgs args)

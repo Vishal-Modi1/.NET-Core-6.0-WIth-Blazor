@@ -2,6 +2,7 @@
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Company;
+using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Reservation;
 using DataModels.VM.User;
@@ -87,6 +88,7 @@ namespace Repository
 
         public DbSet<CompanyVM> CompanyData { get; set; }
         public DbSet<ReservationDataVM> ReservationDataVM { get; set; }
+        public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 
@@ -100,6 +102,8 @@ namespace Repository
         public DbSet<AircraftScheduleDetail> AircraftScheduleDetails { get; set; }
 
         public DbSet<AircraftScheduleHobbsTime> AircraftScheduleHobbsTimes { get; set; }
+    
+        public DbSet<Document> Documents { get; set; }
     }
 
 }

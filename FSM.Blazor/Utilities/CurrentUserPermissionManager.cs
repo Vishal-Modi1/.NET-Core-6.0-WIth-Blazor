@@ -78,5 +78,17 @@ namespace FSM.Blazor.Utilities
 
             return Convert.ToInt32(claimValue) == ((int)userRole);
         }
+
+        public async Task<UserRole> GetRole(Task<AuthenticationState> authenticationState)
+        {
+            var cp = (await authenticationState).User;
+
+            string claimValue = cp.Claims.Where(c => c.Type == ClaimTypes.Role)
+                               .Select(c => c.Value).SingleOrDefault();
+
+            UserRole userRole = (UserRole)Convert.ToInt32(claimValue);
+
+            return userRole;
+        }
     }
 }

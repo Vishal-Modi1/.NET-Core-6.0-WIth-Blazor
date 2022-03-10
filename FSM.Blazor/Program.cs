@@ -1,4 +1,5 @@
 using Configuration;
+using DataModels.Constants;
 using FSM.Blazor.CustomServicesExtensions;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -80,6 +81,10 @@ app.UseExceptionHandler(
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(ConfigurationSettings.Instance.SyncFusionLicenseKey);
 
+string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory);
+Directory.CreateDirectory(uploadsPath);
+
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.TempDocument);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

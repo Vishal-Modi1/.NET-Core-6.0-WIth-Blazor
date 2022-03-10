@@ -7,6 +7,7 @@ using System.Net;
 using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.User;
+using DataModels.Constants;
 
 namespace Service
 {
@@ -203,7 +204,7 @@ namespace Service
             airCraftVM.Id = airCraft.Id;
             airCraftVM.TailNo = airCraft.TailNo;
             airCraftVM.ImageName = airCraft.ImageName;
-            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
+            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
 
             airCraftVM.Year = airCraft.Year;
             airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;
@@ -321,7 +322,7 @@ namespace Service
 
                 foreach (AircraftDataVM airCraftVM in airCraftList)
                 {
-                    airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
+                    airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
                 }
 
                 CreateResponse(airCraftList, HttpStatusCode.OK, "");
@@ -345,7 +346,7 @@ namespace Service
 
                 foreach (Aircraft airCraftVM in airCraftList)
                 {
-                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.AircraftImagePathPrefix}{airCraftVM.ImageName}";
+                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
                 }
 
                 CreateResponse(airCraftList, HttpStatusCode.OK, "");
