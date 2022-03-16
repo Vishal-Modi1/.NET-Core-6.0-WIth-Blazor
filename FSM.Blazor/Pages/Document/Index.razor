@@ -1,11 +1,15 @@
 ﻿@using DataModels.Enums
 @using FSM.Blazor.Data.Document;
+@using FSM.Blazor.Data.User;
+@using FSM.Blazor.Data.Company;
 @using DataModels.VM.Document;
 
 @inject NavigationManager NavManager
 @inject DocumentService DocumentService
 @layout MainLayout
 @inject DialogService DialogService
+@inject UserService UserService
+@inject CompanyService CompanyService
 
 @inject IJSRuntime JS
 
@@ -111,6 +115,15 @@
             <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="ModuleName" Title="Module Name"></RadzenDataGridColumn>
         }
 
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+        {
+            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="CompanyName" Title="Company Name"></RadzenDataGridColumn>
+        }
+
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+        {
+            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false"  Property="UserName" Title="User"></RadzenDataGridColumn>
+        }
         <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Sortable="false" Property="ExpirationDate" Title="Expiration Date"></RadzenDataGridColumn>
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">

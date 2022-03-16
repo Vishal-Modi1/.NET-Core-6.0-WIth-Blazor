@@ -70,7 +70,8 @@ namespace FSMAPI.Controllers
                     Id = user.Id,
                     UserPermissionList = userRolePermissionsList,
                     ImageURL = user.ImageName,
-                    LocalTimeZone = timeZone
+                    LocalTimeZone = timeZone,
+                    CompanyId = user.CompanyId.GetValueOrDefault()
                 };
 
                 return Ok(response);

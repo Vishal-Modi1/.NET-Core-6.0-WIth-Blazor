@@ -27,5 +27,7 @@ namespace Service.Interface
         CurrentResponse FindById(long id);
 
         CurrentResponse UpdateImageName(long id, string imageName);
+
+        CurrentResponse ListDropDownValuesByCompanyId(int companyId);
     }
 }

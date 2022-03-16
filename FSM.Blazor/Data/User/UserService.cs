@@ -113,5 +113,20 @@ namespace FSM.Blazor.Data.User
 
             return response;
         }
+
+        public async Task<List<DropDownLargeValues>> ListDropDownValuesByCompanyId(IHttpClientFactory httpClient, int companyId)
+        {
+            string url = $"user/listdropdownvaluesbycompanyid?companyId={companyId}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            List<DropDownLargeValues> usersList = new List<DropDownLargeValues>();
+
+            if(response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                usersList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return usersList;
+        }
     }
 }

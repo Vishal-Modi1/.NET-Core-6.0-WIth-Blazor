@@ -126,11 +126,11 @@ namespace FSMAPI.Controllers
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].Name}.jpeg";
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["AircraftId"]}.jpeg";
 
             if(string.IsNullOrWhiteSpace(companyId))
             {
-                companyId = form.Files[0].FileName;
+                companyId = form["CompanyId"];
             }
 
             bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.AircraftImage + "\\" + companyId , form, fileName);
@@ -140,7 +140,7 @@ namespace FSMAPI.Controllers
 
             if (isFileUploaded)
             {
-                response = _airCraftService.UpdateImageName(Convert.ToInt32(form.Files[0].Name), fileName);
+                response = _airCraftService.UpdateImageName(Convert.ToInt32(form["AircraftId"]), fileName);
             }
 
             return Ok(response);

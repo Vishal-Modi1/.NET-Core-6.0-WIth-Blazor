@@ -4,16 +4,25 @@
 @using Syncfusion.Blazor.Inputs
 @using DataModels.VM.Common;
 @using DataModels.Constants;
+@using FSM.Blazor.Data.User;
+@using Syncfusion.Blazor.Spinner;
 
 @inject Radzen.DialogService DialogService
 @inject DocumentService DocumentService
 @inject NavigationManager NavigationManager
+@inject UserService UserService
 
 <style>
     form .row {
         margin-bottom: 16px;
     }
 </style>
+
+
+<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
 
 <RadzenTemplateForm Data="@documentData" Submit="@((DocumentVM args) => {  Submit(); })">
 
@@ -36,6 +45,48 @@
                 *@
             </div>
         </div>
+
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+        {
+            <div class="row">
+
+                <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Company" />
+                </div>
+
+                <div class="col-md-8">
+
+                    <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select Company" Data=@documentData.CompniesList TextProperty="Name"
+                                ValueProperty="Id" Name="CompanyId" @bind-Value="@(documentData.CompanyId)" Change=@(args => OnChange(args)) />
+
+                    <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Please select company" Style="position: relative"></RadzenRequiredValidator>
+
+                </div>
+            </div>
+        }
+
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+        {
+            <div class="row">
+
+                <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="User" />
+                </div>
+
+                <div class="col-md-8">
+
+                    <RadzenDropDown AllowClear="true" TValue="long" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select User" Data=@documentData.UsersList TextProperty="Name"
+                                ValueProperty="Id" Name="UserId" @bind-Value="@userId"   />
+
+                    <RadzenRequiredValidator DefaultValue=long.MaxValue Component="UserId" Text="Please select user" Style="position: relative"></RadzenRequiredValidator>
+
+                </div>
+            </div>
+        }
 
         @if (!documentData.IsFromParentModule)
         {

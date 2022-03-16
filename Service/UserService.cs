@@ -7,6 +7,7 @@ using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.VM.Account;
 using DataModels.Constants;
+using System.Collections.Generic;
 
 namespace Service
 {
@@ -27,6 +28,21 @@ namespace Service
             _instructorTypeRepository = instructorTypeRepository;
             _countryRepository = countryRepository;
             _companyRepository = companyRepository;
+        }
+
+        public CurrentResponse ListDropDownValuesByCompanyId(int companyId)
+        {
+            try
+            {
+                List<DropDownLargeValues> usersList = _userRepository.ListDropdownValuesbyCondition(p => p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false);
+                CreateResponse(usersList, HttpStatusCode.OK, "");
+            }
+            catch (Exception ex)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, ex.ToString());
+            }
+
+            return _currentResponse;
         }
 
         public CurrentResponse GetDetails(long id, int companyId, int roleId)
@@ -303,9 +319,9 @@ namespace Service
 
                 string companyId = "0";
 
-                if(!string.IsNullOrWhiteSpace(userVM.CompanyId.ToString()))
+                if (!string.IsNullOrWhiteSpace(userVM.CompanyId.ToString()))
                 {
-                    companyId = userVM.CompanyId.ToString();    
+                    companyId = userVM.CompanyId.ToString();
                 }
 
                 userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{userVM.ImageName}";
@@ -333,7 +349,7 @@ namespace Service
             {
                 bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
 
-                CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "");
+                CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "Profile picture updated successfully.");
 
                 return _currentResponse;
             }

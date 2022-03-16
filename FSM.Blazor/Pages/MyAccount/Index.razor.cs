@@ -113,8 +113,13 @@ namespace FSM.Blazor.Pages.MyAccount
             {
                 MultipartFormDataContent multiContent = new MultipartFormDataContent
                 {
-                   { data, userVM.Id.ToString(), userVM.CompanyId == null ? "0" : userVM.CompanyId.ToString() }
+                   { data, "0","0" }
                 };
+
+                string companyId = userVM.CompanyId == null ? "0" : userVM.CompanyId.ToString();
+
+                multiContent.Add(new StringContent(userVM.Id.ToString()), "UserId");
+                multiContent.Add(new StringContent(companyId), "CompanyId");
 
                 CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
 

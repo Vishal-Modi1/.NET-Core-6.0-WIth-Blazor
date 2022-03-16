@@ -45,18 +45,17 @@ namespace FSMAPI.Controllers
             IFormCollection form = Request.Form;
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            string userId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+           
+            DocumentVM documentVM = _documentService.FindById(Guid.Parse(form["DocumentId"].ToString()));
 
-            DocumentVM documentVM = _documentService.FindById(Guid.Parse(form.Files[0].Name));
-
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].Name}.{documentVM.Type}";
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["DocumentId"]}.{documentVM.Type}";
 
             if (string.IsNullOrWhiteSpace(companyId))
             {
-                companyId = form.Files[0].FileName;
+                companyId = form["CompanyId"];
             }
 
-            string filePath = UploadDirectory.Document + "\\" + companyId + "\\" + userId;
+            string filePath = UploadDirectory.Document + "\\" + companyId + "\\" + documentVM.UserId;
 
             Directory.CreateDirectory(filePath);
 
@@ -67,7 +66,7 @@ namespace FSMAPI.Controllers
 
             if (isFileUploaded)
             {
-                response = _documentService.UpdateDocumentName(Guid.Parse(form.Files[0].Name), fileName);
+                response = _documentService.UpdateDocumentName(Guid.Parse(form["DocumentId"]), fileName);
             }
 
             return Ok(response);

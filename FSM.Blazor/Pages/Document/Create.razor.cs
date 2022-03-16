@@ -8,6 +8,9 @@ using Newtonsoft.Json;
 using Radzen;
 using DE = DataModels.Entities;
 using Configuration;
+using FSM.Blazor.Utilities;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -22,8 +25,17 @@ namespace FSM.Blazor.Pages.Document
         [Inject]
         NotificationService NotificationService { get; set; }
 
-        public bool isBusy, isLoading;
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
+        public bool isBusy, isLoading, isDisplayLoader;
         string uploadedFilePath = "";
+        public long userId = long.MaxValue;
 
         IReadOnlyList<IBrowserFile> selectedFiles;
 
@@ -33,10 +45,29 @@ namespace FSM.Blazor.Pages.Document
 
         protected override void OnInitialized()
         {
+            if(documentData.UserId > 0)
+            {
+                userId = documentData.UserId;
+
+                OnChange(documentData.CompanyId);
+            }
+
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
             maxSizeInMB = ConfigurationSettings.Instance.MaxDocumentUploadSize / (1024 * 1024);
             errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
 
             base.OnInitialized();
+        }
+
+        async void OnChange(object companyId)
+        {
+            isDisplayLoader = true;
+
+            documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(_httpClient, documentData.CompanyId);
+
+            isDisplayLoader = false;
+            base.StateHasChanged();
         }
 
         public async Task Submit()
@@ -55,6 +86,13 @@ namespace FSM.Blazor.Pages.Document
 
             isLoading = true;
             SetSaveButtonState(true);
+
+            if(documentData.UserId == 0 && userId == long.MaxValue)
+            {
+                documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+            }
+
+            documentData.UserId = userId;
 
             CurrentResponse response = await DocumentService.SaveandUpdateAsync(_httpClient, documentData);
 
@@ -107,6 +145,11 @@ namespace FSM.Blazor.Pages.Document
             {
                { data, documentData.Id.ToString(), documentData.CompanyId.ToString() }
             };
+
+            string companyId = documentData.CompanyId == null ? "0" : documentData.CompanyId.ToString();
+
+            multiContent.Add(new StringContent(documentData.Id.ToString()), "DocumentId");
+            multiContent.Add(new StringContent(companyId), "CompanyId");
 
             CurrentResponse response = await DocumentService.UploadDocumentAsync(_httpClient, multiContent);
 

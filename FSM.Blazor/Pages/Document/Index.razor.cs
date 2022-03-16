@@ -10,6 +10,8 @@ using DataModels.VM.Common;
 using FSM.Blazor.Extensions;
 using Microsoft.JSInterop;
 using System.Net;
+using DataModels.Enums;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -71,9 +73,9 @@ namespace FSM.Blazor.Pages.Document
             datatableParams.CompanyId = CompanyId;
             datatableParams.ModuleId = ModuleId;
 
-            if(!string.IsNullOrWhiteSpace(ParentModuleName))
+            if (!string.IsNullOrWhiteSpace(ParentModuleName))
             {
-                datatableParams.ModuleId = documentFilterVM.ModulesList.Where(p=>p.Name == ParentModuleName).FirstOrDefault().Id;  
+                datatableParams.ModuleId = documentFilterVM.ModulesList.Where(p => p.Name == ParentModuleName).FirstOrDefault().Id;
             }
 
             datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
@@ -92,6 +94,20 @@ namespace FSM.Blazor.Pages.Document
 
             DocumentVM documentData = await DocumentService.GetDetailsAsync(_httpClient, id == null ? Guid.Empty : id.Value);
 
+            string height = "400px";
+
+            if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+            {
+                height = "450";
+                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(_httpClient, documentData.CompanyId);
+            }
+
+            if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            {
+                height = "500";
+                documentData.CompniesList = await CompanyService.ListDropDownValues(_httpClient);
+            }
+
             SetAddNewButtonState(false);
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName))
@@ -102,7 +118,7 @@ namespace FSM.Blazor.Pages.Document
 
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "documentData", documentData } },
-                  new DialogOptions() { Width = "500px", Height = "380px" });
+                  new DialogOptions() { Width = "500px", Height = height });
 
             await grid.Reload();
         }
@@ -166,17 +182,17 @@ namespace FSM.Blazor.Pages.Document
                 WebClient webClient = new WebClient();
 
                 byte[] fileBytes = webClient.DownloadData(documentPath);
-                    
+
                 var fileStream = new MemoryStream(fileBytes);
 
                 return fileStream;
             }
 
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 return null;
             }
-            
+
         }
 
         private async Task SetDeleteButtonState(bool isBusy)

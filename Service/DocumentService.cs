@@ -76,6 +76,11 @@ namespace Service
                     documentVM = ToBusinessObject(document);
                 }
 
+                if (documentVM.CompanyId == 0)
+                {
+                    documentVM.CompanyId = companyId;
+                }
+
                 documentVM.ModulesList = _moduleDetailsRepository.ListDropDownValues();
 
                 CreateResponse(documentVM, HttpStatusCode.OK, "");
@@ -160,7 +165,7 @@ namespace Service
 
                 foreach (DocumentDataVM documentDataVM in documentsList)
                 {
-                    documentDataVM.DocumentPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.Document}/{documentDataVM.CompanyId}/{documentDataVM.Name}";
+                    documentDataVM.DocumentPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.Document}/{documentDataVM.CompanyId}/{documentDataVM.UserId}/{documentDataVM.Name}";
                 }
 
                 CreateResponse(documentsList, HttpStatusCode.OK, "");

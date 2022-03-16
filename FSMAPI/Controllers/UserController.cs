@@ -141,6 +141,15 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("listdropdownvaluesbycompanyid")]
+        public IActionResult ListDropDownValuesByCompanyId(int companyId)
+        {
+            CurrentResponse response = _userService.ListDropDownValuesByCompanyId(companyId);
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [Route("uploadprofileimage")]
         public async Task<IActionResult> UploadFileAsync()
@@ -153,21 +162,21 @@ namespace FSMAPI.Controllers
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             IFormCollection form = Request.Form;
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].Name}.jpeg";
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["UserId"]}.jpeg";
 
             if (string.IsNullOrWhiteSpace(companyId))
             {
-                companyId = form.Files[0].FileName;
+                companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage + "\\" + companyId, form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage + "\\" + companyId , form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "false";
 
             if (isFileUploaded)
             {
-                response = _userService.UpdateImageName(Convert.ToInt32(form.Files[0].Name), fileName);
+                response = _userService.UpdateImageName(Convert.ToInt32(form["UserId"]), fileName);
             }
 
             return Ok(response);

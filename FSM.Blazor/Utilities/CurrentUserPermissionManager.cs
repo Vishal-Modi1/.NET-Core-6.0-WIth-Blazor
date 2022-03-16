@@ -90,5 +90,16 @@ namespace FSM.Blazor.Utilities
 
             return userRole;
         }
+
+        public async Task<string> GetClaimValue(Task<AuthenticationState> authenticationState, string claimType)
+        {
+            var cp = (await authenticationState).User;
+
+            string claimValue = cp.Claims.Where(c => c.Type == claimType)
+                               .Select(c => c.Value).SingleOrDefault();
+
+
+            return claimValue;
+        }
     }
 }

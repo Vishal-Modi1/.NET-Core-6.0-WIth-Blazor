@@ -15,6 +15,7 @@ namespace DataModels.VM.Document
 
         public long UserId { get; set; }
 
+        public string UserName { get; set; }
         public string Type { get; set; }
 
         public DateTime? ExpirationDate { get; set; }
@@ -23,6 +24,8 @@ namespace DataModels.VM.Document
         public string DocumentPath { get; set; }
 
         public int CompanyId { get; set; }
+
+        public string CompanyName { get; set; }
 
         public string Size { get; set; }
 

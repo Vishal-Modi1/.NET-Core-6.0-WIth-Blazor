@@ -29,6 +29,8 @@ namespace DataModels.VM.Document
         public bool IsFromParentModule { get; set; }
 
         public List<DropDownValues> ModulesList { get; set; }
+        public List<DropDownLargeValues> UsersList { get; set; }
+        public List<DropDownValues> CompniesList { get; set; }
 
         public long CreatedBy { get; set; }
 
