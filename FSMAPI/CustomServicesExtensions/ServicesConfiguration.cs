@@ -30,6 +30,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IReservationService, ReservationService>();
             services.AddScoped<IUserPreferenceService, UserPreferenceService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            services.AddScoped<IDocumentTagService, DocumentTagService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -59,6 +60,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IReservationRepository, ReservationRepository>();
             services.AddScoped<IUserPreferenceRepository, UserPreferenceRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
+            services.AddScoped<IDocumentTagRepository, DocumentTagRepository>();
         }
     }
 }

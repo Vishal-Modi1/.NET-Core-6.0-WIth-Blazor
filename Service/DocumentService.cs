@@ -7,6 +7,7 @@ using System;
 using System.Net;
 using System.Collections.Generic;
 using DataModels.Constants;
+using System.Linq;
 
 namespace Service
 {
@@ -15,14 +16,16 @@ namespace Service
         private readonly IDocumentRepository _documentRepository;
         private readonly IModuleDetailsRepository _moduleDetailsRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IDocumentTagRepository _documentTagRepository;
 
         public DocumentService(IDocumentRepository documentRepository,
             IModuleDetailsRepository moduleDetailsRepository,
-            ICompanyRepository companyRepository)
+            ICompanyRepository companyRepository, IDocumentTagRepository documentTagRepository)
         {
             _documentRepository = documentRepository;
             _moduleDetailsRepository = moduleDetailsRepository;
             _companyRepository = companyRepository;
+            _documentTagRepository = documentTagRepository;
         }
 
         public CurrentResponse Create(DocumentVM documentVM)
@@ -30,6 +33,8 @@ namespace Service
             try
             {
                 Document document = ToDataObject(documentVM);
+
+                document.TagIds = GetDocumentTagIds(documentVM.Tags);
 
                 document = _documentRepository.Create(document);
                 CreateResponse(document, HttpStatusCode.OK, "Document details added successfully");
@@ -44,12 +49,46 @@ namespace Service
             }
         }
 
+        private string GetDocumentTagIds(string documentTags)
+        {
+            string ids = "";
+
+            string[] listTags = documentTags.Split(",",StringSplitOptions.RemoveEmptyEntries);
+
+            List<DocumentTagVM> existingTagsList = _documentTagRepository.ListByCondition(p => p.IsActive == true && p.IsDeleted == false && listTags.Contains(p.TagName));
+
+            List<DocumentTag> documentTagsList = new List<DocumentTag>();
+
+            foreach (string tagName in listTags)
+            {
+                if(existingTagsList.Where(p=>p.TagName == tagName).Count() > 0)
+                {
+                    continue;
+                }
+
+                DocumentTag documentTag = new DocumentTag();
+
+                documentTag.TagName = tagName;
+
+                documentTagsList.Add(documentTag);
+            }
+
+             _documentTagRepository.Create(documentTagsList);
+
+            existingTagsList = _documentTagRepository.ListByCondition(p => p.IsActive == true && p.IsDeleted == false  && listTags.Contains(p.TagName));
+
+            ids = String.Join("," ,existingTagsList.Select(p => p.Id));
+
+            return ids;
+        }
+
         public CurrentResponse Edit(DocumentVM documentVM)
         {
             try
             {
                 Document document = ToDataObject(documentVM);
 
+                document.TagIds = GetDocumentTagIds(documentVM.Tags);
                 document = _documentRepository.Edit(document);
                 CreateResponse(document, HttpStatusCode.OK, "Document details updated successfully");
 
@@ -143,8 +182,9 @@ namespace Service
             try
             {
                 bool isImageNameUpdated = _documentRepository.UpdateDocumentName(id, name);
+                Document document = _documentRepository.FindByCondition(p => p.Id == id);
 
-                CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "");
+                CreateResponse(document, HttpStatusCode.OK, "Document updated successfully.");
 
                 return _currentResponse;
             }
@@ -211,6 +251,14 @@ namespace Service
             documentVM.UserId = document.UserId;
             documentVM.ModuleId = document.ModuleId;
             documentVM.Type = document.Type;
+
+            if (!string.IsNullOrWhiteSpace(document.TagIds))
+            {
+                List<int> listTagIds = document.TagIds.Split(",").Select(p => Convert.ToInt32(p)).ToList();
+                List<DocumentTagVM> documentTags = _documentTagRepository.ListByCondition(p => p.IsActive == true && p.IsDeleted == false && listTagIds.Contains(p.Id));
+
+               documentVM.Tags = String.Join(",",documentTags.Select(p => p.TagName).ToList());
+            }
 
             return documentVM;
         }

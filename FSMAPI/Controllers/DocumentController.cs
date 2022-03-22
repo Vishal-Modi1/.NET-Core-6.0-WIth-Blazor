@@ -4,11 +4,13 @@ using DataModels.VM.Common;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DocumentController : ControllerBase
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -45,10 +47,41 @@ namespace FSMAPI.Controllers
             IFormCollection form = Request.Form;
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-           
-            DocumentVM documentVM = _documentService.FindById(Guid.Parse(form["DocumentId"].ToString()));
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["DocumentId"]}.{documentVM.Type}";
+            DocumentVM documentVM = new DocumentVM();
+
+            documentVM.Id = Guid.Parse(form["Id"].ToString());
+            documentVM.Name = form["Name"].ToString();
+            documentVM.DisplayName = form["DisplayName"].ToString();
+            documentVM.Type = form["Type"].ToString();
+            documentVM.Size = Convert.ToInt64(form["Size"].ToString());
+            documentVM.UserId = Convert.ToInt64(form["UserId"].ToString());
+            documentVM.ModuleId = Convert.ToInt32(form["ModuleId"].ToString());
+            documentVM.CompanyId = Convert.ToInt32(form["CompanyId"].ToString());
+            documentVM.Tags = form["Tags"].ToString();
+
+            if (!string.IsNullOrWhiteSpace(form["ExpirationDate"].ToString()))
+            {
+                documentVM.ExpirationDate = Convert.ToDateTime(form["ExpirationDate"].ToString());
+            }
+
+            CurrentResponse response = new CurrentResponse();
+          
+            if(documentVM.Id != Guid.Empty)
+            {
+                response = Edit(documentVM);
+            }
+            else
+            {
+                response = Create(documentVM);
+            }
+
+            if(response.Status != System.Net.HttpStatusCode.OK)
+            {
+                return Ok(response);
+            }
+
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["Id"]}.{documentVM.Type}";
 
             if (string.IsNullOrWhiteSpace(companyId))
             {
@@ -61,24 +94,24 @@ namespace FSMAPI.Controllers
 
             bool isFileUploaded = await _fileUploader.UploadAsync(filePath, form, fileName);
 
-            CurrentResponse response = new CurrentResponse();
             response.Data = "false";
 
             if (isFileUploaded)
             {
-                response = _documentService.UpdateDocumentName(Guid.Parse(form["DocumentId"]), fileName);
+                response = _documentService.UpdateDocumentName(Guid.Parse(form["Id"]), fileName);
+
             }
 
             return Ok(response);
         }
 
-        [HttpPost]
-        [Route("create")]
-        public IActionResult Create(DocumentVM documentVM)
+        //[HttpPost]
+        //[Route("create")]
+        private CurrentResponse Create(DocumentVM documentVM)
         {
             documentVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
-            if(documentVM.CompanyId == 0)
+            if (documentVM.CompanyId == 0)
             {
                 documentVM.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
             }
@@ -90,12 +123,12 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _documentService.Create(documentVM);
 
-            return Ok(response);
+            return response;
         }
 
-        [HttpPost]
-        [Route("edit")]
-        public IActionResult Edit(DocumentVM documentVM)
+        //[HttpPost]
+        //[Route("edit")]
+        private CurrentResponse Edit(DocumentVM documentVM)
         {
             documentVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
@@ -111,7 +144,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _documentService.Edit(documentVM);
 
-            return Ok(response);
+            return response;
         }
 
         [HttpGet]

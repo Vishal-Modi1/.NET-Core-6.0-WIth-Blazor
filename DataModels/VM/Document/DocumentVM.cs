@@ -17,6 +17,7 @@ namespace DataModels.VM.Document
 
         public long Size { get; set; }
 
+        public string Tags { get; set; }
         public DateTime? ExpirationDate { get; set; }
 
         public int CompanyId { get; set; }
@@ -31,6 +32,8 @@ namespace DataModels.VM.Document
         public List<DropDownValues> ModulesList { get; set; }
         public List<DropDownLargeValues> UsersList { get; set; }
         public List<DropDownValues> CompniesList { get; set; }
+
+        public List<DocumentTagVM> DocumentTagsList { get; set; }
 
         public long CreatedBy { get; set; }
 

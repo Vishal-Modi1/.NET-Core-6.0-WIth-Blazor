@@ -11,6 +11,8 @@ using Configuration;
 using FSM.Blazor.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Components.Authorization;
+using Radzen.Blazor;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -33,21 +35,30 @@ namespace FSM.Blazor.Pages.Document
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
+        RadzenAutoComplete autoComplete;
+
         public bool isBusy, isLoading, isDisplayLoader;
         string uploadedFilePath = "";
         public long userId = long.MaxValue;
 
         IReadOnlyList<IBrowserFile> selectedFiles;
 
-        public  long maxFileSize =  ConfigurationSettings.Instance.MaxDocumentUploadSize;
+        public long maxFileSize = ConfigurationSettings.Instance.MaxDocumentUploadSize;
         long maxSizeInMB = 0;
         string errorMessage = "";
 
+        List<string> selectedTagsList = new List<string>();
+       
         protected override void OnInitialized()
         {
-            if(documentData.UserId > 0)
+            if (documentData.UserId > 0)
             {
                 userId = documentData.UserId;
+
+                if (!string.IsNullOrWhiteSpace(documentData.Tags))
+                {
+                    selectedTagsList = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
 
                 OnChange(documentData.CompanyId);
             }
@@ -78,7 +89,7 @@ namespace FSM.Blazor.Pages.Document
                 return;
             }
 
-            if (selectedFiles != null && selectedFiles.Count() > 0 && selectedFiles[0].Size > maxFileSize )
+            if (selectedFiles != null && selectedFiles.Count() > 0 && selectedFiles[0].Size > maxFileSize)
             {
                 await OpenErrorDialog(errorMessage);
                 return;
@@ -87,7 +98,7 @@ namespace FSM.Blazor.Pages.Document
             isLoading = true;
             SetSaveButtonState(true);
 
-            if(documentData.UserId == 0 && userId == long.MaxValue)
+            if (documentData.UserId == 0 && userId == long.MaxValue)
             {
                 documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
             }
@@ -137,7 +148,35 @@ namespace FSM.Blazor.Pages.Document
 
         private async Task UploadFilesAsync()
         {
-            byte[] fileData = File.ReadAllBytes(uploadedFilePath);
+            if ((selectedFiles == null || selectedFiles.Count() == 0) && documentData.Id == Guid.Empty)
+            {
+                await OpenErrorDialog("Please upload document.");
+                return;
+            }
+
+            if (selectedFiles != null && selectedFiles.Count() > 0 && selectedFiles[0].Size > maxFileSize)
+            {
+                await OpenErrorDialog(errorMessage);
+                return;
+            }
+
+            isLoading = true;
+            SetSaveButtonState(true);
+
+            if (documentData.UserId == 0 && userId == long.MaxValue)
+            {
+                documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+            }
+
+            documentData.UserId = userId;
+
+            byte[] fileData = new byte[0];
+
+            if (!string.IsNullOrWhiteSpace(uploadedFilePath))
+            {
+                fileData = File.ReadAllBytes(uploadedFilePath);
+            }
+
 
             ByteArrayContent data = new ByteArrayContent(fileData);
 
@@ -148,14 +187,34 @@ namespace FSM.Blazor.Pages.Document
 
             string companyId = documentData.CompanyId == null ? "0" : documentData.CompanyId.ToString();
 
-            multiContent.Add(new StringContent(documentData.Id.ToString()), "DocumentId");
+            multiContent.Add(new StringContent(documentData.Id.ToString()), "Id");
             multiContent.Add(new StringContent(companyId), "CompanyId");
+            multiContent.Add(new StringContent(documentData.DisplayName), "DisplayName");
+            multiContent.Add(new StringContent(documentData.ModuleId.ToString()), "ModuleId");
+            multiContent.Add(new StringContent(documentData.UserId.ToString()), "UserId");
+            multiContent.Add(new StringContent(documentData.Type), "Type");
+            multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
+            multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
+            multiContent.Add(new StringContent(String.Join(",", selectedTagsList)), "Tags");
 
             CurrentResponse response = await DocumentService.UploadDocumentAsync(_httpClient, multiContent);
 
-            ManageFileUploadResponse(response, "Document Details");
-
             SetSaveButtonState(false);
+
+            ManageFileUploadResponse(response, "Document Details");
+        }
+
+        public void RemoveTag(string value)
+        {
+            selectedTagsList.Remove(value);
+        }
+
+        public void SubmitFormIgnore(KeyboardEventArgs e)
+        {
+            if (e.Code == "Enter")
+            {
+                return;
+            }
         }
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary)
@@ -169,7 +228,10 @@ namespace FSM.Blazor.Pages.Document
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                File.Delete(uploadedFilePath);
+                if (!string.IsNullOrWhiteSpace(uploadedFilePath))
+                {
+                    File.Delete(uploadedFilePath);
+                }
 
                 DialogService.Close(true);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
@@ -218,6 +280,35 @@ namespace FSM.Blazor.Pages.Document
             }
 
             this.StateHasChanged();
+        }
+
+        void OntestChange(object value)
+        {
+            var selectedTag = documentData.DocumentTagsList.Where(p => p.TagName == value).FirstOrDefault();
+
+            if (selectedTag != null)
+            {
+                if (!selectedTagsList.Contains(selectedTag.TagName))
+                {
+                    selectedTagsList.Add(selectedTag.TagName);
+
+                  //  selectedTagsText = String.Join(" ", selectedTagsList);
+
+                    autoComplete.Value = "";
+                }
+                else
+                {
+                    autoComplete.Value = "";
+                }
+            }
+        }
+
+        public async Task OpenCreateTagDialogAsync()
+        {
+            await DialogService.OpenAsync<DocumentTag.Create>("Create",
+                  null, new DialogOptions() { Width = "500px", Height = "380px" });
+
+            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
         }
 
         private void SetSaveButtonState(bool isBusyState)

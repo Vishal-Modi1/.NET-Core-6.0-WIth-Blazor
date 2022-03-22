@@ -349,7 +349,10 @@ namespace Service
             {
                 bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
 
-                CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "Profile picture updated successfully.");
+                User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{user}/{user.ImageName}";
+
+                CreateResponse(user, HttpStatusCode.OK, "Profile picture updated successfully.");
 
                 return _currentResponse;
             }

@@ -49,14 +49,28 @@ namespace FSM.Blazor.Data.Document
         {
             var response = await _httpCaller.GetAsync(httpClient, $"document/getDetails?id={id}");
 
-            DocumentVM userVM = new DocumentVM();
+            DocumentVM documentVM = new DocumentVM();
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                userVM = JsonConvert.DeserializeObject<DocumentVM>(response.Data.ToString());
+                documentVM = JsonConvert.DeserializeObject<DocumentVM>(response.Data.ToString());
             }
 
-            return userVM;
+            return documentVM;
+        }
+
+        public async Task<List<DocumentTagVM>> GetDocumentTagsList(IHttpClientFactory httpClient)
+        {
+            var response = await _httpCaller.GetAsync(httpClient, $"documenttag/list");
+
+            List<DocumentTagVM> documentTagsVM = new List<DocumentTagVM>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                documentTagsVM = JsonConvert.DeserializeObject<List<DocumentTagVM>>(response.Data.ToString());
+            }
+
+            return documentTagsVM;
         }
 
         public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, DocumentVM documentVM)
@@ -88,6 +102,22 @@ namespace FSM.Blazor.Data.Document
             string url = $"document/uploadfile";
 
             CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> SaveTagAsync(IHttpClientFactory httpClient, DocumentTagVM documentTagVM)
+        {
+            string jsonData = JsonConvert.SerializeObject(documentTagVM);
+
+            string url = "documenttag/create";
+
+            if (documentTagVM.Id > 0)
+            {
+                url = "documenttag/edit";
+            }
+
+            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
 
             return response;
         }

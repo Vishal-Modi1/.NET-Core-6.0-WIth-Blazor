@@ -24,6 +24,8 @@ namespace DataModels.Entities
 
         public int ModuleId { get; set; }
 
+        public string TagIds { get; set; }
+
         public bool IsActive { get; set; }
         
         public bool IsDeleted { get; set; }

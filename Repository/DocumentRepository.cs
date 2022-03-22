@@ -47,6 +47,7 @@ namespace Repository
                 existingDocument.ModuleId = document.ModuleId;
                 existingDocument.CompanyId = document.CompanyId;
                 existingDocument.UserId = document.UserId;
+                existingDocument.TagIds = document.TagIds;
 
                 _myContext.SaveChanges();
 

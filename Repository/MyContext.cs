@@ -104,6 +104,7 @@ namespace Repository
         public DbSet<AircraftScheduleHobbsTime> AircraftScheduleHobbsTimes { get; set; }
     
         public DbSet<Document> Documents { get; set; }
+        public DbSet<DocumentTag> DocumentTags { get; set; }
     }
 
 }

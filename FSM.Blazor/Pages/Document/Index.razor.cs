@@ -93,18 +93,19 @@ namespace FSM.Blazor.Pages.Document
             SetAddNewButtonState(true);
 
             DocumentVM documentData = await DocumentService.GetDetailsAsync(_httpClient, id == null ? Guid.Empty : id.Value);
-
-            string height = "400px";
+            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
+            
+            string height = "420px";
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {
-                height = "450";
+                height = "470";
                 documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(_httpClient, documentData.CompanyId);
             }
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
             {
-                height = "500";
+                height = "520";
                 documentData.CompniesList = await CompanyService.ListDropDownValues(_httpClient);
             }
 
@@ -200,7 +201,5 @@ namespace FSM.Blazor.Pages.Document
             isBusyDeleteButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
         }
-
-
     }
 }

@@ -172,7 +172,7 @@ namespace FSMAPI.Controllers
             bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage + "\\" + companyId , form, fileName);
 
             CurrentResponse response = new CurrentResponse();
-            response.Data = "false";
+            response.Data = "";
 
             if (isFileUploaded)
             {
