@@ -5,6 +5,7 @@ using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using Microsoft.AspNetCore.Authorization;
+using DataModels.Entities;
 
 namespace FSMAPI.Controllers
 {
@@ -66,8 +67,8 @@ namespace FSMAPI.Controllers
             }
 
             CurrentResponse response = new CurrentResponse();
-          
-            if(documentVM.Id != Guid.Empty)
+
+            if (documentVM.Id != Guid.Empty)
             {
                 response = Edit(documentVM);
             }
@@ -76,31 +77,38 @@ namespace FSMAPI.Controllers
                 response = Create(documentVM);
             }
 
-            if(response.Status != System.Net.HttpStatusCode.OK)
+            if (response.Status != System.Net.HttpStatusCode.OK)
             {
                 return Ok(response);
             }
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["Id"]}.{documentVM.Type}";
+            Document document = (Document)response.Data;
 
-            if (string.IsNullOrWhiteSpace(companyId))
+            if (form.Files.Any(p => p.Length > 0))
             {
-                companyId = form["CompanyId"];
+                string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{document.Id}.{documentVM.Type}";
+
+                if (string.IsNullOrWhiteSpace(companyId))
+                {
+                    companyId = form["CompanyId"];
+                }
+
+                string filePath = UploadDirectory.Document + "\\" + companyId + "\\" + documentVM.UserId;
+
+                Directory.CreateDirectory(filePath);
+
+                bool isFileUploaded = await _fileUploader.UploadAsync(filePath, form, fileName);
+
+                response.Data = "false";
+
+                if (isFileUploaded)
+                {
+                    response = _documentService.UpdateDocumentName(document.Id, fileName);
+
+                }
             }
 
-            string filePath = UploadDirectory.Document + "\\" + companyId + "\\" + documentVM.UserId;
-
-            Directory.CreateDirectory(filePath);
-
-            bool isFileUploaded = await _fileUploader.UploadAsync(filePath, form, fileName);
-
-            response.Data = "false";
-
-            if (isFileUploaded)
-            {
-                response = _documentService.UpdateDocumentName(Guid.Parse(form["Id"]), fileName);
-
-            }
+            response = _documentService.FindByCondition(p => p.Id == document.Id);
 
             return Ok(response);
         }

@@ -30,7 +30,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
         {
-            <RadzenButton Style="float:right" Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Create")) />
+            <RadzenButton Style="float:right" IsBusy="@isBusyAddNewButton" BusyText="Upload ..." Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Create")) />
         }
 
     </div>
@@ -122,16 +122,24 @@
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
-            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false"  Property="UserName" Title="User"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="UserName" Title="User"></RadzenDataGridColumn>
         }
         <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Sortable="false" Property="ExpirationDate" Title="Expiration Date"></RadzenDataGridColumn>
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">
             <Template Context="data">
                 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
-                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit")) />
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+             
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit")) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
                               Click=@(args => OpenDeleteDialog(data)) />
+                }
             </Template>
         </RadzenDataGridColumn>
     </Columns>

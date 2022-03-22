@@ -189,6 +189,7 @@ namespace FSM.Blazor.Pages.Document
 
             multiContent.Add(new StringContent(documentData.Id.ToString()), "Id");
             multiContent.Add(new StringContent(companyId), "CompanyId");
+            multiContent.Add(new StringContent(documentData.Name == null ? "" : documentData.Name), "Name");
             multiContent.Add(new StringContent(documentData.DisplayName), "DisplayName");
             multiContent.Add(new StringContent(documentData.ModuleId.ToString()), "ModuleId");
             multiContent.Add(new StringContent(documentData.UserId.ToString()), "UserId");

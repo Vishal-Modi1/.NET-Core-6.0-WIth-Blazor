@@ -8,6 +8,7 @@ using System.Net;
 using System.Collections.Generic;
 using DataModels.Constants;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Service
 {
@@ -172,6 +173,25 @@ namespace Service
             catch (Exception exc)
             {
                 CreateResponse(new DocumentFilterVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse FindByCondition(Expression<Func<Document, bool>> predicate)
+        {
+            try
+            {
+                Document document = _documentRepository.FindByCondition(predicate);
+
+                CreateResponse(document, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
 
                 return _currentResponse;
             }

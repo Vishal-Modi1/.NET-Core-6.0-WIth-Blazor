@@ -1,6 +1,8 @@
 ﻿using DataModels.VM.Document;
 using DataModels.VM.Common;
 using System;
+using System.Linq.Expressions;
+using DataModels.Entities;
 
 namespace Service.Interface
 {
@@ -15,5 +17,7 @@ namespace Service.Interface
 
         DocumentVM FindById(Guid id);
         CurrentResponse GetFiltersValue();
+
+        CurrentResponse FindByCondition(Expression<Func<Document, bool>> predicate);
     }
 }
