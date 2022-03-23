@@ -69,7 +69,7 @@ namespace DataModels.VM.Aircraft
         public Nullable<long> DeletedBy { get; set; }
         public Nullable<System.DateTime> DeletedOn { get; set; }
         public Nullable<System.DateTime> CreatedOn { get; set; }
-        public Nullable<long> CreatedBy { get; set; }
+        public long CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
 

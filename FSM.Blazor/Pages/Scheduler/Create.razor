@@ -405,7 +405,7 @@
         <div class="d-flex btn-grp justify-content-evenly">
             @if (uiOptions.isDisplayCheckOutOption)
             {
-                if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler"))
+                if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                 {
                     if (uiOptions.isDisplayCheckInButton)
                     {
@@ -421,7 +421,7 @@
 
                 if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
-                    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler"))
+                    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                     {
                         <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
                         <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => UnCheckOut())" Text="Un-Check Out" Style="width: 164px" />
@@ -429,11 +429,11 @@
                 }
                 else
                 {
-                    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler"))
+                    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                     {
                         <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenForm())" Text="Edit" Style="width: 164px" />
                     }
-                    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, "Scheduler"))
+                    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, "Scheduler") && isAllowToDelete)
                     {
                         <RadzenButton ButtonStyle="ButtonStyle.Danger" Click="@((args) => OpenDeleteDialog())" Text="Delete" Style="width: 164px" />
                     }
@@ -441,7 +441,7 @@
             }
             else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
-                if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler"))
+                if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                 {
                     <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => ShowEditEndTimeForm())" Text="Edit End Time" Style="width: 164px" />
                     <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => EditFlightTime())" Text="Edit Flight Time" Style="width: 164px" />

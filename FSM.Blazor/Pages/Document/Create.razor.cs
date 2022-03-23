@@ -177,7 +177,6 @@ namespace FSM.Blazor.Pages.Document
                 fileData = File.ReadAllBytes(uploadedFilePath);
             }
 
-
             ByteArrayContent data = new ByteArrayContent(fileData);
 
             MultipartFormDataContent multiContent = new MultipartFormDataContent
@@ -307,7 +306,7 @@ namespace FSM.Blazor.Pages.Document
         public async Task OpenCreateTagDialogAsync()
         {
             await DialogService.OpenAsync<DocumentTag.Create>("Create",
-                  null, new DialogOptions() { Width = "500px", Height = "380px" });
+                  null, new DialogOptions() { Width = "500px", Height = "300px" });
 
             documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
         }

@@ -46,7 +46,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(SchedulerVM schedulerVM)
         {
-            schedulerVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            schedulerVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.Create(schedulerVM);
 
             return Ok(response);

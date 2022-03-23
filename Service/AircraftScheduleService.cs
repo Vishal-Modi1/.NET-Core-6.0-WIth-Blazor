@@ -81,7 +81,7 @@ namespace Service
                 {
                     UserPreference aircraftData = userPreferencesList.Where(p => p.PreferenceType == PreferenceType.Aircraft.ToString()).FirstOrDefault();
 
-                    if (aircraftData == null)
+                    if (aircraftData == null || string.IsNullOrWhiteSpace(aircraftData.PreferencesIds))
                     {
                         continue;
                     }
@@ -93,7 +93,7 @@ namespace Service
                 {
                     UserPreference activityType = userPreferencesList.Where(p => p.PreferenceType == PreferenceType.ScheduleActivityType.ToString()).FirstOrDefault();
 
-                    if (activityType == null)
+                    if (activityType == null || string.IsNullOrWhiteSpace(activityType.PreferencesIds))
                     {
                         continue;
                     }
@@ -371,6 +371,7 @@ namespace Service
             schedulerVM.InternalComments = aircraftSchedule.PrivateComments;
             schedulerVM.FlightRoutes = aircraftSchedule.FlightRoutes;
             schedulerVM.IsStandBy = aircraftSchedule.StandBy;
+            schedulerVM.CreatedBy = aircraftSchedule.CreatedBy;
 
             return schedulerVM;
         }

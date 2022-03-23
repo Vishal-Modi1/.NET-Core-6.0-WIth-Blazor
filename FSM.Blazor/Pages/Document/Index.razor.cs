@@ -169,7 +169,16 @@ namespace FSM.Blazor.Pages.Document
             using var streamRef = new DotNetStreamReference(stream: fileStream);
 
             var jsFile = await JS.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-            await jsFile.InvokeVoidAsync("downloadFileFromStream", documentDataVM.DisplayName, streamRef);
+
+            string fileName = documentDataVM.DisplayName;
+            bool hasExtension = Path.HasExtension(documentDataVM.DisplayName);
+
+            if(!hasExtension)
+            {
+                fileName += "." + documentDataVM.Type;
+            }
+
+            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName , streamRef);
         }
 
         private Stream GetFileStream(string documentPath)

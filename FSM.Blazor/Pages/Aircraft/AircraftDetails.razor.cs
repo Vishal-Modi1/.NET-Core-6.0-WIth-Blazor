@@ -1,7 +1,11 @@
-﻿using DataModels.VM.Aircraft;
+﻿using DataModels.Constants;
+using DataModels.VM.Aircraft;
 using FSM.Blazor.Data.Aircraft;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Radzen;
 using System.Net;
@@ -13,6 +17,12 @@ namespace FSM.Blazor.Pages.Aircraft
         public string AircraftId { get; set; }
 
         [Inject]
+        protected IMemoryCache memoryCache { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
         [Parameter]
@@ -21,9 +31,14 @@ namespace FSM.Blazor.Pages.Aircraft
         public string CompanyName;
 
         public bool isDataLoaded = false, isBusy = false;
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+        string moduleName = "Aircraft";
+        public bool isAllowToEdit;
 
         protected override async Task OnInitializedAsync()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
@@ -51,6 +66,18 @@ namespace FSM.Blazor.Pages.Aircraft
             catch (Exception e)
             {
 
+            }
+
+            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
+            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
+
+            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+
+            bool isCreator = userId == AircraftData.CreatedBy;
+
+            if (isAdmin || isSuperAdmin || isCreator)
+            {
+                isAllowToEdit = true;
             }
 
             SetCompanyName();

@@ -109,6 +109,7 @@ namespace FSMAPI.Controllers
             }
 
             response = _documentService.FindByCondition(p => p.Id == document.Id);
+            response.Message = "Document updated successfully.";
 
             return Ok(response);
         }
