@@ -38,18 +38,20 @@ namespace FSM.Blazor.Pages.Document
         NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
+        private DotNetObjectReference<Index>? objRef;
 
         #endregion
 
         IList<DocumentDataVM> data;
         int count, ModuleId, CompanyId;
-        bool isLoading, isBusyAddNewButton, isBusyDeleteButton;
+        bool isLoading, isBusyAddNewButton, isBusyEditButton, isBusyDeleteButton;
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         DocumentFilterVM documentFilterVM;
         string moduleName = "Document";
+        private string? result;
 
         protected override async Task OnInitializedAsync()
         {
@@ -88,9 +90,16 @@ namespace FSM.Blazor.Pages.Document
             isLoading = false;
         }
 
-        async Task DocumentCreateDialog(Guid? id, string title)
+        async Task DocumentCreateDialog(Guid? id, string title, bool isCreate)
         {
-            SetAddNewButtonState(true);
+            if (isCreate)
+            {
+                SetAddNewButtonState(true);
+            }
+            else
+            {
+                SetEditButtonState(id.Value, true);
+            }
 
             DocumentVM documentData = await DocumentService.GetDetailsAsync(_httpClient, id == null ? Guid.Empty : id.Value);
             documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
@@ -109,7 +118,14 @@ namespace FSM.Blazor.Pages.Document
                 documentData.CompniesList = await CompanyService.ListDropDownValues(_httpClient);
             }
 
-            SetAddNewButtonState(false);
+            if (isCreate)
+            {
+                SetAddNewButtonState(true);
+            }
+            else
+            {
+                SetEditButtonState(id.Value,false);
+            }
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName))
             {
@@ -127,6 +143,15 @@ namespace FSM.Blazor.Pages.Document
         private void SetAddNewButtonState(bool isBusy)
         {
             isBusyAddNewButton = isBusy;
+            StateHasChanged();
+        }
+
+        private void SetEditButtonState(Guid id, bool isBusy)
+        {
+            var details = data.Where(p => p.Id == id).First();
+
+            details.IsLoadingEditButton = isBusy;
+
             StateHasChanged();
         }
 
@@ -160,6 +185,27 @@ namespace FSM.Blazor.Pages.Document
             await grid.Reload();
         }
 
+        async Task CopyLinkToClipboard(string link)
+        {
+            var jsFile = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+            await jsFile.InvokeVoidAsync("copyTextToClipboard", link);
+
+            NotificationMessage message = new NotificationMessage().Build(NotificationSeverity.Success, "Link copied to the clipboard", "");
+            NotificationService.Notify(message);
+
+            DialogService.Close();
+        }
+
+        [JSInvokable]
+        public async void ManageDocumentDownloadResponse(string id)
+        {
+            DocumentDataVM documentDataVM = data.Where(p => p.Id == Guid.Parse(id)).First();
+
+            documentDataVM.TotalDownloads += 1;
+
+            await DocumentService.UpdateTotalDownloadsAsync(_httpClient, Guid.Parse(id));
+        }
+
         async Task DownloadDocument(Guid id)
         {
             DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
@@ -178,7 +224,10 @@ namespace FSM.Blazor.Pages.Document
                 fileName += "." + documentDataVM.Type;
             }
 
-            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName , streamRef);
+            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName , streamRef, id.ToString());
+
+            objRef = DotNetObjectReference.Create(this);
+            result = await jsFile.InvokeAsync<string>("ManageDocumentDownloadResponse", objRef, id.ToString());
         }
 
         private Stream GetFileStream(string documentPath)

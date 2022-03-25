@@ -48,6 +48,7 @@ namespace Repository
                 existingDocument.CompanyId = document.CompanyId;
                 existingDocument.UserId = document.UserId;
                 existingDocument.TagIds = document.TagIds;
+                existingDocument.LastShareDate = document.LastShareDate;
 
                 _myContext.SaveChanges();
 
@@ -111,6 +112,42 @@ namespace Repository
                     document.IsDeleted = true;
                     _myContext.SaveChanges();
                 }
+            }
+        }
+
+        public long UpdateTotalDownloads(Guid id)
+        {
+            using (_myContext = new MyContext())
+            {
+                Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+
+                if (document != null)
+                {
+                    document.TotalDownloads = document.TotalDownloads.GetValueOrDefault() + 1;
+                    _myContext.SaveChanges();
+
+                    return Convert.ToInt64(document.TotalDownloads);
+                }
+
+                return 0;
+            }
+        }
+
+        public long UpdateTotalShares(Guid id)
+        {
+            using (_myContext = new MyContext())
+            {
+                Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+
+                if (document != null)
+                {
+                    document.TotalShares = document.TotalShares.GetValueOrDefault() + 1;
+                    _myContext.SaveChanges();
+
+                    return Convert.ToInt64(document.TotalShares);
+                }
+
+                return 0;
             }
         }
     }

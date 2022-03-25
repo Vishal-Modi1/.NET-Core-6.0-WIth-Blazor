@@ -66,6 +66,11 @@ namespace FSMAPI.Controllers
                 documentVM.ExpirationDate = Convert.ToDateTime(form["ExpirationDate"].ToString());
             }
 
+            if (!string.IsNullOrWhiteSpace(form["LastShareDate"].ToString()))
+            {
+                documentVM.LastShareDate = Convert.ToDateTime(form["LastShareDate"].ToString());
+            }
+
             CurrentResponse response = new CurrentResponse();
 
             if (documentVM.Id != Guid.Empty)
@@ -197,5 +202,22 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpPut]
+        [Route("updatetotaldownloads")]
+        public IActionResult UpdateTotalDownloads([FromBody] Guid id)
+        {
+            CurrentResponse response = _documentService.UpdateTotalDownloads(id);
+
+            return Ok(response);
+        }
+
+        [HttpPut]
+        [Route("updatetotalshares")]
+        public IActionResult UpdateTotalShares([FromBody]Guid id)
+        {
+            CurrentResponse response = _documentService.UpdateTotalShares(id);
+
+            return Ok(response);
+        }
     }
 }

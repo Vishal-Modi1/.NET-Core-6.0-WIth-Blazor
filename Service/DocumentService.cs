@@ -259,6 +259,44 @@ namespace Service
             }
         }
 
+        public CurrentResponse UpdateTotalDownloads(Guid id)
+        {
+            try
+            {
+                long totalDownloads = _documentRepository.UpdateTotalDownloads(id);
+                CreateResponse(totalDownloads, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(0, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateTotalShares(Guid id)
+        {
+            try
+            {
+                long totalShares = _documentRepository.UpdateTotalShares(id);
+                CreateResponse(totalShares, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(0, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        #region Object Mapping
+
         private DocumentVM ToBusinessObject(Document document)
         {
             DocumentVM documentVM = new DocumentVM();
@@ -271,6 +309,9 @@ namespace Service
             documentVM.UserId = document.UserId;
             documentVM.ModuleId = document.ModuleId;
             documentVM.Type = document.Type;
+            documentVM.TotalDownloads = document.TotalDownloads;
+            documentVM.TotalShares = document.TotalShares;
+            documentVM.LastShareDate = document.LastShareDate;
 
             if (!string.IsNullOrWhiteSpace(document.TagIds))
             {
@@ -297,9 +338,10 @@ namespace Service
             document.Type = documentVM.Type == null ? "" : documentVM.Type;
             document.Size = documentVM.Size;
             document.IsActive = true;
+            document.LastShareDate = documentVM.LastShareDate;
 
             document.CreatedBy = documentVM.CreatedBy;
-            document.UpdatedBy = documentVM.UpdatedBy;
+           
 
             if (documentVM.Id == Guid.Empty)
             {
@@ -308,9 +350,12 @@ namespace Service
             else
             {
                 document.UpdatedOn = DateTime.UtcNow;
+                document.UpdatedBy = documentVM.UpdatedBy;
             }
 
             return document;
         }
+
+        #endregion
     }
 }

@@ -10,11 +10,24 @@
 @inject DialogService DialogService
 @inject UserService UserService
 @inject CompanyService CompanyService
+@inject IJSRuntime JSRunTime
 
 @inject IJSRuntime JS
 
 @page "/Document"
 
+<style>
+
+    .download {
+        font-size: 15px;
+        width: 55px;
+    }
+
+        .download > i {
+            margin-left: -8px;
+            margin-right: 0px;
+        }
+</style>
 <PageTitle>Documents | Fly Manager </PageTitle>
 
 @if (documentFilterVM == null)
@@ -30,7 +43,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
         {
-            <RadzenButton Style="float:right" IsBusy="@isBusyAddNewButton" BusyText="Upload ..." Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Create")) />
+            <RadzenButton Style="float:right" IsBusy="@isBusyAddNewButton" BusyText="Upload ..." Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Create", true)) />
         }
 
     </div>
@@ -124,15 +137,26 @@
         {
             <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="UserName" Title="User"></RadzenDataGridColumn>
         }
+
         <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Sortable="false" Property="ExpirationDate" Title="Expiration Date"></RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="250px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">
             <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
-             
+
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Text="@data.TotalDownloads.ToString()" Style="font-size: 15px !important;width:55px !important;" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
+               
+                @if (data.LastShareDate != null && data.LastShareDate.Value < DateTime.Now.Date)
+                {
+                    <RadzenButton Disabled=true ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:55px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                }
+                else
+                {
+                     <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:55px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                }
+
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit")) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy=@data.IsLoadingEditButton Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit", false)) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
@@ -160,5 +184,31 @@
         </div>
     </div>
     , new DialogOptions { Width = "360px" });
+    }
+
+
+    async Task OpenShareDocumentDialog(Guid id)
+    {
+        DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
+
+        await DocumentService.UpdateTotalSharesAsync(_httpClient, documentDataVM.Id);
+
+        documentDataVM.TotalShares += 1;
+
+        var result = await DialogService.OpenAsync("Share", ds =>
+    @<RadzenTemplateForm Data=@documentDataVM>
+        <div>
+            <p class="mb-4">  <RadzenLink Path="@documentDataVM.DocumentPath" Text="@documentDataVM.DocumentPath" /></p>
+
+            <div class="row" style="text-align:right">
+                <div class="col">
+                    <RadzenButton Text="Copy to clipboard" Click="() => CopyLinkToClipboard(documentDataVM.DocumentPath)" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 150px;" />
+
+                </div>
+            </div>
+        </div>
+    </RadzenTemplateForm>
+    , new DialogOptions { Width = "700px", Height = "200px" });
+
     }
 }

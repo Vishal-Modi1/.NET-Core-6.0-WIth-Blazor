@@ -17,7 +17,15 @@ namespace DataModels.VM.Document
 
         public long Size { get; set; }
 
+        public long? TotalDownloads { get; set; }
+
+        public long? TotalShares { get; set; }
+
+        public DateTime? LastShareDate { get; set; }
+
+
         public string Tags { get; set; }
+
         public DateTime? ExpirationDate { get; set; }
 
         public int CompanyId { get; set; }

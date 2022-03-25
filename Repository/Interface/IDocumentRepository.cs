@@ -20,5 +20,9 @@ namespace Repository.Interface
         List<DocumentDataVM> List(DocumentDatatableParams datatableParams);
 
         void Delete(Guid id);
+
+        long UpdateTotalDownloads(Guid id);
+
+        long UpdateTotalShares(Guid id);
     }
 }

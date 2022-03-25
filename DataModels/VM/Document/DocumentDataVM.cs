@@ -20,8 +20,13 @@ namespace DataModels.VM.Document
 
         public DateTime? ExpirationDate { get; set; }
 
+        public DateTime? LastShareDate { get; set; }
+
         [NotMapped]
         public string DocumentPath { get; set; }
+
+        [NotMapped]
+        public bool IsLoadingEditButton { get; set; }
 
         public int CompanyId { get; set; }
 
@@ -29,6 +34,8 @@ namespace DataModels.VM.Document
 
         public string Size { get; set; }
 
+        public long TotalDownloads { get; set; }
+        public long TotalShares { get; set; }
         public int TotalRecords { get; set; }
     }
 }

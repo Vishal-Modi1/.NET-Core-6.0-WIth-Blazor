@@ -14,10 +14,10 @@ namespace Service.Interface
         CurrentResponse GetDetails(Guid id, int companyId);
         CurrentResponse List(DocumentDatatableParams datatableParams);
         CurrentResponse Delete(Guid id);
-
         DocumentVM FindById(Guid id);
         CurrentResponse GetFiltersValue();
-
         CurrentResponse FindByCondition(Expression<Func<Document, bool>> predicate);
+        CurrentResponse UpdateTotalDownloads(Guid id);
+        CurrentResponse UpdateTotalShares(Guid id);
     }
 }

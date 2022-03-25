@@ -74,14 +74,14 @@
                 <RadzenAutoComplete Placeholder="Search a tag..." Data=@documentData.DocumentTagsList
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @ref="@autoComplete"
                                     TextProperty="TagName" Change=@(args => OntestChange(args)) Style="width: 100%;" />
-               
+
                 <RadzenButton Click=@(args => OpenCreateTagDialogAsync()) Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
 
-               @* <RadzenLabel Text="@selectedTagsText" />*@
+                @* <RadzenLabel Text="@selectedTagsText" />*@
 
-                @foreach(var data in selectedTagsList)
+                @foreach (var data in selectedTagsList)
                 {
-                  <RadzenButton Click=@(args => RemoveTag(data)) Text="@data" Icon="highlight_off" ButtonStyle="ButtonStyle.Light" />    
+                    <RadzenButton Click=@(args => RemoveTag(data)) Text="@data" Icon="highlight_off" ButtonStyle="ButtonStyle.Light" />
                 }
 
             </div>
@@ -152,12 +152,20 @@
 
         <div class="row">
             <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Last Sharing Date" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDatePicker @bind-Value=@documentData.LastShareDate Placeholder="Please select date" DateFormat="d" Class="w-100" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
                 <RadzenLabel Text="Expiration Date" />
             </div>
             <div class="col-md-8">
-                <RadzenDatePicker @bind-Value=@documentData.ExpirationDate DateFormat="d" Class="w-100" />
+                <RadzenDatePicker @bind-Value=@documentData.ExpirationDate Placeholder="Please select date" DateFormat="d" Class="w-100" />
             </div>
-
         </div>
 
     </RadzenFieldset>

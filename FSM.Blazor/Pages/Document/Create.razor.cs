@@ -81,70 +81,70 @@ namespace FSM.Blazor.Pages.Document
             base.StateHasChanged();
         }
 
-        public async Task Submit()
-        {
-            if ((selectedFiles == null || selectedFiles.Count() == 0) && documentData.Id == Guid.Empty)
-            {
-                await OpenErrorDialog("Please upload document.");
-                return;
-            }
+        //public async Task Submit()
+        //{
+        //    if ((selectedFiles == null || selectedFiles.Count() == 0) && documentData.Id == Guid.Empty)
+        //    {
+        //        await OpenErrorDialog("Please upload document.");
+        //        return;
+        //    }
 
-            if (selectedFiles != null && selectedFiles.Count() > 0 && selectedFiles[0].Size > maxFileSize)
-            {
-                await OpenErrorDialog(errorMessage);
-                return;
-            }
+        //    if (selectedFiles != null && selectedFiles.Count() > 0 && selectedFiles[0].Size > maxFileSize)
+        //    {
+        //        await OpenErrorDialog(errorMessage);
+        //        return;
+        //    }
 
-            isLoading = true;
-            SetSaveButtonState(true);
+        //    isLoading = true;
+        //    SetSaveButtonState(true);
 
-            if (documentData.UserId == 0 && userId == long.MaxValue)
-            {
-                documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-            }
+        //    if (documentData.UserId == 0 && userId == long.MaxValue)
+        //    {
+        //        documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+        //    }
 
-            documentData.UserId = userId;
+        //    documentData.UserId = userId;
 
-            CurrentResponse response = await DocumentService.SaveandUpdateAsync(_httpClient, documentData);
+        //    CurrentResponse response = await DocumentService.SaveandUpdateAsync(_httpClient, documentData);
 
-            SetSaveButtonState(false);
+        //    SetSaveButtonState(false);
 
-            NotificationMessage message;
+        //    NotificationMessage message;
 
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
-                NotificationService.Notify(message);
-            }
-            else if (((int)response.Status) == 200)
-            {
-                if (response != null && response.Status == System.Net.HttpStatusCode.OK)
-                {
-                    if (selectedFiles != null && selectedFiles.Count() > 0)
-                    {
-                        var data = JsonConvert.DeserializeObject<DE.Document>(response.Data.ToString());
+        //    if (response == null)
+        //    {
+        //        message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+        //        NotificationService.Notify(message);
+        //    }
+        //    else if (((int)response.Status) == 200)
+        //    {
+        //        if (response != null && response.Status == System.Net.HttpStatusCode.OK)
+        //        {
+        //            if (selectedFiles != null && selectedFiles.Count() > 0)
+        //            {
+        //                var data = JsonConvert.DeserializeObject<DE.Document>(response.Data.ToString());
 
-                        documentData.Id = data.Id;
-                        documentData.CompanyId = data.CompanyId;
+        //                documentData.Id = data.Id;
+        //                documentData.CompanyId = data.CompanyId;
 
-                        await UploadFilesAsync();
-                    }
-                    else
-                    {
-                        DialogService.Close(true);
-                        message = new NotificationMessage().Build(NotificationSeverity.Success, "Document Details", response.Message);
-                        NotificationService.Notify(message);
-                    }
-                }
-            }
-            else
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Document Details", response.Message);
-                NotificationService.Notify(message);
-            }
+        //                await UploadFilesAsync();
+        //            }
+        //            else
+        //            {
+        //                DialogService.Close(true);
+        //                message = new NotificationMessage().Build(NotificationSeverity.Success, "Document Details", response.Message);
+        //                NotificationService.Notify(message);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        message = new NotificationMessage().Build(NotificationSeverity.Error, "Document Details", response.Message);
+        //        NotificationService.Notify(message);
+        //    }
 
-            isLoading = false;
-        }
+        //    isLoading = false;
+        //}
 
         private async Task UploadFilesAsync()
         {
@@ -195,6 +195,7 @@ namespace FSM.Blazor.Pages.Document
             multiContent.Add(new StringContent(documentData.Type), "Type");
             multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
+            multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
             multiContent.Add(new StringContent(String.Join(",", selectedTagsList)), "Tags");
 
             CurrentResponse response = await DocumentService.UploadDocumentAsync(_httpClient, multiContent);

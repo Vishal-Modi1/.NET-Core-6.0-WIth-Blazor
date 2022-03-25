@@ -521,6 +521,9 @@ CREATE TABLE [dbo].[Documents](
 	[UserId] [bigint] NOT NULL,
 	[TagIds] [varchar](200) NULL,
 	[Size(InKB)] [bigint] NULL,
+	[TotalDownloads] [bigint] NULL,
+	[TotalShares] [bigint] NULL,
+	[LastShareDate] [datetime] NULL,
 	[ExpirationDate] [datetime] NULL,
 	[CompanyId] [int] NULL,
 	[ModuleId] [int] NULL,
@@ -2026,7 +2029,7 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetDocumentList]    Script Date: 16-03-2022 09:34:58 ******/
+/****** Object:  StoredProcedure [dbo].[GetDocumentList]    Script Date: 25-03-2022 11:48:27 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2050,6 +2053,8 @@ AS BEGIN
     ; WITH CTE_Results AS       
     (      
         SELECT d.Id, d.Name,d.UserId ,d.DisplayName, d.ExpirationDate, d.CompanyId,
+		 ISNULL(d.TotalDownloads, 0) as TotalDownloads , ISNULL(d.TotalShares, 0) as TotalShares ,
+		 d.LastShareDate,
 		d.Type,ISNULL(d.[Size(InKB)], 0) as Size, m.Name as ModuleName,
 		CP.Name as CompanyName, u.FirstName + ' ' + u.LastName as UserName   from Documents d    
 		LEFT JOIN  Companies CP on CP.Id = d.CompanyId    
@@ -2160,6 +2165,8 @@ AS BEGIN
        
     )      
     Select TotalRecords, d.Id,d.UserId, d.Name, d.DisplayName, d.ExpirationDate, d.CompanyId,
+	 ISNULL(d.TotalDownloads, 0) as TotalDownloads , ISNULL(d.TotalShares, 0) as TotalShares ,
+	 d.LastShareDate,
 	d.Type,CONCAT(ISNULL(d.[Size(InKB)], 0), ' KB') as Size, m.Name as ModuleName, 
 	CP.Name as CompanyName, u.FirstName + ' ' + u.LastName as UserName from Documents d    
 	LEFT JOIN  Companies CP on CP.Id = d.CompanyId  
@@ -2169,7 +2176,6 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = d.Id)      
        
 END    
-    
     
     
 /****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 07-12-2021 15:12:50 ******/    

@@ -16,6 +16,12 @@ namespace DataModels.Entities
         [Column("Size(InKB)")]
         public long Size { get; set; }
 
+        public long? TotalDownloads { get; set; }
+
+        public long? TotalShares { get; set; }
+        
+        public DateTime? LastShareDate { get; set; }
+        
         public DateTime? ExpirationDate { get; set; }
 
         public int CompanyId { get; set; }

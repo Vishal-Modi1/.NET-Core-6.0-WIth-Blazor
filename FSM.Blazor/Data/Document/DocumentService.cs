@@ -97,6 +97,24 @@ namespace FSM.Blazor.Data.Document
             return response;
         }
 
+        public async Task<CurrentResponse> UpdateTotalDownloadsAsync(IHttpClientFactory httpClient, Guid id)
+        {
+            string url = $"document/updatetotaldownloads";
+            string jsonData = JsonConvert.SerializeObject(id);
+            CurrentResponse response = await _httpCaller.PutAsync(httpClient, url, jsonData);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UpdateTotalSharesAsync(IHttpClientFactory httpClient, Guid id)
+        {
+            string url = $"document/updatetotalshares";
+            string jsonData = JsonConvert.SerializeObject(id);
+            CurrentResponse response = await _httpCaller.PutAsync(httpClient, url, jsonData);
+
+            return response;
+        }
+
         public async Task<CurrentResponse> UploadDocumentAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
         {
             string url = $"document/uploadfile";
