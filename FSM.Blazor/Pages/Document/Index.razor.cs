@@ -120,7 +120,7 @@ namespace FSM.Blazor.Pages.Document
 
             if (isCreate)
             {
-                SetAddNewButtonState(true);
+                SetAddNewButtonState(false);
             }
             else
             {

@@ -138,20 +138,30 @@
             <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="UserName" Title="User"></RadzenDataGridColumn>
         }
 
-        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Sortable="false" Property="ExpirationDate" Title="Expiration Date"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="100px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Expiration Date">
+            <Template Context="data">
 
+                @if (data.ExpirationDate != null)
+                {
+                    <RadzenLabel Text="@data.ExpirationDate.Value.ToShortDateString()"></RadzenLabel>
+
+                }
+
+            </Template>
+        </RadzenDataGridColumn>
+        
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="250px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">
             <Template Context="data">
 
                 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Text="@data.TotalDownloads.ToString()" Style="font-size: 15px !important;width:55px !important;" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
-               
+
                 @if (data.LastShareDate != null && data.LastShareDate.Value < DateTime.Now.Date)
                 {
                     <RadzenButton Disabled=true ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:55px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
                 }
                 else
                 {
-                     <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:55px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:55px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
