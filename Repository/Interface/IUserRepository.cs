@@ -20,7 +20,7 @@ namespace Repository.Interface
 
         List<UserDataVM> List(UserDatatableParams datatableParams);
 
-        void Delete(long id);
+        void Delete(long id, long deletedBy);
 
         void UpdateActiveStatus(long id, bool isActive);
 

@@ -2,10 +2,7 @@
 using DataModels.VM.AircraftEquipment;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repository.Interface
 {
@@ -15,7 +12,7 @@ namespace Repository.Interface
 
         AircraftEquipmentTime Edit(AircraftEquipmentTime airCraft);
         
-        void Delete(int id);
+        void Delete(int id, long deletedBy);
         void DeleteEquipmentTimes(long airCraftId,long UpdatedBy);
 
         AircraftEquipmentTime FindByCondition(Expression<Func<AircraftEquipmentTime, bool>> predicate);

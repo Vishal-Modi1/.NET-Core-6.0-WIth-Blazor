@@ -101,11 +101,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(int id)
+        public CurrentResponse Delete(int id, long deletedBy)
         {
             try
             {
-                _airCraftRepository.Delete(id);
+                _airCraftRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Aircraft is deleted successfully.");
 
                 return _currentResponse;

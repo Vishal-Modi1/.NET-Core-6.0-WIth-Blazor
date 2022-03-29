@@ -5,6 +5,7 @@ using DataModels.VM.Company;
 using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Reservation;
+using DataModels.VM.SubscriptionPlan;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,7 @@ namespace Repository
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<UserDataVM> UserSearchList { get; set; }
+        public DbSet<SubscriptionPlanDataVM> SubscriptionPlanData { get; set; }
 
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
@@ -105,6 +107,8 @@ namespace Repository
     
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentTag> DocumentTags { get; set; }
+
+        public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
     }
 
 }

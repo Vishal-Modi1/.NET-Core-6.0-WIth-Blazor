@@ -11,6 +11,6 @@ namespace Service.Interface
         CurrentResponse ListAll();
         CurrentResponse Edit(CompanyVM companyVM);
         CurrentResponse GetDetails(int id);
-        CurrentResponse Delete(int id);
+        CurrentResponse Delete(int id, long deletedBy);
     }
 }

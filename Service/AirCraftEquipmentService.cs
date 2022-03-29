@@ -70,11 +70,11 @@ namespace Service
 
             return _currentResponse;
         }
-        public CurrentResponse Delete(int id)
+        public CurrentResponse Delete(int id, long deletedBy)
         {
             try
             {
-                _aircraftEquipementRepository.Delete(id);
+                _aircraftEquipementRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Aircraft Equipment is deleted successfully.");
 
                 return _currentResponse;

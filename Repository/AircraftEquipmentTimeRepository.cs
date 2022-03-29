@@ -43,7 +43,7 @@ namespace Repository
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -51,7 +51,10 @@ namespace Repository
 
                 if (aircraftEquipmentTime != null)
                 {
-                    _myContext.AircraftEquipmentTimes.Remove(aircraftEquipmentTime);
+                    aircraftEquipmentTime.DeletedBy = deletedBy;
+                    aircraftEquipmentTime.IsDeleted = true;
+                    aircraftEquipmentTime.DeletedOn = DateTime.UtcNow;
+
                     _myContext.SaveChanges();
                 }
             }

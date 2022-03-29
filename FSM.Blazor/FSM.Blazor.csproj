@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\SubscriptionPlan\Index.razor~RFe28820.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BlazorMaterialIcons" Version="0.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

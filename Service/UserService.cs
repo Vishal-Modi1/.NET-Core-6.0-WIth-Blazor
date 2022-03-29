@@ -244,11 +244,11 @@ namespace Service
 
         #endregion
 
-        public CurrentResponse Delete(long id)
+        public CurrentResponse Delete(long id, long deletedBy)
         {
             try
             {
-                _userRepository.Delete(id);
+                _userRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "User deleted successfully.");
 
                 return _currentResponse;

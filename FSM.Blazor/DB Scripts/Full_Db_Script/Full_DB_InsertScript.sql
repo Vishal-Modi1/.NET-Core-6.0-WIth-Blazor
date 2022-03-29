@@ -635,6 +635,7 @@ INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,Ord
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Scheduler','Scheduler','Index','Schedule','event_note',6,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (7,'Reservation', 'Reservation', 'Index', 'Reservation', 'book_online',7,1)
 INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (8,'Document', 'Document', 'Index', 'Document', 'description',8,1)
+INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (9,'SubscriptionPlan', 'SubscriptionPlan', 'Index', 'Subscription Plan', 'account_balance_wallet',9,1)
 Go
 SET IDENTITY_INSERT [dbo].ModuleDetails OFF
 GO

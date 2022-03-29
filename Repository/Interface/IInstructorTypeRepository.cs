@@ -19,7 +19,7 @@ namespace Repository.Interface
 
         InstructorType FindByCondition(Expression<Func<InstructorType, bool>> predicate);
 
-        void Delete(int id);
+        void Delete(int id, long deletedBy);
 
         List<DropDownValues> ListDropDownValues();
 

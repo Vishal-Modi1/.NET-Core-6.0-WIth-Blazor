@@ -1,0 +1,171 @@
+﻿@namespace FSM.Blazor.Pages.SubscriptionPlan
+@using DataModels.Enums
+@using FSM.Blazor.Data.SubscriptionPlan
+@using FSM.Blazor.Data.ModuleDetail
+@using DataModels.VM.SubscriptionPlan
+@using Configuration;
+
+@inject SubscriptionPlanService SubscriptionPlanService
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavManager
+@inject ModuleDetailsService ModuleDetailsService
+
+@page "/SubscriptionPlan"
+
+
+<PageTitle>Subscription Plan | Fly Manager </PageTitle>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Subscription Plans Details</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" IsBusy=@isBusyAddNewButton BusyText="Add New ..." Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
+                      Click=@(() => SubscriptionPlanCreateDialog(0, "Create", true
+                      )) />
+        }
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Subscription Plan" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="SubscriptionPlanDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="SubscriptionPlanDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="SubscriptionPlanDataVM" Property="Name" Filterable="false" Title="Name"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="80px" Filterable="false" TItem="SubscriptionPlanDataVM" Property="Price" Title="Price">
+            <Template Context="data">
+
+                 <RadzenBadge Style="font-size:15px" BadgeStyle="BadgeStyle.Primary" Text=@("$ " + data.Price) />
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="100px" Filterable="false" TItem="SubscriptionPlanDataVM" Property="Duration" Title="Duration">
+            <Template Context="data">
+
+                 <RadzenBadge  BadgeStyle="BadgeStyle.Warning" Text=@(data.Duration + " Month(s)") />
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="460px" Filterable="false" TItem="SubscriptionPlanDataVM" Title="Module(s)">
+            <Template Context="data">
+
+                @{
+                    string[] listModules = data.ModulesName.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var module in listModules)
+                    {
+                        <RadzenBadge BadgeStyle="BadgeStyle.Info" Text="@module" />
+
+                    }
+                }
+
+            </Template>
+        </RadzenDataGridColumn>
+
+         <RadzenDataGridColumn TextAlign="TextAlign.Center" TItem="SubscriptionPlanDataVM" Filterable="false" Sortable="false" Property="IsActive" Width="100px" Title="Is Active">
+
+            <Template Context="value">
+                <RadzenCheckBox TriState="false" TValue="bool" Change=@(args => OpenUpdatePlanStatusDialog(args,value.Name, value.Id))
+                                Name="@("chkIsActive"+ value.Id)" @bind-Value="@(value.IsActive)" />
+
+            </Template>
+
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="SubscriptionPlanDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" IsBusy=@data.IsLoadingEditButton
+                    Click=@(() => SubscriptionPlanCreateDialog(data.Id, "Edit", false)) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+                }
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+@{
+    async Task OpenDeleteDialog(SubscriptionPlanDataVM subscriptionPlanDataVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @subscriptionPlanDataVM.Name </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(subscriptionPlanDataVM.Id) " Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+
+        async Task OpenUpdatePlanStatusDialog(bool? value, string name, int id)
+    {
+        string message = "Are you sure, you want to activate ";
+        string title = "Actiavate";
+
+        if (value == false)
+        {
+            message = "Are you sure, you want to deactivate ";
+            title = "Deactivate";
+        }
+
+        var result = await DialogService.OpenAsync(title, ds =>
+    @<div>
+        <p class="mb-4"> @message <b> @name </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                    {
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() =>
+                        UpdateIsPlanActiveAsync(value,id) " Class="mr-1" Style="width: 80px;" IsBusy="@isBusyUpdateStatusButton" BusyText="Updating ..." />
+                    }
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                    {
+                        <RadzenButton Text="No" Click="() => ClosePplanStatusUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                    }
+
+                </div>
+            </div>
+        </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

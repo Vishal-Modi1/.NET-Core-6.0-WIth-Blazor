@@ -108,7 +108,9 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            CurrentResponse response = _airCraftService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
+            CurrentResponse response = _airCraftService.Delete(id, deletedBy);
 
             return Ok(response);
         }

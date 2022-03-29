@@ -101,7 +101,7 @@ namespace Repository
             }
         }
 
-        public void Delete(Guid id)
+        public void Delete(Guid id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -110,6 +110,9 @@ namespace Repository
                 if (document != null)
                 {
                     document.IsDeleted = true;
+                    document.DeletedBy = deletedBy;
+                    document.DeletedOn = DateTime.UtcNow;
+
                     _myContext.SaveChanges();
                 }
             }

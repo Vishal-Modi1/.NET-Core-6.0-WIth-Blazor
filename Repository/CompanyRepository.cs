@@ -77,7 +77,7 @@ namespace Repository
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -86,6 +86,9 @@ namespace Repository
                 if (company != null)
                 {
                     company.IsDeleted = true;
+                    company.DeletedBy = deletedBy;
+                    company.DeletedOn = DateTime.UtcNow;
+
                     _myContext.SaveChanges();
                 }
             }

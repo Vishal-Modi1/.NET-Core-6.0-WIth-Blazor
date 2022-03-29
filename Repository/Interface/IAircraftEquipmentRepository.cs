@@ -15,7 +15,7 @@ namespace Repository.Interface
 
         AircraftEquipment Edit(AircraftEquipment airCraft);
         
-        void Delete(int id);
+        void Delete(int id, long deletedBy);
 
         List<AircraftEquipment> List();
 

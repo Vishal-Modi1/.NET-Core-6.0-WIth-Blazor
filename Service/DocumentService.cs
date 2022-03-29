@@ -241,11 +241,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(Guid id)
+        public CurrentResponse Delete(Guid id, long deletedBy)
         {
             try
             {
-                _documentRepository.Delete(id);
+                _documentRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Document deleted successfully.");
 
                 return _currentResponse;
@@ -342,7 +342,6 @@ namespace Service
 
             document.CreatedBy = documentVM.CreatedBy;
            
-
             if (documentVM.Id == Guid.Empty)
             {
                 document.CreatedOn = DateTime.UtcNow;

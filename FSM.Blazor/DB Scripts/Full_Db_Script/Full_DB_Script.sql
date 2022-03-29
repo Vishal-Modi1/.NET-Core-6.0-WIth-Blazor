@@ -567,6 +567,56 @@ CREATE TABLE [dbo].[DocumentTags](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+
+/****** Object:  Table [dbo].[UserPreferences]    Script Date: 18-02-2022 11:59:36 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[UserPreferences](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[UserId] [bigint] NOT NULL,
+	[PreferenceType] [varchar](100) NOT NULL,
+	[PreferencesIds] [varchar](500) NULL,
+ CONSTRAINT [PK_UserPreference] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[SubscriptionPlans]    Script Date: 29-03-2022 16:14:40 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SubscriptionPlans](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NULL,
+	[ModuleIds] [varchar](50) NULL,
+	[IsCombo] [bit] NOT NULL,
+	[Price] [numeric](6, 2) NOT NULL,
+	[Duration(InMonths)] [smallint] NOT NULL,
+	[IsActive] [bit] NULL,
+	[IsDeleted] [bit] NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_SubscriptionPlans] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 ---------------------------------------------------------------------------------------------------------------
 --					CONSTRAINT
 ---------------------------------------------------------------------------------------------------------------
@@ -892,31 +942,35 @@ GO
 ALTER TABLE [dbo].[DocumentTags] CHECK CONSTRAINT [FK_DocumentTags_Users2]
 GO
 
-
-/****** Object:  Table [dbo].[UserPreferences]    Script Date: 18-02-2022 11:59:36 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[UserPreferences](
-	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[UserId] [bigint] NOT NULL,
-	[PreferenceType] [varchar](100) NOT NULL,
-	[PreferencesIds] [varchar](500) NULL,
- CONSTRAINT [PK_UserPreference] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
 ALTER TABLE [dbo].[UserPreferences]  WITH CHECK ADD  CONSTRAINT [FK_UserPreference_Users] FOREIGN KEY([UserId])
 REFERENCES [dbo].[Users] ([Id])
 GO
 
 ALTER TABLE [dbo].[UserPreferences] CHECK CONSTRAINT [FK_UserPreference_Users]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] ADD  CONSTRAINT [DF_SubscriptionPlans_IsCombo]  DEFAULT ((0)) FOR [IsCombo]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans]  WITH CHECK ADD  CONSTRAINT [FK_SubscriptionPlans_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans]  WITH CHECK ADD  CONSTRAINT [FK_SubscriptionPlans_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users1]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans]  WITH CHECK ADD  CONSTRAINT [FK_SubscriptionPlans_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users2]
 GO
 
 /****** Object:  StoredProcedure [dbo].[GetAircraftEquipmentList]    Script Date: 01-02-2022 09:37:22 ******/
@@ -2176,7 +2230,84 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = d.Id)      
        
 END    
-    
-    
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 07-12-2021 15:12:50 ******/    
-SET ANSI_NULLS ON 
+
+/****** Object:  StoredProcedure [dbo].[GetSubscriptionPlanList]    Script Date: 29-03-2022 16:03:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetSubscriptionPlanList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'Name',  
+    @SortOrder NVARCHAR(20) = 'ASC'
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+  print(@sortColumn)
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+      select * from ( select SP.*,temp.ModulesName from (select sp.Id,STRING_AGG(md.displayname,',') 
+		as ModulesName from (SELECT SP.id, value  
+		FROM SubscriptionPlans sp
+		CROSS APPLY STRING_SPLIT(sp.ModuleIds, ',')) as sp
+		join ModuleDetails md on SP.value = md.Id group by sp.Id)as temp
+		join SubscriptionPlans SP on SP.Id = temp.id
+) as tempData
+        WHERE
+			(tempData.IsDeleted = 0 OR  tempData.IsDeleted IS NULL) AND
+			
+			(@SearchValue= '' OR  (   
+              tempData.Name LIKE '%' + @SearchValue + '%' OR
+			  tempData.Price LIKE '%' + @SearchValue + '%' OR
+			  tempData.[Duration(InMonths)] LIKE '%' + @SearchValue + '%' 
+            ))  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='ASC')  
+                        THEN [Name]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='DESC')  
+                        THEN [Name]  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Price' AND @SortOrder='ASC')  
+					
+                        THEN Price  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Price' AND @SortOrder='DESC')  
+                        THEN Price  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='ASC')  
+                        THEN [Duration(InMonths)]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='DESC')  
+                        THEN [Duration(InMonths)]  
+            END DESC
+           
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(sp.Id)  as TotalRecords from SubscriptionPlans SP
+       WHERE
+		(SP.IsDeleted = 0 OR  SP.IsDeleted IS NULL) AND
+			
+			(@SearchValue= '' OR  (   
+              SP.Name LIKE '%' + @SearchValue + '%' OR
+			  SP.Price LIKE '%' + @SearchValue + '%' OR
+			  SP.[Duration(InMonths)] LIKE '%' + @SearchValue + '%' 
+            ))  
+   
+    )  
+    Select  TotalRecords, SP.Id, SP.Name, SP.ModuleIds, SP.ModulesName, SP.[Duration(InMonths)]
+	, SP.IsActive, SP.IsCombo, SP.Price from CTE_Results SP
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = SP.ID)  
+   
+END

@@ -9,6 +9,6 @@ namespace Service.Interface
         CurrentResponse List(DatatableParams datatableParams);
         CurrentResponse Edit(InstructorTypeVM instructorTypeVM);
         CurrentResponse GetDetails(int id);
-        CurrentResponse Delete(int id);
+        CurrentResponse Delete(int id, long deletedBy);
     }
 }

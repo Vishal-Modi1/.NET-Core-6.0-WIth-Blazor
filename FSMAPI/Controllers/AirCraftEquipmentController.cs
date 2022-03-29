@@ -6,6 +6,7 @@ using DataModels.VM.Common;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Http;
 using DataModels.VM.AircraftEquipment;
+using DataModels.Constants;
 
 namespace FSMAPI.Controllers
 {
@@ -47,7 +48,9 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            CurrentResponse response = _airCraftEquipmentService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId)); 
+            
+            CurrentResponse response = _airCraftEquipmentService.Delete(id, deletedBy);
 
             return Ok(response);
         }

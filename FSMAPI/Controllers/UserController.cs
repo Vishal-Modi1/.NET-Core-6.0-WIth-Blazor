@@ -94,7 +94,8 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            CurrentResponse response = _userService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _userService.Delete(id, deletedBy);
 
             return Ok(response);
         }

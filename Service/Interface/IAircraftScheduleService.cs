@@ -13,7 +13,7 @@ namespace Service.Interface
 
         CurrentResponse Edit(SchedulerVM schedulerVM);
 
-        CurrentResponse Delete(long id);
+        CurrentResponse Delete(long id, long deletedBy);
 
         CurrentResponse EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM);
 

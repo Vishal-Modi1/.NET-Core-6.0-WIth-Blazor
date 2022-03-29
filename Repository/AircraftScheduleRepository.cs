@@ -136,7 +136,7 @@ namespace Repository
             }
         }
 
-        public void Delete(long id)
+        public void Delete(long id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -145,6 +145,9 @@ namespace Repository
                 if (aircraftSchedule != null)
                 {
                     aircraftSchedule.IsDeleted = true;
+                    aircraftSchedule.DeletedOn = DateTime.UtcNow;
+                    aircraftSchedule.DeletedBy = deletedBy; 
+
                     _myContext.SaveChanges();
                 }
             }

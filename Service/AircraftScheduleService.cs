@@ -255,11 +255,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(long id)
+        public CurrentResponse Delete(long id, long deletedBy)
         {
             try
             {
-                _aircraftScheduleRepository.Delete(id);
+                _aircraftScheduleRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully.");
 
                 return _currentResponse;

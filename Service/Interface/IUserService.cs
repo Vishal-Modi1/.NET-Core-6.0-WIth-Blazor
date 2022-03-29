@@ -16,7 +16,7 @@ namespace Service.Interface
 
         CurrentResponse List(UserDatatableParams datatableParams);
 
-        CurrentResponse Delete(long id);
+        CurrentResponse Delete(long id, long deletedBy);
 
         CurrentResponse UpdateActiveStatus(long id, bool isActive);
         
