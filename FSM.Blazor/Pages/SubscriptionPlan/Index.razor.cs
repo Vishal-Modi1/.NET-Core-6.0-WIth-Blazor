@@ -47,15 +47,34 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
             {
                 NavManager.NavigateTo("/Dashboard");
             }
+
+            await LoadData();
         }
 
-        async Task LoadData(LoadDataArgs args)
+        //async Task LoadData(LoadDataArgs args)
+        //{
+        //    isLoading = true;
+
+        //    DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
+        //    pageSize = datatableParams.Length;
+        //    datatableParams.SearchText = searchText;
+
+        //    data = await SubscriptionPlanService.ListAsync(_httpClient, datatableParams);
+        //    count = data.Count() > 0 ? data[0].TotalRecords : 0;
+        //    isLoading = false;
+        //}
+
+        async Task LoadData()
         {
             isLoading = true;
 
-            DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
-            pageSize = datatableParams.Length;
+            DatatableParams datatableParams = new DatatableParams();
+            pageSize = 10;
             datatableParams.SearchText = searchText;
+            datatableParams.SortOrderColumn = "Name";
+            datatableParams.Length = 10;
+            datatableParams.Start = 1;
+            datatableParams.OrderType = "ASC";
 
             data = await SubscriptionPlanService.ListAsync(_httpClient, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
@@ -68,11 +87,11 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
             await grid.Reload();
         }
 
-        async Task UpdateIsPlanActiveAsync(bool? value, int id)
+        async Task UpdateIsPlanActiveAsync(bool value, int id)
         {
             SetUpdateStatusButtonState(true);
 
-            CurrentResponse response = await SubscriptionPlanService.UpdateStatus(_httpClient, id, value.GetValueOrDefault());
+            CurrentResponse response = await SubscriptionPlanService.UpdateStatus(_httpClient, id, value);
 
             SetUpdateStatusButtonState(false);
 
@@ -95,7 +114,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                 NotificationService.Notify(message);
             }
 
-            await grid.Reload();
+            // await grid.Reload();
+            await LoadData();
         }
 
         async Task SubscriptionPlanCreateDialog(int id, string title, bool isCreate)
@@ -125,7 +145,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                   new Dictionary<string, object>() { { "subscriptionPlanData", subscriptionPlanVM } },
                   new DialogOptions() { Width = "500px", Height = "500px" });
 
-            await grid.Reload();
+            // await grid.Reload();
+            await LoadData();
 
         }
 
@@ -152,7 +173,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                 NotificationService.Notify(message);
             }
 
-            await grid.Reload();
+            // await grid.Reload();
+            await LoadData();
         }
 
         private void SetAddNewButtonState(bool isBusy)

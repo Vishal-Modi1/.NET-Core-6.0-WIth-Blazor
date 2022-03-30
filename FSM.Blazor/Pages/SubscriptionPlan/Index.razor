@@ -4,6 +4,8 @@
 @using FSM.Blazor.Data.ModuleDetail
 @using DataModels.VM.SubscriptionPlan
 @using Configuration;
+@using Syncfusion.Blazor;
+
 
 @inject SubscriptionPlanService SubscriptionPlanService
 @layout MainLayout
@@ -32,89 +34,64 @@
 <div class="row">
 
     <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
-        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  LoadData())"
                        Placeholder="Search Subscription Plan" @bind-Value="@searchText" />
     </div>
 
 </div>
 
-<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
-                PageSize="@pageSize"
-                AllowSorting="true" Data="@data" TItem="SubscriptionPlanDataVM"
-                PageSizeOptions="@pageSizeOptions"
-                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
-                PagingSummaryFormat="@pagingSummaryFormat">
-    <Columns>
+@if (data != null)
+{
+    @foreach (var item in data)
+    {
+        <div class="card" style="width: 18rem;">
 
-        <RadzenDataGridColumn Width="50px" TItem="SubscriptionPlanDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-            <Template Context="value">
-                @(data.IndexOf(value) + 1)
-            </Template>
-        </RadzenDataGridColumn>
+            <RadzenLabel Text="@item.Name"></RadzenLabel>
+            <RadzenLabel Text="@("$ " + item.Price.ToString())"></RadzenLabel>
+            <RadzenLabel Text="@(item.Duration.ToString() + " Month(s)")"></RadzenLabel>
 
-        <RadzenDataGridColumn TItem="SubscriptionPlanDataVM" Property="Name" Filterable="false" Title="Name"></RadzenDataGridColumn>
+            <div class="card-body">
 
-        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="80px" Filterable="false" TItem="SubscriptionPlanDataVM" Property="Price" Title="Price">
-            <Template Context="data">
+                @foreach (var module in item.ModulesName.Split(","))
+                {
+                    <br />
+                    <RadzenLabel Text="@module"></RadzenLabel>
+                }
 
-                 <RadzenBadge Style="font-size:15px" BadgeStyle="BadgeStyle.Primary" Text=@("$ " + data.Price) />
-            </Template>
-        </RadzenDataGridColumn>
+                <p>This is basic plan for 3 months with combo feature where oyu can get multiple modules in single package.</p>
+            </div>
 
-        <RadzenDataGridColumn Width="100px" Filterable="false" TItem="SubscriptionPlanDataVM" Property="Duration" Title="Duration">
-            <Template Context="data">
+            <div class="card-footer">
 
-                 <RadzenBadge  BadgeStyle="BadgeStyle.Warning" Text=@(data.Duration + " Month(s)") />
+                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                {
 
-            </Template>
-        </RadzenDataGridColumn>
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
+                      Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Create", true)) />
 
-        <RadzenDataGridColumn Width="460px" Filterable="false" TItem="SubscriptionPlanDataVM" Title="Module(s)">
-            <Template Context="data">
+                    <RadzenButton Text="Delete" Icon="delete_sweep" ButtonStyle="ButtonStyle.Danger"
+                      Click=@(() => OpenDeleteDialog(item)) />
 
-                @{
-                    string[] listModules = data.ModulesName.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-                    foreach (var module in listModules)
+                    @if (item.IsActive)
                     {
-                        <RadzenBadge BadgeStyle="BadgeStyle.Info" Text="@module" />
-
+                        <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Deactivate" Icon=""
+                      Click=@(() => OpenUpdatePlanStatusDialog(false, item.Name,item.Id)) />
+                    }
+                    else
+                    {
+                        <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Activate" Icon=""
+                      Click=@(() => OpenUpdatePlanStatusDialog(true, item.Name ,item.Id)) />
                     }
                 }
-
-            </Template>
-        </RadzenDataGridColumn>
-
-         <RadzenDataGridColumn TextAlign="TextAlign.Center" TItem="SubscriptionPlanDataVM" Filterable="false" Sortable="false" Property="IsActive" Width="100px" Title="Is Active">
-
-            <Template Context="value">
-                <RadzenCheckBox TriState="false" TValue="bool" Change=@(args => OpenUpdatePlanStatusDialog(args,value.Name, value.Id))
-                                Name="@("chkIsActive"+ value.Id)" @bind-Value="@(value.IsActive)" />
-
-            </Template>
-
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="SubscriptionPlanDataVM" Property="Id" Title="Actions">
-            <Template Context="data">
-
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                else
                 {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" IsBusy=@data.IsLoadingEditButton
-                    Click=@(() => SubscriptionPlanCreateDialog(data.Id, "Edit", false)) />
+                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
+                      Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Create", true)) />
                 }
-
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
-                {
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
-                              Click=@(args => OpenDeleteDialog(data)) />
-                }
-            </Template>
-        </RadzenDataGridColumn>
-
-    </Columns>
-</RadzenDataGrid>
+            </div>
+        </div>
+    }
+}
 
 @{
     async Task OpenDeleteDialog(SubscriptionPlanDataVM subscriptionPlanDataVM)
@@ -134,7 +111,7 @@
 
     }
 
-        async Task OpenUpdatePlanStatusDialog(bool? value, string name, int id)
+    async Task OpenUpdatePlanStatusDialog(bool value, string name, int id)
     {
         string message = "Are you sure, you want to activate ";
         string title = "Actiavate";
