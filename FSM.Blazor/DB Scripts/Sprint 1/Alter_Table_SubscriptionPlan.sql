@@ -1,0 +1,1 @@
+ALTER TABLE SubscriptionPlans ADD [Description] VARCHAR(500)

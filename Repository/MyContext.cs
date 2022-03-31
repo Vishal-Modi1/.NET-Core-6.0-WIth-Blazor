@@ -1,6 +1,7 @@
 ﻿using DataModels.Entities;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
+using DataModels.VM.BillingHistory;
 using DataModels.VM.Company;
 using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
@@ -51,6 +52,9 @@ namespace Repository
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<UserDataVM> UserSearchList { get; set; }
+
+        public DbSet<BillingHistoryDataVM> BillingHistoryList { get; set; }
+
         public DbSet<SubscriptionPlanDataVM> SubscriptionPlanData { get; set; }
 
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }

@@ -1,0 +1,26 @@
+﻿@using DataModels.VM.BillingHistory
+
+
+<div> <label>Subscription Plan Name: </label> @BillingData.SubscriptionPlanName </div>
+<div> <label>Price: </label> @("$ " + BillingData.Price) </div>
+<div> <label>Duration:</label> @(BillingData.Duration + " Month(s)") </div>
+
+<div>
+    <label>Module(s): </label>
+    <br />
+    @foreach (var item in BillingData.ModulesName.Split(","))
+    {
+           <RadzenBadge BadgeStyle="BadgeStyle.Primary" Text="@item" />
+    }
+</div>
+
+<div><label>Plan Start Date: </label> @BillingData.PlanStartDate </div>
+<div> <label>Plan End Date: </label>@BillingData.PlanEndDate </div>
+
+@code {
+
+    [Parameter]
+
+    public BillingHistoryDataVM BillingData { get; set; }
+
+}

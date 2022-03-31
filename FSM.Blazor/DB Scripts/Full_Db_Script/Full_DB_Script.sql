@@ -618,6 +618,32 @@ CREATE TABLE [dbo].[SubscriptionPlans](
 ) ON [PRIMARY]
 GO
 
+/****** Object:  Table [dbo].[BillingHistories]    Script Date: 31-03-2022 17:01:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[BillingHistories](
+	[Id] [uniqueidentifier] NOT NULL,
+	[UserId] [bigint] NOT NULL,
+	[SubscriptionPlanName] [varchar](50) NOT NULL,
+	[ModuleIds] [varchar](50) NOT NULL,
+	[IsCombo] [bit] NOT NULL,
+	[Price] [numeric](8, 2) NOT NULL,
+	[Duration] [smallint] NOT NULL,
+	[PlanStartDate] [datetime] NOT NULL,
+	[PlanEndDate] [datetime] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+ CONSTRAINT [PK_BillingHistories] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
 ---------------------------------------------------------------------------------------------------------------
 --					CONSTRAINT
 ---------------------------------------------------------------------------------------------------------------
@@ -974,6 +1000,16 @@ GO
 ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users2]
 GO
 
+ALTER TABLE [dbo].[BillingHistories]  WITH CHECK ADD  CONSTRAINT [FK_BillingHistories_Users] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[BillingHistories] CHECK CONSTRAINT [FK_BillingHistories_Users]
+GO
+
+---------------------------------------------------------------------------------------------------------------------
+						--PROCEDURE
+---------------------------------------------------------------------------------------------------------------------
 /****** Object:  StoredProcedure [dbo].[GetAircraftEquipmentList]    Script Date: 01-02-2022 09:37:22 ******/
 
 SET ANSI_NULLS ON
@@ -2310,5 +2346,90 @@ AS BEGIN
 	, SP.IsActive, SP.IsCombo, SP.Price from CTE_Results SP
 	, CTE_TotalRows   
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = SP.ID)  
+   
+END
+
+/****** Object:  StoredProcedure [dbo].[GetBillingHistoryList]    Script Date: 31-03-2022 17:00:40 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetBillingHistoryList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'CreatedOn',  
+    @SortOrder NVARCHAR(20) = 'DESC'
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+  print(@sortColumn)
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+      select * from ( select BH.*,temp.ModulesName from (select bh.Id,STRING_AGG(md.displayname,',') 
+		as ModulesName from (SELECT BH.id, value  
+		FROM BillingHistories bh
+		CROSS APPLY STRING_SPLIT(bh.ModuleIds, ',')) as bh
+		join ModuleDetails md on BH.value = md.Id group by bh.Id)as temp
+		join BillingHistories BH on BH.Id = temp.id
+) as tempData
+        WHERE
+			
+			(@SearchValue= '' OR  (   
+              tempData.SubscriptionPlanName LIKE '%' + @SearchValue + '%' OR
+			  tempData.Price LIKE '%' + @SearchValue + '%' OR
+			  tempData.[Duration] LIKE '%' + @SearchValue + '%' 
+            ))  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'SubscriptionPlanName' AND @SortOrder='ASC')  
+                        THEN [SubscriptionPlanName]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'SubscriptionPlanName' AND @SortOrder='DESC')  
+                        THEN [SubscriptionPlanName]  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Price' AND @SortOrder='ASC')  
+                        THEN Price  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Price' AND @SortOrder='DESC')  
+                        THEN Price  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='ASC')  
+                        THEN [Duration]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='DESC')  
+                        THEN [Duration]  
+            END DESC,
+			   
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='ASC')  
+                        THEN [CreatedOn]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='DESC')  
+                        THEN [CreatedOn]  
+            END DESC
+           
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(bh.Id)  as TotalRecords from BillingHistories BH
+       WHERE
+			
+			(@SearchValue= '' OR  (   
+              BH.SubscriptionPlanName LIKE '%' + @SearchValue + '%' OR
+			  BH.Price LIKE '%' + @SearchValue + '%' OR
+			  BH.[Duration] LIKE '%' + @SearchValue + '%' 
+            ))  
+   
+    )  
+    Select  TotalRecords, BH.Id, BH.UserId, BH.SubscriptionPlanName, BH.ModuleIds, BH.ModulesName, BH.[Duration]
+	,BH.PlanStartDate, BH.PlanEndDate, BH.CreatedOn, BH.Iscombo , BH.Price from CTE_Results BH
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = BH.ID)  
    
 END

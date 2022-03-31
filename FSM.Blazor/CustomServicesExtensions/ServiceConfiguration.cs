@@ -15,6 +15,7 @@ using FSM.Blazor.Data.Reservation;
 using FSM.Blazor.Data.Document;
 using FSM.Blazor.Data.SubscriptionPlan;
 using FSM.Blazor.Data.ModuleDetail;
+using FSM.Blazor.Data.BillingHistory;
 
 namespace FSM.Blazor.CustomServicesExtensions
 {
@@ -39,6 +40,7 @@ namespace FSM.Blazor.CustomServicesExtensions
             builder.Services.AddScoped<DocumentService>();
             builder.Services.AddScoped<SubscriptionPlanService>();
             builder.Services.AddScoped<ModuleDetailsService>();
+            builder.Services.AddScoped<BillingHistoryService>();
         }
     }
 }
