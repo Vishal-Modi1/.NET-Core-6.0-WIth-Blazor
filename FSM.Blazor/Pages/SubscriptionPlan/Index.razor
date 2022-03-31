@@ -46,7 +46,7 @@
     <div class="col">
         <h2 style="float:left">Manage Subscription Plans Details</h2>
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
             <RadzenButton Style="float:right" Text="Add New" IsBusy=@isBusyAddNewButton BusyText="Add New ..." Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
                       Click=@(() => SubscriptionPlanCreateDialog(0, "Create", true
@@ -72,7 +72,7 @@
     {
                     <div class="col-md-4">
 
-         <div class="card" style="width: 20rem;height:356.69px!important">
+         <div class="card" style="width: 21.8rem;height:356.69px!important">
 
             <RadzenLabel Text="@item.Name" style="margin-top:5px;font-weight:700;font-size:18px;margin-bottom:.368421em!important"></RadzenLabel>
             <RadzenLabel Text="@("$ " + item.Price.ToString())" style="font-weight:600;font-size:30px;display:inline-block!important"></RadzenLabel>
@@ -89,41 +89,39 @@
                     <li>
                     <RadzenLabel Text="@module"></RadzenLabel>
                     </li>
-                    
-                    
                 }
                 <li>
-                    <p>This is basic plan for 3 months with combo feature where oyu can get multiple modules in single package.</p>
+                    <p>@item.Description</p>
                     </li>
                     </ul>
             </div>
 
             <div class="card-footer">
 
-                @if (!_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                 {
 
                     <RadzenButton ButtonStyle="ButtonStyle.Success" Style="margin-right:6px;margin-left:-9px" Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
-                      Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Create", true)) />
+                      Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Edit", false)) />
 
                     <RadzenButton Text="Delete" Icon="delete_sweep" Style="margin-right:6px;" ButtonStyle="ButtonStyle.Danger"
                       Click=@(() => OpenDeleteDialog(item)) />
 
                     @if (item.IsActive)
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Deactivate" Icon=""
+                        <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Deactivate" Icon="lock"
                       Click=@(() => OpenUpdatePlanStatusDialog(false, item.Name,item.Id)) />
                     }
                     else
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Activate" Icon=""
+                        <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Activate" Icon="lock_open"
                       Click=@(() => OpenUpdatePlanStatusDialog(true, item.Name ,item.Id)) />
                     }
                 }
                 else
                 {
                      <RadzenButton ButtonStyle="ButtonStyle.Primary" Style="width:18rem;height:3rem;" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
-                      Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Create", true)) />
+                      Click=@(() => BuyNow(item.Id)) />
                 }
             </div>
         </div>

@@ -602,6 +602,7 @@ CREATE TABLE [dbo].[SubscriptionPlans](
 	[IsCombo] [bit] NOT NULL,
 	[Price] [numeric](6, 2) NOT NULL,
 	[Duration(InMonths)] [smallint] NOT NULL,
+	[Description] VARCHAR (500),
 	[IsActive] [bit] NULL,
 	[IsDeleted] [bit] NULL,
 	[CreatedBy] [bigint] NOT NULL,
@@ -2305,7 +2306,7 @@ AS BEGIN
             ))  
    
     )  
-    Select  TotalRecords, SP.Id, SP.Name, SP.ModuleIds, SP.ModulesName, SP.[Duration(InMonths)]
+    Select  TotalRecords, SP.Id, SP.Name, SP.ModuleIds, SP.ModulesName, SP.[Duration(InMonths)], sp.Description
 	, SP.IsActive, SP.IsCombo, SP.Price from CTE_Results SP
 	, CTE_TotalRows   
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = SP.ID)  

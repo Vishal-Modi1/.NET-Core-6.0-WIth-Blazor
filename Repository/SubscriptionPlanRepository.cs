@@ -39,6 +39,7 @@ namespace Repository
                 existingDetails.ModuleIds = subscriptionPlan.ModuleIds;
                 existingDetails.IsCombo = subscriptionPlan.IsCombo;
                 existingDetails.Duration = subscriptionPlan.Duration;
+                existingDetails.Description = subscriptionPlan.Description;
 
                 existingDetails.UpdatedBy = subscriptionPlan.UpdatedBy;
                 existingDetails.UpdatedOn = subscriptionPlan.UpdatedOn;

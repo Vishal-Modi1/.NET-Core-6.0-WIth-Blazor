@@ -198,6 +198,7 @@ namespace Service
             subscriptionPlan.ModuleIds = subscriptionPlanVM.ModuleIds;
             subscriptionPlan.IsCombo = subscriptionPlanVM.ModuleIds.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).Length > 1;
             subscriptionPlan.IsActive = true;
+            subscriptionPlan.Description = subscriptionPlanVM.Description;
 
             subscriptionPlan.CreatedBy = subscriptionPlanVM.CreatedBy;
 
@@ -223,6 +224,7 @@ namespace Service
             subscriptionPlanVM.Duration = subscriptionPlan.Duration;
             subscriptionPlanVM.Price = subscriptionPlan.Price;
             subscriptionPlanVM.ModuleIds = subscriptionPlan.ModuleIds;
+            subscriptionPlanVM.Description = subscriptionPlan.Description;
 
             return subscriptionPlanVM;
         }

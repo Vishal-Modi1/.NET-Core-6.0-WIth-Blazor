@@ -14,6 +14,7 @@ namespace DataModels.VM.SubscriptionPlan
         public string ModulesName { get; set; }
         public bool IsCombo { get; set; }
 
+        public string Description { get; set; }
         public decimal Price { get; set; }
 
         [Column("Duration(InMonths)")]

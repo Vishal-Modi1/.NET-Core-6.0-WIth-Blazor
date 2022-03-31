@@ -18,6 +18,8 @@ namespace DataModels.VM.SubscriptionPlan
 
         public decimal Price { get; set; }
 
+        public string Description { get; set; }
+
         public Int16 Duration { get; set; }
 
         public long CreatedBy { get; set; }

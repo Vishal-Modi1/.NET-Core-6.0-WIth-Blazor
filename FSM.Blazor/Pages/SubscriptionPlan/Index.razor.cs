@@ -7,6 +7,7 @@ using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text;
 
 namespace FSM.Blazor.Pages.SubscriptionPlan
 {
@@ -72,7 +73,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
             pageSize = 10;
             datatableParams.SearchText = searchText;
             datatableParams.SortOrderColumn = "Name";
-            datatableParams.Length = 10;
+            datatableParams.Length = 1000;
             datatableParams.Start = 1;
             datatableParams.OrderType = "ASC";
 
@@ -118,6 +119,13 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
             await LoadData();
         }
 
+        async Task BuyNow(int id)
+        {
+            byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(id.ToString() + "FlyManager");
+            var data = Encoding.Default.GetBytes(id.ToString());
+            NavManager.NavigateTo("BuyNow?SubscriptionPlanId=" + System.Convert.ToBase64String(encodedBytes));
+        }
+
         async Task SubscriptionPlanCreateDialog(int id, string title, bool isCreate)
         {
             if (isCreate)
@@ -149,6 +157,12 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
             await LoadData();
 
         }
+
+        async Task BuySubscriptionPlan(int id)
+        {
+
+        }
+
 
         async Task DeleteAsync(int id)
         {
