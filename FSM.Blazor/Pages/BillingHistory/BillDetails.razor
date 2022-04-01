@@ -1,21 +1,34 @@
 ﻿@using DataModels.VM.BillingHistory
+<style>
+    .posted_in
+    {
+        display:block;
+        margin-bottom:10px;
+        font-size:16px;
+    }
+    strong
+    {
+        font-weight:700;
+        font-size:16px;
+    }
+</style>
+  <span class="posted_in"> <strong>Subscription Plan Name:</strong> @BillingData.SubscriptionPlanName</span>
+  <span class="posted_in"> <strong>Price:</strong> @("$ " + BillingData.Price)</span>
+   <span class="posted_in"> <strong>Duration:</strong> @(BillingData.Duration + " Month(s)")</span>
 
-
-<div> <label>Subscription Plan Name: </label> @BillingData.SubscriptionPlanName </div>
-<div> <label>Price: </label> @("$ " + BillingData.Price) </div>
-<div> <label>Duration:</label> @(BillingData.Duration + " Month(s)") </div>
-
+    
 <div>
-    <label>Module(s): </label>
-    <br />
+    <span class="posted_in"> <strong>Module(s):</strong></span>
     @foreach (var item in BillingData.ModulesName.Split(","))
     {
-           <RadzenBadge BadgeStyle="BadgeStyle.Primary" Text="@item" />
+
+           <RadzenBadge Style="margin-bottom:10px;width:9rem;" BadgeStyle="BadgeStyle.Primary" Text="@item" />
     }
 </div>
 
-<div><label>Plan Start Date: </label> @BillingData.PlanStartDate </div>
-<div> <label>Plan End Date: </label>@BillingData.PlanEndDate </div>
+   <span class="posted_in"> <strong>Plan Start Date:</strong> @BillingData.PlanStartDate</span>
+   <span class="posted_in"> <strong>Plan End Date:</strong> @BillingData.PlanEndDate</span>
+
 
 @code {
 

@@ -16,35 +16,68 @@
 @page "/SubscriptionPlan"
 
 <style>
-    .card
-    {
-        background-color:#fff;
-        color:#1a1a1a!important;
-        margin-bottom:0;
-        border-bottom-left-radius:0!important;
-        border-bottom-right-radius:0!important;
-        padding-bottom:0;
-        height:auto!important;
-        border-bottom:none!important;
-        text-align:center;
+    
+    .text-custom,
+.navbar-custom .navbar-nav li a:hover,
+.navbar-custom .navbar-nav li a:active,
+.navbar-custom .navbar-nav li.active a,
+.service-box .services-icon,
+.price-features p i,.text-custom, .navbar-custom .navbar-nav li a:hover, .navbar-custom .navbar-nav li a:active, .navbar-custom .navbar-nav li.active a, .service-box .services-icon, .price-features p i, .faq-icon, .social .social-icon:hover
+.faq-icon,
+.social .social-icon:hover {
+    color: #262526 !important;
+}
 
-    }
-    .card-body
-    {
-        text-align:left;
-        border-top-left-radius:0;
-        border-top-right-radius:0;
-        margin-bottom:0;
-        padding-left:40px;
-        margin-top:-20px;
-    }
+.bg-custom,
+.btn-custom
+ {
+    background-color: #f6576e;
+}
+
+.btn-custom,
+.custom-form  {
+    border-color: #f6576e;
+}
+
+.price-features p i {
+    background-color: rgba(246, 87, 110, 0.1);
+}
+
+
+
+    .price-box {
+    padding: 40px 50px;
+    width:20rem!important
+}
+
+.plan-price h1 span {
+    font-size: 16px;
+    color: #000;
+}
+
+.price-features p i {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+.msgBtn
+{
+    display:inline-block;
+}
+
+    
     </style>
 
 <PageTitle>Subscription Plan | Fly Manager </PageTitle>
 
 <div class="row mb-4">
     <div class="col">
-        <h2 style="float:left">Manage Subscription Plans Details</h2>
+        <h2 style="float:left">Manage Subscription Plans Details 1010 </h2>
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
@@ -64,68 +97,68 @@
 
 </div>
 
+
 @if (data != null)
 {
-    <div class="row">
-       
+        <div class="row mt-5">     
     @foreach (var item in data)
     {
-                    <div class="col-md-4">
-
-         <div class="card" style="width: 21.8rem;height:356.69px!important">
-
-            <RadzenLabel Text="@item.Name" style="margin-top:5px;font-weight:700;font-size:18px;margin-bottom:.368421em!important"></RadzenLabel>
-            <RadzenLabel Text="@("$ " + item.Price.ToString())" style="font-weight:600;font-size:30px;display:inline-block!important"></RadzenLabel>
-            <RadzenLabel Text="@(item.Duration.ToString() + " Month(s)")" style="font-weight:500;font-size:16px;"></RadzenLabel>
-            <br/>
-
-            <div class="card-body">
-
-                 <ul style="list-style-type:disc;">
-                        
-                 
-                @foreach (var module in item.ModulesName.Split(","))
-                {
-                    <li>
-                    <RadzenLabel Text="@module"></RadzenLabel>
-                    </li>
-                }
-                <li>
-                    <p>@item.Description</p>
-                    </li>
+            <div class="col-lg-4">
+                <div class="bg-white mt-3 price-box">
+        			<div class="pricing-name text-center">
+        				<h4 class="mb-0" style="font-size:22px;">@item.Name</h4>
+        			</div>
+        			<div class="plan-price text-center mt-4">
+        				<h1 class="text-custom font-weight-normal mb-0">@("$ " + item.Price.ToString())</h1>
+                        <br/>
+        				<h3 class="text-custom font-weight-normal mb-0">@(item.Duration.ToString() + " Month(s)")</h3>
+        			</div>
+        			<div class="price-features" style="margin-top:1rem!important">
+                                         <ul style="list-style-type:none;margin-left:-17px">                            
+                                        @foreach (var module in item.ModulesName.Split(","))
+                                        {           
+                                         <li>
+                     <RadzenIcon Icon="done" Style="color:#0bb42a" />
+                    <RadzenLabel Text="@module" Style="font-size:16px;"></RadzenLabel>
+                                        </li>
+                                        }
                     </ul>
-            </div>
+                     <p>@item.Description</p>
 
-            <div class="card-footer">
-
+        		     </div>
+                        <div style="width:500px;margin-left:-45px;">
+    
                 @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                 {
 
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Style="margin-right:6px;margin-left:-9px" Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
+                    
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" class="btn btn-custom" style="margin-right: 2px;" Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
                       Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Edit", false)) />
 
-                    <RadzenButton Text="Delete" Icon="delete_sweep" Style="margin-right:6px;" ButtonStyle="ButtonStyle.Danger"
+                    <RadzenButton Text="Delete" Icon="delete_sweep" class="btn btn-custom" ButtonStyle="ButtonStyle.Danger"
                       Click=@(() => OpenDeleteDialog(item)) />
 
                     @if (item.IsActive)
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Warning" Text="Deactivate" Icon="lock"
+                        <RadzenButton ButtonStyle="ButtonStyle.Warning" class="btn btn-custom" style="margin-right: 2px;" Text="Deactivate" Icon="lock"
                       Click=@(() => OpenUpdatePlanStatusDialog(false, item.Name,item.Id)) />
                     }
                     else
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Info" Text="Activate" Icon="lock_open"
+                        <RadzenButton ButtonStyle="ButtonStyle.Info" class="btn btn-custom" Text="Activate" Icon="lock_open"
                       Click=@(() => OpenUpdatePlanStatusDialog(true, item.Name ,item.Id)) />
                     }
                 }
                 else
                 {
-                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Style="width:18rem;height:3rem;" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
+                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Style="width:13rem;height:3rem;" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
                       Click=@(() => BuyNow(item.Id)) />
                 }
+                </div>
+
+            
             </div>
-        </div>
-               </div>
+            </div>
 
     }
      </div>
