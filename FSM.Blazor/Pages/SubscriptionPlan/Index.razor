@@ -47,7 +47,8 @@
 
     .price-box {
     padding: 40px 50px;
-    width:20rem!important
+    width:20rem!important;
+    height:24rem!important;
 }
 
 .plan-price h1 span {
@@ -68,6 +69,21 @@
 .msgBtn
 {
     display:inline-block;
+}
+.description
+{
+    height:57px!important;
+    margin-left:-16px!important;
+    margin-right:-16px!important;
+}
+.buttons
+{
+    width:500px!important;
+    margin-left:-38px;
+}
+.rz-button-icon-left
+{
+    margin-right:-1px!important;
 }
 
     
@@ -113,8 +129,8 @@
                         <br/>
         				<h3 class="text-custom font-weight-normal mb-0">@(item.Duration.ToString() + " Month(s)")</h3>
         			</div>
-        			<div class="price-features" style="margin-top:1rem!important">
-                                         <ul style="list-style-type:none;margin-left:-17px">                            
+        			<div class="price-features" style="margin-top:1rem!important;">
+                                         <ul style="list-style-type:none;margin-left:-45px">                            
                                         @foreach (var module in item.ModulesName.Split(","))
                                         {           
                                          <li>
@@ -123,24 +139,24 @@
                                         </li>
                                         }
                     </ul>
-                     <p>@item.Description</p>
+                     <p class="description">@item.Description</p>
 
         		     </div>
-                        <div style="width:500px;margin-left:-45px;">
+                        <div class="buttons">
     
                 @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                 {
 
                     
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" class="btn btn-custom" style="margin-right: 2px;" Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" class="btn btn-custom" Style=width:88px!important;height:36px!important Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
                       Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Edit", false)) />
 
-                    <RadzenButton Text="Delete" Icon="delete_sweep" class="btn btn-custom" ButtonStyle="ButtonStyle.Danger"
+                    <RadzenButton Text="Delete" Icon="delete_sweep" class="btn btn-custom"  ButtonStyle="ButtonStyle.Danger"
                       Click=@(() => OpenDeleteDialog(item)) />
 
                     @if (item.IsActive)
                     {
-                        <RadzenButton ButtonStyle="ButtonStyle.Warning" class="btn btn-custom" style="margin-right: 2px;" Text="Deactivate" Icon="lock"
+                        <RadzenButton ButtonStyle="ButtonStyle.Warning" class="btn btn-custom" Text="Deactivate" Icon="lock"
                       Click=@(() => OpenUpdatePlanStatusDialog(false, item.Name,item.Id)) />
                     }
                     else
@@ -151,7 +167,7 @@
                 }
                 else
                 {
-                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Style="width:13rem;height:3rem;" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
+                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Style="width:16rem;height:3rem;margin-left:35px!important" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
                       Click=@(() => BuyNow(item.Id)) />
                 }
                 </div>
