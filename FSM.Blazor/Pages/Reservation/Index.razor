@@ -21,7 +21,7 @@
     {
         max-height:588px!important;
     }
-    </style>
+</style>
 
 
 <div class="row mb-4">
@@ -87,7 +87,11 @@
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="ScheduleTitle" Filterable="false" Title="Title"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
+      
+        @if (AircraftId.GetValueOrDefault() == 0)
+        {
+            <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
+        }
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="StartDateTime" Filterable="false" Title="From"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="ReservationId" Sortable="false" Filterable="false" Title="Reservation Id"></RadzenDataGridColumn>

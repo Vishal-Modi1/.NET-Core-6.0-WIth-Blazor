@@ -30,7 +30,7 @@ namespace Repository
 
                 string sql = $"EXEC dbo.GetReservationList '{ datatableParams.SearchText }', { pageNo }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                    $"{datatableParams.CompanyId},'{startDate}','{endDate}'";
+                    $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}, {datatableParams.AircraftId.GetValueOrDefault()}";
 
                 list = _myContext.ReservationDataVM.FromSqlRaw<ReservationDataVM>(sql).ToList();
 

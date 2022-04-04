@@ -24,6 +24,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Radzen.Blazor" Version="3.13.6" />
     <PackageReference Include="Syncfusion.Blazor.Schedule" Version="19.4.0.42" />
+    <PackageReference Include="TimeZoneConverter" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

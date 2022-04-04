@@ -1556,7 +1556,7 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)    
      
 END  
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 24-02-2022 12:33:32 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 04-04-2022 08:44:39 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1570,7 +1570,9 @@ CREATE PROCEDURE [dbo].[GetReservationList]
     @SortOrder NVARCHAR(20) = 'ASC',
 	@CompanyId INT = NULL,
 	@StartDate DATETIME = NULL,
-	@EndDate DATETIME = NULL
+	@EndDate DATETIME = NULL,
+	@UserId BIGINT = NULL,
+	@AircraftId BIGINT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -1593,14 +1595,20 @@ AS BEGIN
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
 			1 = 1 AND 
 		      (
+				((ISNULL(@UserId,0)=0)
+				OR (acs.CreatedBy = @UserId))
+				AND
+				((ISNULL(@AircraftId,0)=0)
+				OR (acs.AircraftId = @AircraftId))
+				AND
 				((ISNULL(@CompanyId,0)=0)
 				OR (cp.Id = @CompanyId))
 				AND
 				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
-				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
+				OR (acs.StartDateTime   >= @StartDate ))
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
-				OR (cast(acs.EndDateTime as date) <= cast(@EndDate as date)))
+				OR (acs.EndDateTime  <= @EndDate ))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1657,14 +1665,20 @@ AS BEGIN
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
 			1 = 1 AND 
 		      (
+			   ((ISNULL(@UserId,0)=0)
+				OR (acs.CreatedBy = @UserId))
+				AND
+				((ISNULL(@AircraftId,0)=0)
+				OR (acs.AircraftId = @AircraftId))
+				AND
 				((ISNULL(@CompanyId,0)=0)
 				OR (cp.Id = @CompanyId))
 				AND
 				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
-				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
+				OR (acs.StartDateTime   >= @StartDate ))
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
-				OR (cast(acs.EndDateTime as date) <= cast(@EndDate as date)))
+				OR (acs.EndDateTime <= @EndDate ))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1678,9 +1692,6 @@ AS BEGIN
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
-
-
-
 
 /****** Object:  Trigger [dbo].[Trg_Company_InsertUserRolePermission]    Script Date: 03-12-2021 16:40:28 ******/
 SET ANSI_NULLS ON

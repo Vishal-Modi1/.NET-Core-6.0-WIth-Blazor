@@ -18,6 +18,14 @@ namespace FSM.Blazor.Pages.Reservation
 {
     partial class Index
     {
+        #region Params
+
+        [Parameter]
+        public long UserId { get; set; }
+
+        [Parameter]
+        public long? AircraftId { get; set; }
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
@@ -45,6 +53,9 @@ namespace FSM.Blazor.Pages.Reservation
 
         string timezone = "";
         private bool isDisplayLoader;
+        bool isSuperAdmin, isAdmin;
+
+        #endregion
 
         #region Filters
         public int CompanyId;
@@ -72,6 +83,9 @@ namespace FSM.Blazor.Pages.Reservation
                 NavManager.NavigateTo("/Dashboard");
             }
 
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+            isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
+
             timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
             reservationFilterVM = await ReservationService.GetFiltersAsync(_httpClient);
         }
@@ -98,6 +112,13 @@ namespace FSM.Blazor.Pages.Reservation
             datatableParams.StartDate = startDate;
             datatableParams.EndDate = endDate;
             datatableParams.CompanyId = reservationFilterVM.CompanyId;
+
+            if (!isSuperAdmin && !isAdmin)
+            {
+                datatableParams.UserId = UserId;
+            }
+
+            datatableParams.AircraftId = AircraftId;
 
             await LoadDataAsync();
         }

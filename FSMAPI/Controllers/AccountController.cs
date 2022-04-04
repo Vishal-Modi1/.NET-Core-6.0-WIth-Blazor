@@ -54,7 +54,8 @@ namespace FSMAPI.Controllers
 
                 if(!string.IsNullOrWhiteSpace(loginVM.TimeZone))
                 {
-                    timeZone =  loginVM.TimeZone.Substring(1, loginVM.TimeZone.Length - 2);
+                    //timeZone =  loginVM.TimeZone.Substring(1, loginVM.TimeZone.Length - 2);
+                    timeZone =  loginVM.TimeZone;
                 }
 
                 response.Data = new LoginResponseVM

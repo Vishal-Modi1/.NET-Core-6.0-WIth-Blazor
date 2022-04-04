@@ -78,10 +78,12 @@ export function SignOut(redirect) {
 
 export function GetTimeZone() {
 
-    const split = new Date().toString().split(" ");
-    const timeZone = split.slice(-3).join(' ')
+    //const split = new Date().toString().split(" ");
+    //const timeZone = split.slice(-3).join(' ')
 
-    return timeZone;
+    //return timeZone;
+
+   return  Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
 
 export async function downloadFileFromStream(fileName, contentStreamReference, id) {
