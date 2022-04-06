@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Text;
 using Configuration;
 using DataModels.Constants;
+using DataModels.Enums;
+using DataModels.Entities;
 
 namespace FSMAPI.Utilities
 {
@@ -18,15 +20,16 @@ namespace FSMAPI.Utilities
             _httpContext = httpContext;
         }
 
-        public string Generate(long id, int? companyId, int roleId)
+        public string Generate(User user)
         {
             List<Claim> claims = new List<Claim>
             {
                 //new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(CustomClaimTypes.CompanyId, companyId.ToString()),
-                new Claim(CustomClaimTypes.UserId, id.ToString()),
-                new Claim(ClaimTypes.Role, roleId.ToString()),
+                new Claim(CustomClaimTypes.CompanyId, user.CompanyId.ToString()),
+                new Claim(CustomClaimTypes.UserId, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+                new Claim(CustomClaimTypes.RoleName, user.RoleName.ToString()),
             };
 
             //roles.ForEach(role =>

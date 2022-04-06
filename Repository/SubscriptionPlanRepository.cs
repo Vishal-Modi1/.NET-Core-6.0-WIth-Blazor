@@ -50,14 +50,25 @@ namespace Repository
             }
         }
 
-        public List<SubscriptionPlanDataVM> List(DatatableParams datatableParams)
+        public List<SubscriptionPlanDataVM> List(SubscriptionDataTableParams datatableParams)
         {
             using (_myContext = new MyContext())
             {
                 int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<SubscriptionPlanDataVM> list;
-                string sql = $"EXEC dbo.GetSubscriptionPlanList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
-                    $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+
+                string sql = "";
+
+                if (datatableParams.IsActive.HasValue)
+                {
+                    sql = $"EXEC dbo.GetSubscriptionPlanList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                        $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.IsActive} ";
+                }
+                else
+                {
+                    sql = $"EXEC dbo.GetSubscriptionPlanList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                        $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+                }
 
                 list = _myContext.SubscriptionPlanData.FromSqlRaw<SubscriptionPlanDataVM>(sql).ToList();
 

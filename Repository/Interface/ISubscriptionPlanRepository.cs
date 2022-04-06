@@ -13,7 +13,7 @@ namespace Repository.Interface
 
         SubscriptionPlan Edit(SubscriptionPlan subscriptionPlan);
 
-        List<SubscriptionPlanDataVM> List(DatatableParams datatableParams);
+        List<SubscriptionPlanDataVM> List(SubscriptionDataTableParams datatableParams);
         
         void Delete(long id, long deletedBy);
 

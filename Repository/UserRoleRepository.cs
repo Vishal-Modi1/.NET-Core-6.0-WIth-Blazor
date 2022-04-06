@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataModels.VM.UserRole;
 using DataModels.VM.Common;
+using DataModels.Entities;
 
 namespace Repository
 {
@@ -22,6 +23,16 @@ namespace Repository
                                                  }).ToList();
 
                 return userRoleList;
+            }
+        }
+
+        public UserRole FindById(int id)
+        {
+            using (_myContext = new MyContext())
+            {
+                UserRole userRole = _myContext.UserRoles.Where(p => p.Id == id).First();
+
+                return userRole;
             }
         }
 

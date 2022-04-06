@@ -10,5 +10,6 @@
         public const string FullName = "FullName";
         public const string ProfileImageURL = "ProfileImage";
         public const string TimeZone = "TimeZone";
+        public const string RoleName = "RoleName";
     }
 }

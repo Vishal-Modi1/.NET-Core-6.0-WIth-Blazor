@@ -15,7 +15,7 @@ namespace FSM.Blazor.Data.BillingHistory
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<BillingHistoryDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<BillingHistoryDataVM>> ListAsync(IHttpClientFactory httpClient, BillingHistoryDatatableParams datatableParams)
         {
             string jsonData = JsonConvert.SerializeObject(datatableParams);
 

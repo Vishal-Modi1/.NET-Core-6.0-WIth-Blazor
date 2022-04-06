@@ -12,12 +12,14 @@ namespace Service
     public class SubscriptionPlanService : BaseService, ISubscriptionPlanService
     {
         private readonly ISubscriptionPlanRepository _subscriptionPlanRepository;
+        private readonly IBillingHistoryRepository _billingHistoryRepository;
 
-        public SubscriptionPlanService(ISubscriptionPlanRepository subscriptionPlanRepository)
+        public SubscriptionPlanService(ISubscriptionPlanRepository subscriptionPlanRepository,
+            IBillingHistoryRepository billingHistoryRepository)
         {
             _subscriptionPlanRepository = subscriptionPlanRepository;
+            _billingHistoryRepository = billingHistoryRepository;
         }
-
 
         public CurrentResponse GetDetails(int id)
         {
@@ -152,7 +154,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse List(DatatableParams datatableParams)
+        public CurrentResponse List(SubscriptionDataTableParams datatableParams)
         {
             try
             {
@@ -183,6 +185,49 @@ namespace Service
             bool isPlanNameExist = _subscriptionPlanRepository.IsPlanNameAlreadyExist(subscriptionPlan);
 
             return isPlanNameExist;
+        }
+
+        public CurrentResponse BuyPlan(int id, long userId)
+        {
+            try
+            {
+                BillingHistory billingHistory = GenerateBillingDetails(id, userId);
+
+                CreateResponse(billingHistory, HttpStatusCode.OK, "Subscription Plan Activated.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        private BillingHistory GenerateBillingDetails(int id, long userId)
+        {
+            SubscriptionPlan subscriptionPlan = _subscriptionPlanRepository.FindByCondition(p => p.Id == id);
+
+            BillingHistory billingHistory = new BillingHistory();
+
+            billingHistory.SubscriptionPlanName = subscriptionPlan.Name;
+            billingHistory.UserId = userId;
+            billingHistory.ModuleIds = subscriptionPlan.ModuleIds;
+            billingHistory.IsCombo = subscriptionPlan.IsCombo;
+            billingHistory.Price = subscriptionPlan.Price;
+            billingHistory.Duration = subscriptionPlan.Duration;
+            billingHistory.IsActive = true;
+
+            billingHistory.PlanStartDate = DateTime.UtcNow;
+            billingHistory.PlanEndDate = billingHistory.PlanStartDate.AddMonths(billingHistory.Duration);
+
+            billingHistory.CreatedOn = DateTime.UtcNow;
+
+            _billingHistoryRepository.Create(billingHistory);
+
+            return billingHistory;
         }
 
         #region Obbject Mapper

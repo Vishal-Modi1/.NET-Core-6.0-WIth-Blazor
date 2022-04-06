@@ -20,6 +20,8 @@ namespace DataModels.VM.BillingHistory
 
         public Int16 Duration { get; set; }
 
+        public bool IsActive { get; set; }
+
         public DateTime PlanStartDate { get; set; }
 
         public DateTime PlanEndDate { get; set; }

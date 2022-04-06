@@ -25,7 +25,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("list")]
-        public IActionResult List(DatatableParams datatableParams)
+        public IActionResult List(SubscriptionDataTableParams datatableParams)
         {
             CurrentResponse response = _subscriptionPlanService.List(datatableParams);
 
@@ -78,6 +78,16 @@ namespace FSMAPI.Controllers
         public IActionResult UpdateStatus(long id, bool isActive)
         {
             CurrentResponse response = _subscriptionPlanService.UpdateActiveStatus(id, isActive);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("buyplan")]
+        public IActionResult UpdateStatus(int id)
+        {
+            long userId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _subscriptionPlanService.BuyPlan(id, userId);
 
             return Ok(response);
         }

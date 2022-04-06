@@ -9,11 +9,12 @@ namespace Service.Interface
 
         CurrentResponse Edit(SubscriptionPlanVM subscriptionPlan);
 
-        CurrentResponse List(DatatableParams datatableParams);
+        CurrentResponse List(SubscriptionDataTableParams datatableParams);
 
         CurrentResponse Delete(long id, long deletedBy);
 
         CurrentResponse UpdateActiveStatus(long id, bool isActive);
+        CurrentResponse BuyPlan(int id, long userId);
 
         CurrentResponse GetDetails(int id);
     }

@@ -17,9 +17,9 @@
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
-<style>.e-dialog
-    {
-        max-height:588px!important;
+<style>
+    .e-dialog {
+        max-height: 588px !important;
     }
 </style>
 
@@ -39,7 +39,7 @@
 
     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
-         <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
+        <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
                         TextProperty="Name" Placeholder="Select Company" style="width: 100%;"
                         Data="@reservationFilterVM.Companies" Change="@(args =>  grid.Reload())"
@@ -87,14 +87,36 @@
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="ScheduleTitle" Filterable="false" Title="Title"></RadzenDataGridColumn>
-      
+
         @if (AircraftId.GetValueOrDefault() == 0)
         {
             <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
         }
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="StartDateTime" Filterable="false" Title="From"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="ReservationId" Sortable="false" Filterable="false" Title="Reservation Id"></RadzenDataGridColumn>
+        
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="From" >
+            <Template Context="value">
+
+                @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To">
+            <Template Context="value">
+
+                @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="90px" TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="Flight Hours" TextAlign="TextAlign.Center">
+            <Template Context="value">
+
+                @value.AirFrameTime.GetValueOrDefault()
+
+            </Template>
+        </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="FlightStatus" Filterable="false" Title="FlightStatus" TextAlign="TextAlign.Center">
             <Template Context="value">
@@ -134,12 +156,11 @@
         <Content>
 
             <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-            InitializeValuesParentEvent="@InitializeValues"
-            OpenDialogParentEvent = "@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
-            RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-            CloseDialogParentEvent = "@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
-            ></Create>
-           
+                    InitializeValuesParentEvent="@InitializeValues"
+                    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
+                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+
         </Content>
     </DialogTemplates>
 

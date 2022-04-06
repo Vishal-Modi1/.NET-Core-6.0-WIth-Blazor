@@ -3,6 +3,7 @@ using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using DataModels.VM.Document;
 using DataModels.VM.Reservation;
+using DataModels.VM.BillingHistory;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
 using Radzen;
@@ -164,5 +165,28 @@ namespace FSM.Blazor.Extensions
 
             return datatableParams;
         }
+
+        public static BillingHistoryDatatableParams Create(this BillingHistoryDatatableParams documentDatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
+        {
+            BillingHistoryDatatableParams datatableParams = new BillingHistoryDatatableParams();
+
+            datatableParams.Length = args.Top.GetValueOrDefault();
+            datatableParams.Start = args.Skip.GetValueOrDefault() + 1;
+
+            if (string.IsNullOrWhiteSpace(args.OrderBy))
+            {
+                datatableParams.SortOrderColumn = defaultSearchOrderColumn;
+                datatableParams.OrderType = "asc";
+
+            }
+            else
+            {
+                datatableParams.SortOrderColumn = args.OrderBy.Split(new char[] { ' ' })[0];
+                datatableParams.OrderType = args.OrderBy.Split(new char[] { ' ' })[1];
+            }
+
+            return datatableParams;
+        }
+
     }
 }

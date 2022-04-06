@@ -25,6 +25,9 @@ namespace DataModels.Entities
 
         [NotMapped]
         public string CompanyName { set; get; }
+
+        [NotMapped]
+        public string RoleName { get; set; }
         public string Password { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }

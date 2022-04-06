@@ -630,6 +630,7 @@ CREATE TABLE [dbo].[BillingHistories](
 	[UserId] [bigint] NOT NULL,
 	[SubscriptionPlanName] [varchar](50) NOT NULL,
 	[ModuleIds] [varchar](50) NOT NULL,
+	IsActive bit NOT NULL,
 	[IsCombo] [bit] NOT NULL,
 	[Price] [numeric](8, 2) NOT NULL,
 	[Duration] [smallint] NOT NULL,
@@ -1556,7 +1557,7 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)    
      
 END  
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 04-04-2022 08:44:39 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 06-04-2022 11:02:51 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1584,15 +1585,21 @@ AS BEGIN
         Select acs.Id, acs.ScheduleTitle, acs.CreatedOn, 
 		acs.StartDateTime, acs.EndDateTime, acd.FlightStatus,
 		u.FirstName + '' + u.LastName as Member1, acd.IsCheckOut,
-		acs.ReservationId, a.TailNo, cp.Name as CompanyName
+		acs.ReservationId, a.TailNo, cp.Name as CompanyName, ah.TotalTime as AirFrameTime
 		From AircraftSchedules acs
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
 		LEFT JOIN  Companies cp on a.CompanyId = cp.Id   
-
+		LEFT JOIN AircraftScheduleHobbsTimes ah
+		ON acs.Id = ah.AircraftScheduleId
+		LEFT JOIN AircraftEquipmentTimes at
+		ON ah.AircraftEquipmentTimeId = at.Id
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
+			(at.IsDeleted = 0 or at.IsDeleted Is NULL) and
+			(at.EquipmentName = 'Air Frame' or at.EquipmentName IS NULL)
+			AND
 			1 = 1 AND 
 		      (
 				((ISNULL(@UserId,0)=0)
@@ -1660,9 +1667,16 @@ AS BEGIN
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
 		LEFT JOIN  Companies cp on a.CompanyId = cp.Id  
+		LEFT JOIN AircraftScheduleHobbsTimes ah
+		ON acs.Id = ah.AircraftScheduleId
+		LEFT JOIN AircraftEquipmentTimes at
+		ON ah.AircraftEquipmentTimeId = at.Id
 
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
+			(at.IsDeleted = 0 or at.IsDeleted Is NULL) and
+			(at.EquipmentName = 'Air Frame' or at.EquipmentName IS NULL)
+			AND
 			1 = 1 AND 
 		      (
 			   ((ISNULL(@UserId,0)=0)
@@ -1693,11 +1707,6 @@ AS BEGIN
 
 END
 
-/****** Object:  Trigger [dbo].[Trg_Company_InsertUserRolePermission]    Script Date: 03-12-2021 16:40:28 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE Trigger [dbo].[Trg_Company_InsertUserRolePermission]
 On [dbo].[Companies]
@@ -2360,7 +2369,7 @@ AS BEGIN
    
 END
 
-/****** Object:  StoredProcedure [dbo].[GetBillingHistoryList]    Script Date: 31-03-2022 17:00:40 ******/
+/****** Object:  StoredProcedure [dbo].[GetBillingHistoryList]    Script Date: 06-04-2022 15:33:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2371,7 +2380,9 @@ CREATE PROCEDURE [dbo].[GetBillingHistoryList]
     @PageNo INT = 1,  
     @PageSize INT = 10,  
     @SortColumn NVARCHAR(20) = 'CreatedOn',  
-    @SortOrder NVARCHAR(20) = 'DESC'
+    @SortOrder NVARCHAR(20) = 'DESC',
+	@CompanyId INT = NULL,
+	@UserId BIGINT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -2381,15 +2392,21 @@ AS BEGIN
   
     ; WITH CTE_Results AS   
     (  
-      select * from ( select BH.*,temp.ModulesName from (select bh.Id,STRING_AGG(md.displayname,',') 
+      select * from ( select BH.*, u.CompanyId ,temp.ModulesName from (select bh.Id,STRING_AGG(md.displayname,',') 
 		as ModulesName from (SELECT BH.id, value  
 		FROM BillingHistories bh
 		CROSS APPLY STRING_SPLIT(bh.ModuleIds, ',')) as bh
 		join ModuleDetails md on BH.value = md.Id group by bh.Id)as temp
 		join BillingHistories BH on BH.Id = temp.id
+		join Users u on BH.UserId =u.Id
 ) as tempData
         WHERE
-			
+			((ISNULL(@UserId,0)=0)
+				OR (tempData.UserId = @UserId))
+				AND
+			((ISNULL(@CompanyId,0)=0)
+				OR (tempData.CompanyId = @CompanyId))
+				AND
 			(@SearchValue= '' OR  (   
               tempData.SubscriptionPlanName LIKE '%' + @SearchValue + '%' OR
 			  tempData.Price LIKE '%' + @SearchValue + '%' OR
@@ -2428,9 +2445,14 @@ AS BEGIN
     ),  
     CTE_TotalRows AS   
     (  
-        select count(bh.Id)  as TotalRecords from BillingHistories BH
+        select count(bh.Id)  as TotalRecords from CTE_Results BH
        WHERE
-			
+			((ISNULL(@UserId,0)=0)
+				OR (bh.UserId = @UserId))
+				AND
+			((ISNULL(@CompanyId,0)=0)
+				OR (bh.CompanyId = @CompanyId))
+				AND
 			(@SearchValue= '' OR  (   
               BH.SubscriptionPlanName LIKE '%' + @SearchValue + '%' OR
 			  BH.Price LIKE '%' + @SearchValue + '%' OR
@@ -2439,8 +2461,9 @@ AS BEGIN
    
     )  
     Select  TotalRecords, BH.Id, BH.UserId, BH.SubscriptionPlanName, BH.ModuleIds, BH.ModulesName, BH.[Duration]
-	,BH.PlanStartDate, BH.PlanEndDate, BH.CreatedOn, BH.Iscombo , BH.Price from CTE_Results BH
+	,BH.PlanStartDate,BH.IsActive, BH.PlanEndDate, BH.CreatedOn, BH.Iscombo , BH.Price from CTE_Results BH
 	, CTE_TotalRows   
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = BH.ID)  
    
 END
+

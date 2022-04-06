@@ -17,7 +17,7 @@ namespace Service
             _billingHistoryRepository = billingHistoryRepository;
         }
 
-        public CurrentResponse List(DatatableParams datatableParams)
+        public CurrentResponse List(BillingHistoryDatatableParams datatableParams)
         {
             try
             {

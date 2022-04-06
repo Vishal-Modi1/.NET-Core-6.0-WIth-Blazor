@@ -48,7 +48,7 @@ namespace FSMAPI.Controllers
                 response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
                 List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
-                string accessToken = _jWTTokenGenerator.Generate(user.Id, user.CompanyId, user.RoleId);
+                string accessToken = _jWTTokenGenerator.Generate(user);
                 
                 string timeZone = "";
 

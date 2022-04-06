@@ -53,7 +53,7 @@ namespace FSM.Blazor.Pages.BillingHistory
         {
             isLoading = true;
 
-            DatatableParams datatableParams = new DatatableParams().Create(args, "CreatedOn");
+            BillingHistoryDatatableParams datatableParams = new BillingHistoryDatatableParams().Create(args, "CreatedOn");
 
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;

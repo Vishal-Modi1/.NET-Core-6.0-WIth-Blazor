@@ -8,6 +8,7 @@ using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using System.Text;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.SubscriptionPlan
 {
@@ -31,11 +32,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         IList<SubscriptionPlanDataVM> data;
-        int count;
-        string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         bool isLoading, isBusyAddNewButton, isBusyUpdateStatusButton;
-        int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
-        IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string searchText ="";
         string moduleName = "SubscriptionPlan";
         
@@ -69,20 +66,24 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
         {
             isLoading = true;
 
-            DatatableParams datatableParams = new DatatableParams();
-            pageSize = 10;
+            SubscriptionDataTableParams datatableParams = new SubscriptionDataTableParams();
             datatableParams.SearchText = searchText;
             datatableParams.SortOrderColumn = "Name";
             datatableParams.Length = 1000;
             datatableParams.Start = 1;
             datatableParams.OrderType = "ASC";
 
+            if(!_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            {
+                datatableParams.IsActive = true;
+            }
+
             data = await SubscriptionPlanService.ListAsync(_httpClient, datatableParams);
-            count = data.Count() > 0 ? data[0].TotalRecords : 0;
+            
             isLoading = false;
         }
 
-        async Task ClosePplanStatusUpdateDialogAsync()
+        async Task ClosePlanStatusUpdateDialogAsync()
         {
             DialogService.Close(false);
             await grid.Reload();

@@ -1,0 +1,1 @@
+ALTER TABLE BillingHistories ADD IsActive bit NOT NULL DEFAULT 0

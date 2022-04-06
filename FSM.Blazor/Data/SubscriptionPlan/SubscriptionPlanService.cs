@@ -15,7 +15,7 @@ namespace FSM.Blazor.Data.SubscriptionPlan
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<SubscriptionPlanDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<SubscriptionPlanDataVM>> ListAsync(IHttpClientFactory httpClient, SubscriptionDataTableParams datatableParams)
         {
             string jsonData = JsonConvert.SerializeObject(datatableParams);
 
@@ -73,6 +73,15 @@ namespace FSM.Blazor.Data.SubscriptionPlan
         {
             string url = $"subscriptionPlan/updatestatus?id={id}&isActive={isActive}";
               
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> BuyPlan(IHttpClientFactory httpClient, int id)
+        {
+            string url = $"subscriptionPlan/buyplan?id={id}";
+
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;

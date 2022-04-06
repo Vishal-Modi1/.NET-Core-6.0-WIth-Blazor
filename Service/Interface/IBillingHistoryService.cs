@@ -1,9 +1,10 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.VM.BillingHistory;
+using DataModels.VM.Common;
 
 namespace Service.Interface
 {
     public interface IBillingHistoryService
     {
-        CurrentResponse List(DatatableParams datatableParams);
+        CurrentResponse List(BillingHistoryDatatableParams datatableParams);
     }
 }

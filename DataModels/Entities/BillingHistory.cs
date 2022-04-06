@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataModels.Entities
 {
@@ -19,6 +15,8 @@ namespace DataModels.Entities
         public bool IsCombo { get; set; }
 
         public decimal Price { get; set; }
+
+        public bool IsActive { get; set; }
 
         public Int16 Duration{ get; set; }
 

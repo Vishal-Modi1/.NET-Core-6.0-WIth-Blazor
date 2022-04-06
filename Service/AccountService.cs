@@ -13,11 +13,13 @@ namespace Service
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
 
-        public AccountService(IAccountRepository accountRepository, ICompanyRepository companyRepository)
+        public AccountService(IAccountRepository accountRepository, ICompanyRepository companyRepository, IUserRoleRepository userRoleRepository)
         {
             _accountRepository = accountRepository;
             _companyRepository = companyRepository; 
+            _userRoleRepository = userRoleRepository;
         }
 
         public CurrentResponse GetValidUser(LoginVM loginVM)
@@ -75,6 +77,8 @@ namespace Service
                     {
                         user.CompanyName = company.Name;
                     }
+
+                    user.RoleName = _userRoleRepository.FindById(user.RoleId).Name;
 
                     CreateResponse(user, HttpStatusCode.OK, "User is valid");
                 }

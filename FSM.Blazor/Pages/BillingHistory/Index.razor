@@ -58,6 +58,19 @@
             </Template>
         </RadzenDataGridColumn>
 
+           <RadzenDataGridColumn TItem="BillingHistoryDataVM" Title="Is Active" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @if(value.IsActive)
+                {
+                    @("Yes")
+                }
+                else
+                {
+                    @("No")
+                }
+            </Template>
+        </RadzenDataGridColumn>
+
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="BillingHistoryDataVM" Property="Id" Title="Actions">
             <Template Context="data">
                 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="visibility" Class="m-1" Click=@(() => OpenViewBillingInfo(data)) />

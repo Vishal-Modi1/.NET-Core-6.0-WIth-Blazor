@@ -1,9 +1,15 @@
-﻿@page "/BuyNow"
+﻿@using FSM.Blazor.Data.SubscriptionPlan
+
+@inject SubscriptionPlanService SubscriptionPlanService
+@inject NotificationService NotificationService
+
+@page "/BuyNow"
 
 @inject NavigationManager NavigationManager
 
 <h3>BuyNow  @SubscriptionPlanId</h3>
 
+<RadzenButton Text="Buy Plan" Click=@(() => BuySubscriptionPlan())></RadzenButton>
 @code {
 
 }

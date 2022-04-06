@@ -51,6 +51,8 @@ namespace Repository
 
         public DbSet<Country> Countries { get; set; }
 
+        public DbSet<BillingHistory> BillingHistories { get; set; }
+
         public DbSet<UserDataVM> UserSearchList { get; set; }
 
         public DbSet<BillingHistoryDataVM> BillingHistoryList { get; set; }
