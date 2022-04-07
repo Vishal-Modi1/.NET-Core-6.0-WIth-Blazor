@@ -93,13 +93,12 @@
 
 <div class="row mb-4">
     <div class="col">
-        <h2 style="float:left">Manage Subscription Plans Details 1010 </h2>
+        <h2 style="float:left">Manage Subscription Plans Details </h2>
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
             <RadzenButton Style="float:right" Text="Add New" IsBusy=@isBusyAddNewButton BusyText="Add New ..." Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
-                      Click=@(() => SubscriptionPlanCreateDialog(0, "Create", true
-                      )) />
+                      Click=@(() => SubscriptionPlanCreateDialog(0, "Create", true )) />
         }
     </div>
 </div>

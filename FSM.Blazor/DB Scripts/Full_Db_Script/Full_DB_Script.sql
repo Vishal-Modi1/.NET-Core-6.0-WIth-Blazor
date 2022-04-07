@@ -2288,7 +2288,7 @@ AS BEGIN
        
 END    
 
-/****** Object:  StoredProcedure [dbo].[GetSubscriptionPlanList]    Script Date: 29-03-2022 16:03:05 ******/
+/****** Object:  StoredProcedure [dbo].[GetSubscriptionPlanList]    Script Date: 06-04-2022 16:05:07 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2298,8 +2298,9 @@ CREATE PROCEDURE [dbo].[GetSubscriptionPlanList]
     @SearchValue NVARCHAR(50) = NULL,  
     @PageNo INT = 1,  
     @PageSize INT = 10,  
-    @SortColumn NVARCHAR(20) = 'Name',  
-    @SortOrder NVARCHAR(20) = 'ASC'
+    @SortColumn NVARCHAR(20) = 'CreatedOn',  
+    @SortOrder NVARCHAR(20) = 'DESC',
+	@IsActive BIT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -2317,6 +2318,9 @@ AS BEGIN
 		join SubscriptionPlans SP on SP.Id = temp.id
 ) as tempData
         WHERE
+			((ISNULL(@IsActive,0)=0)
+				OR (tempData.IsActive = @IsActive))
+			AND
 			(tempData.IsDeleted = 0 OR  tempData.IsDeleted IS NULL) AND
 			
 			(@SearchValue= '' OR  (   
@@ -2344,6 +2348,13 @@ AS BEGIN
             END ASC,  
             CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='DESC')  
                         THEN [Duration(InMonths)]  
+            END DESC,
+			   
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='ASC')  
+                        THEN [CreatedOn]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='DESC')  
+                        THEN [CreatedOn]  
             END DESC
            
             OFFSET @PageSize * (@PageNo - 1) ROWS  
@@ -2353,6 +2364,9 @@ AS BEGIN
     (  
         select count(sp.Id)  as TotalRecords from SubscriptionPlans SP
        WHERE
+	    ((ISNULL(@IsActive,0)=0)
+				OR (SP.IsActive = @IsActive))
+			AND
 		(SP.IsDeleted = 0 OR  SP.IsDeleted IS NULL) AND
 			
 			(@SearchValue= '' OR  (   

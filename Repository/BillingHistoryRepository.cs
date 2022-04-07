@@ -46,7 +46,7 @@ namespace Repository
                 billingHistory.Id = System.Guid.NewGuid();
                 _myContext.BillingHistories.Add(billingHistory);
 
-                _myContext.SaveChangesAsync();
+                _myContext.SaveChanges();
 
                 return billingHistory;
             }
@@ -61,5 +61,10 @@ namespace Repository
         //        return billingHistory;
         //    }
         //}
+
+        // the implentatation of the campus tension the tension if the task the implementation
+        // the tank of the task of
+        // templates 
+            
     }
 }
