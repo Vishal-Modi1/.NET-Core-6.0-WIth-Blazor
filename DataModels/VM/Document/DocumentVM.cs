@@ -23,6 +23,7 @@ namespace DataModels.VM.Document
 
         public DateTime? LastShareDate { get; set; }
 
+        public bool IsShareable { get; set; }
 
         public string Tags { get; set; }
 

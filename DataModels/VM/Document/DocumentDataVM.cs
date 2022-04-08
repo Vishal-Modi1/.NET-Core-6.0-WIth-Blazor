@@ -11,7 +11,7 @@ namespace DataModels.VM.Document
 
         public string DisplayName { get; set; }
 
-        public string ModuleName { get; set; }  
+        public string ModuleName { get; set; }
 
         public long UserId { get; set; }
 
@@ -21,6 +21,9 @@ namespace DataModels.VM.Document
         public DateTime? ExpirationDate { get; set; }
 
         public DateTime? LastShareDate { get; set; }
+
+
+        public bool IsShareable { get; set; }
 
         [NotMapped]
         public string DocumentPath { get; set; }

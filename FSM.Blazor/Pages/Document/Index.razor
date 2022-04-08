@@ -100,7 +100,6 @@
         <RadzenDataGridColumn TItem="DocumentDataVM" TextAlign="TextAlign.Center" Property="Type" Filterable="false" Title="Document Type">
             <Template Context="data">
 
-
                 @if (data.Type == "pdf")
                 {
                     <RadzenImage Path="../img/pdficon.png" Style="width: 14%;" />
@@ -157,11 +156,9 @@
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="250px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">
             <Template Context="data">
 
-
-
                 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Text="@data.TotalDownloads.ToString()" Style="font-size: 15px !important;width:60px !important;" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
 
-                @if (data.LastShareDate != null && data.LastShareDate.Value < DateTime.Now.Date)
+                @if (!data.IsShareable ||  (data.LastShareDate != null && data.LastShareDate.Value < DateTime.Now.Date))
                 {
                     <RadzenButton Disabled=true ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
                 }

@@ -197,6 +197,7 @@ namespace FSM.Blazor.Pages.Document
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
             multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
             multiContent.Add(new StringContent(String.Join(",", selectedTagsList)), "Tags");
+            multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
 
             CurrentResponse response = await DocumentService.UploadDocumentAsync(_httpClient, multiContent);
 

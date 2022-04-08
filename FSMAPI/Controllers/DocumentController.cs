@@ -66,9 +66,14 @@ namespace FSMAPI.Controllers
                 documentVM.ExpirationDate = Convert.ToDateTime(form["ExpirationDate"].ToString());
             }
 
-            if (!string.IsNullOrWhiteSpace(form["LastShareDate"].ToString()))
+            documentVM.IsShareable = Convert.ToBoolean(form["IsShareable"]);
+            
+            if (Convert.ToBoolean(form["IsShareable"]))
             {
-                documentVM.LastShareDate = Convert.ToDateTime(form["LastShareDate"].ToString());
+                if (!string.IsNullOrWhiteSpace(form["LastShareDate"].ToString()))
+                {
+                    documentVM.LastShareDate = Convert.ToDateTime(form["LastShareDate"].ToString());
+                }
             }
 
             CurrentResponse response = new CurrentResponse();
@@ -215,7 +220,7 @@ namespace FSMAPI.Controllers
 
         [HttpPut]
         [Route("updatetotalshares")]
-        public IActionResult UpdateTotalShares([FromBody]Guid id)
+        public IActionResult UpdateTotalShares([FromBody] Guid id)
         {
             CurrentResponse response = _documentService.UpdateTotalShares(id);
 

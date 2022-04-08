@@ -524,6 +524,7 @@ CREATE TABLE [dbo].[Documents](
 	[TotalDownloads] [bigint] NULL,
 	[TotalShares] [bigint] NULL,
 	[LastShareDate] [datetime] NULL,
+	[IsShareable] BIT NOT NULL DEFAULT 1,
 	[ExpirationDate] [datetime] NULL,
 	[CompanyId] [int] NULL,
 	[ModuleId] [int] NULL,
@@ -2140,7 +2141,7 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetDocumentList]    Script Date: 25-03-2022 11:48:27 ******/
+/****** Object:  StoredProcedure [dbo].[GetDocumentList]    Script Date: 07-04-2022 15:44:02 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -2163,7 +2164,7 @@ AS BEGIN
       
     ; WITH CTE_Results AS       
     (      
-        SELECT d.Id, d.Name,d.UserId ,d.DisplayName, d.ExpirationDate, d.CompanyId,
+        SELECT d.Id, d.Name,d.UserId ,d.DisplayName, d.ExpirationDate, d.IsShareable , d.CompanyId,
 		 ISNULL(d.TotalDownloads, 0) as TotalDownloads , ISNULL(d.TotalShares, 0) as TotalShares ,
 		 d.LastShareDate,
 		d.Type,ISNULL(d.[Size(InKB)], 0) as Size, m.Name as ModuleName,
@@ -2243,50 +2244,18 @@ AS BEGIN
     ),      
     CTE_TotalRows AS       
     (      
-        select count(d.Id) as TotalRecords from Documents d    
-  LEFT JOIN  Companies CP on CP.Id = d.CompanyId    
-  LEFT JOIN ModuleDetails m on d.ModuleId = m.Id
-    LEFT JOIN Users u on d.UserId = u.Id
-        WHERE    
-   (CP.IsDeleted = 0 OR  CP.IsDeleted IS NULL) AND    
-   1 = 1 AND     
-        (    
-    ((ISNULL(@CompanyId,0)=0)    
-    OR (d.CompanyId = @CompanyId))    
-        )
-		AND     
-        (    
-    ((ISNULL(@ModuleId,0)=0)    
-    OR (d.ModuleId = @ModuleId))    
-        
-        ) 
-		AND     
-        (    
-    ((ISNULL(@UserId,0)=0)    
-    OR (d.UserId = @UserId))    
-        
-        ) 
-   AND     
-   d.IsDeleted = 0 AND    
-   (@SearchValue= '' OR  (       
-              d.DisplayName LIKE '%' + @SearchValue + '%' OR    
-     Type LIKE '%' + @SearchValue + '%' OR    
-     CP.Name LIKE '%' + @SearchValue + '%'    
-            ))      
+        select count(CTE_Results.Id) as TotalRecords from CTE_Results      
        
     )      
-    Select TotalRecords, d.Id,d.UserId, d.Name, d.DisplayName, d.ExpirationDate, d.CompanyId,
-	 ISNULL(d.TotalDownloads, 0) as TotalDownloads , ISNULL(d.TotalShares, 0) as TotalShares ,
-	 d.LastShareDate,
-	d.Type,CONCAT(ISNULL(d.[Size(InKB)], 0), ' KB') as Size, m.Name as ModuleName, 
-	CP.Name as CompanyName, u.FirstName + ' ' + u.LastName as UserName from Documents d    
-	LEFT JOIN  Companies CP on CP.Id = d.CompanyId  
-	LEFT JOIN ModuleDetails m on d.ModuleId = m.Id
-	LEFT JOIN Users u on d.UserId = u.Id
- , CTE_TotalRows       
-    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = d.Id)      
+    Select TotalRecords, cr.Id,cr.UserId, cr.Name, cr.DisplayName,cr.IsShareable , cr.ExpirationDate, cr.CompanyId,
+	 ISNULL(cr.TotalDownloads, 0) as TotalDownloads , ISNULL(cr.TotalShares, 0) as TotalShares ,
+	 cr.LastShareDate,
+	cr.Type, CONCAT(ISNULL(cr.Size, 0), ' KB') as Size, cr.ModuleName, 
+	cr.CompanyName, cr.UserName from CTE_Results cr
+	, CTE_TotalRows       
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = cr.Id)      
        
-END    
+END
 
 /****** Object:  StoredProcedure [dbo].[GetSubscriptionPlanList]    Script Date: 06-04-2022 16:05:07 ******/
 SET ANSI_NULLS ON

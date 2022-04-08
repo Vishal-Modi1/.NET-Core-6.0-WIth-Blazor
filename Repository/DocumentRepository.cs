@@ -1,5 +1,4 @@
 ﻿using DataModels.Entities;
-using DataModels.VM.Common;
 using DataModels.VM.Document;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
@@ -49,6 +48,7 @@ namespace Repository
                 existingDocument.UserId = document.UserId;
                 existingDocument.TagIds = document.TagIds;
                 existingDocument.LastShareDate = document.LastShareDate;
+                existingDocument.IsShareable = document.IsShareable;
 
                 _myContext.SaveChanges();
 

@@ -35,6 +35,11 @@ namespace Service
             {
                 Document document = ToDataObject(documentVM);
 
+                if (document.IsShareable)
+                {
+                    document.LastShareDate = null;
+                }
+
                 document.TagIds = GetDocumentTagIds(documentVM.Tags);
 
                 document = _documentRepository.Create(document);
@@ -122,6 +127,11 @@ namespace Service
                 }
 
                 documentVM.ModulesList = _moduleDetailsRepository.ListDropDownValues();
+
+                if(documentVM.Id == Guid.Empty)
+                {
+                    documentVM.IsShareable = true;
+                }
 
                 CreateResponse(documentVM, HttpStatusCode.OK, "");
 
@@ -312,6 +322,7 @@ namespace Service
             documentVM.TotalDownloads = document.TotalDownloads;
             documentVM.TotalShares = document.TotalShares;
             documentVM.LastShareDate = document.LastShareDate;
+            documentVM.IsShareable = document.IsShareable;
 
             if (!string.IsNullOrWhiteSpace(document.TagIds))
             {
@@ -339,6 +350,7 @@ namespace Service
             document.Size = documentVM.Size;
             document.IsActive = true;
             document.LastShareDate = documentVM.LastShareDate;
+            document.IsShareable = documentVM.IsShareable;
 
             document.CreatedBy = documentVM.CreatedBy;
            

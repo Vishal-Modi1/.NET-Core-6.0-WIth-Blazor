@@ -38,11 +38,6 @@
 
                 <InputFile OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName"
                            accept=".csv,.xlsx,.pdf,.txt,.doc,.docx,.png,.jpg ,.jpeg,.jfif,.pjpeg,.pjp,ppt,.pptx,.svg" />
-
-                @* <RadzenTextBox Name="DisplayName" @bind-Value="@documentData.DisplayName"  Placeholder="Please upload document" />
-
-                    <RadzenRequiredValidator Component="DisplayName" Text="Please upload document" Style="position: relative"></RadzenRequiredValidator>
-                *@
             </div>
         </div>
 
@@ -76,8 +71,6 @@
                                     TextProperty="TagName" Change=@(args => OntestChange(args)) Style="width: 100%;" />
 
                 <RadzenButton Click=@(args => OpenCreateTagDialogAsync()) Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
-
-                @* <RadzenLabel Text="@selectedTagsText" />*@
 
                 @foreach (var data in selectedTagsList)
                 {
@@ -151,13 +144,25 @@
         }
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
-                <RadzenLabel Text="Last Sharing Date" />
+            <div class="col-md-2 align-items-center d-flex">
+                <RadzenLabel Text="Is Shareable" />
             </div>
-            <div class="col-md-8">
-                <RadzenDatePicker @bind-Value=@documentData.LastShareDate Placeholder="Please select date" DateFormat="d" Class="w-100" />
+            <div class="col-md-4">
+                <RadzenSwitch @bind-Value=@documentData.IsShareable />
             </div>
         </div>
+
+        @if (documentData.IsShareable)
+        {
+            <div class="row">
+                <div class="col-md-4 align-items-center d-flex">
+                    <RadzenLabel Text="Last Sharing Date" />
+                </div>
+                <div class="col-md-8">
+                    <RadzenDatePicker @bind-Value=@documentData.LastShareDate  Class="w-100" />
+                </div>
+            </div>
+        }
 
         <div class="row">
             <div class="col-md-4 align-items-center d-flex">

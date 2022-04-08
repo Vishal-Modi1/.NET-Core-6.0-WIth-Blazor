@@ -28,6 +28,7 @@ namespace DataModels.Entities
 
         public long UserId { get; set; }
 
+        public bool IsShareable { get; set; }
         public int ModuleId { get; set; }
 
         public string TagIds { get; set; }
