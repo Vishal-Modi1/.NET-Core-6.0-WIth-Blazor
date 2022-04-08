@@ -144,10 +144,10 @@
         }
 
         <div class="row">
-            <div class="col-md-2 align-items-center d-flex">
+               <div class="col-md-4 align-items-center d-flex">
                 <RadzenLabel Text="Is Shareable" />
             </div>
-            <div class="col-md-4">
+             <div class="col-md-8">
                 <RadzenSwitch @bind-Value=@documentData.IsShareable />
             </div>
         </div>
@@ -159,8 +159,8 @@
                     <RadzenLabel Text="Last Sharing Date" />
                 </div>
                 <div class="col-md-8">
-                    <RadzenDatePicker @bind-Value=@documentData.LastShareDate  Class="w-100" />
-                </div>
+                    <RadzenDatePicker Name="LastShareDate" Placeholder="Please select date" @bind-Value=@documentData.LastShareDate  Class="w-100" />
+                 <RadzenRequiredValidator  Component="LastShareDate" Text="Please select date" Style="position: relative"></RadzenRequiredValidator>   </div>
             </div>
         }
 
