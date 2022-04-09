@@ -82,6 +82,11 @@ namespace Configuration
             get => configuration.GetValue<long>("MaxDocumentUploadSize");
         }
 
+        public string SupportedDocuments
+        {
+            get => configuration.GetValue<string>("SupportedDocuments");
+        }
+
         public MailSettingConfig MailSetting
         {
             get => MailSettingConfig.Instance;

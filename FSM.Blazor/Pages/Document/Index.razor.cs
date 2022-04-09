@@ -52,6 +52,7 @@ namespace FSM.Blazor.Pages.Document
         DocumentFilterVM documentFilterVM;
         string moduleName = "Document";
         private string? result;
+        string[] documentFormats = Configuration.ConfigurationSettings.Instance.SupportedDocuments.Split(',');
 
         protected override async Task OnInitializedAsync()
         {
@@ -252,6 +253,11 @@ namespace FSM.Blazor.Pages.Document
                 return null;
             }
 
+        }
+
+        public void OpenDocumentPreviewPopup(string link)
+        {
+           
         }
 
         private async Task SetDeleteButtonState(bool isBusy)

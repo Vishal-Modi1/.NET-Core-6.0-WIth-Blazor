@@ -37,7 +37,7 @@
             <div class="col-md-8">
 
                 <InputFile OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName"
-                           accept=".csv,.xlsx,.pdf,.txt,.doc,.docx,.png,.jpg ,.jpeg,.jfif,.pjpeg,.pjp,ppt,.pptx,.svg" />
+                           accept="@supportedDocumentsFormat" />
             </div>
         </div>
 

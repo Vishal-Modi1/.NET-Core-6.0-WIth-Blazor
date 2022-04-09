@@ -44,6 +44,7 @@ namespace FSM.Blazor.Pages.Document
         IReadOnlyList<IBrowserFile> selectedFiles;
 
         public long maxFileSize = ConfigurationSettings.Instance.MaxDocumentUploadSize;
+        string supportedDocumentsFormat  = ConfigurationSettings.Instance.SupportedDocuments;
         long maxSizeInMB = 0;
         string errorMessage = "";
 
