@@ -213,12 +213,11 @@
         var result = await DialogService.OpenAsync("Preview", ds =>
     @<div>
 
-        <div class="row" style="text-align:right">
+        <div class="row" style="text-align:center">
             <div class="col">
 
-                <iframe src="@link" class="w-100" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-            </div>
+                <img src="@link" style="max-width:670px;max-height:700px;" />
+                  </div>
         </div>
     </div>
     , new DialogOptions { Width = "50%", Height = "60%" });
