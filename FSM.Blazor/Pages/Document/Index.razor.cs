@@ -44,7 +44,7 @@ namespace FSM.Blazor.Pages.Document
 
         IList<DocumentDataVM> data;
         int count, ModuleId, CompanyId;
-        bool isLoading, isBusyAddNewButton, isBusyEditButton, isBusyDeleteButton;
+        bool isLoading, isBusyAddNewButton, isBusyDeleteButton;
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
@@ -52,7 +52,9 @@ namespace FSM.Blazor.Pages.Document
         DocumentFilterVM documentFilterVM;
         string moduleName = "Document";
         private string? result;
-        string[] documentFormats = Configuration.ConfigurationSettings.Instance.SupportedDocuments.Split(',');
+     
+        string[] imageFormats = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
+        string[] previewSupportedFormats = new string[] { ".pdf",".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
 
         protected override async Task OnInitializedAsync()
         {
@@ -253,11 +255,6 @@ namespace FSM.Blazor.Pages.Document
                 return null;
             }
 
-        }
-
-        public void OpenDocumentPreviewPopup(string link)
-        {
-           
         }
 
         private async Task SetDeleteButtonState(bool isBusy)

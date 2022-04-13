@@ -1558,7 +1558,8 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)    
      
 END  
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 06-04-2022 11:02:51 ******/
+
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 12-04-2022 17:15:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

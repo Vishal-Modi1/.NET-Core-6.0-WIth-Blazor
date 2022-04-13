@@ -98,10 +98,11 @@
             </Template>
         </RadzenDataGridColumn>
 
-        <RadzenDataGridColumn TItem="DocumentDataVM" Title="Name" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+        <RadzenDataGridColumn TItem="DocumentDataVM" Title="Name" Filterable="false" Sortable="false" >
             <Template Context="value">
-                @*  <RadzenLink Path="" Text="@value.DisplayName" @onclick="@(args =>  OpenPopup(value.DocumentPath))" />*@
-                <RadzenButton Text="@value.DisplayName" Click="@(args =>  OpenDocumentViewer(value.DocumentPath))"></RadzenButton>
+
+                <a href="javascript:void(0)" @onclick="@((ui) => OpenDocumentPreviewPopupAsync(@value.DocumentPath))">@value.DisplayName</a>
+
             </Template>
         </RadzenDataGridColumn>
 
@@ -109,25 +110,25 @@
             <Template Context="data">
 
                 @if (data.Type == "pdf")
-                {
-                    <RadzenImage Path="../img/pdficon.png" Style="width: 14%;" />
+                    {
+                <RadzenImage Path="../img/pdficon.png" Style="width: 14%;" />
                 }
-                else if (data.Type == "doc" || data.Type == "docx")
-                {
-                    <RadzenImage Path="../img/word.png" Style="width: 14%;" />
+                    else if (data.Type == "doc" || data.Type == "docx")
+                    {
+                <RadzenImage Path="../img/word.png" Style="width: 14%;" />
                 }
-                else if (data.Type == "csv" || data.Type == "xlsx")
-                {
-                    <RadzenImage Path="../img/excelicon.png" Style="width: 14%;" />
+                    else if (data.Type == "csv" || data.Type == "xlsx")
+                    {
+                <RadzenImage Path="../img/excelicon.png" Style="width: 14%;" />
                 }
-                else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
-                data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
-                {
-                    <RadzenImage Path="../img/photosicon.png" Style="width: 14%;" />
+                    else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
+                    data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
+                    {
+                <RadzenImage Path="../img/photosicon.png" Style="width: 14%;" />
                 }
-                else
-                {
-                    <RadzenImage Path="../img/defaultdocicon.png" Style="width: 14%;" />
+                    else
+                    {
+                <RadzenImage Path="../img/defaultdocicon.png" Style="width: 14%;" />
                 }
 
             </Template>
@@ -135,27 +136,26 @@
         <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="Size" Title="Size"></RadzenDataGridColumn>
 
         @if (string.IsNullOrWhiteSpace(ParentModuleName))
-        {
-            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="ModuleName" Title="Module Name"></RadzenDataGridColumn>
+            {
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="ModuleName" Title="Module Name"></RadzenDataGridColumn>
         }
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-        {
-            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="CompanyName" Title="Company Name"></RadzenDataGridColumn>
+            {
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="CompanyName" Title="Company Name"></RadzenDataGridColumn>
         }
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-        {
-            <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="UserName" Title="User"></RadzenDataGridColumn>
+            {
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="UserName" Title="User"></RadzenDataGridColumn>
         }
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="100px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Expiration Date">
             <Template Context="data">
 
                 @if (data.ExpirationDate != null)
-                {
-                    <RadzenLabel Text="@data.ExpirationDate.Value.ToShortDateString()"></RadzenLabel>
-
+                    {
+                <RadzenLabel Text="@data.ExpirationDate.Value.ToShortDateString()"></RadzenLabel>
                 }
 
             </Template>
@@ -167,22 +167,22 @@
                 <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Text="@data.TotalDownloads.ToString()" Style="font-size: 15px !important;width:60px !important;" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
 
                 @if (!data.IsShareable || (data.LastShareDate != null && data.LastShareDate.Value < DateTime.Now.Date))
-                {
-                    <RadzenButton Disabled=true ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                    {
+                <RadzenButton Disabled=true ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
                 }
-                else
-                {
-                    <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                    else
+                    {
+                <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy=@data.IsLoadingEditButton Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit", false)) />
+                    {
+                <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy=@data.IsLoadingEditButton Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit", false)) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                {
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                    {
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
                               Click=@(args => OpenDeleteDialog(data)) />
                 }
             </Template>
@@ -192,9 +192,32 @@
 
 
 @{
-    async Task OpenDeleteDialog(DocumentDataVM documentData)
+
+    async void OpenDocumentPreviewPopupAsync(string link)
+        {
+    string extension = Path.GetExtension(link);
+
+    if (previewSupportedFormats.Contains(extension))
     {
-        var result = await DialogService.OpenAsync("Delete", ds =>
+        if (imageFormats.Contains(extension))
+        {
+            OpenDocumentViewer(link, true);
+        }
+        else
+        {
+            OpenDocumentViewer(link, false);
+        }
+    }
+    else
+    {
+        OpenNoPreViewPopup();
+    }
+   
+    }
+
+        async Task OpenDeleteDialog(DocumentDataVM documentData)
+        {
+    var result = await DialogService.OpenAsync("Delete", ds =>
     @<div>
         <p class="mb-4">Are you sure, You want to delete <b> @documentData.DisplayName</b>?</p>
         <div class="row" style="text-align:right">
@@ -206,49 +229,57 @@
         </div>
     </div>
     , new DialogOptions { Width = "360px" });
-    }
+        }
 
-    async Task OpenDocumentViewer(string link)
-    {
-        var result = await DialogService.OpenAsync("Preview", ds =>
+        async void OpenDocumentViewer(string link, bool isImage)
+        {
+    var result = await DialogService.OpenAsync("Preview", ds =>
     @<div>
 
         <div class="row" style="text-align:center">
             <div class="col">
 
-                <img src="@link" style="max-width:670px;max-height:700px;" />
-                  </div>
+                @if (isImage)
+                    {
+                        <img src="@link" style="max-width:670px;max-height:700px;" />
+                    }
+                    else
+                    {
+                        <iframe width="100%" height="520" src="@link" frameborder="0" allowfullscreen></iframe>
+                    }
+
+                </div>
+            </div>
         </div>
-    </div>
-    , new DialogOptions { Width = "50%", Height = "60%" });
+    , new DialogOptions { Width = "50%", Height = "90%" });
 
-    }
+        }
 
-    async Task OpenNoPreViewPopup()
-    {
-        var result = await DialogService.OpenAsync("No Preview", ds =>
+        async Task OpenNoPreViewPopup()
+        {
+    var result = await DialogService.OpenAsync("No Preview", ds =>
     @<div>
 
         <div class="row" style="text-align:right">
             <div class="col">
 
-              <p> No Preview available for selected document.</p>
+                <p> No Preview available for selected document.</p>
             </div>
         </div>
     </div>
-    , new DialogOptions { Width = "65%", Height = "80%" });
+    , new DialogOptions { Width = "20%", Height = "150px" });
 
-    }
+        }
 
-    async Task OpenShareDocumentDialog(Guid id)
-    {
-        DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
+        async Task OpenShareDocumentDialog(Guid id)
+        {
+    DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
 
-        await DocumentService.UpdateTotalSharesAsync(_httpClient, documentDataVM.Id);
+    await DocumentService.UpdateTotalSharesAsync(_httpClient, documentDataVM.Id);
 
-        documentDataVM.TotalShares += 1;
+    documentDataVM.TotalShares += 1;
 
-        var result = await DialogService.OpenAsync("Share", ds =>
+    var result = await DialogService.OpenAsync("Share", ds =>
     @<RadzenTemplateForm Data=@documentDataVM>
         <div>
             <p class="mb-4">  <RadzenLink Path="@documentDataVM.DocumentPath" Text="@documentDataVM.DocumentPath" /></p>
@@ -263,5 +294,5 @@
     </RadzenTemplateForm>
     , new DialogOptions { Width = "700px", Height = "200px" });
 
-    }
+        }
 }

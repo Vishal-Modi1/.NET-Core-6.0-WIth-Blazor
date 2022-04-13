@@ -3,6 +3,7 @@ using DataModels.VM.Common;
 using System;
 using System.Linq.Expressions;
 using DataModels.Entities;
+using System.Collections.Generic;
 
 namespace Service.Interface
 {
@@ -19,5 +20,7 @@ namespace Service.Interface
         CurrentResponse FindByCondition(Expression<Func<Document, bool>> predicate);
         CurrentResponse UpdateTotalDownloads(Guid id);
         CurrentResponse UpdateTotalShares(Guid id);
+
+        List<DocumentDataVM> ListDetails(DocumentDatatableParams datatableParams);
     }
 }

@@ -47,7 +47,6 @@ namespace FSM.Blazor.Pages.Document
         string supportedDocumentsFormat  = ConfigurationSettings.Instance.SupportedDocuments;
         long maxSizeInMB = 0;
         string errorMessage = "";
-
         List<string> selectedTagsList = new List<string>();
        
         protected override void OnInitialized()

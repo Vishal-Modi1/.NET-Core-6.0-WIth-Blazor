@@ -29,5 +29,7 @@ namespace Service.Interface
         CurrentResponse UpdateImageName(long id, string imageName);
 
         CurrentResponse ListDropDownValuesByCompanyId(int companyId);
+
+        UserVM GetUserDetails(long id, int companyId, int roleId);
     }
 }

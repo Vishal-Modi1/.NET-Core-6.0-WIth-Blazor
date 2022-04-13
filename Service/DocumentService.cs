@@ -231,13 +231,8 @@ namespace Service
         {
             try
             {
-                List<DocumentDataVM> documentsList = _documentRepository.List(datatableParams);
-
-                foreach (DocumentDataVM documentDataVM in documentsList)
-                {
-                    documentDataVM.DocumentPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.Document}/{documentDataVM.CompanyId}/{documentDataVM.UserId}/{documentDataVM.Name}";
-                }
-
+                List<DocumentDataVM> documentsList = ListDetails(datatableParams);
+               
                 CreateResponse(documentsList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -249,6 +244,18 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        public List<DocumentDataVM> ListDetails(DocumentDatatableParams datatableParams)
+        {
+            List<DocumentDataVM> documentsList = _documentRepository.List(datatableParams);
+
+            foreach (DocumentDataVM documentDataVM in documentsList)
+            {
+                documentDataVM.DocumentPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.Document}/{documentDataVM.CompanyId}/{documentDataVM.UserId}/{documentDataVM.Name}";
+            }
+
+            return documentsList;
         }
 
         public CurrentResponse Delete(Guid id, long deletedBy)

@@ -49,6 +49,17 @@ namespace Service
         {
             User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true);
 
+            UserVM userVM = GetUserDetails(id, companyId, roleId);
+
+            CreateResponse(userVM, HttpStatusCode.OK, "");
+
+            return _currentResponse;
+        }
+
+        public UserVM GetUserDetails(long id, int companyId, int roleId)
+        {
+            User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true);
+
             UserVM userVM = new UserVM();
 
             if (user != null)
@@ -70,9 +81,7 @@ namespace Service
                 userVM.Companies = _companyRepository.ListDropDownValues();
             }
 
-            CreateResponse(userVM, HttpStatusCode.OK, "");
-
-            return _currentResponse;
+            return userVM;
         }
 
         public CurrentResponse Create(UserVM userVM)

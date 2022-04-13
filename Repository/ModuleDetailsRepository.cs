@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataModels.VM.UserRolePermission;
 using DataModels.VM.Common;
+using DataModels.Entities;
 
 namespace Repository
 {
@@ -32,13 +33,23 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> moduleList = (from module in _myContext.ModuleDetails
-                                                     select new DropDownValues()
-                                                     {
-                                                         Id = module.Id,
-                                                         Name = module.DisplayName
-                                                     }).ToList();
+                                                   select new DropDownValues()
+                                                   {
+                                                       Id = module.Id,
+                                                       Name = module.DisplayName
+                                                   }).ToList();
 
                 return moduleList;
+            }
+        }
+
+        public ModuleDetail FindByName(string name)
+        {
+            using (_myContext = new MyContext())
+            {
+                ModuleDetail moduleDetails = _myContext.ModuleDetails.Where(p => p.Name == name).First();
+
+                return moduleDetails;
             }
         }
     }
