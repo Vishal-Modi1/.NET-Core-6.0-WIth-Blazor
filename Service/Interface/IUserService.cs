@@ -31,5 +31,7 @@ namespace Service.Interface
         CurrentResponse ListDropDownValuesByCompanyId(int companyId);
 
         UserVM GetUserDetails(long id, int companyId, int roleId);
+
+        CurrentResponse FindMyPreferencesById(long id);
     }
 }

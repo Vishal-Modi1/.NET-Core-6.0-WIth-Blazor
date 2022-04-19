@@ -3,6 +3,7 @@
 @using DataModels.VM.Common
 @using FSM.Blazor.Data.AircraftSchedule
 @using FSM.Blazor.Data.Aircraft
+@using FSM.Blazor.Data.User
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Schedule
 @using System.Collections.ObjectModel
@@ -20,6 +21,7 @@
 
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AircraftService AircraftService
+@inject UserService UserService
 @layout MainLayout
 @inject NavigationManager NavigationManager
 @inject NotificationService NotificationService
@@ -68,12 +70,10 @@
     .e-schedule .e-timeline-month-view .e-appointment.checkedin {
         background: #B8B8B8;
     }
-    .e-dialog
-    {
-        max-height:588px!important;
-    }
-    
 
+    .e-dialog {
+        max-height: 588px !important;
+    }
 </style>
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
@@ -85,6 +85,17 @@
 
 @if (isDisplayScheduler)
 {
+    <div class="row">
+              <div class="col-md-2 align-items-center d-flex" style="margin-right:-96px">
+                <RadzenLabel Text="Select aircraft: " Style="font-weight:bold" />
+        </div>
+        <div class="col-md-4">
+            <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        Multiple="true" Placeholder="Select aircraft" Data=@allAircraftList TextProperty="TailNo" ValueProperty="TailNo"
+                        Name="Aircraft" Class="w-100" @bind-Value=@multipleValues Change="@(args => OnAircraftsListChange())" />
+        </div>
+    </div>
+
     <SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"
             @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate"
             @bind-CurrentView="@CurrentView">
@@ -123,7 +134,7 @@
     </SfSchedule>
 }
 
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility"  AllowDragging="true" IsModal="true" Width="624px" Height="auto" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" Height="auto" ShowCloseIcon="true">
 
     <DialogTemplates>
         <Header> <h5>Schedule Appointment</h5> </Header>

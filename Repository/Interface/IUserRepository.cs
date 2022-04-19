@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using DataModels.VM.User;
 using DataModels.VM.Common;
 using DataModels.VM.Account;
+using DataModels.VM.UserPreference;
 
 namespace Repository.Interface
 {
@@ -31,5 +32,7 @@ namespace Repository.Interface
         UserVM FindById(long id);
 
         bool UpdateImageName(long id, string imageName);
+
+        List<UserPreferenceVM> FindPreferenceById(long id);
     }
 }

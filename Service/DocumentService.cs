@@ -40,7 +40,7 @@ namespace Service
                     document.LastShareDate = null;
                 }
 
-                document.TagIds = GetDocumentTagIds(documentVM.Tags);
+                document.TagIds = GetDocumentTagIds(documentVM.Tags, documentVM.CreatedBy);
 
                 document = _documentRepository.Create(document);
                 CreateResponse(document, HttpStatusCode.OK, "Document details added successfully");
@@ -55,7 +55,7 @@ namespace Service
             }
         }
 
-        private string GetDocumentTagIds(string documentTags)
+        private string GetDocumentTagIds(string documentTags, long createdBy)
         {
             string ids = "";
 
@@ -75,7 +75,9 @@ namespace Service
                 DocumentTag documentTag = new DocumentTag();
 
                 documentTag.TagName = tagName;
-
+                documentTag.CreatedOn = DateTime.UtcNow;
+                documentTag.CreatedBy = createdBy;
+                documentTag.IsActive = true;
                 documentTagsList.Add(documentTag);
             }
 
@@ -94,7 +96,7 @@ namespace Service
             {
                 Document document = ToDataObject(documentVM);
 
-                document.TagIds = GetDocumentTagIds(documentVM.Tags);
+                document.TagIds = GetDocumentTagIds(documentVM.Tags, documentVM.UpdatedBy.GetValueOrDefault());
                 document = _documentRepository.Edit(document);
                 CreateResponse(document, HttpStatusCode.OK, "Document details updated successfully");
 

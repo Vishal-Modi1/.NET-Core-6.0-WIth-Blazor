@@ -80,6 +80,7 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 _myContext.DocumentTags.AddRange(documentTagsList);
+                _myContext.SaveChanges();
 
                 return documentTagsList;
             }

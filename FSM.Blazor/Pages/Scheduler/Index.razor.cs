@@ -1,21 +1,19 @@
-﻿using DataModels.VM.Scheduler;
+﻿using DataModels.Constants;
+using DataModels.Enums;
+using DataModels.VM.Common;
+using DataModels.VM.Scheduler;
+using DataModels.VM.UserPreference;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
+using Radzen;
 using Syncfusion.Blazor.Schedule;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using DE = DataModels.Entities;
-using DataModels.VM.Common;
-using Radzen;
-using FSM.Blazor.Extensions;
-using Newtonsoft.Json;
-using DataModels.VM.AircraftEquipment;
-using DataModels.Entities;
-using DataModels.Enums;
 using Utilities;
-using DataModels.Constants;
+using DE = DataModels.Entities;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -55,6 +53,8 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private bool isDisplayLoader { get; set; } = false;
         private bool isDisplayScheduler { get; set; } = false;
+        List<DE.Aircraft> allAircraftList = new List<DE.Aircraft>();
+        IEnumerable<string> multipleValues = new string[] { "Test" };
 
         protected override async Task OnInitializedAsync()
         {
@@ -74,7 +74,10 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerVM = new SchedulerVM();
             schedulerVM.ScheduleActivitiesList = new List<DropDownValues>();
 
-            ObservableAircraftsData = new ObservableCollection<ResourceData>(await GetAircraftData());
+            List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(_httpClient);
+            UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
+            
+            ObservableAircraftsData = new ObservableCollection<ResourceData>(await GetAircraftData(aircraftPreference));
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -185,9 +188,23 @@ namespace FSM.Blazor.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        private async Task<List<ResourceData>> GetAircraftData()
+        private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
         {
-            List<DE.Aircraft> aircraftList = await AircraftService.ListAllAsync(_httpClient);
+            allAircraftList = await AircraftService.ListAllAsync(_httpClient);
+
+            List<DE.Aircraft> aircraftList = new List<DE.Aircraft>();
+
+            if (aircraftPreference != null)
+            {
+                List<long> aircraftIds = aircraftPreference.ListPreferencesIds.Select(long.Parse).ToList();
+                aircraftList = allAircraftList.Where(p => aircraftIds.Contains(p.Id)).ToList();
+            }
+            else
+            {
+                aircraftList = allAircraftList;
+            }
+
+            multipleValues = aircraftList.Select(p => p.TailNo).ToList();
 
             List<ResourceData> aircraftResourceList = new List<ResourceData>();
 
@@ -329,6 +346,28 @@ namespace FSM.Blazor.Pages.Scheduler
 
             await ScheduleRef.RefreshEventsAsync();
             base.StateHasChanged();
+        }
+
+        void OnAircraftsListChange()
+        {
+            if (multipleValues == null)
+            {
+                ObservableAircraftsData = new ObservableCollection<ResourceData>();
+            }
+            else
+            {
+                var aircraftList = allAircraftList.Where(p => multipleValues.Contains(p.TailNo)).ToList();
+
+                List<ResourceData> aircraftResourceList = new List<ResourceData>();
+
+                foreach (DE.Aircraft aircraft in aircraftList)
+                {
+                    aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.TailNo, Id = aircraft.Id });
+                }
+
+                ObservableAircraftsData = new ObservableCollection<ResourceData>(aircraftResourceList);
+            }
+                base.StateHasChanged();
         }
 
         private void CloseDialog()

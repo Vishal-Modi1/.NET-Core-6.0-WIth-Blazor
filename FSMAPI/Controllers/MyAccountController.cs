@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
         /// API for modile users only
         /// </summary>
 
-        [HttpPost]
+        [HttpGet]
         [Route("myprofiledetails")]
         
         public IActionResult MyProfileDetilas()

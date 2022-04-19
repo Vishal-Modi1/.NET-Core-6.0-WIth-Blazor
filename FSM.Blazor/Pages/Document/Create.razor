@@ -24,7 +24,7 @@
     </SfSpinner>
 </div>
 
-<RadzenTemplateForm Data="@documentData" Submit="@((DocumentVM args) => {  UploadFilesAsync(); })">
+<RadzenTemplateForm Data="@documentData" @ref="@form" Submit="@((DocumentVM args) => {  UploadFilesAsync(); })">
 
     <input type="hidden" value="@documentData.Id" name="Id" />
 
@@ -60,13 +60,13 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-4 align-items-top d-flex">
                 <RadzenLabel Text="Document Tag" />
             </div>
 
             <div class="col-md-8">
 
-                <RadzenAutoComplete Placeholder="Search a tag..." Data=@documentData.DocumentTagsList
+                <RadzenAutoComplete Placeholder="Search a tag..." Data=@documentData.DocumentTagsList @onkeyup="@Enter"
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @ref="@autoComplete"
                                     TextProperty="TagName" Change=@(args => OntestChange(args)) Style="width: 100%;" />
 
@@ -159,8 +159,8 @@
                     <RadzenLabel Text="Last Sharing Date" />
                 </div>
                 <div class="col-md-8">
-                    <RadzenDatePicker Name="LastShareDate" Placeholder="Please select date" @bind-Value=@documentData.LastShareDate  Class="w-100" />
-                 <RadzenRequiredValidator  Component="LastShareDate" Text="Please select date" Style="position: relative"></RadzenRequiredValidator>   </div>
+                    <RadzenDatePicker Name="LastShareDate" Placeholder="Please select date" @bind-Value=@documentData.LastShareDate DateFormat="d" Class="w-100" />
+                 <RadzenRequiredValidator Component="LastShareDate" Text="Please select date" Style="position: relative" ></RadzenRequiredValidator>   </div>
             </div>
         }
 
@@ -177,7 +177,7 @@
 
     <div class="row" style="margin-top:4%">
         <div class="col-md-12 text-right">
-            <RadzenButton ButtonType="ButtonType.Submit" @onkeydown="@SubmitFormIgnore" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
+            <RadzenButton ButtonType="ButtonType.Button" Click="@((args) => UploadFilesAsync())" @onkeydown="@SubmitFormIgnore" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
             <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
         </div>
     </div>

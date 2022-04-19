@@ -8,6 +8,7 @@ using DataModels.VM.User;
 using DataModels.VM.Account;
 using DataModels.Constants;
 using System.Collections.Generic;
+using DataModels.VM.UserPreference;
 
 namespace Service
 {
@@ -182,77 +183,6 @@ namespace Service
             }
         }
 
-        #region Object Mapping
-
-        public User ToDataObject(UserVM userVM)
-        {
-            User user = new User();
-
-            user.Id = userVM.Id;
-            user.CompanyId = userVM.CompanyId;
-            user.DateofBirth = userVM.DateofBirth;
-            user.Email = userVM.Email;
-            user.FirstName = userVM.FirstName;
-            user.LastName = userVM.LastName;
-
-            if (!string.IsNullOrWhiteSpace(userVM.Password))
-            {
-                user.Password = userVM.Password;
-            }
-
-            user.Phone = userVM.Phone;
-            user.RoleId = userVM.RoleId;
-            user.IsInstructor = userVM.IsInstructor;
-            user.InstructorTypeId = (bool)userVM.IsInstructor ? userVM.InstructorTypeId : null;
-            user.Gender = userVM.Gender;
-            user.ExternalId = userVM.ExternalId;
-            user.CountryId = userVM.CountryId;
-            user.ExternalId = userVM.ExternalId;
-            user.IsSendEmailInvite = userVM.IsSendEmailInvite;
-            user.IsSendTextMessage = userVM.IsSendTextMessage;
-            user.CreatedBy = userVM.CreatedBy;
-            user.UpdatedBy = userVM.UpdatedBy;
-
-            user.Gender = userVM.Gender;
-
-            if (userVM.Id == 0)
-            {
-                user.CreatedOn = DateTime.UtcNow;
-            }
-
-            user.UpdatedOn = DateTime.UtcNow;
-
-            return user;
-        }
-
-        public UserVM ToBusinessObject(User user)
-        {
-            UserVM userDetails = new UserVM();
-
-            userDetails.Id = user.Id;
-            userDetails.CompanyId = user.CompanyId;
-            userDetails.DateofBirth = user.DateofBirth;
-            userDetails.Email = user.Email;
-            userDetails.FirstName = user.FirstName;
-            userDetails.LastName = user.LastName;
-            userDetails.Password = user.Password;
-            userDetails.Phone = user.Phone;
-            userDetails.RoleId = user.RoleId;
-            userDetails.IsInstructor = user.IsInstructor;
-            userDetails.InstructorTypeId = user.InstructorTypeId == null ? 0 : (int)user.InstructorTypeId;
-            userDetails.Gender = user.Gender;
-            userDetails.ExternalId = user.ExternalId;
-            userDetails.CountryId = user.CountryId;
-            userDetails.ExternalId = user.ExternalId;
-            userDetails.IsSendEmailInvite = user.IsSendEmailInvite;
-            userDetails.Gender = user.Gender;
-            userDetails.IsSendTextMessage = user.IsSendTextMessage;
-
-            return userDetails;
-        }
-
-        #endregion
-
         public CurrentResponse Delete(long id, long deletedBy)
         {
             try
@@ -373,5 +303,95 @@ namespace Service
                 return _currentResponse;
             }
         }
+
+        public CurrentResponse FindMyPreferencesById(long id)
+        {
+            try
+            {
+                List<UserPreferenceVM> listUserPreferences  = _userRepository.FindPreferenceById(id);
+
+                CreateResponse(listUserPreferences, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new UserVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        #region Object Mapping
+
+        public User ToDataObject(UserVM userVM)
+        {
+            User user = new User();
+
+            user.Id = userVM.Id;
+            user.CompanyId = userVM.CompanyId;
+            user.DateofBirth = userVM.DateofBirth;
+            user.Email = userVM.Email;
+            user.FirstName = userVM.FirstName;
+            user.LastName = userVM.LastName;
+
+            if (!string.IsNullOrWhiteSpace(userVM.Password))
+            {
+                user.Password = userVM.Password;
+            }
+
+            user.Phone = userVM.Phone;
+            user.RoleId = userVM.RoleId;
+            user.IsInstructor = userVM.IsInstructor;
+            user.InstructorTypeId = (bool)userVM.IsInstructor ? userVM.InstructorTypeId : null;
+            user.Gender = userVM.Gender;
+            user.ExternalId = userVM.ExternalId;
+            user.CountryId = userVM.CountryId;
+            user.ExternalId = userVM.ExternalId;
+            user.IsSendEmailInvite = userVM.IsSendEmailInvite;
+            user.IsSendTextMessage = userVM.IsSendTextMessage;
+            user.CreatedBy = userVM.CreatedBy;
+            user.UpdatedBy = userVM.UpdatedBy;
+
+            user.Gender = userVM.Gender;
+
+            if (userVM.Id == 0)
+            {
+                user.CreatedOn = DateTime.UtcNow;
+            }
+
+            user.UpdatedOn = DateTime.UtcNow;
+
+            return user;
+        }
+
+        public UserVM ToBusinessObject(User user)
+        {
+            UserVM userDetails = new UserVM();
+
+            userDetails.Id = user.Id;
+            userDetails.CompanyId = user.CompanyId;
+            userDetails.DateofBirth = user.DateofBirth;
+            userDetails.Email = user.Email;
+            userDetails.FirstName = user.FirstName;
+            userDetails.LastName = user.LastName;
+            userDetails.Password = user.Password;
+            userDetails.Phone = user.Phone;
+            userDetails.RoleId = user.RoleId;
+            userDetails.IsInstructor = user.IsInstructor;
+            userDetails.InstructorTypeId = user.InstructorTypeId == null ? 0 : (int)user.InstructorTypeId;
+            userDetails.Gender = user.Gender;
+            userDetails.ExternalId = user.ExternalId;
+            userDetails.CountryId = user.CountryId;
+            userDetails.ExternalId = user.ExternalId;
+            userDetails.IsSendEmailInvite = user.IsSendEmailInvite;
+            userDetails.Gender = user.Gender;
+            userDetails.IsSendTextMessage = user.IsSendTextMessage;
+
+            return userDetails;
+        }
+
+        #endregion
     }
 }

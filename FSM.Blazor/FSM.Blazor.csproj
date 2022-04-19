@@ -34,9 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="configuration.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
     <Content Update="Pages\InstructorType\Index.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

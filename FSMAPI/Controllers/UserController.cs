@@ -143,6 +143,15 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
+        [Route("findmypreferencesbyid")]
+        public IActionResult FindPreferencesById(long id)
+        {
+            CurrentResponse response = _userService.FindMyPreferencesById(id);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("listdropdownvaluesbycompanyid")]
         public IActionResult ListDropDownValuesByCompanyId(int companyId)
         {

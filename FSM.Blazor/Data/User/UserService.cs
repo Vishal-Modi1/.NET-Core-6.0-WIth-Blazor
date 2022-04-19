@@ -3,6 +3,7 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
+using DataModels.VM.UserPreference;
 
 namespace FSM.Blazor.Data.User
 {
@@ -103,6 +104,21 @@ namespace FSM.Blazor.Data.User
             CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findbyid?id={id}");
 
             return response;
+        }
+
+        public async Task<List<UserPreferenceVM>> FindMyPreferencesById(IHttpClientFactory httpClient)
+        {
+            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id"));
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findmypreferencesbyid?id={id}");
+
+            List<UserPreferenceVM> listUserPreferences = new List<UserPreferenceVM>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                listUserPreferences = JsonConvert.DeserializeObject<List<UserPreferenceVM>>(response.Data.ToString());
+            }
+
+            return listUserPreferences;
         }
 
         public async Task<CurrentResponse> UploadProfileImageAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)

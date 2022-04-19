@@ -23,7 +23,7 @@ namespace FSM.Blazor.Pages.MyAccount
         List<DropDownLargeValues> aircraftList = new List<DropDownLargeValues>();
         List<DropDownValues> activityTypeList = new List<DropDownValues>();
         int preferenceTypeId = 0;
-        IEnumerable<string> multipleValues = new string[] { "ALFKI", "ANATR" };
+        IEnumerable<string> multipleValues = new string[] { "" };
 
         protected override void OnInitialized()
         {

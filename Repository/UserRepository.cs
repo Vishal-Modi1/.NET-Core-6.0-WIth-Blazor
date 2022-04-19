@@ -197,11 +197,21 @@ namespace Repository
 
                                  }).FirstOrDefault();
 
+                userVM.UserPreferences = FindPreferenceById(id);
+
+                return userVM;
+            }
+        }
+
+        public List<UserPreferenceVM> FindPreferenceById(long id)
+        {
+            using (_myContext = new MyContext())
+            {
                 List<UserPreference> userPreferences = _myContext.UserPreferences.Where(p => p.UserId == id).ToList();
-                userVM.UserPreferences = new List<UserPreferenceVM>();
+                List<UserPreferenceVM> userPreferenceVM = new List<UserPreferenceVM>();
                 userPreferences.ForEach(p =>
                 {
-                    userVM.UserPreferences.Add(new UserPreferenceVM()
+                    userPreferenceVM.Add(new UserPreferenceVM()
                     {
                         Id = p.Id,
                         UserId = p.UserId,
@@ -211,7 +221,7 @@ namespace Repository
                     });
                 });
 
-                return userVM;
+                return userPreferenceVM;
             }
         }
 

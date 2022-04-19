@@ -44,11 +44,12 @@ namespace FSM.Blazor.Pages.Document
         IReadOnlyList<IBrowserFile> selectedFiles;
 
         public long maxFileSize = ConfigurationSettings.Instance.MaxDocumentUploadSize;
-        string supportedDocumentsFormat  = ConfigurationSettings.Instance.SupportedDocuments;
+        string supportedDocumentsFormat = ConfigurationSettings.Instance.SupportedDocuments;
         long maxSizeInMB = 0;
         string errorMessage = "";
         List<string> selectedTagsList = new List<string>();
-       
+        RadzenTemplateForm<DocumentVM> form;
+
         protected override void OnInitialized()
         {
             if (documentData.UserId > 0)
@@ -146,8 +147,37 @@ namespace FSM.Blazor.Pages.Document
         //    isLoading = false;
         //}
 
+        public void Enter(KeyboardEventArgs e)
+        {
+            if (e.Code == "Enter" || e.Code == "NumpadEnter")
+            {
+                string[] listTags = autoComplete.Value.ToString().Split(",", StringSplitOptions.RemoveEmptyEntries);
+
+                if (listTags.Length == 0)
+                {
+                    return;
+                }
+
+                foreach (string tag in listTags)
+                {
+                    if (!selectedTagsList.Contains(tag))
+                    {
+                        selectedTagsList.Add(tag);
+                    }
+
+                    autoComplete.Value = "";
+                }
+
+            }
+        }
+
         private async Task UploadFilesAsync()
         {
+            if (!form.EditContext.Validate())
+            {
+                return;
+            }
+
             if ((selectedFiles == null || selectedFiles.Count() == 0) && documentData.Id == Guid.Empty)
             {
                 await OpenErrorDialog("Please upload document.");
@@ -293,16 +323,10 @@ namespace FSM.Blazor.Pages.Document
                 if (!selectedTagsList.Contains(selectedTag.TagName))
                 {
                     selectedTagsList.Add(selectedTag.TagName);
-
-                  //  selectedTagsText = String.Join(" ", selectedTagsList);
-
-                    autoComplete.Value = "";
                 }
-                else
-                {
-                    autoComplete.Value = "";
-                }
+                autoComplete.Value = "";
             }
+
         }
 
         public async Task OpenCreateTagDialogAsync()
