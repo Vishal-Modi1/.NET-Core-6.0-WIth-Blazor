@@ -6,6 +6,9 @@ using System.Net;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.VM.Account;
+using DataModels.Constants;
+using System.Collections.Generic;
+using DataModels.VM.UserPreference;
 
 namespace Service
 {
@@ -28,7 +31,33 @@ namespace Service
             _companyRepository = companyRepository;
         }
 
+        public CurrentResponse ListDropDownValuesByCompanyId(int companyId)
+        {
+            try
+            {
+                List<DropDownLargeValues> usersList = _userRepository.ListDropdownValuesbyCondition(p => p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false);
+                CreateResponse(usersList, HttpStatusCode.OK, "");
+            }
+            catch (Exception ex)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, ex.ToString());
+            }
+
+            return _currentResponse;
+        }
+
         public CurrentResponse GetDetails(long id, int companyId, int roleId)
+        {
+            User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true);
+
+            UserVM userVM = GetUserDetails(id, companyId, roleId);
+
+            CreateResponse(userVM, HttpStatusCode.OK, "");
+
+            return _currentResponse;
+        }
+
+        public UserVM GetUserDetails(long id, int companyId, int roleId)
         {
             User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true);
 
@@ -53,9 +82,7 @@ namespace Service
                 userVM.Companies = _companyRepository.ListDropDownValues();
             }
 
-            CreateResponse(userVM, HttpStatusCode.OK, "");
-
-            return _currentResponse;
+            return userVM;
         }
 
         public CurrentResponse Create(UserVM userVM)
@@ -156,6 +183,146 @@ namespace Service
             }
         }
 
+        public CurrentResponse Delete(long id, long deletedBy)
+        {
+            try
+            {
+                _userRepository.Delete(id, deletedBy);
+                CreateResponse(true, HttpStatusCode.OK, "User deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateActiveStatus(long id, bool isActive)
+        {
+            try
+            {
+                _userRepository.UpdateActiveStatus(id, isActive);
+
+                string message = "User activated successfully.";
+
+                if (!isActive)
+                {
+                    message = "User deactivated successfully.";
+
+                }
+
+                CreateResponse(true, HttpStatusCode.OK, message);
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse GetFiltersValue(int roleId)
+        {
+            try
+            {
+                UserFilterVM userFilterVM = new UserFilterVM();
+
+                userFilterVM.Companies = _companyRepository.ListDropDownValues();
+                userFilterVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
+
+                CreateResponse(userFilterVM, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new UserFilterVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse FindById(long id)
+        {
+            try
+            {
+                UserVM userVM = _userRepository.FindById(id);
+
+                string companyId = "0";
+
+                if (!string.IsNullOrWhiteSpace(userVM.CompanyId.ToString()))
+                {
+                    companyId = userVM.CompanyId.ToString();
+                }
+
+                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{userVM.ImageName}";
+
+                userVM.Countries = _countryRepository.ListDropDownValues();
+                userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
+                userVM.UserRoles = _userRoleRepository.ListDropDownValues(userVM.RoleId);
+
+                CreateResponse(userVM, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new UserVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateImageName(long id, string imageName)
+        {
+            try
+            {
+                bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
+
+                User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{user}/{user.ImageName}";
+
+                CreateResponse(user, HttpStatusCode.OK, "Profile picture updated successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse FindMyPreferencesById(long id)
+        {
+            try
+            {
+                List<UserPreferenceVM> listUserPreferences  = _userRepository.FindPreferenceById(id);
+
+                CreateResponse(listUserPreferences, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new UserVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         #region Object Mapping
 
         public User ToDataObject(UserVM userVM)
@@ -226,115 +393,5 @@ namespace Service
         }
 
         #endregion
-
-        public CurrentResponse Delete(long id)
-        {
-            try
-            {
-                _userRepository.Delete(id);
-                CreateResponse(true, HttpStatusCode.OK, "User deleted successfully.");
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
-        public CurrentResponse UpdateActiveStatus(long id, bool isActive)
-        {
-            try
-            {
-                _userRepository.UpdateActiveStatus(id, isActive);
-
-                string message = "User activated successfully.";
-
-                if (!isActive)
-                {
-                    message = "User deactivated successfully.";
-
-                }
-
-                CreateResponse(true, HttpStatusCode.OK, message);
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
-        public CurrentResponse GetFiltersValue(int roleId)
-        {
-            try
-            {
-                UserFilterVM userFilterVM = new UserFilterVM();
-
-                userFilterVM.Companies = _companyRepository.ListDropDownValues();
-                userFilterVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
-
-                CreateResponse(userFilterVM, HttpStatusCode.OK, "");
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(new UserFilterVM(), HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
-        public CurrentResponse FindById(long id)
-        {
-            try
-            {
-                UserVM userVM = _userRepository.FindById(id);
-                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UserProfileImagePathPrefix}{userVM.ImageName}";
-
-                userVM.Countries = _countryRepository.ListDropDownValues();
-                userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
-                userVM.UserRoles = _userRoleRepository.ListDropDownValues(userVM.RoleId);
-
-                CreateResponse(userVM, HttpStatusCode.OK, "");
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(new UserVM(), HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
-        public CurrentResponse UpdateImageName(long id, string imageName)
-        {
-            try
-            {
-                bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
-
-                CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "");
-
-                return _currentResponse;
-            }
-
-            catch (Exception exc)
-            {
-                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
     }
 }

@@ -11,11 +11,21 @@ using Microsoft.Extensions.Caching.Memory;
 using FSM.Blazor.Pages.Scheduler;
 using DataModels.VM.Scheduler;
 using DataModels.Enums;
+using DataModels.Constants;
+using Utilities;
 
 namespace FSM.Blazor.Pages.Reservation
 {
     partial class Index
     {
+        #region Params
+
+        [Parameter]
+        public long UserId { get; set; }
+
+        [Parameter]
+        public long? AircraftId { get; set; }
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
@@ -41,9 +51,15 @@ namespace FSM.Blazor.Pages.Reservation
 
         SchedulerVM schedulerVM;
 
+        string timezone = "";
+        private bool isDisplayLoader;
+        bool isSuperAdmin, isAdmin;
+
+        #endregion
+
         #region Filters
         public int CompanyId;
-        public DateTime? startDate, endDate; 
+        public DateTime? startDate, endDate;
         IList<ReservationDataVM> data;
         int count;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
@@ -67,6 +83,10 @@ namespace FSM.Blazor.Pages.Reservation
                 NavManager.NavigateTo("/Dashboard");
             }
 
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+            isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
+
+            timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
             reservationFilterVM = await ReservationService.GetFiltersAsync(_httpClient);
         }
 
@@ -93,12 +113,46 @@ namespace FSM.Blazor.Pages.Reservation
             datatableParams.EndDate = endDate;
             datatableParams.CompanyId = reservationFilterVM.CompanyId;
 
+            if (!isSuperAdmin && !isAdmin)
+            {
+                datatableParams.UserId = UserId;
+            }
+
+            datatableParams.AircraftId = AircraftId;
+
             await LoadDataAsync();
         }
 
         public async Task LoadDataAsync()
         {
+            if (datatableParams.StartDate != null)
+            {
+                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value.Date, timezone);
+            }
+
+            if (datatableParams.EndDate != null)
+            {
+                datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), timezone);
+            }
+
             data = await ReservationService.ListAsync(_httpClient, datatableParams);
+
+            data.ToList().ForEach(p =>
+            {
+                p.StartDateTime = DateConverter.ToLocal(p.StartDateTime, timezone);
+                p.EndDateTime = DateConverter.ToLocal(p.EndDateTime, timezone);
+            });
+
+            if (datatableParams.StartDate != null)
+            {
+                datatableParams.StartDate = DateConverter.ToLocal(datatableParams.StartDate.Value, timezone);
+            }
+
+            if (datatableParams.EndDate != null)
+            {
+                datatableParams.EndDate = DateConverter.ToLocal(datatableParams.EndDate.Value, timezone);
+            }
+
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
 
@@ -107,9 +161,25 @@ namespace FSM.Blazor.Pages.Reservation
 
         async Task OpenSchedulerDialog(long id)
         {
+            isDisplayLoader = true;
+
             InitializeValues();
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, id);
+
+            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
+            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
+
+            if (schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime != null)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, timezone);
+            }
+
+            if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+            {
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
+            }
+
             uiOptions.dialogVisibility = true;
 
             uiOptions.isDisplayForm = false;
@@ -122,6 +192,8 @@ namespace FSM.Blazor.Pages.Reservation
 
             uiOptions.isDisplayMainForm = true;
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
+
+            isDisplayLoader = false;
         }
 
         public async Task RefreshSchedulerDataSourceAsync(ScheduleOperations scheduleOperations)

@@ -6,6 +6,7 @@ using DataModels.VM.Common;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Http;
 using DataModels.VM.AircraftEquipment;
+using DataModels.Constants;
 
 namespace FSMAPI.Controllers
 {
@@ -27,7 +28,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
-            airCraftEquipmentsVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue("Id"));
+            airCraftEquipmentsVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftEquipmentService.Create(airCraftEquipmentsVM);
 
             return Ok(response);
@@ -37,7 +38,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
-            airCraftEquipmentsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue("Id"));
+            airCraftEquipmentsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftEquipmentService.Edit(airCraftEquipmentsVM);
 
             return Ok(response);
@@ -47,7 +48,9 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            CurrentResponse response = _airCraftEquipmentService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId)); 
+            
+            CurrentResponse response = _airCraftEquipmentService.Delete(id, deletedBy);
 
             return Ok(response);
         }

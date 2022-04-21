@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 
@@ -9,5 +10,7 @@ namespace Repository.Interface
         List<ModuleDetailsVM> List();
 
         List<DropDownValues> ListDropDownValues();
+
+        ModuleDetail FindByName(string name);
     }
 }

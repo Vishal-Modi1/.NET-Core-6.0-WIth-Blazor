@@ -94,11 +94,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(int id)
+        public CurrentResponse Delete(int id, long deletedBy)
         {
             try
             {
-                _instructorTypeRepository.Delete(id);
+                _instructorTypeRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Instructor type deleted successfully.");
 
                 return _currentResponse;

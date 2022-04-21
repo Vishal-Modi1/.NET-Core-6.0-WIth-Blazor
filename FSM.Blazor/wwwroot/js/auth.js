@@ -5,7 +5,8 @@
     // Data to send
     var data = {
         email: email,
-        password: password
+        password: password,
+        timeZone: GetTimeZone()
     };
 
 
@@ -44,6 +45,13 @@ export function ManageLoginResponse(dotNetHelper) {
     dotnetReferenceObject = dotNetHelper;
 };
 
+export function ManageDocumentDownloadResponse(dotNetHelper, id) {
+
+    dotnetReferenceObject = dotNetHelper;
+
+    dotnetReferenceObject.invokeMethodAsync("ManageDocumentDownloadResponse", id);
+};
+
 export function SignOut(redirect) {
 
     var url = "/api/auth/signout";
@@ -66,4 +74,47 @@ export function SignOut(redirect) {
 
     // Call API
     xhr.send();
+}
+
+export function GetTimeZone() {
+
+    //const split = new Date().toString().split(" ");
+    //const timeZone = split.slice(-3).join(' ')
+
+    //return timeZone;
+
+   return  Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+export async function downloadFileFromStream(fileName, contentStreamReference, id) {
+
+    debugger
+    const arrayBuffer = await contentStreamReference.arrayBuffer();
+    const blob = new Blob([arrayBuffer]);
+    const url = URL.createObjectURL(blob);
+
+    triggerFileDownload(fileName, url, id);
+
+    URL.revokeObjectURL(url);
+}
+
+function triggerFileDownload(fileName, url, id) {
+    const anchorElement = document.createElement('a');
+    anchorElement.href = url;
+    anchorElement.download = fileName ?? '';
+    anchorElement.click();
+    anchorElement.remove();
+}
+
+export function copyTextToClipboard(text) {
+
+    var dummy = document.createElement("textarea");
+
+    document.body.appendChild(dummy);
+
+    dummy.value = text;
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+
 }

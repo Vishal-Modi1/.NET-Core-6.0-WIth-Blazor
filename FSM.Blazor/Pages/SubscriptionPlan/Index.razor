@@ -1,0 +1,234 @@
+﻿@namespace FSM.Blazor.Pages.SubscriptionPlan
+@using DataModels.Enums
+@using FSM.Blazor.Data.SubscriptionPlan
+@using FSM.Blazor.Data.ModuleDetail
+@using DataModels.VM.SubscriptionPlan
+@using Configuration;
+@using Syncfusion.Blazor;
+
+
+@inject SubscriptionPlanService SubscriptionPlanService
+@layout MainLayout
+@inject DialogService DialogService
+@inject NavigationManager NavManager
+@inject ModuleDetailsService ModuleDetailsService
+
+@page "/SubscriptionPlan"
+
+<style>
+    
+    .text-custom,
+.navbar-custom .navbar-nav li a:hover,
+.navbar-custom .navbar-nav li a:active,
+.navbar-custom .navbar-nav li.active a,
+.service-box .services-icon,
+.price-features p i,.text-custom, .navbar-custom .navbar-nav li a:hover, .navbar-custom .navbar-nav li a:active, .navbar-custom .navbar-nav li.active a, .service-box .services-icon, .price-features p i, .faq-icon, .social .social-icon:hover
+.faq-icon,
+.social .social-icon:hover {
+    color: #262526 !important;
+}
+
+.bg-custom,
+.btn-custom
+ {
+    background-color: #f6576e;
+}
+
+.btn-custom,
+.custom-form  {
+    border-color: #f6576e;
+}
+
+.price-features p i {
+    background-color: rgba(246, 87, 110, 0.1);
+}
+
+
+
+    .price-box {
+    padding: 40px 50px;
+    width:20rem!important;
+    height:29rem!important;
+}
+
+.plan-price h1 span {
+    font-size: 16px;
+    color: #000;
+}
+
+.price-features p i {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+.msgBtn
+{
+    display:inline-block;
+}
+.description
+{
+    height:57px!important;
+    margin-left:-16px!important;
+    margin-right:-16px!important;
+}
+.buttons
+{
+    width:500px!important;
+    margin-left:-38px;
+}
+.rz-button-icon-left
+{
+    margin-right:-1px!important;
+}
+
+    
+    </style>
+
+<PageTitle>Subscription Plan | Fly Manager </PageTitle>
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Subscription Plans Details </h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+        {
+            <RadzenButton Style="float:right" Text="Add New" IsBusy=@isBusyAddNewButton BusyText="Add New ..." Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
+                      Click=@(() => SubscriptionPlanCreateDialog(0, "Create", true )) />
+        }
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  LoadData())"
+                       Placeholder="Search Subscription Plan" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+
+@if (data != null)
+{
+        <div class="row mt-5">     
+    @foreach (var item in data)
+    {
+            <div class="col-lg-4">
+                <div class="bg-white mt-3 price-box">
+        			<div class="pricing-name text-center">
+        				<h4 class="mb-0" style="font-size:22px;">@item.Name</h4>
+        			</div>
+        			<div class="plan-price text-center mt-4">
+        				<h1 class="text-custom font-weight-normal mb-0">@("$ " + item.Price.ToString())</h1>
+                        <br/>
+        				<h3 class="text-custom font-weight-normal mb-0">@(item.Duration.ToString() + " Month(s)")</h3>
+        			</div>
+        			<div class="price-features" style="margin-top:1rem!important;">
+                                         <ul style="list-style-type:none;margin-left:-45px;height:117px">                            
+                                        @foreach (var module in item.ModulesName.Split(","))
+                                        {           
+                                         <li>
+                     <RadzenIcon Icon="done" Style="color:#0bb42a" />
+                    <RadzenLabel Text="@module" Style="font-size:16px;"></RadzenLabel>
+                                        </li>
+                                        }
+                    </ul>
+                     <p class="description">@item.Description</p>
+
+        		     </div>
+                        <div class="buttons">
+    
+                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                {
+
+                    
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" class="btn btn-custom" Style=width:88px!important;height:36px!important Text="Edit" IsBusy=@item.IsLoadingEditButton BusyText="Edit ..." Icon="mode_edit"
+                      Click=@(() => SubscriptionPlanCreateDialog(item.Id, "Edit", false)) />
+
+                    <RadzenButton Text="Delete" Icon="delete_sweep" class="btn btn-custom"  ButtonStyle="ButtonStyle.Danger"
+                      Click=@(() => OpenDeleteDialog(item)) />
+
+                    @if (item.IsActive)
+                    {
+                        <RadzenButton ButtonStyle="ButtonStyle.Warning" class="btn btn-custom" Text="Deactivate" Icon="lock"
+                      Click=@(() => OpenUpdatePlanStatusDialog(false, item.Name,item.Id)) />
+                    }
+                    else
+                    {
+                        <RadzenButton ButtonStyle="ButtonStyle.Info" class="btn btn-custom" Text="Activate" Icon="lock_open"
+                      Click=@(() => OpenUpdatePlanStatusDialog(true, item.Name ,item.Id)) />
+                    }
+                }
+                else
+                {
+                     <RadzenButton ButtonStyle="ButtonStyle.Primary" Style="width:17rem;height:37px;margin-left:13px!important" Text="Buy Now" IsBusy=@item.IsLoadingEditButton BusyText="Buy ..." Icon="shopping_cart"
+                      Click=@(() => BuyNow(item.Id)) />
+                }
+                </div>
+
+            
+            </div>
+            </div>
+
+    }
+     </div>
+}
+
+@{
+    async Task OpenDeleteDialog(SubscriptionPlanDataVM subscriptionPlanDataVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @subscriptionPlanDataVM.Name </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(subscriptionPlanDataVM.Id) " Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+
+    async Task OpenUpdatePlanStatusDialog(bool value, string name, int id)
+    {
+        string message = "Are you sure, you want to activate ";
+        string title = "Actiavate";
+
+        if (value == false)
+        {
+            message = "Are you sure, you want to deactivate ";
+            title = "Deactivate";
+        }
+
+        var result = await DialogService.OpenAsync(title, ds =>
+    @<div>
+        <p class="mb-4"> @message <b> @name </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                    {
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() =>
+                        UpdateIsPlanActiveAsync(value,id) " Class="mr-1" Style="width: 80px;" IsBusy="@isBusyUpdateStatusButton" BusyText="Updating ..." />
+                    }
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                    {
+                        <RadzenButton Text="No" Click="() => ClosePlanStatusUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                    }
+
+                </div>
+            </div>
+        </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

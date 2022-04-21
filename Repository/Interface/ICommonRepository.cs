@@ -1,7 +1,7 @@
 ﻿using DataModels.VM.Common;
 using System.Collections.Generic;
 
-namespace Repository
+namespace Repository.Interface
 {
     public interface ICommonRepository
     {

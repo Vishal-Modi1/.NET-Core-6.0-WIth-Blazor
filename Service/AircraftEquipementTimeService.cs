@@ -55,11 +55,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(int id)
+        public CurrentResponse Delete(int id, long deletedBy)
         {
             try
             {
-                _aircraftEquipementTimeRepository.Delete(id);
+                _aircraftEquipementTimeRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Aircraft Equipment Time is deleted successfully.");
 
                 return _currentResponse;

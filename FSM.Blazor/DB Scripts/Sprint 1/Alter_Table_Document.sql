@@ -1,0 +1,2 @@
+ALTER TABLE DOCUMENTS ADD TagIds varchar(200)
+

@@ -7,10 +7,10 @@ namespace Service.Interface
     {
         CurrentResponse Create(CompanyVM companyVM);
         CurrentResponse List(DatatableParams datatableParams);
-
+        CurrentResponse ListDropDownValues();
         CurrentResponse ListAll();
         CurrentResponse Edit(CompanyVM companyVM);
         CurrentResponse GetDetails(int id);
-        CurrentResponse Delete(int id);
+        CurrentResponse Delete(int id, long deletedBy);
     }
 }

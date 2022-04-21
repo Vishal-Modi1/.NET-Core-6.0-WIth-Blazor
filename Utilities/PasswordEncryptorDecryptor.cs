@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Text;
 
-namespace FSMAPI.Utilities
+namespace Utilities
 {
-
     public static class PasswordEncryptorDecryptor
     {
         public static string Encrypt(this string value)

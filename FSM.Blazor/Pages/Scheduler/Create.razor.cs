@@ -9,6 +9,8 @@ using FSM.Blazor.Extensions;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
 using DataModels.Enums;
+using Utilities;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Scheduler
 {
@@ -23,6 +25,7 @@ namespace FSM.Blazor.Pages.Scheduler
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
+        #region Params
         [Parameter]
         public SchedulerVM schedulerVM { get; set; }
 
@@ -40,14 +43,43 @@ namespace FSM.Blazor.Pages.Scheduler
 
         [Parameter]
         public EventCallback CloseDialogParentEvent { get; set; }
-        
+
         [Parameter]
         public EventCallback OpenDialogParentEvent { get; set; }
 
         [Parameter]
         public EventCallback LoadDataParentEvent { get; set; }
 
+        #endregion
+
         public bool isBusy;
+
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+        string timezone = "";
+
+        public bool isAllowToEdit;
+        public bool isAllowToDelete;
+
+        protected override async Task OnInitializedAsync()
+        {
+            timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
+            // user should be superadmin, admin or owner of reservation to update or delete it
+            
+            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
+            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
+
+            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+
+            bool isCreator = userId == schedulerVM.CreatedBy;
+
+            if(isAdmin || isSuperAdmin || isCreator)
+            {
+                isAllowToDelete = true;
+                isAllowToEdit = true; 
+            }
+        }
 
         private async void OnValidSubmit()
         {
@@ -64,7 +96,10 @@ namespace FSM.Blazor.Pages.Scheduler
 
             isBusy = true;
 
-            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM);
+            //schedulerVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
+            //schedulerVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
+
+            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
 
             NotificationMessage message;
 
@@ -135,8 +170,8 @@ namespace FSM.Blazor.Pages.Scheduler
             SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
 
             schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
-            schedulerEndTimeDetailsVM.EndTime = schedulerVM.EndTime;
-            schedulerEndTimeDetailsVM.StartTime = schedulerVM.StartTime;
+            schedulerEndTimeDetailsVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
+            schedulerEndTimeDetailsVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
 
             CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(_httpClient, schedulerEndTimeDetailsVM);
@@ -391,6 +426,11 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public void TextBoxChangeEvent(ChangeEventArgs args, int index)
         {
+            if (string.IsNullOrWhiteSpace(args.Value.ToString()))
+            {
+                return;
+            }
+
             schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
 
             base.StateHasChanged();
@@ -398,6 +438,11 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public void EditFlightTimeTextBoxChangeEvent(ChangeEventArgs value, int index)
         {
+            if (string.IsNullOrWhiteSpace(value.ToString()))
+            {
+                return;
+            }
+
             schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
             schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value.Value);
 
@@ -406,7 +451,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private BadgeStyle GetSchedulerStatusClass()
         {
-            if(schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+            if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
             {
                 return BadgeStyle.Success;
             }

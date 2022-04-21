@@ -32,6 +32,7 @@ namespace Repository
                                                                           RoleName = userRole.Name,
                                                                           ActionName = module.ActionName,
                                                                           ControllerName = module.ControllerName,
+                                                                          IsAdministrationModule = module.IsAdministrationModule,
                                                                           Icon = module.Icon,
                                                                           OrderNo = module.OrderNo,
                                                                           DisplayName = module.DisplayName,

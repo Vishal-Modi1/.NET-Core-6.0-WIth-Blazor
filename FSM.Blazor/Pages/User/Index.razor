@@ -21,7 +21,7 @@
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
             <RadzenButton Style="float:right" Text="Add New" BusyText="Add New ..." IsBusy="@isBusyAddNewButton"
-            Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UserCreateDialog(0, "Create")) />
+                      Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => UserCreateDialog(0, "Create")) />
         }
 
     </div>
@@ -36,7 +36,7 @@
         </RadzenDropDown>
     </div>
 
-    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -90,9 +90,17 @@
 
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="UserDataVM" Property="Id" Title="Actions">
             <Template Context="data">
-                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => UserCreateDialog(data.Id, "Edit")) />
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => UserCreateDialog(data.Id, "Edit")) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
                               Click=@(args => OpenDeleteDialog(data)) />
+                }
             </Template>
         </RadzenDataGridColumn>
     </Columns>
@@ -133,9 +141,9 @@
         <div class="row" style="text-align:right">
             <div class="col">
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                     {
-                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => 
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() =>
                         UpdateIsUserActiveAsync(value,id) " Class="mr-1" Style="width: 80px;" IsBusy="@isBusyUpdateStatusButton" BusyText="Updating ..." />
                     }
 

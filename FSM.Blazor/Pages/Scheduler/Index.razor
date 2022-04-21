@@ -3,6 +3,7 @@
 @using DataModels.VM.Common
 @using FSM.Blazor.Data.AircraftSchedule
 @using FSM.Blazor.Data.Aircraft
+@using FSM.Blazor.Data.User
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Schedule
 @using System.Collections.ObjectModel
@@ -16,19 +17,22 @@
 @using Syncfusion.Blazor.Popups;
 @using DataModels.Entities;
 @using DataModels.VM;
+@using Syncfusion.Blazor.Spinner
 
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AircraftService AircraftService
+@inject UserService UserService
 @layout MainLayout
 @inject NavigationManager NavigationManager
 @inject NotificationService NotificationService
 @inject DialogService DialogService
 @inject AircraftSchedulerDetailService AircraftSchedulerDetailService
+@inject AuthenticationStateProvider authenticationStateProvider
 
 @page "/Scheduler"
 
 <style>
-    
+
     .e-schedule .e-vertical-view .e-all-day-appointment-wrapper .e-appointment.scheduledhorizontally,
     .e-schedule .e-vertical-view .e-day-wrapper .e-appointment.scheduledhorizontally,
     .e-schedule .e-month-view .e-appointment.scheduledhorizontally {
@@ -45,7 +49,6 @@
     .e-schedule .e-timeline-view .e-appointment.checkedout,
     .e-schedule .e-timeline-month-view .e-appointment.checkedout {
         background: #33ff81;
-        
         /*green color*/
     }
 
@@ -68,61 +71,81 @@
         background: #B8B8B8;
     }
 
+    .e-dialog {
+        max-height: 588px !important;
+    }
 </style>
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
 
-<SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"
+<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
+@if (isDisplayScheduler)
+{
+    <div class="row">
+              <div class="col-md-2 align-items-center d-flex" style="margin-right:-96px">
+                <RadzenLabel Text="Select aircraft: " Style="font-weight:bold" />
+        </div>
+        <div class="col-md-4">
+            <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        Multiple="true" Placeholder="Select aircraft" Data=@allAircraftList TextProperty="TailNo" ValueProperty="TailNo"
+                        Name="Aircraft" Class="w-100" @bind-Value=@multipleValues Change="@(args => OnAircraftsListChange())" />
+        </div>
+    </div>
+
+    <SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"
             @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate"
             @bind-CurrentView="@CurrentView">
 
-    <ScheduleGroup EnableCompactView="false" Resources="@Resources"></ScheduleGroup>
+        <ScheduleGroup EnableCompactView="false" Resources="@Resources"></ScheduleGroup>
 
-    <ScheduleEventSettings DataSource="@DataSource" EnableTooltip="true">
+        <ScheduleEventSettings DataSource="@DataSource" EnableTooltip="true">
 
-        <ScheduleField Id="Id">
-            <FieldSubject Name="DisplayTitle"></FieldSubject>
-            <FieldStartTime Name="StartTime"></FieldStartTime>
-            <FieldEndTime Name="EndTime"></FieldEndTime>
-        </ScheduleField>
+            <ScheduleField Id="Id">
+                <FieldSubject Name="DisplayTitle"></FieldSubject>
+                <FieldStartTime Name="StartTime"></FieldStartTime>
+                <FieldEndTime Name="EndTime"></FieldEndTime>
+            </ScheduleField>
 
-    </ScheduleEventSettings>
-    <ScheduleEvents ActionCompleted="OnActionCompletedAsync" TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" EventRendered="OnEventRendered"
+        </ScheduleEventSettings>
+        <ScheduleEvents ActionCompleted="OnActionCompletedAsync" TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" EventRendered="OnEventRendered"
                     OnCellDoubleClick="OpenCreateAppointmentDialog" OnCellClick="OpenCreateAppointmentDialog" OnEventClick="OnEventClick"></ScheduleEvents>
 
-    <ScheduleResources>
+        <ScheduleResources>
 
-        <ScheduleResource TItem="ResourceData" TValue="long[]" DataSource="@ObservableAircraftsData" Field="AircraftId" Title="Aircraft"
+            <ScheduleResource TItem="ResourceData" TValue="long[]" DataSource="@ObservableAircraftsData" Field="AircraftId" Title="Aircraft"
                           Name="Aircrafts" TextField="AircraftTailNo" IdField="Id" AllowMultiple="true">
-        </ScheduleResource>
+            </ScheduleResource>
 
-    </ScheduleResources>
+        </ScheduleResources>
 
-    <ScheduleViews>
-        <ScheduleView Option="View.TimelineDay"></ScheduleView>
-        <ScheduleView Option="View.TimelineWeek"></ScheduleView>
-        <ScheduleView Option="View.TimelineMonth"></ScheduleView>
-        <ScheduleView Option="View.Day"></ScheduleView>
-        <ScheduleView Option="View.Week"></ScheduleView>
-        <ScheduleView Option="View.Month"></ScheduleView>
-    </ScheduleViews>
+        <ScheduleViews>
+            <ScheduleView Option="View.TimelineDay"></ScheduleView>
+            <ScheduleView Option="View.TimelineWeek"></ScheduleView>
+            <ScheduleView Option="View.TimelineMonth"></ScheduleView>
+            <ScheduleView Option="View.Day"></ScheduleView>
+            <ScheduleView Option="View.Week"></ScheduleView>
+            <ScheduleView Option="View.Month"></ScheduleView>
+        </ScheduleViews>
 
-</SfSchedule>
+    </SfSchedule>
+}
 
-
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" Height="auto" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" Height="auto" ShowCloseIcon="true">
 
     <DialogTemplates>
         <Header> <h5>Schedule Appointment</h5> </Header>
         <Content>
 
             <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-            DeleteParentEvent="@DeleteEventAsync" InitializeValuesParentEvent="@InitializeValues"
-            RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-            OpenDialogParentEvent = "@OpenDialog"
-            CloseDialogParentEvent = "@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
-            ></Create>
-           
+                    DeleteParentEvent="@DeleteEventAsync" InitializeValuesParentEvent="@InitializeValues"
+                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                    OpenDialogParentEvent="@OpenDialog"
+                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+
         </Content>
     </DialogTemplates>
 

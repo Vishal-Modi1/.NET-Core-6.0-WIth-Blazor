@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.Company;
+using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
@@ -10,9 +11,9 @@ namespace FSM.Blazor.Data.Company
     {
         private readonly HttpCaller _httpCaller;
 
-        public CompanyService(AuthenticationStateProvider authenticationStateProvider)
+        public CompanyService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<List<CompanyVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
@@ -53,6 +54,21 @@ namespace FSM.Blazor.Data.Company
             CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
 
             return response;
+        }
+
+        public async Task<List<DropDownValues>> ListDropDownValues(IHttpClientFactory httpClient)
+        {
+            string url = $"company/listdropdownvalues";
+
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            List<DropDownValues> companiesList = new List<DropDownValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                companiesList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+            }
+
+            return companiesList;
         }
     }
 }

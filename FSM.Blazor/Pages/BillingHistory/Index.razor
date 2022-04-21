@@ -1,0 +1,80 @@
+﻿@namespace FSM.Blazor.Pages.BillingHistory
+@using DataModels.Enums
+@using FSM.Blazor.Data.BillingHistory
+@using DataModels.VM.BillingHistory
+@using FSM.Blazor.Utilities;
+@using Configuration;
+
+@inject NavigationManager NavManager
+@inject BillingHistoryService BillingHistoryService
+@layout MainLayout
+@inject DialogService DialogService
+
+@page "/BillingHistory"
+
+<PageTitle>Billing History | Fly Manager </PageTitle>
+
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Company" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="BillingHistoryDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="BillingHistoryDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="BillingHistoryDataVM" Filterable="false" Property="SubscriptionPlanName" Title="Subscription Plan Name"></RadzenDataGridColumn>
+        
+         <RadzenDataGridColumn TItem="BillingHistoryDataVM" Title="Price" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @("$ " + value.Price)
+            </Template>
+        </RadzenDataGridColumn>
+
+         <RadzenDataGridColumn TItem="BillingHistoryDataVM" Title="Plan Start Date" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(value.PlanStartDate.ToShortDateString())
+            </Template>
+        </RadzenDataGridColumn>
+
+         <RadzenDataGridColumn TItem="BillingHistoryDataVM" Title="Plan End Date" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(value.PlanEndDate.ToShortDateString())
+            </Template>
+        </RadzenDataGridColumn>
+
+           <RadzenDataGridColumn TItem="BillingHistoryDataVM" Title="Is Active" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @if(value.IsActive)
+                {
+                    @("Yes")
+                }
+                else
+                {
+                    @("No")
+                }
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="BillingHistoryDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="visibility" Class="m-1" Click=@(() => OpenViewBillingInfo(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>

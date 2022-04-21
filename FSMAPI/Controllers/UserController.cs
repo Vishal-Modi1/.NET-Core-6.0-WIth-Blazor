@@ -1,10 +1,11 @@
-﻿using FSMAPI.Utilities;
+﻿using Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.Constants;
+using FSMAPI.Utilities;
 
 namespace FSMAPI.Controllers
 {
@@ -93,7 +94,8 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            CurrentResponse response = _userService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _userService.Delete(id, deletedBy);
 
             return Ok(response);
         }
@@ -140,6 +142,24 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("findmypreferencesbyid")]
+        public IActionResult FindPreferencesById(long id)
+        {
+            CurrentResponse response = _userService.FindMyPreferencesById(id);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("listdropdownvaluesbycompanyid")]
+        public IActionResult ListDropDownValuesByCompanyId(int companyId)
+        {
+            CurrentResponse response = _userService.ListDropDownValuesByCompanyId(companyId);
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [Route("uploadprofileimage")]
         public async Task<IActionResult> UploadFileAsync()
@@ -149,17 +169,24 @@ namespace FSMAPI.Controllers
                 return Ok(false);
             }
 
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             IFormCollection form = Request.Form;
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].FileName}.jpeg";
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage, form, fileName);
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["UserId"]}.jpeg";
+
+            if (string.IsNullOrWhiteSpace(companyId))
+            {
+                companyId = form["CompanyId"];
+            }
+
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage + "\\" + companyId , form, fileName);
 
             CurrentResponse response = new CurrentResponse();
-            response.Data = "false";
+            response.Data = "";
 
             if (isFileUploaded)
             {
-                response = _userService.UpdateImageName(Convert.ToInt32(form.Files[0].FileName), fileName);
+                response = _userService.UpdateImageName(Convert.ToInt32(form["UserId"]), fileName);
             }
 
             return Ok(response);

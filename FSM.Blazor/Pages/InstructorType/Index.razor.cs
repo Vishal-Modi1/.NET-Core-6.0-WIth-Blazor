@@ -13,6 +13,8 @@ namespace FSM.Blazor.Pages.InstructorType
 {
     partial class Index
     {
+        #region Params
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
@@ -38,6 +40,8 @@ namespace FSM.Blazor.Pages.InstructorType
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string searchText;
         string moduleName = "InstructorType";
+
+        #endregion
 
         protected override async Task OnInitializedAsync()
         {

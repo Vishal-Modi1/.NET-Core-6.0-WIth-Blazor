@@ -3,6 +3,8 @@ using Service.Interface;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Authorization;
+using DataModels.Constants;
+using FSMAPI.Utilities;
 
 namespace FSMAPI.Controllers
 {
@@ -12,10 +14,12 @@ namespace FSMAPI.Controllers
     public class InstructorTypeController : ControllerBase
     {
         private readonly IInstructorTypeService _instructorTypeService;
+        private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public InstructorTypeController(IInstructorTypeService instructorTypeService)
+        public InstructorTypeController(IInstructorTypeService instructorTypeService, IHttpContextAccessor httpContextAccessor)
         {
             _instructorTypeService = instructorTypeService;
+            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -55,7 +59,9 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            CurrentResponse response = _instructorTypeService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
+            CurrentResponse response = _instructorTypeService.Delete(id, deletedBy);
 
             return Ok(response);
         }

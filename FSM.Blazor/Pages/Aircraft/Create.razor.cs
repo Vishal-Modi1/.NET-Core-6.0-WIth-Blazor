@@ -163,8 +163,12 @@ namespace FSM.Blazor.Pages.Aircraft
 
                         MultipartFormDataContent multiContent = new MultipartFormDataContent
                         {
-                          { data, "file", airCraftData.Id.ToString() }
+                          { data, "0", "0" }
                         };
+
+                        multiContent.Add(new StringContent(data.ToString()), "data");
+                        multiContent.Add(new StringContent(airCraftData.Id.ToString()), "AircraftId");
+                        multiContent.Add(new StringContent(airCraftData.CompanyId.ToString()), "CompanyId");
 
                         response = await AircraftService.UploadAircraftImageAsync(_httpClient, multiContent);
 

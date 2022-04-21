@@ -37,10 +37,10 @@ namespace DataModels.VM.AircraftEquipment
         public string SerialNumber { get; set; }
 
         [Display(Name = "Manufacturer Date")]
-        public Nullable<DateTime> ManufacturerDate { get; set; } = DateTime.Now;
+        public Nullable<DateTime> ManufacturerDate { get; set; } 
 
         [Display(Name = "Log Entry Date")]
-        public Nullable<DateTime> LogEntryDate { get; set; } = DateTime.Now;
+        public Nullable<DateTime> LogEntryDate { get; set; } 
 
         [Display(Name = "Aircraft TT at Install")]
         public Nullable<int> AircraftTTInstall { get; set; }

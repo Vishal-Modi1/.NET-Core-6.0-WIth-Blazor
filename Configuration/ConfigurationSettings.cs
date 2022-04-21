@@ -16,7 +16,7 @@ namespace Configuration
         {
             configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("configuration.json", optional: true, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
                     .Build();
         }
 
@@ -42,14 +42,9 @@ namespace Configuration
             get => configuration.GetValue<string>("APIURL");
         }
 
-        public string AircraftImagePathPrefix
+        public string UploadDirectoryPath
         {
-            get => configuration.GetValue<string>("AircraftImagePathPrefix");
-        }
-
-        public string UserProfileImagePathPrefix
-        {
-            get => configuration.GetValue<string>("UserProfileImagePathPrefix");
+            get => configuration.GetValue<string>("UploadDirectoryPath");
         }
 
         public string JWTKey
@@ -60,6 +55,11 @@ namespace Configuration
         public  double JWTExpireDays
         {
             get => Convert.ToDouble(configuration.GetValue<string>("JWTExpireDays"));
+        }
+
+        public double JWTRefreshTokenExpireDays
+        {
+            get => Convert.ToDouble(configuration.GetValue<string>("JWTRefreshTokenExpireDays"));
         }
 
         public  string JWTIssuer
@@ -80,6 +80,16 @@ namespace Configuration
         public string SyncFusionLicenseKey
         {
             get => configuration.GetValue<string>("SyncfusionLicenseKey");
+        }
+
+        public long MaxDocumentUploadSize
+        {
+            get => configuration.GetValue<long>("MaxDocumentUploadSize");
+        }
+
+        public string SupportedDocuments
+        {
+            get => configuration.GetValue<string>("SupportedDocuments");
         }
 
         public MailSettingConfig MailSetting

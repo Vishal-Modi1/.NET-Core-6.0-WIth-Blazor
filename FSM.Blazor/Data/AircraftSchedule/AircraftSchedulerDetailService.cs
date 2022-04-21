@@ -4,6 +4,8 @@ using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
+using Utilities;
+using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Data.AircraftSchedule
 {
@@ -11,36 +13,37 @@ namespace FSM.Blazor.Data.AircraftSchedule
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftSchedulerDetailService(AuthenticationStateProvider authenticationStateProvider)
+        public AircraftSchedulerDetailService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<CurrentResponse> CheckOut(IHttpClientFactory httpClient, long scheduleId)
         {
             string jsonData = JsonConvert.SerializeObject(scheduleId);
 
-            string url = "aircraftschedulerdetail/checkout";
+            string url = "aircraftschedulerdetail/checkout?scheduleId="+scheduleId;
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;
         }
 
         public async Task<CurrentResponse> UnCheckOut(IHttpClientFactory httpClient, long scheduleId)
         {
-            string jsonData = JsonConvert.SerializeObject(scheduleId);
+            string url = "aircraftschedulerdetail/uncheckout?scheduleId=" + scheduleId;
 
-            string url = "aircraftschedulerdetail/uncheckout";
-
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
 
             return response;
         }
 
         public async Task<CurrentResponse> CheckIn(IHttpClientFactory httpClient, List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
         {
-            string jsonData = JsonConvert.SerializeObject(aircraftEquipmentsTimeList);
+            AircraftEquipmentTimeRequestVM aircraftEquipmentTimeRequestVM = new AircraftEquipmentTimeRequestVM();
+            aircraftEquipmentTimeRequestVM.Data = aircraftEquipmentsTimeList;
+
+            string jsonData = JsonConvert.SerializeObject(aircraftEquipmentTimeRequestVM);
 
             string url = "aircraftschedulerdetail/checkin";
 

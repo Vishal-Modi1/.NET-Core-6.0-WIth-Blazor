@@ -23,7 +23,7 @@ namespace Repository.Interface
 
         AircraftSchedule Edit(AircraftSchedule aircraftSchedule);
 
-        void Delete(long id);
+        void Delete(long id, long deletedBy);
 
         void EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM);
 

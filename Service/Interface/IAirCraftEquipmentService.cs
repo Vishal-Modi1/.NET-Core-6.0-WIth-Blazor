@@ -9,7 +9,7 @@ namespace Service.Interface
         CurrentResponse Create(AircraftEquipmentsVM airCraftEquipmentsVM);
         CurrentResponse Edit(AircraftEquipmentsVM airCraftEquipmentsVM);
         CurrentResponse List(int airCraftId);
-        CurrentResponse Delete(int id);
+        CurrentResponse Delete(int id, long deletedBy);
         CurrentResponse Get(int id);
         CurrentResponse List(AircraftEquipmentDatatableParams datatableParams);
 

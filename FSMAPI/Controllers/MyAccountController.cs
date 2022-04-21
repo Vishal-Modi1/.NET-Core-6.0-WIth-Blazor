@@ -1,9 +1,12 @@
-﻿using FSMAPI.Utilities;
+﻿using Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 using DataModels.VM.MyAccount;
 using DataModels.VM.Common;
+using DataModels.Constants;
+using System.Security.Claims;
+using FSMAPI.Utilities;
 
 namespace FSMAPI.Controllers
 {
@@ -13,21 +16,42 @@ namespace FSMAPI.Controllers
     public class MyAccountController : ControllerBase
     {
         private readonly IMyAccountService _myAccountService;
+        private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public MyAccountController(IMyAccountService myAccountService)
+        public MyAccountController(IMyAccountService myAccountService, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
+            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
             _myAccountService = myAccountService;
         }
 
         [HttpPost]
         [Route("changepassword")]
-        [AllowAnonymous]
+    
         public IActionResult ChangePassword(ChangePasswordVM changePasswordVM)
         {
             changePasswordVM.OldPassword = changePasswordVM.OldPassword.Encrypt();
             changePasswordVM.NewPassword = changePasswordVM.NewPassword.Encrypt();
 
             CurrentResponse response = _myAccountService.ChangePassword(changePasswordVM);
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// API for modile users only
+        /// </summary>
+
+        [HttpGet]
+        [Route("myprofiledetails")]
+        
+        public IActionResult MyProfileDetilas()
+        {
+            string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int companyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);
+            long id = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            int roleId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(ClaimTypes.Role));
+
+            CurrentResponse response = _myAccountService.GetMyProfileDetails(companyId, roleId, id);
 
             return Ok(response);
         }

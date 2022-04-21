@@ -1,0 +1,298 @@
+﻿@using DataModels.Enums
+@using FSM.Blazor.Data.Document;
+@using FSM.Blazor.Data.User;
+@using FSM.Blazor.Data.Company;
+@using DataModels.VM.Document;
+@using Syncfusion.Blazor.Popups;
+@using Syncfusion.Blazor;
+
+@inject NavigationManager NavManager
+@inject DocumentService DocumentService
+@layout MainLayout
+@inject DialogService DialogService
+@inject UserService UserService
+@inject CompanyService CompanyService
+@inject IJSRuntime JSRunTime
+
+@inject IJSRuntime JS
+
+@page "/Document"
+
+<style>
+
+    .download {
+        font-size: 15px;
+        width: 55px;
+    }
+
+        .download > i {
+            margin-left: -8px;
+            margin-right: 0px;
+        }
+
+    .rz-button-icon-left {
+        margin-left: -3px;
+    }
+</style>
+<PageTitle>Documents | Fly Manager </PageTitle>
+
+@if (documentFilterVM == null)
+{
+    return;
+}
+
+<div class="row">
+
+    <div class="mb-4">
+
+        <h2 style="float:left">Manage Documents Details</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+        {
+            <RadzenButton Style="float:right" IsBusy="@isBusyAddNewButton" BusyText="Upload ..." Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Create", true)) />
+        }
+
+    </div>
+
+    @if (string.IsNullOrWhiteSpace(ParentModuleName))
+    {
+        <div class="col-md-4">
+            <RadzenDropDown @bind-Value="@ModuleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        TextProperty="Name" Placeholder="Select Module Type"
+                        Data="@documentFilterVM.ModulesList" Change="@(args =>  grid.Reload())"
+                        Name="ModuleId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+    {
+        <div class="col-md-4">
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+                        TextProperty="Name" Placeholder="Select Company"
+                        Data="@documentFilterVM.Companies" Change="@(args =>  grid.Reload())"
+                        Name="CompanyId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    <div class="col-md-4" style="padding-top:0.5%;">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Document" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="DocumentDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="DocumentDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="DocumentDataVM" Title="Name" Filterable="false" Sortable="false" >
+            <Template Context="value">
+
+                <a href="javascript:void(0)" @onclick="@((ui) => OpenDocumentPreviewPopupAsync(@value.DocumentPath))">@value.DisplayName</a>
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="DocumentDataVM" TextAlign="TextAlign.Center" Property="Type" Filterable="false" Title="Document Type">
+            <Template Context="data">
+
+                @if (data.Type == "pdf")
+                    {
+                <RadzenImage Path="../img/pdficon.png" Style="width: 14%;" />
+                }
+                    else if (data.Type == "doc" || data.Type == "docx")
+                    {
+                <RadzenImage Path="../img/word.png" Style="width: 14%;" />
+                }
+                    else if (data.Type == "csv" || data.Type == "xlsx")
+                    {
+                <RadzenImage Path="../img/excelicon.png" Style="width: 14%;" />
+                }
+                    else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
+                    data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
+                    {
+                <RadzenImage Path="../img/photosicon.png" Style="width: 14%;" />
+                }
+                    else
+                    {
+                <RadzenImage Path="../img/defaultdocicon.png" Style="width: 14%;" />
+                }
+
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="Size" Title="Size"></RadzenDataGridColumn>
+
+        @if (string.IsNullOrWhiteSpace(ParentModuleName))
+            {
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="ModuleName" Title="Module Name"></RadzenDataGridColumn>
+        }
+
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            {
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="CompanyName" Title="Company Name"></RadzenDataGridColumn>
+        }
+
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            {
+        <RadzenDataGridColumn TItem="DocumentDataVM" Filterable="false" Property="UserName" Title="User"></RadzenDataGridColumn>
+        }
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="100px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Expiration Date">
+            <Template Context="data">
+
+                @if (data.ExpirationDate != null)
+                    {
+                <RadzenLabel Text="@data.ExpirationDate.Value.ToShortDateString()"></RadzenLabel>
+                }
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="250px" Sortable="false" Filterable="false" TItem="DocumentDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="download" Text="@data.TotalDownloads.ToString()" Style="font-size: 15px !important;width:60px !important;" Class="m-1" Click=@(() => DownloadDocument(data.Id)) />
+
+                @if (!data.IsShareable || (data.LastShareDate != null && data.LastShareDate.Value < DateTime.Now.Date))
+                    {
+                <RadzenButton Disabled=true ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                }
+                    else
+                    {
+                <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="reply" Text="@data.TotalShares.ToString()" Class="m-1" Style="font-size: 15px !important;width:60px !important;" Click=@(() => OpenShareDocumentDialog(data.Id)) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                    {
+                <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy=@data.IsLoadingEditButton Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit", false)) />
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                    {
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+                }
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+
+@{
+
+    async void OpenDocumentPreviewPopupAsync(string link)
+        {
+    string extension = Path.GetExtension(link);
+
+    if (previewSupportedFormats.Contains(extension))
+    {
+        if (imageFormats.Contains(extension))
+        {
+            OpenDocumentViewer(link, true);
+        }
+        else
+        {
+            OpenDocumentViewer(link, false);
+        }
+    }
+    else
+    {
+        OpenNoPreViewPopup();
+    }
+   
+    }
+
+        async Task OpenDeleteDialog(DocumentDataVM documentData)
+        {
+    var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @documentData.DisplayName</b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(documentData.Id)" BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "360px" });
+        }
+
+        async void OpenDocumentViewer(string link, bool isImage)
+        {
+    var result = await DialogService.OpenAsync("Preview", ds =>
+    @<div>
+
+        <div class="row" style="text-align:center">
+            <div class="col">
+
+                @if (isImage)
+                    {
+                        <img src="@link" style="max-width:670px;max-height:700px;" />
+                    }
+                    else
+                    {
+                        <iframe width="100%" height="520" src="@link" frameborder="0" allowfullscreen></iframe>
+                    }
+
+                </div>
+            </div>
+        </div>
+    , new DialogOptions { Width = "50%", Height = "90%" });
+
+        }
+
+        async Task OpenNoPreViewPopup()
+        {
+    var result = await DialogService.OpenAsync("No Preview", ds =>
+    @<div>
+
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                <p> No Preview available for selected document.</p>
+            </div>
+        </div>
+    </div>
+    , new DialogOptions { Width = "20%", Height = "150px" });
+
+        }
+
+        async Task OpenShareDocumentDialog(Guid id)
+        {
+    DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
+
+    await DocumentService.UpdateTotalSharesAsync(_httpClient, documentDataVM.Id);
+
+    documentDataVM.TotalShares += 1;
+
+    var result = await DialogService.OpenAsync("Share", ds =>
+    @<RadzenTemplateForm Data=@documentDataVM>
+        <div>
+            <p class="mb-4">  <RadzenLink Path="@documentDataVM.DocumentPath" Text="@documentDataVM.DocumentPath" /></p>
+
+            <div class="row" style="text-align:right">
+                <div class="col">
+                    <RadzenButton Text="Copy to clipboard" Click="() => CopyLinkToClipboard(documentDataVM.DocumentPath)" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 150px;" />
+
+                </div>
+            </div>
+        </div>
+    </RadzenTemplateForm>
+    , new DialogOptions { Width = "700px", Height = "200px" });
+
+        }
+}

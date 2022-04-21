@@ -352,6 +352,13 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+/****** Object:  Table [dbo].[ModuleDetails]    Script Date: 28-02-2022 13:23:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE TABLE [dbo].[ModuleDetails](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [varchar](100) NULL,
@@ -361,12 +368,14 @@ CREATE TABLE [dbo].[ModuleDetails](
 	[Icon] [varchar](50) NULL,
 	[OrderNo] [int] NOT NULL,
 	[IsActive] [bit] NOT NULL,
+	[IsAdministrationModule] [bit] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
 /****** Object:  Table [dbo].[Permissions]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO
@@ -496,6 +505,151 @@ CREATE TABLE [dbo].[Users](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/****** Object:  Table [dbo].[Documents]    Script Date: 16-03-2022 09:04:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Documents](
+	[Id] [uniqueidentifier] NOT NULL,
+	[DisplayName] [varchar](200) NOT NULL,
+	[Name] [varchar](200) NOT NULL,
+	[Type] [varchar](10) NOT NULL,
+	[UserId] [bigint] NOT NULL,
+	[TagIds] [varchar](200) NULL,
+	[Size(InKB)] [bigint] NULL,
+	[TotalDownloads] [bigint] NULL,
+	[TotalShares] [bigint] NULL,
+	[LastShareDate] [datetime] NULL,
+	[IsShareable] BIT NOT NULL DEFAULT 1,
+	[ExpirationDate] [datetime] NULL,
+	[CompanyId] [int] NULL,
+	[ModuleId] [int] NULL,
+	[IsActive] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_Documents] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+/****** Object:  Table [dbo].[DocumentTags]    Script Date: 22-03-2022 09:49:40 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[DocumentTags](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[TagName] [varchar](50) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_DocumentTags] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+/****** Object:  Table [dbo].[UserPreferences]    Script Date: 18-02-2022 11:59:36 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[UserPreferences](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[UserId] [bigint] NOT NULL,
+	[PreferenceType] [varchar](100) NOT NULL,
+	[PreferencesIds] [varchar](500) NULL,
+ CONSTRAINT [PK_UserPreference] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[SubscriptionPlans]    Script Date: 29-03-2022 16:14:40 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SubscriptionPlans](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NULL,
+	[ModuleIds] [varchar](50) NULL,
+	[IsCombo] [bit] NOT NULL,
+	[Price] [numeric](6, 2) NOT NULL,
+	[Duration(InMonths)] [smallint] NOT NULL,
+	[Description] VARCHAR (500),
+	[IsActive] [bit] NULL,
+	[IsDeleted] [bit] NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_SubscriptionPlans] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[BillingHistories]    Script Date: 31-03-2022 17:01:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[BillingHistories](
+	[Id] [uniqueidentifier] NOT NULL,
+	[UserId] [bigint] NOT NULL,
+	[SubscriptionPlanName] [varchar](50) NOT NULL,
+	[ModuleIds] [varchar](50) NOT NULL,
+	IsActive bit NOT NULL,
+	[IsCombo] [bit] NOT NULL,
+	[Price] [numeric](8, 2) NOT NULL,
+	[Duration] [smallint] NOT NULL,
+	[PlanStartDate] [datetime] NOT NULL,
+	[PlanEndDate] [datetime] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+ CONSTRAINT [PK_BillingHistories] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+---------------------------------------------------------------------------------------------------------------
+--					CONSTRAINT
+---------------------------------------------------------------------------------------------------------------
+
 ALTER TABLE [dbo].[AirCraftEquipments] ADD  CONSTRAINT [DF_AirCraftEquipments_CreatedOn]  DEFAULT (getdate()) FOR [CreatedOn]
 GO
 ALTER TABLE [dbo].[Aircrafts] ADD  CONSTRAINT [DF__Aircrafts__IsEng__47DBAE45]  DEFAULT ((0)) FOR [IsEngineshavePropellers]
@@ -527,6 +681,8 @@ GO
 ALTER TABLE [dbo].[ModuleDetails] ADD  CONSTRAINT [DF_ModuleDetails_OrderNo]  DEFAULT ((0)) FOR [OrderNo]
 GO
 ALTER TABLE [dbo].[ModuleDetails] ADD  CONSTRAINT [DF_ModuleDetails_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+ALTER TABLE [dbo].[ModuleDetails] ADD  DEFAULT ((0)) FOR [IsAdministrationModule]
 GO
 ALTER TABLE [dbo].[ScheduleActivityTypes] ADD  CONSTRAINT [DF_ScheduleActivityTypes_IsActive]  DEFAULT ((1)) FOR [IsActive]
 GO
@@ -767,29 +923,52 @@ REFERENCES [dbo].[Users] ([Id])
 GO
 ALTER TABLE [dbo].[Users] CHECK CONSTRAINT [FK_Users_Users2]
 GO
-SET ANSI_NULLS ON
+ALTER TABLE [dbo].[Documents]  WITH CHECK ADD  CONSTRAINT [FK_Documents_Users] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
 GO
 
-SET QUOTED_IDENTIFIER ON
+ALTER TABLE [dbo].[Documents] CHECK CONSTRAINT [FK_Documents_Users]
 GO
 
-/****** Object:  Table [dbo].[UserPreferences]    Script Date: 18-02-2022 11:59:36 ******/
-SET ANSI_NULLS ON
+ALTER TABLE [dbo].[Documents]  WITH CHECK ADD  CONSTRAINT [FK_Documents_Users1] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
 GO
 
-SET QUOTED_IDENTIFIER ON
+ALTER TABLE [dbo].[Documents] CHECK CONSTRAINT [FK_Documents_Users1]
 GO
 
-CREATE TABLE [dbo].[UserPreferences](
-	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[UserId] [bigint] NOT NULL,
-	[PreferenceType] [varchar](100) NOT NULL,
-	[PreferencesIds] [varchar](500) NULL,
- CONSTRAINT [PK_UserPreference] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+ALTER TABLE [dbo].[Documents]  WITH CHECK ADD  CONSTRAINT [FK_Documents_Users2] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Documents] CHECK CONSTRAINT [FK_Documents_Users2]
+GO
+
+ALTER TABLE [dbo].[DocumentTags] ADD  CONSTRAINT [DF_DocumentTags_IsActive]  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[DocumentTags] ADD  CONSTRAINT [DF_DocumentTags_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+
+ALTER TABLE [dbo].[DocumentTags]  WITH CHECK ADD  CONSTRAINT [FK_DocumentTags_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[DocumentTags] CHECK CONSTRAINT [FK_DocumentTags_Users]
+GO
+
+ALTER TABLE [dbo].[DocumentTags]  WITH CHECK ADD  CONSTRAINT [FK_DocumentTags_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[DocumentTags] CHECK CONSTRAINT [FK_DocumentTags_Users1]
+GO
+
+ALTER TABLE [dbo].[DocumentTags]  WITH CHECK ADD  CONSTRAINT [FK_DocumentTags_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[DocumentTags] CHECK CONSTRAINT [FK_DocumentTags_Users2]
 GO
 
 ALTER TABLE [dbo].[UserPreferences]  WITH CHECK ADD  CONSTRAINT [FK_UserPreference_Users] FOREIGN KEY([UserId])
@@ -799,6 +978,40 @@ GO
 ALTER TABLE [dbo].[UserPreferences] CHECK CONSTRAINT [FK_UserPreference_Users]
 GO
 
+ALTER TABLE [dbo].[SubscriptionPlans] ADD  CONSTRAINT [DF_SubscriptionPlans_IsCombo]  DEFAULT ((0)) FOR [IsCombo]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans]  WITH CHECK ADD  CONSTRAINT [FK_SubscriptionPlans_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans]  WITH CHECK ADD  CONSTRAINT [FK_SubscriptionPlans_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users1]
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans]  WITH CHECK ADD  CONSTRAINT [FK_SubscriptionPlans_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[SubscriptionPlans] CHECK CONSTRAINT [FK_SubscriptionPlans_Users2]
+GO
+
+ALTER TABLE [dbo].[BillingHistories]  WITH CHECK ADD  CONSTRAINT [FK_BillingHistories_Users] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[BillingHistories] CHECK CONSTRAINT [FK_BillingHistories_Users]
+GO
+
+---------------------------------------------------------------------------------------------------------------------
+						--PROCEDURE
+---------------------------------------------------------------------------------------------------------------------
 /****** Object:  StoredProcedure [dbo].[GetAircraftEquipmentList]    Script Date: 01-02-2022 09:37:22 ******/
 
 SET ANSI_NULLS ON
@@ -1218,128 +1431,135 @@ AS BEGIN
 END
 
 
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 01-02-2022 09:37:22 ******/
+/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 02-03-2022 09:02:52 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[GetUserRolePermissionList]  
-(       
-    @SearchValue NVARCHAR(50) = NULL,  
-    @PageNo INT = 1,  
-    @PageSize INT = 10,  
-    @SortColumn NVARCHAR(20) = 'UserRole',  
-    @SortOrder NVARCHAR(20) = 'ASC'  ,
-	@ModuleId INT = NULL,
-	@RoleId INT = NULL,
-	@CompanyId INT = NULL
-)  
-AS BEGIN  
-    SET NOCOUNT ON;  
+CREATE PROCEDURE [dbo].[GetUserRolePermissionList]    
+(         
+    @SearchValue NVARCHAR(50) = NULL,    
+    @PageNo INT = 1,    
+    @PageSize INT = 10,    
+    @SortColumn NVARCHAR(20) = 'UserRole',    
+    @SortOrder NVARCHAR(20) = 'ASC'  ,  
+ @ModuleId INT = NULL,  
+ @RoleId INT = NULL,  
+ @CompanyId INT = NULL  
+)    
+AS BEGIN    
+    SET NOCOUNT ON;    
+    
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))    
+    
+    ; WITH CTE_Results AS     
+    (    
+        SELECT URP.*,UR.Name,PR.PermissionType,MD.Name AS ModuleName, MD.IsAdministrationModule, 
+	    MD.OrderNo from UserRolePermissions URP  
+	    LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId  
+	    LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId   
+	    LEFT JOIN  ModuleDetails MD on MD.Id = URP.ModuleId  
+	    LEFT JOIN  Companies CP on CP.Id = URP.CompanyId  
+    
+        WHERE   
+   (CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND  
+   1 = 1 AND   
+        (  
+    ((ISNULL(@ModuleId,0)=0)  
+    OR (URP.ModuleId = @ModuleId))  
+    AND ((ISNULL(@RoleId,0)=0)   
+    OR (URP.RoleId = @RoleId))  
+    AND ((ISNULL(@CompanyId,0)=0)  
+    OR (URP.CompanyId = @CompanyId))  
+        )  
+       
+     AND  
+     (@SearchValue= '' OR  (     
+              UR.Name LIKE '%' + @SearchValue + '%' OR  
+     MD.Name LIKE '%' + @SearchValue + '%' OR  
+     PR.PermissionType LIKE '%' + @SearchValue + '%' OR  
+     URP.IsAllowed  LIKE '%' + @SearchValue + '%'  
+            ) )  
+            ORDER BY    
+            CASE WHEN (@SortColumn = 'RoleName' AND @SortOrder='ASC')    
+                        THEN UR.Name    
+            END ASC,    
+            CASE WHEN (@SortColumn = 'RoleName' AND @SortOrder='DESC')    
+                        THEN UR.Name    
+            END DESC,   
+   CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='ASC')    
+                        THEN MD.Name    
+            END ASC,    
+            CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='DESC')    
+                        THEN MD.Name    
+            END DESC,   
+   CASE WHEN (@SortColumn = 'PermissionType' AND @SortOrder='ASC')    
+                        THEN PR.PermissionType    
+            END ASC,    
+            CASE WHEN (@SortColumn = 'PermissionType' AND @SortOrder='DESC')    
+                        THEN PR.PermissionType    
+            END DESC,   
+   CASE WHEN (@SortColumn = 'IsAllowed' AND @SortOrder='ASC')    
+                        THEN URP.IsAllowed  
+            END ASC,    
+            CASE WHEN (@SortColumn = 'IsAllowed' AND @SortOrder='DESC')    
+                         THEN URP.IsAllowed  
+            END DESC,   
+   CASE WHEN (@SortColumn = 'IsAllowedForMobileApp' AND @SortOrder='ASC')    
+                        THEN URP.IsAllowed  
+            END ASC,    
+            CASE WHEN (@SortColumn = 'IsAllowedForMobileApp' AND @SortOrder='DESC')    
+                         THEN URP.IsAllowed  
+            END DESC,
+	CASE WHEN (@SortColumn = 'CompanyName' AND @SortOrder='ASC')    
+                        THEN CP.Name
+            END ASC,    
+            CASE WHEN (@SortColumn = 'CompanyName' AND @SortOrder='DESC')    
+                         THEN CP.Name
+            END DESC  
+            OFFSET @PageSize * (@PageNo - 1) ROWS    
+            FETCH NEXT @PageSize ROWS ONLY    
+    ),    
+    CTE_TotalRows AS     
+    (    
+        select count(URP.ID) as TotalRecords  from UserRolePermissions URP  
+  LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId  
+  LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId   
+  LEFT JOIN  ModuleDetails MD on MD.Id = URp.ModuleId  
+  LEFT JOIN  Companies CP on CP.Id = URP.CompanyId  
   
-    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+        WHERE   
+   (CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND  
+   1 = 1 AND   
+        (  
+    ((ISNULL(@ModuleId,0)=0)  
+    OR (URP.ModuleId = @ModuleId))  
+    AND ((ISNULL(@RoleId,0)=0)   
+    OR (URP.RoleId = @RoleId))  
+    AND ((ISNULL(@CompanyId,0)=0)  
+    OR (URP.CompanyId = @CompanyId))  
+        ) AND  
+     (@SearchValue= '' OR  (     
+              UR.Name LIKE '%' + @SearchValue + '%' OR  
+     MD.Name LIKE '%' + @SearchValue + '%' OR  
+     PR.PermissionType LIKE '%' + @SearchValue + '%' OR  
+     URP.IsAllowed  LIKE '%' + @SearchValue + '%'  
+            ))     
+    )    
   
-    ; WITH CTE_Results AS   
-    (  
-        SELECT URP.*,UR.Name,PR.PermissionType,MD.Name AS ModuleName,
-		MD.OrderNo from UserRolePermissions URP
-		LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId
-		LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId 
-		LEFT JOIN  ModuleDetails MD on MD.Id = URP.ModuleId
-		LEFT JOIN  Companies CP on CP.Id = URP.CompanyId
-		
-        WHERE 
-			(CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND
-			1 = 1 AND 
-		      (
-				((ISNULL(@ModuleId,0)=0)
-				OR (URP.ModuleId = @ModuleId))
-				AND ((ISNULL(@RoleId,0)=0) 
-				OR (URP.RoleId = @RoleId))
-				AND ((ISNULL(@CompanyId,0)=0)
-				OR (URP.CompanyId = @CompanyId))
-		      )
-			  
-			  AND
-			  (@SearchValue= '' OR  (   
-              UR.Name LIKE '%' + @SearchValue + '%' OR
-			  MD.Name LIKE '%' + @SearchValue + '%' OR
-			  PR.PermissionType LIKE '%' + @SearchValue + '%' OR
-			  URP.IsAllowed  LIKE '%' + @SearchValue + '%'
-            ) )
-            ORDER BY  
-            CASE WHEN (@SortColumn = 'RoleName' AND @SortOrder='ASC')  
-                        THEN UR.Name  
-            END ASC,  
-            CASE WHEN (@SortColumn = 'RoleName' AND @SortOrder='DESC')  
-                        THEN UR.Name  
-            END DESC, 
-			CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='ASC')  
-                        THEN MD.Name  
-            END ASC,  
-            CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='DESC')  
-                        THEN MD.Name  
-            END DESC, 
-			CASE WHEN (@SortColumn = 'PermissionType' AND @SortOrder='ASC')  
-                        THEN PR.PermissionType  
-            END ASC,  
-            CASE WHEN (@SortColumn = 'PermissionType' AND @SortOrder='DESC')  
-                        THEN PR.PermissionType  
-            END DESC, 
-			CASE WHEN (@SortColumn = 'IsAllowed' AND @SortOrder='ASC')  
-                        THEN URP.IsAllowed
-            END ASC,  
-            CASE WHEN (@SortColumn = 'IsAllowed' AND @SortOrder='DESC')  
-                         THEN URP.IsAllowed
-            END DESC, 
-			CASE WHEN (@SortColumn = 'IsAllowedForMobileApp' AND @SortOrder='ASC')  
-                        THEN URP.IsAllowed
-            END ASC,  
-            CASE WHEN (@SortColumn = 'IsAllowedForMobileApp' AND @SortOrder='DESC')  
-                         THEN URP.IsAllowed
-            END DESC 
-            OFFSET @PageSize * (@PageNo - 1) ROWS  
-            FETCH NEXT @PageSize ROWS ONLY  
-    ),  
-    CTE_TotalRows AS   
-    (  
-        select count(URP.ID) as TotalRecords  from UserRolePermissions URP
-		LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId
-		LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId 
-		LEFT JOIN  ModuleDetails MD on MD.Id = URp.ModuleId
-		LEFT JOIN  Companies CP on CP.Id = URP.CompanyId
+    Select TotalRecords, URP.*,UR.Name  AS RoleName,PR.PermissionType, CP.Name AS CompanyName,MD.IsAdministrationModule, 
+    MD.Name ModuleName,MD.ControllerName, MD.ActionName, MD.Icon, MD.DisplayName,  
+    MD.OrderNo from UserRolePermissions URP  
+  LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId  
+  LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId   
+  LEFT JOIN  ModuleDetails MD on MD.Id = URp.ModuleId  
+  LEFT JOIN  Companies CP on CP.Id = URP.CompanyId  
+ , CTE_TotalRows     
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)    
+     
+END  
 
-        WHERE 
-			(CP.IsDeleted = 0 OR CP.IsDeleted IS NULL) AND
-			1 = 1 AND 
-		      (
-				((ISNULL(@ModuleId,0)=0)
-				OR (URP.ModuleId = @ModuleId))
-				AND ((ISNULL(@RoleId,0)=0) 
-				OR (URP.RoleId = @RoleId))
-				AND ((ISNULL(@CompanyId,0)=0)
-				OR (URP.CompanyId = @CompanyId))
-		      ) AND
-			  (@SearchValue= '' OR  (   
-              UR.Name LIKE '%' + @SearchValue + '%' OR
-			  MD.Name LIKE '%' + @SearchValue + '%' OR
-			  PR.PermissionType LIKE '%' + @SearchValue + '%' OR
-			  URP.IsAllowed  LIKE '%' + @SearchValue + '%'
-            ))   
-    )  
-
-    Select TotalRecords, URP.*,UR.Name  AS RoleName,PR.PermissionType,
-		   MD.Name ModuleName,MD.ControllerName, MD.ActionName, MD.Icon, MD.DisplayName,
-		   MD.OrderNo from UserRolePermissions URP
-		LEFT JOIN  UserRoles UR on UR.Id = URP.RoleId
-		LEFT JOIN  Permissions PR on PR.Id = URP.PermissionId 
-		LEFT JOIN  ModuleDetails MD on MD.Id = URp.ModuleId
-	, CTE_TotalRows   
-    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = URP.ID)  
-   
-END
-
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 15-02-2022 15:34:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 12-04-2022 17:15:42 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1353,7 +1573,9 @@ CREATE PROCEDURE [dbo].[GetReservationList]
     @SortOrder NVARCHAR(20) = 'ASC',
 	@CompanyId INT = NULL,
 	@StartDate DATETIME = NULL,
-	@EndDate DATETIME = NULL
+	@EndDate DATETIME = NULL,
+	@UserId BIGINT = NULL,
+	@AircraftId BIGINT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -1365,25 +1587,37 @@ AS BEGIN
         Select acs.Id, acs.ScheduleTitle, acs.CreatedOn, 
 		acs.StartDateTime, acs.EndDateTime, acd.FlightStatus,
 		u.FirstName + '' + u.LastName as Member1, acd.IsCheckOut,
-		acs.ReservationId, a.TailNo, cp.Name as CompanyName
+		acs.ReservationId, a.TailNo, cp.Name as CompanyName, ah.TotalTime as AirFrameTime
 		From AircraftSchedules acs
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
-		LEFT JOIN  Companies cp on u.CompanyId = cp.Id  
-
+		LEFT JOIN  Companies cp on a.CompanyId = cp.Id   
+		LEFT JOIN AircraftScheduleHobbsTimes ah
+		ON acs.Id = ah.AircraftScheduleId
+		LEFT JOIN AircraftEquipmentTimes at
+		ON ah.AircraftEquipmentTimeId = at.Id
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
+			(at.IsDeleted = 0 or at.IsDeleted Is NULL) and
+			(at.EquipmentName = 'Air Frame' or at.EquipmentName IS NULL)
+			AND
 			1 = 1 AND 
 		      (
+				((ISNULL(@UserId,0)=0)
+				OR (acs.CreatedBy = @UserId))
+				AND
+				((ISNULL(@AircraftId,0)=0)
+				OR (acs.AircraftId = @AircraftId))
+				AND
 				((ISNULL(@CompanyId,0)=0)
-				OR (U.CompanyId = @CompanyId))
+				OR (cp.Id = @CompanyId))
 				AND
 				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
-				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
+				OR (acs.StartDateTime   >= @StartDate ))
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
-				OR (cast(acs.EndDateTime as date) <= cast(@EndDate as date)))
+				OR (acs.EndDateTime  <= @EndDate ))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1434,20 +1668,33 @@ AS BEGIN
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
-		LEFT JOIN  Companies cp on u.CompanyId = cp.Id  
+		LEFT JOIN  Companies cp on a.CompanyId = cp.Id  
+		LEFT JOIN AircraftScheduleHobbsTimes ah
+		ON acs.Id = ah.AircraftScheduleId
+		LEFT JOIN AircraftEquipmentTimes at
+		ON ah.AircraftEquipmentTimeId = at.Id
 
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
+			(at.IsDeleted = 0 or at.IsDeleted Is NULL) and
+			(at.EquipmentName = 'Air Frame' or at.EquipmentName IS NULL)
+			AND
 			1 = 1 AND 
 		      (
+			   ((ISNULL(@UserId,0)=0)
+				OR (acs.CreatedBy = @UserId))
+				AND
+				((ISNULL(@AircraftId,0)=0)
+				OR (acs.AircraftId = @AircraftId))
+				AND
 				((ISNULL(@CompanyId,0)=0)
-				OR (U.CompanyId = @CompanyId))
+				OR (cp.Id = @CompanyId))
 				AND
 				((ISNULL(@StartDate,0)= '1900-01-01 00:00:00.000')
-				OR (cast(acs.StartDateTime as date)  >= cast(@StartDate as date) ))
+				OR (acs.StartDateTime   >= @StartDate ))
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
-				OR (cast(acs.EndDateTime as date) <= cast(@EndDate as date)))
+				OR (acs.EndDateTime <= @EndDate ))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1462,13 +1709,6 @@ AS BEGIN
 
 END
 
-
-
-/****** Object:  Trigger [dbo].[Trg_Company_InsertUserRolePermission]    Script Date: 03-12-2021 16:40:28 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 
 CREATE Trigger [dbo].[Trg_Company_InsertUserRolePermission]
 On [dbo].[Companies]
@@ -1901,3 +2141,313 @@ BEGIN
 	
 END
 GO
+
+/****** Object:  StoredProcedure [dbo].[GetDocumentList]    Script Date: 07-04-2022 15:44:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetDocumentList]      
+(           
+    @SearchValue NVARCHAR(50) = NULL,      
+    @PageNo INT = 1,      
+    @PageSize INT = 10,      
+    @SortColumn NVARCHAR(20) = 'DisplayName',      
+    @SortOrder NVARCHAR(20) = 'ASC',    
+	@CompanyId INT = NULL,    
+	@ModuleId INT = NULL,
+	@UserId bigint = NULL
+)      
+AS BEGIN      
+    SET NOCOUNT ON;      
+      
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))      
+      
+    ; WITH CTE_Results AS       
+    (      
+        SELECT d.Id, d.Name,d.UserId ,d.DisplayName, d.ExpirationDate, d.IsShareable , d.CompanyId,
+		 ISNULL(d.TotalDownloads, 0) as TotalDownloads , ISNULL(d.TotalShares, 0) as TotalShares ,
+		 d.LastShareDate,
+		d.Type,ISNULL(d.[Size(InKB)], 0) as Size, m.Name as ModuleName,
+		CP.Name as CompanyName, u.FirstName + ' ' + u.LastName as UserName   from Documents d    
+		LEFT JOIN  Companies CP on CP.Id = d.CompanyId    
+		LEFT JOIN ModuleDetails m on d.ModuleId = m.Id
+		LEFT JOIN Users u on d.UserId = u.Id
+    
+        WHERE    
+   (CP.IsDeleted = 0 OR  CP.IsDeleted IS NULL) AND    
+   1 = 1 AND     
+        (    
+    ((ISNULL(@CompanyId,0)=0)    
+    OR (d.CompanyId = @CompanyId))    
+        
+        ) 
+		AND     
+        (    
+    ((ISNULL(@ModuleId,0)=0)    
+    OR (d.ModuleId = @ModuleId))    
+        
+        ) 
+
+		AND     
+        (    
+    ((ISNULL(@UserId,0)=0)    
+    OR (d.UserId = @UserId))    
+        
+        ) 
+   AND     
+   d.IsDeleted = 0 AND    
+   (@SearchValue= '' OR  (       
+              d.DisplayName LIKE '%' + @SearchValue + '%' OR    
+     Type LIKE '%' + @SearchValue + '%' OR    
+     CP.Name LIKE '%' + @SearchValue + '%'    
+            ))      
+      
+            ORDER BY      
+            CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='ASC')      
+                        THEN d.DisplayName      
+            END ASC,      
+            CASE WHEN (@SortColumn = 'DisplayName' AND @SortOrder='DESC')      
+                        THEN d.DisplayName      
+            END DESC,     
+   CASE WHEN (@SortColumn = 'Type' AND @SortOrder='ASC')      
+                        THEN [Type]    
+            END ASC,      
+            CASE WHEN (@SortColumn = 'Type' AND @SortOrder='DESC')      
+                        THEN [Type]     
+            END DESC,     
+   CASE WHEN (@SortColumn = 'Size' AND @SortOrder='ASC')      
+                        THEN [Size(InKB)]      
+            END ASC,      
+            CASE WHEN (@SortColumn = 'Size' AND @SortOrder='DESC')      
+                        THEN [Size(InKB)]      
+            END DESC,  
+	CASE WHEN (@SortColumn = 'ModuleName' AND @SortOrder='ASC')      
+                        THEN m.Name    
+            END ASC,      
+            CASE WHEN (@SortColumn = 'ModuleName' AND @SortOrder='DESC')      
+                        THEN m.Name     
+            END DESC,
+   CASE WHEN (@SortColumn = 'CompanyName' AND @SortOrder='ASC')      
+                        THEN CP.Name    
+            END ASC,      
+            CASE WHEN (@SortColumn = 'CompanyName' AND @SortOrder='DESC')      
+                        THEN CP.Name     
+            END DESC,
+	CASE WHEN (@SortColumn = 'UserName' AND @SortOrder='ASC')      
+                        THEN u.FirstName    
+            END ASC,      
+            CASE WHEN (@SortColumn = 'UserName' AND @SortOrder='DESC')      
+                        THEN u.FirstName     
+            END DESC
+            OFFSET @PageSize * (@PageNo - 1) ROWS      
+            FETCH NEXT @PageSize ROWS ONLY      
+    ),      
+    CTE_TotalRows AS       
+    (      
+        select count(CTE_Results.Id) as TotalRecords from CTE_Results      
+       
+    )      
+    Select TotalRecords, cr.Id,cr.UserId, cr.Name, cr.DisplayName,cr.IsShareable , cr.ExpirationDate, cr.CompanyId,
+	 ISNULL(cr.TotalDownloads, 0) as TotalDownloads , ISNULL(cr.TotalShares, 0) as TotalShares ,
+	 cr.LastShareDate,
+	cr.Type, CONCAT(ISNULL(cr.Size, 0), ' KB') as Size, cr.ModuleName, 
+	cr.CompanyName, cr.UserName from CTE_Results cr
+	, CTE_TotalRows       
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = cr.Id)      
+       
+END
+
+/****** Object:  StoredProcedure [dbo].[GetSubscriptionPlanList]    Script Date: 06-04-2022 16:05:07 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetSubscriptionPlanList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'CreatedOn',  
+    @SortOrder NVARCHAR(20) = 'DESC',
+	@IsActive BIT = NULL
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+  print(@sortColumn)
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+      select * from ( select SP.*,temp.ModulesName from (select sp.Id,STRING_AGG(md.displayname,',') 
+		as ModulesName from (SELECT SP.id, value  
+		FROM SubscriptionPlans sp
+		CROSS APPLY STRING_SPLIT(sp.ModuleIds, ',')) as sp
+		join ModuleDetails md on SP.value = md.Id group by sp.Id)as temp
+		join SubscriptionPlans SP on SP.Id = temp.id
+) as tempData
+        WHERE
+			((ISNULL(@IsActive,0)=0)
+				OR (tempData.IsActive = @IsActive))
+			AND
+			(tempData.IsDeleted = 0 OR  tempData.IsDeleted IS NULL) AND
+			
+			(@SearchValue= '' OR  (   
+              tempData.Name LIKE '%' + @SearchValue + '%' OR
+			  tempData.Price LIKE '%' + @SearchValue + '%' OR
+			  tempData.[Duration(InMonths)] LIKE '%' + @SearchValue + '%' 
+            ))  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='ASC')  
+                        THEN [Name]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='DESC')  
+                        THEN [Name]  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Price' AND @SortOrder='ASC')  
+					
+                        THEN Price  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Price' AND @SortOrder='DESC')  
+                        THEN Price  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='ASC')  
+                        THEN [Duration(InMonths)]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='DESC')  
+                        THEN [Duration(InMonths)]  
+            END DESC,
+			   
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='ASC')  
+                        THEN [CreatedOn]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='DESC')  
+                        THEN [CreatedOn]  
+            END DESC
+           
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(sp.Id)  as TotalRecords from SubscriptionPlans SP
+       WHERE
+	    ((ISNULL(@IsActive,0)=0)
+				OR (SP.IsActive = @IsActive))
+			AND
+		(SP.IsDeleted = 0 OR  SP.IsDeleted IS NULL) AND
+			
+			(@SearchValue= '' OR  (   
+              SP.Name LIKE '%' + @SearchValue + '%' OR
+			  SP.Price LIKE '%' + @SearchValue + '%' OR
+			  SP.[Duration(InMonths)] LIKE '%' + @SearchValue + '%' 
+            ))  
+   
+    )  
+    Select  TotalRecords, SP.Id, SP.Name, SP.ModuleIds, SP.ModulesName, SP.[Duration(InMonths)], sp.Description
+	, SP.IsActive, SP.IsCombo, SP.Price from CTE_Results SP
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = SP.ID)  
+   
+END
+
+/****** Object:  StoredProcedure [dbo].[GetBillingHistoryList]    Script Date: 06-04-2022 15:33:14 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetBillingHistoryList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'CreatedOn',  
+    @SortOrder NVARCHAR(20) = 'DESC',
+	@CompanyId INT = NULL,
+	@UserId BIGINT = NULL
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+  print(@sortColumn)
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+      select * from ( select BH.*, u.CompanyId ,temp.ModulesName from (select bh.Id,STRING_AGG(md.displayname,',') 
+		as ModulesName from (SELECT BH.id, value  
+		FROM BillingHistories bh
+		CROSS APPLY STRING_SPLIT(bh.ModuleIds, ',')) as bh
+		join ModuleDetails md on BH.value = md.Id group by bh.Id)as temp
+		join BillingHistories BH on BH.Id = temp.id
+		join Users u on BH.UserId =u.Id
+) as tempData
+        WHERE
+			((ISNULL(@UserId,0)=0)
+				OR (tempData.UserId = @UserId))
+				AND
+			((ISNULL(@CompanyId,0)=0)
+				OR (tempData.CompanyId = @CompanyId))
+				AND
+			(@SearchValue= '' OR  (   
+              tempData.SubscriptionPlanName LIKE '%' + @SearchValue + '%' OR
+			  tempData.Price LIKE '%' + @SearchValue + '%' OR
+			  tempData.[Duration] LIKE '%' + @SearchValue + '%' 
+            ))  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'SubscriptionPlanName' AND @SortOrder='ASC')  
+                        THEN [SubscriptionPlanName]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'SubscriptionPlanName' AND @SortOrder='DESC')  
+                        THEN [SubscriptionPlanName]  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Price' AND @SortOrder='ASC')  
+                        THEN Price  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Price' AND @SortOrder='DESC')  
+                        THEN Price  
+            END DESC, 
+			CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='ASC')  
+                        THEN [Duration]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'Duration' AND @SortOrder='DESC')  
+                        THEN [Duration]  
+            END DESC,
+			   
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='ASC')  
+                        THEN [CreatedOn]  
+            END ASC,  
+            CASE WHEN (@SortColumn = 'CreatedOn' AND @SortOrder='DESC')  
+                        THEN [CreatedOn]  
+            END DESC
+           
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(bh.Id)  as TotalRecords from CTE_Results BH
+       WHERE
+			((ISNULL(@UserId,0)=0)
+				OR (bh.UserId = @UserId))
+				AND
+			((ISNULL(@CompanyId,0)=0)
+				OR (bh.CompanyId = @CompanyId))
+				AND
+			(@SearchValue= '' OR  (   
+              BH.SubscriptionPlanName LIKE '%' + @SearchValue + '%' OR
+			  BH.Price LIKE '%' + @SearchValue + '%' OR
+			  BH.[Duration] LIKE '%' + @SearchValue + '%' 
+            ))  
+   
+    )  
+    Select  TotalRecords, BH.Id, BH.UserId, BH.SubscriptionPlanName, BH.ModuleIds, BH.ModulesName, BH.[Duration]
+	,BH.PlanStartDate,BH.IsActive, BH.PlanEndDate, BH.CreatedOn, BH.Iscombo , BH.Price from CTE_Results BH
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = BH.ID)  
+   
+END
+

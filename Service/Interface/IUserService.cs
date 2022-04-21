@@ -16,7 +16,7 @@ namespace Service.Interface
 
         CurrentResponse List(UserDatatableParams datatableParams);
 
-        CurrentResponse Delete(long id);
+        CurrentResponse Delete(long id, long deletedBy);
 
         CurrentResponse UpdateActiveStatus(long id, bool isActive);
         
@@ -27,5 +27,11 @@ namespace Service.Interface
         CurrentResponse FindById(long id);
 
         CurrentResponse UpdateImageName(long id, string imageName);
+
+        CurrentResponse ListDropDownValuesByCompanyId(int companyId);
+
+        UserVM GetUserDetails(long id, int companyId, int roleId);
+
+        CurrentResponse FindMyPreferencesById(long id);
     }
 }

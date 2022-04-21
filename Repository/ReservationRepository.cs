@@ -20,17 +20,17 @@ namespace Repository
 
                 if(datatableParams.StartDate != null)
                 {
-                    startDate = datatableParams.StartDate.Value.ToString("yyyy-MM-dd hh:mm:ss");
+                    startDate = datatableParams.StartDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 if (datatableParams.EndDate != null)
                 {
-                    endDate = datatableParams.EndDate.Value.ToString("yyyy-MM-dd hh:mm:ss");
+                    endDate = datatableParams.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
                 string sql = $"EXEC dbo.GetReservationList '{ datatableParams.SearchText }', { pageNo }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                    $"{datatableParams.CompanyId},'{startDate}','{endDate}'";
+                    $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}, {datatableParams.AircraftId.GetValueOrDefault()}";
 
                 list = _myContext.ReservationDataVM.FromSqlRaw<ReservationDataVM>(sql).ToList();
 

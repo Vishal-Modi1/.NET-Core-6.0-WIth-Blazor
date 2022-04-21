@@ -1,6 +1,8 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 
@@ -10,9 +12,9 @@ namespace FSM.Blazor.Data.AircraftSchedule
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftSchedulerService(AuthenticationStateProvider authenticationStateProvider)
+        public AircraftSchedulerService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<SchedulerVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
@@ -29,9 +31,18 @@ namespace FSM.Blazor.Data.AircraftSchedule
             return schedulerVM;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, SchedulerVM schedulerVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, SchedulerVM schedulerVM, DateTime startTime, DateTime endTime)
         {
+            DateTime localStartTime = schedulerVM.StartTime;
+            DateTime localEndTime = schedulerVM.EndTime;
+
+            schedulerVM.StartTime = startTime;
+            schedulerVM.EndTime = endTime;
+
             string jsonData = JsonConvert.SerializeObject(schedulerVM);
+           
+            schedulerVM.StartTime = localStartTime;
+            schedulerVM.EndTime = localEndTime;
 
             string url = "aircraftscheduler/create";
 

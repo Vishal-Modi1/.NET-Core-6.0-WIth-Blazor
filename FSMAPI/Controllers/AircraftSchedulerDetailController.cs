@@ -7,6 +7,7 @@ using Service.Interface;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace FSMAPI.Controllers
 {
@@ -33,9 +34,9 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("checkout")]
-        public IActionResult Checkout([FromBody] long scheduleId)
+        public IActionResult Checkout(long scheduleId)
         {
             AircraftSchedulerDetailsVM aircraftScheduleDetailVM = new AircraftSchedulerDetailsVM();
             aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
@@ -46,9 +47,9 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("uncheckout")]
-        public IActionResult UnCheckout([FromBody] long scheduleId)
+        public IActionResult UnCheckout(long scheduleId)
         {
             CurrentResponse response = _aircraftScheduleDetailService.UnCheckOut(scheduleId);
 
@@ -57,10 +58,10 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("checkin")]
-        public IActionResult CheckIn(List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
+        public IActionResult CheckIn(AircraftEquipmentTimeRequestVM aircraftEquipmentTimeRequestVM)
         {
             long checkInBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _aircraftScheduleDetailService.CheckIn(aircraftEquipmentsTimeList, checkInBy);
+            CurrentResponse response = _aircraftScheduleDetailService.CheckIn(aircraftEquipmentTimeRequestVM.Data, checkInBy);
 
             return Ok(response);
         }

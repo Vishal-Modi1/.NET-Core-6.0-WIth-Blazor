@@ -50,7 +50,7 @@ namespace Repository
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -59,6 +59,7 @@ namespace Repository
                 if (instructorType != null)
                 {
                     _myContext.InstructorTypes.Remove(instructorType);
+
                     _myContext.SaveChanges();
                 }
             }

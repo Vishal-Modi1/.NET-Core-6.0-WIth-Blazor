@@ -70,3 +70,6 @@
 /FSMAPI/bin/x64/Debug/net6.0
 /Repository/bin/x64/Debug/net6.0
 /Service/bin/x64/Debug/net6.0
+/Utilities/obj
+/Utilities/bin
+/FSM.Blazor/Uploads/TempDocuments

@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSMAPI", "FSMAPI\FSMAPI.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSM.Blazor", "FSM.Blazor\FSM.Blazor.csproj", "{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject1", "TestProject1\TestProject1.csproj", "{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,22 @@ Global
 		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|x64.ActiveCfg = Release|x64
 		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|x64.Build.0 = Release|x64
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Release|x64.Build.0 = Release|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Debug|x64.Build.0 = Debug|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Release|x64.ActiveCfg = Release|Any CPU
+		{C5C5A1B2-66A2-4603-B77D-F6A3C483221C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

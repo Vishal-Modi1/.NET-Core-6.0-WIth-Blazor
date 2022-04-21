@@ -17,14 +17,14 @@ namespace FSM.Blazor.Pages.MyAccount
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
         [Inject]
         protected IMemoryCache memoryCache { get; set; }
 
         [Inject]
         NotificationService NotificationService { get; set; }
-
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -109,15 +109,26 @@ namespace FSM.Blazor.Pages.MyAccount
 
             ByteArrayContent data = new ByteArrayContent(bytes);
 
-            MultipartFormDataContent multiContent = new MultipartFormDataContent
+            try
+            {
+                MultipartFormDataContent multiContent = new MultipartFormDataContent
                 {
-                   { data, "file", userVM.Id.ToString() }
+                   { data, "0","0" }
                 };
 
-            CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
+                string companyId = userVM.CompanyId == null ? "0" : userVM.CompanyId.ToString();
 
-            ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
+                multiContent.Add(new StringContent(userVM.Id.ToString()), "UserId");
+                multiContent.Add(new StringContent(companyId), "CompanyId");
 
+                CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
+
+                ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
+            }
+            catch (Exception ex)
+            {
+
+            }
             isDisplayLoader = false;
         }
     }

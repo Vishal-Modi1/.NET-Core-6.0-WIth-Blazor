@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using DataModels.VM.Account;
 using DataModels.VM.Common;
+using DataModels.Constants;
 
 namespace Service
 {
@@ -12,11 +13,13 @@ namespace Service
     {
         private readonly IAccountRepository _accountRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IUserRoleRepository _userRoleRepository;
 
-        public AccountService(IAccountRepository accountRepository, ICompanyRepository companyRepository)
+        public AccountService(IAccountRepository accountRepository, ICompanyRepository companyRepository, IUserRoleRepository userRoleRepository)
         {
             _accountRepository = accountRepository;
             _companyRepository = companyRepository; 
+            _userRoleRepository = userRoleRepository;
         }
 
         public CurrentResponse GetValidUser(LoginVM loginVM)
@@ -32,7 +35,14 @@ namespace Service
                     return _currentResponse;
                 }
 
-                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UserProfileImagePathPrefix}{user.ImageName}";
+                string companyId = "0";
+
+                if(!string.IsNullOrWhiteSpace(user.CompanyId.ToString()))
+                {
+                    companyId = user.CompanyId.ToString();
+                }
+
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{user.ImageName}";
 
                 Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
 
@@ -52,7 +62,6 @@ namespace Service
                         return _currentResponse;
                     }
                 }
-
                
                 if (!user.IsActive)
                 {
@@ -68,6 +77,8 @@ namespace Service
                     {
                         user.CompanyName = company.Name;
                     }
+
+                    user.RoleName = _userRoleRepository.FindById(user.RoleId).Name;
 
                     CreateResponse(user, HttpStatusCode.OK, "User is valid");
                 }

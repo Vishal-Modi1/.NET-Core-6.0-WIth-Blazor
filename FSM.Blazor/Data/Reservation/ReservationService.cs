@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Reservation;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
 
@@ -10,9 +11,9 @@ namespace FSM.Blazor.Data.Reservation
     {
         private readonly HttpCaller _httpCaller;
 
-        public ReservationService(AuthenticationStateProvider authenticationStateProvider)
+        public ReservationService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<List<ReservationDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)

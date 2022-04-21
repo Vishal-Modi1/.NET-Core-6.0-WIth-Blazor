@@ -58,7 +58,7 @@ namespace Repository
             }
         }
 
-        public void Delete(int id)
+        public void Delete(int id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -67,6 +67,9 @@ namespace Repository
                 if (aircraftEquipment != null)
                 {
                     aircraftEquipment.IsDeleted = true;
+                    aircraftEquipment.DeletedOn = DateTime.UtcNow;
+                    aircraftEquipment.DeletedBy = deletedBy;
+
                     _myContext.SaveChanges();
                 }
             }

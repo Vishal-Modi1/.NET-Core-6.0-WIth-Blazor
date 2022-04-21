@@ -1,13 +1,12 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Configuration;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
 using DataModels.Constants;
+using DataModels.Enums;
+using DataModels.Entities;
+using Utilities;
 
 namespace FSMAPI.Utilities
 {
@@ -15,22 +14,25 @@ namespace FSMAPI.Utilities
     {
         private readonly ConfigurationSettings _configurationSettings;
         private readonly HttpContext _httpContext;
+        private readonly RandomTextGenerator _randomTextGenerator;
 
         public JWTTokenGenerator(HttpContext httpContext)
         {
             _configurationSettings = ConfigurationSettings.Instance;
             _httpContext = httpContext;
+            _randomTextGenerator = new RandomTextGenerator();
         }
 
-        public string Generate(long id, int? companyId, int roleId)
+        public string Generate(User user)
         {
             List<Claim> claims = new List<Claim>
             {
                 //new Claim(JwtRegisteredClaimNames.Sub, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(CustomClaimTypes.CompanyId, companyId.ToString()),
-                new Claim(CustomClaimTypes.UserId, id.ToString()),
-                new Claim(ClaimTypes.Role, roleId.ToString()),
+                new Claim(CustomClaimTypes.CompanyId, user.CompanyId.ToString()),
+                new Claim(CustomClaimTypes.UserId, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
+                new Claim(CustomClaimTypes.RoleName, user.RoleName.ToString()),
             };
 
             //roles.ForEach(role =>
@@ -40,9 +42,9 @@ namespace FSMAPI.Utilities
 
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationSettings.JWTKey));
-            DateTime expires = DateTime.Now.AddDays(_configurationSettings.JWTExpireDays);
+           DateTime expires = DateTime.Now.AddMinutes(_configurationSettings.JWTExpireDays);
 
-            //  DateTime expires = DateTime.Now.AddSeconds(15);
+          //  DateTime expires = DateTime.Now.AddMinutes(_configurationSettings.JWTExpireDays);
 
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -55,7 +57,15 @@ namespace FSMAPI.Utilities
                 signingCredentials: creds
             );
 
+
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string RefreshTokenGenerate()
+        {
+            string refreshToken = _randomTextGenerator.Generate();
+
+            return refreshToken;
         }
 
         public string GetClaimValue(string claimType)

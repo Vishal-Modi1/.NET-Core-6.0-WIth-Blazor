@@ -10,5 +10,6 @@ namespace DataModels.Constants
     {
         public const string AccountActivation = "AccountActivation";
         public const string ForgotPassword = "ForgotPassword";
+        public const string RefreshToken = "RefreshToken";
     }
 }

@@ -108,7 +108,9 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            CurrentResponse response = _airCraftService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
+            CurrentResponse response = _airCraftService.Delete(id, deletedBy);
 
             return Ok(response);
         }
@@ -124,15 +126,23 @@ namespace FSMAPI.Controllers
 
             IFormCollection form = Request.Form;
 
-            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form.Files[0].FileName}.jpeg";
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.AircraftImage, form, fileName);
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["AircraftId"]}.jpeg";
+
+            if(string.IsNullOrWhiteSpace(companyId))
+            {
+                companyId = form["CompanyId"];
+            }
+
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.AircraftImage + "\\" + companyId , form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "false";
 
             if (isFileUploaded)
             {
-                response = _airCraftService.UpdateImageName(Convert.ToInt32(form.Files[0].FileName), fileName);
+                response = _airCraftService.UpdateImageName(Convert.ToInt32(form["AircraftId"]), fileName);
             }
 
             return Ok(response);

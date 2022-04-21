@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataModels.VM.AircraftEquipment
@@ -25,5 +26,10 @@ namespace DataModels.VM.AircraftEquipment
         public Nullable<long> CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
+    }
+
+    public class AircraftEquipmentTimeRequestVM
+    {
+        public List<AircraftEquipmentTimeVM> Data { get; set; }
     }
 }

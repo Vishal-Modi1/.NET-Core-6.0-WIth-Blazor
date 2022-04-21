@@ -6,6 +6,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 
@@ -36,6 +37,10 @@ builder.Services.AddSwaggerGen(c =>
                         new string[] {}
                     }
                 });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
 });
 
 #region
@@ -91,7 +96,6 @@ var app = builder.Build();
 if (_environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    
 }
 
 string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory);
@@ -99,6 +103,7 @@ Directory.CreateDirectory(uploadsPath);
 
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.UserProfileImage);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.Document);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));

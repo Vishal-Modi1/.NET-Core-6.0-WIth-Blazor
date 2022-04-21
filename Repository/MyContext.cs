@@ -1,9 +1,12 @@
 ﻿using DataModels.Entities;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
+using DataModels.VM.BillingHistory;
 using DataModels.VM.Company;
+using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Reservation;
+using DataModels.VM.SubscriptionPlan;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +31,7 @@ namespace Repository
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
                    .SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile("configuration.json")
+                   .AddJsonFile($"appsettings.{System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
                    .Build();
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseSqlServer(connectionString);
@@ -48,7 +51,13 @@ namespace Repository
 
         public DbSet<Country> Countries { get; set; }
 
+        public DbSet<BillingHistory> BillingHistories { get; set; }
+
         public DbSet<UserDataVM> UserSearchList { get; set; }
+
+        public DbSet<BillingHistoryDataVM> BillingHistoryList { get; set; }
+
+        public DbSet<SubscriptionPlanDataVM> SubscriptionPlanData { get; set; }
 
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
@@ -87,6 +96,7 @@ namespace Repository
 
         public DbSet<CompanyVM> CompanyData { get; set; }
         public DbSet<ReservationDataVM> ReservationDataVM { get; set; }
+        public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 
@@ -100,6 +110,11 @@ namespace Repository
         public DbSet<AircraftScheduleDetail> AircraftScheduleDetails { get; set; }
 
         public DbSet<AircraftScheduleHobbsTime> AircraftScheduleHobbsTimes { get; set; }
+    
+        public DbSet<Document> Documents { get; set; }
+        public DbSet<DocumentTag> DocumentTags { get; set; }
+
+        public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
     }
 
 }

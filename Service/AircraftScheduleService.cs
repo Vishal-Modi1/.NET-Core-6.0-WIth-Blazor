@@ -81,7 +81,7 @@ namespace Service
                 {
                     UserPreference aircraftData = userPreferencesList.Where(p => p.PreferenceType == PreferenceType.Aircraft.ToString()).FirstOrDefault();
 
-                    if (aircraftData == null)
+                    if (aircraftData == null || string.IsNullOrWhiteSpace(aircraftData.PreferencesIds))
                     {
                         continue;
                     }
@@ -93,7 +93,7 @@ namespace Service
                 {
                     UserPreference activityType = userPreferencesList.Where(p => p.PreferenceType == PreferenceType.ScheduleActivityType.ToString()).FirstOrDefault();
 
-                    if (activityType == null)
+                    if (activityType == null || string.IsNullOrWhiteSpace(activityType.PreferencesIds))
                     {
                         continue;
                     }
@@ -255,11 +255,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(long id)
+        public CurrentResponse Delete(long id, long deletedBy)
         {
             try
             {
-                _aircraftScheduleRepository.Delete(id);
+                _aircraftScheduleRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully.");
 
                 return _currentResponse;
@@ -371,6 +371,7 @@ namespace Service
             schedulerVM.InternalComments = aircraftSchedule.PrivateComments;
             schedulerVM.FlightRoutes = aircraftSchedule.FlightRoutes;
             schedulerVM.IsStandBy = aircraftSchedule.StandBy;
+            schedulerVM.CreatedBy = aircraftSchedule.CreatedBy;
 
             return schedulerVM;
         }

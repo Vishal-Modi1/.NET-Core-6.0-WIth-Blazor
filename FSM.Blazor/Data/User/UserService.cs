@@ -1,8 +1,10 @@
 ﻿using DataModels.VM.User;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
+using DataModels.VM.UserPreference;
 
 namespace FSM.Blazor.Data.User
 {
@@ -10,9 +12,9 @@ namespace FSM.Blazor.Data.User
     {
         private readonly HttpCaller _httpCaller;
 
-        public UserService(AuthenticationStateProvider authenticationStateProvider)
+        public UserService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<List<UserDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
@@ -105,6 +107,21 @@ namespace FSM.Blazor.Data.User
             return response;
         }
 
+        public async Task<List<UserPreferenceVM>> FindMyPreferencesById(IHttpClientFactory httpClient)
+        {
+            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id"));
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findmypreferencesbyid?id={id}");
+
+            List<UserPreferenceVM> listUserPreferences = new List<UserPreferenceVM>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                listUserPreferences = JsonConvert.DeserializeObject<List<UserPreferenceVM>>(response.Data.ToString());
+            }
+
+            return listUserPreferences;
+        }
+
         public async Task<CurrentResponse> UploadProfileImageAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
         {
             string url = $"user/uploadprofileimage";
@@ -112,6 +129,21 @@ namespace FSM.Blazor.Data.User
             CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
 
             return response;
+        }
+
+        public async Task<List<DropDownLargeValues>> ListDropDownValuesByCompanyId(IHttpClientFactory httpClient, int companyId)
+        {
+            string url = $"user/listdropdownvaluesbycompanyid?companyId={companyId}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            List<DropDownLargeValues> usersList = new List<DropDownLargeValues>();
+
+            if(response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                usersList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return usersList;
         }
     }
 }

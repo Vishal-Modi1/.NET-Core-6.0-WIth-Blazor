@@ -11,7 +11,7 @@ namespace Service.Interface
         CurrentResponse ListAllByCompanyId(int companyId);
         CurrentResponse Edit(AircraftVM airCraftVM);
         CurrentResponse GetDetails(int id, int companyId);
-        CurrentResponse Delete(int id);
+        CurrentResponse Delete(int id, long deletedBy);
         CurrentResponse UpdateImageName(int id, string imageName);
         CurrentResponse IsAirCraftExist(int id, string tailNo);
         CurrentResponse GetFiltersValue(int companyId);

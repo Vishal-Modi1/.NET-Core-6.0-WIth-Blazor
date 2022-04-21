@@ -1,10 +1,13 @@
 using Configuration;
+using DataModels.Constants;
 using FSM.Blazor.CustomServicesExtensions;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using Radzen;
 using Syncfusion.Blazor;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 var _configurationSettings = ConfigurationSettings.Instance;
@@ -78,8 +81,27 @@ app.UseExceptionHandler(
                 }
             );
 
+app.UseExceptionHandler(c => c.Run(async context =>
+{
+    var exception = context.Features
+        .Get<IExceptionHandlerPathFeature>()
+        .Error;
+
+    var response = new { error = exception.Message };
+
+    if(exception.Message == HttpStatusCode.Unauthorized.ToString())
+    {
+        context.Response.Redirect("/Login");
+    }
+}));
+
+
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(ConfigurationSettings.Instance.SyncFusionLicenseKey);
 
+string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory);
+Directory.CreateDirectory(uploadsPath);
+
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.TempDocument);
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

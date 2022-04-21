@@ -7,6 +7,8 @@ namespace DataModels.VM.Aircraft
         public long Id { get; set; }
         public string TailNo { get; set; }
         public string ImageName { get; set; }
+
+        public int CompanyId { get; set; }
         [NotMapped]
         public string ImagePath { get; set; }
         public string Year { get; set; }

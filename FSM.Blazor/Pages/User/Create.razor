@@ -1,4 +1,5 @@
 ﻿@using DataModels.VM.User
+@using DataModels.Enums
 @using FSM.Blazor.Data.User
 
 @inject Radzen.DialogService dialogService
@@ -60,10 +61,19 @@
                 <RadzenLabel Text="User Role" />
             </div>
             <div class="col-md-4">
-                <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+
+                @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
+                {
+                    <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
                                 Placeholder="Select Role" Data=@userData.UserRoles TextProperty="Name"
                                 ValueProperty="Id" Name="RoleId" @bind-Value="@(userData.RoleId)" />
-                <RadzenRequiredValidator DefaultValue="0" Component="RoleId" Text="Please select role" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+                    <RadzenRequiredValidator DefaultValue="0" Component="RoleId" Text="Please select role" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
+                }
+                else
+                {
+                    <RadzenTextBox style="width: 100%;" Name="RoleName" @bind-Value="@userData.Role" Disabled="true" />
+                    <input type="hidden" id="RoleId" value="@userData.RoleId" />
+                }
             </div>
 
             @if (!userData.IsFromMyProfile)
@@ -72,7 +82,7 @@
                     <RadzenLabel Text="Company" />
                 </div>
                 <div class="col-md-4">
-                    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                     {
                         <RadzenDropDown @bind-Value="@(userData.CompanyId)" Style="width:100%;" TValue="int?"
                                 TextProperty="Name" Placeholder="Select Company"

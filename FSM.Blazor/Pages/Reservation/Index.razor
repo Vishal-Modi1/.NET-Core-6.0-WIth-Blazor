@@ -6,15 +6,22 @@
 @using Configuration;
 @using Syncfusion.Blazor.Popups;
 @using FSM.Blazor.Pages.Scheduler;
+@using Syncfusion.Blazor.Spinner;
 
 @inject ReservationService ReservationService
 @layout MainLayout
 @inject DialogService DialogService
 @inject NavigationManager NavManager
 @inject AircraftSchedulerService AircraftSchedulerService
+@inject AuthenticationStateProvider authenticationStateProvider
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
+<style>
+    .e-dialog {
+        max-height: 588px !important;
+    }
+</style>
 
 
 <div class="row mb-4">
@@ -23,11 +30,16 @@
     </div>
 </div>
 
+<div id="container">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
 <div class="row">
 
-    @if (_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result)
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
-         <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
+        <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
                         TextProperty="Name" Placeholder="Select Company" style="width: 100%;"
                         Data="@reservationFilterVM.Companies" Change="@(args =>  grid.Reload())"
@@ -36,12 +48,12 @@
         </div>
     }
 
-    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
     </div>
 
-    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
 
         <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
                           @bind-Value="@startDate" Placeholder="Select Start Date"
@@ -49,7 +61,7 @@
                           DateFormat="dd/MM/yyyy" Class="w-100" />
     </div>
 
-    <div class="@(_currentUserPermissionManager.IsSuperAdmin(AuthStat).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
 
         <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
                           @bind-Value="@endDate" Placeholder="Select End Date"
@@ -75,10 +87,36 @@
         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="ScheduleTitle" Filterable="false" Title="Title"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="StartDateTime" Filterable="false" Title="From"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To"></RadzenDataGridColumn>
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="ReservationId" Sortable="false" Filterable="false" Title="Reservation Id"></RadzenDataGridColumn>
+
+        @if (AircraftId.GetValueOrDefault() == 0)
+        {
+            <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
+        }
+        
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="From" >
+            <Template Context="value">
+
+                @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To">
+            <Template Context="value">
+
+                @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")
+
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Width="90px" TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="Flight Hours" TextAlign="TextAlign.Center">
+            <Template Context="value">
+
+                @value.AirFrameTime.GetValueOrDefault()
+
+            </Template>
+        </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="FlightStatus" Filterable="false" Title="FlightStatus" TextAlign="TextAlign.Center">
             <Template Context="value">
@@ -111,19 +149,18 @@
 </RadzenDataGrid>
 
 
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="575px" ShowCloseIcon="true">
+<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" ShowCloseIcon="true">
 
     <DialogTemplates>
         <Header> <h5>Schedule Appointment</h5> </Header>
         <Content>
 
             <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-            InitializeValuesParentEvent="@InitializeValues"
-            OpenDialogParentEvent = "@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
-            RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-            CloseDialogParentEvent = "@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
-            ></Create>
-           
+                    InitializeValuesParentEvent="@InitializeValues"
+                    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
+                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+
         </Content>
     </DialogTemplates>
 

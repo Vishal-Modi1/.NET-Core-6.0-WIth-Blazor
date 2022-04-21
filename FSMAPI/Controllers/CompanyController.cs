@@ -40,6 +40,15 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("listdropdownvalues")]
+        public IActionResult ListDropDownValues()
+        {
+            CurrentResponse response = _companyService.ListDropDownValues();
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [Route("create")]
         public IActionResult Create(CompanyVM companyVM)
@@ -72,7 +81,9 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            CurrentResponse response = _companyService.Delete(id);
+            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
+            CurrentResponse response = _companyService.Delete(id, deletedBy);
 
             return Ok(response);
         }

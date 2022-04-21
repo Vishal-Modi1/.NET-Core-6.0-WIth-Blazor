@@ -113,11 +113,30 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(int id)
+        public CurrentResponse ListDropDownValues()
         {
             try
             {
-                _companyRepository.Delete(id);
+                List<DropDownValues> companiesList = _companyRepository.ListDropDownValues();
+
+                CreateResponse(companiesList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse Delete(int id, long deletedBy)
+        {
+            try
+            {
+                _companyRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Company deleted successfully.");
 
                 return _currentResponse;
@@ -145,6 +164,8 @@ namespace Service
 
             return _currentResponse;
         }
+
+        #region Object Mapper
 
         private CompanyVM ToBusinessObject(Company company)
         {
@@ -182,11 +203,13 @@ namespace Service
             return company;
         }
 
+        #endregion
+
         private bool IsCompanyExist(CompanyVM companyVM)
         {
             Company company = _companyRepository.FindByCondition(p => p.Name == companyVM.Name && p.Id != companyVM.Id);
 
-            if(company == null)
+            if (company == null)
             {
                 return false;
             }
