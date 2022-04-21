@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
 using DataModels.VM.MyAccount;
+using Microsoft.AspNetCore.Components;
 using DataModels.VM.UserPreference;
 
 namespace FSM.Blazor.Data.MyAccount
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.MyAccount
     {
         private readonly HttpCaller _httpCaller;
 
-        public MyAccountService(AuthenticationStateProvider authenticationStateProvider)
+        public MyAccountService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<CurrentResponse> ChangePassword(IHttpClientFactory httpClient, ChangePasswordVM changePasswordVM)

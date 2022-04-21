@@ -2,6 +2,7 @@
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
+using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.SubscriptionPlan
@@ -10,9 +11,9 @@ namespace FSM.Blazor.Data.SubscriptionPlan
     {
         private readonly HttpCaller _httpCaller;
 
-        public SubscriptionPlanService(AuthenticationStateProvider authenticationStateProvider)
+        public SubscriptionPlanService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<List<SubscriptionPlanDataVM>> ListAsync(IHttpClientFactory httpClient, SubscriptionDataTableParams datatableParams)

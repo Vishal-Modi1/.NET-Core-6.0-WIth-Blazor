@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.Company;
+using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
@@ -10,9 +11,9 @@ namespace FSM.Blazor.Data.Company
     {
         private readonly HttpCaller _httpCaller;
 
-        public CompanyService(AuthenticationStateProvider authenticationStateProvider)
+        public CompanyService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<List<CompanyVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)

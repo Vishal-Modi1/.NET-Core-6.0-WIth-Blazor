@@ -3,6 +3,7 @@
     public class CustomClaimTypes
     {
         public const string AccessToken = "AccessToken";
+        public const string RefreshToken = "RefreshToken";
         public const string UserId = "Id";
         public const string Permissions = "Permissions";
         public const string CompanyName = "CompanyName";

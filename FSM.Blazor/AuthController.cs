@@ -82,6 +82,7 @@ namespace FSM.Blazor
                   new Claim(CustomClaimTypes.FullName, loginResponse.FirstName + " " + loginResponse.LastName),
                   new Claim(ClaimTypes.Email, loginResponse.Email),
                   new Claim(CustomClaimTypes.AccessToken, loginResponse.AccessToken),
+                  new Claim(CustomClaimTypes.RefreshToken, loginResponse.RefreshToken),
                   new Claim(CustomClaimTypes.UserId, loginResponse.Id.ToString()),
                   new Claim(ClaimTypes.Role, loginResponse.RoleId.ToString()),
                   new Claim(CustomClaimTypes.CompanyName, loginResponse.CompanyName == null ? "" : loginResponse.CompanyName),

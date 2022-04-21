@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Document;
 using DataModels.VM.Common;
+using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.Document
@@ -10,9 +11,9 @@ namespace FSM.Blazor.Data.Document
     {
         private readonly HttpCaller _httpCaller;
 
-        public DocumentService(AuthenticationStateProvider authenticationStateProvider)
+        public DocumentService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<DocumentFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)

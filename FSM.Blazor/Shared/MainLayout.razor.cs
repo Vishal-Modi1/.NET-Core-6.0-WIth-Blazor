@@ -3,9 +3,8 @@ using FSM.Blazor.Pages.MyAccount;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Radzen;
-using DataModels.Enums;
 using Microsoft.Extensions.Caching.Memory;
+using Radzen;
 
 namespace FSM.Blazor.Shared
 {

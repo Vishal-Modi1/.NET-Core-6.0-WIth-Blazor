@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.UserRolePermission;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using DataModels.VM.Common;
 
@@ -10,9 +11,9 @@ namespace FSM.Blazor.Data.UserRolePermission
     {
         private readonly HttpCaller _httpCaller;
 
-        public UserRolePermissionService(AuthenticationStateProvider authenticationStateProvider)
+        public UserRolePermissionService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<UserRolePermissionFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)

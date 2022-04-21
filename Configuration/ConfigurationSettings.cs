@@ -57,6 +57,11 @@ namespace Configuration
             get => Convert.ToDouble(configuration.GetValue<string>("JWTExpireDays"));
         }
 
+        public double JWTRefreshTokenExpireDays
+        {
+            get => Convert.ToDouble(configuration.GetValue<string>("JWTRefreshTokenExpireDays"));
+        }
+
         public  string JWTIssuer
         {
             get => configuration.GetValue<string>("JWTIssuer");

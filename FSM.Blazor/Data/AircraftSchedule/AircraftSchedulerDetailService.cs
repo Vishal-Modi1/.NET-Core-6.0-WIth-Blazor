@@ -5,6 +5,7 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Utilities;
+using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Data.AircraftSchedule
 {
@@ -12,9 +13,9 @@ namespace FSM.Blazor.Data.AircraftSchedule
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftSchedulerDetailService(AuthenticationStateProvider authenticationStateProvider)
+        public AircraftSchedulerDetailService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<CurrentResponse> CheckOut(IHttpClientFactory httpClient, long scheduleId)

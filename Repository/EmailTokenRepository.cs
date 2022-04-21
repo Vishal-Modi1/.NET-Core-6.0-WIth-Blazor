@@ -1,7 +1,9 @@
 ﻿using DataModels.Entities;
 using Repository.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Repository
 {
@@ -19,6 +21,16 @@ namespace Repository
 
                 _myContext.EmailTokens.Add(emailToken);
                 _myContext.SaveChanges();
+
+                return emailToken;
+            }
+        }
+
+        public EmailToken FindByCondition(Expression<Func<EmailToken, bool>> predicate)
+        {
+            using (_myContext = new MyContext())
+            {
+                EmailToken emailToken = _myContext.EmailTokens.Where(predicate).FirstOrDefault();
 
                 return emailToken;
             }

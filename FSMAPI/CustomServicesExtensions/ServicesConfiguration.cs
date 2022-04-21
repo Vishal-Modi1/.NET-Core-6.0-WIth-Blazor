@@ -34,6 +34,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddScoped<IModuleDetailsService, ModuleDetailsService>();
             services.AddScoped<IBillingHistoryService, BillingHistoryService>();
+            services.AddScoped<IEmailTokenService, EmailTokenService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)

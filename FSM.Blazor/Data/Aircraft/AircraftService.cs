@@ -16,9 +16,9 @@ namespace FSM.Blazor.Data.Aircraft
         [CascadingParameter]
         public Error? Error { get; set; }
 
-        public AircraftService(AuthenticationStateProvider authenticationStateProvider)
+        public AircraftService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(authenticationStateProvider);
+            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
         }
 
         public async Task<List<AircraftDataVM>> ListAsync(IHttpClientFactory httpClient, AircraftDatatableParams datatableParams)
