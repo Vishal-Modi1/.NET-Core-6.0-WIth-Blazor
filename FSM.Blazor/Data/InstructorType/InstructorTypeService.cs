@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.InstructorType
 {
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.InstructorType
     {
         private readonly HttpCaller _httpCaller;
 
-        public InstructorTypeService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public InstructorTypeService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<List<InstructorTypeVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)

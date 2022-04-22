@@ -27,7 +27,6 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-
         private CurrentUserPermissionManager(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;

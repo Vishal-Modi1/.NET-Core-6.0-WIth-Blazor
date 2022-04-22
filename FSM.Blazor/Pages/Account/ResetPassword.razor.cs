@@ -34,7 +34,7 @@ namespace FSM.Blazor.Pages.Account
         NotificationMessage message;
         ResetPasswordVM resetPasswordVM { get; set; }
 
-        protected override async void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();
 

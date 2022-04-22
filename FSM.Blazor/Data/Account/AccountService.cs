@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using Newtonsoft.Json;
 using DataModels.VM.Account;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Account
 {
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.Account
     {
         private readonly HttpCaller _httpCaller;
 
-        public AccountService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AccountService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<CurrentResponse> ForgetPasswordAsync(IHttpClientFactory httpClient, ForgotPasswordVM forgotPasswordVM)

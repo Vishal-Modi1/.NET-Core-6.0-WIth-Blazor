@@ -18,7 +18,7 @@ namespace FSM.Blazor.Pages.Account
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
-        protected override async void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();
             

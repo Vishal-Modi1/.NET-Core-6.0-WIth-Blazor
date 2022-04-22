@@ -23,7 +23,7 @@ namespace FSM.Blazor.Pages.Account
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             ForgotPasswordVM = new ForgotPasswordVM();
             base.OnInitialized();

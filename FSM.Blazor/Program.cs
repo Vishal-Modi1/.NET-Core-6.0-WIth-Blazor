@@ -48,6 +48,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         {
             options.Cookie.Name = "myauth";
             options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.MaxAge = TimeSpan.FromSeconds(5000);
+          //  options.Cookie.Expiration = DateTime.UtcNow.AddSeconds(50);
             // Add this new line
             options.EventsType = typeof(CookieAuthenticationEvents);    // <---
         });
@@ -70,16 +72,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseExceptionHandler(
-                options =>
-                {
-                    options.Run(
-                        async context =>
-                        {
-                            
-                        });
-                }
-            );
 
 app.UseExceptionHandler(c => c.Run(async context =>
 {
@@ -91,9 +83,16 @@ app.UseExceptionHandler(c => c.Run(async context =>
 
     if(exception.Message == HttpStatusCode.Unauthorized.ToString())
     {
+        context.Response.Cookies.Delete("myauth");
         context.Response.Redirect("/Login");
     }
 }));
+
+app.UseStatusCodePages(async statusCodeContext =>
+{
+    // using static System.Net.Mime.MediaTypeNames;
+    
+});
 
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(ConfigurationSettings.Instance.SyncFusionLicenseKey);

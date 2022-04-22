@@ -4,6 +4,7 @@ using DataModels.VM.Document;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Document
 {
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.Document
     {
         private readonly HttpCaller _httpCaller;
 
-        public DocumentService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public DocumentService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<DocumentFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)

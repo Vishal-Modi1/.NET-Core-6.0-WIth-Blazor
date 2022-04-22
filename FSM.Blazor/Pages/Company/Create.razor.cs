@@ -39,7 +39,7 @@ namespace FSM.Blazor.Pages.Company
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
                 NotificationService.Notify(message);
             }
-            else if (((int)response.Status) == 200)
+            else if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 dialogService.Close(true);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);

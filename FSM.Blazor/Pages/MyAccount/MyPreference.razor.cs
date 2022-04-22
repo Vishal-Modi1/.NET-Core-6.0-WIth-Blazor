@@ -25,7 +25,7 @@ namespace FSM.Blazor.Pages.MyAccount
         int preferenceTypeId = 0;
         IEnumerable<string> multipleValues = new string[] { "" };
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             int i = 0;
             foreach (var item in Enum.GetNames(typeof(PreferenceType)).ToList())

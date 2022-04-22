@@ -13,6 +13,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen.Blazor;
 using Microsoft.AspNetCore.Components.Web;
+using FSM.Blazor.Data.Common;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -50,8 +51,17 @@ namespace FSM.Blazor.Pages.Document
         List<string> selectedTagsList = new List<string>();
         RadzenTemplateForm<DocumentVM> form;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
+            bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
+
+            if (!isValid)
+            {
+                NavigationManager.NavigateTo("/Login?TokenExpired=true");
+            }
+
             if (documentData.UserId > 0)
             {
                 userId = documentData.UserId;
@@ -64,7 +74,6 @@ namespace FSM.Blazor.Pages.Document
                 OnChange(documentData.CompanyId);
             }
 
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             maxSizeInMB = ConfigurationSettings.Instance.MaxDocumentUploadSize / (1024 * 1024);
             errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";

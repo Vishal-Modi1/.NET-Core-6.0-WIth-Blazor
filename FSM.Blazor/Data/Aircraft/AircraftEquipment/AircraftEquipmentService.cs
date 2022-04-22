@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
+using Microsoft.JSInterop;
 using DataModels.VM.AircraftEquipment;
 
 namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftEquipmentService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AircraftEquipmentService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<List<AircraftEquipmentDataVM>> ListAsync(IHttpClientFactory httpClient, AircraftEquipmentDatatableParams datatableParams)

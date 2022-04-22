@@ -46,7 +46,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         string timeZone = "";
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
             timeZone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);

@@ -6,6 +6,7 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.Common
@@ -16,9 +17,9 @@ namespace FSM.Blazor.Data.Common
         private readonly CurrentUserPermissionManager _currentUserPermissionManager;
         private readonly IHttpClientFactory _httpClient;
 
-        public MenuService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider, IHttpClientFactory httpClient, IMemoryCache memoryCache)
+        public MenuService(AuthenticationStateProvider authenticationStateProvider, IHttpClientFactory httpClient, IMemoryCache memoryCache)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
             _httpClient = httpClient;
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
         }
@@ -45,6 +46,11 @@ namespace FSM.Blazor.Data.Common
                         _currentUserPermissionManager.AddInCache(Convert.ToInt32(claimValue), userRolePermissionsList);
                     }
                 }
+            }
+
+            if(userRolePermissionsList == null)
+            {
+                return new List<MenuItem>();
             }
 
             userRolePermissionsList = userRolePermissionsList.Where(p => p.IsAllowed == true && p.PermissionType == PermissionType.View.ToString()).ToList();

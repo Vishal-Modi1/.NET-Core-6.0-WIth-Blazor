@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
+using Microsoft.JSInterop;
 using DataModels.VM.UserPreference;
 
 namespace FSM.Blazor.Data.User
@@ -12,9 +13,9 @@ namespace FSM.Blazor.Data.User
     {
         private readonly HttpCaller _httpCaller;
 
-        public UserService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public UserService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<List<UserDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)

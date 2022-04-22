@@ -1,7 +1,6 @@
 ﻿using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.ModuleDetail
@@ -10,9 +9,9 @@ namespace FSM.Blazor.Data.ModuleDetail
     {
         private readonly HttpCaller _httpCaller;
 
-        public ModuleDetailsService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public ModuleDetailsService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<List<DropDownValues>> ListDropDownValues(IHttpClientFactory httpClient)

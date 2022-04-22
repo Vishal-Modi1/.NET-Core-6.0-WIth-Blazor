@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Shared;
 using DE = DataModels.Entities;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Aircraft
 {
@@ -16,9 +17,9 @@ namespace FSM.Blazor.Data.Aircraft
         [CascadingParameter]
         public Error? Error { get; set; }
 
-        public AircraftService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AircraftService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<List<AircraftDataVM>> ListAsync(IHttpClientFactory httpClient, AircraftDatatableParams datatableParams)

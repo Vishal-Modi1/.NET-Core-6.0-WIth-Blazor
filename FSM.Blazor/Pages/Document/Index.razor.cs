@@ -12,6 +12,7 @@ using Microsoft.JSInterop;
 using System.Net;
 using DataModels.Enums;
 using DataModels.Constants;
+using System.Net.Http.Headers;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -52,13 +53,17 @@ namespace FSM.Blazor.Pages.Document
         DocumentFilterVM documentFilterVM;
         string moduleName = "Document";
         private string? result;
-     
+
         string[] imageFormats = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
-        string[] previewSupportedFormats = new string[] { ".pdf",".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
+        string[] previewSupportedFormats = new string[] { ".pdf", ".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
+        BaseComponent.BaseComponent baseComponent;
+        HttpCaller httpCaller = new HttpCaller();
 
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            
+            ValidateTokenAsync();
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -95,6 +100,8 @@ namespace FSM.Blazor.Pages.Document
 
         async Task DocumentCreateDialog(Guid? id, string title, bool isCreate)
         {
+            ValidateTokenAsync();
+
             if (isCreate)
             {
                 SetAddNewButtonState(true);
@@ -106,7 +113,7 @@ namespace FSM.Blazor.Pages.Document
 
             DocumentVM documentData = await DocumentService.GetDetailsAsync(_httpClient, id == null ? Guid.Empty : id.Value);
             documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
-            
+
             string height = "420px";
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
@@ -127,7 +134,7 @@ namespace FSM.Blazor.Pages.Document
             }
             else
             {
-                SetEditButtonState(id.Value,false);
+                SetEditButtonState(id.Value, false);
             }
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName))
@@ -222,12 +229,12 @@ namespace FSM.Blazor.Pages.Document
             string fileName = documentDataVM.DisplayName;
             bool hasExtension = Path.HasExtension(documentDataVM.DisplayName);
 
-            if(!hasExtension)
+            if (!hasExtension)
             {
                 fileName += "." + documentDataVM.Type;
             }
 
-            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName , streamRef, id.ToString());
+            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef, id.ToString());
 
             objRef = DotNetObjectReference.Create(this);
             result = await jsFile.InvokeAsync<string>("ManageDocumentDownloadResponse", objRef, id.ToString());
@@ -261,6 +268,17 @@ namespace FSM.Blazor.Pages.Document
         {
             isBusyDeleteButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
+        }
+
+        private async Task ValidateTokenAsync()
+        {
+            string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
+            bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
+
+            if (!isValid)
+            {
+                NavManager.NavigateTo("/Login?TokenExpired=true");
+            }
         }
     }
 }

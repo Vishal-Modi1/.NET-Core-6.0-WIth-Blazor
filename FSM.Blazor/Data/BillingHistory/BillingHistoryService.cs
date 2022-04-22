@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.BillingHistory;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
+using Microsoft.JSInterop;
 using DataModels.VM.Common;
 
 namespace FSM.Blazor.Data.BillingHistory
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.BillingHistory
     {
         private readonly HttpCaller _httpCaller;
 
-        public BillingHistoryService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public BillingHistoryService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<List<BillingHistoryDataVM>> ListAsync(IHttpClientFactory httpClient, BillingHistoryDatatableParams datatableParams)

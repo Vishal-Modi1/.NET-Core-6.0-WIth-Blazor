@@ -31,7 +31,7 @@ namespace FSM.Blazor.Pages.User
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isInstructorTypeDropdownVisible = false;
         bool isBusy;
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
             isInstructorTypeDropdownVisible = userData.IsInstructor;

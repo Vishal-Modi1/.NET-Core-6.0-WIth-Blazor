@@ -41,6 +41,7 @@ namespace FSM.Blazor.CustomServicesExtensions
             builder.Services.AddScoped<SubscriptionPlanService>();
             builder.Services.AddScoped<ModuleDetailsService>();
             builder.Services.AddScoped<BillingHistoryService>();
+            builder.Services.AddScoped<TokenValidatorService>();
         }
     }
 }

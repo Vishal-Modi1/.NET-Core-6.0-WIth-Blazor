@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -31,9 +32,18 @@ namespace FSM.Blazor
 
         private static readonly AuthenticationProperties COOKIE_EXPIRES = new AuthenticationProperties()
         {
-            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+            ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(5000),
             IsPersistent = true,
         };
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/auth/test")]
+        public async Task<IActionResult> SignInPost1()
+        {
+            return Ok("");
+        }
 
         [HttpPost]
         [Route("api/auth/signin")]
@@ -101,7 +111,8 @@ namespace FSM.Blazor
 
                 var authProperties = COOKIE_EXPIRES;
 
-                await HttpContext.SignInAsync(new ClaimsPrincipal(userPrincipal));
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(userPrincipal), authProperties);
             }
             catch (Exception ex)
             {

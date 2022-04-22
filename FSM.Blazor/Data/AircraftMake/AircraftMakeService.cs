@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
 using DE = DataModels.Entities;
+using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Data.AircraftMake
@@ -11,9 +12,9 @@ namespace FSM.Blazor.Data.AircraftMake
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftMakeService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AircraftMakeService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager,authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
         public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, DE.AircraftMake aircraftMake)
