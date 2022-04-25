@@ -86,14 +86,28 @@
 @if (isDisplayScheduler)
 {
     <div class="row">
-              <div class="col-md-2 align-items-center d-flex" style="margin-right:-96px">
-                <RadzenLabel Text="Select aircraft: " Style="font-weight:bold" />
+        <div class="col-md-2 align-items-center d-flex" style="margin-right:-96px">
+            <RadzenLabel Text="Select aircraft: " Style="font-weight:bold" />
         </div>
         <div class="col-md-4">
             <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                         Multiple="true" Placeholder="Select aircraft" Data=@allAircraftList TextProperty="TailNo" ValueProperty="TailNo"
                         Name="Aircraft" Class="w-100" @bind-Value=@multipleValues Change="@(args => OnAircraftsListChange())" />
         </div>
+
+@*
+        <div class="row mb-4">
+            <div class="col">
+                <h2 style="float:left">Manage Aircrafts Details</h2>
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+                {
+                    <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" BusyText="Add New ..." IsBusy=@isBusyAddNewButton
+                          ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
+                }
+
+            </div>
+        </div>*@
     </div>
 
     <SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"

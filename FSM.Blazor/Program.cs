@@ -81,18 +81,18 @@ app.UseExceptionHandler(c => c.Run(async context =>
 
     var response = new { error = exception.Message };
 
-    if(exception.Message == HttpStatusCode.Unauthorized.ToString())
+    if (exception.Message == HttpStatusCode.Unauthorized.ToString())
     {
         context.Response.Cookies.Delete("myauth");
-        context.Response.Redirect("/Login");
+        context.Response.Redirect("/Login?TokenExpired=true");
     }
 }));
 
-app.UseStatusCodePages(async statusCodeContext =>
-{
-    // using static System.Net.Mime.MediaTypeNames;
-    
-});
+//app.UseStatusCodePages(async statusCodeContext =>
+//{
+//    // using static System.Net.Mime.MediaTypeNames;
+
+//});
 
 
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(ConfigurationSettings.Instance.SyncFusionLicenseKey);

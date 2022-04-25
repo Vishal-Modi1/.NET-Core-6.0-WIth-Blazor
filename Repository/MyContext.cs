@@ -115,6 +115,7 @@ namespace Repository
         public DbSet<DocumentTag> DocumentTags { get; set; }
 
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
+        public DbSet<CompanyService> CompanyServices { get; set; }
     }
 
 }

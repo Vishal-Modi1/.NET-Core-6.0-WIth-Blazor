@@ -27,6 +27,24 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/****** Object:  Table [dbo].[CompanyServices]    Script Date: 22-04-2022 11:37:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CompanyServices](
+	[Id] [smallint] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](250) NULL,
+ CONSTRAINT [PK_CompanyServices] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /****** Object:  Table [dbo].[AirCraftEquipments]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO
@@ -241,7 +259,6 @@ CREATE TABLE [dbo].[Companies](
 	[Address] [varchar](300) NOT NULL,
 	[ContactNo] [varchar](20) NULL,
 	[IsActive] [bit] NOT NULL,
-	[TimeZone] varchar(100) NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
 	[CreatedBy] [bigint] NOT NULL,
@@ -249,6 +266,10 @@ CREATE TABLE [dbo].[Companies](
 	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,
 	[DeletedBy] [bigint] NULL,
+	[TimeZone] [varchar](100) NOT NULL,
+	[Website] [varchar](50) NULL,
+	[PrimaryAirport] [varchar](200) NULL,
+	[PrimaryServiceId] [smallint] NULL,
  CONSTRAINT [PK_Companies] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -842,6 +863,9 @@ ALTER TABLE [dbo].[AircraftSchedules]  WITH CHECK ADD  CONSTRAINT [FK_AircraftSc
 REFERENCES [dbo].[Users] ([Id])
 GO
 ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersUpdatedBy]
+GO
+ALTER TABLE [dbo].[Companies]  WITH CHECK ADD FOREIGN KEY([PrimaryServiceId])
+REFERENCES [dbo].[CompanyServices] ([Id])
 GO
 ALTER TABLE [dbo].[Companies]  WITH CHECK ADD  CONSTRAINT [FK_Companies_Users] FOREIGN KEY([CreatedBy])
 REFERENCES [dbo].[Users] ([Id])
@@ -1708,7 +1732,7 @@ AS BEGIN
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
-
+GO
 
 CREATE Trigger [dbo].[Trg_Company_InsertUserRolePermission]
 On [dbo].[Companies]

@@ -49,6 +49,15 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("listcompanyservicesdropdownvalues")]
+        public IActionResult ListCompanyServicesDropDownValues()
+        {
+            CurrentResponse response = _companyService.ListCompanyServiceDropDownValues();
+
+            return Ok(response);
+        }
+
         [HttpPost]
         [Route("create")]
         public IActionResult Create(CompanyVM companyVM)

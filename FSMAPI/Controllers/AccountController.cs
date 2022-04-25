@@ -216,12 +216,12 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("istokenvalid")]
-        [Authorize]
-        public IActionResult ActivateAccount()
-        {
-            return Ok();
-        }
+        //[HttpGet]
+        //[Route("istokenvalid")]
+        //[Authorize]
+        //public IActionResult ActivateAccount()
+        //{
+        //    return Ok();
+        //}
     }
 }

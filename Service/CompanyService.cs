@@ -132,6 +132,25 @@ namespace Service
             }
         }
 
+        public CurrentResponse ListCompanyServiceDropDownValues()
+        {
+            try
+            {
+                List<DropDownValues> companiesServicesList = _companyRepository.ListCompanyServicesDropDownValues();
+
+                CreateResponse(companiesServicesList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse Delete(int id, long deletedBy)
         {
             try
@@ -176,6 +195,9 @@ namespace Service
             companyVM.Address = company.Address;
             companyVM.ContactNo = company.ContactNo;
             companyVM.TimeZone = company.TimeZone;
+            companyVM.Website = company.Website;
+            companyVM.PrimaryAirport = company.PrimaryAirport;
+            companyVM.PrimaryServiceId = company.PrimaryServiceId;
 
             return companyVM;
         }
@@ -189,6 +211,11 @@ namespace Service
             company.Address = companyVM.Address;
             company.ContactNo = companyVM.ContactNo;
             company.TimeZone = companyVM.TimeZone;
+            company.Website = companyVM.Website;
+            company.PrimaryAirport = companyVM.PrimaryAirport;
+            company.PrimaryServiceId = companyVM.PrimaryServiceId == null ? null : (short)companyVM.PrimaryServiceId;
+
+
             company.CreatedBy = companyVM.CreatedBy;
             company.UpdatedBy = companyVM.UpdatedBy;
             company.IsActive = true;

@@ -43,6 +43,21 @@ namespace Repository
             }
         }
 
+        public List<DropDownValues> ListCompanyServicesDropDownValues()
+        {
+            using (_myContext = new MyContext())
+            {
+                List<DropDownValues> companyServices = (from companyService in _myContext.CompanyServices
+                                                    select new DropDownValues()
+                                                    {
+                                                        Id = (int)companyService.Id,
+                                                        Name = companyService.Name
+                                                    }).ToList();
+
+                return companyServices;
+            }
+        }
+
         public Company Create(Company company)
         {
             using (_myContext = new MyContext())
@@ -66,6 +81,9 @@ namespace Repository
                     existingCompany.Address = company.Address;
                     existingCompany.ContactNo = company.ContactNo;
                     existingCompany.TimeZone = company.TimeZone;
+                    existingCompany.Website = company.Website;
+                    existingCompany.PrimaryAirport = company.PrimaryAirport;
+                    existingCompany.PrimaryServiceId = company.PrimaryServiceId;
 
                     existingCompany.UpdatedBy = company.UpdatedBy;
                     existingCompany.UpdatedOn = company.UpdatedOn;

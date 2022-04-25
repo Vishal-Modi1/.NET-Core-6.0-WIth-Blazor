@@ -1,0 +1,27 @@
+﻿@using Radzen.Blazor;
+
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject NotificationService NotificationService
+
+
+@if (isTokenValid)
+{
+    <p>
+        Your token has been expired! Please click on
+
+        <a href="javascript:void(0)"
+       @onclick="@((ui) => OpenDocumentPreviewPopupAsync())">
+            Refresh Link
+        </a>
+
+        to refresh the token.
+    </p>
+}
+else
+{
+    <p> Refresh token has been expired. Please Click on 
+        <a href="/Login">Login</a> 
+    </p>
+}
+

@@ -22,12 +22,20 @@ namespace FSM.Blazor.Pages.Company
         bool isLoading = false, isBusy = false;
 
         ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
+        int? primaryServiceId;
+
+        protected override Task OnInitializedAsync()
+        {
+            primaryServiceId = companyData.PrimaryServiceId;
+            return base.OnInitializedAsync();
+        }
 
         public async Task Submit(CompanyVM companyData)
         {
             isLoading = true;
             SetSaveButtonState(true);
 
+            companyData.PrimaryServiceId = primaryServiceId == null ? null : (short)primaryServiceId;
             CurrentResponse response = await CompanyService.SaveandUpdateAsync(_httpClient, companyData);
 
             SetSaveButtonState(false);

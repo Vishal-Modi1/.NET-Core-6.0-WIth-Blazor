@@ -22,5 +22,7 @@ namespace Repository.Interface
         void Delete(int id, long deletedBy);
 
         List<DropDownValues> ListDropDownValues();
+
+        List<DropDownValues> ListCompanyServicesDropDownValues();
     }
 }

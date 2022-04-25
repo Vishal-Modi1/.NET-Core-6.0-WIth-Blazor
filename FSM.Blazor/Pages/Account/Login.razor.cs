@@ -40,7 +40,7 @@ namespace FSM.Blazor.Pages.Account
             await authModule.InvokeVoidAsync("SignIn", loginVM.Email, loginVM.Password, "/");
 
             objRef = DotNetObjectReference.Create(this);
-            result = await authModule.InvokeAsync<string>("ManageLoginResponse", objRef, "");
+            result = await authModule.InvokeAsync<string>("SetDotNetObject", objRef, "");
         }
 
         [JSInvokable]

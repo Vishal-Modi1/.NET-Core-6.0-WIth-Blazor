@@ -15,12 +15,13 @@ namespace FSM.Blazor.Utilities
     public class HttpCaller : ComponentBase
     {
         private static AuthenticationStateProvider _authenticationStateProvider;
-        private ConfigurationSettings _configurationSettings = ConfigurationSettings.Instance;
-        public HttpContext _httpContext => new HttpContextAccessor().HttpContext;
 
         public HttpCaller(AuthenticationStateProvider authenticationStateProvider = null)
         {
-            _authenticationStateProvider = authenticationStateProvider;
+            if (_authenticationStateProvider == null)
+            {
+                _authenticationStateProvider = authenticationStateProvider;
+            }
         }
 
         public async Task<CurrentResponse> PostAsync(IHttpClientFactory _httpClient, string url, string jsonData)
@@ -51,30 +52,30 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-        public async Task<bool> IsTokenValid(IHttpClientFactory _httpClientFactory, string token)
-        {
-            try
-            {
-                var request = new HttpRequestMessage(HttpMethod.Get, $"account/IsTokenValid");
-                request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //public async Task<bool> IsTokenValid(IHttpClientFactory _httpClientFactory, string token)
+        //{
+        //    try
+        //    {
+        //        var request = new HttpRequestMessage(HttpMethod.Get, $"account/IsTokenValid");
+        //        request.Headers.Clear();
+        //        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var client = _httpClientFactory.CreateClient("FSMAPI");
+        //        var client = _httpClientFactory.CreateClient("FSMAPI");
 
-                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
+        //        HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    return false;
-                }
+        //        if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        //        {
+        //            return false;
+        //        }
 
-                return true;
-            }
-            catch (Exception exc)
-            {
-                return false;
-            }
-        }
+        //        return true;
+        //    }
+        //    catch (Exception exc)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         public async Task<CurrentResponse> PutAsync(IHttpClientFactory _httpClient, string url, string jsonData)
         {

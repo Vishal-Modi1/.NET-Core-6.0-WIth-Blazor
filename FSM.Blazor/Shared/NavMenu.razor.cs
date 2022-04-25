@@ -40,16 +40,18 @@ namespace FSM.Blazor.Shared
                 }
             }
 
-            menuItems = await MenuService.ListMenuItemsAsync(AuthStat);
-
             var cp = (await AuthStat).User;
 
-             fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
-                       .Select(c => c.Value).SingleOrDefault();
+            if (cp.Identity.IsAuthenticated)
+            {
+                menuItems = await MenuService.ListMenuItemsAsync(AuthStat);
 
-            profileImageURL = cp.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
-                       .Select(c => c.Value).SingleOrDefault();
+                fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                          .Select(c => c.Value).SingleOrDefault();
 
+                profileImageURL = cp.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
+                           .Select(c => c.Value).SingleOrDefault();
+            }
         }
     }
 }

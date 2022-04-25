@@ -42,8 +42,8 @@
                 <RadzenLabel Text="Timezone" />
             </div>
             <div class="col-md-8">
-                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-                AllowFiltering="true" Class="w-100"
+                <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
                                 Placeholder="Select timezone" Data=@timeZoneInfos TextProperty="DisplayName"
                                 ValueProperty="StandardName" Name="TimeZone" @bind-Value="@companyData.TimeZone" />
                 <RadzenRequiredValidator Component="TimeZone" Text="TimeZone is required" Popup="@isPopup" Style="position: relative" />
@@ -56,6 +56,38 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextBox style="width: 100%;" Name="ContactNo" @bind-Value="@companyData.ContactNo" Placeholder="Please enter contact" />
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Website" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@companyData.Website" Placeholder="Please enter website" />
+                <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Primary Airport" />
+            </div>
+            <div class="col-md-8">
+                <RadzenTextBox style="width: 100%;" Name="PrimaryAirport" @bind-Value="@companyData.PrimaryAirport" Placeholder="Please enter primary airport" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Primary Service" />
+            </div>
+            <div class="col-md-8">
+                <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Class="w-100"
+                                Placeholder="Select company service" Data=@companyData.PrimaryServicesList TextProperty="Name"
+                                ValueProperty="Id" Name="PrimaryServiceId" @bind-Value="@(primaryServiceId)" />
             </div>
         </div>
 

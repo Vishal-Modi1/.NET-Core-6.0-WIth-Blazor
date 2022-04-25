@@ -40,7 +40,6 @@ namespace FSM.Blazor.Shared
             }
         }
 
-
         protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();

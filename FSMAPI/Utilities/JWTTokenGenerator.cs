@@ -44,8 +44,6 @@ namespace FSMAPI.Utilities
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationSettings.JWTKey));
            DateTime expires = DateTime.Now.AddMinutes(_configurationSettings.JWTExpireDays);
 
-          //  DateTime expires = DateTime.Now.AddMinutes(_configurationSettings.JWTExpireDays);
-
             SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(

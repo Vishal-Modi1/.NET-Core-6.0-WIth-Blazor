@@ -71,5 +71,20 @@ namespace FSM.Blazor.Data.Company
 
             return companiesList;
         }
+
+        public async Task<List<DropDownValues>> ListCompanyServiceDropDownValues(IHttpClientFactory httpClient)
+        {
+            string url = $"company/listcompanyservicesdropdownvalues";
+
+            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            List<DropDownValues> companyServicesList = new List<DropDownValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                companyServicesList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+            }
+
+            return companyServicesList;
+        }
     }
 }

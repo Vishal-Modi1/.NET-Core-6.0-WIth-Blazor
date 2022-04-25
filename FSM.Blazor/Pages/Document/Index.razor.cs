@@ -63,7 +63,7 @@ namespace FSM.Blazor.Pages.Document
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
             
-            ValidateTokenAsync();
+          //  ValidateTokenAsync();
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -100,7 +100,7 @@ namespace FSM.Blazor.Pages.Document
 
         async Task DocumentCreateDialog(Guid? id, string title, bool isCreate)
         {
-            ValidateTokenAsync();
+         //   ValidateTokenAsync();
 
             if (isCreate)
             {
@@ -270,15 +270,15 @@ namespace FSM.Blazor.Pages.Document
             await InvokeAsync(() => StateHasChanged());
         }
 
-        private async Task ValidateTokenAsync()
-        {
-            string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
-            bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
+        //private async Task ValidateTokenAsync()
+        //{
+        //    string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
+        //    bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
 
-            if (!isValid)
-            {
-                NavManager.NavigateTo("/Login?TokenExpired=true");
-            }
-        }
+        //    if (!isValid)
+        //    {
+        //        NavManager.NavigateTo("/Login?TokenExpired=true");
+        //    }
+        //}
     }
 }

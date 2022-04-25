@@ -12,5 +12,6 @@ namespace Service.Interface
         CurrentResponse Edit(CompanyVM companyVM);
         CurrentResponse GetDetails(int id);
         CurrentResponse Delete(int id, long deletedBy);
+        CurrentResponse ListCompanyServiceDropDownValues();
     }
 }

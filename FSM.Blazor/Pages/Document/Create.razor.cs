@@ -1,19 +1,16 @@
-﻿using DataModels.Constants;
+﻿using Configuration;
+using DataModels.Constants;
 using DataModels.VM.Common;
 using DataModels.VM.Document;
 using FSM.Blazor.Extensions;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
-using Newtonsoft.Json;
-using Radzen;
-using DE = DataModels.Entities;
-using Configuration;
 using FSM.Blazor.Utilities;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Radzen.Blazor;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
-using FSM.Blazor.Data.Common;
+using Microsoft.Extensions.Caching.Memory;
+using Radzen;
+using Radzen.Blazor;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -55,12 +52,12 @@ namespace FSM.Blazor.Pages.Document
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
             string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
-            bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
+            //bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
 
-            if (!isValid)
-            {
-                NavigationManager.NavigateTo("/Login?TokenExpired=true");
-            }
+            //if (!isValid)
+            //{
+            //    NavigationManager.NavigateTo("/Login?TokenExpired=true");
+            //}
 
             if (documentData.UserId > 0)
             {

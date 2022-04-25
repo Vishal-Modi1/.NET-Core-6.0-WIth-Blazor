@@ -696,3 +696,18 @@ Insert into [dbo].[UserRoleVsScheduleActivityType] (Id, UserRoleId, ActivityType
 GO
 SET IDENTITY_INSERT [dbo].UserRoleVsScheduleActivityType OFF
 GO
+
+
+INSERT INTO CompanyServices VALUES('Aircraft Maintenance')
+INSERT INTO CompanyServices VALUES('Aircraft Management')
+INSERT INTO CompanyServices VALUES('Aircraft Partnership')
+INSERT INTO CompanyServices VALUES('Aircraft Sales')
+INSERT INTO CompanyServices VALUES('Charter')
+INSERT INTO CompanyServices VALUES('Corporate Flight Dept.')
+INSERT INTO CompanyServices VALUES('FBO')
+INSERT INTO CompanyServices VALUES('Flight Training')
+INSERT INTO CompanyServices VALUES('Military')
+INSERT INTO CompanyServices VALUES('Photography/Surveying')
+INSERT INTO CompanyServices VALUES('Tours')
+INSERT INTO CompanyServices VALUES('Other')
+Go

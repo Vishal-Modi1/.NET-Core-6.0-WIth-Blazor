@@ -66,11 +66,13 @@ namespace FSM.Blazor.Pages.Company
             isLoading = false;
         }
 
-        async Task CompanyCreateDialog(CompanyVM companyData)
+        async Task CompanyCreateDialog(CompanyVM companyData, string title)
         {
-            await DialogService.OpenAsync<Create>($"Edit",
+            companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(_httpClient);
+           
+            await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "companyData", companyData } },
-                  new DialogOptions() { Width = "500px", Height = "380px" });
+                  new DialogOptions() { Width = "550px", Height = "620px" });
 
             await grid.Reload();
         }

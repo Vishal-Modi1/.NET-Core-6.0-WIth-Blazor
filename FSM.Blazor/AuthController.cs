@@ -1,4 +1,5 @@
 ﻿using DataModels.Constants;
+using DataModels.Models;
 using DataModels.VM.Account;
 using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -51,7 +53,7 @@ namespace FSM.Blazor
         {
             string jsonData = JsonConvert.SerializeObject(loginVM);
 
-            var response = await _httpCaller.PostAsync( _httpClient, "Account/login", jsonData);
+            var response = await _httpCaller.PostAsync(_httpClient, "Account/login", jsonData);
 
             jsonData = JsonConvert.SerializeObject(response.Data);
 
@@ -64,10 +66,40 @@ namespace FSM.Blazor
         }
 
         [HttpGet]
+        [Route("api/auth/refreshtoken")]
+        public async Task<IActionResult> RefreshToken(string refreshToken, long userId)
+        {
+            string url = $"Account/RefreshToken?refreshToken={refreshToken}&userId={userId}";
+            var response = await _httpCaller.GetAsync(_httpClient, url);
+
+            string jsonData = JsonConvert.SerializeObject(response.Data);
+
+            if (response.Status == HttpStatusCode.OK)
+            {
+                await UpdateCookieAsync(response.Data);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("api/auth/signout")]
         public async Task<ActionResult> SignOutPost()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var user = User as ClaimsPrincipal;
+            var identity = user.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var claimNameList = identity.Claims.ToList();
+                foreach (var claim in claimNameList)
+                {
+                    identity.RemoveClaim(claim);
+                }
+            }
+
             return this.Ok();
         }
 
@@ -109,10 +141,10 @@ namespace FSM.Blazor
                 ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
                 Thread.CurrentPrincipal = userPrincipal;
 
-                var authProperties = COOKIE_EXPIRES;
+                //var authProperties = COOKIE_EXPIRES;
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(userPrincipal), authProperties);
+                    new ClaimsPrincipal(userPrincipal));
             }
             catch (Exception ex)
             {
@@ -120,25 +152,53 @@ namespace FSM.Blazor
             }
         }
 
-        private async Task<CurrentResponse> PostAsync(string url, string jsonData)
+        private async Task UpdateCookieAsync(object response)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
-                request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "");
+                RefreshTokenModel refreshTokenModel = JsonConvert.DeserializeObject<RefreshTokenModel>(response.ToString());
 
-                request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                // create a new identity from the old one
+                var identity = new ClaimsIdentity(User.Identity);
 
-                var client = _httpClient.CreateClient("FSMAPI");
-                HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+                // update claim value
+                //identity.RemoveClaim(identity.FindFirst(CustomClaimTypes.AccessToken));
+                //identity.AddClaim(new Claim(CustomClaimTypes.AccessToken, refreshTokenModel.AccessToken));
 
-                return response;
+                //identity.RemoveClaim(identity.FindFirst(CustomClaimTypes.RefreshToken));
+                //identity.AddClaim(new Claim(CustomClaimTypes.RefreshToken, refreshTokenModel.RefreshToken));
+
+                var userClaims = new List<Claim>()
+                {
+                  new Claim(ClaimTypes.Name, identity.FindFirst(ClaimTypes.Name).Value),
+                  new Claim(CustomClaimTypes.FullName, identity.FindFirst(CustomClaimTypes.FullName).Value),
+                  new Claim(ClaimTypes.Email, identity.FindFirst(CustomClaimTypes.FullName).Value),
+                  new Claim(CustomClaimTypes.AccessToken,  refreshTokenModel.AccessToken),
+                  new Claim(CustomClaimTypes.RefreshToken, refreshTokenModel.RefreshToken),
+                  new Claim(CustomClaimTypes.UserId, identity.FindFirst(CustomClaimTypes.UserId).Value),
+                  new Claim(ClaimTypes.Role, identity.FindFirst(ClaimTypes.Role).Value),
+                  new Claim(CustomClaimTypes.CompanyName, identity.FindFirst(CustomClaimTypes.CompanyName).Value),
+                  new Claim(CustomClaimTypes.CompanyId, identity.FindFirst(CustomClaimTypes.CompanyId).Value),
+                  new Claim(CustomClaimTypes.ProfileImageURL, identity.FindFirst(CustomClaimTypes.ProfileImageURL).Value),
+                  new Claim(CustomClaimTypes.TimeZone, identity.FindFirst(CustomClaimTypes.TimeZone).Value),
+               };
+
+           //     _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
+
+                //var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(new[] { grandmaIdentity });
+                Thread.CurrentPrincipal = userPrincipal;
+
+                //var authProperties = COOKIE_EXPIRES;
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(userPrincipal));
             }
-            catch (Exception exc)
+            catch (Exception ex)
             {
-                return null;
+
             }
         }
     }
