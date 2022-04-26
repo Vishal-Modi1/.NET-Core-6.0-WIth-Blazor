@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
 using System.Collections.ObjectModel;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.Company
 {
@@ -36,7 +37,8 @@ namespace FSM.Blazor.Pages.Company
             SetSaveButtonState(true);
 
             companyData.PrimaryServiceId = primaryServiceId == null ? null : (short)primaryServiceId;
-            CurrentResponse response = await CompanyService.SaveandUpdateAsync(_httpClient, companyData);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await CompanyService.SaveandUpdateAsync(dependecyParams, companyData);
 
             SetSaveButtonState(false);
 
@@ -67,5 +69,7 @@ namespace FSM.Blazor.Pages.Company
             isBusy = isBusyState;
             StateHasChanged();
         }
+
+       
     }
 }

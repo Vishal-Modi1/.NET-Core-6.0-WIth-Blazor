@@ -1,12 +1,8 @@
-﻿using DataModels.VM;
-using DataModels.VM.AircraftEquipment;
+﻿using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
-using Utilities;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.AircraftSchedule
 {
@@ -19,45 +15,45 @@ namespace FSM.Blazor.Data.AircraftSchedule
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> CheckOut(IHttpClientFactory httpClient, long scheduleId)
+        public async Task<CurrentResponse> CheckOut(DependecyParams dependecyParams, long scheduleId)
         {
             string jsonData = JsonConvert.SerializeObject(scheduleId);
 
-            string url = "aircraftschedulerdetail/checkout?scheduleId="+scheduleId;
+            dependecyParams.URL  = "aircraftschedulerdetail/checkout?scheduleId="+scheduleId;
 
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UnCheckOut(IHttpClientFactory httpClient, long scheduleId)
+        public async Task<CurrentResponse> UnCheckOut(DependecyParams dependecyParams, long scheduleId)
         {
-            string url = "aircraftschedulerdetail/uncheckout?scheduleId=" + scheduleId;
+            dependecyParams.URL  = "aircraftschedulerdetail/uncheckout?scheduleId=" + scheduleId;
 
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> CheckIn(IHttpClientFactory httpClient, List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
+        public async Task<CurrentResponse> CheckIn(DependecyParams dependecyParams, List<AircraftEquipmentTimeVM> aircraftEquipmentsTimeList)
         {
             AircraftEquipmentTimeRequestVM aircraftEquipmentTimeRequestVM = new AircraftEquipmentTimeRequestVM();
             aircraftEquipmentTimeRequestVM.Data = aircraftEquipmentsTimeList;
 
-            string jsonData = JsonConvert.SerializeObject(aircraftEquipmentTimeRequestVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(aircraftEquipmentTimeRequestVM);
 
-            string url = "aircraftschedulerdetail/checkin";
+            dependecyParams.URL  = "aircraftschedulerdetail/checkin";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
 
-        public async Task<CurrentResponse> IsAircraftAlreadyCheckOutAsync(IHttpClientFactory httpClient, long aircraftId)
+        public async Task<CurrentResponse> IsAircraftAlreadyCheckOutAsync(DependecyParams dependecyParams, long aircraftId)
         {
-            string url = $"aircraftschedulerdetail/isaircraftalreadycheckout?aircraftId={aircraftId}";
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            dependecyParams.URL  = $"aircraftschedulerdetail/isaircraftalreadycheckout?aircraftId={aircraftId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }

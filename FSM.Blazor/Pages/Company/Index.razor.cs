@@ -8,6 +8,8 @@ using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using System.Text;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.Company
 {
@@ -48,7 +50,7 @@ namespace FSM.Blazor.Pages.Company
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
-                NavManager.NavigateTo("/Dashboard");
+                NavigationManager.NavigateTo("/Dashboard");
             }
         }
 
@@ -61,14 +63,16 @@ namespace FSM.Blazor.Pages.Company
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            data = await CompanyService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await CompanyService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
         }
 
         async Task CompanyCreateDialog(CompanyVM companyData, string title)
         {
-            companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
            
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "companyData", companyData } },
@@ -77,9 +81,23 @@ namespace FSM.Blazor.Pages.Company
             await grid.Reload();
         }
 
+        async Task OpenCompanyDetailPagge(CompanyVM companyData)
+        {
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
+
+            if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+            {
+                byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(companyData.Id.ToString() + "FlyManager");
+                var data = Encoding.Default.GetBytes(companyData.Id.ToString());
+                NavigationManager.NavigateTo("CompanyDetails?CompanyId=" + System.Convert.ToBase64String(encodedBytes));
+            }
+        }
+
         async Task DeleteAsync(int id)
         {
-            CurrentResponse response = await CompanyService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await CompanyService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
 

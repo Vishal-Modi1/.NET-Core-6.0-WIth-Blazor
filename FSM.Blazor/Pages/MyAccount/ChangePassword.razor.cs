@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.MyAccount;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 
@@ -28,7 +29,8 @@ namespace FSM.Blazor.Pages.MyAccount
             StateHasChanged();
 
             changePasswordVM.UserId = Convert.ToInt32(Id);
-            CurrentResponse response = await MyAccountService.ChangePassword(_httpClient, changePasswordVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await MyAccountService.ChangePassword(dependecyParams, changePasswordVM);
 
             isBusy = false;
             StateHasChanged();

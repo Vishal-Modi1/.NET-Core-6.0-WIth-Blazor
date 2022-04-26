@@ -60,7 +60,9 @@ namespace FSM.Blazor.Pages.UserRolePermission
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            userrolePermissionFilterVM = await UserRolePermissionService.GetFiltersAsync(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            userrolePermissionFilterVM = await UserRolePermissionService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = userrolePermissionFilterVM.Companies;
             RoleFilterDropdown = userrolePermissionFilterVM.UserRoles;
             ModuleFilterDropdown = userrolePermissionFilterVM.ModuleList;
@@ -77,14 +79,17 @@ namespace FSM.Blazor.Pages.UserRolePermission
             datatableParams.RoleId = RoleId;
             pageSize = datatableParams.Length;
 
-            data = await UserRolePermissionService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await UserRolePermissionService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
         }
 
         async Task UpdatePermissionAsync(bool? value, long id, bool isForWeb)
         {
-            CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(_httpClient, id, value.GetValueOrDefault(), isForWeb);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(dependecyParams, id, value.GetValueOrDefault(), isForWeb);
 
             NotificationMessage message;
 
@@ -122,7 +127,9 @@ namespace FSM.Blazor.Pages.UserRolePermission
             userrolePermissionFilterVM.ModuleId = ModuleId;
             userrolePermissionFilterVM.UserRoleId = RoleId;
 
-            CurrentResponse response = await UserRolePermissionService.UpdatePermissionsAsync(_httpClient, userrolePermissionFilterVM, isForWeb);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await UserRolePermissionService.UpdatePermissionsAsync(dependecyParams, userrolePermissionFilterVM, isForWeb);
 
             NotificationMessage message;
 

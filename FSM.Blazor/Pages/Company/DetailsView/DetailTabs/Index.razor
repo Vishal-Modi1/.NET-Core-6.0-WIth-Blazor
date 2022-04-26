@@ -1,0 +1,40 @@
+﻿@using DataModels.Enums
+
+<RadzenTabs RenderMode="TabRenderMode.Client">
+    <Tabs>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "User"))
+        {
+            <RadzenTabsItem Text="User">
+
+                <FSM.Blazor.Pages.User.Index CompanyIdParam="@CompanyData.Id" ParentModuleName="Company">
+
+                </FSM.Blazor.Pages.User.Index>
+
+            </RadzenTabsItem>
+        }
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
+        {
+            <RadzenTabsItem Text="Reservation">
+
+                <FSM.Blazor.Pages.Reservation.Index ParentModuleName="Company" CompanyId="@CompanyData.Id">
+
+                </FSM.Blazor.Pages.Reservation.Index>
+
+            </RadzenTabsItem>
+        }
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
+        {
+            <RadzenTabsItem Text="Document">
+
+                <FSM.Blazor.Pages.Document.Index ParentModuleName="Company" CompanyIdParam="@CompanyData.Id">
+
+                </FSM.Blazor.Pages.Document.Index>
+
+            </RadzenTabsItem>
+        }
+
+    </Tabs>
+</RadzenTabs>

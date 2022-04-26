@@ -53,7 +53,9 @@ namespace FSM.Blazor
         {
             string jsonData = JsonConvert.SerializeObject(loginVM);
 
-            var response = await _httpCaller.PostAsync(_httpClient, "Account/login", jsonData);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "Account/login", jsonData, null);
+            
+            var response = await _httpCaller.PostAsync(dependecyParams);
 
             jsonData = JsonConvert.SerializeObject(response.Data);
 
@@ -70,7 +72,10 @@ namespace FSM.Blazor
         public async Task<IActionResult> RefreshToken(string refreshToken, long userId)
         {
             string url = $"Account/RefreshToken?refreshToken={refreshToken}&userId={userId}";
-            var response = await _httpCaller.GetAsync(_httpClient, url);
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, url, "", null);
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             string jsonData = JsonConvert.SerializeObject(response.Data);
 

@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.User;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Shared;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -20,6 +21,10 @@ namespace FSM.Blazor.Pages.MyAccount
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
+        [CascadingParameter]
+        public MainLayout Layout { get; set; }
+
+
         [Inject]
         protected IMemoryCache memoryCache { get; set; }
 
@@ -37,6 +42,8 @@ namespace FSM.Blazor.Pages.MyAccount
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
+            base.StateHasChanged();
             await LoadData();
         }
 
@@ -44,7 +51,10 @@ namespace FSM.Blazor.Pages.MyAccount
         {
             isDisplayLoader = true;
 
-            CurrentResponse response = await UserService.FindById(_httpClient);
+            var user = (await AuthStat).User;
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await UserService.FindById(dependecyParams);
 
             NotificationMessage message;
 
@@ -121,7 +131,9 @@ namespace FSM.Blazor.Pages.MyAccount
                 multiContent.Add(new StringContent(userVM.Id.ToString()), "UserId");
                 multiContent.Add(new StringContent(companyId), "CompanyId");
 
-                CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+                CurrentResponse response = await UserService.UploadProfileImageAsync(dependecyParams, multiContent);
 
                 ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
             }

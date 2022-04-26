@@ -104,6 +104,7 @@ Directory.CreateDirectory(uploadsPath);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.UserProfileImage);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.Document);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.CompanyLogo);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));

@@ -1,10 +1,8 @@
-﻿using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using DataModels.VM.Common;
 using DataModels.VM.Document;
-using DataModels.VM.Common;
-using Microsoft.AspNetCore.Components;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
-using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Document
 {
@@ -17,9 +15,11 @@ namespace FSM.Blazor.Data.Document
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<DocumentFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)
+        public async Task<DocumentFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"document/getfilters");
+            dependecyParams.URL = $"document/getfilters";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             DocumentFilterVM documentFilterVM = new DocumentFilterVM();
 
@@ -31,11 +31,12 @@ namespace FSM.Blazor.Data.Document
             return documentFilterVM;
         }
 
-        public async Task<List<DocumentDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<DocumentDataVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "document/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "document/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -47,9 +48,11 @@ namespace FSM.Blazor.Data.Document
             return documents;
         }
 
-        public async Task<DocumentVM> GetDetailsAsync(IHttpClientFactory httpClient, Guid id)
+        public async Task<DocumentVM> GetDetailsAsync(DependecyParams dependecyParams, Guid id)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"document/getDetails?id={id}");
+            dependecyParams.URL = $"document/getDetails?id={id}";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             DocumentVM documentVM = new DocumentVM();
 
@@ -61,9 +64,11 @@ namespace FSM.Blazor.Data.Document
             return documentVM;
         }
 
-        public async Task<List<DocumentTagVM>> GetDocumentTagsList(IHttpClientFactory httpClient)
+        public async Task<List<DocumentTagVM>> GetDocumentTagsList(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"documenttag/list");
+            dependecyParams.URL = $"documenttag/list";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             List<DocumentTagVM> documentTagsVM = new List<DocumentTagVM>();
 
@@ -75,69 +80,69 @@ namespace FSM.Blazor.Data.Document
             return documentTagsVM;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, DocumentVM documentVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DocumentVM documentVM)
         {
-            string jsonData = JsonConvert.SerializeObject(documentVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(documentVM);
 
-            string url = "document/create";
+            dependecyParams.URL = "document/create";
 
             if (documentVM.Id !=  Guid.Empty)
             {
-                url = "document/edit";
+                dependecyParams.URL = "document/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, Guid id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, Guid id)
         {
-            string url = $"document/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"document/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UpdateTotalDownloadsAsync(IHttpClientFactory httpClient, Guid id)
+        public async Task<CurrentResponse> UpdateTotalDownloadsAsync(DependecyParams dependecyParams, Guid id)
         {
-            string url = $"document/updatetotaldownloads";
-            string jsonData = JsonConvert.SerializeObject(id);
-            CurrentResponse response = await _httpCaller.PutAsync(httpClient, url, jsonData);
+            dependecyParams.URL = $"document/updatetotaldownloads";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(id);
+            CurrentResponse response = await _httpCaller.PutAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UpdateTotalSharesAsync(IHttpClientFactory httpClient, Guid id)
+        public async Task<CurrentResponse> UpdateTotalSharesAsync(DependecyParams dependecyParams, Guid id)
         {
-            string url = $"document/updatetotalshares";
-            string jsonData = JsonConvert.SerializeObject(id);
-            CurrentResponse response = await _httpCaller.PutAsync(httpClient, url, jsonData);
+            dependecyParams.URL = $"document/updatetotalshares";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(id);
+            CurrentResponse response = await _httpCaller.PutAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UploadDocumentAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
+        public async Task<CurrentResponse> UploadDocumentAsync(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
         {
-            string url = $"document/uploadfile";
+            dependecyParams.URL = $"document/uploadfile";
 
-            CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
+            CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
 
             return response;
         }
 
-        public async Task<CurrentResponse> SaveTagAsync(IHttpClientFactory httpClient, DocumentTagVM documentTagVM)
+        public async Task<CurrentResponse> SaveTagAsync(DependecyParams dependecyParams, DocumentTagVM documentTagVM)
         {
-            string jsonData = JsonConvert.SerializeObject(documentTagVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(documentTagVM);
 
-            string url = "documenttag/create";
+            dependecyParams.URL = "documenttag/create";
 
             if (documentTagVM.Id > 0)
             {
-                url = "documenttag/edit";
+                dependecyParams.URL = "documenttag/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }

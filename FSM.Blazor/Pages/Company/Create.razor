@@ -4,6 +4,7 @@
 @inject Radzen.DialogService dialogService
 @inject CompanyService CompanyService
 @inject DialogService DialogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <style>
     form .row {
@@ -66,7 +67,7 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@companyData.Website" Placeholder="Please enter website" />
-                <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />
+               @* <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />*@
             </div>
         </div>
 

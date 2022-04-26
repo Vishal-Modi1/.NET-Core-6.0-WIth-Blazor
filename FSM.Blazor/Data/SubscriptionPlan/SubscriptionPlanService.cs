@@ -17,11 +17,12 @@ namespace FSM.Blazor.Data.SubscriptionPlan
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<SubscriptionPlanDataVM>> ListAsync(IHttpClientFactory httpClient, SubscriptionDataTableParams datatableParams)
+        public async Task<List<SubscriptionPlanDataVM>> ListAsync(DependecyParams dependecyParams, SubscriptionDataTableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "subscriptionPlan/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "subscriptionPlan/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -33,33 +34,34 @@ namespace FSM.Blazor.Data.SubscriptionPlan
             return subscriptionPlans; 
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, SubscriptionPlanVM subscriptionPlanVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, SubscriptionPlanVM subscriptionPlanVM)
         {
-            string jsonData = JsonConvert.SerializeObject(subscriptionPlanVM);
-            
-            string url = "subscriptionPlan/create";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(subscriptionPlanVM);
+
+            dependecyParams.URL = "subscriptionPlan/create";
 
             if (subscriptionPlanVM.Id > 0)
             {
-                url = "subscriptionPlan/edit";
+                dependecyParams.URL = "subscriptionPlan/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, int id)
         {
-            string url = $"subscriptionPlan/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"subscriptionPlan/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<SubscriptionPlanVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
+        public async Task<SubscriptionPlanVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"subscriptionplan/getDetails?id={id}");
+            dependecyParams.URL = $"subscriptionplan/getDetails?id={id}";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             SubscriptionPlanVM subscriptionPlanVM = new SubscriptionPlanVM();
 
@@ -71,20 +73,20 @@ namespace FSM.Blazor.Data.SubscriptionPlan
             return subscriptionPlanVM;
         }
 
-        public async Task<CurrentResponse> UpdateStatus(IHttpClientFactory httpClient, int id, bool isActive)
+        public async Task<CurrentResponse> UpdateStatus(DependecyParams dependecyParams, int id, bool isActive)
         {
-            string url = $"subscriptionPlan/updatestatus?id={id}&isActive={isActive}";
+            dependecyParams.URL = $"subscriptionPlan/updatestatus?id={id}&isActive={isActive}";
               
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> BuyPlan(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> BuyPlan(DependecyParams dependecyParams, int id)
         {
-            string url = $"subscriptionPlan/buyplan?id={id}";
+            dependecyParams.URL = $"subscriptionPlan/buyplan?id={id}";
 
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }

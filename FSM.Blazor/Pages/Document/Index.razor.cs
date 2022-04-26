@@ -29,6 +29,9 @@ namespace FSM.Blazor.Pages.Document
         [Parameter]
         public string ParentModuleName { get; set; }
 
+        [Parameter]
+        public int? CompanyIdParam { get; set; }
+
         [Inject]
         protected IMemoryCache memoryCache { get; set; }
 
@@ -70,7 +73,8 @@ namespace FSM.Blazor.Pages.Document
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            documentFilterVM = await DocumentService.GetFiltersAsync(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
         }
 
         async Task LoadData(LoadDataArgs args)
@@ -80,19 +84,29 @@ namespace FSM.Blazor.Pages.Document
             args.OrderBy = args.OrderBy.Replace("@", "");
             DocumentDatatableParams datatableParams = new DocumentDatatableParams().Create(args, "DisplayName");
 
-            datatableParams.CompanyId = CompanyId;
+           
             datatableParams.ModuleId = ModuleId;
 
-            if (!string.IsNullOrWhiteSpace(ParentModuleName))
+            if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != "Company")
             {
                 datatableParams.ModuleId = documentFilterVM.ModulesList.Where(p => p.Name == ParentModuleName).FirstOrDefault().Id;
+            }
+
+            if (ParentModuleName == "Company")
+            {
+                datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
+            }
+            else
+            {
+                datatableParams.CompanyId = CompanyId;
             }
 
             datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            data = await DocumentService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
 
             isLoading = false;
@@ -111,21 +125,22 @@ namespace FSM.Blazor.Pages.Document
                 SetEditButtonState(id.Value, true);
             }
 
-            DocumentVM documentData = await DocumentService.GetDetailsAsync(_httpClient, id == null ? Guid.Empty : id.Value);
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DocumentVM documentData = await DocumentService.GetDetailsAsync(dependecyParams, id == null ? Guid.Empty : id.Value);
+            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
 
             string height = "420px";
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {
                 height = "470";
-                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(_httpClient, documentData.CompanyId);
+                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
             }
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
             {
                 height = "520";
-                documentData.CompniesList = await CompanyService.ListDropDownValues(_httpClient);
+                documentData.CompniesList = await CompanyService.ListDropDownValues(dependecyParams);
             }
 
             if (isCreate)
@@ -169,7 +184,8 @@ namespace FSM.Blazor.Pages.Document
         {
             await SetDeleteButtonState(true);
 
-            CurrentResponse response = await DocumentService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await DocumentService.DeleteAsync(dependecyParams, id);
 
             await SetDeleteButtonState(false);
 
@@ -213,7 +229,8 @@ namespace FSM.Blazor.Pages.Document
 
             documentDataVM.TotalDownloads += 1;
 
-            await DocumentService.UpdateTotalDownloadsAsync(_httpClient, Guid.Parse(id));
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            await DocumentService.UpdateTotalDownloadsAsync(dependecyParams, Guid.Parse(id));
         }
 
         async Task DownloadDocument(Guid id)

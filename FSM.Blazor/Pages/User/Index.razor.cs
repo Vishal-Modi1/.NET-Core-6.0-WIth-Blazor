@@ -32,6 +32,12 @@ namespace FSM.Blazor.Pages.User
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        [Parameter]
+        public string ParentModuleName { get; set; }
+
+        [Parameter]
+        public int? CompanyIdParam { get; set; }
+
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         IList<UserDataVM> data;
@@ -63,7 +69,8 @@ namespace FSM.Blazor.Pages.User
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            userFilterVM = await UserService.GetFiltersAsync(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = userFilterVM.Companies;
             RoleFilterDropdown = userFilterVM.UserRoles;
         }
@@ -74,12 +81,22 @@ namespace FSM.Blazor.Pages.User
 
             ReservationDataTableParams datatableParams = new ReservationDataTableParams().Create(args, "StartDateTime");
 
-            datatableParams.CompanyId = CompanyId;
+          
             datatableParams.SearchText = searchText;
            
             pageSize = datatableParams.Length;
 
-            data = await UserService.ListAsync(_httpClient, datatableParams);
+            if (ParentModuleName == "Company")
+            {
+                datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
+            }
+            else
+            {
+                datatableParams.CompanyId = CompanyId;
+            }
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await UserService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
         }
@@ -88,7 +105,8 @@ namespace FSM.Blazor.Pages.User
         {
             SetAddNewButtonState(true);
 
-            UserVM userData = await UserService.GetDetailsAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            UserVM userData = await UserService.GetDetailsAsync(dependecyParams, id);
 
             SetAddNewButtonState(false);
 
@@ -113,7 +131,8 @@ namespace FSM.Blazor.Pages.User
         {
             await SetDeleteButtonState(true);
 
-            CurrentResponse response = await UserService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await UserService.DeleteAsync(dependecyParams, id);
 
             await SetDeleteButtonState(false);
 
@@ -143,7 +162,9 @@ namespace FSM.Blazor.Pages.User
         {
             SetUpdateStatusButtonState(true);
 
-            CurrentResponse response = await UserService.UpdateIsUserActive(_httpClient, id, value.GetValueOrDefault());
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await UserService.UpdateIsUserActive(dependecyParams, id, value.GetValueOrDefault());
 
             SetUpdateStatusButtonState(false);
 

@@ -64,7 +64,8 @@ namespace FSM.Blazor.Pages.Aircraft
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            aircraftFilterVM = await AircraftService.GetFiltersAsync(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            aircraftFilterVM = await AircraftService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = aircraftFilterVM.Companies;
         }
 
@@ -84,7 +85,8 @@ namespace FSM.Blazor.Pages.Aircraft
             datatableParams.IsActive = true;
             pageSize = datatableParams.Length;
 
-            airCraftsVM = await AircraftService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            airCraftsVM = await AircraftService.ListAsync(dependecyParams, datatableParams);
             count = airCraftsVM.Count() > 0 ? airCraftsVM[0].TotalRecords : 0;
             isLoading = false;
         }
@@ -93,7 +95,9 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             SetAddNewButtonState(true);
 
-            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
             SetAddNewButtonState(false);
 

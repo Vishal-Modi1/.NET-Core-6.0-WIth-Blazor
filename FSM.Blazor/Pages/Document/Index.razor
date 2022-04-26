@@ -3,6 +3,7 @@
 @using FSM.Blazor.Data.User;
 @using FSM.Blazor.Data.Company;
 @using DataModels.VM.Document;
+@using FSM.Blazor.Utilities
 @using Syncfusion.Blazor.Popups;
 @using Syncfusion.Blazor;
 @using FSM.Blazor.Data.Common;
@@ -15,6 +16,7 @@
 @inject CompanyService CompanyService
 @inject IJSRuntime JSRunTime
 @inject TokenValidatorService TokenValidatorService
+@inject AuthenticationStateProvider AuthenticationStateProvider 
 
 @inject IJSRuntime JS
 
@@ -56,7 +58,7 @@
 
     </div>
 
-    @if (string.IsNullOrWhiteSpace(ParentModuleName))
+    @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == "Company")
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@ModuleId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -67,7 +69,7 @@
         </div>
     }
 
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != "Company")
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -277,7 +279,9 @@
         {
     DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
 
-    await DocumentService.UpdateTotalSharesAsync(_httpClient, documentDataVM.Id);
+    DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+    await DocumentService.UpdateTotalSharesAsync(dependecyParams, documentDataVM.Id);
 
     documentDataVM.TotalShares += 1;
 

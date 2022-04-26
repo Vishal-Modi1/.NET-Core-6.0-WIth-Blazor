@@ -43,15 +43,16 @@ namespace FSM.Blazor.Pages.Aircraft
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
 
-            if(link.Count() == 0 || link[0] == "")
+            if (link.Count() == 0 || link[0] == "")
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager","");
-            
-            AircraftData = await AircraftService.GetDetailsAsync(_httpClient, Convert.ToInt64(AircraftId));
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            AircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
 
             try
             {
@@ -60,7 +61,7 @@ namespace FSM.Blazor.Pages.Aircraft
                     var webClient = new WebClient();
                     byte[] imageBytes = webClient.DownloadData(AircraftData.ImagePath);
 
-                    AircraftData.ImagePath =   "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                    AircraftData.ImagePath = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
             catch (Exception e)
@@ -88,7 +89,8 @@ namespace FSM.Blazor.Pages.Aircraft
             isBusy = true;
             StateHasChanged();
 
-            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
             isBusy = false;
             StateHasChanged();

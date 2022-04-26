@@ -24,13 +24,14 @@ namespace FSM.Blazor.Data.Common
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
         }
 
-        public async Task<List<MenuItem>> ListMenuItemsAsync(Task<AuthenticationState> AuthStat)
+        public async Task<List<MenuItem>> ListMenuItemsAsync(Task<AuthenticationState> authenticationState, AuthenticationStateProvider authenticationStateProvider)
         {
-            List<UserRolePermissionDataVM> userRolePermissionsList = await _currentUserPermissionManager.GetAsync(AuthStat);
+            List<UserRolePermissionDataVM> userRolePermissionsList = await _currentUserPermissionManager.GetAsync(authenticationState);
 
             if (userRolePermissionsList == null || userRolePermissionsList.Count() == 0)
             {
-                CurrentResponse response = await _httpCaller.GetAsync(_httpClient, $"UserRolePermission/listbyroleid");
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, $"UserRolePermission/listbyroleid", "", authenticationStateProvider);
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
                 if (response != null)
                 {
@@ -38,7 +39,7 @@ namespace FSM.Blazor.Data.Common
 
                     if (userRolePermissionsList != null && userRolePermissionsList.Count() > 0)
                     {
-                        var cp = (await AuthStat).User;
+                        var cp = (await authenticationState).User;
 
                         string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
                                    .Select(c => c.Value).SingleOrDefault();

@@ -1,10 +1,8 @@
-﻿using FSM.Blazor.Utilities;
+﻿using DataModels.VM.Common;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
-using DataModels.VM.Common;
 using Newtonsoft.Json;
 using DE = DataModels.Entities;
-using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Data.AircraftMake
 {
@@ -17,20 +15,21 @@ namespace FSM.Blazor.Data.AircraftMake
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, DE.AircraftMake aircraftMake)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DE.AircraftMake aircraftMake)
         {
-            string jsonData = JsonConvert.SerializeObject(aircraftMake);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(aircraftMake);
 
-            string url = "aircraft/createmake";
+            dependecyParams.URL = "aircraft/createmake";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> ListDropdownValues(IHttpClientFactory httpClient)
+        public async Task<CurrentResponse> ListDropdownValues(DependecyParams dependecyParams)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"aircraft/makelist");
+            dependecyParams.URL = "aircraft/makelist";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }

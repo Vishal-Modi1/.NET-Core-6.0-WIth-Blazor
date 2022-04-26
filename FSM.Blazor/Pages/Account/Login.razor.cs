@@ -41,6 +41,8 @@ namespace FSM.Blazor.Pages.Account
 
             objRef = DotNetObjectReference.Create(this);
             result = await authModule.InvokeAsync<string>("SetDotNetObject", objRef, "");
+
+            this.StateHasChanged();
         }
 
         [JSInvokable]

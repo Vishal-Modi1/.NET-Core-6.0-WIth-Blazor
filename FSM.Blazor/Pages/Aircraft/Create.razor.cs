@@ -101,7 +101,8 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             if (steps.SelectedIndex == 0)
             {
-                CurrentResponse response = await AircraftService.IsAircraftExistAsync(_httpClient, airCraftData.Id, airCraftData.TailNo);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                CurrentResponse response = await AircraftService.IsAircraftExistAsync(dependecyParams, airCraftData.Id, airCraftData.TailNo);
                 bool isAircraftExist = ManageIsAircraftExistResponse(response, "");
 
                 if (isAircraftExist)
@@ -125,7 +126,8 @@ namespace FSM.Blazor.Pages.Aircraft
             {
                 SetSaveButtonState(true);
 
-                CurrentResponse response = await AircraftService.SaveandUpdateAsync(_httpClient, airCraftData);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                CurrentResponse response = await AircraftService.SaveandUpdateAsync(dependecyParams, airCraftData);
 
                 if (response != null)
                 {
@@ -138,7 +140,8 @@ namespace FSM.Blazor.Pages.Aircraft
 
                         if (AircraftData.IsEquipmentTimesListChanged)
                         {
-                            response = await AircraftService.SaveandUpdateEquipmentTimeListAsync(_httpClient, airCraftData);
+                            dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                            response = await AircraftService.SaveandUpdateEquipmentTimeListAsync(dependecyParams, airCraftData);
                         }
                     }
                 }
@@ -170,7 +173,8 @@ namespace FSM.Blazor.Pages.Aircraft
                         multiContent.Add(new StringContent(airCraftData.Id.ToString()), "AircraftId");
                         multiContent.Add(new StringContent(airCraftData.CompanyId.ToString()), "CompanyId");
 
-                        response = await AircraftService.UploadAircraftImageAsync(_httpClient, multiContent);
+                        dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                        response = await AircraftService.UploadAircraftImageAsync(dependecyParams, multiContent);
 
                         ManageFileUploadResponse(response, "Aircraft Details", true);
 
@@ -187,7 +191,8 @@ namespace FSM.Blazor.Pages.Aircraft
                 await DialogService.OpenAsync<AMD.Create>("Create",
                   null, new DialogOptions() { Width = "500px", Height = "380px" });
 
-                CurrentResponse response = await AircraftModelService.ListDropdownValues(_httpClient);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                CurrentResponse response = await AircraftModelService.ListDropdownValues(dependecyParams);
                 AircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 
                 AircraftData.AircraftModelList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
@@ -203,7 +208,9 @@ namespace FSM.Blazor.Pages.Aircraft
                 await DialogService.OpenAsync<AMK.Create>("Create",
                   null, new DialogOptions() { Width = "500px", Height = "380px" });
 
-                CurrentResponse response = await AircraftMakeService.ListDropdownValues(_httpClient);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+                CurrentResponse response = await AircraftMakeService.ListDropdownValues(dependecyParams);
                 AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 
                 AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });

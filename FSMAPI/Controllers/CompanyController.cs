@@ -15,17 +15,22 @@ namespace FSMAPI.Controllers
     {
         private readonly ICompanyService _companyService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly FileUploader _fileUploader;
 
-        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor)
+        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor,
+             IWebHostEnvironment webHostEnvironment)
         {
             _companyService = companyService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpPost]
         [Route("list")]
         public IActionResult List(DatatableParams datatableParams)
         {
+            datatableParams.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
+
             CurrentResponse response = _companyService.List(datatableParams);
 
             return Ok(response);
@@ -93,6 +98,38 @@ namespace FSMAPI.Controllers
             long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _companyService.Delete(id, deletedBy);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("uploadlogo")]
+        public async Task<IActionResult> UploadLogoAsync()
+        {
+            if (!Request.HasFormContentType)
+            {
+                return Ok(false);
+            }
+
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            IFormCollection form = Request.Form;
+
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["CompanyId"]}.jpeg";
+
+            if (string.IsNullOrWhiteSpace(companyId))
+            {
+                companyId = form["CompanyId"];
+            }
+
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.CompanyLogo, form, fileName);
+
+            CurrentResponse response = new CurrentResponse();
+            response.Data = "";
+
+            if (isFileUploaded)
+            {
+                response = _companyService.UpdateImageName(Convert.ToInt32(form["CompanyId"]), fileName);
+            }
 
             return Ok(response);
         }

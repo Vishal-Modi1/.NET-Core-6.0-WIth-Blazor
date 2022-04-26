@@ -3,6 +3,7 @@ using DataModels.VM.SubscriptionPlan;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.SubscriptionPlan
 {
@@ -37,7 +38,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
             subscriptionPlanData.ModuleIds = String.Join(",",subscriptionPlanData.ModulesList.Where(p => multipleValues.Contains(p.Name)).Select(p => p.Id));
 
-            CurrentResponse response = await SubscriptionPlanService.SaveandUpdateAsync(_httpClient, subscriptionPlanData);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await SubscriptionPlanService.SaveandUpdateAsync(dependecyParams, subscriptionPlanData);
 
             SetSaveButtonState(false);
 

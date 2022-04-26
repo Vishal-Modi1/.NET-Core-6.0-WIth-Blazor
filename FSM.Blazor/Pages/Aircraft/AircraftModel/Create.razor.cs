@@ -3,7 +3,7 @@ using DE = DataModels.Entities;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
-
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.Aircraft.AircraftModel
 {
@@ -21,7 +21,8 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftModel
 
         public async Task Submit()
         {
-            CurrentResponse response = await AircraftModelService.SaveandUpdateAsync(_httpClient, aircraftModel);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftModelService.SaveandUpdateAsync(dependecyParams, aircraftModel);
 
             NotificationMessage message;
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Radzen;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.SubscriptionPlan
 {
@@ -34,7 +35,9 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
         public async Task BuySubscriptionPlan()
         {
-            CurrentResponse response = await SubscriptionPlanService.BuyPlan(_httpClient, Convert.ToInt32(SubscriptionPlanId));
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await SubscriptionPlanService.BuyPlan(dependecyParams, Convert.ToInt32(SubscriptionPlanId));
 
             NotificationMessage message;
 

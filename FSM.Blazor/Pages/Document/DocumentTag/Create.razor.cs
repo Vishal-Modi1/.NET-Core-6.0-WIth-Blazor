@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
 using DataModels.VM.Document;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.Document.DocumentTag
 {
@@ -20,7 +21,8 @@ namespace FSM.Blazor.Pages.Document.DocumentTag
 
         public async Task Submit()
         {
-            CurrentResponse response = await DocumentService.SaveTagAsync(_httpClient, documentTagVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await DocumentService.SaveTagAsync(dependecyParams, documentTagVM);
 
             NotificationMessage message;
 

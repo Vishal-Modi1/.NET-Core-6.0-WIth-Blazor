@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Account;
 using DataModels.VM.Common;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 
@@ -35,7 +36,9 @@ namespace FSM.Blazor.Pages.Account
 
             ForgotPasswordVM.ResetURL = NavigationManager.BaseUri + "/ResetPassword?Token=";
 
-            CurrentResponse response = await AccountService.ForgetPasswordAsync(_httpClient, ForgotPasswordVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await AccountService.ForgetPasswordAsync(dependecyParams, ForgotPasswordVM);
 
             NotificationMessage message;
 

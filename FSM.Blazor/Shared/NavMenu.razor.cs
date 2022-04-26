@@ -44,7 +44,7 @@ namespace FSM.Blazor.Shared
 
             if (cp.Identity.IsAuthenticated)
             {
-                menuItems = await MenuService.ListMenuItemsAsync(AuthStat);
+                menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);
 
                 fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
                           .Select(c => c.Value).SingleOrDefault();

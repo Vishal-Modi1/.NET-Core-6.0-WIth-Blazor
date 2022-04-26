@@ -22,15 +22,15 @@ namespace FSM.Blazor.Data.Aircraft
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<AircraftDataVM>> ListAsync(IHttpClientFactory httpClient, AircraftDatatableParams datatableParams)
+        public async Task<List<AircraftDataVM>> ListAsync(DependecyParams dependecyParams, AircraftDatatableParams datatableParams)
         {
             try
             {
-                string url = "aircraft/list";
+                dependecyParams.URL = "aircraft/list";
 
-                string jsonData = JsonConvert.SerializeObject(datatableParams);
+                dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
 
-                CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+                CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
                 List<AircraftDataVM> aircraftList = JsonConvert.DeserializeObject<List<AircraftDataVM>>(response.Data.ToString());
 
                 return aircraftList;
@@ -42,13 +42,13 @@ namespace FSM.Blazor.Data.Aircraft
             }
         }
 
-        public async Task<List<DE.Aircraft>> ListAllAsync(IHttpClientFactory httpClient)
+        public async Task<List<DE.Aircraft>> ListAllAsync(DependecyParams dependecyParams)
         {
             try
             {
-                string url = "aircraft/listall";
+                dependecyParams.URL = "aircraft/listall";
 
-                CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
                 List<DE.Aircraft> aircraftList = JsonConvert.DeserializeObject<List<DE.Aircraft>>(response.Data.ToString());
 
                 return aircraftList;
@@ -60,43 +60,44 @@ namespace FSM.Blazor.Data.Aircraft
             }
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AircraftVM aircraftVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, AircraftVM aircraftVM)
         {
-            string jsonData = JsonConvert.SerializeObject(aircraftVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(aircraftVM);
 
-            string url = "aircraft/create";
+            dependecyParams.URL = "aircraft/create";
 
             if (aircraftVM.Id > 0)
             {
-                url = "aircraft/edit";
+                dependecyParams.URL = "aircraft/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
            
             return response;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateEquipmentTimeListAsync(IHttpClientFactory httpClient, AircraftVM aircraftVM)
+        public async Task<CurrentResponse> SaveandUpdateEquipmentTimeListAsync(DependecyParams dependecyParams, AircraftVM aircraftVM)
         {
-            string url = "aircraft/createaircraftequipment";
+            dependecyParams.URL = "aircraft/createaircraftequipment";
 
-            string jsonData = JsonConvert.SerializeObject(aircraftVM.AircraftEquipmentTimesList);
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(aircraftVM.AircraftEquipmentTimesList);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, int id)
         {
-            string url = $"aircraft/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"aircraft/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<AircraftFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)
+        public async Task<AircraftFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"aircraft/getfilters");
+            dependecyParams.URL = "aircraft/getfilters";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             AircraftFilterVM aircraftFilterVM = new AircraftFilterVM();
 
@@ -108,9 +109,10 @@ namespace FSM.Blazor.Data.Aircraft
             return aircraftFilterVM;
         }
 
-        public async Task<AircraftVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
+        public async Task<AircraftVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"aircraft/getDetails?id={id}");
+            dependecyParams.URL = $"aircraft/getDetails?id={id}";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             AircraftVM airCraftVM = new AircraftVM();
 
@@ -122,9 +124,10 @@ namespace FSM.Blazor.Data.Aircraft
             return airCraftVM;
         }
 
-        public async Task<List<DropDownLargeValues>> ListDropdownValues(IHttpClientFactory httpClient)
+        public async Task<List<DropDownLargeValues>> ListDropdownValues(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"aircraft/listdropdownvalues");
+            dependecyParams.URL = $"aircraft/listdropdownvalues";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             List<DropDownLargeValues> airCraftList = new List<DropDownLargeValues>();
 
@@ -136,20 +139,19 @@ namespace FSM.Blazor.Data.Aircraft
             return airCraftList;
         }
 
-        public async Task<CurrentResponse> IsAircraftExistAsync(IHttpClientFactory httpClient, long id, string tailNo)
+        public async Task<CurrentResponse> IsAircraftExistAsync(DependecyParams dependecyParams, long id, string tailNo)
         {
-            string url = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";
-
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            dependecyParams.URL = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UploadAircraftImageAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
+        public async Task<CurrentResponse> UploadAircraftImageAsync(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
         {
-            string url = $"aircraft/uploadfile";
+            dependecyParams.URL = $"aircraft/uploadfile";
 
-            CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
+            CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
 
             return response;
         }

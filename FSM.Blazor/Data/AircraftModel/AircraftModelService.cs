@@ -17,20 +17,21 @@ namespace FSM.Blazor.Data.AircraftModel
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, DE.AircraftModel aircraftModel)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DE.AircraftModel aircraftModel)
         {
-            string jsonData = JsonConvert.SerializeObject(aircraftModel);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(aircraftModel);
 
-            string url = "aircraft/createModel";
+            dependecyParams.URL = "aircraft/createModel";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> ListDropdownValues(IHttpClientFactory httpClient)
+        public async Task<CurrentResponse> ListDropdownValues(DependecyParams dependecyParams)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"aircraft/modellist");
+            dependecyParams.URL = "aircraft/modellist";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }

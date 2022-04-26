@@ -62,7 +62,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         protected override async Task OnInitializedAsync()
         {
-            timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             // user should be superadmin, admin or owner of reservation to update or delete it
@@ -99,7 +99,8 @@ namespace FSM.Blazor.Pages.Scheduler
             //schedulerVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             //schedulerVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
 
-            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(_httpClient, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(dependecyParams, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
 
             NotificationMessage message;
 
@@ -174,7 +175,8 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerEndTimeDetailsVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
 
-            CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(_httpClient, schedulerEndTimeDetailsVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(dependecyParams, schedulerEndTimeDetailsVM);
 
             if (response == null)
             {
@@ -234,7 +236,8 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             NotificationMessage message;
 
-            CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(_httpClient, schedulerVM.AircraftEquipmentsTimeList);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(dependecyParams, schedulerVM.AircraftEquipmentsTimeList);
 
             if (response == null)
             {
@@ -360,7 +363,9 @@ namespace FSM.Blazor.Pages.Scheduler
             await SetCheckOutButtonState(true);
 
             // check if someone else already checked out it 
-            CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(_httpClient, schedulerVM.AircraftId.GetValueOrDefault());
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(dependecyParams, schedulerVM.AircraftId.GetValueOrDefault());
 
             await SetCheckOutButtonState(false);
 
@@ -395,7 +400,8 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             NotificationMessage message;
 
-            CurrentResponse response = await AircraftSchedulerDetailService.CheckOut(_httpClient, schedulerVM.Id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerDetailService.CheckOut(dependecyParams, schedulerVM.Id);
 
             if (response == null)
             {
@@ -504,7 +510,8 @@ namespace FSM.Blazor.Pages.Scheduler
 
             await SetUnCheckOutButtonState(true);
 
-            CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(_httpClient, schedulerVM.AircraftSchedulerDetailsVM.Id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(dependecyParams, schedulerVM.AircraftSchedulerDetailsVM.Id);
 
             await SetUnCheckOutButtonState(false);
 
@@ -557,7 +564,8 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             await SetDeleteButtonState(true);
 
-            CurrentResponse response = await AircraftSchedulerService.DeleteAsync(_httpClient, schedulerVM.Id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftSchedulerService.DeleteAsync(dependecyParams, schedulerVM.Id);
 
             await SetDeleteButtonState(false);
 

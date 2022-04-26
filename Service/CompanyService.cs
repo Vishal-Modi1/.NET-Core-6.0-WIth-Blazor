@@ -6,6 +6,7 @@ using System.Net;
 using DataModels.VM.Company;
 using DataModels.VM.Common;
 using Service.Interface;
+using DataModels.Constants;
 
 namespace Service
 {
@@ -80,6 +81,11 @@ namespace Service
             try
             {
                 List<CompanyVM> companyList = _companyRepository.List(datatableParams);
+
+                foreach (CompanyVM companyVM in companyList)
+                {
+                    companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{companyVM.Logo}";
+                }
 
                 CreateResponse(companyList, HttpStatusCode.OK, "");
 
@@ -184,6 +190,40 @@ namespace Service
             return _currentResponse;
         }
 
+        public CurrentResponse UpdateImageName(int id, string logoName)
+        {
+            try
+            {
+                bool isImageNameUpdated = _companyRepository.UpdateImageName(id, logoName);
+
+                Company company = _companyRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
+                company.Logo = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{company.Logo}";
+
+                CreateResponse(company, HttpStatusCode.OK, "Profile picture updated successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        private bool IsCompanyExist(CompanyVM companyVM)
+        {
+            Company company = _companyRepository.FindByCondition(p => p.Name == companyVM.Name && p.Id != companyVM.Id);
+
+            if (company == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         #region Object Mapper
 
         private CompanyVM ToBusinessObject(Company company)
@@ -198,6 +238,9 @@ namespace Service
             companyVM.Website = company.Website;
             companyVM.PrimaryAirport = company.PrimaryAirport;
             companyVM.PrimaryServiceId = company.PrimaryServiceId;
+            companyVM.Logo = company.Logo;
+
+            companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{companyVM.Logo}";
 
             return companyVM;
         }
@@ -215,7 +258,6 @@ namespace Service
             company.PrimaryAirport = companyVM.PrimaryAirport;
             company.PrimaryServiceId = companyVM.PrimaryServiceId == null ? null : (short)companyVM.PrimaryServiceId;
 
-
             company.CreatedBy = companyVM.CreatedBy;
             company.UpdatedBy = companyVM.UpdatedBy;
             company.IsActive = true;
@@ -231,17 +273,5 @@ namespace Service
         }
 
         #endregion
-
-        private bool IsCompanyExist(CompanyVM companyVM)
-        {
-            Company company = _companyRepository.FindByCondition(p => p.Name == companyVM.Name && p.Id != companyVM.Id);
-
-            if (company == null)
-            {
-                return false;
-            }
-
-            return true;
-        }
     }
 }

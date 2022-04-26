@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using DataModels.VM.Common;
 using Radzen.Blazor;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.Account
 {
@@ -58,7 +59,9 @@ namespace FSM.Blazor.Pages.Account
                 message = new NotificationMessage().Build(NotificationSeverity.Info, "" , "Validating Token..");
                 NotificationService.Notify(message);
 
-                CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(_httpClient, link[0]);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+                CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, link[0]);
 
                 ManageResponse(response);
             }
@@ -103,17 +106,19 @@ namespace FSM.Blazor.Pages.Account
         public async Task Submit(ResetPasswordVM resetPasswordVM)
         {
             isValidToken = false;
-           // DisplayAlert(BadgeStyle.Info, "Validating Token..");
+            // DisplayAlert(BadgeStyle.Info, "Validating Token..");
 
-           // StateHasChanged();
+            // StateHasChanged();
 
-            CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(_httpClient, resetPasswordVM.Token);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, resetPasswordVM.Token);
 
             ManageResponse(response);
 
             if (isValidToken)
             {
-                response = await AccountService.ResetPasswordAsync(_httpClient, resetPasswordVM);
+                response = await AccountService.ResetPasswordAsync(dependecyParams, resetPasswordVM);
 
                 NotificationMessage message;
 

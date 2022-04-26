@@ -258,6 +258,11 @@ CREATE TABLE [dbo].[Companies](
 	[Name] [varchar](200) NOT NULL,
 	[Address] [varchar](300) NOT NULL,
 	[ContactNo] [varchar](20) NULL,
+	[TimeZone] [varchar](100) NOT NULL,
+	[Website] [varchar](50) NULL,
+	[PrimaryAirport] [varchar](200) NULL,
+	[PrimaryServiceId] [smallint] NULL,
+	[Logo] [varchar](200) NULL,
 	[IsActive] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
@@ -266,10 +271,6 @@ CREATE TABLE [dbo].[Companies](
 	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,
 	[DeletedBy] [bigint] NULL,
-	[TimeZone] [varchar](100) NOT NULL,
-	[Website] [varchar](50) NULL,
-	[PrimaryAirport] [varchar](200) NULL,
-	[PrimaryServiceId] [smallint] NULL,
  CONSTRAINT [PK_Companies] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -1235,7 +1236,8 @@ CREATE PROCEDURE [dbo].[GetCompanyList]
     @PageNo INT = 1,  
     @PageSize INT = 10,  
     @SortColumn NVARCHAR(20) = 'Name',  
-    @SortOrder NVARCHAR(20) = 'ASC'  
+    @SortOrder NVARCHAR(20) = 'ASC',
+	@CompanyId INT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -1246,7 +1248,10 @@ AS BEGIN
     (  
         SELECT * from Companies 
 		
-        WHERE  IsDeleted = 0 and ( @SearchValue= '' OR  (   
+        WHERE  IsDeleted = 0 and 
+		((ISNULL(@CompanyId,0)=0)
+				OR (Id = @CompanyId))
+				and (@SearchValue= '' OR  (   
               Name LIKE '%' + @SearchValue + '%' 
             )  )
   
@@ -1263,11 +1268,7 @@ AS BEGIN
     ),  
     CTE_TotalRows AS   
     (  
-        select count(ID) as TotalRecords from Companies 
-		
-        WHERE IsDeleted = 0 and ( @SearchValue= '' OR  (   
-              Name LIKE '%' + @SearchValue + '%' 
-            )  )
+        select count(ID) as TotalRecords from CTE_Results 
     )  
     Select  * from CTE_Results 
 	, CTE_TotalRows   
@@ -1277,7 +1278,7 @@ END
 
 /****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
-GO
+
 /****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO

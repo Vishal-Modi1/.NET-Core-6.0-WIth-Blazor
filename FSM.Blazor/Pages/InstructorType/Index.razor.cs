@@ -61,7 +61,8 @@ namespace FSM.Blazor.Pages.InstructorType
             pageSize = datatableParams.Length;
             datatableParams.SearchText = searchText;
 
-            data = await InstructorTypeService.ListAsync(_httpClient,datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await InstructorTypeService.ListAsync(dependecyParams,datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;            
         }
@@ -78,7 +79,9 @@ namespace FSM.Blazor.Pages.InstructorType
 
         async Task DeleteAsync(int id)
         {
-            CurrentResponse response = await InstructorTypeService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await InstructorTypeService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
 

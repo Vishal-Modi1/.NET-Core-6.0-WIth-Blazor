@@ -3,6 +3,7 @@ using DataModels.VM.InstructorType;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.InstructorType
 {
@@ -24,7 +25,8 @@ namespace FSM.Blazor.Pages.InstructorType
         {
             SetSaveButtonState(true);
 
-            CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(_httpClient, instructorTypeData);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(dependecyParams, instructorTypeData);
 
             SetSaveButtonState(false);
 

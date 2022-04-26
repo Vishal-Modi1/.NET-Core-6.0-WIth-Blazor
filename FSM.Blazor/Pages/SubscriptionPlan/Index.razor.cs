@@ -78,7 +78,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                 datatableParams.IsActive = true;
             }
 
-            data = await SubscriptionPlanService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await SubscriptionPlanService.ListAsync(dependecyParams, datatableParams);
             
             isLoading = false;
         }
@@ -93,7 +94,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
         {
             SetUpdateStatusButtonState(true);
 
-            CurrentResponse response = await SubscriptionPlanService.UpdateStatus(_httpClient, id, value);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await SubscriptionPlanService.UpdateStatus(dependecyParams, id, value);
 
             SetUpdateStatusButtonState(false);
 
@@ -138,8 +140,9 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                 SetEditButtonState(id, true);
             }
 
-            SubscriptionPlanVM subscriptionPlanVM = await SubscriptionPlanService.GetDetailsAsync(_httpClient, id);
-            subscriptionPlanVM.ModulesList = await ModuleDetailsService.ListDropDownValues(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            SubscriptionPlanVM subscriptionPlanVM = await SubscriptionPlanService.GetDetailsAsync(dependecyParams, id);
+            subscriptionPlanVM.ModulesList = await ModuleDetailsService.ListDropDownValues(_httpClient, AuthenticationStateProvider);
 
             if (isCreate)
             {
@@ -167,7 +170,8 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
         async Task DeleteAsync(int id)
         {
-            CurrentResponse response = await SubscriptionPlanService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await SubscriptionPlanService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
 

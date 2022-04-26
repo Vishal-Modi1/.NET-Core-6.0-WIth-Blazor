@@ -58,7 +58,8 @@ namespace FSM.Blazor.Pages.BillingHistory
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            data = await BillingHistoryService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await BillingHistoryService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
         }

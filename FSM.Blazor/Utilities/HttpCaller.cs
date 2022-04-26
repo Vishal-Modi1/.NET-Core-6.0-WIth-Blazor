@@ -24,22 +24,22 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-        public async Task<CurrentResponse> PostAsync(IHttpClientFactory _httpClient, string url, string jsonData)
+        public async Task<CurrentResponse> PostAsync(DependecyParams dependecyParams)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, dependecyParams.URL);
                 request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
 
-                request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                request.Content = new StringContent(dependecyParams.JsonData, Encoding.UTF8, "application/json");
 
-                var client = _httpClient.CreateClient("FSMAPI");
+                var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    await ManageUnAuthorizedErrorAsync(_httpClient);
+                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
                 }
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
@@ -52,7 +52,7 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-        //public async Task<bool> IsTokenValid(IHttpClientFactory _httpClientFactory, string token)
+        //public async Task<bool> IsTokenValid(IHttpClientFactory dependecyParams.HttpClientFactoryFactory, string token)
         //{
         //    try
         //    {
@@ -60,7 +60,7 @@ namespace FSM.Blazor.Utilities
         //        request.Headers.Clear();
         //        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        //        var client = _httpClientFactory.CreateClient("FSMAPI");
+        //        var client = dependecyParams.HttpClientFactoryFactory.CreateClient("FSMAPI");
 
         //        HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
@@ -77,22 +77,22 @@ namespace FSM.Blazor.Utilities
         //    }
         //}
 
-        public async Task<CurrentResponse> PutAsync(IHttpClientFactory _httpClient, string url, string jsonData)
+        public async Task<CurrentResponse> PutAsync(DependecyParams dependecyParams)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Put, url);
+                var request = new HttpRequestMessage(HttpMethod.Put, dependecyParams.URL);
                 request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
 
-                request.Content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                request.Content = new StringContent(dependecyParams.JsonData, Encoding.UTF8, "application/json");
 
-                var client = _httpClient.CreateClient("FSMAPI");
+                var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    await ManageUnAuthorizedErrorAsync(_httpClient);
+                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
                 }
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
@@ -106,21 +106,21 @@ namespace FSM.Blazor.Utilities
 
         }
 
-        public async Task<CurrentResponse> GetAsync(IHttpClientFactory _httpClient, string url)
+        public async Task<CurrentResponse> GetAsync(DependecyParams dependecyParams)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                var request = new HttpRequestMessage(HttpMethod.Get, dependecyParams.URL);
                 request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
 
-                var client = _httpClient.CreateClient("FSMAPI");
+                var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    await ManageUnAuthorizedErrorAsync(_httpClient);
+                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
                 }
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
@@ -133,26 +133,27 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-        private async Task ManageUnAuthorizedErrorAsync(IHttpClientFactory _httpClient)
+        private async Task ManageUnAuthorizedErrorAsync(IHttpClientFactory httpClientFactory)
         {
             throw new Exception(HttpStatusCode.Unauthorized.ToString());
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory _httpClient, string url)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Delete, url);
+                var request = new HttpRequestMessage(HttpMethod.Delete, dependecyParams.URL);
                 request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
 
-                var client = _httpClient.CreateClient("FSMAPI");
+
+                var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    await ManageUnAuthorizedErrorAsync(_httpClient);
+                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
                 }
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
@@ -165,23 +166,23 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-        public async Task<CurrentResponse> PostFileAsync(IHttpClientFactory _httpClient, string url, MultipartFormDataContent fileContent)
+        public async Task<CurrentResponse> PostFileAsync(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
         {
             try
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, dependecyParams.URL);
                 request.Headers.Clear();
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken));
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
 
                 request.Content = fileContent;
 
-                var client = _httpClient.CreateClient("FSMAPI");
+                var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
                 if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    await ManageUnAuthorizedErrorAsync(_httpClient);
+                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
                 }
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
@@ -194,14 +195,14 @@ namespace FSM.Blazor.Utilities
             }
         }
 
-        public string GetClaimValue(string claimType)
+        public string GetClaimValue(string claimType, AuthenticationStateProvider authenticationStateProvider)
         {
-            if (_authenticationStateProvider == null)
+            if(authenticationStateProvider == null)
             {
                 return "";
             }
 
-            ClaimsPrincipal cp = _authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+            ClaimsPrincipal cp = authenticationStateProvider.GetAuthenticationStateAsync().Result.User;
 
             string claimValue = cp.Claims.Where(c => c.Type == claimType)
                                .Select(c => c.Value).SingleOrDefault();

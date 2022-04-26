@@ -28,12 +28,13 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         {
             SetSaveButtonState(true);
 
-            string timeZone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            string timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             airCraftEquipmentsVM.LogEntryDate = DateConverter.ToUTC(airCraftEquipmentsVM.LogEntryDate.Value, timeZone);
             airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToUTC(airCraftEquipmentsVM.ManufacturerDate.Value, timeZone);
 
-            CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(_httpClient, airCraftEquipmentsVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(dependecyParams, airCraftEquipmentsVM);
 
             SetSaveButtonState(false);
 

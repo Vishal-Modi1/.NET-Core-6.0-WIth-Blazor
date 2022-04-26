@@ -48,7 +48,8 @@ namespace FSM.Blazor.Pages.User
             {
                 SetButtonState(true);
 
-                response = await UserService.IsEmailExistAsync(_httpClient, userData.Email);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                response = await UserService.IsEmailExistAsync(dependecyParams, userData.Email);
 
                 SetButtonState(false);
 
@@ -61,7 +62,8 @@ namespace FSM.Blazor.Pages.User
 
                 userDataVM.ActivationLink = NavigationManager.BaseUri + "AccountActivation?Token=";
 
-                response = await UserService.SaveandUpdateAsync(_httpClient, userDataVM);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                response = await UserService.SaveandUpdateAsync(dependecyParams, userDataVM);
 
                 SetButtonState(false);
 

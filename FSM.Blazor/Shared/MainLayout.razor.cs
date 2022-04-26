@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Radzen;
+using System.Security.Claims;
 
 namespace FSM.Blazor.Shared
 {
@@ -47,6 +48,8 @@ namespace FSM.Blazor.Shared
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             var user = (await AuthStat).User;
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user1 = authState.User;
 
             if (!user.Identity.IsAuthenticated)
             {
@@ -58,6 +61,8 @@ namespace FSM.Blazor.Shared
 
             loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
                                .Select(c => c.Value).SingleOrDefault();
+
+            base.StateHasChanged();
 
         }
 
@@ -89,6 +94,21 @@ namespace FSM.Blazor.Shared
             {
                await OpenChangePasswordDailog();
             }
+        }
+
+        public string GetClaimValue(string claimType)
+        {
+            if (AuthenticationStateProvider == null)
+            {
+                return "";
+            }
+
+            ClaimsPrincipal cp = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+
+            string claimValue = cp.Claims.Where(c => c.Type == claimType)
+                               .Select(c => c.Value).SingleOrDefault();
+
+            return claimValue;
         }
     }
 }

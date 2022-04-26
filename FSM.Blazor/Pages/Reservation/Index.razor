@@ -13,7 +13,7 @@
 @inject DialogService DialogService
 @inject NavigationManager NavManager
 @inject AircraftSchedulerService AircraftSchedulerService
-@inject AuthenticationStateProvider authenticationStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
@@ -37,7 +37,7 @@
 
 <div class="row">
 
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != "Company")
     {
         <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"

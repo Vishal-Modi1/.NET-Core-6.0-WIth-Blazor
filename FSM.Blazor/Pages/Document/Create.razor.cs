@@ -82,7 +82,8 @@ namespace FSM.Blazor.Pages.Document
         {
             isDisplayLoader = true;
 
-            documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(_httpClient, documentData.CompanyId);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
 
             isDisplayLoader = false;
             base.StateHasChanged();
@@ -235,7 +236,8 @@ namespace FSM.Blazor.Pages.Document
             multiContent.Add(new StringContent(String.Join(",", selectedTagsList)), "Tags");
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
 
-            CurrentResponse response = await DocumentService.UploadDocumentAsync(_httpClient, multiContent);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await DocumentService.UploadDocumentAsync(dependecyParams, multiContent);
 
             SetSaveButtonState(false);
 
@@ -340,7 +342,8 @@ namespace FSM.Blazor.Pages.Document
             await DialogService.OpenAsync<DocumentTag.Create>("Create",
                   null, new DialogOptions() { Width = "500px", Height = "300px" });
 
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
         }
 
         private void SetSaveButtonState(bool isBusyState)

@@ -24,5 +24,7 @@ namespace Repository.Interface
         List<DropDownValues> ListDropDownValues();
 
         List<DropDownValues> ListCompanyServicesDropDownValues();
+
+        bool UpdateImageName(int id, string logoName);
     }
 }

@@ -119,7 +119,7 @@ namespace Repository
                 int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<CompanyVM> list;
 
-                string sql = $"EXEC dbo.GetCompanyList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+                string sql = $"EXEC dbo.GetCompanyList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
 
                 list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
 
@@ -132,6 +132,24 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 return _myContext.Companies.Where(predicate).FirstOrDefault();
+            }
+        }
+
+        public bool UpdateImageName(int id, string logoName)
+        {
+            using (_myContext = new MyContext())
+            {
+                Company existingCompany = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+
+                if (existingCompany != null)
+                {
+                    existingCompany.Logo = logoName;
+                    _myContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
             }
         }
     }

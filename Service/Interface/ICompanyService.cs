@@ -13,5 +13,6 @@ namespace Service.Interface
         CurrentResponse GetDetails(int id);
         CurrentResponse Delete(int id, long deletedBy);
         CurrentResponse ListCompanyServiceDropDownValues();
+        CurrentResponse UpdateImageName(int id, string logoName);
     }
 }

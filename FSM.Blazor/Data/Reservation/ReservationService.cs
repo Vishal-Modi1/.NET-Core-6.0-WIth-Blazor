@@ -1,10 +1,8 @@
-﻿using DataModels.VM.Reservation;
+﻿using DataModels.VM.Common;
+using DataModels.VM.Reservation;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
-using DataModels.VM.Common;
 using Newtonsoft.Json;
-using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Reservation
 {
@@ -17,11 +15,12 @@ namespace FSM.Blazor.Data.Reservation
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<ReservationDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<ReservationDataVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "reservation/List"; 
 
-            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "reservation/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -33,9 +32,11 @@ namespace FSM.Blazor.Data.Reservation
             return reservationsList; 
         }
 
-        public async Task<ReservationFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)
+        public async Task<ReservationFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"reservation/getfilters");
+            dependecyParams.URL = $"reservation/getfilters";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             ReservationFilterVM reservationFilterVM = new ReservationFilterVM();
 

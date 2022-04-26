@@ -49,7 +49,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
-            timeZone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
             bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
@@ -73,7 +73,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             AircraftEquipmentDatatableParams datatableParams = new AircraftEquipmentDatatableParams().Create(args, "Status");
             datatableParams.AircraftId = AircraftId;
 
-            data = await AircraftEquipmentService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            data = await AircraftEquipmentService.ListAsync(dependecyParams, datatableParams);
 
             data.ForEach(p =>
             {
@@ -87,7 +88,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async Task DeleteAsync(long id)
         {
-            CurrentResponse response = await AircraftEquipmentService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftEquipmentService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
 
@@ -115,7 +117,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         {
             SetAddNewButtonState(true);
 
-            AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, id);
 
             if (airCraftEquipmentsVM.LogEntryDate == null)
             {
