@@ -1225,7 +1225,9 @@ AS BEGIN
    
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetCompanyList]    Script Date: 01-02-2022 09:37:22 ******/
+
+
+/****** Object:  StoredProcedure [dbo].[GetCompanyList]    Script Date: 28-04-2022 15:57:20 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1268,7 +1270,14 @@ AS BEGIN
     ),  
     CTE_TotalRows AS   
     (  
-        select count(ID) as TotalRecords from CTE_Results 
+        select count(ID) as TotalRecords from Companies 
+		
+        WHERE  IsDeleted = 0 and 
+		((ISNULL(@CompanyId,0)=0)
+				OR (Id = @CompanyId))
+				and (@SearchValue= '' OR  (   
+              Name LIKE '%' + @SearchValue + '%' 
+            )  )
     )  
     Select  * from CTE_Results 
 	, CTE_TotalRows   
@@ -1279,9 +1288,7 @@ END
 /****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
 
-/****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 01-02-2022 09:37:22 ******/
-SET ANSI_NULLS ON
-GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[GetInstructorTypeList]  
@@ -1584,7 +1591,7 @@ AS BEGIN
      
 END  
 
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 12-04-2022 17:15:42 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 28-04-2022 16:08:36 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1600,7 +1607,8 @@ CREATE PROCEDURE [dbo].[GetReservationList]
 	@StartDate DATETIME = NULL,
 	@EndDate DATETIME = NULL,
 	@UserId BIGINT = NULL,
-	@AircraftId BIGINT = NULL
+	@AircraftId BIGINT = NULL,
+	@ReservationType VARCHAR(10) = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -1643,6 +1651,12 @@ AS BEGIN
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
 				OR (acs.EndDateTime  <= @EndDate ))
+				AND
+				(((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Past') AND EndDateTime < SYSDATETIME()))
+				OR
+				((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Future') AND StartDateTime > SYSDATETIME())))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1650,7 +1664,7 @@ AS BEGIN
               ScheduleTitle LIKE '%' + @SearchValue + '%' OR
 			  ReservationId LIKE '%' + @SearchValue + '%' OR
 			  TailNo LIKE '%' + @SearchValue + '%' 
-            ))  
+            )) 
   
             ORDER BY  
             CASE WHEN (@SortColumn = 'StartDateTime' AND @SortOrder='ASC')  
@@ -1693,12 +1707,11 @@ AS BEGIN
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
-		LEFT JOIN  Companies cp on a.CompanyId = cp.Id  
+		LEFT JOIN  Companies cp on a.CompanyId = cp.Id   
 		LEFT JOIN AircraftScheduleHobbsTimes ah
 		ON acs.Id = ah.AircraftScheduleId
 		LEFT JOIN AircraftEquipmentTimes at
 		ON ah.AircraftEquipmentTimeId = at.Id
-
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
 			(at.IsDeleted = 0 or at.IsDeleted Is NULL) and
@@ -1706,7 +1719,7 @@ AS BEGIN
 			AND
 			1 = 1 AND 
 		      (
-			   ((ISNULL(@UserId,0)=0)
+				((ISNULL(@UserId,0)=0)
 				OR (acs.CreatedBy = @UserId))
 				AND
 				((ISNULL(@AircraftId,0)=0)
@@ -1719,7 +1732,13 @@ AS BEGIN
 				OR (acs.StartDateTime   >= @StartDate ))
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
-				OR (acs.EndDateTime <= @EndDate ))
+				OR (acs.EndDateTime  <= @EndDate ))
+				AND
+				(((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Past') AND EndDateTime < SYSDATETIME()))
+				OR
+				((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Future') AND StartDateTime > SYSDATETIME())))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1727,13 +1746,12 @@ AS BEGIN
               ScheduleTitle LIKE '%' + @SearchValue + '%' OR
 			  ReservationId LIKE '%' + @SearchValue + '%' OR
 			  TailNo LIKE '%' + @SearchValue + '%' 
-            ))  
+            )) 
     )
 	
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
-GO
 
 CREATE Trigger [dbo].[Trg_Company_InsertUserRolePermission]
 On [dbo].[Companies]

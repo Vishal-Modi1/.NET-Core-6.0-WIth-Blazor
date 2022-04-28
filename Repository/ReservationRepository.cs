@@ -17,6 +17,12 @@ namespace Repository
                 int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<ReservationDataVM> list;
                 string startDate = "", endDate = "";
+                string reservationType = "";
+
+                if(datatableParams.ReservationType.ToString() != "0")
+                {
+                    reservationType = datatableParams.ReservationType.ToString();
+                }
 
                 if(datatableParams.StartDate != null)
                 {
@@ -30,7 +36,8 @@ namespace Repository
 
                 string sql = $"EXEC dbo.GetReservationList '{ datatableParams.SearchText }', { pageNo }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                    $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}, {datatableParams.AircraftId.GetValueOrDefault()}";
+                    $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}," +
+                    $"{datatableParams.AircraftId.GetValueOrDefault()},'{reservationType}'";
 
                 list = _myContext.ReservationDataVM.FromSqlRaw<ReservationDataVM>(sql).ToList();
 

@@ -67,18 +67,20 @@ namespace FSM.Blazor.Pages.Reservation
        
         public DateTime? startDate, endDate;
         IList<ReservationDataVM> data;
-        int count;
+        int count, reservationFilterTypeId;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         bool isLoading;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string searchText;
+        DependecyParams dependecyParams;
 
         #endregion
 
         string moduleName = "Reservation";
 
         UIOptions uiOptions = new UIOptions();
+        List<DropDownValues> ReservationTypeFilter = new List<DropDownValues>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -93,8 +95,43 @@ namespace FSM.Blazor.Pages.Reservation
             isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
 
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+
+            dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             reservationFilterVM = await ReservationService.GetFiltersAsync(dependecyParams);
+
+            if (CompanyId != 0 || !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.CompanyId).Result) )
+            {
+                reservationFilterVM.CompanyId = CompanyId == null ? Convert.ToInt32(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.CompanyId).Result) : CompanyId.Value;
+                reservationFilterVM.Users = await UserService.ListDropDownValuesByCompanyId(dependecyParams, reservationFilterVM.CompanyId);
+            }
+
+            GetReservationTypeFilter();
+        }
+
+        private void GetReservationTypeFilter()
+        {
+            List<ReservationType> reservationFilterList = Enum.GetValues(typeof(ReservationType))
+                           .Cast<ReservationType>()
+                           .ToList();
+
+            foreach (ReservationType reservationFilter in reservationFilterList)
+            {
+                ReservationTypeFilter.Add(new DropDownValues()
+                {
+                    Id = ((int)reservationFilter),
+                    Name = reservationFilter.ToString()
+                });
+            }
+        }
+
+        async void GetUsersList()
+        {
+            isLoading = true;
+
+            reservationFilterVM.Users = await UserService.ListDropDownValuesByCompanyId(dependecyParams, reservationFilterVM.CompanyId);
+            grid.Reload();
+
+            isLoading = false ;
         }
 
         async void OnStartDateChange(DateTime? value)
@@ -119,6 +156,11 @@ namespace FSM.Blazor.Pages.Reservation
             datatableParams.StartDate = startDate;
             datatableParams.EndDate = endDate;
 
+            if (reservationFilterTypeId != 0)
+            {
+                datatableParams.ReservationType = (ReservationType)reservationFilterTypeId;
+            }
+
             if (ParentModuleName == "Company")
             {
                 datatableParams.CompanyId = CompanyId.GetValueOrDefault();
@@ -126,6 +168,11 @@ namespace FSM.Blazor.Pages.Reservation
             else
             {
                 datatableParams.CompanyId = reservationFilterVM.CompanyId;
+            }
+
+            if(reservationFilterVM.UserId > 0)
+            {
+                datatableParams.UserId = reservationFilterVM.UserId;
             }
 
             if (!isSuperAdmin && !isAdmin)

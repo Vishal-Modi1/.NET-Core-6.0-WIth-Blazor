@@ -199,7 +199,7 @@ namespace Service
                 Company company = _companyRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
                 company.Logo = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{company.Logo}";
 
-                CreateResponse(company, HttpStatusCode.OK, "Profile picture updated successfully.");
+                CreateResponse(company, HttpStatusCode.OK, "Company logo updated successfully.");
 
                 return _currentResponse;
             }

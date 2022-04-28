@@ -2,6 +2,7 @@
 @using DataModels.Enums
 @using FSM.Blazor.Data.AircraftSchedule
 @using FSM.Blazor.Data.Reservation
+@using FSM.Blazor.Data.User
 @using DataModels.VM.Reservation
 @using Configuration;
 @using Syncfusion.Blazor.Popups;
@@ -14,6 +15,7 @@
 @inject NavigationManager NavManager
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserService UserService
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
@@ -37,23 +39,34 @@
 
 <div class="row">
 
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != "Company")
+    @if (isSuperAdmin && ParentModuleName != "Company")
     {
-        <div class="col-md-3" style="padding-top:0.5%; margin: 8px 0px">
+        <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
                         TextProperty="Name" Placeholder="Select Company" style="width: 100%;"
-                        Data="@reservationFilterVM.Companies" Change="@(args =>  grid.Reload())"
+                        Data="@reservationFilterVM.Companies" Change="@(args =>  GetUsersList())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
             </RadzenDropDown>
         </div>
     }
 
-    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    @if (isSuperAdmin ||isAdmin)
+    {
+        <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+            <RadzenDropDown @bind-Value="@reservationFilterVM.UserId" TValue="long"
+                        TextProperty="Name" Placeholder="Select Users" style="width: 100%;"
+                        Data="@reservationFilterVM.Users" Change="@(args =>  grid.Reload())"
+                        Name="UserId" ValueProperty="Id" AllowClear="true">
+            </RadzenDropDown>
+        </div>
+    }
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
     </div>
 
-    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
 
         <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
                           @bind-Value="@startDate" Placeholder="Select Start Date"
@@ -61,12 +74,20 @@
                           DateFormat="dd/MM/yyyy" Class="w-100" />
     </div>
 
-    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-3 " : "col-md-4 ")" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
 
         <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
                           @bind-Value="@endDate" Placeholder="Select End Date"
                           Change=@(args => OnEndDateChange(args))
                           DateFormat="dd/MM/yyyy" Class="w-100" />
+    </div>
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenDropDown @bind-Value="@reservationFilterTypeId" TValue="int"
+                        TextProperty="Name" Placeholder="Select Reservation Type" style="width: 100%;"
+                        Data="@ReservationTypeFilter" Change="@(args =>  grid.Reload())"
+                        Name="ReservationType" ValueProperty="Id" AllowClear="true">
+        </RadzenDropDown>
     </div>
 
 </div>
@@ -92,8 +113,8 @@
         {
             <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
         }
-        
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="From" >
+
+        <RadzenDataGridColumn TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="From">
             <Template Context="value">
 
                 @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")
@@ -101,7 +122,7 @@
             </Template>
         </RadzenDataGridColumn>
 
-        
+
         <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To">
             <Template Context="value">
 

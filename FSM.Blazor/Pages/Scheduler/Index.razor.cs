@@ -77,7 +77,7 @@ namespace FSM.Blazor.Pages.Scheduler
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
             UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
-            
+
             ObservableAircraftsData = new ObservableCollection<ResourceData>(await GetAircraftData(aircraftPreference));
         }
 
@@ -255,9 +255,18 @@ namespace FSM.Blazor.Pages.Scheduler
 
         public async Task OpenCreateAppointmentDialog(CellClickEventArgs args)
         {
+            var SelectedResource = ScheduleRef.GetResourceByIndex(args.GroupIndex);
+            var groupData = JsonConvert.DeserializeObject<SchedulerVM>(JsonConvert.SerializeObject(SelectedResource.GroupData));
+
+            await OpenCreateScheduleDialogAsync(args.StartTime, args.EndTime, groupData.AircraftId);
+        }
+
+        private async Task OpenCreateScheduleDialogAsync(DateTime? startTime, DateTime? endTime, long? aircraftId)
+        {
+
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler"))
             {
-                await DialogService.OpenAsync<UnAuthorized>("Un Authorized",
+                await DialogService.OpenAsync<UnAuthorized>("UnAuthorized",
                   new Dictionary<string, object>() { { "UnAuthorizedMessage", "You are not authorized to create new reservation. Please contact to your administartor" } },
                   new DialogOptions() { Width = "410px", Height = "165px" });
 
@@ -271,14 +280,23 @@ namespace FSM.Blazor.Pages.Scheduler
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, 0);
 
-            schedulerVM.StartTime = args.StartTime;
-            schedulerVM.EndTime = args.EndTime;
+            if (startTime != null)
+            {
+                schedulerVM.StartTime = startTime.Value;
+                schedulerVM.EndTime = endTime.Value;
+            }
+            else
+            {
+                schedulerVM.StartTime =  DateTime.Now;
+                schedulerVM.EndTime = DateTime.Now.AddMinutes(30);
+            }
 
-            var SelectedResource = ScheduleRef.GetResourceByIndex(args.GroupIndex);
-            var groupData = JsonConvert.DeserializeObject<SchedulerVM>(JsonConvert.SerializeObject(SelectedResource.GroupData));
-            schedulerVM.AircraftId = groupData.AircraftId;
+            if (aircraftId != null)
+            {
+                schedulerVM.AircraftId = aircraftId;
+            }
 
-            args.Cancel = true;
+            //  args.Cancel = true;
             uiOptions.dialogVisibility = true;
 
             isDisplayLoader = false;
@@ -372,7 +390,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
                 ObservableAircraftsData = new ObservableCollection<ResourceData>(aircraftResourceList);
             }
-                base.StateHasChanged();
+            base.StateHasChanged();
         }
 
         private void CloseDialog()

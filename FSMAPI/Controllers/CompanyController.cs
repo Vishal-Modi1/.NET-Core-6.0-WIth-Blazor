@@ -29,7 +29,12 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(DatatableParams datatableParams)
         {
-            datatableParams.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+
+            if (!string.IsNullOrWhiteSpace(companyId))
+            {
+                datatableParams.CompanyId = Convert.ToInt32(companyId);
+            }
 
             CurrentResponse response = _companyService.List(datatableParams);
 
