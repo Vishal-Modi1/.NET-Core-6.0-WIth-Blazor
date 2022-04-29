@@ -24,7 +24,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
         {
-            <RadzenTabsItem Text="Reservation">
+            <RadzenTabsItem Text="Reservations">
 
                 <FSM.Blazor.Pages.Reservation.Index  AircraftId="@AircraftData.Id">
 
@@ -34,7 +34,7 @@
         }
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
         {
-            <RadzenTabsItem Text="Document">
+            <RadzenTabsItem Text="Documents">
 
                 <FSM.Blazor.Pages.Document.Index ParentModuleName="Aircraft">
 

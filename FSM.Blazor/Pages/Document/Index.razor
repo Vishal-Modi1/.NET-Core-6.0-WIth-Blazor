@@ -58,7 +58,7 @@
 
     </div>
 
-    @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == "Company")
+    @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == Module.Company.ToString())
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@ModuleId" Style="width:100%; margin: 8px 4px;" TValue="int"
@@ -69,7 +69,7 @@
         </div>
     }
 
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != "Company")
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"

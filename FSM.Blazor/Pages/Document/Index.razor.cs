@@ -87,12 +87,12 @@ namespace FSM.Blazor.Pages.Document
            
             datatableParams.ModuleId = ModuleId;
 
-            if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != "Company")
+            if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
                 datatableParams.ModuleId = documentFilterVM.ModulesList.Where(p => p.Name == ParentModuleName).FirstOrDefault().Id;
             }
 
-            if (ParentModuleName == "Company")
+            if (ParentModuleName == Module.Company.ToString())
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }

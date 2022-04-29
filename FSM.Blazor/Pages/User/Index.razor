@@ -37,7 +37,7 @@
         </RadzenDropDown>
     </div>
 
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != "Company")
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
     {
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"

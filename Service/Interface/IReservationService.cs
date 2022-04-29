@@ -7,6 +7,6 @@ namespace Service.Interface
     {
         CurrentResponse List(ReservationDataTableParams datatableParams);
 
-        CurrentResponse GetFiltersValue(int roleId);
+        CurrentResponse GetFiltersValue(int roleId, int compamyId);
     }
 }

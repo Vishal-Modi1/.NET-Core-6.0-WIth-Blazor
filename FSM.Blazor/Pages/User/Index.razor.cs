@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using FSM.Blazor.Utilities;
 using Microsoft.Extensions.Caching.Memory;
 using DataModels.VM.Reservation;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.User
 {
@@ -86,7 +87,7 @@ namespace FSM.Blazor.Pages.User
            
             pageSize = datatableParams.Length;
 
-            if (ParentModuleName == "Company")
+            if (ParentModuleName == Module.Company.ToString())
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }

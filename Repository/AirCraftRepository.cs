@@ -150,15 +150,14 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownLargeValues> aircraftsList = (from aircraft in _myContext.AirCrafts
-                                                    where aircraft.IsDeleted == false
-                                                    && aircraft.IsActive == true
-                                                    && aircraft.CompanyId == companyId
-                                                    select new DropDownLargeValues()
-                                                    {
-                                                        Id = aircraft.Id,
-                                                        Name = aircraft.TailNo
-
-                                                    }).ToList();
+                                                           where aircraft.IsDeleted == false
+                                                           && aircraft.IsActive == true
+                                                           && (companyId == 0 || (aircraft.CompanyId == companyId))
+                                                           select new DropDownLargeValues()
+                                                           {
+                                                                Id = aircraft.Id,
+                                                                Name = aircraft.TailNo
+                                                           }).ToList();
 
                 return aircraftsList;
             }

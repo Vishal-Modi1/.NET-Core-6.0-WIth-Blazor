@@ -161,7 +161,7 @@ namespace FSM.Blazor.Pages.Reservation
                 datatableParams.ReservationType = (ReservationType)reservationFilterTypeId;
             }
 
-            if (ParentModuleName == "Company")
+            if (ParentModuleName == Module.Company.ToString())
             {
                 datatableParams.CompanyId = CompanyId.GetValueOrDefault();
             }
@@ -175,12 +175,21 @@ namespace FSM.Blazor.Pages.Reservation
                 datatableParams.UserId = reservationFilterVM.UserId;
             }
 
-            if (!isSuperAdmin && !isAdmin)
+            if (AircraftId == null)
             {
-                datatableParams.UserId = UserId;
+                datatableParams.AircraftId = reservationFilterVM.AircraftId;
+            }
+            else
+            {
+                datatableParams.AircraftId = AircraftId;
             }
 
-            datatableParams.AircraftId = AircraftId;
+            //if (!isSuperAdmin && !isAdmin)
+            //{
+            //    datatableParams.UserId = UserId;
+            //}
+
+            
 
             await LoadDataAsync();
         }

@@ -3,33 +3,33 @@
 <RadzenTabs RenderMode="TabRenderMode.Client">
     <Tabs>
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "User"))
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
         {
-            <RadzenTabsItem Text="User">
+            <RadzenTabsItem Text="Users">
 
-                <FSM.Blazor.Pages.User.Index CompanyIdParam="@CompanyData.Id" ParentModuleName="Company">
+                <FSM.Blazor.Pages.User.Index CompanyIdParam="@CompanyData.Id" ParentModuleName="@Module.Company.ToString()">
 
                 </FSM.Blazor.Pages.User.Index>
 
             </RadzenTabsItem>
         }
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Reservation.ToString()))
         {
-            <RadzenTabsItem Text="Reservation">
+            <RadzenTabsItem Text="Reservations">
 
-                <FSM.Blazor.Pages.Reservation.Index ParentModuleName="Company" CompanyId="@CompanyData.Id">
+                <FSM.Blazor.Pages.Reservation.Index ParentModuleName="@Module.Company.ToString()" CompanyId="@CompanyData.Id">
 
                 </FSM.Blazor.Pages.Reservation.Index>
 
             </RadzenTabsItem>
         }
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Document.ToString()))
         {
-            <RadzenTabsItem Text="Document">
+            <RadzenTabsItem Text="Documents">
 
-                <FSM.Blazor.Pages.Document.Index ParentModuleName="Company" CompanyIdParam="@CompanyData.Id">
+                <FSM.Blazor.Pages.Document.Index ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
 
                 </FSM.Blazor.Pages.Document.Index>
 

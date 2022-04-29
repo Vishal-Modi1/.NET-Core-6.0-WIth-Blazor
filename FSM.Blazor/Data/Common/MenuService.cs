@@ -63,6 +63,7 @@ namespace FSM.Blazor.Data.Common
                 MenuItem menuItem = new MenuItem();
 
                 menuItem.Action = userRolePermission.ActionName;
+                menuItem.Name = userRolePermission.ModuleName;
                 menuItem.Controller = userRolePermission.ControllerName;
                 menuItem.DisplayName = userRolePermission.DisplayName;
                 menuItem.IsAdministrationModule = userRolePermission.IsAdministrationModule;

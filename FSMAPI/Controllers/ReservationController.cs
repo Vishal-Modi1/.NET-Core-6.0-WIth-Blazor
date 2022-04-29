@@ -41,7 +41,10 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters(int roleId)
         {
-            CurrentResponse response = _reservationService.GetFiltersValue(roleId);
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
+            CurrentResponse response = _reservationService.GetFiltersValue(roleId, CompanyId);
 
             return Ok(response);
         }

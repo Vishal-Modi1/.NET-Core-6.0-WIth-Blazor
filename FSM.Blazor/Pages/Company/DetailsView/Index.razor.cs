@@ -1,4 +1,5 @@
 ﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.Company;
 using FSM.Blazor.Extensions;
@@ -30,7 +31,7 @@ namespace FSM.Blazor.Pages.Company.DetailsView
         protected IMemoryCache memoryCache { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
-        string moduleName = "Company";
+        string moduleName = Module.Company.ToString();
         public bool isAllowToEdit, isBusy = false, isDisplayLoader = false;
 
         protected override async Task OnInitializedAsync()

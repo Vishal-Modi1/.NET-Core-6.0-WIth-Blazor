@@ -51,6 +51,14 @@
             </Template>
         </RadzenDataGridColumn>
 
+         <RadzenDataGridColumn TItem="CompanyVM" Title="Name" Filterable="false" Sortable="false" >
+            <Template Context="value">
+
+                <a href="javascript:void(0)" @onclick="@((ui) => OpenCompanyDetailPagge(value))">@value.Name</a>
+
+            </Template>
+        </RadzenDataGridColumn>
+
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Property="Name" Title="Name"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="Address" Title="Address"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="TimeZone" Title="TimeZone"></RadzenDataGridColumn>

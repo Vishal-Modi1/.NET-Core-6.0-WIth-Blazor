@@ -1,5 +1,6 @@
 ﻿@using FSM.Blazor.Data.Common
 @using Syncfusion.Blazor.Spinner
+@using DataModels.Enums;
 
 @inject MenuService MenuService
 @inject NavigationManager UriHelper
@@ -29,19 +30,19 @@
 
                 <RadzenTabsItem Text=@name>
 
-                    @if(name == "Company")
+                    @if(name == Module.Company.ToString())
                     {
                         <FSM.Blazor.Pages.Company.Index></FSM.Blazor.Pages.Company.Index>
                     }
-                    else if(name == "User") 
+                    else if(name == Module.User.ToString())
                     {
                         <FSM.Blazor.Pages.User.Index></FSM.Blazor.Pages.User.Index>
                     }
-                     else if(name == "Instructor Type") 
+                     else if(name == Module.InstructorType.ToString())
                     {
                         <FSM.Blazor.Pages.InstructorType.Index></FSM.Blazor.Pages.InstructorType.Index>
                     }
-                     else if(name == "User Role Permission") 
+                     else if(name == Module.UserRolePermission.ToString()) 
                     {
                         <FSM.Blazor.Pages.UserRolePermission.Index></FSM.Blazor.Pages.UserRolePermission.Index>
                     }

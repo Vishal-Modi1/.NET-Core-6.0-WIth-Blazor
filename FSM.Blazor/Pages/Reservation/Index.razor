@@ -3,19 +3,22 @@
 @using FSM.Blazor.Data.AircraftSchedule
 @using FSM.Blazor.Data.Reservation
 @using FSM.Blazor.Data.User
+@using FSM.Blazor.Data.Aircraft
 @using DataModels.VM.Reservation
 @using Configuration;
 @using Syncfusion.Blazor.Popups;
 @using FSM.Blazor.Pages.Scheduler;
 @using Syncfusion.Blazor.Spinner;
 
-@inject ReservationService ReservationService
 @layout MainLayout
 @inject DialogService DialogService
 @inject NavigationManager NavManager
-@inject AircraftSchedulerService AircraftSchedulerService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inject AircraftSchedulerService AircraftSchedulerService
+@inject ReservationService ReservationService
 @inject UserService UserService
+@inject AircraftService AircraftService
 
 @page "/Reservation"
 <PageTitle>Reservation | Fly Manager </PageTitle>
@@ -40,7 +43,7 @@
 
 <div class="row">
 
-    @if (isSuperAdmin && ParentModuleName != "Company")
+    @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
     {
         <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
@@ -51,15 +54,23 @@
         </div>
     }
 
-    @if (isSuperAdmin ||isAdmin)
-    {
-        <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
-            <RadzenDropDown @bind-Value="@reservationFilterVM.UserId" TValue="long"
-                        TextProperty="Name" Placeholder="Select Users" style="width: 100%;"
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenDropDown @bind-Value="@reservationFilterVM.UserId" TValue="long"
+                        TextProperty="Name" Placeholder="Select User" style="width: 100%;"
                         Data="@reservationFilterVM.Users" Change="@(args =>  grid.Reload())"
                         Name="UserId" ValueProperty="Id" AllowClear="true">
+        </RadzenDropDown>
+    </div>
+
+    @if (AircraftId == null)
+    {
+        <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+            <RadzenDropDown @bind-Value="@reservationFilterVM.AircraftId" TValue="long"
+                        TextProperty="Name" Placeholder="Select Aircraft" style="width: 100%;"
+                        Data="@reservationFilterVM.Aircrafts" Change="@(args =>  grid.Reload())"
+                        Name="AircraftId" ValueProperty="Id" AllowClear="true">
             </RadzenDropDown>
-        </div>
+      </div>
     }
 
     <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">

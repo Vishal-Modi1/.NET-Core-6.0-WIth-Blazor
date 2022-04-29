@@ -1,13 +1,11 @@
 ﻿using DataModels.Constants;
-using DataModels.VM;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
+using DataModels.VM.Scheduler;
 using FSMAPI.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
-using DataModels.VM.AircraftEquipment;
-using DataModels.VM.Scheduler;
-using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
 
 namespace FSMAPI.Controllers
 {
