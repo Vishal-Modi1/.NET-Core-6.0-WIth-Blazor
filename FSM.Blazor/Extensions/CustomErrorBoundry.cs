@@ -18,10 +18,9 @@ namespace FSM.Blazor.Extensions
         {
             if(exception.Message == HttpStatusCode.Unauthorized.ToString())
             {
-                await DialogService.OpenAsync<RefreshToken>("Refresh Token",
+                await DialogService.OpenAsync<RefreshToken>("Session Timeout!",
                  new Dictionary<string, object>() { { "userData", ""} },
-                 new DialogOptions() { Width = "300px", Height = "400px" });
-
+                 new DialogOptions() { Width = "300px", Height = "200px" });
             }
 
             return base.OnErrorAsync(exception);

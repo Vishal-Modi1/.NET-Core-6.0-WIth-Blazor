@@ -7,21 +7,23 @@
 
 @if (isTokenValid)
 {
-    <p>
-        Your token has been expired! Please click on
+    <p style="color:red">
+        Your token has been expired! Please 
 
-        <a href="javascript:void(0)"
+       @* <a href="javascript:void(0)"
        @onclick="@((ui) => OpenDocumentPreviewPopupAsync())">
-            Refresh Link
-        </a>
+            Login
+        </a>*@
 
-        to refresh the token.
+         <a href="/Logout">Login</a> 
+
+        again.
     </p>
 }
 else
 {
-    <p> Refresh token has been expired. Please Click on 
-        <a href="/Login">Login</a> 
+    <p> Token has been expired. Please Click on 
+        <a href="/Logout">Login</a> 
     </p>
 }
 
