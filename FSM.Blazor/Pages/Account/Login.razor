@@ -14,6 +14,23 @@
     form .row {
         margin-bottom: 16px;
     }
+    .rz-card
+    {
+        padding:0px!important;
+        width:87%!important;
+    }
+    .p-md-5
+    {
+        padding:2rem!important;
+    }
+    .mb-4
+    {
+        margin-top:-1rem;
+    }
+    	.wrap{width:100%;overflow:hidden;background:#fff;border-radius:5px;-webkit-box-shadow:0 10px 34px -15px rgba(0,0,0,.24);-moz-box-shadow:0 10px 34px -15px rgba(0,0,0,.24);box-shadow:0 10px 34px -15px rgba(0,0,0,.24)}.img,.login-wrap{width:100%}
+        .img,.login-wrap{width:100%}.login-wrap{position:relative;background:#fff h3;background-font-weight:3000}.form-group{position:relative}.form-group .label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#000;font-weight:700}.form-group a{color:gray}.form-control{height:36px;background:#fff;color:#000;font-size:16px;border-radius:5px;-webkit-box-shadow:none;box-shadow:none;border:1px solid rgba(0,0,0,.1)}.form-control::-webkit-input-placeholder{color:rgba(0,0,0,.2)!important}.form-control::-moz-placeholder{color:rgba(0,0,0,.2)!important}.form-control:-ms-input-placeholder{color:rgba(0,0,0,.2)!important}.form-control:-moz-placeholder{color:rgba(0,0,0,.2)!important}.form-control:focus,.form-control:active{outline:none!important;-webkit-box-shadow:none;box-shadow:none;border:1px solid #e3b04b}.social-media{position:relative;width:100%}.social-media .social-icon{display:block;width:40px;height:40px;background:transparent;border:1px solid rgba(0,0,0,.05);font-size:16px;margin-right:5px;border-radius:50%}.social-media .social-icon span{color:#999}.social-media .social-icon:hover,.social-media .social-icon:focus{background:#e3b04b}.social-media .social-icon:hover span,.social-media .social-icon:focus span{color:#fff}.checkbox-wrap{display:block;position:relative;padding-left:30px;margin-bottom:12px;cursor:pointer;font-size:16px;font-weight:500;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.checkbox-wrap input{position:absolute;opacity:0;cursor:pointer;height:0;width:0}.checkmark{position:absolute;top:0;left:0}.checkmark:after{content:"\f0c8";font-family:"FontAwesome";position:absolute;color:rgba(0,0,0,.1);font-size:20px;margin-top:-4px;-webkit-transition:.3s;-o-transition:.3s;transition:.3s}
+.btn{cursor:pointer;-webkit-box-shadow:none!important;box-shadow:none!important;font-size:15px;padding:10px 20px}.btn:hover,.btn:active,.btn:focus{outline:none}.btn.btn-primary{background:#1151F3!important;border:1px solid #1151F3!important;color:#fff!important}.btn.btn-primary:hover{border:1px solid #1151F3;background:transparent;color:#1151F3}.btn.btn-primary.btn-outline-primary{border:1px solid #1151F3;background:transparent;color:#1151F3}.btn.btn-primary.btn-outline-primary:hover{border:1px solid transparent;background:#1151F3;color:#fff}
+
 </style>
 
 <PageTitle>Login | Fly Manager </PageTitle>
@@ -26,9 +43,51 @@
                 <div style="color: red;">Session Timeout!</div>
             }
 
-            <h2 class="mb-4">Login</h2>
+<RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+<div class="login-wrap p-4 p-md-5">
+<div class="d-flex">
+<div class="w-100">
+<h3 class="mb-4">Login</h3>
+</div>
+</div>
+<div class="form-group mb-3">
+<RadzenLabel  Text="Email" />
 
-            <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+<RadzenTextBox Placeholder="Please enter email" Name="Email" Class="form-control" @bind-Value=@loginVM.Email />
+                        <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
+                        <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
+         
+</div>
+<div class="form-group mb-3">
+                            <RadzenLabel  Text="Password" />
+
+                        <RadzenPassword Placeholder="Please enter password" Name="Password" Class="form-control" @bind-Value=@loginVM.Password />
+                        <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
+
+</div>
+<div class="form-group">
+<RadzenButton ButtonType="ButtonType.Submit" class="form-control btn btn-primary rounded submit px-3" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
+
+</div>
+    <div class="d-md-flex">
+<div class="w-50 text-left"> 
+     <RadzenLink Path="/registeration" Text="Register" Style="color:#1151F3" />
+
+</div>
+
+<div class="w-50 text-md-right">
+               <RadzenLink Path="/forgetpassword" Text="Forget Password ?"  Style="color:#1151F3" />
+                
+</div>
+</div>
+
+
+</div>
+            </RadzenTemplateForm>
+
+
+    
+@* <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
 
                 <div class="row">
                     <div class="col-md-4 align-items-center d-flex">
@@ -64,7 +123,7 @@
 
                 </div>
             </RadzenTemplateForm>
-
+*@
         </RadzenCard>
     </div>
 </div>
