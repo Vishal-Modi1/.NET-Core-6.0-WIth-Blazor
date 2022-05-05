@@ -78,7 +78,7 @@ namespace FSMAPI.Controllers
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
-                companyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(loggedInUser));
+                companyVM.CreatedBy = Convert.ToInt64(loggedInUser);
             }
 
             CurrentResponse response = _companyService.Create(companyVM);
