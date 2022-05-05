@@ -38,7 +38,7 @@ namespace FSMAPI.Controllers
         }
 
         /// <summary>
-        /// API for modile users only
+        /// API for mobile users only
         /// </summary>
 
         [HttpGet]

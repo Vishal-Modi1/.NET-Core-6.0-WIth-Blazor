@@ -266,7 +266,7 @@ CREATE TABLE [dbo].[Companies](
 	[IsActive] [bit] NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
-	[CreatedBy] [bigint] NOT NULL,
+	[CreatedBy] [bigint] NULL,
 	[UpdatedOn] [datetime] NULL,
 	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,

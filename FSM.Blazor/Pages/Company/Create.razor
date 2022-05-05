@@ -5,6 +5,7 @@
 @inject CompanyService CompanyService
 @inject DialogService DialogService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <style>
     form .row {
@@ -12,7 +13,7 @@
     }
 </style>
 
-<RadzenTemplateForm Data="@companyData" Submit="@((CompanyVM args) => {  Submit(args); })">
+<RadzenTemplateForm @ref=@compnayForm Data="@companyData" Submit="@((CompanyVM args) => {  Submit(args); })">
 
     <input type="hidden" value="@companyData.Id" name="Id" />
 
@@ -67,7 +68,7 @@
             </div>
             <div class="col-md-8">
                 <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@companyData.Website" Placeholder="Please enter website" />
-               @* <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />*@
+                @* <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />*@
             </div>
         </div>
 
@@ -96,9 +97,19 @@
 
     <div class="row" style="margin-top:4%">
         <div class="col-md-12 text-right">
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />
-            <RadzenButton Click="@((args) => dialogService.Close(false))"
+
+            @if (isAuthenticated)
+            {
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />
+                <RadzenButton Click="@((args) => dialogService.Close(false))"
                           ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            }
+            else
+            {
+                <RadzenButton ButtonType="ButtonType.Button" Click="@GotoNextStep" Text="Next"  Style="width: 120px" />
+                <RadzenButton Click="@RedirectToLogin" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            }
+
         </div>
     </div>
 

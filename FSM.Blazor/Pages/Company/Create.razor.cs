@@ -5,6 +5,10 @@ using FSM.Blazor.Extensions;
 using Radzen;
 using System.Collections.ObjectModel;
 using FSM.Blazor.Utilities;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Components.Authorization;
+using DataModels.Constants;
+using Radzen.Blazor;
 
 namespace FSM.Blazor.Pages.Company
 {
@@ -13,21 +17,39 @@ namespace FSM.Blazor.Pages.Company
         [Parameter]
         public CompanyVM companyData { get; set; }
 
+        [Parameter]
+        public Action GoToNext { get; set; }
+
+        [CascadingParameter]
+        protected Task<AuthenticationState> AuthStat { get; set; }
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
+
+        private CurrentUserPermissionManager _currentUserPermissionManager;
+
+        [Inject]
+        protected IMemoryCache memoryCache { get; set; }
 
         [Inject]
         NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
-        bool isLoading = false, isBusy = false;
+        bool isLoading = false, isBusy = false,isAuthenticated = false;
 
         ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
         int? primaryServiceId;
 
+        public RadzenTemplateForm<CompanyVM> compnayForm;
+
         protected override Task OnInitializedAsync()
         {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+
+            isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
+
             primaryServiceId = companyData.PrimaryServiceId;
+
             return base.OnInitializedAsync();
         }
 
@@ -70,6 +92,19 @@ namespace FSM.Blazor.Pages.Company
             StateHasChanged();
         }
 
-       
+        async void GotoNextStep()
+        {
+            if (!compnayForm.EditContext.Validate())
+            {
+                return;
+            }
+
+            GoToNext.Invoke();
+        }
+
+        void RedirectToLogin()
+        {
+            NavigationManager.NavigateTo("/Login");
+        }
     }
 }

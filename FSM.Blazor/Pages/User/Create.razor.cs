@@ -6,6 +6,8 @@ using Radzen;
 using Microsoft.Extensions.Caching.Memory;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
+using Radzen.Blazor;
+using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.User
 {
@@ -28,13 +30,32 @@ namespace FSM.Blazor.Pages.User
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        public RadzenTemplateForm<UserVM> userForm;
+
+        [Parameter]
+        public Action SaveBothStepsValue { get; set; }
+
+        [Parameter]
+        public Action GoBackStep { get; set; }
+
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
-        bool isInstructorTypeDropdownVisible = false;
+        bool isInstructorTypeDropdownVisible = false, isAuthenticated = false;
         bool isBusy;
+
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
-            isInstructorTypeDropdownVisible = userData.IsInstructor;
+
+            isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
+
+            if (userData != null)
+            {
+                isInstructorTypeDropdownVisible = userData.IsInstructor;
+            }
+            else
+            {
+                userData = new UserVM();
+            }
         }
 
         public async Task Submit(UserVM userDataVM)
@@ -153,6 +174,26 @@ namespace FSM.Blazor.Pages.User
         {
             isBusy = isBusyState;
             StateHasChanged();
+        }
+
+        async void GotoSave()
+        {
+            if (!userForm.EditContext.Validate())
+            {
+                return;
+            }
+
+            SaveBothStepsValue.Invoke();
+        }
+
+        async void GoBack()
+        {
+            GoBackStep.Invoke();
+        }
+
+        void RedirectToLogin()
+        {
+            NavigationManager.NavigateTo("/Login");
         }
     }
 }

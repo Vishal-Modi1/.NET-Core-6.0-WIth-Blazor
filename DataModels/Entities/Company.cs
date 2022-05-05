@@ -18,7 +18,7 @@ namespace DataModels.Entities
         public long? DeletedBy { get; set; }
         public Nullable<DateTime> DeletedOn { get; set; }
         public Nullable<DateTime> CreatedOn { get; set; }
-        public long CreatedBy { get; set; }
+        public long? CreatedBy { get; set; }
         public Nullable<DateTime> UpdatedOn { get; set; }
         public long? UpdatedBy { get; set; }
     }

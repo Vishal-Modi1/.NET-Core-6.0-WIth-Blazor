@@ -84,6 +84,22 @@ namespace FSM.Blazor.Data.User
             return userVM;
         }
 
+        public async Task<UserVM> GetMasterDetailsAsync(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"user/getMasterDetails";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            UserVM userVM = new UserVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
+            }
+
+            return userVM;
+        }
+
         public async Task<UserFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
         {
             dependecyParams.URL = $"user/getfilters";

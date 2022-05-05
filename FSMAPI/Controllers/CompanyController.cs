@@ -59,6 +59,7 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("listcompanyservicesdropdownvalues")]
         public IActionResult ListCompanyServicesDropDownValues()
@@ -68,11 +69,17 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("create")]
         public IActionResult Create(CompanyVM companyVM)
         {
-            companyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+
+            if (!string.IsNullOrEmpty(loggedInUser))
+            {
+                companyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(loggedInUser));
+            }
 
             CurrentResponse response = _companyService.Create(companyVM);
             return Ok(response);

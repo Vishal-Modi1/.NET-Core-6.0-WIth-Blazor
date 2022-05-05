@@ -23,7 +23,7 @@ namespace DataModels.VM.Company
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<System.DateTime> CreatedOn { get; set; }
-        public long CreatedBy { get; set; }
+        public long? CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
         public Nullable<System.DateTime> DeletedOn { get; set; }

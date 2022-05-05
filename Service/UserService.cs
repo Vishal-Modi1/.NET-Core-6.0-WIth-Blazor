@@ -68,9 +68,7 @@ namespace Service
                 userVM = ToBusinessObject(user);
             }
 
-            userVM.Countries = _countryRepository.ListDropDownValues();
-            userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
-            userVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
+            GetMasterDetails(userVM, roleId);
 
             if (companyId > 0)
             {
@@ -83,6 +81,33 @@ namespace Service
             }
 
             return userVM;
+        }
+
+        private void GetMasterDetails(UserVM userVM, int roleId)
+        {
+            userVM.Countries = _countryRepository.ListDropDownValues();
+            userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
+            userVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
+        }
+
+        public CurrentResponse GetMasterDetails(int roleId)
+        {
+            try
+            {
+                UserVM userVM = new UserVM();
+
+                GetMasterDetails(userVM , roleId);
+
+                CreateResponse(userVM, HttpStatusCode.OK, "Master details retrived successfully");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
         }
 
         public CurrentResponse Create(UserVM userVM)
@@ -308,7 +333,7 @@ namespace Service
         {
             try
             {
-                List<UserPreferenceVM> listUserPreferences  = _userRepository.FindPreferenceById(id);
+                List<UserPreferenceVM> listUserPreferences = _userRepository.FindPreferenceById(id);
 
                 CreateResponse(listUserPreferences, HttpStatusCode.OK, "");
 

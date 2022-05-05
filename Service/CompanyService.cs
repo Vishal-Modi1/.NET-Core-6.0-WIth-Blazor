@@ -29,12 +29,15 @@ namespace Service
 
                 if (isCompanyExist)
                 {
-                    CreateResponse(company, HttpStatusCode.Ambiguous, "Company is already exist");
+                    CreateResponse(companyVM, HttpStatusCode.Ambiguous, "Company is already exist");
                 }
                 else
                 {
                     company = _companyRepository.Create(company);
-                    CreateResponse(company, HttpStatusCode.OK, "Company added successfully");
+
+                    companyVM = ToBusinessObject(company);
+
+                    CreateResponse(companyVM, HttpStatusCode.OK, "Company added successfully");
                 }
 
                 return _currentResponse;
