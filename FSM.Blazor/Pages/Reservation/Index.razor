@@ -21,7 +21,12 @@
 @inject AircraftService AircraftService
 
 @page "/Reservation"
-<PageTitle>Reservation | Fly Manager </PageTitle>
+
+@if (string.IsNullOrWhiteSpace(ParentModuleName))
+{
+    <PageTitle>Reservation | Fly Manager </PageTitle>
+}
+
 <style>
     .e-dialog {
         max-height: 588px !important;

@@ -38,7 +38,11 @@
         margin-left: -3px;
     }
 </style>
-<PageTitle>Documents | Fly Manager </PageTitle>
+
+@if (string.IsNullOrWhiteSpace(ParentModuleName))
+{
+    <PageTitle>Documents | Fly Manager </PageTitle>
+}
 
 @if (documentFilterVM == null)
 {

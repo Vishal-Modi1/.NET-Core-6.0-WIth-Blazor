@@ -13,7 +13,10 @@
 
 @page "/User"
 
-<PageTitle>User | Fly Manager </PageTitle>
+@if (string.IsNullOrWhiteSpace(ParentModuleName))
+{
+    <PageTitle>User | Fly Manager </PageTitle>
+}
 
 <div class="row mb-4">
     <div class="col">

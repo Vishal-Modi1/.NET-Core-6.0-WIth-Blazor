@@ -11,6 +11,8 @@
 
 @page "/administration"
 
+<PageTitle> Administration | Fly Manager  </PageTitle>
+
 <div id="container">
 
     <SfSpinner @bind-Visible="@isDisplayLoader">
@@ -32,15 +34,15 @@
 
                     @if(name == Module.Company.ToString())
                     {
-                        <FSM.Blazor.Pages.Company.Index></FSM.Blazor.Pages.Company.Index>
+                        <FSM.Blazor.Pages.Company.Index ></FSM.Blazor.Pages.Company.Index>
                     }
                     else if(name == Module.User.ToString())
                     {
-                        <FSM.Blazor.Pages.User.Index></FSM.Blazor.Pages.User.Index>
+                        <FSM.Blazor.Pages.User.Index ParentModuleName="Administration"></FSM.Blazor.Pages.User.Index>
                     }
                      else if(name == Module.InstructorType.ToString())
                     {
-                        <FSM.Blazor.Pages.InstructorType.Index></FSM.Blazor.Pages.InstructorType.Index>
+                        <FSM.Blazor.Pages.InstructorType.Index ></FSM.Blazor.Pages.InstructorType.Index>
                     }
                      else if(name == Module.UserRolePermission.ToString()) 
                     {
