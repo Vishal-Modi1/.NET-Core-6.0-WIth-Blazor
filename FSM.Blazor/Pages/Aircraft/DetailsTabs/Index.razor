@@ -7,12 +7,12 @@
             <AircraftEquipmentsTimes AircraftData=@AircraftData></AircraftEquipmentsTimes>
 
         </RadzenTabsItem>
-
-        <RadzenTabsItem Text="Description">
+        @*
+            <RadzenTabsItem Text="Description">
 
             <Description AircraftData=@AircraftData></Description>
 
-        </RadzenTabsItem>
+            </RadzenTabsItem>*@
 
         <RadzenTabsItem Text="Equipments">
 
@@ -26,7 +26,7 @@
         {
             <RadzenTabsItem Text="Reservations">
 
-                <FSM.Blazor.Pages.Reservation.Index  ParentModuleName="Aircraft"  AircraftId="@AircraftData.Id">
+                <FSM.Blazor.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@AircraftData.Id">
 
                 </FSM.Blazor.Pages.Reservation.Index>
 
@@ -42,5 +42,26 @@
 
             </RadzenTabsItem>
         }
+
+        <RadzenTabsItem Text="Maintenance">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Financials">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Performance">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Settings">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Crew">
+
+        </RadzenTabsItem>
+
     </Tabs>
 </RadzenTabs>

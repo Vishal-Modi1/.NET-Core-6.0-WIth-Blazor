@@ -30,13 +30,15 @@ namespace FSM.Blazor.Pages.Aircraft
 
         public string CompanyName;
 
-        public bool isDataLoaded = false, isBusy = false;
+        public bool isDataLoaded = false, isBusy = false, isDisplayLoader;
         private CurrentUserPermissionManager _currentUserPermissionManager;
         string moduleName = "Aircraft";
         public bool isAllowToEdit;
 
         protected override async Task OnInitializedAsync()
         {
+            isDisplayLoader = true;
+
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             StringValues link;
@@ -80,6 +82,8 @@ namespace FSM.Blazor.Pages.Aircraft
             {
                 isAllowToEdit = true;
             }
+
+            isDisplayLoader = false;
 
             SetCompanyName();
         }
