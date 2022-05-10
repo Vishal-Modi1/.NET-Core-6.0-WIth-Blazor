@@ -43,6 +43,17 @@
         /*        object-fit:cover;
         */
     }
+    .rz-button-icon-left
+    {
+        margin-right:1px!important;
+    }
+    
+    [b-vy5hox7kaq] .rz-fileupload-buttonbar
+    {
+        top:120px!important
+    }
+    
+
 
 </style>
 @if (companyData != null)
@@ -58,9 +69,17 @@
 
                 <div class="col-sm-3" style="position: relative;">
 
-                    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@(companyData.LogoPath)" Style="width: 100%; height: 140px;object-fit:cover; border: 2px solid #1151f3;" />
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@(companyData.LogoPath)" Style="width: 100%; height: 142px;object-fit:cover; border: 2px solid #1151f3;" />
                     <RadzenFileInput Style="outline:none" @bind-Value=@companyData.LogoPath
                                  Change=@(args => OnChangeAsync()) TValue="string" />
+                                 <br/>
+                                  @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
+                            {
+                                <RadzenButton Text="Update Details" Click=@(() => CompanyEditDialog())
+                                      BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" />
+                            }
+
+
 
                 </div>
                 <div class="col-sm-3">
@@ -76,14 +95,7 @@
 
                         <br />
 
-                        <div>
-                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
-                            {
-                                <RadzenButton Text="Update Company Details" Click=@(() => CompanyEditDialog())
-                                      BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" class="w-100" ButtonStyle="ButtonStyle.Primary" />
-                            }
-
-                        </div>
+                        
 
                     </div>
                 </div>
