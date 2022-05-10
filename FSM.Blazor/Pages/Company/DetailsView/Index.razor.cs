@@ -36,6 +36,9 @@ namespace FSM.Blazor.Pages.Company.DetailsView
 
         protected override async Task OnInitializedAsync()
         {
+            isDisplayLoader = true;
+            base.StateHasChanged();
+
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             StringValues link;
@@ -92,6 +95,10 @@ namespace FSM.Blazor.Pages.Company.DetailsView
             {
                 isAllowToEdit = true;
             }
+
+            isDisplayLoader = false;
+            base.StateHasChanged();
+
         }
 
         async Task CompanyEditDialog()

@@ -1,5 +1,6 @@
 ﻿@using FSM.Blazor.Data.Company;
 @using DataModels.Enums;
+@using Syncfusion.Blazor.Spinner;
 
 @inject CompanyService CompanyService
 @inject Radzen.DialogService DialogService
@@ -10,7 +11,6 @@
 @page "/CompanyDetails"
 
 <PageTitle>Company Details | Fly Manager </PageTitle>
-
 <style>
 
     .description {
@@ -47,108 +47,91 @@
 </style>
 @if (companyData != null)
 {
-    <div class="row my-2">
-        <div class="col-md-3 col-12">
-            <RadzenCard>
-                <div class="row">
-                    <div class="profile-icon">
-                        <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@(companyData.LogoPath)" Style="width: 100%; height: 140px;object-fit:cover; border: 2px solid #1151f3;" />
-                        <RadzenFileInput Style="outline:none" @bind-Value=@companyData.LogoPath
-                                     Change=@(args => OnChangeAsync()) TValue="string" />
-                    </div>
+    <div id="container">
+        <SfSpinner @bind-Visible="@isDisplayLoader">
+        </SfSpinner>
+    </div>
+
+    <div class="m-4">
+        <div class="card">
+            <div class="row g-0">
+
+                <div class="col-sm-3" style="position: relative;">
+
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@(companyData.LogoPath)" Style="width: 100%; height: 140px;object-fit:cover; border: 2px solid #1151f3;" />
+                    <RadzenFileInput Style="outline:none" @bind-Value=@companyData.LogoPath
+                                 Change=@(args => OnChangeAsync()) TValue="string" />
+
                 </div>
-                <div class="row mt-2">
-                    <div class="col-12 col-md-6">
-                        <span>Company Name:</span>
-                    </div>
-                    <div class="col-md-6 float-end text-right">
-                        <b>@(companyData.Name)</b>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12 col-md-6">
-                        <span>Address:</span>
-                    </div>
-                    <div class="col-md-6 float-end text-right">
-                        <b>@(companyData.Address)</b>
-                    </div>
-                </div>
-                <div class="row mt-2 mb-2">
-                    <div class="col-12 m-1 align-items-right d-flex w-100 flex-row-reverse">
-                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
-                        {
-                            <RadzenButton Text="Update Company Details" Click=@(() => CompanyEditDialog())
-                                  BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" class="w-100" ButtonStyle="ButtonStyle.Primary" />
-                        }
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="h5 mt-2 text-center">Detail Information</h3>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <span>Timezone</span>
-                            </div>
-                            <div class="col-md-6 float-end text-right">
-                                <b>@(companyData.TimeZone)</b>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                Contact No
-                            </div>
-                            <div class="col-md-6 float-end text-right">
-                                <b>@(companyData.ContactNo == null ? "-" : companyData.ContactNo)</b>
-                            </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-md-6">
-                                Website
-                            </div>
-                            <div class="col-md-6 float-end text-right">
-                               <b>@(companyData.Website == null ? "-" : companyData.Website)</b>
-                            </div>
+                <div class="col-sm-3">
+                    <div class="card-body" style="margin-left:-40px;">
+                        <div>
+                            <label class="description">Company Name : </label>
+                            @(companyData.Name)
                         </div>
 
-                         <div class="row mt-2">
-                            <div class="col-md-6">
-                                Primary Airport
-                            </div>
-                            <div class="col-md-6 float-end text-right">
-                               <b>@(companyData.PrimaryAirport == null ? "-" : companyData.PrimaryAirport)</b>
-                            </div>
+                        <div>
+                            <label class="description">Address : </label> @(companyData.Address)
                         </div>
 
-                         <div class="row mt-2">
-                            <div class="col-md-6">
-                                Primary Service
-                            </div>
-                            <div class="col-md-6 float-end text-right">
+                        <br />
 
-                                @if(companyData.PrimaryServiceId != null)
-                                {
-                                     <b> @companyData.PrimaryServicesList.Where(p=>p.Id == companyData.PrimaryServiceId).First().Name </b>
-                                }
-                                else
-                                {
-                                   <b>@("-")</b>
-                                }
+                        <div>
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
+                            {
+                                <RadzenButton Text="Update Company Details" Click=@(() => CompanyEditDialog())
+                                      BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" class="w-100" ButtonStyle="ButtonStyle.Primary" />
+                            }
 
-                            </div>
                         </div>
 
                     </div>
-                    <div class="col-12 m-2">
-                        <hr>
-                    </div>
-
                 </div>
-            </RadzenCard>
-        </div>
-        <div class="col-md-9 col-12">
-            <FSM.Blazor.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData>
+                <div class="col-sm-3">
+                    <div class="card-body">
+                        <div>
+                            <label class="description">Timezone : </label> @(companyData.TimeZone)
 
-            </FSM.Blazor.Pages.Company.DetailsView.DetailTabs.Index>
+                        </div>
+
+                        <div>
+                            <label class="description">Contat No : </label> @(companyData.ContactNo == null ? "-" : companyData.ContactNo)
+                        </div>
+                        <div>
+                            <label class="description">Website : </label> @(companyData.Website == null ? "-" : companyData.Website)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card-body">
+
+                        <div>
+                            <label class="description">Primary Airport : </label> @(companyData.PrimaryAirport == null ? "-" : companyData.PrimaryAirport)
+                        </div>
+
+                        <div>
+                            <label class="description">Primary Service : </label>
+                            @if (companyData.PrimaryServiceId != null)
+                            {
+                                <b> @companyData.PrimaryServicesList.Where(p=>p.Id == companyData.PrimaryServiceId).First().Name </b>
+                            }
+                            else
+                            {
+                                <b>@("-")</b>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-header" style="margin-top:30px">
+
+                <FSM.Blazor.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData>
+
+                </FSM.Blazor.Pages.Company.DetailsView.DetailTabs.Index>
+            </div>
+
         </div>
     </div>
 }
