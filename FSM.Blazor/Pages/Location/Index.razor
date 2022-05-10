@@ -1,0 +1,88 @@
+﻿@namespace FSM.Blazor.Pages.Location
+@using DataModels.Enums
+@using FSM.Blazor.Data.Location
+@using FSM.Blazor.Data.Timezone
+@using DataModels.VM.Location
+@using FSM.Blazor.Utilities;
+@using Configuration;
+
+@inject NavigationManager NavigationManager
+@inject LocationService LocationService
+@layout MainLayout
+@inject DialogService DialogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject TimezoneService TimezoneService
+
+@page "/Location"
+
+@{
+   // if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+   // {
+        <div class="row mb-4">
+            <div class="col">
+                <h2 style="float:left">Manage Companies Details</h2>
+                <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => LocationCreateDialog(0, "Create")) />
+            </div>
+        </div>
+  //  }
+}
+
+<div class="row">
+
+    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Location" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="LocationDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="LocationDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Property="AirportCode" Title="Airport Code"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Sortable="false" Property="PhysicalAddress" Title="Physical Address"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Sortable="false" Property="Timezone" Title="Timezone"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Sortable="false" Property="Offset" Title="Offset"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="LocationDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => LocationCreateDialog(data.Id,"Edit")) />
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@{
+    async Task OpenDeleteDialog(LocationDataVM locationDataVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @locationDataVM.AirportCode </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(locationDataVM.Id) " Class="mr-1" Style="width: 80px;" />
+                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                
+                </div>
+            </div>
+        </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

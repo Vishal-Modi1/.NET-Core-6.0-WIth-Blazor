@@ -30,28 +30,34 @@
             {
                 string name = tab.Name;
 
-                <RadzenTabsItem Text=@name>
+                <RadzenTabsItem Text=@tab.DisplayName>
 
-                    @if(name == Module.Company.ToString())
+                    @if (name == Module.Company.ToString())
                     {
-                        <FSM.Blazor.Pages.Company.Index ></FSM.Blazor.Pages.Company.Index>
+                        <FSM.Blazor.Pages.Company.Index></FSM.Blazor.Pages.Company.Index>
                     }
-                    else if(name == Module.User.ToString())
+                    else if (name == Module.User.ToString())
                     {
                         <FSM.Blazor.Pages.User.Index ParentModuleName="Administration"></FSM.Blazor.Pages.User.Index>
                     }
-                     else if(name == Module.InstructorType.ToString())
+                    else if (name == Module.InstructorType.ToString())
                     {
-                        <FSM.Blazor.Pages.InstructorType.Index ></FSM.Blazor.Pages.InstructorType.Index>
+                        <FSM.Blazor.Pages.InstructorType.Index></FSM.Blazor.Pages.InstructorType.Index>
                     }
-                     else if(name == Module.UserRolePermission.ToString()) 
+                    else if (name == Module.UserRolePermission.ToString())
                     {
                         <FSM.Blazor.Pages.UserRolePermission.Index></FSM.Blazor.Pages.UserRolePermission.Index>
                     }
 
                 </RadzenTabsItem>
-            }
 
+            }
+            
+                <RadzenTabsItem Text="Location">
+
+                    <FSM.Blazor.Pages.Location.Index></FSM.Blazor.Pages.Location.Index>
+            
+                </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>
 

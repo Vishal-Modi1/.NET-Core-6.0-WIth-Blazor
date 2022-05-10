@@ -128,7 +128,6 @@ namespace Repository
                 return list;
 
             }
-
         }
 
         public void Delete(long id, long deletedBy)

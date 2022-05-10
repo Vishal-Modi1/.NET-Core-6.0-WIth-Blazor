@@ -11,6 +11,7 @@
         Reservation = 7,
         Document = 8,
         SubscriptionPlan = 9,
-        BillingHistory = 10
+        BillingHistory = 10,
+        Location = 11
     }
 }

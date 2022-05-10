@@ -66,7 +66,9 @@ namespace Service
                 else
                 {
                     company = _companyRepository.Edit(company);
-                    CreateResponse(company, HttpStatusCode.OK, "Company updated successfully");
+                    companyVM = ToBusinessObject(company);
+
+                    CreateResponse(companyVM, HttpStatusCode.OK, "Company updated successfully");
                 }
 
                 return _currentResponse;

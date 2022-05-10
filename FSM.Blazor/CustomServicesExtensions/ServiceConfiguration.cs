@@ -16,6 +16,8 @@ using FSM.Blazor.Data.Document;
 using FSM.Blazor.Data.SubscriptionPlan;
 using FSM.Blazor.Data.ModuleDetail;
 using FSM.Blazor.Data.BillingHistory;
+using FSM.Blazor.Data.Location;
+using FSM.Blazor.Data.Timezone;
 
 namespace FSM.Blazor.CustomServicesExtensions
 {
@@ -42,6 +44,8 @@ namespace FSM.Blazor.CustomServicesExtensions
             builder.Services.AddScoped<ModuleDetailsService>();
             builder.Services.AddScoped<BillingHistoryService>();
             builder.Services.AddScoped<TokenValidatorService>();
+            builder.Services.AddScoped<LocationService>();
+            builder.Services.AddScoped<TimezoneService>();
         }
     }
 }

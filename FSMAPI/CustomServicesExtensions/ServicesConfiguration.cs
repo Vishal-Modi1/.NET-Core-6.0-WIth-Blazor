@@ -35,6 +35,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IModuleDetailsService, ModuleDetailsService>();
             services.AddScoped<IBillingHistoryService, BillingHistoryService>();
             services.AddScoped<IEmailTokenService, EmailTokenService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ITimezoneService, TimezoneService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -67,6 +69,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IDocumentTagRepository, DocumentTagRepository>();
             services.AddScoped<ISubscriptionPlanRepository, SubscriptionPlanRepository>();
             services.AddScoped<IBillingHistoryRepository, BillingHistoryRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ITimezoneRepository, TimezoneRepository>();
             }
     }
 }

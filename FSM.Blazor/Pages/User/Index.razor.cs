@@ -81,7 +81,6 @@ namespace FSM.Blazor.Pages.User
             isLoading = true;
 
             ReservationDataTableParams datatableParams = new ReservationDataTableParams().Create(args, "StartDateTime");
-
           
             datatableParams.SearchText = searchText;
            

@@ -667,7 +667,48 @@ CREATE TABLE [dbo].[BillingHistories](
 ) ON [PRIMARY]
 GO
 
+/****** Object:  Table [dbo].[Timezones]    Script Date: 06-05-2022 15:23:03 ******/
+SET ANSI_NULLS ON
+GO
 
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Timezones](
+	[Id] [smallint] IDENTITY(1,1) NOT NULL,
+	[Timezone] [varchar](100) NOT NULL,
+	[Offset] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_Timezones] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Locations]    Script Date: 06-05-2022 15:38:32 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Locations](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PhysicalAddress] [varchar](max) NOT NULL,
+	[TimezoneId] [smallint] NOT NULL,
+	[AirportCode] [varchar](100) NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_Locations] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 ---------------------------------------------------------------------------------------------------------------
 --					CONSTRAINT
 ---------------------------------------------------------------------------------------------------------------
@@ -1033,6 +1074,35 @@ GO
 
 ALTER TABLE [dbo].[BillingHistories] CHECK CONSTRAINT [FK_BillingHistories_Users]
 GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Timezones] FOREIGN KEY([TimezoneId])
+REFERENCES [dbo].[Timezones] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Timezones]
+GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Users]
+GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Users1]
+GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Users2]
+GO
+
 
 ---------------------------------------------------------------------------------------------------------------------
 						--PROCEDURE
@@ -1752,6 +1822,62 @@ AS BEGIN
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
+GO
+
+/****** Object:  StoredProcedure [dbo].[GetLocationsList]    Script Date: 10-05-2022 11:10:44 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetLocationsList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'AirportCode',  
+    @SortOrder NVARCHAR(20) = 'ASC'  
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+        SELECT l.*, tz.Offset, tz.Timezone from Locations l
+		INNER JOIN Timezones  tz
+		ON l.TimezoneId = tz.Id
+
+  
+        WHERE  (@SearchValue= '' OR  (   
+              AirportCode LIKE '%' + @SearchValue + '%' 
+            )) AND l.DeletedBy Is  null  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'AirportCode' AND @SortOrder='ASC')  
+                        THEN [AirportCode]  
+            END ASC,
+			CASE WHEN (@SortColumn = 'AirportCode' AND @SortOrder='DESC')  
+                        THEN [AirportCode]  
+            END DESC
+
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(ID) as TotalRecords from Locations 
+		
+        WHERE  (@SearchValue= '' OR  (   
+              AirportCode LIKE '%' + @SearchValue + '%' 
+            ))   AND DeletedBy Is  null
+    )  
+    Select   * from CTE_Results 
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = ID)  
+   
+END
+GO
 
 CREATE Trigger [dbo].[Trg_Company_InsertUserRolePermission]
 On [dbo].[Companies]
