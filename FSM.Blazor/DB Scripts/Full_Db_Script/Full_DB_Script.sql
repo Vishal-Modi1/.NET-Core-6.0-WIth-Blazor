@@ -1407,12 +1407,13 @@ AS BEGIN
    
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetUserList]    Script Date: 01-02-2022 09:37:22 ******/
+
+/****** Object:  StoredProcedure [dbo].[GetUsersList]    Script Date: 10-05-2022 17:53:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[GetUserList]  
+CREATE PROCEDURE [dbo].[GetUsersList]  
 (       
     @SearchValue NVARCHAR(50) = NULL,  
     @PageNo INT = 1,  
@@ -1524,7 +1525,8 @@ AS BEGIN
    
     )  
     Select TotalRecords, U.Id, U.FirstName, U.LastName,U.Email,ISNULL(U.IsInstructor, 0 ) 
-	AS IsInstructor,ISNULL(U.IsActive, 0 ) AS IsActive,Ur.Name as UserRole, CP.Name AS CompanyName from Users U
+	AS IsInstructor,ISNULL(U.IsActive, 0 ) AS IsActive,Ur.Name as UserRole, CP.Id AS CompanyId,
+	CP.Name AS CompanyName,	U.ImageName as ProfileImage from Users U
 	LEFT JOIN  UserRoles UR on UR.Id=U.RoleId
 	LEFT JOIN  Companies CP on CP.Id = U.CompanyId
 	, CTE_TotalRows   
@@ -1532,12 +1534,6 @@ AS BEGIN
    
 END
 
-
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 02-03-2022 09:02:52 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 CREATE PROCEDURE [dbo].[GetUserRolePermissionList]    
 (         
     @SearchValue NVARCHAR(50) = NULL,    

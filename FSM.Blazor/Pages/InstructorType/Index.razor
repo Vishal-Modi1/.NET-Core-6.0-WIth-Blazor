@@ -12,9 +12,7 @@
 
 @page "/InstructorType"
 
-
-
-<div class="row mb-4">
+<div class="row">
     <div class="col">
         <h2 style="float:left">Manage Instructor Types Details</h2>
 
@@ -26,9 +24,9 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom:22px;">
 
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="col-md-4">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Instructor Type" @bind-Value="@searchText" />
     </div>

@@ -193,9 +193,18 @@ namespace Service
         {
             try
             {
-                var data = _userRepository.List(datatableParams);
+                List<UserDataVM> usersList = _userRepository.List(datatableParams);
 
-                CreateResponse(data, HttpStatusCode.OK, "");
+                foreach (UserDataVM user in usersList)
+                {
+                    //if(!string.IsNullOrWhiteSpace(user.ProfileImage))
+                   // {
+                        user.ProfileImage = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{user.CompanyId.GetValueOrDefault()}/{user.ProfileImage}";
+                        
+                   // }
+                }
+
+                CreateResponse(usersList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
             }

@@ -20,7 +20,7 @@
         flex:none;
     }
     </style>
-<div class="row mb-4">
+<div class="row">
     <div class="col">
         <h2 style="float:left">Manage Aircrafts Details</h2>
 
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom:22px;">
 
     @*    <div class="col-md-4">
         <RadzenDropDown @bind-Value="@aircraftStatus" Style="width:100%; margin: 8px 4px;" TValue="bool"
@@ -48,7 +48,7 @@
     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
         <div class="col-md-4">
-            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                         @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
                         Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
@@ -56,7 +56,7 @@
         </div>
     }
 
-    <div class="col-md-4" style="padding-top:0.5%">
+    <div class="col-md-4">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Aircraft" @bind-Value="@searchText" />
     </div>
@@ -71,7 +71,7 @@
     <Template Context="airCraftVM">
         <RadzenCard Style="width:200px;height:200px;cursor:pointer;padding:0px;" @onclick="@((args) => OpenDetailPage(airCraftVM.Id))">
             <div class="d-flex flex-row align-items-center" style="height: 80%;width: 100%;">
-                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(airCraftVM.ImagePath)" Class="float-left mr-3" Style="width: 100%; height: 100%;" />            
+                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';" Path="@(airCraftVM.ImagePath)" Class="float-left mr-3" Style="width: 100%; height: 100%;" />            
             </div>
             <br/>
              <div class="row" style="margin-top:-10px;">

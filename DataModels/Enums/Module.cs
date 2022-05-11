@@ -12,6 +12,7 @@
         Document = 8,
         SubscriptionPlan = 9,
         BillingHistory = 10,
-        Location = 11
+        // Pending to set correct value
+        Location = 20
     }
 }

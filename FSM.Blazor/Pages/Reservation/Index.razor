@@ -35,7 +35,7 @@
 </style>
 
 
-<div class="row mb-4">
+<div class="row">
     <div class="col">
         <h2 style="float:left">Reservations</h2>
     </div>
@@ -46,11 +46,24 @@
     </SfSpinner>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom:22px;">
+
+        <div class="col-md-4">
+
+        <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
+                          @bind-Value="@startDate" Placeholder="Select Start Date"
+                          Change=@(args => OnStartDateChange(args))
+                          DateFormat="dd/MM/yyyy" Style="width:49.5%" />
+
+        <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
+                          @bind-Value="@endDate" Placeholder="Select End Date"
+                          Change=@(args => OnEndDateChange(args))
+                          DateFormat="dd/MM/yyyy" Style="width:49.5%"/>
+    </div>
 
     @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
     {
-        <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <div class="col-md-4">
             <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
                         TextProperty="Name" Placeholder="Select Company" style="width: 100%;"
                         Data="@reservationFilterVM.Companies" Change="@(args =>  GetUsersList())"
@@ -59,7 +72,7 @@
         </div>
     }
 
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="col-md-4">
         <RadzenDropDown @bind-Value="@reservationFilterVM.UserId" TValue="long"
                         TextProperty="Name" Placeholder="Select User" style="width: 100%;"
                         Data="@reservationFilterVM.Users" Change="@(args =>  grid.Reload())"
@@ -69,7 +82,7 @@
 
     @if (AircraftId == null)
     {
-        <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+        <div class="col-md-4">
             <RadzenDropDown @bind-Value="@reservationFilterVM.AircraftId" TValue="long"
                         TextProperty="Name" Placeholder="Select Aircraft" style="width: 100%;"
                         Data="@reservationFilterVM.Aircrafts" Change="@(args =>  grid.Reload())"
@@ -78,28 +91,12 @@
       </div>
     }
 
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="col-md-4">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
     </div>
 
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
-
-        <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
-                          @bind-Value="@startDate" Placeholder="Select Start Date"
-                          Change=@(args => OnStartDateChange(args))
-                          DateFormat="dd/MM/yyyy" Class="w-100" />
-    </div>
-
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
-
-        <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
-                          @bind-Value="@endDate" Placeholder="Select End Date"
-                          Change=@(args => OnEndDateChange(args))
-                          DateFormat="dd/MM/yyyy" Class="w-100" />
-    </div>
-
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+    <div class="col-md-4">
         <RadzenDropDown @bind-Value="@reservationFilterTypeId" TValue="int"
                         TextProperty="Name" Placeholder="Select Reservation Type" style="width: 100%;"
                         Data="@ReservationTypeFilter" Change="@(args =>  grid.Reload())"

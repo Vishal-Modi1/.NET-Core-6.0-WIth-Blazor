@@ -14,15 +14,15 @@
 @page "/UserRolePermission"
 
 
-<div class="row mb-4">
+<div class="row">
     <div class="col">
         <h2 style="float:left">Manage Users Permissions</h2>
     </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom:22px;">
     <div class="col-md-4">
-        <RadzenDropDown @bind-Value="@RoleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+        <RadzenDropDown @bind-Value="@RoleId" Style="width:100%;" TValue="int"
                         @ref="roleFilter" TextProperty="Name" Placeholder="Select Role"
                         Data="@RoleFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="RoleId" ValueProperty="Id" AllowClear="true">
@@ -32,7 +32,7 @@
     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
         <div class="col-md-4">
-            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                         @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
                         Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
@@ -41,7 +41,7 @@
     }
 
     <div class="col-md-4">
-        <RadzenDropDown @bind-Value="@ModuleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+        <RadzenDropDown @bind-Value="@ModuleId" Style="width:100%;" TValue="int"
                         @ref="moduleFilter" TextProperty="Name" Placeholder="Select Module"
                         Data="@ModuleFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="ModuleId" ValueProperty="Id" AllowClear="true">

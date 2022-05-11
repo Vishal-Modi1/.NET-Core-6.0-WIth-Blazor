@@ -13,21 +13,22 @@
 
 @page "/Company"
 
-@{
-    if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
-    {
-        <div class="row mb-4">
-            <div class="col">
-                <h2 style="float:left">Manage Companies Details</h2>
-                <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => CompanyCreateDialog(new CompanyVM(), "Create")) />
-            </div>
-        </div>
-    }
-}
 
 <div class="row">
+    <div class="col">
+        <h2 style="float:left">Manage Companies Details</h2>
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+        {
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline"
+                      ButtonStyle="ButtonStyle.Primary" Click=@(() => CompanyCreateDialog(new CompanyVM(), "Create")) />
+        }
+    </div>
+</div>
 
-    <div class="col-md-4" style="padding-top:0.5%; margin: 8px 0px">
+
+<div class="row" style="margin-bottom:22px;">
+
+    <div class="col-md-4">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search Company" @bind-Value="@searchText" />
     </div>
@@ -43,13 +44,13 @@
                 PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 
-        <RadzenDataGridColumn Width="50px" TItem="CompanyVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-            <Template Context="value">
-                @(data.IndexOf(value) + 1)
+        <RadzenDataGridColumn TItem="CompanyVM" Title="Logo" Frozen="true" Sortable="false" Filterable="false" Width="65px">
+            <Template Context="data">
+                <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 8px;" />
             </Template>
         </RadzenDataGridColumn>
 
-         <RadzenDataGridColumn TItem="CompanyVM" Title="Name" Filterable="false" Sortable="false" >
+        <RadzenDataGridColumn TItem="CompanyVM" Title="Name" Filterable="false" Sortable="false">
             <Template Context="value">
 
                 <a href="javascript:void(0)" @onclick="@((ui) => OpenCompanyDetailPagge(value))">@value.Name</a>
@@ -62,7 +63,7 @@
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="TimeZone" Title="TimeZone"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="ContactNo" Title="Contact No"></RadzenDataGridColumn>
 
-         <RadzenDataGridColumn TItem="CompanyVM" Title="Website" Filterable="false" Sortable="false" >
+        <RadzenDataGridColumn TItem="CompanyVM" Title="Website" Filterable="false" Sortable="false">
             <Template Context="value">
 
                 @if (!string.IsNullOrWhiteSpace(value.Website))

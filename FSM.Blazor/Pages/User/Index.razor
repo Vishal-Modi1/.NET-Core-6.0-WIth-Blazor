@@ -18,7 +18,7 @@
     <PageTitle>User | Fly Manager </PageTitle>
 }
 
-<div class="row mb-4">
+<div class="row">
     <div class="col">
         <h2 style="float:left">Manage Users Details</h2>
 
@@ -31,9 +31,9 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom:22px;">
     <div class="col-md-4">
-        <RadzenDropDown @bind-Value="@RoleId" Style="width:100%; margin: 8px 4px;" TValue="int"
+        <RadzenDropDown @bind-Value="@RoleId" Style="width:100%;" TValue="int"
                         @ref="roleFilter" TextProperty="Name" Placeholder="Select Role"
                         Data="@RoleFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="RoleId" ValueProperty="Id" AllowClear="true">
@@ -43,7 +43,7 @@
     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
     {
         <div class="col-md-4">
-            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%; margin: 8px 4px;" TValue="int"
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                         TextProperty="Name" Placeholder="Select Company"
                         Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
@@ -51,7 +51,7 @@
         </div>
     }
 
-    <div class="col-md-4" style="padding-top:0.5%">
+    <div class="col-md-4">
         <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
                        Placeholder="Search User" @bind-Value="@searchText" />
     </div>
@@ -67,11 +67,17 @@
                 PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 
-        <RadzenDataGridColumn Width="50px" TItem="UserDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+      @*  <RadzenDataGridColumn Width="50px" TItem="UserDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
             <Template Context="value">
                 @(data.IndexOf(value) + 1)
             </Template>
         </RadzenDataGridColumn>
+*@
+         <RadzenDataGridColumn TItem="UserDataVM" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="65px" >
+                <Template Context="data">
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';" Path="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 8px;" />
+                </Template>
+         </RadzenDataGridColumn>
 
         <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="FirstName" Title="First Name"></RadzenDataGridColumn>
         <RadzenDataGridColumn TItem="UserDataVM" Filterable="false" Property="LastName" Title="Last Name"></RadzenDataGridColumn>

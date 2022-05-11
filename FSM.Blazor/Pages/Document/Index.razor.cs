@@ -89,8 +89,10 @@ namespace FSM.Blazor.Pages.Document
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
-                datatableParams.ModuleId = documentFilterVM.ModulesList.Where(p => p.Name == ParentModuleName).FirstOrDefault().Id;
+                datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
             }
+
+
 
             if (ParentModuleName == Module.Company.ToString())
             {
