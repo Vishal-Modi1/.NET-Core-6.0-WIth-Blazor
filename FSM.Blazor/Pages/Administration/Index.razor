@@ -30,35 +30,41 @@
             {
                 string name = tab.Name;
 
-                <RadzenTabsItem Text=@tab.DisplayName>
 
-                    @if (name == Module.Company.ToString())
-                    {
+
+                @if (name == Module.Company.ToString())
+                {
+                    <RadzenTabsItem Text=@tab.DisplayName Icon="account_balance">
                         <FSM.Blazor.Pages.Company.Index></FSM.Blazor.Pages.Company.Index>
-                    }
-                    else if (name == Module.User.ToString())
-                    {
+                    </RadzenTabsItem>
+                }
+                else if (name == Module.User.ToString())
+                {
+                    <RadzenTabsItem Text=@tab.DisplayName Icon="person">
                         <FSM.Blazor.Pages.User.Index ParentModuleName="Administration"></FSM.Blazor.Pages.User.Index>
-                    }
-                    else if (name == Module.InstructorType.ToString())
-                    {
+                    </RadzenTabsItem>
+                }
+                else if (name == Module.InstructorType.ToString())
+                {
+                    <RadzenTabsItem Text=@tab.DisplayName Icon="account_box">
                         <FSM.Blazor.Pages.InstructorType.Index></FSM.Blazor.Pages.InstructorType.Index>
-                    }
-                    else if (name == Module.UserRolePermission.ToString())
-                    {
+                    </RadzenTabsItem>
+                }
+                else if (name == Module.UserRolePermission.ToString())
+                {
+                    <RadzenTabsItem Text=@tab.DisplayName Icon="lock_open">
                         <FSM.Blazor.Pages.UserRolePermission.Index></FSM.Blazor.Pages.UserRolePermission.Index>
-                    }
-
-                </RadzenTabsItem>
-
+                    </RadzenTabsItem>
+                }
             }
-            
-                <RadzenTabsItem Text="Location">
 
-                    <FSM.Blazor.Pages.Location.Index></FSM.Blazor.Pages.Location.Index>
-            
-                </RadzenTabsItem>
+            <RadzenTabsItem Text="Location" Icon="location_on">
+
+                <FSM.Blazor.Pages.Location.Index></FSM.Blazor.Pages.Location.Index>
+
+            </RadzenTabsItem>
         </Tabs>
+
     </RadzenTabs>
 
 </div>

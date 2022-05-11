@@ -5,7 +5,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
         {
-            <RadzenTabsItem Text="Users">
+            <RadzenTabsItem Text="Users" Icon="person">
 
                 <FSM.Blazor.Pages.User.Index CompanyIdParam="@CompanyData.Id" ParentModuleName="@Module.Company.ToString()">
 
@@ -16,7 +16,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Reservation.ToString()))
         {
-            <RadzenTabsItem Text="Reservations">
+            <RadzenTabsItem Text="Reservations" Icon="book_online">
 
                 <FSM.Blazor.Pages.Reservation.Index ParentModuleName="@Module.Company.ToString()" CompanyId="@CompanyData.Id">
 
@@ -27,7 +27,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Document.ToString()))
         {
-            <RadzenTabsItem Text="Documents">
+            <RadzenTabsItem Text="Documents" Icon="description">
 
                 <FSM.Blazor.Pages.Document.Index ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
 
@@ -36,27 +36,27 @@
             </RadzenTabsItem>
         }
 
-        <RadzenTabsItem Text="Aircrafts">
+        <RadzenTabsItem Text="Aircrafts" Icon="flight">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Maintenance">
+        <RadzenTabsItem Text="Maintenance" Icon="engineering">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Settings">
+        <RadzenTabsItem Text="Settings" Icon="settings">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Expenses">
+        <RadzenTabsItem Text="Expenses" Icon="local_atm">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Flights">
+        <RadzenTabsItem Text="Flights" Icon="connecting_airports">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Quotes">
+        <RadzenTabsItem Text="Quotes" Icon="">
 
         </RadzenTabsItem>
 

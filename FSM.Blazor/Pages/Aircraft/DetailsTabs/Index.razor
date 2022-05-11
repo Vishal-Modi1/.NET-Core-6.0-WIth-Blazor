@@ -2,7 +2,7 @@
 
 <RadzenTabs RenderMode="TabRenderMode.Client">
     <Tabs>
-        <RadzenTabsItem Text="Aircraft Times">
+        <RadzenTabsItem Text="Aircraft Times" Icon="schedule">
 
             <AircraftEquipmentsTimes AircraftData=@AircraftData></AircraftEquipmentsTimes>
 
@@ -14,7 +14,7 @@
 
             </RadzenTabsItem>*@
 
-        <RadzenTabsItem Text="Equipments">
+        <RadzenTabsItem Text="Equipments" Icon="handyman">
 
             <FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index AircraftId=@AircraftData.Id CreatedBy=@AircraftData.CreatedBy>
 
@@ -24,7 +24,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
         {
-            <RadzenTabsItem Text="Reservations">
+            <RadzenTabsItem Text="Reservations" Icon="book_online">
 
                 <FSM.Blazor.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@AircraftData.Id">
 
@@ -34,7 +34,7 @@
         }
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
         {
-            <RadzenTabsItem Text="Documents">
+            <RadzenTabsItem Text="Documents" Icon="description">
 
                 <FSM.Blazor.Pages.Document.Index ParentModuleName="Aircraft">
 
@@ -43,23 +43,23 @@
             </RadzenTabsItem>
         }
 
-        <RadzenTabsItem Text="Maintenance">
+        <RadzenTabsItem Text="Maintenance" Icon="engineering">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Financials">
+        <RadzenTabsItem Text="Financials" Icon="paid">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Performance">
+        <RadzenTabsItem Text="Performance" Icon="query_stats">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Settings">
+        <RadzenTabsItem Text="Settings" Icon="settings">
 
         </RadzenTabsItem>
 
-        <RadzenTabsItem Text="Crew">
+        <RadzenTabsItem Text="Crew" Icon="people">
 
         </RadzenTabsItem>
 
