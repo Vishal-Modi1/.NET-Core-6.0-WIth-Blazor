@@ -36,7 +36,12 @@
             </RadzenTabsItem>
         }
 
-        <RadzenTabsItem Text="Aircrafts" Icon="flight">
+        <RadzenTabsItem Text="Aircrafts" Icon="flight" >
+
+            <FSM.Blazor.Pages.Aircraft.Index ParentModuleName="@Module.Company.ToString()" ParentCompanyId="@CompanyData.Id">
+
+            </FSM.Blazor.Pages.Aircraft.Index>
+
 
         </RadzenTabsItem>
 

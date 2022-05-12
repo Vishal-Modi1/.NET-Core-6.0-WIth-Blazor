@@ -44,9 +44,9 @@
                 PagingSummaryFormat="@pagingSummaryFormat">
     <Columns>
 
-        <RadzenDataGridColumn TItem="CompanyVM" Title="Logo" Frozen="true" Sortable="false" Filterable="false" Width="65px">
+        <RadzenDataGridColumn TItem="CompanyVM" Title="Logo"  Sortable="false" Filterable="false" Width="65px">
             <Template Context="data">
-                <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 8px;" />
+                <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 22px;" />
             </Template>
         </RadzenDataGridColumn>
 

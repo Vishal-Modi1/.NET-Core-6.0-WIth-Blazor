@@ -15,6 +15,8 @@ namespace FSM.Blazor.Pages.Aircraft
 {
     public partial class Index
     {
+        #region Params
+
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
@@ -36,12 +38,22 @@ namespace FSM.Blazor.Pages.Aircraft
         [Inject]
         NotificationService NotificationService { get; set; }
 
+        [Parameter]
+        public int? ParentCompanyId { get; set; }
+
+        [Parameter]
+        public long? UserId { get; set; }
+
+        [Parameter]
+        public string ParentModuleName { get; set; }
+
+        #endregion
+
         AircraftFilterVM aircraftFilterVM;
         IList<DropDownValues> CompanyFilterDropdown;
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
-        int CompanyId;
 
         bool isLoading, isBusyAddNewButton;
 
@@ -58,6 +70,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
         string moduleName = "Aircraft";
         bool isDisplayGridView = false;
+        int companyId;
 
         protected override async Task OnInitializedAsync()
         {
@@ -71,11 +84,11 @@ namespace FSM.Blazor.Pages.Aircraft
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             aircraftFilterVM = await AircraftService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = aircraftFilterVM.Companies;
-        }
 
-        void PageChanged(PagerEventArgs args)
-        {
-            //airCraftsVM = GetOrders(args.Skip, args.Top);
+            if (ParentCompanyId != null)
+            {
+                companyId = ParentCompanyId.Value;
+            }
         }
 
         async Task LoadData(LoadDataArgs args)
@@ -84,7 +97,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
             AircraftDatatableParams datatableParams = new AircraftDatatableParams().Create(args, "TailNo");
 
-            datatableParams.CompanyId = CompanyId;
+            datatableParams.CompanyId = companyId;
             datatableParams.SearchText = searchText;
             datatableParams.IsActive = true;
             pageSize = datatableParams.Length;
@@ -93,6 +106,12 @@ namespace FSM.Blazor.Pages.Aircraft
             airCraftsVM = await AircraftService.ListAsync(dependecyParams, datatableParams);
             count = airCraftsVM.Count() > 0 ? airCraftsVM[0].TotalRecords : 0;
             isLoading = false;
+        }
+
+        async Task RefreshGrid()
+        {
+            await dataGridView.Reload();
+            await dataListView.Reload();
         }
 
         async Task AircraftCreateDialog(long id, string title)
@@ -117,7 +136,7 @@ namespace FSM.Blazor.Pages.Aircraft
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
             {
                 byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
-                var data  = Encoding.Default.GetBytes(aircraftId.ToString());
+                var data = Encoding.Default.GetBytes(aircraftId.ToString());
                 NavManager.NavigateTo("AircraftDetails?AircraftId=" + System.Convert.ToBase64String(encodedBytes));
             }
         }
@@ -145,7 +164,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Details", response.Message);
                 NotificationService.Notify(message);
             }
-                
+
             await dataGridView.Reload();
         }
 

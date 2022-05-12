@@ -73,9 +73,9 @@
             </Template>
         </RadzenDataGridColumn>
 *@
-         <RadzenDataGridColumn TItem="UserDataVM" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="65px" >
+         <RadzenDataGridColumn TItem="UserDataVM" Title="Photo" Sortable="false" Filterable="false" Width="65px" >
                 <Template Context="data">
-                    <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';" Path="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 8px;" />
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';" Path="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 22px;" />
                 </Template>
          </RadzenDataGridColumn>
 
