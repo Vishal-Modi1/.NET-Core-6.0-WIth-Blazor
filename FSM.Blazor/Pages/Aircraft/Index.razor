@@ -15,16 +15,15 @@
 
 <PageTitle>Aircraft | Fly Manager </PageTitle>
 <style>
-    .rz-g > div
-    {
-        flex:none;
+    .rz-g > div {
+        flex: none;
     }
-    </style>
+</style>
 <div class="row">
     <div class="col">
         <h2 style="float:left">Manage Aircrafts Details</h2>
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat,PermissionType.Create, @moduleName))
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
             <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" BusyText="Add New ..." IsBusy=@isBusyAddNewButton
                       ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
@@ -50,43 +49,124 @@
         <div class="col-md-4">
             <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
                         @ref="companyFilter" TextProperty="Name" Placeholder="Select Company"
-                        Data="@CompanyFilterDropdown" Change="@(args =>  grid.Reload())"
+                        Data="@CompanyFilterDropdown" Change="@(args =>  dataListView.Reload())"
                         Name="CompanyId" ValueProperty="Id" AllowClear="true">
             </RadzenDropDown>
         </div>
     }
 
     <div class="col-md-4">
-        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  dataListView.Reload())"
                        Placeholder="Search Aircraft" @bind-Value="@searchText" />
     </div>
 
+    <div class="col-md-4">
+
+
+        <RadzenIcon style="cursor:pointer" Icon="list" title="List View" @onclick="@(args => ChangeView(false))"></RadzenIcon>
+        <RadzenIcon style="cursor:pointer" Icon="grid_view" title="Grid View" @onclick="@(args => ChangeView(true))"></RadzenIcon>
+
+    </div>
+
 </div>
-<RadzenDataList WrapItems="true" @ref="grid" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
+
+@if (isDisplayGridView)
+{
+    <RadzenDataList WrapItems="true" @ref="dataListView" AllowPaging="true" Data="@airCraftsVM" TItem="AircraftDataVM"
                 ShowPagingSummary="true" PagingSummaryFormat="@pagingSummaryFormat"
                 PageSize="@pageSize" Count="@count"
                 PageChanged="@PageChanged" LoadData="@LoadData"
                 PageSizeOptions="@pageSizeOptions">
 
-    <Template Context="airCraftVM">
-        <RadzenCard Style="width:200px;height:200px;cursor:pointer;padding:0px;" @onclick="@((args) => OpenDetailPage(airCraftVM.Id))">
-            <div class="d-flex flex-row align-items-center" style="height: 80%;width: 100%;">
-                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';" Path="@(airCraftVM.ImagePath)" Class="float-left mr-3" Style="width: 100%; height: 100%;" />            
-            </div>
-            <br/>
-             <div class="row" style="margin-top:-10px;">
-                <div class="col-md-6 text-truncate" style="padding-left:24px;">
-                    <b >@(airCraftVM.TailNo)</b>
-                   @*  <h4 class="mb-0">@(airCraftVM.ModelName + " " + airCraftVM.MakeName)</h4>
-*@
+        <Template Context="airCraftVM">
+            <RadzenCard Style="width:200px;height:200px;cursor:pointer;padding:0px;" @onclick="@((args) => OpenDetailPage(airCraftVM.Id))">
+                <div class="d-flex flex-row align-items-center" style="height: 80%;width: 100%;">
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(airCraftVM.ImagePath)" Class="float-left mr-3" Style="width: 100%; height: 100%;" />
                 </div>
-               @* <div class="col-md-6" style="float:right;">
-                                        <div>@airCraftVM.Category</div>
+                <br />
+                <div class="row" style="margin-top:-10px;">
+                    <div class="col-md-6 text-truncate" style="padding-left:24px;">
+                        <b>@(airCraftVM.TailNo)</b>
 
-                    <RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text=@($"{String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", airCraftVM.CompanyName)}") />
+                    </div>
+
                 </div>
-                *@
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>
+
+}
+else
+{
+    <RadzenDataGrid AllowFiltering="true" @ref="dataGridView" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@airCraftsVM" TItem="AircraftDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+        <Columns>
+
+            <RadzenDataGridColumn TItem="AircraftDataVM" Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="65px">
+                <Template Context="data">
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(data.ImagePath)" Style="width: 45px; height: 45px; border-radius: 8px;" />
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AircraftDataVM" Title="Tail No" Filterable="false" Sortable="false">
+                <Template Context="value">
+
+                    <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(value.Id))">@value.TailNo</a>
+
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AircraftDataVM" Filterable="false" Sortable="false" Property="MakeName" Title="Make"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="AircraftDataVM" Filterable="false" Sortable="false" Property="ModelName" Title="Model"></RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="AircraftDataVM" Filterable="false" Sortable="false" Property="Category" Title="Category"></RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="AircraftDataVM" Property="Id" Title="Actions">
+                <Template Context="data">
+
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="settings" Class="m-1" Click=@(() => OpenDetailPage(data.Id)) />
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                    {
+                        <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => AircraftCreateDialog(data.Id,"Edit")) />
+                    }
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                    {
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+                    }
+
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@{
+    async Task OpenDeleteDialog(AircraftDataVM aircraftDataVM)
+    {
+        var result = await DialogService.OpenAsync("Delete", ds =>
+    @<div>
+        <p class="mb-4">Are you sure, You want to delete <b> @aircraftDataVM.TailNo </b>?</p>
+        <div class="row" style="text-align:right">
+            <div class="col">
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                    {
+                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(aircraftDataVM.Id) " Class="mr-1" Style="width: 80px;" />
+                    }
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                    {
+                        <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+                    }
+                </div>
             </div>
-        </RadzenCard>
-    </Template>
-</RadzenDataList>
+        </div>
+    , new DialogOptions { Width = "360px" });
+
+    }
+}

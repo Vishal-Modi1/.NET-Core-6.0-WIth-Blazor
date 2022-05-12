@@ -7,7 +7,6 @@ using Service.Interface;
 using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
-using System.Security.Claims;
 
 namespace FSMAPI.Controllers
 {
@@ -66,7 +65,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(AircraftVM airCraftVM)
         {
-            airCraftVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Create(airCraftVM);
 
             return Ok(response);
@@ -76,7 +75,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftVM airCraftVM)
         {
-            airCraftVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Edit(airCraftVM);
 
             return Ok(response);
@@ -84,7 +83,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("getDetails")]
-        public IActionResult GetDetails(int id)
+        public IActionResult GetDetails(long id)
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
@@ -106,9 +105,9 @@ namespace FSMAPI.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _airCraftService.Delete(id, deletedBy);
 
@@ -123,7 +122,7 @@ namespace FSMAPI.Controllers
             {
                 return Ok(false);
             }
-
+            
             IFormCollection form = Request.Form;
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
@@ -150,7 +149,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("isaircraftexist")]
-        public IActionResult IsAirCraftExist(int id, string tailNo)
+        public IActionResult IsAirCraftExist(long id, string tailNo)
         {
             CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
 

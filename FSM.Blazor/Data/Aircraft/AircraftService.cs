@@ -86,7 +86,7 @@ namespace FSM.Blazor.Data.Aircraft
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, int id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, long id)
         {
             dependecyParams.URL = $"aircraft/delete?id={id}";
             CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);

@@ -25,7 +25,10 @@ namespace FSM.Blazor.Pages.Aircraft
         protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
-        public RadzenDataList<AircraftDataVM> grid { get; set; }
+        public RadzenDataList<AircraftDataVM> dataListView { get; set; }
+
+        [CascadingParameter]
+        public RadzenDataGrid<AircraftDataVM> dataGridView { get; set; }
 
         [CascadingParameter]
         public RadzenDropDown<int> companyFilter { get; set; }
@@ -54,6 +57,7 @@ namespace FSM.Blazor.Pages.Aircraft
         #endregion
 
         string moduleName = "Aircraft";
+        bool isDisplayGridView = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -91,7 +95,7 @@ namespace FSM.Blazor.Pages.Aircraft
             isLoading = false;
         }
 
-        async Task AircraftCreateDialog(int id, string title)
+        async Task AircraftCreateDialog(long id, string title)
         {
             SetAddNewButtonState(true);
 
@@ -105,7 +109,7 @@ namespace FSM.Blazor.Pages.Aircraft
                   new Dictionary<string, object>() { { "aircraftData", aircraftData } },
                   new DialogOptions() { Width = "800px", Height = "580px" });
 
-            await grid.Reload();
+            await dataListView.Reload();
         }
 
         async Task OpenDetailPage(long aircraftId)
@@ -116,6 +120,38 @@ namespace FSM.Blazor.Pages.Aircraft
                 var data  = Encoding.Default.GetBytes(aircraftId.ToString());
                 NavManager.NavigateTo("AircraftDetails?AircraftId=" + System.Convert.ToBase64String(encodedBytes));
             }
+        }
+
+        async Task DeleteAsync(long id)
+        {
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftService.DeleteAsync(dependecyParams, id);
+
+            NotificationMessage message;
+
+            if (response == null)
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
+                NotificationService.Notify(message);
+            }
+            else if (((int)response.Status) == 200)
+            {
+                DialogService.Close(true);
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Details", response.Message);
+                NotificationService.Notify(message);
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Details", response.Message);
+                NotificationService.Notify(message);
+            }
+                
+            await dataGridView.Reload();
+        }
+
+        async Task ChangeView(bool isGridView)
+        {
+            isDisplayGridView = isGridView;
         }
 
         private void SetAddNewButtonState(bool isBusy)

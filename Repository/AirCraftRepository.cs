@@ -25,7 +25,7 @@ namespace Repository
             }
         }
 
-        public void Delete(int id, long deletedBy)
+        public void Delete(long id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -34,7 +34,7 @@ namespace Repository
                 if (airCraft != null)
                 {
                     airCraft.IsDeleted = true;
-                    airCraft.DeletedBy = 0;
+                    airCraft.DeletedBy = deletedBy;
                     airCraft.DeletedOn = DateTime.UtcNow;
 
                     _myContext.SaveChanges();
@@ -127,7 +127,7 @@ namespace Repository
             }
         }
 
-        public bool UpdateImageName(int id, string imageName)
+        public bool UpdateImageName(long id, string imageName)
         {
             using (_myContext = new MyContext())
             {

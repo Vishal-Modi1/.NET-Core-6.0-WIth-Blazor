@@ -15,7 +15,7 @@
 
     .description {
         font-size: 14px;
-        font-weight: 530;
+        
     }
 
     .rz-fileupload-row {
@@ -50,15 +50,13 @@
     
     [b-vy5hox7kaq] .rz-fileupload-buttonbar
     {
-        top:120px!important
+        top:175px!important
     }
     .rz-button.btn-primary
     {
         margin-top:28px;
     }
     
-
-
 </style>
 @if (companyData != null)
 {
@@ -73,12 +71,11 @@
 
                 <div class="col-sm-3" style="position: relative;">
 
-                    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@(companyData.LogoPath)" Style="width: 100%; height: 142px;object-fit:cover; border: 2px solid #1151f3;" />
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
+                    Path="@(companyData.LogoPath)" Style="width: 200px; height: 200px;object-fit:cover; border: 2px solid #1151f3;" />
                     <RadzenFileInput Style="outline:none" @bind-Value=@companyData.LogoPath
                                  Change=@(args => OnChangeAsync()) TValue="string" />
                                 
-
-
 
                 </div>
                 <div class="col-sm-3">
@@ -100,8 +97,6 @@
                                       BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" />
                             }
                         </div>
-
-                        
 
                     </div>
                 </div>
