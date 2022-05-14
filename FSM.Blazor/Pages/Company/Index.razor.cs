@@ -76,7 +76,7 @@ namespace FSM.Blazor.Pages.Company
            
             await DialogService.OpenAsync<Create>(title,
                   new Dictionary<string, object>() { { "companyData", companyData } },
-                  new DialogOptions() { Width = "550px", Height = "620px" });
+                  new DialogOptions() { Width = "550px",Style="" });
 
             await grid.Reload();
         }
