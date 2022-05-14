@@ -1,10 +1,10 @@
 ﻿<div class="modal fadeIn show" id="myModal" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@Title</h4>
+            <div class="modal-header @(HeaderCssClass)">
+                <h4 class="modal-title @(HeaderTitleCssClass)">@Title</h4>
                 <span class="close"
-                        @onclick="@Cancel">
+                        @onclick="@Close">
                     &times;
                 </span>
             </div>
@@ -32,5 +32,5 @@
             }
         </div>
     </div>
-    <div class="modal-backdrop fade show" @onclick="@( () => {if(CloseOnOutsideClick) Cancel();})"></div>
+    <div class="modal-backdrop fade show" @onclick="@( () => { if(CloseOnOutsideClick) { OutsideClick(); } })"></div>
 </div>
