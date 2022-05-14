@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="BlazorMaterialIcons" Version="0.0.1" />
+    <PackageReference Include="BuildWebCompiler2022" Version="1.14.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
