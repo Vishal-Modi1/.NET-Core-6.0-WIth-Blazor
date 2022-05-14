@@ -6,55 +6,5 @@
 <PageTitle>Dashboard | Fly Manager </PageTitle>
 
 <AuthorizeView>
-
     <h4>Hello, @context.User.Identity.Name!</h4>
-
-    <button @onclick=@(() => {ShowPopup = true;})>Open Popup</button>
-    <button @onclick="@(() => OpenDialog("Belison"))">Open Popup1</button>
-
-    @*
-        @if (ShowPopup)
-        {
-        <FlightCommonPopupModal @ref="_demoPopup">
-        <h4>Hello, @context.User.Identity.Name!</h4>
-        <button @onclick=@(() => {_demoPopup.Close();})>Close Popup</button>
-        </FlightCommonPopupModal>
-        }*@
-
-
-
-
-    @if (DialogIsOpen)
-    {
-        <FlightCommonPopupModal
-        Title="Delete an author"
-                            OnClose="@OnDialogClose"
-                            Message="@message"
-                            Type="FlightCommonPopupModal.Category.DeleteNot">
-            <Body>
-                <div>Test qwerretertw</div>
-            </Body>
-        </FlightCommonPopupModal>
-
-        
-    }
-
-</AuthorizeView>
-@code { 
-
-    private string message;
-    private bool DialogIsOpen = false;
-
-    private void OpenDialog(string title)
-    {
-        DialogIsOpen = true;
-        message = "Do you want to delete the author \"" + title + "\"?";
-    }
-
-    private void OnDialogClose(bool isOk)
-    {
-
-        DialogIsOpen = false;
-    }
-
-    }
+</AuthorizeView> 

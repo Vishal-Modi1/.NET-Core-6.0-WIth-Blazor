@@ -94,7 +94,12 @@
 {
                         @*OnClose="@OnDialogClose"
                         Message="@message"*@
-    <FlightCommonPopupModal Title="@OpenPopupTitle" OnClose="@(()=> {OpenPopup = false;})">
+    <FlightCommonPopupModal 
+    Title="@OpenPopupTitle" 
+    HeaderCssClass="@(OpenCompanyEditPopup ? "bg-success-f text-white":"")"
+    HeaderTitleCssClass="@(OpenCompanyEditPopup ? "text-white":"")"
+    CloseOnOutsideClick="false"
+    OnClose="@(()=> {OpenPopup = false;})">
         <Body>
             @if (OpenCompanyEditPopup)
             {

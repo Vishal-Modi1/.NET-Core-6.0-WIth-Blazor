@@ -24,22 +24,32 @@ namespace FSM.Blazor.Shared.Components
         /// </summary>
         [Parameter] public RenderFragment? Footer { get; set; }
         [Parameter] public bool CloseOnOutsideClick { get; set; }
-        [Parameter] public EventCallback<bool> OnClose { get; set; }
+        [Parameter] public string HeaderCssClass { get; set; }
+        [Parameter] public string HeaderTitleCssClass { get; set; }
+
+        [Parameter] public string BodyCssClass { get; set; }
+
+        [Parameter] public string FooterCssClass { get; set; }
         [Parameter] public Category Type { get; set; }
+        [Parameter] public EventCallback OnClose { get; set; }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
         }
 
-        private Task Cancel()
+        private Task Close()
         {
-            return OnClose.InvokeAsync(false);
+            return OnClose.InvokeAsync();
         }
-        private Task Ok()
+
+        private Task OutsideClick()
         {
-            return OnClose.InvokeAsync(true);
+            if (CloseOnOutsideClick)
+                return OnClose.InvokeAsync();
+            return Task.CompletedTask;
         }
+
         public enum Category
         {
             Okay,

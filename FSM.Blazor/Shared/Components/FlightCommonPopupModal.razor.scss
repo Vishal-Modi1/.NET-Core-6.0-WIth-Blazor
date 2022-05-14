@@ -8,15 +8,23 @@
     outline: 0;
     display: block;
 
+    .close {
+        cursor: pointer;
+        font-size: 18px;
+    }
+
     .modal-dialog {
         z-index: 1055;
-        border-radius: 0.5rem;
+        border-radius: 0.8rem;
         background-color: #ffffff;
     }
 
-    .close {
-        cursor: pointer;
-        font-size:18px;
+    .modal-header {
+        border-radius: 0.8rem 0.8rem 0 0;
+    }
+
+    .modal-content {
+        border-radius: 0.8rem;
     }
 
     .modal-backdrop.show {
