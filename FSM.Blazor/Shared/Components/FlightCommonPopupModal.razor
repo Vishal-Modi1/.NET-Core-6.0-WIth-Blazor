@@ -1,0 +1,36 @@
+﻿<div class="modal fadeIn show" id="myModal" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@Title</h4>
+                <span class="close"
+                        @onclick="@Cancel">
+                    &times;
+                </span>
+            </div>
+            <div class="modal-body">
+                @if (string.IsNullOrEmpty(Message))
+                {
+                    <div class="body-content">
+                        @(Body)
+                    </div>
+                }
+                else
+                {
+                    <div class="body-content">
+                        @(Message)
+                    </div>
+                }
+            </div>
+            @if (Footer is not null)
+            {
+                <div class="modal-footer">
+                    <div>
+                        @(Footer)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" @onclick="@( () => {if(CloseOnOutsideClick) Cancel();})"></div>
+</div>

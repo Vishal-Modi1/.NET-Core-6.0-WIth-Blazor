@@ -4,6 +4,7 @@
 @using DataModels.VM.Company
 @using FSM.Blazor.Utilities;
 @using Configuration;
+@using FSM.Blazor.Shared.Components;
 
 @inject NavigationManager NavigationManager
 @inject CompanyService CompanyService
@@ -89,7 +90,21 @@
         </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
+@if (OpenPopup)
+{
+                        @*OnClose="@OnDialogClose"
+                        Message="@message"*@
+    <FlightCommonPopupModal Title="@OpenPopupTitle" OnClose="@(()=> {OpenPopup = false;})">
+        <Body>
+            @if (OpenCompanyEditPopup)
+            {
+                <Create companyData=@(_companyData)></Create>
+            }
+        </Body>
+    </FlightCommonPopupModal>
 
+
+}
 @{
     async Task OpenDeleteDialog(CompanyVM companyVM)
     {

@@ -44,6 +44,11 @@ namespace FSM.Blazor.Pages.Company
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string moduleName = Module.Company.ToString();
 
+        bool OpenPopup { get; set; }
+        string OpenPopupTitle { get; set; }
+        bool OpenCompanyEditPopup { get; set; }
+        CompanyVM _companyData { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
@@ -73,12 +78,16 @@ namespace FSM.Blazor.Pages.Company
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
-           
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "companyData", companyData } },
-                  new DialogOptions() { Width = "550px", Height = "620px" });
 
-            await grid.Reload();
+            _companyData = companyData;
+            OpenPopupTitle = title;
+            OpenPopup = true;
+            OpenCompanyEditPopup = true;
+            //await DialogService.OpenAsync<Create>(title,
+            //      new Dictionary<string, object>() { { "companyData", companyData } },
+            //      new DialogOptions() { Width = "550px", Height = "620px" });
+
+            //await grid.Reload();
         }
 
         async Task OpenCompanyDetailPagge(CompanyVM companyData)
