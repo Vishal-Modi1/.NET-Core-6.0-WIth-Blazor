@@ -47,6 +47,7 @@ namespace FSM.Blazor.Pages.Company
         bool OpenPopup { get; set; }
         string OpenPopupTitle { get; set; }
         bool OpenCompanyEditPopup { get; set; }
+        bool OpenCompanyDeletePopup { get; set; }
         CompanyVM _companyData { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -128,6 +129,13 @@ namespace FSM.Blazor.Pages.Company
             }
 
             await grid.Reload();
+        }
+
+        string GetHeaderCssClass() {
+            return OpenCompanyEditPopup ? "bg-success-f text-white" : OpenCompanyDeletePopup? "bg-danger-f text-white" : "";
+        }
+        string GetHeaderTitleCssClass() {
+            return OpenCompanyEditPopup ? "text-white" : "";
         }
     }
 }

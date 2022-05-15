@@ -93,14 +93,19 @@
 @if (OpenPopup)
 {
     <FlightCommonPopupModal Title="@OpenPopupTitle"
-                        HeaderCssClass="@(OpenCompanyEditPopup ? "bg-success-f text-white":"")"
-                        HeaderTitleCssClass="@(OpenCompanyEditPopup ? "text-white":"")"
+                        HeaderCssClass="@(GetHeaderCssClass())"
+                        HeaderTitleCssClass="@(GetHeaderTitleCssClass())"
                         CloseOnOutsideClick="false"
                         OnClose="@(()=> {OpenPopup = false;})">
         <Body>
+            
             @if (OpenCompanyEditPopup)
             {
                 <Create companyData=@(_companyData)></Create>
+            }
+            else if(OpenCompanyDeletePopup)
+            {
+                //Delete popup 
             }
         </Body>
     </FlightCommonPopupModal>
