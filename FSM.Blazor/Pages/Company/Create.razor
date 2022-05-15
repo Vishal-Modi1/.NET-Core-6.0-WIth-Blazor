@@ -89,7 +89,15 @@
 
                 @if (isAuthenticated)
                 {
-                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />
+                    if (companyData.Id == 0)
+                    {
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />    
+                    } 
+                    else
+                    {
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />
+                    }
+                    
                     <RadzenButton Click="@((args) => dialogService.Close(false))"
                               ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
                 }

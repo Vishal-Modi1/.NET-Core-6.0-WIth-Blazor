@@ -46,6 +46,7 @@ namespace FSM.Blazor.Pages.Company
 
         bool OpenPopup { get; set; }
         string OpenPopupTitle { get; set; }
+        bool OpenCompanyCreatePopup { get; set; }
         bool OpenCompanyEditPopup { get; set; }
         bool OpenCompanyDeletePopup { get; set; }
         CompanyVM _companyData { get; set; }
@@ -83,7 +84,14 @@ namespace FSM.Blazor.Pages.Company
             _companyData = companyData;
             OpenPopupTitle = title;
             OpenPopup = true;
-            OpenCompanyEditPopup = true;
+            if (companyData.Id == 0) {
+                OpenCompanyCreatePopup = true;
+                OpenCompanyEditPopup = false;
+            }
+            else {
+                OpenCompanyCreatePopup = false;
+                OpenCompanyEditPopup = true;
+            }
             //await DialogService.OpenAsync<Create>(title,
             //      new Dictionary<string, object>() { { "companyData", companyData } },
             //      new DialogOptions() { Width = "550px", Height = "620px" });
@@ -132,10 +140,10 @@ namespace FSM.Blazor.Pages.Company
         }
 
         string GetHeaderCssClass() {
-            return OpenCompanyEditPopup ? "bg-success-f text-white" : OpenCompanyDeletePopup? "bg-danger-f text-white" : "";
+            return OpenCompanyCreatePopup ? "bg-primary-f text-white" : OpenCompanyEditPopup ? "bg-success-f text-white" : OpenCompanyDeletePopup? "bg-danger-f text-white" : "";
         }
         string GetHeaderTitleCssClass() {
-            return OpenCompanyEditPopup ? "text-white" : "";
+            return "text-white";
         }
     }
 }
