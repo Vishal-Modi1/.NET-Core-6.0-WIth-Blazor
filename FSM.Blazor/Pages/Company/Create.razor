@@ -46,7 +46,7 @@
                                 AllowFiltering="true" Class="w-100"
                                 Placeholder="Select timezone" Data=@timeZoneInfos TextProperty="DisplayName"
                                 ValueProperty="StandardName" Name="TimeZone" @bind-Value="@companyData.TimeZone" />
-                <RadzenRequiredValidator Component="TimeZone" Text="TimeZone is required" Popup="@isPopup" Style="position: relative" />
+                <RadzenRequiredValidator Component="TimeZone" Text="Timezone is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
@@ -91,14 +91,14 @@
                 {
                     if (companyData.Id == 0)
                     {
-                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />    
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" IsBusy=@isBusy Style="width: 120px" />    
                     } 
                     else
                     {
-                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success" Text="Save" IsBusy=@isBusy BusyText="Saving ..." Style="width: 120px" />
+                        <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success" Text="Update" IsBusy=@isBusy Style="width: 120px" />
                     }
                     
-                    <RadzenButton Click="@((args) => dialogService.Close(false))"
+                    <RadzenButton Click="@((args) => CloseDilaog(true))"
                               ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
                 }
                 else

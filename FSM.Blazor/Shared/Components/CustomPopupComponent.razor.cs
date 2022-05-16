@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using DataModels.Enums;
+using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Shared.Components
 {
-    public partial class FlightCommonPopupModal
+    public partial class CustomPopupComponent
     {
         /// <summary>
         /// 
@@ -27,10 +28,10 @@ namespace FSM.Blazor.Shared.Components
         [Parameter] public string HeaderCssClass { get; set; }
         [Parameter] public string HeaderTitleCssClass { get; set; }
 
-        [Parameter] public string BodyCssClass { get; set; }
+        //[Parameter] public string BodyCssClass { get; set; }
+        //[Parameter] public string FooterCssClass { get; set; }
+        //[Parameter] public Category Type { get; set; }
 
-        [Parameter] public string FooterCssClass { get; set; }
-        [Parameter] public Category Type { get; set; }
         [Parameter] public EventCallback OnClose { get; set; }
 
         protected override void OnInitialized()
@@ -47,15 +48,36 @@ namespace FSM.Blazor.Shared.Components
         {
             if (CloseOnOutsideClick)
                 return OnClose.InvokeAsync();
+
             return Task.CompletedTask;
         }
 
-        public enum Category
+        public static string GetHeaderCssClass(OperationType operationType)
         {
-            Okay,
-            SaveNot,
-            DeleteNot
+            switch (operationType)
+            {
+                case OperationType.Create: 
+                    return "bg-primary-f text-white";
+                case OperationType.Edit:
+                    return "bg-success-f text-white";
+                case OperationType.Delete:
+                    return "bg-danger-f text-white";
+                default:
+                    return "bg-primary-f text-white";
+            }
         }
+
+        //public static string GetHeaderTitleCssClass()
+        //{
+        //    return "text-white";
+        //}
+
+        //public enum Category
+        //{
+        //    Okay,
+        //    SaveNot,
+        //    DeleteNot
+        //}
 
         //private string _title = "";
         //private string _description = "";

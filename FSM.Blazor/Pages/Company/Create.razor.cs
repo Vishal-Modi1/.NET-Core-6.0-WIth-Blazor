@@ -14,25 +14,23 @@ namespace FSM.Blazor.Pages.Company
 {
     public partial class Create
     {
-        [Parameter]
-        public CompanyVM companyData { get; set; }
 
-        [Parameter]
-        public Action GoToNext { get; set; }
+        [Parameter] public CompanyVM companyData { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [Parameter] public Action GoToNext { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Inject] IHttpClientFactory _httpClient { get; set; }
+
+        [Inject] protected IMemoryCache memoryCache { get; set; }
+
+        [Inject] NotificationService NotificationService { get; set; }
+
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isLoading = false, isBusy = false,isAuthenticated = false;
@@ -76,6 +74,8 @@ namespace FSM.Blazor.Pages.Company
                 dialogService.Close(true);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);
                 NotificationService.Notify(message);
+
+                CloseDilaog(false);
             }
             else
             {
@@ -90,6 +90,11 @@ namespace FSM.Blazor.Pages.Company
         {
             isBusy = isBusyState;
             StateHasChanged();
+        }
+
+        public void CloseDilaog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
 
         async void GotoNextStep()

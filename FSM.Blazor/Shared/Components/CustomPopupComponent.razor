@@ -2,16 +2,13 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header @(HeaderCssClass)">
-                <h4 class="modal-title @(HeaderTitleCssClass)">@Title</h4>
-                <span class="close"
-                        @onclick="@Close">
-                    &times;
-                </span>
+                <h3 class="modal-title text-white">@Title</h3>
+               <RadzenIcon Icon="close" @onclick="@Close" Style="cursor:pointer"></RadzenIcon>
             </div>
             <div class="modal-body">
                 @if (string.IsNullOrEmpty(Message))
                 {
-                    <div class="body-content">
+                    <div class="body-content px-3">
                         @(Body)
                     </div>
                 }
