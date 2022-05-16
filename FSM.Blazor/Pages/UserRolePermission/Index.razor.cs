@@ -13,14 +13,8 @@ namespace FSM.Blazor.Pages.UserRolePermission
 {
     partial class Index
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-        
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<UserRolePermissionDataVM> grid { get; set; }
@@ -33,9 +27,6 @@ namespace FSM.Blazor.Pages.UserRolePermission
 
         [CascadingParameter]
         public RadzenDropDown<int> moduleFilter { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -53,14 +44,14 @@ namespace FSM.Blazor.Pages.UserRolePermission
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             userrolePermissionFilterVM = await UserRolePermissionService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = userrolePermissionFilterVM.Companies;
@@ -79,7 +70,7 @@ namespace FSM.Blazor.Pages.UserRolePermission
             datatableParams.RoleId = RoleId;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserRolePermissionService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
@@ -87,7 +78,7 @@ namespace FSM.Blazor.Pages.UserRolePermission
 
         async Task UpdatePermissionAsync(bool? value, long id, bool isForWeb)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(dependecyParams, id, value.GetValueOrDefault(), isForWeb);
 
@@ -127,7 +118,7 @@ namespace FSM.Blazor.Pages.UserRolePermission
             userrolePermissionFilterVM.ModuleId = ModuleId;
             userrolePermissionFilterVM.UserRoleId = RoleId;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionsAsync(dependecyParams, userrolePermissionFilterVM, isForWeb);
 

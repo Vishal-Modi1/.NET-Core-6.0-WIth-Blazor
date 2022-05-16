@@ -15,21 +15,12 @@ namespace FSM.Blazor.Pages.MyAccount
     partial class Index
     {
         #region Objects
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
         [CascadingParameter]
         public MainLayout Layout { get; set; }
-
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -41,7 +32,7 @@ namespace FSM.Blazor.Pages.MyAccount
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             base.StateHasChanged();
             await LoadData();
@@ -53,7 +44,7 @@ namespace FSM.Blazor.Pages.MyAccount
 
             var user = (await AuthStat).User;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserService.FindById(dependecyParams);
 
             NotificationMessage message;
@@ -131,7 +122,7 @@ namespace FSM.Blazor.Pages.MyAccount
                 multiContent.Add(new StringContent(userVM.Id.ToString()), "UserId");
                 multiContent.Add(new StringContent(companyId), "CompanyId");
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 CurrentResponse response = await UserService.UploadProfileImageAsync(dependecyParams, multiContent);
 

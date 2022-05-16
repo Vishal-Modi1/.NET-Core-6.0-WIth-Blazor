@@ -286,7 +286,7 @@
     {
         DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
 
-        DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+        DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
         await DocumentService.UpdateTotalSharesAsync(dependecyParams, documentDataVM.Id);
 

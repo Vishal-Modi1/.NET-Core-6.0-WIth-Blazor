@@ -17,14 +17,8 @@ namespace FSM.Blazor.Pages.Aircraft
     {
         #region Params
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataList<AircraftDataVM> dataListView { get; set; }
@@ -34,9 +28,6 @@ namespace FSM.Blazor.Pages.Aircraft
 
         [CascadingParameter]
         public RadzenDropDown<int> companyFilter { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         [Parameter]
         public int? ParentCompanyId { get; set; }
@@ -53,7 +44,6 @@ namespace FSM.Blazor.Pages.Aircraft
         IList<DropDownValues> CompanyFilterDropdown;
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
-
 
         bool isLoading, isBusyAddNewButton;
 
@@ -74,14 +64,14 @@ namespace FSM.Blazor.Pages.Aircraft
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
             {
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftFilterVM = await AircraftService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = aircraftFilterVM.Companies;
 
@@ -102,7 +92,7 @@ namespace FSM.Blazor.Pages.Aircraft
             datatableParams.IsActive = true;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             airCraftsVM = await AircraftService.ListAsync(dependecyParams, datatableParams);
             count = airCraftsVM.Count() > 0 ? airCraftsVM[0].TotalRecords : 0;
             isLoading = false;
@@ -118,7 +108,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             SetAddNewButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
@@ -143,7 +133,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async Task DeleteAsync(long id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;

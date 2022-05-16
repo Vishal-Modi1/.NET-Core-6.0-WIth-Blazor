@@ -13,38 +13,25 @@ namespace FSM.Blazor.Pages.User
 {
     public partial class Create
     {
-        [Parameter]
-        public UserVM userData { get; set; }
+        [Parameter] public UserVM userData { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
+        [Parameter] public Action SaveBothStepsValue { get; set; }
+
+        [Parameter] public Action GoBackStep { get; set; }
+
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         public RadzenTemplateForm<UserVM> userForm;
-
-        [Parameter]
-        public Action SaveBothStepsValue { get; set; }
-
-        [Parameter]
-        public Action GoBackStep { get; set; }
-
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isInstructorTypeDropdownVisible = false, isAuthenticated = false;
         bool isBusy;
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
 
@@ -69,7 +56,7 @@ namespace FSM.Blazor.Pages.User
             {
                 SetButtonState(true);
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 response = await UserService.IsEmailExistAsync(dependecyParams, userData.Email);
 
                 SetButtonState(false);
@@ -83,7 +70,7 @@ namespace FSM.Blazor.Pages.User
 
                 userDataVM.ActivationLink = NavigationManager.BaseUri + "AccountActivation?Token=";
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 response = await UserService.SaveandUpdateAsync(dependecyParams, userDataVM);
 
                 SetButtonState(false);
@@ -127,11 +114,7 @@ namespace FSM.Blazor.Pages.User
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    dialogService.Close(true);
-                }
-
+                CloseDilaog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }
@@ -194,6 +177,11 @@ namespace FSM.Blazor.Pages.User
         void RedirectToLogin()
         {
             NavigationManager.NavigateTo("/Login");
+        }
+
+        public void CloseDilaog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

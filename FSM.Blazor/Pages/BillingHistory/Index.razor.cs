@@ -14,14 +14,9 @@ namespace FSM.Blazor.Pages.BillingHistory
     partial class Index
     {
         #region Params
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
+        
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<BillingHistoryDataVM> grid { get; set; }
@@ -41,7 +36,7 @@ namespace FSM.Blazor.Pages.BillingHistory
         
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -58,7 +53,7 @@ namespace FSM.Blazor.Pages.BillingHistory
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await BillingHistoryService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;

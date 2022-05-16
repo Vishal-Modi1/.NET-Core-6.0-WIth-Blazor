@@ -15,23 +15,14 @@ namespace FSM.Blazor.Pages.User
 {
     partial class Index
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<UserDataVM> grid { get; set; }
 
         [CascadingParameter]
         public RadzenDropDown<int> roleFilter { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         [Parameter]
         public string ParentModuleName { get; set; }
@@ -46,16 +37,22 @@ namespace FSM.Blazor.Pages.User
         IList<DropDownValues> CompanyFilterDropdown;
         IList<DropDownValues> RoleFilterDropdown;
         int CompanyId, RoleId, count;
+        bool isDisplayPopup { get; set; }
+        string popupTitle { get; set; }
+
+        OperationType operationType = OperationType.Create;
 
         // Loaders
         bool isLoading, isBusyAddNewButton, isBusyDeleteButton, isBusyUpdateStatusButton;
 
+        UserVM userData;
         #region Grid Variables
 
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
+        string message = "";
 
         #endregion
 
@@ -63,14 +60,14 @@ namespace FSM.Blazor.Pages.User
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
          
             if(!_currentUserPermissionManager.IsAllowed(AuthStat,DataModels.Enums.PermissionType.View,moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
             CompanyFilterDropdown = userFilterVM.Companies;
             RoleFilterDropdown = userFilterVM.UserRoles;
@@ -95,7 +92,7 @@ namespace FSM.Blazor.Pages.User
                 datatableParams.CompanyId = CompanyId;
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
@@ -103,10 +100,18 @@ namespace FSM.Blazor.Pages.User
 
         async Task UserCreateDialog(long id, string title)
         {
-            SetAddNewButtonState(true);
+            if (id == 0)
+            {
+                SetAddNewButtonState(true);
+            }
+            else
+            {
+                operationType = OperationType.Edit;
+                SetEditButtonState(id, true);
+            }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
-            UserVM userData = await UserService.GetDetailsAsync(dependecyParams, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            userData = await UserService.GetDetailsAsync(dependecyParams, id);
 
             SetAddNewButtonState(false);
 
@@ -120,18 +125,24 @@ namespace FSM.Blazor.Pages.User
                 userData.GenderId = userData.Gender == "Male" ? 0 : 1;
             }
 
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "userData", userData } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
+            if (id == 0)
+            {
+                SetAddNewButtonState(false);
+            }
+            else
+            {
+                SetEditButtonState(id, false);
+            }
 
-            await grid.Reload();
+            popupTitle = title;
+            isDisplayPopup = true;
         }
 
         async Task DeleteAsync(long id)
         {
             await SetDeleteButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserService.DeleteAsync(dependecyParams, id);
 
             await SetDeleteButtonState(false);
@@ -145,7 +156,8 @@ namespace FSM.Blazor.Pages.User
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DialogService.Close(true);
+                //DialogService.Close(true);
+                isDisplayPopup = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "User Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -162,7 +174,7 @@ namespace FSM.Blazor.Pages.User
         {
             SetUpdateStatusButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             CurrentResponse response = await UserService.UpdateIsUserActive(dependecyParams, id, value.GetValueOrDefault());
 
@@ -196,6 +208,16 @@ namespace FSM.Blazor.Pages.User
             await grid.Reload();
         }
 
+        async Task CloseDiloag(bool isCancelled)
+        {
+            if (!isCancelled)
+            {
+                await grid.Reload();
+            }
+
+            isDisplayPopup = false;
+        }
+
         private void SetAddNewButtonState(bool isBusy)
         {
             isBusyAddNewButton = isBusy;
@@ -212,6 +234,46 @@ namespace FSM.Blazor.Pages.User
         {
             isBusyUpdateStatusButton = isBusy;
             StateHasChanged();
+        }
+
+        private void SetEditButtonState(long id, bool isBusy)
+        {
+            var details = data.Where(p => p.Id == id).First();
+            details.IsLoadingEditButton = isBusy;
+        }
+
+        async Task OpenDeleteDialog(UserDataVM userInfo)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete User";
+
+            userData = new UserVM();
+            userData.Id = userInfo.Id;
+
+            userData.FirstName = userInfo.FirstName;
+            userData.LastName = userInfo.LastName;
+        }
+
+        void OpenUpdateUserStatusDialog(bool? value, UserDataVM userInfo)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.ActivateDeActivate;
+
+            message = "Are you sure, you want to activate ";
+            popupTitle = "Actiavate User";
+
+            userData = new UserVM();
+            userData.Id = userInfo.Id;
+
+            userData.FirstName = userInfo.FirstName;
+            userData.LastName = userInfo.LastName;
+
+            if (value == false)
+            {
+                message = "Are you sure, you want to deactivate ";
+                popupTitle = "Deactivate User";
+            }
         }
     }
 }

@@ -23,16 +23,7 @@ namespace FSM.Blazor.Pages.Location
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isLoading = false, isBusy = false,isAuthenticated = false;
@@ -44,7 +35,7 @@ namespace FSM.Blazor.Pages.Location
 
         protected override Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             timezoneId = locationData.TimezoneId;
 
@@ -60,7 +51,7 @@ namespace FSM.Blazor.Pages.Location
 
             locationData.TimezoneId = (short)timezoneId;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await LocationService.SaveandUpdateAsync(dependecyParams, locationData);
 
             SetSaveButtonState(false);

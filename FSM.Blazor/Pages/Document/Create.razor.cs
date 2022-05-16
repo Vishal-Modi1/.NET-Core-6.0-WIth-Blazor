@@ -19,16 +19,7 @@ namespace FSM.Blazor.Pages.Document
         [Parameter]
         public DocumentVM documentData { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
@@ -50,9 +41,9 @@ namespace FSM.Blazor.Pages.Document
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
-            //bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
+            //bool isValid = await TokenValidatorService.IsTokenValid(HttpClient, token);
 
             //if (!isValid)
             //{
@@ -82,7 +73,7 @@ namespace FSM.Blazor.Pages.Document
         {
             isDisplayLoader = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
 
             isDisplayLoader = false;
@@ -113,7 +104,7 @@ namespace FSM.Blazor.Pages.Document
 
         //    documentData.UserId = userId;
 
-        //    CurrentResponse response = await DocumentService.SaveandUpdateAsync(_httpClient, documentData);
+        //    CurrentResponse response = await DocumentService.SaveandUpdateAsync(HttpClient, documentData);
 
         //    SetSaveButtonState(false);
 
@@ -236,7 +227,7 @@ namespace FSM.Blazor.Pages.Document
             multiContent.Add(new StringContent(String.Join(",", selectedTagsList)), "Tags");
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.UploadDocumentAsync(dependecyParams, multiContent);
 
             SetSaveButtonState(false);
@@ -342,7 +333,7 @@ namespace FSM.Blazor.Pages.Document
             await DialogService.OpenAsync<DocumentTag.Create>("Create",
                   null, new DialogOptions() { Width = "500px", Height = "300px" });
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
         }
 

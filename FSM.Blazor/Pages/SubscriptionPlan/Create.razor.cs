@@ -12,12 +12,6 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
         [Parameter]
         public SubscriptionPlanVM subscriptionPlanData { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isBusy = false;
         IEnumerable<string> multipleValues;
@@ -38,7 +32,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
             subscriptionPlanData.ModuleIds = String.Join(",",subscriptionPlanData.ModulesList.Where(p => multipleValues.Contains(p.Name)).Select(p => p.Id));
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await SubscriptionPlanService.SaveandUpdateAsync(dependecyParams, subscriptionPlanData);
 
             SetSaveButtonState(false);

@@ -17,12 +17,6 @@ namespace FSM.Blazor.Pages.Account
 
         string submitButtonText = "Reset Password";
 
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         public string alertMessageText = "";
         public bool isDisplayAlert = false;
         BadgeStyle alertBadgeStyle;
@@ -59,7 +53,7 @@ namespace FSM.Blazor.Pages.Account
                 message = new NotificationMessage().Build(NotificationSeverity.Info, "" , "Validating Token..");
                 NotificationService.Notify(message);
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, link[0]);
 
@@ -110,7 +104,7 @@ namespace FSM.Blazor.Pages.Account
 
             // StateHasChanged();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, resetPasswordVM.Token);
 

@@ -12,9 +12,6 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftMake
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         DE.AircraftMake aircraftMake = new DE.AircraftMake();
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;

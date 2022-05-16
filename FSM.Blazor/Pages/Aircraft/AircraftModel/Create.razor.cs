@@ -9,19 +9,13 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftModel
 {
     public partial class Create
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         DE.AircraftModel aircraftModel = new DE.AircraftModel();
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
         public async Task Submit()
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftModelService.SaveandUpdateAsync(dependecyParams, aircraftModel);
 
             NotificationMessage message;

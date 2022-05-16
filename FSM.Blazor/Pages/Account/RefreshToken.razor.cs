@@ -16,9 +16,6 @@ namespace FSM.Blazor.Pages.Account
         [Parameter]
         public string userData { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -30,7 +27,7 @@ namespace FSM.Blazor.Pages.Account
 
         async void OpenDocumentPreviewPopupAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             string refreshToken = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.RefreshToken).Result;
             long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);

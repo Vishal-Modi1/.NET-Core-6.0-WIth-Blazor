@@ -11,13 +11,6 @@ namespace FSM.Blazor.Pages.Account
 {
     partial class Registration
     {
-        #region Params
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        #endregion
-
         public CompanyVM companyData = new CompanyVM();
         public UserVM userVM = new UserVM();
 
@@ -26,7 +19,7 @@ namespace FSM.Blazor.Pages.Account
 
         protected override async Task OnInitializedAsync()
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
 
             userVM = await UserService.GetMasterDetailsAsync(dependecyParams);
@@ -57,7 +50,7 @@ namespace FSM.Blazor.Pages.Account
             isLoading = true;
             base.StateHasChanged();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserService.IsEmailExistAsync(dependecyParams, userVM.Email);
 
             bool isEmailExist = ManageIsEmailExistResponse(response, userVM.Email);

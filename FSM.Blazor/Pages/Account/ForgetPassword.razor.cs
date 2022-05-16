@@ -13,13 +13,6 @@ namespace FSM.Blazor.Pages.Account
         
         string submitButtonText = "Submit";
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         ForgotPasswordVM ForgotPasswordVM { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
@@ -36,7 +29,7 @@ namespace FSM.Blazor.Pages.Account
 
             ForgotPasswordVM.ResetURL = NavigationManager.BaseUri + "/ResetPassword?Token=";
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             CurrentResponse response = await AccountService.ForgetPasswordAsync(dependecyParams, ForgotPasswordVM);
 

@@ -9,32 +9,32 @@ namespace FSM.Blazor.Utilities
 {
     public class CurrentUserPermissionManager
     {
-        private readonly IMemoryCache _memoryCache;
+        private readonly IMemoryCache _MemoryCache;
         private static CurrentUserPermissionManager _instance = null;
         private static readonly object padlock = new object();
 
-        public static CurrentUserPermissionManager GetInstance(IMemoryCache memoryCache)
+        public static CurrentUserPermissionManager GetInstance(IMemoryCache MemoryCache)
         {
 
             lock (padlock)
             {
                 if (_instance == null)
                 {
-                    _instance = new CurrentUserPermissionManager(memoryCache);
+                    _instance = new CurrentUserPermissionManager(MemoryCache);
                 }
 
                 return _instance;
             }
         }
 
-        private CurrentUserPermissionManager(IMemoryCache memoryCache)
+        private CurrentUserPermissionManager(IMemoryCache MemoryCache)
         {
-            _memoryCache = memoryCache;
+            _MemoryCache = MemoryCache;
         }
 
         public void AddInCache(long loggedUserId, List<UserRolePermissionDataVM> userRolePermissionsList)
         {
-            _memoryCache.Set(loggedUserId, userRolePermissionsList);
+            _MemoryCache.Set(loggedUserId, userRolePermissionsList);
         }
 
         public async Task<List<UserRolePermissionDataVM>> GetAsync(Task<AuthenticationState> authenticationState)
@@ -53,7 +53,7 @@ namespace FSM.Blazor.Utilities
             long loggedUserId = Convert.ToInt64(claimValue);
             List<UserRolePermissionDataVM> userRolePermissionsList;
 
-            bool isExist = _memoryCache.TryGetValue(loggedUserId, out userRolePermissionsList);
+            bool isExist = _MemoryCache.TryGetValue(loggedUserId, out userRolePermissionsList);
 
             return userRolePermissionsList;
         }

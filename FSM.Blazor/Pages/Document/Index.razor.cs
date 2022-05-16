@@ -20,9 +20,6 @@ namespace FSM.Blazor.Pages.Document
     {
         #region Params
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -32,14 +29,8 @@ namespace FSM.Blazor.Pages.Document
         [Parameter]
         public int? CompanyIdParam { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         public RadzenDataGrid<DocumentDataVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
         private DotNetObjectReference<Index>? objRef;
@@ -64,7 +55,7 @@ namespace FSM.Blazor.Pages.Document
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             
           //  ValidateTokenAsync();
 
@@ -73,7 +64,7 @@ namespace FSM.Blazor.Pages.Document
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
         }
 
@@ -84,15 +75,12 @@ namespace FSM.Blazor.Pages.Document
             args.OrderBy = args.OrderBy.Replace("@", "");
             DocumentDatatableParams datatableParams = new DocumentDatatableParams().Create(args, "DisplayName");
 
-           
             datatableParams.ModuleId = ModuleId;
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
                 datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
             }
-
-
 
             if (ParentModuleName == Module.Company.ToString())
             {
@@ -107,7 +95,7 @@ namespace FSM.Blazor.Pages.Document
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
 
@@ -127,7 +115,7 @@ namespace FSM.Blazor.Pages.Document
                 SetEditButtonState(id.Value, true);
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             DocumentVM documentData = await DocumentService.GetDetailsAsync(dependecyParams, id == null ? Guid.Empty : id.Value);
             documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
 
@@ -176,17 +164,14 @@ namespace FSM.Blazor.Pages.Document
         private void SetEditButtonState(Guid id, bool isBusy)
         {
             var details = data.Where(p => p.Id == id).First();
-
             details.IsLoadingEditButton = isBusy;
-
-            StateHasChanged();
         }
 
         async Task DeleteAsync(Guid id)
         {
             await SetDeleteButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.DeleteAsync(dependecyParams, id);
 
             await SetDeleteButtonState(false);
@@ -231,7 +216,7 @@ namespace FSM.Blazor.Pages.Document
 
             documentDataVM.TotalDownloads += 1;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             await DocumentService.UpdateTotalDownloadsAsync(dependecyParams, Guid.Parse(id));
         }
 
@@ -292,7 +277,7 @@ namespace FSM.Blazor.Pages.Document
         //private async Task ValidateTokenAsync()
         //{
         //    string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
-        //    bool isValid = await TokenValidatorService.IsTokenValid(_httpClient, token);
+        //    bool isValid = await TokenValidatorService.IsTokenValid(HttpClient, token);
 
         //    if (!isValid)
         //    {

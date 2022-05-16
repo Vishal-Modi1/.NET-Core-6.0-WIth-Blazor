@@ -20,9 +20,6 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         [Parameter]
         public long CreatedBy { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -30,14 +27,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         string moduleName = "Aircraft";
         public bool isAllowToEdit;
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [CascadingParameter]
         public RadzenDataGrid<AircraftEquipmentDataVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         List<AircraftEquipmentDataVM> data;
         int count;
@@ -48,7 +39,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
@@ -73,7 +64,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             AircraftEquipmentDatatableParams datatableParams = new AircraftEquipmentDatatableParams().Create(args, "Status");
             datatableParams.AircraftId = AircraftId;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await AircraftEquipmentService.ListAsync(dependecyParams, datatableParams);
 
             data.ForEach(p =>
@@ -88,7 +79,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async Task DeleteAsync(long id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftEquipmentService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
@@ -117,7 +108,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         {
             SetAddNewButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, id);
 
             if (airCraftEquipmentsVM.LogEntryDate == null)

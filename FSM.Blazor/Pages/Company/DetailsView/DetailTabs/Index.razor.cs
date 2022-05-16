@@ -14,17 +14,11 @@ namespace FSM.Blazor.Pages.Company.DetailsView.DetailTabs
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
         }
     }
 }

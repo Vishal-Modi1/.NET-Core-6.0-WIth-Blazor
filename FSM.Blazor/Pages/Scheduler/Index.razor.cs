@@ -19,11 +19,6 @@ namespace FSM.Blazor.Pages.Scheduler
 {
     partial class Index
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
@@ -64,7 +59,7 @@ namespace FSM.Blazor.Pages.Scheduler
             isDisplayLoader = true;
             InitializeValues();
 
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -74,7 +69,7 @@ namespace FSM.Blazor.Pages.Scheduler
             schedulerVM = new SchedulerVM();
             schedulerVM.ScheduleActivitiesList = new List<DropDownValues>();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
             UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
 
@@ -132,7 +127,7 @@ namespace FSM.Blazor.Pages.Scheduler
                 schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             DataSource = await AircraftSchedulerService.ListAsync(dependecyParams, schedulerFilter);
 
             DataSource.ForEach(x =>
@@ -192,7 +187,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
         private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             allAircraftList = await AircraftService.ListAllAsync(dependecyParams);
 
             List<DE.Aircraft> aircraftList = new List<DE.Aircraft>();
@@ -277,7 +272,7 @@ namespace FSM.Blazor.Pages.Scheduler
 
             InitializeValues();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, 0);
 
             if (startTime != null)
@@ -306,7 +301,7 @@ namespace FSM.Blazor.Pages.Scheduler
         {
             isDisplayLoader = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, args.Event.Id);
 
             schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);

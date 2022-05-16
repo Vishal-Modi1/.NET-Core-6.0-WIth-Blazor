@@ -5,7 +5,7 @@ using FSM.Blazor.Extensions;
 using Radzen;
 using System.Collections.ObjectModel;
 using FSM.Blazor.Utilities;
-using Microsoft.Extensions.Caching.Memory;
+
 using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.Constants;
 using Radzen.Blazor;
@@ -23,13 +23,6 @@ namespace FSM.Blazor.Pages.Company
 
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject] IHttpClientFactory _httpClient { get; set; }
-
-        [Inject] protected IMemoryCache memoryCache { get; set; }
-
-        [Inject] NotificationService NotificationService { get; set; }
-
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
@@ -42,7 +35,7 @@ namespace FSM.Blazor.Pages.Company
 
         protected override Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
 
@@ -57,7 +50,7 @@ namespace FSM.Blazor.Pages.Company
             SetSaveButtonState(true);
 
             companyData.PrimaryServiceId = primaryServiceId == null ? null : (short)primaryServiceId;
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.SaveandUpdateAsync(dependecyParams, companyData);
 
             SetSaveButtonState(false);
@@ -71,7 +64,6 @@ namespace FSM.Blazor.Pages.Company
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                dialogService.Close(true);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);
                 NotificationService.Notify(message);
 

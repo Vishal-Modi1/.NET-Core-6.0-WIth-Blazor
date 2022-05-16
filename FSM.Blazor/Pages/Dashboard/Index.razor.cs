@@ -17,38 +17,26 @@ namespace FSM.Blazor.Pages.Dashboard
     {
         public UserVM userData { get; set; }
         public bool isPopup { get; set; }
+       
         #region Objects
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
+       
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
         [CascadingParameter]
         public MainLayout Layout { get; set; }
 
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         #endregion
 
-        [Inject]
-        DialogService DialogService { get; set; }
-        [Inject] NavigationManager NavManager { get; set; }
         [Inject] UserService UserService { get; set; }
-        [Inject] AuthenticationStateProvider AuthenticationStateProvider { get; set; }
         private bool isDisplayLoader { get; set; } = false;
         UserVM userVM = new UserVM();
         DateTime DateofBirth { get; set; } = DateTime.Now;
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             base.StateHasChanged();
             await LoadData();
@@ -59,7 +47,7 @@ namespace FSM.Blazor.Pages.Dashboard
 
             var user = (await AuthStat).User;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserService.FindById(dependecyParams);
 
             NotificationMessage message;

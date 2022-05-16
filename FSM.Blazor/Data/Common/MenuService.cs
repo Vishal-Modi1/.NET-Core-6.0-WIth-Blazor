@@ -17,11 +17,11 @@ namespace FSM.Blazor.Data.Common
         private readonly CurrentUserPermissionManager _currentUserPermissionManager;
         private readonly IHttpClientFactory _httpClient;
 
-        public MenuService(AuthenticationStateProvider authenticationStateProvider, IHttpClientFactory httpClient, IMemoryCache memoryCache)
+        public MenuService(AuthenticationStateProvider authenticationStateProvider, IHttpClientFactory httpClient, IMemoryCache MemoryCache)
         {
             _httpCaller = new HttpCaller(authenticationStateProvider);
             _httpClient = httpClient;
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
         }
 
         public async Task<List<MenuItem>> ListMenuItemsAsync(Task<AuthenticationState> authenticationState, AuthenticationStateProvider authenticationStateProvider)

@@ -16,14 +16,8 @@ namespace FSM.Blazor.Pages.Aircraft
     {
         public string AircraftId { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
 
         [Parameter]
         public AircraftVM AircraftData { get; set; }
@@ -39,7 +33,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             isDisplayLoader = true;
 
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -53,7 +47,7 @@ namespace FSM.Blazor.Pages.Aircraft
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
             AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             AircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
 
             try
@@ -93,7 +87,7 @@ namespace FSM.Blazor.Pages.Aircraft
             isBusy = true;
             StateHasChanged();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
             isBusy = false;

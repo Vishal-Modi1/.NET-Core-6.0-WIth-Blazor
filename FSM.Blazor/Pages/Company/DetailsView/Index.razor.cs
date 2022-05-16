@@ -18,7 +18,6 @@ namespace FSM.Blazor.Pages.Company.DetailsView
     partial class Index
     {
         public string CompanyId { get; set; }
-
         public CompanyVM companyData { get; set; }
 
         [CascadingParameter]
@@ -27,16 +26,13 @@ namespace FSM.Blazor.Pages.Company.DetailsView
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
         string moduleName = Module.Company.ToString();
         public bool isAllowToEdit, isBusy = false, isDisplayLoader = true;
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);

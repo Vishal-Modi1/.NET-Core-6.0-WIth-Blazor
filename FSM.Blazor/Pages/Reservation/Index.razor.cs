@@ -32,21 +32,11 @@ namespace FSM.Blazor.Pages.Reservation
         [Parameter]
         public int? CompanyId { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-
         [CascadingParameter]
         public RadzenDataGrid<ReservationDataVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -84,7 +74,7 @@ namespace FSM.Blazor.Pages.Reservation
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -96,7 +86,7 @@ namespace FSM.Blazor.Pages.Reservation
 
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
-            dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             reservationFilterVM = await ReservationService.GetFiltersAsync(dependecyParams);
 
             if (CompanyId != 0 || !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.CompanyId).Result) )
@@ -206,7 +196,7 @@ namespace FSM.Blazor.Pages.Reservation
                 datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), timezone);
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await ReservationService.ListAsync(dependecyParams, datatableParams);
 
             data.ToList().ForEach(p =>
@@ -237,7 +227,7 @@ namespace FSM.Blazor.Pages.Reservation
 
             InitializeValues();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, id);
 

@@ -14,20 +14,11 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 {
     partial class Index
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<SubscriptionPlanDataVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -39,7 +30,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -57,7 +48,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
         //    pageSize = datatableParams.Length;
         //    datatableParams.SearchText = searchText;
 
-        //    data = await SubscriptionPlanService.ListAsync(_httpClient, datatableParams);
+        //    data = await SubscriptionPlanService.ListAsync(HttpClient, datatableParams);
         //    count = data.Count() > 0 ? data[0].TotalRecords : 0;
         //    isLoading = false;
         //}
@@ -78,7 +69,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                 datatableParams.IsActive = true;
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await SubscriptionPlanService.ListAsync(dependecyParams, datatableParams);
             
             isLoading = false;
@@ -94,7 +85,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
         {
             SetUpdateStatusButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await SubscriptionPlanService.UpdateStatus(dependecyParams, id, value);
 
             SetUpdateStatusButtonState(false);
@@ -140,9 +131,9 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
                 SetEditButtonState(id, true);
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             SubscriptionPlanVM subscriptionPlanVM = await SubscriptionPlanService.GetDetailsAsync(dependecyParams, id);
-            subscriptionPlanVM.ModulesList = await ModuleDetailsService.ListDropDownValues(_httpClient, AuthenticationStateProvider);
+            subscriptionPlanVM.ModulesList = await ModuleDetailsService.ListDropDownValues(HttpClient, AuthenticationStateProvider);
 
             if (isCreate)
             {
@@ -170,7 +161,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
         async Task DeleteAsync(int id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await SubscriptionPlanService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;

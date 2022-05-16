@@ -1,26 +1,18 @@
 ﻿@namespace FSM.Blazor.Pages.Company
-@using DataModels.Enums
 @using FSM.Blazor.Data.Company
 @using DataModels.VM.Company
-@using FSM.Blazor.Utilities;
-@using Configuration;
-@using FSM.Blazor.Shared.Components;
 
-@inject NavigationManager NavigationManager
 @inject CompanyService CompanyService
 @layout MainLayout
-@inject DialogService DialogService
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @page "/Company"
-
 
 <div class="row">
     <div class="col">
         <h2 style="float:left">Manage Companies Details</h2>
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
         {
-            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline"
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" IsBusy="@isBusyAddButton" BusyText="Add New .."
                       ButtonStyle="ButtonStyle.Primary" Click=@(() => CompanyCreateDialog(new CompanyVM(), "Create Company")) />
         }
     </div>
@@ -82,8 +74,8 @@
         <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="CompanyVM" Property="Id" Title="Actions">
             <Template Context="data">
 
-                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="settings" Class="m-1" Click=@(() => OpenCompanyDetailPage(data)) />
-                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => CompanyCreateDialog(data,"Edit Company")) />
+                <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="settings"  Class="m-1" Click=@(() => OpenCompanyDetailPage(data)) />
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" IsBusy="@data.IsLoadingEditButton" Class="m-1" Click=@(() => CompanyCreateDialog(data,"Edit Company")) />
                 <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
                               Click=@(args => OpenDeleteDialog(data)) />
             </Template>
@@ -91,12 +83,12 @@
     </Columns>
 </RadzenDataGrid>
 
-@if (IsDisplayPopup)
+@if (isDisplayPopup)
 {
-    <CustomPopupComponent Title="@OpenPopupTitle"
+    <CustomPopupComponent Title="@popupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false"
-                      OnClose="@(()=> {IsDisplayPopup = false;})">
+                      OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
@@ -116,7 +108,7 @@
                                 <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(_companyData.Id) " Class="mr-1" Style="width: 80px;" />
                             }
 
-                            <RadzenButton Text="No" Click="@(() => IsDisplayPopup = false)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
+                            <RadzenButton Text="No" Click="@(() => isDisplayPopup = false)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
 
                         </div>
                     </div>

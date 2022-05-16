@@ -10,9 +10,6 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 {
     partial class BuyNow
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         public string SubscriptionPlanId { get; set; }
 
         protected override Task OnInitializedAsync()
@@ -35,7 +32,7 @@ namespace FSM.Blazor.Pages.SubscriptionPlan
 
         public async Task BuySubscriptionPlan()
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             CurrentResponse response = await SubscriptionPlanService.BuyPlan(dependecyParams, Convert.ToInt32(SubscriptionPlanId));
 

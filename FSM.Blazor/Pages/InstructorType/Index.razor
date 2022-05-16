@@ -68,21 +68,37 @@
     </Columns>
 </RadzenDataGrid>
 
-@{
-    async Task OpenDeleteDialog(InstructorTypeVM instructorTypeVM)
-    {
-        var result = await DialogService.OpenAsync("Delete", ds =>
-    @<div>
-        <p class="mb-4">Are you sure, You want to delete <b> @instructorTypeVM.Name </b>?</p>
-        <div class="row" style="text-align:right">
-            <div class="col">
-                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(instructorTypeVM.Id) " Class="mr-1" Style="width: 80px;" />
-                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
 
-            </div>
-        </div>
-    </div>
-    , new DialogOptions { Width = "360px" });
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Create InstructorTypeData=@(_instructorTypeData) CloseDialogCallBack="@CloseDiloag"></Create>
+            }
+            else
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to remove <b> @_instructorTypeData.Name </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
 
-    }
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                            {
+                                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(_instructorTypeData.Id) " Class="mr-1" Style="width: 80px;" />
+                            }
+
+                            <RadzenButton Text="No" Click="@(() => isDisplayPopup = false)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </Body>
+    </CustomPopupComponent>
 }

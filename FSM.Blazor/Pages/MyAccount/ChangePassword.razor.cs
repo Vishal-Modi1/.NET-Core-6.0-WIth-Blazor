@@ -12,12 +12,6 @@ namespace FSM.Blazor.Pages.MyAccount
         [Parameter]
         public string Id { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         private ChangePasswordVM changePasswordVM = new ChangePasswordVM();
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
@@ -29,7 +23,7 @@ namespace FSM.Blazor.Pages.MyAccount
             StateHasChanged();
 
             changePasswordVM.UserId = Convert.ToInt32(Id);
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await MyAccountService.ChangePassword(dependecyParams, changePasswordVM);
 
             isBusy = false;

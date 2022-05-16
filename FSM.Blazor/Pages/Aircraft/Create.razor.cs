@@ -24,12 +24,6 @@ namespace FSM.Blazor.Pages.Aircraft
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         public RadzenSteps steps;
@@ -48,7 +42,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
         protected override Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             YearDropDown = new List<DropDownValues>();
             NoofEnginesDropDown = new List<DropDownValues>();
             NoofPropellersDropDown = new List<DropDownValues>();
@@ -101,7 +95,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             if (steps.SelectedIndex == 0)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.IsAircraftExistAsync(dependecyParams, airCraftData.Id, airCraftData.TailNo);
                 bool isAircraftExist = ManageIsAircraftExistResponse(response, "");
 
@@ -126,7 +120,7 @@ namespace FSM.Blazor.Pages.Aircraft
             {
                 SetSaveButtonState(true);
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.SaveandUpdateAsync(dependecyParams, airCraftData);
 
                 if (response != null)
@@ -140,7 +134,7 @@ namespace FSM.Blazor.Pages.Aircraft
 
                         if (AircraftData.IsEquipmentTimesListChanged)
                         {
-                            dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                             response = await AircraftService.SaveandUpdateEquipmentTimeListAsync(dependecyParams, airCraftData);
                         }
                     }
@@ -173,7 +167,7 @@ namespace FSM.Blazor.Pages.Aircraft
                         multiContent.Add(new StringContent(airCraftData.Id.ToString()), "AircraftId");
                         multiContent.Add(new StringContent(airCraftData.CompanyId.ToString()), "CompanyId");
 
-                        dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                        dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                         response = await AircraftService.UploadAircraftImageAsync(dependecyParams, multiContent);
 
                         ManageFileUploadResponse(response, "Aircraft Details", true);
@@ -191,7 +185,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 await DialogService.OpenAsync<AMD.Create>("Create",
                   null, new DialogOptions() { Width = "500px", Height = "380px" });
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftModelService.ListDropdownValues(dependecyParams);
                 AircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 
@@ -208,7 +202,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 await DialogService.OpenAsync<AMK.Create>("Create",
                   null, new DialogOptions() { Width = "500px", Height = "380px" });
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 CurrentResponse response = await AircraftMakeService.ListDropdownValues(dependecyParams);
                 AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());

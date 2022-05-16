@@ -17,11 +17,8 @@ namespace FSM.Blazor.Pages.Company
     {
         #region Params
 
-        [Inject] IHttpClientFactory _httpClient { get; set; }
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
-        [Inject] protected IMemoryCache memoryCache { get; set; }
         [CascadingParameter] public RadzenDataGrid<CompanyVM> grid { get; set; }
-        [Inject] NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -29,22 +26,22 @@ namespace FSM.Blazor.Pages.Company
 
         IList<CompanyVM> data;
         int count;
-        bool isLoading;
+        bool isLoading, isBusyAddButton, isBusyEditButton;
         string searchText;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string moduleName = Module.Company.ToString();
 
-        bool IsDisplayPopup { get; set; }
-        string OpenPopupTitle { get; set; }
+        bool isDisplayPopup { get; set; }
+        string popupTitle { get; set; }
         
         OperationType operationType = OperationType.Create;
         CompanyVM _companyData { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -61,7 +58,7 @@ namespace FSM.Blazor.Pages.Company
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await CompanyService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
@@ -69,41 +66,53 @@ namespace FSM.Blazor.Pages.Company
 
         async Task CompanyCreateDialog(CompanyVM companyData, string title)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            if (companyData.Id == 0)
+            {
+                operationType = OperationType.Create;
+                isBusyAddButton = true;
+            }
+            else
+            {
+                operationType = OperationType.Edit;
+                SetEditButtonState(companyData.Id, true);
+            }
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
 
             _companyData = companyData;
-            OpenPopupTitle = title;
-            IsDisplayPopup = true;
-
-            if (companyData.Id == 0) {
-
-                operationType = OperationType.Create;
+            popupTitle = title;
+            isDisplayPopup = true;
+            
+            if (companyData.Id == 0)
+            {
+                isBusyAddButton = false;
             }
-            else {
-                operationType = OperationType.Edit;
-
+            else
+            {
+                SetEditButtonState(companyData.Id, false);
             }
-            //await DialogService.OpenAsync<Create>(title,
-            //      new Dictionary<string, object>() { { "companyData", companyData } },
-            //      new DialogOptions() { Width = "550px", Height = "620px" });
+        }
 
-            //await grid.Reload();
+        private void SetEditButtonState(int id, bool isBusy)
+        {
+            var details = data.Where(p => p.Id == id).First();
+            details.IsLoadingEditButton = isBusy;
         }
 
         async Task CloseDiloag(bool isCancelled)
         {
             if(!isCancelled)
             {
-                grid.Reload();
+                await grid.Reload();
             }
 
-            IsDisplayPopup = false;
+            isDisplayPopup = false;
         }
 
         async Task OpenCompanyDetailPage(CompanyVM companyData)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
 
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
@@ -116,7 +125,7 @@ namespace FSM.Blazor.Pages.Company
 
         async Task DeleteAsync(int id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
@@ -129,7 +138,7 @@ namespace FSM.Blazor.Pages.Company
             else if (((int)response.Status) == 200)
             {
                 //DialogService.Close(true);
-                IsDisplayPopup = false;
+                isDisplayPopup = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -144,10 +153,10 @@ namespace FSM.Blazor.Pages.Company
 
         async Task OpenDeleteDialog(CompanyVM companyVM)
         {
-            IsDisplayPopup = true;
+            isDisplayPopup = true;
             operationType = OperationType.Delete;
             _companyData = companyVM;
-            OpenPopupTitle = "Delete Company";
+            popupTitle = "Delete Company";
         }
     }
 }

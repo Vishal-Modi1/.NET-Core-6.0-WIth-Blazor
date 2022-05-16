@@ -16,20 +16,13 @@ namespace FSM.Blazor.Pages.Location
     partial class Index
     {
         #region Params
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         public RadzenDataGrid<LocationDataVM> grid { get; set; }
 
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -46,7 +39,7 @@ namespace FSM.Blazor.Pages.Location
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             //if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             //{
@@ -63,7 +56,7 @@ namespace FSM.Blazor.Pages.Location
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await LocationService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;
@@ -71,7 +64,7 @@ namespace FSM.Blazor.Pages.Location
 
         async Task LocationCreateDialog(int id, string title)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             LocationVM locationData = new LocationVM();
 
@@ -92,7 +85,7 @@ namespace FSM.Blazor.Pages.Location
 
         async Task DeleteAsync(int id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await LocationService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;

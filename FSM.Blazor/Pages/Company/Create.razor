@@ -13,7 +13,7 @@
     }
 </style>
 
-<RadzenTemplateForm @ref=@compnayForm Data="@companyData" Submit="@((CompanyVM args) => {  Submit(args); })">
+<RadzenTemplateForm @ref=@compnayForm Data="@companyData" Submit="@((CompanyVM args) => { Submit(args); })">
     <div class="popup-content">
         <input type="hidden" value="@companyData.Id" name="Id" />
 

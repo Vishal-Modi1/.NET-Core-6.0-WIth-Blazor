@@ -14,9 +14,6 @@ namespace FSM.Blazor.Shared
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
         bool sidebarExpanded = true;
@@ -45,7 +42,7 @@ namespace FSM.Blazor.Shared
         {
             base.OnInitialized();
 
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             var user = (await AuthStat).User;
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

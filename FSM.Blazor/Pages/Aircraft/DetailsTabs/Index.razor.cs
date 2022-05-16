@@ -16,12 +16,9 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
         }
 
     }

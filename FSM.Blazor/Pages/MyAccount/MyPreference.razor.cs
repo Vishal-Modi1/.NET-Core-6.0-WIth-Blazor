@@ -10,9 +10,6 @@ namespace FSM.Blazor.Pages.MyAccount
 {
     partial class MyPreference
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [Parameter]
         public List<UserPreferenceVM> UserPreferencesList { get; set; }
 
@@ -50,7 +47,7 @@ namespace FSM.Blazor.Pages.MyAccount
                 return;
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             if ((int)values == (int)PreferenceType.ScheduleActivityType)
             {
@@ -135,7 +132,7 @@ namespace FSM.Blazor.Pages.MyAccount
                 }
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await MyAccountService.AddMyPreference(dependecyParams, userPreferenceVM);
 
             isBusy = false;
