@@ -1,0 +1,8 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/BlazorSite.css",
+    "inputFile": "Shared/Styles/BlazorSite.scss",
+    "outputFile": "Shared/Components/FlightCommonPopupModal.razor.css",
+    "inputFile": "Shared/Components/FlightCommonPopupModal.razor.scss"
+  }
+]

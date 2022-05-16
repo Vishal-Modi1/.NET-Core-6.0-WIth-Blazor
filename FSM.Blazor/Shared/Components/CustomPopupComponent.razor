@@ -1,0 +1,33 @@
+﻿<div class="modal fadeIn show" id="myModal" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header @(HeaderCssClass)">
+                <h3 class="modal-title text-white">@Title</h3>
+               <RadzenIcon Icon="close" @onclick="@Close" Style="cursor:pointer"></RadzenIcon>
+            </div>
+            <div class="modal-body">
+                @if (string.IsNullOrEmpty(Message))
+                {
+                    <div class="body-content px-3">
+                        @(Body)
+                    </div>
+                }
+                else
+                {
+                    <div class="body-content">
+                        @(Message)
+                    </div>
+                }
+            </div>
+            @if (Footer is not null)
+            {
+                <div class="modal-footer">
+                    <div>
+                        @(Footer)
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" @onclick="@( () => { if(CloseOnOutsideClick) { OutsideClick(); } })"></div>
+</div>

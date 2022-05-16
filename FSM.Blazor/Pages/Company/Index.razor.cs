@@ -16,20 +16,12 @@ namespace FSM.Blazor.Pages.Company
     partial class Index
     {
         #region Params
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [CascadingParameter]
-        public RadzenDataGrid<CompanyVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
+        [Inject] IHttpClientFactory _httpClient { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+        [Inject] protected IMemoryCache memoryCache { get; set; }
+        [CascadingParameter] public RadzenDataGrid<CompanyVM> grid { get; set; }
+        [Inject] NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -43,6 +35,12 @@ namespace FSM.Blazor.Pages.Company
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string moduleName = Module.Company.ToString();
+
+        bool IsDisplayPopup { get; set; }
+        string OpenPopupTitle { get; set; }
+        
+        OperationType operationType = OperationType.Create;
+        CompanyVM _companyData { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -73,15 +71,37 @@ namespace FSM.Blazor.Pages.Company
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
-           
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "companyData", companyData } },
-                  new DialogOptions() { Width = "550px", Height = "620px" });
 
-            await grid.Reload();
+            _companyData = companyData;
+            OpenPopupTitle = title;
+            IsDisplayPopup = true;
+
+            if (companyData.Id == 0) {
+
+                operationType = OperationType.Create;
+            }
+            else {
+                operationType = OperationType.Edit;
+
+            }
+            //await DialogService.OpenAsync<Create>(title,
+            //      new Dictionary<string, object>() { { "companyData", companyData } },
+            //      new DialogOptions() { Width = "550px", Height = "620px" });
+
+            //await grid.Reload();
         }
 
-        async Task OpenCompanyDetailPagge(CompanyVM companyData)
+        async Task CloseDiloag(bool isCancelled)
+        {
+            if(!isCancelled)
+            {
+                grid.Reload();
+            }
+
+            IsDisplayPopup = false;
+        }
+
+        async Task OpenCompanyDetailPage(CompanyVM companyData)
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
@@ -108,7 +128,8 @@ namespace FSM.Blazor.Pages.Company
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                //DialogService.Close(true);
+                IsDisplayPopup = false;
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -119,6 +140,14 @@ namespace FSM.Blazor.Pages.Company
             }
 
             await grid.Reload();
+        }
+
+        async Task OpenDeleteDialog(CompanyVM companyVM)
+        {
+            IsDisplayPopup = true;
+            operationType = OperationType.Delete;
+            _companyData = companyVM;
+            OpenPopupTitle = "Delete Company";
         }
     }
 }
