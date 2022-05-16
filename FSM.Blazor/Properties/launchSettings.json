@@ -3,19 +3,19 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:23610",
-      "sslPort": 44334
+      "applicationUrl": "http://localhost:63117/",
+      "sslPort": 44322
     }
   },
   "profiles": {
     "FSM.Blazor": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7105;http://localhost:5105",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:7105;http://localhost:5105",
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",

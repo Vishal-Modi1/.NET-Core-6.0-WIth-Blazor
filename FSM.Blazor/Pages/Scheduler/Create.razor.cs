@@ -66,7 +66,7 @@ namespace FSM.Blazor.Pages.Scheduler
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             // user should be superadmin, admin or owner of reservation to update or delete it
-            
+
             bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
             bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
 
@@ -74,10 +74,10 @@ namespace FSM.Blazor.Pages.Scheduler
 
             bool isCreator = userId == schedulerVM.CreatedBy;
 
-            if(isAdmin || isSuperAdmin || isCreator)
+            if (isAdmin || isSuperAdmin || isCreator)
             {
                 isAllowToDelete = true;
-                isAllowToEdit = true; 
+                isAllowToEdit = true;
             }
         }
 
@@ -225,11 +225,6 @@ namespace FSM.Blazor.Pages.Scheduler
                     aircraftEquipmentTimeVM.Hours = aircraftScheduleHobbsTime.OutTime;
                 }
             }
-        }
-
-        private async Task OpenMainForm()
-        {
-            uiOptions.isDisplayMainForm = true;
         }
 
         private async Task CheckIn()
@@ -607,6 +602,12 @@ namespace FSM.Blazor.Pages.Scheduler
             uiOptions.isDisplayInstructor = false;
             uiOptions.isDisplayFlightInfo = false;
             uiOptions.isDisplayStandBy = true;
+
+            base.StateHasChanged();
+        }
+
+        public void OpenMainForm()
+        {
             uiOptions.isDisplayForm = true;
             uiOptions.isDisplayCheckOutOption = false;
             uiOptions.isDisplayMainForm = true;

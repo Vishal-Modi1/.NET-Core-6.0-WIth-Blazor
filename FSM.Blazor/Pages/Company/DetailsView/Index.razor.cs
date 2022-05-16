@@ -32,13 +32,10 @@ namespace FSM.Blazor.Pages.Company.DetailsView
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
         string moduleName = Module.Company.ToString();
-        public bool isAllowToEdit, isBusy = false, isDisplayLoader = false;
+        public bool isAllowToEdit, isBusy = false, isDisplayLoader = true;
 
         protected override async Task OnInitializedAsync()
         {
-            isDisplayLoader = true;
-            base.StateHasChanged();
-
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
 
             StringValues link;
@@ -58,7 +55,7 @@ namespace FSM.Blazor.Pages.Company.DetailsView
 
             companyData = new CompanyVM();
 
-            if (response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == HttpStatusCode.OK)
             {
                 companyData = JsonConvert.DeserializeObject<CompanyVM>(response.Data.ToString());
                 companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
@@ -69,7 +66,7 @@ namespace FSM.Blazor.Pages.Company.DetailsView
                 if (!string.IsNullOrEmpty(companyData.Logo))
                 {
                     var webClient = new WebClient();
-                    byte[] imageBytes = webClient.DownloadData(companyData.LogoPath);
+                    byte[] imageBytes = await webClient.DownloadDataTaskAsync(new Uri(companyData.LogoPath));
 
                     companyData.LogoPath = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
@@ -97,8 +94,7 @@ namespace FSM.Blazor.Pages.Company.DetailsView
             }
 
             isDisplayLoader = false;
-            base.StateHasChanged();
-
+            
         }
 
         async Task CompanyEditDialog()

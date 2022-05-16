@@ -15,7 +15,6 @@
 
     .description {
         font-size: 14px;
-        
     }
 
     .rz-fileupload-row {
@@ -41,41 +40,41 @@
         max-width: 100%;
         max-height: 100%;
         /*        object-fit:cover;
-        */
+            */
     }
-    .rz-button-icon-left
-    {
-        margin-right:1px!important;
+
+    .rz-button-icon-left {
+        margin-right: 1px !important;
     }
-    
-    [b-vy5hox7kaq] .rz-fileupload-buttonbar
-    {
-        top:175px!important
+
+    [b-vy5hox7kaq] .rz-fileupload-buttonbar {
+        top: 175px !important
     }
-    .rz-button.btn-primary
-    {
-        margin-top:28px;
+
+    .rz-button.btn-primary {
+        margin-top: 28px;
     }
-    
 </style>
+
+<div id="container" class="loader">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
 @if (companyData != null)
 {
-    <div id="container">
-        <SfSpinner @bind-Visible="@isDisplayLoader">
-        </SfSpinner>
-    </div>
-
     <div class="m-4">
         <div class="card">
+
             <div class="row g-0">
 
                 <div class="col-sm-3" style="position: relative;">
 
                     <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
-                    Path="@(companyData.LogoPath)" Style="width: 200px; height: 200px;object-fit:cover; border: 2px solid #1151f3;" />
+                             Path="@(companyData.LogoPath)" Style="width: 200px; height: 200px;object-fit:cover; border: 2px solid #1151f3;" />
                     <RadzenFileInput Style="outline:none" @bind-Value=@companyData.LogoPath
                                  Change=@(args => OnChangeAsync()) TValue="string" />
-                                
+
 
                 </div>
                 <div class="col-sm-3">
@@ -91,7 +90,7 @@
 
                         <br />
                         <div>
-                              @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
                             {
                                 <RadzenButton Text="Update Details" Click=@(() => CompanyEditDialog())
                                       BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" />

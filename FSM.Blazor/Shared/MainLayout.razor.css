@@ -31,6 +31,12 @@ main {
         text-overflow: ellipsis;
     }
 
+.loader {
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {
         display: none;
