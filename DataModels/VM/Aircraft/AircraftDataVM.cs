@@ -9,8 +9,12 @@ namespace DataModels.VM.Aircraft
         public string ImageName { get; set; }
 
         public int CompanyId { get; set; }
+        
         [NotMapped]
         public string ImagePath { get; set; }
+
+        [NotMapped]
+        public bool IsLoadingEditButton { get; set; }
         public string Year { get; set; }
         public string CompanyName { get; set; }
         public string MakeName { get; set; }

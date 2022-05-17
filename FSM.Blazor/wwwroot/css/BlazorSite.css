@@ -35,6 +35,18 @@
   border: 1px solid #FF0000;
 }
 
+/*.invalid {
+    .rz-calendar,.rz-inputtext {
+        background-color: #FFD1D178;
+        border: 1px solid #FF0000;
+    }
+}
+
+.valid {
+    .rz-calendar {
+        background-color: #F5F5F5;
+    }
+}*/
 /* RADZEN TEXTBOX,TEXTAREA END*/
 .rz-dropdown.valid {
   background-color: #F5F5F5;

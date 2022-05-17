@@ -19,6 +19,8 @@ namespace DataModels.VM.Company
         public string Logo { get; set; }
 
         [NotMapped]
+        public bool IsLoadingEditButton { get; set; }
+        [NotMapped]
         public string LogoPath { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }

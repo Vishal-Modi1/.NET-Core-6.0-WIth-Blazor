@@ -17,26 +17,19 @@ namespace FSM.Blazor.Pages.Aircraft
     {
         #region Params
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [CascadingParameter]
-        public RadzenDataList<AircraftDataVM> dataListView { get; set; }
+        [CascadingParameter] public RadzenDataList<AircraftDataVM> dataListView { get; set; }
 
-        [CascadingParameter]
-        public RadzenDataGrid<AircraftDataVM> dataGridView { get; set; }
+        [CascadingParameter] public RadzenDataGrid<AircraftDataVM> dataGridView { get; set; }
 
-        [CascadingParameter]
-        public RadzenDropDown<int> companyFilter { get; set; }
+        [CascadingParameter] public RadzenDropDown<int> companyFilter { get; set; }
 
-        [Parameter]
-        public int? ParentCompanyId { get; set; }
+        [Parameter] public int? ParentCompanyId { get; set; }
 
-        [Parameter]
-        public long? UserId { get; set; }
+        [Parameter] public long? UserId { get; set; }
 
-        [Parameter]
-        public string ParentModuleName { get; set; }
+        [Parameter] public string ParentModuleName { get; set; }
 
         #endregion
 
@@ -58,9 +51,11 @@ namespace FSM.Blazor.Pages.Aircraft
 
         #endregion
 
-        string moduleName = "Aircraft";
-        bool isDisplayGridView = false;
+        string moduleName = "Aircraft", popupTitle;
+        bool isDisplayGridView = false, isDisplayPopup;
         int companyId;
+        OperationType operationType = OperationType.Create;
+        AircraftVM aircraftData;
 
         protected override async Task OnInitializedAsync()
         {
@@ -106,19 +101,40 @@ namespace FSM.Blazor.Pages.Aircraft
 
         async Task AircraftCreateDialog(long id, string title)
         {
-            SetAddNewButtonState(true);
+            if (id == 0)
+            {
+                operationType = OperationType.Create;
+                SetAddNewButtonState(true);
+            }
+            else
+            {
+                operationType = OperationType.Edit;
+                SetEditButtonState(id, true);
+            }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
+            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
             SetAddNewButtonState(false);
 
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "aircraftData", aircraftData } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
+            if (id == 0)
+            {
+                SetAddNewButtonState(false);
+            }
+            else
+            {
+                SetEditButtonState(id, false);
+            }
 
-            await dataListView.Reload();
+            popupTitle = title;
+            isDisplayPopup = true;
+        }
+
+        private void SetEditButtonState(long id, bool isBusy)
+        {
+            var details = airCraftsVM.Where(p => p.Id == id).First();
+            details.IsLoadingEditButton = isBusy;
         }
 
         async Task OpenDetailPage(long aircraftId)
@@ -145,7 +161,7 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -158,6 +174,16 @@ namespace FSM.Blazor.Pages.Aircraft
             await dataGridView.Reload();
         }
 
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
+            if (!isCancelled)
+            {
+                await RefreshGrid();
+            }
+        }
+
         async Task ChangeView(bool isGridView)
         {
             isDisplayGridView = isGridView;
@@ -167,6 +193,17 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             isBusyAddNewButton = isBusy;
             StateHasChanged();
+        }
+
+        async Task OpenDeleteDialog(AircraftDataVM aircraftDetails)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete Aircraft";
+
+            aircraftData = new AircraftVM();
+            aircraftData.Id = aircraftDetails.Id;
+            aircraftData.TailNo = aircraftDetails.TailNo;
         }
     }
 }

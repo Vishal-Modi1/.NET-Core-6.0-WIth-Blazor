@@ -96,7 +96,7 @@ namespace FSM.Blazor.Pages.InstructorType
             }
             else if (((int)response.Status) == 200)
             {
-                await CloseDiloag(false);
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "InstructorType Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -109,14 +109,14 @@ namespace FSM.Blazor.Pages.InstructorType
             await grid.Reload();
         }
 
-        async Task CloseDiloag(bool isCancelled)
+        async Task CloseDialog(bool isCancelled)
         {
+            isDisplayPopup = false;
+
             if (!isCancelled)
             {
                 await grid.Reload();
             }
-
-            isDisplayPopup = false;
         }
 
         async Task OpenDeleteDialog(InstructorTypeVM instructorTypeVM)

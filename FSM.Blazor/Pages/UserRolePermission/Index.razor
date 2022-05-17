@@ -77,10 +77,8 @@
         {
             <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="IsAllowed">
                 <HeaderTemplate>
-
-                    <RadzenCheckBox TriState="false" Name="WebPermissions" TValue="bool" Value="@isAllow" Change="@(args => OpenUpdatePermissionsDialog(args, true))" Title="Is Allowed" />
-                    <RadzenLabel Text="Web Permissions" Component="WebPermissions" Style="margin-left: 5px;margin-bottom: 10px;" />
-
+                        <RadzenCheckBox TriState="false" Name="WebPermissions" TValue="bool" Value="@isAllow" Change="@(args => OpenUpdateUserPermissionsDialog(args,true))" Title="Is Allowed" />
+                        <RadzenLabel Text="Web Permissions" Component="WebPermissions" Style="margin-left: 5px;margin-bottom: 10px;" />
                 </HeaderTemplate>
                 <Template Context="value">
                     <RadzenCheckBox TriState="false" Value="@(value.IsAllowed)" TValue="bool" Change="@(args => OpenUpdateUserPermissionDialog(args, value, true))" />
@@ -90,7 +88,7 @@
             <RadzenDataGridColumn TItem="UserRolePermissionDataVM" Filterable="false" Property="IsAllowed">
                 <HeaderTemplate>
 
-                    <RadzenCheckBox TriState="false" Name="MobileAppPermissions" TValue="bool" Value="@isAllowForMobileApp" Change="@(args => OpenUpdatePermissionsDialog(args, false))" Title="Is Allowed" />
+                    <RadzenCheckBox TriState="false" Name="MobileAppPermissions" TValue="bool" Value="@isAllowForMobileApp" Change="@(args => OpenUpdateUserPermissionsDialog(args, false))" Title="Is Allowed" />
                     <RadzenLabel Text="Mobile App Permissions" Component="MobileAppPermissions" Style="margin-left: 5px;margin-bottom: 10px;" />
 
                 </HeaderTemplate>
@@ -102,39 +100,82 @@
     </Columns>
 </RadzenDataGrid>
 
-@{
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.ActivateDeActivate)
+            {
+                <div>
+                    <p class="mb-4">  @(message + " ")  <b> @(userRolePermissionDataVM.PermissionType + " permission to " +  userRolePermissionDataVM.RoleName + " for " + userRolePermissionDataVM.ModuleName + " module") </b>?</p>
+
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdatePermissionAsync(userRolePermissionDataVM.IsAllowed,userRolePermissionDataVM.Id, isForWebApp)" />
+                            <RadzenButton Text="No" Click="() => RevokeUserStatusChange()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (operationType == OperationType.ActivateDeActivateInBulk)
+            {
+                <div>
+                    <p class="mb-4">  @(message)  </p>
+
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdatePermissionsAsync(userRolePermissionDataVM.IsAllowed, isForWebApp)" />
+                            <RadzenButton Text="No" Click="() => RevokeUserStatusChange()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}
+
+@*@{
     async Task OpenUpdateUserPermissionDialog(bool value, UserRolePermissionDataVM userRolePermissionDataVM, bool isForWeb)
     {
-        string message = "Are you sure you want to grant the ";
-        string title = "Grant Permission";
+    string message = "Are you sure you want to grant the ";
+    string title = "Grant Permission";
 
-        if (!isForWeb)
-        {
-            title = "Grant Mobile App Permission";
-        }
+    if (!isForWeb)
+    {
+    title = "Grant Mobile App Permission";
+    }
 
-        if (value == false)
-        {
-            message = "Are you sure you want to deny the ";
-            title = "Deny Permission";
+    if (value == false)
+    {
+    message = "Are you sure you want to deny the ";
+    title = "Deny Permission";
 
-            if (!isForWeb)
-            {
-                title = "Deny Mobile App Permission";
-            }
-        }
+    if (!isForWeb)
+    {
+    title = "Deny Mobile App Permission";
+    }
+    }
 
-        var result = await DialogService.OpenAsync(title, ds =>
+    var result = await DialogService.OpenAsync(title, ds =>
     @<div>
-        <p class="mb-4">  @(message + " ")  <b> @(userRolePermissionDataVM.PermissionType + " permission to " +  userRolePermissionDataVM.RoleName + " for " + userRolePermissionDataVM.ModuleName + " module") </b>?</p>
-        <div class="row" style="text-align:right">
-            <div class="col">
+    <p class="mb-4">  @(message + " ")  <b> @(userRolePermissionDataVM.PermissionType + " permission to " +  userRolePermissionDataVM.RoleName + " for " + userRolePermissionDataVM.ModuleName + " module") </b>?</p>
+    <div class="row" style="text-align:right">
+    <div class="col">
 
-                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdatePermissionAsync(value, userRolePermissionDataVM.Id, isForWeb)" />
-                <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+    <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdatePermissionAsync(value, userRolePermissionDataVM.Id, isForWeb)" />
+    <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
 
-            </div>
-        </div>
+    </div>
+    </div>
     </div>
     , new DialogOptions { Width = "360px" });
 
@@ -143,43 +184,43 @@
     async Task OpenUpdatePermissionsDialog(bool value, bool isForWeb)
     {
 
-        string message = "Are you sure you want to grant the permissions for all selected modules and roles ?";
-        string title = "Grant Permissions";
+    string message = "Are you sure you want to grant the permissions for all selected modules and roles ?";
+    string title = "Grant Permissions";
 
-        if (!isForWeb)
-        {
-            title = "Grant Mobile App Permissions";
-            isAllowForMobileApp = value;
-        }
-        else
-        {
-            isAllow = value;
-        }
+    if (!isForWeb)
+    {
+    title = "Grant Mobile App Permissions";
+    isAllowForMobileApp = value;
+    }
+    else
+    {
+    isAllow = value;
+    }
 
-        if (value == false)
-        {
-            message = "Are you sure you want to deny the permissions for all selected modules and roles ?";
-            title = "Deny Permission";
+    if (value == false)
+    {
+    message = "Are you sure you want to deny the permissions for all selected modules and roles ?";
+    title = "Deny Permission";
 
-            if (!isForWeb)
-            {
-                title = "Deny Mobile App Permission";
-            }
-        }
+    if (!isForWeb)
+    {
+    title = "Deny Mobile App Permission";
+    }
+    }
 
-        var result = await DialogService.OpenAsync(title, ds =>
+    var result = await DialogService.OpenAsync(title, ds =>
     @<div>
-        <p class="mb-4">  @(message)  </p>
-        <div class="row" style="text-align:right">
-            <div class="col">
+    <p class="mb-4">  @(message)  </p>
+    <div class="row" style="text-align:right">
+    <div class="col">
 
-                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdatePermissionsAsync(value, isForWeb)" />
-                <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
+    <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 80px;" Click="() => UpdatePermissionsAsync(value, isForWeb)" />
+    <RadzenButton Text="No" Click="() => CloseUserPermissionUpdateDialogAsync()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
 
-            </div>
-        </div>
+    </div>
+    </div>
     </div>
     , new DialogOptions { Width = "360px" });
 
     }
-}
+    }*@

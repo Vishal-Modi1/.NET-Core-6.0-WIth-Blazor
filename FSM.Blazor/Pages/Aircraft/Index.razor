@@ -115,7 +115,7 @@
                             <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="settings" Class="m-1" Click=@(() => OpenDetailPage(data.Id)) />
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                             {
-                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => AircraftCreateDialog(data.Id,"Edit")) />
+                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" IsBusy="@data.IsLoadingEditButton" Class="m-1" Click=@(() => AircraftCreateDialog(data.Id,"Edit")) />
                             }
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
                             {
@@ -132,29 +132,38 @@
     </Tabs>
 </RadzenTabs>
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
 
-@{
-    async Task OpenDeleteDialog(AircraftDataVM aircraftDataVM)
-    {
-        var result = await DialogService.OpenAsync("Delete", ds =>
-    @<div>
-        <p class="mb-4">Are you sure, You want to delete <b> @aircraftDataVM.TailNo </b>?</p>
-        <div class="row" style="text-align:right">
-            <div class="col">
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Create AircraftData="@aircraftData" CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                      <p class="mb-4">Are you sure, You want to delete <b> @aircraftData.TailNo </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
 
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                    {
-                        <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(aircraftDataVM.Id) " Class="mr-1" Style="width: 80px;" />
-                    }
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                            {
+                                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(aircraftData.Id) " Class="mr-1" Style="width: 80px;" />
+                            }
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                    {
-                        <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
-                    }
+                            <RadzenButton Text="No" Click="@(() => isDisplayPopup = false)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    , new DialogOptions { Width = "360px" });
+            }
 
-    }
+        </Body>
+    </CustomPopupComponent>
 }

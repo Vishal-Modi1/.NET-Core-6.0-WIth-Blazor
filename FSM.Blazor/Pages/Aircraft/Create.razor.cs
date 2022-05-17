@@ -6,13 +6,11 @@ using DataModels.Enums;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Newtonsoft.Json;
-using DataModels.Constants;
 using AMK = FSM.Blazor.Pages.Aircraft.AircraftMake;
 using AMD = FSM.Blazor.Pages.Aircraft.AircraftModel;
 using FSM.Blazor.Data.AircraftMake;
 using Microsoft.AspNetCore.Components.Authorization;
 using FSM.Blazor.Utilities;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -23,6 +21,8 @@ namespace FSM.Blazor.Pages.Aircraft
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
+
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -60,7 +60,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 NoofPropellersDropDown.Add(new DropDownValues() { Id = year, Name = year.ToString() });
             }
 
-            for (int year = 1980; year <= DateTime.Now.Year; year++)
+            for (int year = 1800; year <= DateTime.Now.Year; year++)
             {
                 YearDropDown.Add(new DropDownValues() { Id = year, Name = year.ToString() });
             }
@@ -326,7 +326,7 @@ namespace FSM.Blazor.Pages.Aircraft
             return isAircraftExist;
         }
 
-        private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
+        private async void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
             NotificationMessage message;
 
@@ -337,11 +337,7 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    DialogService.Close(true);
-                }
-
+                CloseDilaog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }
@@ -363,11 +359,7 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    DialogService.Close(true);
-                }
-
+                CloseDilaog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, "Aircraft details added successfully.");
                 NotificationService.Notify(message);
             }
@@ -387,6 +379,11 @@ namespace FSM.Blazor.Pages.Aircraft
         void OnFileChange()
         {
             isAircraftImageChanged = true;
+        }
+
+        public void CloseDilaog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

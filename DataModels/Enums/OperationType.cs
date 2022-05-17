@@ -4,6 +4,8 @@
     {
         Create = 1,
         Edit = 2,
-        Delete = 3
+        Delete = 3,
+        ActivateDeActivate = 4,
+        ActivateDeActivateInBulk = 5,
     }
 }

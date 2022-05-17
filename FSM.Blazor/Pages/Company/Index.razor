@@ -93,7 +93,7 @@
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                <Create companyData=@(_companyData) CloseDialogCallBack="@CloseDiloag"></Create>
+                <Create companyData=@(_companyData) CloseDialogCallBack="@CloseDialog"></Create>
             }
             else
             {

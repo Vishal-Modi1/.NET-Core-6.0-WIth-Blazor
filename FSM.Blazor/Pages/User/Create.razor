@@ -62,15 +62,20 @@
         <div class="row">
 
             <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="User Role" />
+
+                @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
+                {
+                    <RadzenLabel Text="User Role" />
+                }
+
             </div>
 
-            @if (!userData.IsFromMyProfile)
-            {
-                <div class="col-md-6 align-items-center d-flex">
+            <div class="col-md-6 align-items-center d-flex">
+                @if (!userData.IsFromMyProfile)
+                {
                     <RadzenLabel Text="Company" />
-                </div>
-            }
+                }
+            </div>
 
             <div class="col-md-6">
 
@@ -88,10 +93,10 @@
                 }
             </div>
 
-            @if (!userData.IsFromMyProfile)
-            {
-                <div class="col-md-6">
+            <div class="col-md-6">
 
+                @if (!userData.IsFromMyProfile)
+                {
                     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                     {
                         <RadzenDropDown @bind-Value="@(userData.CompanyId)" Style="width:100%;" TValue="int?"
@@ -107,9 +112,8 @@
                         <RadzenTextBox style="width: 100%;" Name="CompanyName" @bind-Value="@userData.CompanyName" Disabled="true" />
                         <input type="hidden" id="CompanyId" value="@userData.CompanyId" />
                     }
-
-                </div>
-            }
+                }
+            </div>
         </div>
 
         <div class="row">
@@ -208,7 +212,7 @@
             </div>
         </div>
 
-          <hr />
+        <hr />
         <div class="row" style="margin-top:4%">
             <div class="col-md-12 text-right">
 

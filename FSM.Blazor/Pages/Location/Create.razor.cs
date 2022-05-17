@@ -14,21 +14,19 @@ namespace FSM.Blazor.Pages.Location
 {
     public partial class Create
     {
-        [Parameter]
-        public LocationVM locationData { get; set; }
+        [Parameter] public LocationVM locationData { get; set; }
 
-        [Parameter]
-        public Action GoToNext { get; set; }
+        [Parameter] public Action GoToNext { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
-        bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
-        bool isLoading = false, isBusy = false,isAuthenticated = false;
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
+        bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
+        bool isBusy = false ;
+
         int timezoneId;
 
         public RadzenTemplateForm<LocationVM> locationForm;
@@ -39,14 +37,13 @@ namespace FSM.Blazor.Pages.Location
 
             timezoneId = locationData.TimezoneId;
 
-            isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
+         //   isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
 
             return base.OnInitializedAsync();
         }
 
         public async Task Submit(LocationVM locationData)
         {
-            isLoading = true;
             SetSaveButtonState(true);
 
             locationData.TimezoneId = (short)timezoneId;
@@ -65,7 +62,7 @@ namespace FSM.Blazor.Pages.Location
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                dialogService.Close(true);
+                CloseDilaog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Location Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -74,14 +71,17 @@ namespace FSM.Blazor.Pages.Location
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Location Details", response.Message);
                 NotificationService.Notify(message);
             }
-
-            isLoading = false;
         }
 
         private void SetSaveButtonState(bool isBusyState)
         {
             isBusy = isBusyState;
             StateHasChanged();
+        }
+
+        public void CloseDilaog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

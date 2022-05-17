@@ -7,7 +7,6 @@ using Radzen;
 using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using DataModels.Enums;
 using Newtonsoft.Json;
 
@@ -17,11 +16,9 @@ namespace FSM.Blazor.Pages.Location
     {
         #region Params
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [CascadingParameter]
-        public RadzenDataGrid<LocationDataVM> grid { get; set; }
+        [CascadingParameter] public RadzenDataGrid<LocationDataVM> grid { get; set; }
 
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
@@ -30,12 +27,13 @@ namespace FSM.Blazor.Pages.Location
 
         IList<LocationDataVM> data;
         int count;
-        bool isLoading;
-        string searchText;
+        bool isLoading, isDisplayPopup, isBusyAddButton;
+        string searchText, moduleName = Module.Location.ToString(), message, popupTitle;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
-        string moduleName = Module.Location.ToString();
+        OperationType operationType = OperationType.Create;
+        LocationVM locationData;
 
         protected override async Task OnInitializedAsync()
         {
@@ -64,9 +62,20 @@ namespace FSM.Blazor.Pages.Location
 
         async Task LocationCreateDialog(int id, string title)
         {
+            if (id == 0)
+            {
+                operationType = OperationType.Create;
+                isBusyAddButton = true;
+            }
+            else
+            {
+                operationType = OperationType.Edit;
+                SetEditButtonState(id, true);
+            }
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-            LocationVM locationData = new LocationVM();
+            locationData = new LocationVM();
 
             CurrentResponse response = await LocationService.GetDetailsAsync(dependecyParams, id);
 
@@ -75,12 +84,18 @@ namespace FSM.Blazor.Pages.Location
                 locationData = JsonConvert.DeserializeObject<LocationVM>(response.Data.ToString());
                 locationData.Timezones = await TimezoneService.ListDropDownValues(dependecyParams);
             }
-           
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "locationData", locationData } },
-                  new DialogOptions() { Width = "550px"});
 
-            await grid.Reload();
+            if (id == 0)
+            {
+                isBusyAddButton = false;
+            }
+            else
+            {
+                SetEditButtonState(id, false);
+            }
+
+            isDisplayPopup = true;
+            popupTitle = title;
         }
 
         async Task DeleteAsync(int id)
@@ -97,7 +112,7 @@ namespace FSM.Blazor.Pages.Location
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Location Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -106,8 +121,34 @@ namespace FSM.Blazor.Pages.Location
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Location Details", response.Message);
                 NotificationService.Notify(message);
             }
+        }
 
-            await grid.Reload();
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
+            if (!isCancelled)
+            {
+                await grid.Reload();
+            }
+        }
+
+        async Task OpenDeleteDialog(LocationDataVM locationDataVM)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete Location";
+
+            locationData = new LocationVM();
+
+            locationData.Id = locationDataVM.Id;
+            locationData.AirportCode = locationDataVM.AirportCode;
+        }
+
+        private void SetEditButtonState(int id, bool isBusy)
+        {
+            var details = data.Where(p => p.Id == id).First();
+            details.IsLoadingEditButton = isBusy;
         }
     }
 }

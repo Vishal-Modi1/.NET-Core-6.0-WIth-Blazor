@@ -35,7 +35,7 @@ $BG-DANGER-COLOR: #F31155;
 }
 
 /* RADZEN TEXTBOX,TEXTAREA START*/
-.rz-textbox, .rz-textarea {
+.rz-textbox,.rz-textarea {
     &.valid {
         background-color: #F5F5F5;
     }
@@ -45,6 +45,19 @@ $BG-DANGER-COLOR: #F31155;
         border: 1px solid #FF0000;
     }
 }
+
+/*.invalid {
+    .rz-calendar,.rz-inputtext {
+        background-color: #FFD1D178;
+        border: 1px solid #FF0000;
+    }
+}
+
+.valid {
+    .rz-calendar {
+        background-color: #F5F5F5;
+    }
+}*/
 
 /* RADZEN TEXTBOX,TEXTAREA END*/
 .rz-dropdown {

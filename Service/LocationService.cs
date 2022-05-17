@@ -154,7 +154,7 @@ namespace Service
 
         private bool IsLocationExist(LocationVM locationVM)
         {
-            Location location = _locationRepository.FindByCondition(p => p.TimezoneId == locationVM.TimezoneId && p.AirportCode == locationVM.AirportCode);
+            Location location = _locationRepository.FindByCondition(p=> p.Id != locationVM.Id &&  p.TimezoneId == locationVM.TimezoneId && p.AirportCode == locationVM.AirportCode);
         
             if(location != null)
             {

@@ -102,6 +102,7 @@ namespace FSM.Blazor.Pages.User
         {
             if (id == 0)
             {
+                operationType = OperationType.Create;
                 SetAddNewButtonState(true);
             }
             else
@@ -189,7 +190,7 @@ namespace FSM.Blazor.Pages.User
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DialogService.Close(true);
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "", response.Message);
                 NotificationService.Notify(message);
             }
@@ -198,8 +199,6 @@ namespace FSM.Blazor.Pages.User
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "", response.Message);
                 NotificationService.Notify(message);
             }
-
-            await grid.Reload();
         }
 
         async Task CloseUserStatusUpdateDialogAsync()
@@ -208,14 +207,20 @@ namespace FSM.Blazor.Pages.User
             await grid.Reload();
         }
 
-        async Task CloseDiloag(bool isCancelled)
+        async Task RevokeUserStatusChange()
         {
+            isDisplayPopup = false;
+            data.Where(p => p.Id == userData.Id).First().IsActive = !userData.IsActive;
+        }
+
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
             if (!isCancelled)
             {
                 await grid.Reload();
             }
-
-            isDisplayPopup = false;
         }
 
         private void SetAddNewButtonState(bool isBusy)
@@ -268,6 +273,7 @@ namespace FSM.Blazor.Pages.User
 
             userData.FirstName = userInfo.FirstName;
             userData.LastName = userInfo.LastName;
+            userData.IsActive = value.Value;
 
             if (value == false)
             {

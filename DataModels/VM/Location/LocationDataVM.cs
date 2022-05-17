@@ -1,4 +1,6 @@
-﻿namespace DataModels.VM.Location
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataModels.VM.Location
 {
     public class LocationDataVM
     {
@@ -8,6 +10,9 @@
         public string Timezone { get; set; }
         public string Offset { get; set; }
         public string AirportCode { get; set; }
+
+        [NotMapped]
+        public bool IsLoadingEditButton { get; set; }   
         public int TotalRecords { get; set; }   
     }
 }

@@ -51,14 +51,12 @@
         top: 120px !important
     }
 
-   /* .rz-button.btn-primary {
-        margin-top: 28px;
-    }*/
-    .rz-fileupload-buttonbar
-    {
-        top:84%!important;
+    /* .rz-button.btn-primary {
+            margin-top: 28px;
+        }*/
+    .rz-fileupload-buttonbar {
+        top: 84% !important;
     }
-    
 </style>
 
 
@@ -220,6 +218,18 @@
     </div>
 </div>
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="Update User"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+            <FSM.Blazor.Pages.User.Create userData="@userVM" CloseDialogCallBack="@CloseDialog">
+            </FSM.Blazor.Pages.User.Create>
+        </Body>
+    </CustomPopupComponent>
+}
 
 
 

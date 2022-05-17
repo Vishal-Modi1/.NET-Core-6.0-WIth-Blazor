@@ -25,11 +25,11 @@ namespace FSM.Blazor
         private readonly CurrentUserPermissionManager _currentUserPermissionManager;
         private readonly IHttpClientFactory _httpClient;
 
-        public AuthController(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClient, IMemoryCache memoryCache)
+        public AuthController(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClient, IMemoryCache MemoryCache)
         {
             _httpCaller = new HttpCaller();
             _httpClient = httpClient;
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
         }
 
         private static readonly AuthenticationProperties COOKIE_EXPIRES = new AuthenticationProperties()

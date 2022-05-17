@@ -57,7 +57,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
         {
-            <RadzenButton Style="float:right" IsBusy="@isBusyAddNewButton" BusyText="Upload ..." Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Create", true)) />
+            <RadzenButton Style="float:right" IsBusy="@isBusyAddNewButton" BusyText="Upload ..." Text="Upload" Icon="backup" ButtonStyle="ButtonStyle.Primary" Click=@(() => DocumentCreateDialog(null, "Upload Document", true)) />
         }
 
     </div>
@@ -188,7 +188,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy=@data.IsLoadingEditButton Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit", false)) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy=@data.IsLoadingEditButton Icon="mode_edit" Class="m-1" Click=@(() => DocumentCreateDialog(data.Id, "Edit Document", false)) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
@@ -201,6 +201,40 @@
     </Columns>
 </RadzenDataGrid>
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Create DocumentData="@documentData" CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete <b> @documentData.DisplayName</b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                            {
+                                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(documentData.Id) " Class="mr-1" Style="width: 80px;" />
+                            }
+
+                            <RadzenButton Text="No" Click="@(() => isDisplayPopup = false)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </Body>
+    </CustomPopupComponent>
+}
 
 @{
 
@@ -224,22 +258,6 @@
             OpenNoPreViewPopup();
         }
 
-    }
-
-    async Task OpenDeleteDialog(DocumentDataVM documentData)
-    {
-        var result = await DialogService.OpenAsync("Delete", ds =>
-    @<div>
-        <p class="mb-4">Are you sure, You want to delete <b> @documentData.DisplayName</b>?</p>
-        <div class="row" style="text-align:right">
-            <div class="col">
-                <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(documentData.Id)" BusyText="Deleting ..." IsBusy=@isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
-                <RadzenButton Text="No" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
-
-            </div>
-        </div>
-    </div>
-    , new DialogOptions { Width = "360px" });
     }
 
     async void OpenDocumentViewer(string link, bool isImage)

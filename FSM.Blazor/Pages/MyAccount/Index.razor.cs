@@ -5,7 +5,6 @@ using FSM.Blazor.Shared;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Radzen;
 using UP = FSM.Blazor.Pages.User;
@@ -16,11 +15,7 @@ namespace FSM.Blazor.Pages.MyAccount
     {
         #region Objects
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [CascadingParameter]
-        public MainLayout Layout { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -29,6 +24,7 @@ namespace FSM.Blazor.Pages.MyAccount
         UserVM userVM = new UserVM();
 
         private bool isDisplayLoader { get; set; } = false;
+        bool isDisplayPopup;
 
         protected override async Task OnInitializedAsync()
         {
@@ -63,12 +59,9 @@ namespace FSM.Blazor.Pages.MyAccount
         public async Task OpenUpdateProfileDialog()
         {
             userVM.IsFromMyProfile = true;
-
-            await DialogService.OpenAsync<UP.Create>("Edit",
-                  new Dictionary<string, object>() { { "userData", userVM } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
-
             userVM.Country = userVM.Countries.Where(p => p.Id == userVM.CountryId).First().Name;
+
+            isDisplayPopup = true;
         }
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
@@ -82,11 +75,7 @@ namespace FSM.Blazor.Pages.MyAccount
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    DialogService.Close(true);
-                }
-
+                CloseDialog();
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, "");
                 NotificationService.Notify(message);
             }
@@ -96,6 +85,11 @@ namespace FSM.Blazor.Pages.MyAccount
                 NotificationService.Notify(message);
             }
         }
+
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
+        } 
 
         async Task OnChangeAsync()
         {
@@ -132,6 +126,7 @@ namespace FSM.Blazor.Pages.MyAccount
             {
 
             }
+
             isDisplayLoader = false;
         }
     }

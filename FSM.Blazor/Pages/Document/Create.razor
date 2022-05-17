@@ -8,12 +8,9 @@
 @using Syncfusion.Blazor.Spinner;
 @using FSM.Blazor.Data.Common;
 
-@inject Radzen.DialogService DialogService
 @inject DocumentService DocumentService
-@inject NavigationManager NavigationManager
 @inject UserService UserService
 @inject TokenValidatorService TokenValidatorService
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <style>
     form .row {
@@ -27,49 +24,46 @@
     </SfSpinner>
 </div>
 
-<RadzenTemplateForm Data="@documentData" @ref="@form" Submit="@((DocumentVM args) => {  UploadFilesAsync(); })">
+<RadzenTemplateForm Data="@DocumentData" @ref="@form" Submit="@((DocumentVM args) => {  UploadFilesAsync(); })">
 
-    <input type="hidden" value="@documentData.Id" name="Id" />
+    <div class="popup-content">
 
-    <RadzenFieldset Text="Document Info">
+        <input type="hidden" value="@DocumentData.Id" name="Id" />
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+
+            <div class="col-md-6 align-items-center d-flex">
                 <RadzenLabel Text="Upload" />
             </div>
-            <div class="col-md-8">
 
-                <InputFile OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName"
-                           accept="@supportedDocumentsFormat" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-6 align-items-center d-flex">
                 <RadzenLabel Text="Document Name" />
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-6">
 
-                <RadzenTextBox Name="DisplayName" @bind-Value="@documentData.DisplayName"
+                <InputFile OnChange="OnInputFileChangeAsync" Value="@DocumentData.DisplayName"
+                           accept="@supportedDocumentsFormat" />
+            </div>
+
+            <div class="col-md-6">
+
+                <RadzenTextBox Name="DisplayName" @bind-Value="@DocumentData.DisplayName"
                                Style="width: 100%;" Placeholder="Please enter document name" />
 
-                @if (string.IsNullOrWhiteSpace(documentData.DisplayName))
-                {
-                    <RadzenRequiredValidator Component="DisplayName" Text="Please enter document name" Style="position: relative"></RadzenRequiredValidator>
-                }
-
+                <RadzenRequiredValidator Component="DisplayName" Text="Please enter document name" Style="position: relative"></RadzenRequiredValidator>
             </div>
+
         </div>
 
         <div class="row">
-            <div class="col-md-4 align-items-top d-flex">
+            <div class="col-md-12">
                 <RadzenLabel Text="Document Tag" />
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-12">
 
-                <RadzenAutoComplete Placeholder="Search a tag..." Data=@documentData.DocumentTagsList @onkeyup="@Enter"
+                <RadzenAutoComplete Placeholder="Search a tag..." Data=@DocumentData.DocumentTagsList @onkeyup="@Enter"
                                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @ref="@autoComplete"
                                     TextProperty="TagName" Change=@(args => OntestChange(args)) Style="width: 100%;" />
 
@@ -83,105 +77,124 @@
             </div>
         </div>
 
-        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-        {
-            <div class="row">
+        <div class="row">
 
-                <div class="col-md-4 align-items-center d-flex">
-                    <RadzenLabel Text="Company" />
+            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            {
+                <div class="col-md-6 align-items-center d-flex">
+                    <div class="row">
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenLabel Text="Company" />
+                        </div> 
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        AllowFiltering="true" Class="w-100"
+                                        Placeholder="Select Company" Data=@DocumentData.CompniesList TextProperty="Name"
+                                        ValueProperty="Id" Name="CompanyId" @bind-Value="@(DocumentData.CompanyId)" Change=@(args => OnChange(args)) />
+
+                            <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Please select company" Style="position: relative"></RadzenRequiredValidator>
+                        </div>
+                    </div>
                 </div>
+            }
 
-                <div class="col-md-8">
+            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+            {
+                <div class="col-md-6 align-items-center d-flex">
+                    <div class="row">
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenLabel Text="User" />
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
 
-                    <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                            <RadzenDropDown AllowClear="true" TValue="long" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        AllowFiltering="true" Class="w-100"
+                                        Placeholder="Select User" Data=@DocumentData.UsersList TextProperty="Name"
+                                        ValueProperty="Id" Name="UserId" @bind-Value="@userId" />
+
+                            <RadzenRequiredValidator DefaultValue=long.MaxValue Component="UserId" Text="Please select user" Style="position: relative"></RadzenRequiredValidator>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!DocumentData.IsFromParentModule)
+            {
+                 <div class="col-md-6 align-items-center d-flex">
+                    <div class="row">
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenLabel Text="Document Type" />
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
+
+                            <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                 AllowFiltering="true" Class="w-100"
-                                Placeholder="Select Company" Data=@documentData.CompniesList TextProperty="Name"
-                                ValueProperty="Id" Name="CompanyId" @bind-Value="@(documentData.CompanyId)" Change=@(args => OnChange(args)) />
-
-                    <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Please select company" Style="position: relative"></RadzenRequiredValidator>
-
-                </div>
-            </div>
-        }
-
-        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
-        {
-            <div class="row">
-
-                <div class="col-md-4 align-items-center d-flex">
-                    <RadzenLabel Text="User" />
-                </div>
-
-                <div class="col-md-8">
-
-                    <RadzenDropDown AllowClear="true" TValue="long" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Class="w-100"
-                                Placeholder="Select User" Data=@documentData.UsersList TextProperty="Name"
-                                ValueProperty="Id" Name="UserId" @bind-Value="@userId" />
-
-                    <RadzenRequiredValidator DefaultValue=long.MaxValue Component="UserId" Text="Please select user" Style="position: relative"></RadzenRequiredValidator>
-
-                </div>
-            </div>
-        }
-
-        @if (!documentData.IsFromParentModule)
-        {
-            <div class="row">
-
-                <div class="col-md-4 align-items-center d-flex">
-                    <RadzenLabel Text="Document Type" />
-                </div>
-
-                <div class="col-md-8">
-
-                    <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Class="w-100"
-                                Placeholder="Select Type" Data=@documentData.ModulesList TextProperty="Name"
-                                ValueProperty="Id" Name="ModuleId" @bind-Value="@(documentData.ModuleId)" />
+                                Placeholder="Select Type" Data=@DocumentData.ModulesList TextProperty="Name"
+                                ValueProperty="Id" Name="ModuleId" @bind-Value="@(DocumentData.ModuleId)" />
 
                     <RadzenRequiredValidator DefaultValue="0" Component="ModuleId" Text="Please select type" Style="position: relative"></RadzenRequiredValidator>
 
+                        </div>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+
+        </div>
 
         <div class="row">
-               <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-6 align-items-center d-flex">
                 <RadzenLabel Text="Is Shareable" />
             </div>
-             <div class="col-md-8">
-                <RadzenSwitch @bind-Value=@documentData.IsShareable />
-            </div>
-        </div>
 
-        @if (documentData.IsShareable)
-        {
-            <div class="row">
-                <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-6 align-items-center d-flex">
+                @if (DocumentData.IsShareable)
+                {
                     <RadzenLabel Text="Last Sharing Date" />
-                </div>
-                <div class="col-md-8">
-                    <RadzenDatePicker Name="LastShareDate" Placeholder="Please select date" @bind-Value=@documentData.LastShareDate DateFormat="d" Class="w-100" />
-                 <RadzenRequiredValidator Component="LastShareDate" Text="Please select date" Style="position: relative" ></RadzenRequiredValidator>   </div>
+                }
             </div>
-        }
+
+            <div class="col-md-6">
+                <RadzenSwitch @bind-Value=@DocumentData.IsShareable />
+            </div>
+
+            <div class="col-md-6">
+                @if (DocumentData.IsShareable)
+                {
+                    <RadzenDatePicker Name="LastShareDate" Placeholder="Please select date" @bind-Value=@DocumentData.LastShareDate DateFormat="d" Class="w-100" />
+                    <RadzenRequiredValidator Component="LastShareDate" Text="Please select date" Style="position: relative"></RadzenRequiredValidator>
+                }
+            </div>
+
+        </div>
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-6 align-items-center d-flex">
                 <RadzenLabel Text="Expiration Date" />
             </div>
-            <div class="col-md-8">
-                <RadzenDatePicker @bind-Value=@documentData.ExpirationDate Placeholder="Please select date" DateFormat="d" Class="w-100" />
+            <div class="col-md-6">
+                <RadzenDatePicker @bind-Value=@DocumentData.ExpirationDate Placeholder="Please select date" DateFormat="d" Class="w-100" />
             </div>
         </div>
 
-    </RadzenFieldset>
+        <hr />
 
-    <div class="row" style="margin-top:4%">
-        <div class="col-md-12 text-right">
-            <RadzenButton ButtonType="ButtonType.Button" Click="@((args) => UploadFilesAsync())" @onkeydown="@SubmitFormIgnore" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
-            <RadzenButton Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+        <div class="row">
+
+            <div class="col-md-12 text-right">
+
+                @if (DocumentData.Id == Guid.Empty)
+                {
+                    <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Primary" Click="@((args) => UploadFilesAsync())" @onkeydown="@SubmitFormIgnore" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
+                }
+                else
+                {
+                    <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Success" Click="@((args) => UploadFilesAsync())" @onkeydown="@SubmitFormIgnore" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
+                }
+
+                <RadzenButton Click="@((args) => CloseDilaog(true))" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
+
+            </div>
+
         </div>
     </div>
 

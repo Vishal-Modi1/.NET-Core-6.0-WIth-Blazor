@@ -100,14 +100,14 @@ namespace FSM.Blazor.Pages.Company
             details.IsLoadingEditButton = isBusy;
         }
 
-        async Task CloseDiloag(bool isCancelled)
+        async Task CloseDialog(bool isCancelled)
         {
+            isDisplayPopup = false;
+
             if(!isCancelled)
             {
                 await grid.Reload();
             }
-
-            isDisplayPopup = false;
         }
 
         async Task OpenCompanyDetailPage(CompanyVM companyData)
