@@ -124,7 +124,7 @@ namespace FSM.Blazor.Pages.InstructorType
             isDisplayPopup = true;
             operationType = OperationType.Delete;
             _instructorTypeData = instructorTypeVM;
-            popupTitle = "Delete Instructor";
+            popupTitle = "Delete Instructor Type";
         }
     }
 }

@@ -35,7 +35,7 @@
         max-width: 100%;
         max-height: 100%;
         /*        object-fit:cover;
-            */
+                    */
     }
 
     .rz-button-icon-left {
@@ -46,9 +46,6 @@
         top: 175px !important
     }
 
-    .rz-button.btn-primary {
-        margin-top: 28px;
-    }
 </style>
 
 <div id="container" class="loader">
@@ -143,4 +140,17 @@
     </div>
 }
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="Edit Profile"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            <Create companyData=@(companyData) CloseDialogCallBack="@CloseDialog"></Create>
+
+        </Body>
+    </CustomPopupComponent>
+}
 

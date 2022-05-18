@@ -26,7 +26,7 @@
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
             <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" BusyText="Add New ..." IsBusy=@isBusyAddNewButton
-                      ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create")) />
+                      ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftCreateDialog(0, "Create Aircraft")) />
         }
 
     </div>
@@ -115,7 +115,7 @@
                             <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="settings" Class="m-1" Click=@(() => OpenDetailPage(data.Id)) />
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                             {
-                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" IsBusy="@data.IsLoadingEditButton" Class="m-1" Click=@(() => AircraftCreateDialog(data.Id,"Edit")) />
+                                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" IsBusy="@data.IsLoadingEditButton" Class="m-1" Click=@(() => AircraftCreateDialog(data.Id,"Edit Aircraft")) />
                             }
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
                             {
@@ -136,7 +136,7 @@
 {
     <CustomPopupComponent Title="@popupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
-                      CloseOnOutsideClick="false"
+                      CloseOnOutsideClick="false" Width="600px"
                       OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 
@@ -167,3 +167,4 @@
         </Body>
     </CustomPopupComponent>
 }
+

@@ -23,7 +23,6 @@
 }
 .modal .modal-content {
   border-radius: 0.2rem;
-  width:600px
 }
 .modal .modal-backdrop.show {
   opacity: 0.2;

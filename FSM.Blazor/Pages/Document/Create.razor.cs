@@ -191,7 +191,7 @@ namespace FSM.Blazor.Pages.Document
                     File.Delete(uploadedFilePath);
                 }
 
-                CloseDilaog(false);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }
@@ -270,7 +270,7 @@ namespace FSM.Blazor.Pages.Document
             StateHasChanged();
         }
 
-        public void CloseDilaog(bool isCancelled)
+        public void CloseDialog(bool isCancelled)
         {
             CloseDialogCallBack.InvokeAsync(isCancelled);
         }

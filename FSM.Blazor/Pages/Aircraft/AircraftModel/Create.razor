@@ -13,26 +13,30 @@
 
 <RadzenTemplateForm Data="@aircraftModel" Submit="@((DE.AircraftModel args) => {  Submit(); })">
 
-    <input type="hidden" value="@aircraftModel.Id" name="Id" />
+    <div class="popup-content">
 
-    <RadzenFieldset Text="Purchase Info">
+        <input type="hidden" value="@aircraftModel.Id" name="Id" />
+
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+
+            <div class="col-md-12 align-items-center d-flex">
                 <RadzenLabel Text="Name" />
             </div>
-            <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Placeholder="Please enter model" Name="Model" @bind-Value="@aircraftModel.Name" />
-                <RadzenRequiredValidator Component="Model" Text="Model is required" Popup="@isPopup" Style="position: relative"/>
+
+            <div class="col-md-12">
+                <RadzenTextBox style="width: 100%;" Placeholder="Model" Name="Model" @bind-Value="@aircraftModel.Name" />
+                <RadzenRequiredValidator Component="Model" Text="Model is required" Popup="@isPopup" Style="position: relative" />
             </div>
+
         </div>
 
-    </RadzenFieldset>
-
-    <div class="row" style="margin-top:4%">
-        <div class="col-md-12 text-right">
-            <RadzenButton  Click="@((args) => DialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
-            <RadzenButton ButtonType="ButtonType.Submit"  Text="Save" Style="width: 120px" />
+        <hr />
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+                <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" Style="width: 120px" />
+                <RadzenButton Click="@((args) => CloseDialog(true))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            </div>
         </div>
     </div>
 

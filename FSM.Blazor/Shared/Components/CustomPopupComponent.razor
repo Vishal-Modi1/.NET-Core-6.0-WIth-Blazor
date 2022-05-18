@@ -1,6 +1,6 @@
 ﻿<div class="modal fadeIn show" id="myModal" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
+        <div class="modal-content" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
             <div class="modal-header @(HeaderCssClass)">
                 <h3 class="modal-title text-white">@Title</h3>
                <RadzenIcon Icon="close" @onclick="@Close" Style="cursor:pointer"></RadzenIcon>

@@ -60,7 +60,7 @@
 <div class="form-group mb-3">
 <RadzenLabel  Text="Email" />
 
-<RadzenTextBox Placeholder="Please enter email" Name="Email" Class="form-control" @bind-Value=@loginVM.Email />
+<RadzenTextBox Placeholder="Email" Name="Email" Class="form-control" @bind-Value=@loginVM.Email />
                         <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
                         <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
          
@@ -68,7 +68,7 @@
 <div class="form-group mb-3">
                             <RadzenLabel  Text="Password" />
 
-                        <RadzenPassword Placeholder="Please enter password" Name="Password" Class="form-control" @bind-Value=@loginVM.Password />
+                        <RadzenPassword Placeholder="Password" Name="Password" Class="form-control" @bind-Value=@loginVM.Password />
                         <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
 
 </div>
@@ -100,7 +100,7 @@
                         <RadzenLabel Text="Email" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenTextBox Placeholder="Please enter email" Name="Email" Class="w-100" @bind-Value=@loginVM.Email />
+                        <RadzenTextBox Placeholder="Email" Name="Email" Class="w-100" @bind-Value=@loginVM.Email />
                         <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
                         <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
                     </div>
@@ -111,7 +111,7 @@
                         <RadzenLabel Text="Password" />
                     </div>
                     <div class="col-md-8">
-                        <RadzenPassword Placeholder="Please enter password" Name="Password" Class="w-100" @bind-Value=@loginVM.Password />
+                        <RadzenPassword Placeholder="Password" Name="Password" Class="w-100" @bind-Value=@loginVM.Password />
                         <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
                     </div>
                 </div>

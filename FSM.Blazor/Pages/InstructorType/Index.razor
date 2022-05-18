@@ -19,7 +19,7 @@
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
             <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
-            Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM(), "Create")) />
+            Click=@(() => InstructorTypeCreateDialog(new InstructorTypeVM(), "Create Instructor Type")) />
         }
     </div>
 </div>
@@ -55,7 +55,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                 {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data, "Edit")) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => InstructorTypeCreateDialog(data, "Edit Instructor Type")) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
@@ -72,7 +72,7 @@
 {
     <CustomPopupComponent Title="@popupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
-                      CloseOnOutsideClick="false"
+                      CloseOnOutsideClick="false" 
                       OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 

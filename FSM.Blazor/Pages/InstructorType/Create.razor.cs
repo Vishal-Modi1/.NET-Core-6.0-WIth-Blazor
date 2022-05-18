@@ -35,7 +35,7 @@ namespace FSM.Blazor.Pages.InstructorType
             }
             else if (((int)response.Status) == 200)
             {
-                CloseDilaog(false);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Instructor Type Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -46,7 +46,7 @@ namespace FSM.Blazor.Pages.InstructorType
             }
         }
 
-        public void CloseDilaog(bool isCancelled)
+        public void CloseDialog(bool isCancelled)
         {
             CloseDialogCallBack.InvokeAsync(isCancelled);
         }

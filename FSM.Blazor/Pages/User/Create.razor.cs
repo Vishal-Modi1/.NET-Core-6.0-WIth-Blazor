@@ -114,7 +114,7 @@ namespace FSM.Blazor.Pages.User
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                CloseDilaog(false);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }
@@ -179,7 +179,7 @@ namespace FSM.Blazor.Pages.User
             NavigationManager.NavigateTo("/Login");
         }
 
-        public void CloseDilaog(bool isCancelled)
+        public void CloseDialog(bool isCancelled)
         {
             CloseDialogCallBack.InvokeAsync(isCancelled);
         }

@@ -38,7 +38,7 @@ namespace FSM.Blazor.Pages.Aircraft
         bool isDisplayClassDropDown, isDisplayFlightSimulatorDropDown, isDisplayNoofEnginesDropDown,
             isDisplayEnginesHavePropellers, isDisplayEnginesareTurbines, isDisplayNoofPropellersDropDown, isBusySaveButton;
 
-        bool isAircraftImageChanged;
+        bool isAircraftImageChanged, isDisplayMakePopup, isDisplayModelPopup;
 
         protected override Task OnInitializedAsync()
         {
@@ -182,16 +182,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             if ((int)value == int.MaxValue)
             {
-                await DialogService.OpenAsync<AMD.Create>("Create",
-                  null, new DialogOptions() { Width = "500px", Height = "380px" });
-
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                CurrentResponse response = await AircraftModelService.ListDropdownValues(dependecyParams);
-                AircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
-
-                AircraftData.AircraftModelList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
-
-                ModelId = 0;
+                isDisplayModelPopup = true;
             }
         }
 
@@ -199,17 +190,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             if ((int)value == int.MaxValue)
             {
-                await DialogService.OpenAsync<AMK.Create>("Create",
-                  null, new DialogOptions() { Width = "500px", Height = "380px" });
-
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
-                CurrentResponse response = await AircraftMakeService.ListDropdownValues(dependecyParams);
-                AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
-
-                AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
-
-                MakeId = 0;
+                isDisplayMakePopup = true;
             }
         }
 
@@ -337,7 +318,7 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                CloseDilaog(false);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }
@@ -359,7 +340,7 @@ namespace FSM.Blazor.Pages.Aircraft
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                CloseDilaog(false);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, "Aircraft details added successfully.");
                 NotificationService.Notify(message);
             }
@@ -381,9 +362,41 @@ namespace FSM.Blazor.Pages.Aircraft
             isAircraftImageChanged = true;
         }
 
-        public void CloseDilaog(bool isCancelled)
+        public void CloseDialog(bool isCancelled)
         {
             CloseDialogCallBack.InvokeAsync(isCancelled);
+        }
+
+        public async Task CloseMakeDialogAsync(bool isCancelled)
+        {
+            if (!isCancelled)
+            {
+
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+                CurrentResponse response = await AircraftMakeService.ListDropdownValues(dependecyParams);
+                AircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+
+                AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
+
+                MakeId = 0;
+                isDisplayMakePopup = false;
+            }
+        }
+
+        public async Task CloseModelDialogAsync(bool isCancelled)
+        {
+            if (!isCancelled)
+            {
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                CurrentResponse response = await AircraftModelService.ListDropdownValues(dependecyParams);
+                AircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+
+                AircraftData.AircraftModelList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
+            }
+
+            isDisplayModelPopup = false;
+            ModelId = 0;
         }
     }
 }

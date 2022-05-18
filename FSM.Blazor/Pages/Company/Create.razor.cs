@@ -67,7 +67,7 @@ namespace FSM.Blazor.Pages.Company
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);
                 NotificationService.Notify(message);
 
-                CloseDilaog(false);
+                CloseDialog(false);
             }
             else
             {
@@ -84,7 +84,7 @@ namespace FSM.Blazor.Pages.Company
             StateHasChanged();
         }
 
-        public void CloseDilaog(bool isCancelled)
+        public void CloseDialog(bool isCancelled)
         {
             CloseDialogCallBack.InvokeAsync(isCancelled);
         }

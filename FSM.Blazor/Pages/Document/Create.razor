@@ -49,7 +49,7 @@
             <div class="col-md-6">
 
                 <RadzenTextBox Name="DisplayName" @bind-Value="@DocumentData.DisplayName"
-                               Style="width: 100%;" Placeholder="Please enter document name" />
+                               Style="width: 100%;" Placeholder="Document Name" />
 
                 <RadzenRequiredValidator Component="DisplayName" Text="Please enter document name" Style="position: relative"></RadzenRequiredValidator>
             </div>
@@ -85,13 +85,14 @@
                     <div class="row">
                         <div class="col-md-12 align-items-center d-flex">
                             <RadzenLabel Text="Company" />
-                        </div> 
+                        </div>
                         <div class="col-md-12 align-items-center d-flex">
                             <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                         AllowFiltering="true" Class="w-100"
                                         Placeholder="Select Company" Data=@DocumentData.CompniesList TextProperty="Name"
                                         ValueProperty="Id" Name="CompanyId" @bind-Value="@(DocumentData.CompanyId)" Change=@(args => OnChange(args)) />
-
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
                             <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Please select company" Style="position: relative"></RadzenRequiredValidator>
                         </div>
                     </div>
@@ -111,7 +112,8 @@
                                         AllowFiltering="true" Class="w-100"
                                         Placeholder="Select User" Data=@DocumentData.UsersList TextProperty="Name"
                                         ValueProperty="Id" Name="UserId" @bind-Value="@userId" />
-
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
                             <RadzenRequiredValidator DefaultValue=long.MaxValue Component="UserId" Text="Please select user" Style="position: relative"></RadzenRequiredValidator>
                         </div>
                     </div>
@@ -120,7 +122,7 @@
 
             @if (!DocumentData.IsFromParentModule)
             {
-                 <div class="col-md-6 align-items-center d-flex">
+                <div class="col-md-6 align-items-center d-flex">
                     <div class="row">
                         <div class="col-md-12 align-items-center d-flex">
                             <RadzenLabel Text="Document Type" />
@@ -128,11 +130,12 @@
                         <div class="col-md-12 align-items-center d-flex">
 
                             <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Class="w-100"
-                                Placeholder="Select Type" Data=@DocumentData.ModulesList TextProperty="Name"
-                                ValueProperty="Id" Name="ModuleId" @bind-Value="@(DocumentData.ModuleId)" />
-
-                    <RadzenRequiredValidator DefaultValue="0" Component="ModuleId" Text="Please select type" Style="position: relative"></RadzenRequiredValidator>
+                                        AllowFiltering="true" Class="w-100"
+                                        Placeholder="Select Type" Data=@DocumentData.ModulesList TextProperty="Name"
+                                        ValueProperty="Id" Name="ModuleId" @bind-Value="@(DocumentData.ModuleId)" />
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenRequiredValidator DefaultValue="0" Component="ModuleId" Text="Please select type" Style="position: relative"></RadzenRequiredValidator>
 
                         </div>
                     </div>
@@ -191,7 +194,7 @@
                     <RadzenButton ButtonType="ButtonType.Button" ButtonStyle="ButtonStyle.Success" Click="@((args) => UploadFilesAsync())" @onkeydown="@SubmitFormIgnore" Text="Save" Style="width: 120px" IsBusy="@isBusy" BusyText="Saving ..." />
                 }
 
-                <RadzenButton Click="@((args) => CloseDilaog(true))" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                <RadzenButton Click="@((args) => CloseDialog(true))" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
 
             </div>
 

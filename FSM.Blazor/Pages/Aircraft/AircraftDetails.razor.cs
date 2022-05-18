@@ -5,7 +5,6 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Radzen;
 using System.Net;
@@ -26,8 +25,8 @@ namespace FSM.Blazor.Pages.Aircraft
 
         public bool isDataLoaded = false, isBusy = false, isDisplayLoader;
         private CurrentUserPermissionManager _currentUserPermissionManager;
-        string moduleName = "Aircraft";
-        public bool isAllowToEdit;
+        string moduleName = "Aircraft", popupTitle;
+        public bool isAllowToEdit, isDisplayPopup;
 
         protected override async Task OnInitializedAsync()
         {
@@ -85,19 +84,20 @@ namespace FSM.Blazor.Pages.Aircraft
         async Task AircraftEditDialog(int id, string title)
         {
             isBusy = true;
-            StateHasChanged();
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
-            isBusy = false;
-            StateHasChanged();
-
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "aircraftData", AircraftData } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
-
             SetCompanyName();
+
+            isBusy = false;
+            isDisplayPopup = true;
+            popupTitle = title;
+        }
+
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
         }
 
         private void SetCompanyName()

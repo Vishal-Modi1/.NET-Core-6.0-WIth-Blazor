@@ -62,7 +62,7 @@ namespace FSM.Blazor.Pages.Location
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                CloseDilaog(false);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Location Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -79,7 +79,7 @@ namespace FSM.Blazor.Pages.Location
             StateHasChanged();
         }
 
-        public void CloseDilaog(bool isCancelled)
+        public void CloseDialog(bool isCancelled)
         {
             CloseDialogCallBack.InvokeAsync(isCancelled);
         }

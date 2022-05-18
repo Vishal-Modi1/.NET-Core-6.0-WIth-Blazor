@@ -20,7 +20,7 @@
                 <RadzenLabel Text="Name" />
             </div>
             <div class="col-md-12">
-                <RadzenTextBox style="width: 100%;" Placeholder="Please enter name" Name="Name" @bind-Value="@InstructorTypeData.Name" />
+                <RadzenTextBox style="width: 100%;" Placeholder="Name" Name="Name" @bind-Value="@InstructorTypeData.Name" />
                 <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -40,7 +40,7 @@
                               Text="Save" Style="width: 120px" IsBusy=@isBusy />
                 }
 
-                  <RadzenButton Click="@((args) => CloseDilaog(true))"
+                  <RadzenButton Click="@((args) => CloseDialog(true))"
                               ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
             </div>
         </div>

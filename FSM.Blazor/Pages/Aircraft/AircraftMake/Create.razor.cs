@@ -16,6 +16,8 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftMake
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+
         public async Task Submit()
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
@@ -30,7 +32,7 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftMake
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Make", response.Message);
                 NotificationService.Notify(message);
             }
@@ -39,6 +41,11 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftMake
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Make", response.Message);
                 NotificationService.Notify(message);
             }
+
+        }
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

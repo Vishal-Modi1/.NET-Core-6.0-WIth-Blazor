@@ -21,7 +21,7 @@
         max-width: 100%;
         max-height: 100%;
         /*        object-fit:cover;
-                    */
+                        */
     }
 
     .rz-button-icon-left {
@@ -29,8 +29,8 @@
     }
 
     /*.rz-button.btn-primary {
-        margin-top: 26px;
-    }*/
+            margin-top: 26px;
+        }*/
 
 </style>
 
@@ -64,13 +64,10 @@
                         <div>
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
                             {
-                                <RadzenButton Text="Update Details" BusyText="Update Aircraft Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit")) />
+                                <RadzenButton Text="Update Details" BusyText="Update Aircraft Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit Aircraft")) />
                             }
 
-
                         </div>
-
-
 
                     </div>
                 </div>
@@ -116,3 +113,16 @@
 }
 
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+          <Create AircraftData=@(AircraftData) CloseDialogCallBack="@CloseDialog"></Create>
+
+        </Body>
+    </CustomPopupComponent>
+}

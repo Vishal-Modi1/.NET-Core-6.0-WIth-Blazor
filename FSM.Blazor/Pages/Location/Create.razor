@@ -24,7 +24,7 @@
                 <RadzenLabel Text="Airport Code" />
             </div>
             <div class="col-md-12">
-                <RadzenTextBox style="width: 100%;" Name="AirportCode" @bind-Value="@locationData.AirportCode" Placeholder="Please enter airport code" />
+                <RadzenTextBox style="width: 100%;" Name="AirportCode" @bind-Value="@locationData.AirportCode" Placeholder="Airport Code" />
                 <RadzenRequiredValidator Component="AirportCode" Text="Airport code is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -34,7 +34,7 @@
                 <RadzenLabel Text="Physical Address" />
             </div>
           <div class="col-md-12">
-                <RadzenTextArea style="width: 100%;" Name="PhysicalAddress" @bind-Value="@locationData.PhysicalAddress" Placeholder="Please enter physical address" />
+                <RadzenTextArea style="width: 100%;" Name="PhysicalAddress" @bind-Value="@locationData.PhysicalAddress" Placeholder="Physical Address" />
                 <RadzenRequiredValidator Component="PhysicalAddress" Text="Physical Address is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success"  Text="Update" IsBusy=@isBusy Style="width: 120px" />
             }
 
-            <RadzenButton Click="@((args) => CloseDilaog(true))"
+            <RadzenButton Click="@((args) => CloseDialog(true))"
                           ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
 
         </div>

@@ -284,7 +284,9 @@ namespace FSM.Blazor.Pages.Document
             popupTitle = "Delete Document";
 
             documentData = new DocumentVM();
+
             documentData.Id = documentInfo.Id;
+            documentData.DisplayName = documentInfo.DisplayName;
         }
     }
 }

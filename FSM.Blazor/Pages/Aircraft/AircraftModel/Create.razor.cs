@@ -12,6 +12,7 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftModel
         DE.AircraftModel aircraftModel = new DE.AircraftModel();
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         public async Task Submit()
         {
@@ -25,9 +26,9 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftModel
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later.");
                 NotificationService.Notify(message);
             }
-            else if (((int)response.Status) == 200)
+            else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DialogService.Close(true);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Model", response.Message);
                 NotificationService.Notify(message);
             }
@@ -36,6 +37,11 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftModel
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Model", response.Message);
                 NotificationService.Notify(message);
             }
+        }
+
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

@@ -28,8 +28,8 @@ namespace FSM.Blazor.Pages.Company.DetailsView
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
         string moduleName = Module.Company.ToString();
-        public bool isAllowToEdit, isBusy = false, isDisplayLoader = true;
-
+        public bool isAllowToEdit, isBusy = false, isDisplayLoader = true, isDisplayPopup;
+      
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -95,13 +95,12 @@ namespace FSM.Blazor.Pages.Company.DetailsView
 
         async Task CompanyEditDialog()
         {
-            //DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            isDisplayPopup = true;
+        }
 
-            //companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
-
-            await DialogService.OpenAsync<Create>("Edit",
-                  new Dictionary<string, object>() { { "companyData", companyData } },
-                  new DialogOptions() { Width = "550px", Height = "620px" });
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
         }
 
         async Task OnChangeAsync()

@@ -23,6 +23,11 @@ namespace FSM.Blazor.Shared.Components
         /// <summary>
         /// 
         /// </summary>
+        [Parameter] public string? Width { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter] public RenderFragment? Footer { get; set; }
         [Parameter] public bool CloseOnOutsideClick { get; set; }
         [Parameter] public string HeaderCssClass { get; set; }

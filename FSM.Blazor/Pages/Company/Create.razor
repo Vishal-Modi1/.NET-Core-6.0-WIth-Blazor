@@ -19,27 +19,27 @@
 
         <div class="row">
             <div class="col-md-12 align-items-center d-flex">
-                <RadzenLabel Text="Name" />
+                <RadzenLabel Text="Company Name" />
             </div>
             <div class="col-md-12">
-                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@companyData.Name" Placeholder="Please enter name" />
+                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@companyData.Name" Placeholder="Company Name" />
                 <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12 align-items-center d-flex">
-                <RadzenLabel Text="Address" />
+                <RadzenLabel Text="Company Address" />
             </div>
             <div class="col-md-12">
-                <RadzenTextArea style="width: 100%;" Name="Address" @bind-Value="@companyData.Address" Placeholder="Please enter address" />
+                <RadzenTextArea style="width: 100%;" Name="Address" @bind-Value="@companyData.Address" Placeholder="Company Address" />
                 <RadzenRequiredValidator Component="Address" Text="Address is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12 align-items-center d-flex">
-                <RadzenLabel Text="Timezone" />
+                <RadzenLabel Text="Company Timezone" />
             </div>
             <div class="col-md-12">
                 <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -52,16 +52,16 @@
 
         <div class="row">
             <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="Contact No" />
+                <RadzenLabel Text="Company Contact No" />
             </div>
             <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="Website" />
+                <RadzenLabel Text="Company Website" />
             </div>
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="ContactNo" @bind-Value="@companyData.ContactNo" Placeholder="Please enter contact" />
+                <RadzenTextBox style="width: 100%;" Name="ContactNo" @bind-Value="@companyData.ContactNo" Placeholder="Contact No" />
             </div>
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@companyData.Website" Placeholder="Please enter website" />
+                <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@companyData.Website" Placeholder="Website" />
                 @* <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />*@
             </div>
         </div>
@@ -74,7 +74,7 @@
                 <RadzenLabel Text="Primary Service" />
             </div>
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="PrimaryAirport" @bind-Value="@companyData.PrimaryAirport" Placeholder="Please enter primary airport" />
+                <RadzenTextBox style="width: 100%;" Name="PrimaryAirport" @bind-Value="@companyData.PrimaryAirport" Placeholder="Primary Airport" />
             </div>
             <div class="col-md-6">
                 <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
@@ -98,12 +98,12 @@
                         <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success" Text="Update" IsBusy=@isBusy Style="width: 120px" />
                     }
                     
-                    <RadzenButton Click="@((args) => CloseDilaog(true))"
+                    <RadzenButton Click="@((args) => CloseDialog(true))"
                               ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
                 }
                 else
                 {
-                    <RadzenButton ButtonType="ButtonType.Button" Click="@GotoNextStep" ButtonStyle="ButtonStyle.Success"  Text="Next" Style="width: 120px" />
+                    <RadzenButton ButtonType="ButtonType.Button" Click="@GotoNextStep" ButtonStyle="ButtonStyle.Primary"  Text="Next" Style="width: 120px" />
                     <RadzenButton Click="@RedirectToLogin" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
                 }
             </div>
