@@ -137,8 +137,7 @@ namespace FSM.Blazor.Pages.Company
             }
             else if (((int)response.Status) == 200)
             {
-                //DialogService.Close(true);
-                isDisplayPopup = false;
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Company Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -147,8 +146,6 @@ namespace FSM.Blazor.Pages.Company
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Company Details", response.Message);
                 NotificationService.Notify(message);
             }
-
-            await grid.Reload();
         }
 
         async Task OpenDeleteDialog(CompanyVM companyVM)

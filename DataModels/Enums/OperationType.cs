@@ -7,5 +7,7 @@
         Delete = 3,
         ActivateDeActivate = 4,
         ActivateDeActivateInBulk = 5,
+        DocumentViewer = 6,
+        DocumentShare = 7,
     }
 }

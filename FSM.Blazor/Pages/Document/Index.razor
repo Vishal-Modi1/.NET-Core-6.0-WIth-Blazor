@@ -232,98 +232,37 @@
                     </div>
                 </div>
             }
-        </Body>
-    </CustomPopupComponent>
-}
-
-@{
-
-    async void OpenDocumentPreviewPopupAsync(string link)
-    {
-        string extension = Path.GetExtension(link);
-
-        if (previewSupportedFormats.Contains(extension))
-        {
-            if (imageFormats.Contains(extension))
+            else if (operationType == OperationType.DocumentViewer)
             {
-                OpenDocumentViewer(link, true);
+                @if (isImageType)
+                {
+                    <img src="@documentPath" style="max-width:100%;max-height:100%;" />
+                }
+                else
+                {
+                    <iframe width="100%" height="520" src="@documentPath" frameborder="0" allowfullscreen></iframe>
+                }
+
+            }
+            else if (operationType == OperationType.DocumentShare)
+            {
+                <div>
+                    <p class="mb-4"> <RadzenLink Path="@documentDataVM.DocumentPath" Text="@documentDataVM.DocumentPath" /></p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <RadzenButton Text="Copy to clipboard" Click="() => CopyLinkToClipboard(documentDataVM.DocumentPath)" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 150px;" />
+
+                        </div>
+                    </div>
+                </div>
             }
             else
             {
-                OpenDocumentViewer(link, false);
+                <div>
+                    <p> No Preview available for selected document.</p>
+                </div>
             }
-        }
-        else
-        {
-            OpenNoPreViewPopup();
-        }
-
-    }
-
-    async void OpenDocumentViewer(string link, bool isImage)
-    {
-        var result = await DialogService.OpenAsync("Preview", ds =>
-    @<div>
-
-        <div class="row" style="text-align:center">
-            <div class="col">
-
-                @if (isImage)
-                    {
-                        <img src="@link" style="max-width:670px;max-height:700px;" />
-                    }
-                    else
-                    {
-                        <iframe width="100%" height="520" src="@link" frameborder="0" allowfullscreen></iframe>
-                    }
-
-                </div>
-            </div>
-        </div>
-    , new DialogOptions { Width = "50%", Height = "90%" });
-
-    }
-
-    async Task OpenNoPreViewPopup()
-    {
-        var result = await DialogService.OpenAsync("No Preview", ds =>
-    @<div>
-
-        <div class="row" style="text-align:right">
-            <div class="col">
-
-                <p> No Preview available for selected document.</p>
-            </div>
-        </div>
-    </div>
-    , new DialogOptions { Width = "20%", Height = "150px" });
-
-    }
-
-    async Task OpenShareDocumentDialog(Guid id)
-    {
-        DocumentDataVM documentDataVM = data.Where(p => p.Id == id).First();
-
-        DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
-        await DocumentService.UpdateTotalSharesAsync(dependecyParams, documentDataVM.Id);
-
-        documentDataVM.TotalShares += 1;
-
-        var result = await DialogService.OpenAsync("Share", ds =>
-    @<RadzenTemplateForm Data=@documentDataVM>
-        <div>
-            <p class="mb-4">  <RadzenLink Path="@documentDataVM.DocumentPath" Text="@documentDataVM.DocumentPath" /></p>
-
-            <div class="row" style="text-align:right">
-                <div class="col">
-                    <RadzenButton Text="Copy to clipboard" Click="() => CopyLinkToClipboard(documentDataVM.DocumentPath)" ButtonStyle="ButtonStyle.Primary" Class="mr-1" Style="width: 150px;" />
-
-                </div>
-            </div>
-        </div>
-    </RadzenTemplateForm>
-    , new DialogOptions { Width = "700px", Height = "200px" });
-
-    }
+        </Body>
+    </CustomPopupComponent>
 }

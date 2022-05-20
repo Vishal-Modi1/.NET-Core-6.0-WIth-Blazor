@@ -11,7 +11,7 @@ namespace FSM.Blazor.Pages.Account
     {
         bool isBusy;
         
-        string submitButtonText = "Submit";
+        string submitButtonText = "Email me a recovery link";
 
         ForgotPasswordVM ForgotPasswordVM { get; set; }
 

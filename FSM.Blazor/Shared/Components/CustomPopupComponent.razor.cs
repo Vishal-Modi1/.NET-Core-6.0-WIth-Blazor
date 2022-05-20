@@ -62,7 +62,6 @@ namespace FSM.Blazor.Shared.Components
             switch (operationType)
             {
                 case OperationType.Create: 
-                case OperationType.ActivateDeActivate: 
                     return "bg-primary-f text-white";
                 case OperationType.Edit:
                     return "bg-success-f text-white";

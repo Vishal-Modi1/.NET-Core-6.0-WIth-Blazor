@@ -88,7 +88,7 @@
                 {
                     <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
                                 Placeholder="Select Role" Data=@userData.UserRoles TextProperty="Name"
-                                ValueProperty="Id" Name="RoleId" @bind-Value="@(userData.RoleId)" />
+                                ValueProperty="Id" Name="RoleId" @bind-Value="@(userData.RoleId)" Disabled="@(!isAuthenticated)" />
                     <RadzenRequiredValidator DefaultValue="0" Component="RoleId" Text="Please select role" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
                 }
                 else

@@ -8,7 +8,7 @@ using Utilities;
 using FSM.Blazor.Utilities;
 using DataModels.Constants;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 {
@@ -32,10 +32,11 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         List<AircraftEquipmentDataVM> data;
         int count;
-        bool isLoading, isBusyAddNewButton;
+        bool isLoading, isBusyAddNewButton, isDisplayPopup;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
-
-        string timeZone = "";
+        string timeZone = "", popupTitle;
+        AircraftEquipmentsVM aircraftEquipmentsVM;
+        OperationType operationType;
 
         protected override async Task OnInitializedAsync()
         {
@@ -104,46 +105,90 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             await grid.Reload();
         }
 
+        private void SetEditButtonState(long id, bool isBusy)
+        {
+            var details = data.Where(p => p.Id == id).First();
+            details.IsLoadingEditButton = isBusy;
+        }
+
         async void AircraftEquipmentCreateDialog(long id, string title)
         {
-            SetAddNewButtonState(true);
+            if (id == 0)
+            {
+                SetAddNewButtonState(true);
+                operationType = OperationType.Create;
+            }
+            else
+            {
+                SetEditButtonState(id, true);
+                operationType = OperationType.Edit;
+            }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, id);
+            aircraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, id);
 
-            if (airCraftEquipmentsVM.LogEntryDate == null)
+            if (aircraftEquipmentsVM.LogEntryDate == null)
             {
-                airCraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+                aircraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
             }
             else
             {
-                airCraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(airCraftEquipmentsVM.LogEntryDate.Value, timeZone);
+                aircraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(aircraftEquipmentsVM.LogEntryDate.Value, timeZone);
             }
 
-            if (airCraftEquipmentsVM.ManufacturerDate == null)
+            if (aircraftEquipmentsVM.ManufacturerDate == null)
             {
-                airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+                aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
             }
             else
             {
-                airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(airCraftEquipmentsVM.ManufacturerDate.Value, timeZone);
+                aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(aircraftEquipmentsVM.ManufacturerDate.Value, timeZone);
             }
 
             SetAddNewButtonState(false);
 
-            airCraftEquipmentsVM.AirCraftId = AircraftId;
+            aircraftEquipmentsVM.AirCraftId = AircraftId;
 
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "airCraftEquipmentsVM", airCraftEquipmentsVM } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
+            isDisplayPopup = true;
+            popupTitle = title;
 
-            await grid.Reload();
+            if (id == 0)
+            {
+                SetAddNewButtonState(false);
+            }
+            else
+            {
+                SetEditButtonState(id, false);
+            }
         }
 
         private void SetAddNewButtonState(bool isBusy)
         {
             isBusyAddNewButton = isBusy;
             StateHasChanged();
+        }
+
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
+            if (!isCancelled)
+            {
+                await grid.Reload();
+            }
+        }
+
+        void OpenDeleteDialog(AircraftEquipmentDataVM aircraftEquipmentDataVM)
+        {
+            isDisplayPopup = true;
+            popupTitle = "Delete Equipment Item";
+            operationType = OperationType.Delete;
+
+            aircraftEquipmentsVM = new AircraftEquipmentsVM();
+            aircraftEquipmentsVM.Item = aircraftEquipmentDataVM.Item;
+            aircraftEquipmentsVM.Id = aircraftEquipmentDataVM.Id;
+
+
         }
     }
 }

@@ -65,7 +65,10 @@ namespace FSM.Blazor.Pages.Account
 
         void GoToBackStep()
         {
+            isLoading = true;
             currentStep--;
+
+            isLoading = false;
             base.StateHasChanged();
         }
 

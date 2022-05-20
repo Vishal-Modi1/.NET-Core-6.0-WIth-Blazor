@@ -5,15 +5,15 @@ using FSM.Blazor.Extensions;
 using Radzen;
 using Utilities;
 using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 {
     partial class Create
     {
-        [Parameter]
-        public AircraftEquipmentsVM AirCraftEquipmentsVM { get; set; }
+        [Parameter] public AircraftEquipmentsVM AircraftEquipmentsVM { get; set; }
+
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isBusySaveButton;
@@ -65,6 +65,11 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         {
             isBusySaveButton = isBusy;
             StateHasChanged();
+        }
+
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

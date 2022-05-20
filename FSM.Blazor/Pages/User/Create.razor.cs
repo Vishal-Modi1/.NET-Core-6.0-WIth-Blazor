@@ -3,11 +3,11 @@ using DataModels.VM.User;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
-using Microsoft.Extensions.Caching.Memory;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
 using Radzen.Blazor;
 using DataModels.Constants;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.User
 {
@@ -44,6 +44,11 @@ namespace FSM.Blazor.Pages.User
                 userData = new UserVM();
             }
 
+            if (!isAuthenticated)
+            {
+                userData.RoleId = userData.UserRoles.Where(p => p.Name == UserRole.Owner.ToString()).First().Id;
+            }
+            
             userData.IsSendEmailInvite = userData.IsSendTextMessage = true;
         }
 

@@ -10,126 +10,164 @@
     form .row {
         margin-bottom: 16px;
     }
-    .rz-card
-    {
-        padding:0px!important;
-        width:87%!important;
+
+    .rz-card {
+        padding: 0px !important;
+        width: 87% !important;
     }
-    .p-md-5
-    {
-        padding:2rem!important;
+
+    .p-md-5 {
+        padding: 2rem !important;
     }
-    .mb-4
-    {
-        margin-top:-1rem;
+
+    .mb-4 {
+        margin-top: -1rem;
     }
-        .login-wrap{width:100%}
-        .login-wrap{position:relative;background:#fff h3;background-font-weight:3000}
-        .form-group{position:relative}
-        .form-group .label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#000;font-weight:700}
-        .form-control{height:36px;background:#fff;color:#000;font-size:16px;border-radius:5px;-webkit-box-shadow:none;box-shadow:none;border:1px solid rgba(0,0,0,.1)}.form-control::-webkit-input-placeholder{color:rgba(0,0,0,.2)!important}
-.btn{cursor:pointer;-webkit-box-shadow:none!important;box-shadow:none!important;font-size:15px;padding:10px 20px}
-.btn.btn-primary{background:#1151F3!important;border:1px solid #1151F3!important;color:#fff!important}
+
+    .login-wrap {
+        width: 100%
+    }
+
+    .login-wrap {
+        position: relative;
+        background: #fff h3;
+        background-font-weight: 3000
+    }
+
+    .form-group {
+        position: relative
+    }
+
+        .form-group .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            font-weight: 700
+        }
+
+    .form-control {
+        height: 36px;
+        background: #fff;
+        color: #000;
+        font-size: 16px;
+        border-radius: 5px;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        border: 1px solid rgba(0,0,0,.1)
+    }
+
+        .form-control::-webkit-input-placeholder {
+            color: rgba(0,0,0,.2) !important
+        }
+
+    .btn {
+        cursor: pointer;
+        -webkit-box-shadow: none !important;
+        box-shadow: none !important;
+        font-size: 15px;
+        padding: 10px 20px
+    }
+
+        .btn.btn-primary {
+            background: #1151F3 !important;
+            border: 1px solid #1151F3 !important;
+            color: #fff !important
+        }
 
 </style>
 
 <PageTitle>Login | Fly Manager </PageTitle>
-@*<div class="row vh-100 d-flex justify-content-center align-items-center column1" >
-
-    <RadzenImage Path="https://c0.wallpaperflare.com/preview/306/697/86/aircraft-ww2-old-vintage.jpg"></RadzenImage>
-
-</div>*@
-
 
 <div class="row vh-100 d-flex justify-content-center align-items-center">
     <div class="col-lg-6 col-xl-4">
         <RadzenCard class="m-3">
 
-            @if(isSessionTimeout)
+            @if (isSessionTimeout)
             {
                 <div style="color: red;">Session Timeout!</div>
             }
 
-<RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
-<div class="login-wrap p-4 p-md-5">
-<div class="d-flex">
-<div class="w-100">
-<h3 class="mb-4">Login</h3>
-</div>
-</div>
-<div class="form-group mb-3">
-<RadzenLabel  Text="Email" />
+            <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+                <div class="login-wrap p-4 p-md-5">
+                    <div class="d-flex">
+                        <div class="w-100">
+                            <h3 class="mb-4">Login</h3>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <RadzenLabel Text="Email" />
 
-<RadzenTextBox Placeholder="Email" Name="Email" Class="form-control" @bind-Value=@loginVM.Email />
+                        <RadzenTextBox Placeholder="Email" Name="Email" Class="form-control" @bind-Value=@loginVM.Email />
                         <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
                         <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
-         
-</div>
-<div class="form-group mb-3">
-                            <RadzenLabel  Text="Password" />
+
+                    </div>
+                    <div class="form-group mb-3">
+                        <RadzenLabel Text="Password" />
 
                         <RadzenPassword Placeholder="Password" Name="Password" Class="form-control" @bind-Value=@loginVM.Password />
                         <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
 
-</div>
-<div class="form-group">
-<RadzenButton ButtonType="ButtonType.Submit" Style="height:40px;" class="form-control btn btn-primary rounded submit px-3" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
-
-</div>
-    <div class="d-md-flex">
-<div class="w-50 text-left"> 
-     <RadzenLink Path="/Registration" Text="Register" Style="color:#1151F3" />
-
-</div>
-
-<div class="w-50 text-md-right">
-               <RadzenLink Path="/forgetpassword" Text="Forget Password ?"  Style="color:#1151F3" />
-                
-</div>
-</div>
-</div>
-
-</RadzenTemplateForm>
-
-
-    
-@* <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
-
-                <div class="row">
-                    <div class="col-md-4 align-items-center d-flex">
-                        <RadzenLabel Text="Email" />
                     </div>
-                    <div class="col-md-8">
-                        <RadzenTextBox Placeholder="Email" Name="Email" Class="w-100" @bind-Value=@loginVM.Email />
-                        <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
-                        <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
+                    <div class="form-group">
+                        <RadzenButton ButtonType="ButtonType.Submit" Style="height:40px;" class="form-control btn btn-primary rounded submit px-3" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
+
+                    </div>
+                    <div class="d-md-flex">
+                        <div class="w-50 text-left">
+                            <RadzenLink Path="/Registration" Text="Register" Style="color:#1151F3" />
+
+                        </div>
+
+                        <div class="w-50 text-md-right">
+                            <RadzenLink Path="/forgetpassword" Text="Forget Password ?" Style="color:#1151F3" />
+
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 align-items-center d-flex">
-                        <RadzenLabel Text="Password" />
-                    </div>
-                    <div class="col-md-8">
-                        <RadzenPassword Placeholder="Password" Name="Password" Class="w-100" @bind-Value=@loginVM.Password />
-                        <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
-                    </div>
-                </div>
-
-                <div class="row">
-                       <div class="col-md-6 col-12 d-flex align-items-center ">
-                        <RadzenLink Path="/Registration" Text="Register" />
-                    </div>
-                    <div class="col-md-6 col-12 d-flex align-items-center ">
-                        <RadzenLink Path="/forgetpassword" Text="Forget Password ?" />
-                    </div>
-                    <div class="col-md-6 col-12 d-flex justify-content-end align-content-center  ">
-                        <RadzenButton ButtonType="ButtonType.Submit" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
-                    </div>
-
-                </div>
             </RadzenTemplateForm>
-*@
+
+
+
+            @* <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+
+                <div class="row">
+                <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Email" />
+                </div>
+                <div class="col-md-8">
+                <RadzenTextBox Placeholder="Email" Name="Email" Class="w-100" @bind-Value=@loginVM.Email />
+                <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
+                <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="col-md-4 align-items-center d-flex">
+                <RadzenLabel Text="Password" />
+                </div>
+                <div class="col-md-8">
+                <RadzenPassword Placeholder="Password" Name="Password" Class="w-100" @bind-Value=@loginVM.Password />
+                <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="col-md-6 col-12 d-flex align-items-center ">
+                <RadzenLink Path="/Registration" Text="Register" />
+                </div>
+                <div class="col-md-6 col-12 d-flex align-items-center ">
+                <RadzenLink Path="/forgetpassword" Text="Forget Password ?" />
+                </div>
+                <div class="col-md-6 col-12 d-flex justify-content-end align-content-center  ">
+                <RadzenButton ButtonType="ButtonType.Submit" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
+                </div>
+
+                </div>
+                </RadzenTemplateForm>
+            *@
         </RadzenCard>
     </div>
 </div>
