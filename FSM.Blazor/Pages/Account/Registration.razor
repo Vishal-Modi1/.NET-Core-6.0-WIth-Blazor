@@ -27,7 +27,7 @@
                 <Steps>
                     <RadzenStepsItem Text="Company Details" Disabled="true">
 
-                         <FSM.Blazor.Pages.Company.Create companyData="@companyData" GoToNext="@GoToNextStep" >
+                         <FSM.Blazor.Pages.Company.Create companyData="@companyData" GoToNext="@(() => GoToNextStepAsync())" >
 
                          </FSM.Blazor.Pages.Company.Create>
 

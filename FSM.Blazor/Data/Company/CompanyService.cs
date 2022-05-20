@@ -94,6 +94,22 @@ namespace FSM.Blazor.Data.Company
             return response;
         }
 
+        public async Task<CurrentResponse> IsCompanyExistAsync(DependecyParams dependecyParams, int id, string name)
+        {
+            dependecyParams.URL = $"company/iscompanyexist?id={id}&name={name}";
+            var response = await _httpCaller.PutAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UpdateCreatedByAsync(DependecyParams dependecyParams, int id, long createdBy)
+        {
+            dependecyParams.URL = $"company/updatecreatedby?id={id}&createdBy={createdBy}";
+            var response = await _httpCaller.PutAsync(dependecyParams);
+
+            return response;
+        }
+
         public async Task<CurrentResponse> UploadLogo(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
         {
             dependecyParams.URL = $"company/uploadlogo";

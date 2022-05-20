@@ -67,6 +67,12 @@ builder.Services.Configure<IpRateLimitOptions>(options =>
                 Endpoint = "POST:/api/user/create",
                 Period = "10s",
                 Limit = 2,
+            },
+             new RateLimitRule
+            {
+                Endpoint = "PUT:/api/user/updatecreatedby",
+                Period = "10s",
+                Limit = 2,
             }
         };
 });

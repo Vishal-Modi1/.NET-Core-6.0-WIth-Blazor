@@ -43,6 +43,8 @@ namespace FSM.Blazor.Pages.User
             {
                 userData = new UserVM();
             }
+
+            userData.IsSendEmailInvite = userData.IsSendTextMessage = true;
         }
 
         public async Task Submit(UserVM userDataVM)

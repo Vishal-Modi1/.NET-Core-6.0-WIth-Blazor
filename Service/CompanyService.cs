@@ -229,6 +229,62 @@ namespace Service
             return true;
         }
 
+        public CurrentResponse IsCompanyExist(int id, string name)
+        {
+            try
+            {
+                CompanyVM companyVM = new CompanyVM() { Id = id, Name = name };
+
+                bool isCompanyExist = IsCompanyExist(companyVM);
+
+                if (isCompanyExist)
+                {
+                    CreateResponse(isCompanyExist, HttpStatusCode.OK, "Company name is already exist.");
+                }
+                else
+                {
+                    CreateResponse(isCompanyExist, HttpStatusCode.OK, "");
+                }
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateCreatedBy(int id, long createdBy)
+        {
+            try
+            {
+                Company company = _companyRepository.FindByCondition(p =>  p.Id == id);
+
+                if (company == null)
+                {
+                    CreateResponse(company, HttpStatusCode.NotFound, "Company not found.");
+                    return _currentResponse;
+                }
+
+                company.CreatedBy = createdBy;
+                company = _companyRepository.Edit(company);
+
+                CreateResponse(company, HttpStatusCode.OK, "Company details updated successfully."); 
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         #region Object Mapper
 
         private CompanyVM ToBusinessObject(Company company)
@@ -276,7 +332,7 @@ namespace Service
 
             return company;
         }
-
+       
         #endregion
     }
 }

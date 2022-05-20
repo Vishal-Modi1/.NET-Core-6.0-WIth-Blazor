@@ -14,5 +14,7 @@ namespace Service.Interface
         CurrentResponse Delete(int id, long deletedBy);
         CurrentResponse ListCompanyServiceDropDownValues();
         CurrentResponse UpdateImageName(int id, string logoName);
+        CurrentResponse UpdateCreatedBy(int id, long createdBy);
+        CurrentResponse IsCompanyExist(int id, string name);
     }
 }

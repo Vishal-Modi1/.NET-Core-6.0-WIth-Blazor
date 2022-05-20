@@ -145,5 +145,25 @@ namespace FSMAPI.Controllers
 
             return Ok(response);
         }
+
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("updatecreatedby")]
+        public IActionResult UpdateCreatedBy(int id, long createdBy)
+        {
+            CurrentResponse response = _companyService.UpdateCreatedBy(id, createdBy);
+            
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("iscompanyexist")]
+        public IActionResult IsCompanyExist(int id, string name)
+        {
+            CurrentResponse response = _companyService.IsCompanyExist(id, name);
+
+            return Ok(response);
+        }
     }
 }

@@ -17,6 +17,11 @@
 
     <div class="popup-content">
 
+        @if (!isAuthenticated)
+        {
+            <hr style="margin-bottom:35px" />
+        }
+
         <input type="hidden" value="@userData.Id" name="Id" />
 
         <div class="row">
@@ -29,8 +34,8 @@
             </div>
 
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="FirtsName" @bind-Value="@userData.FirstName" Placeholder="First Name" />
-                <RadzenRequiredValidator Component="FirtsName" Text="Firt name is required" Popup="@isPopup" Style="position: relative" />
+                <RadzenTextBox style="width: 100%;" Name="FirstsName" @bind-Value="@userData.FirstName" Placeholder="First Name" />
+                <RadzenRequiredValidator Component="FirstsName" Text="First name is required" Popup="@isPopup" Style="position: relative" />
             </div>
 
             <div class="col-md-6">
@@ -54,8 +59,8 @@
             </div>
 
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" ShowUpDown="false" TValue="int?" Name="Phone" @bind-Value="@userData.Phone" Placeholder="Phone No" />
-                <RadzenRegexValidator Component="Phone" Text="Please enter 10 digits no" Pattern="\d{10}" Popup=@isPopup Style="position: relative" />
+                <RadzenMask Mask="(***) ***-****" Style="width: 100%;" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="Phone" @bind-Value=@userData.Phone />
+                <RadzenRegexValidator Component="Phone" Text="Please enter 10 digits no" Pattern="^\(\d{3}\)\s\d{3}-\d{4}" Popup=@isPopup Style="position: relative" />
             </div>
         </div>
 
@@ -116,35 +121,38 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="Is Instructor" />
-            </div>
+        @if (isAuthenticated)
+        {
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <RadzenLabel Text="Is Instructor" />
+                </div>
 
-            <div class="col-md-6 align-items-center d-flex">
-                @if (isInstructorTypeDropdownVisible)
-                {
-                    <RadzenLabel Text="Instructor Type" />
-                }
-            </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    @if (isInstructorTypeDropdownVisible)
+                    {
+                        <RadzenLabel Text="Instructor Type" />
+                    }
+                </div>
 
-            <div class="col-md-6">
-                <RadzenSwitch @bind-Value=@userData.IsInstructor Change=@((args) => OnIsInstructorValueChange(args)) />
-            </div>
+                <div class="col-md-6">
+                    <RadzenSwitch @bind-Value=@userData.IsInstructor Change=@((args) => OnIsInstructorValueChange(args)) />
+                </div>
 
-            <div class="col-md-6">
+                <div class="col-md-6">
 
-                @if (isInstructorTypeDropdownVisible)
-                {
-                    <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
+                    @if (isInstructorTypeDropdownVisible)
+                    {
+                        <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowFiltering="true" Class="w-100"
                                 Placeholder="Select Instructor Type" Data=@userData.InstructorTypes TextProperty="Name"
                                 ValueProperty="Id" Name="InstructorTypeId" @bind-Value="@(userData.InstructorTypeId)" />
-                    <RadzenRequiredValidator DefaultValue="null" Component="InstructorTypeId" Text="Please select instructor type"
+                        <RadzenRequiredValidator DefaultValue="null" Component="InstructorTypeId" Text="Please select instructor type"
                                          Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
-                }
+                    }
 
+                </div>
             </div>
-        </div>
+        }
 
         <div class="row">
             <div class="col-md-6 align-items-center d-flex">
@@ -156,7 +164,7 @@
             </div>
 
             <div class="col-md-6">
-                <RadzenDatePicker @bind-Value=@userData.DateofBirth DateFormat="d" Class="w-100" />
+                <RadzenDatePicker @bind-Value=@userData.DateofBirth Placeholder="Birth Date" DateFormat="d" Class="w-100" />
             </div>
 
             <div class="col-md-6">
@@ -172,48 +180,62 @@
 
         <div class="row">
 
-            <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="External Id" />
+            @if (isAuthenticated)
+            {
+                <div class="col-md-6 align-items-center d-flex mb-3">
+                    <div class="row">
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenLabel Text="External Id" />
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
+                            <RadzenTextBox style="width: 100%;" Name="ExternalId" @bind-Value="@userData.ExternalId" Placeholder="External Id" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="col-md-6 align-items-center d-flex mb-3">
+                <div class="row">
+                    <div class="col-md-12 align-items-center d-flex">
+                        <RadzenLabel Text="Gender" />
+                    </div>
+                    <div class="col-md-12 align-items-center d-flex">
+                        <RadzenRadioButtonList Style="outline:none" @bind-Value=@userData.GenderId TValue="int" Change=@((args) => OnGenderValueChange(args))>
+                            <Items>
+                                <RadzenRadioButtonListItem Text="Male" Value="0" />
+                                <RadzenRadioButtonListItem Text="Female" Value="1" />
+                            </Items>
+                        </RadzenRadioButtonList>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="Gender" />
-            </div>
-
-            <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="ExternalId" @bind-Value="@userData.ExternalId" Placeholder="External Id" />
-            </div>
-            <div class="col-md-6">
-
-                <RadzenRadioButtonList Style="outline:none" @bind-Value=@userData.GenderId TValue="int" Change=@((args) => OnGenderValueChange(args))>
-                    <Items>
-                        <RadzenRadioButtonListItem Text="Male" Value="0" />
-                        <RadzenRadioButtonListItem Text="Female" Value="1" />
-                    </Items>
-                </RadzenRadioButtonList>
-
-            </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="Send Email Invite" />
-            </div>
-            <div class="col-md-6 align-items-center d-flex">
-                <RadzenLabel Text="Send Text Message" />
-            </div>
+        @if (isAuthenticated)
+        {
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <RadzenLabel Text="Send Email Invite" />
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <RadzenLabel Text="Send Text Message" />
+                </div>
 
-            <div class="col-md-6">
-                <RadzenSwitch @bind-Value=@userData.IsSendEmailInvite />
-            </div>
+                <div class="col-md-6">
+                    <RadzenSwitch @bind-Value=@userData.IsSendEmailInvite />
+                </div>
 
-            <div class="col-md-6">
-                <RadzenSwitch @bind-Value=@userData.IsSendTextMessage />
+                <div class="col-md-6">
+                    <RadzenSwitch @bind-Value=@userData.IsSendTextMessage />
+                </div>
             </div>
-        </div>
+        }
 
         <hr />
-        <div class="row" style="margin-top:4%">
+
+        <div class="row" style="margin-bottom:0px">
+
             <div class="col-md-12 text-right">
 
                 @if (isAuthenticated)
@@ -233,7 +255,7 @@
                 {
                     <RadzenButton ButtonType="ButtonType.Button" Text="Previous" Click=@GoBack Style="width: 120px;margin-right:2px;" />
                     <RadzenButton ButtonType="ButtonType.Button" Text="Save" Click=@GotoSave Style="width: 120px;margin-right:3px;" IsBusy="@isBusy" BusyText="Saving ..." />
-                    <RadzenButton Click="@RedirectToLogin" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                    <RadzenButton Click="@RedirectToLogin" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
                 }
 
             </div>
