@@ -31,9 +31,9 @@ namespace DataModels.VM.AircraftEquipment
 
         public string SerialNumber { get; set; }
 
-        public Nullable<DateTime> ManufacturerDate { get; set; }
+        public DateTime? ManufacturerDate { get; set; }
 
-        public Nullable<DateTime> LogEntryDate { get; set; } 
+        public DateTime? LogEntryDate { get; set; } 
 
         public Nullable<int> AircraftTTInstall { get; set; }
 

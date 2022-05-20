@@ -35,15 +35,35 @@
   border: 1px solid #FF0000;
 }
 
+.rz-spinner.valid {
+  background-color: #F5F5F5;
+}
+.rz-spinner.invalid {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
+}
+
+.invalid {
+  outline: hidden;
+}
+.invalid .rz-calendar .rz-inputtext {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
+}
+
+.valid .rz-calendar .rz-inputtext {
+  background-color: #F5F5F5;
+}
+
 /*.invalid {
-    .rz-calendar,.rz-inputtext {
+    .rz-calendar, .rz-inputtext {
         background-color: #FFD1D178;
         border: 1px solid #FF0000;
     }
 }
 
 .valid {
-    .rz-calendar {
+    .rz-calendar,.rz-inputtext{
         background-color: #F5F5F5;
     }
 }*/

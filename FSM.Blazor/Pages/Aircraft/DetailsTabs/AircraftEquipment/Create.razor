@@ -114,11 +114,13 @@
                 <RadzenLabel Text="Log Entry Date" />
             </div>
             <div class="col-md-6">
-                <RadzenDatePicker Name="ManufacturerDate" @bind-Value=@AircraftEquipmentsVM.ManufacturerDate Placeholder="Date" DateFormat="d" class="w-100" />
+                <RadzenDatePicker Name="ManufacturerDate" @bind-Value=@AircraftEquipmentsVM.ManufacturerDate Placeholder="Please select date" DateFormat="d" class="w-100" />
+                <RadzenRequiredValidator Component="ManufacturerDate" Text="Please select manufacturer date" Style="position: relative"></RadzenRequiredValidator>
             </div>
             <div class="col-md-6">
-                <RadzenDatePicker Name="LogEntryDate" @bind-Value=@AircraftEquipmentsVM.LogEntryDate Placeholder="Date"
+                <RadzenDatePicker Name="LogEntryDate" @bind-Value=@AircraftEquipmentsVM.LogEntryDate Placeholder="Please select date"
                                   DateFormat="d" class="w-100" />
+                <RadzenRequiredValidator Component="LogEntryDate" Text="Please select log entry date" Style="position: relative"></RadzenRequiredValidator>
             </div>
         </div>
 
