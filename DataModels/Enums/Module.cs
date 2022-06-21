@@ -4,7 +4,6 @@
     {
         Company = 1,
         User = 2,
-        InstructorType = 3,
         Aircraft = 4,
         UserRolePermission = 5,
         Scheduler = 6,
@@ -12,7 +11,9 @@
         Document = 8,
         SubscriptionPlan = 9,
         BillingHistory = 10,
-        // Pending to set correct value
-        Location = 20
+
+        // Super Admin Modules Oly
+        InstructorType = 51,
+        Location = 52
     }
 }

@@ -1533,6 +1533,7 @@ AS BEGIN
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = U.ID)  
    
 END
+GO
 
 CREATE PROCEDURE [dbo].[GetUserRolePermissionList]    
 (         

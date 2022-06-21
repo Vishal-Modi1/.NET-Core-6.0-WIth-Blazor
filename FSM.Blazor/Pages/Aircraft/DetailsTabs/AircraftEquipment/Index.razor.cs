@@ -92,7 +92,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Equipment Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -101,8 +101,6 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Equipment Details", response.Message);
                 NotificationService.Notify(message);
             }
-
-            await grid.Reload();
         }
 
         private void SetEditButtonState(long id, bool isBusy)
@@ -187,8 +185,6 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             aircraftEquipmentsVM = new AircraftEquipmentsVM();
             aircraftEquipmentsVM.Item = aircraftEquipmentDataVM.Item;
             aircraftEquipmentsVM.Id = aircraftEquipmentDataVM.Id;
-
-
         }
     }
 }

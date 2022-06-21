@@ -46,11 +46,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    DialogService.Close(true);
-                }
-
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }

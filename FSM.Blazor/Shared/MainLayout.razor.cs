@@ -3,7 +3,6 @@ using FSM.Blazor.Pages.MyAccount;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Radzen;
 using System.Security.Claims;
 
@@ -11,15 +10,10 @@ namespace FSM.Blazor.Shared
 {
     public partial class MainLayout
     {
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        bool sidebarExpanded = true;
-        bool bodyExpanded = false;
-        string userFullName = "";
-        string loggedUserId;
+        bool sidebarExpanded = true, bodyExpanded = false;
+        string userFullName = "", loggedUserId;
 
         dynamic themes = new[]
         {
@@ -41,8 +35,6 @@ namespace FSM.Blazor.Shared
         protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();
-
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             var user = (await AuthStat).User;
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

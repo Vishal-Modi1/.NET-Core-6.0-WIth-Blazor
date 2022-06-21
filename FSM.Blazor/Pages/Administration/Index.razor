@@ -30,8 +30,6 @@
             {
                 string name = tab.Name;
 
-
-
                 @if (name == Module.Company.ToString())
                 {
                     <RadzenTabsItem Text=@tab.DisplayName Icon="account_balance">
@@ -44,12 +42,12 @@
                         <FSM.Blazor.Pages.User.Index ParentModuleName="Administration"></FSM.Blazor.Pages.User.Index>
                     </RadzenTabsItem>
                 }
-                else if (name == Module.InstructorType.ToString())
+                @*else if (name == Module.InstructorType.ToString())
                 {
                     <RadzenTabsItem Text=@tab.DisplayName Icon="account_box">
                         <FSM.Blazor.Pages.InstructorType.Index></FSM.Blazor.Pages.InstructorType.Index>
                     </RadzenTabsItem>
-                }
+                }*@
                 else if (name == Module.UserRolePermission.ToString())
                 {
                     <RadzenTabsItem Text=@tab.DisplayName Icon="lock_open">
@@ -57,6 +55,12 @@
                     </RadzenTabsItem>
                 }
             }
+
+           <RadzenTabsItem Text="Instructor Types" Icon="assignment_ind">
+
+                <FSM.Blazor.Pages.Location.Index></FSM.Blazor.Pages.Location.Index>
+
+            </RadzenTabsItem>
 
             <RadzenTabsItem Text="Location" Icon="location_on">
 

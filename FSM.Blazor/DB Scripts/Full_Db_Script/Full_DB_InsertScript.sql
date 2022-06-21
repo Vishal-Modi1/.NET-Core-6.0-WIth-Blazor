@@ -625,20 +625,25 @@ GO
 SET IDENTITY_INSERT [dbo].[UserRoles] OFF
 GO
 
-SET IDENTITY_INSERT [dbo].ModuleDetails ON
+SET IDENTITY_INSERT [dbo].[ModuleDetails] ON 
 GO
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (1,'Company','Company','Index','Companies','account_balance',1,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (2,'User','User','Index','Users','accessibility',2,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (3,'InstructorType','InstructorType','Index','Instructor Types','assignment_ind',3,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (4,'Aircraft','Aircraft','Index','Aircrafts','flight_takeoff',4,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (5,'UserRolePermission','UserRolePermission','Index','User Role Permissions','lock_open',5,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) VALUES (6,'Scheduler','Scheduler','Index','Schedules','event_note',6,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (7,'Reservation', 'Reservation', 'Index', 'Reservations', 'book_online',7,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (8,'Document', 'Document', 'Index', 'Documents', 'description',8,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (9,'SubscriptionPlan', 'SubscriptionPlan', 'Index', 'Subscription Plans', 'account_balance_wallet',9,1)
-INSERT INTO ModuleDetails(Id,Name,ControllerName,ActionName,DisplayName,Icon,OrderNo,IsActive) Values (10,'BillingHistory', 'BillingHistory', 'Index', 'Billing Histories', 'receipt',10,1)
-Go
-SET IDENTITY_INSERT [dbo].ModuleDetails OFF
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (1, N'Company', N'Company', N'Index', N'Companies', N'account_balance', 1, 1, 1)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (2, N'User', N'User', N'Index', N'Users', N'accessibility', 2, 1, 1)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (4, N'Aircraft', N'Aircraft', N'Index', N'Aircrafts', N'flight_takeoff', 4, 1, 0)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (5, N'UserRolePermission', N'UserRolePermission', N'Index', N'User Role Permissions', N'lock_open', 5, 1, 1)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (6, N'Scheduler', N'Scheduler', N'Index', N'Schedules', N'event_note', 6, 1, 0)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (7, N'Reservation', N'Reservation', N'Index', N'Reservations', N'book_online', 7, 1, 0)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (8, N'Document', N'Document', N'Index', N'Documents', N'description', 8, 1, 0)
+GO
+INSERT [dbo].[ModuleDetails] ([Id], [Name], [ControllerName], [ActionName], [DisplayName], [Icon], [OrderNo], [IsActive], [IsAdministrationModule]) VALUES (10, N'BillingHistory', N'BillingHistory', N'Index', N'Billing Histories', N'receipt', 10, 1, 0)
+GO
+SET IDENTITY_INSERT [dbo].[ModuleDetails] OFF
 GO
 
 --INSERT INTO UserRolePermissions VALUES(1,1,1,null,1)

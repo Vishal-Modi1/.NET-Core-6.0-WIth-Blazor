@@ -42,7 +42,7 @@
             <Template Context="data">
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName) && isAllowToEdit)
                 {
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" Class="m-1" Click=@(() => AircraftEquipmentCreateDialog(data.Id, "Edit Equipment")) />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy="@data.IsLoadingEditButton" Icon="mode_edit" Class="m-1" Click=@(() => AircraftEquipmentCreateDialog(data.Id, "Edit Equipment")) />
                 }
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName) && isAllowToEdit)
