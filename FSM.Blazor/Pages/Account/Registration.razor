@@ -16,36 +16,37 @@
     </SfSpinner>
 </div>
 
+<div class="col-lg-6 @(currentStep == 0 ? "col-xl-9" : "col-xl-10")">
 
-<div class="row vh-100 d-flex justify-content-center align-items-center">
+    <div class="m-3">
 
-    <div class="col-lg-6 @(currentStep == 0 ? "col-xl-5" : "col-xl-6")">
+        <div class="d-flex">
+            <div class="w-100">
+                <h3 class="mb-4">Sign up to Fly Manager </h3>
+            </div>
+        </div>
 
-        <RadzenCard class="m-3">
+        <RadzenSteps ShowStepsButtons="false" SelectedIndex="@currentStep">
+            <Steps>
+                <RadzenStepsItem Text="Company Details" Disabled="true">
 
-            <RadzenSteps ShowStepsButtons="false" SelectedIndex="@currentStep" >
-                <Steps>
-                    <RadzenStepsItem Text="Company Details" Disabled="true">
+                    <FSM.Blazor.Pages.Company.Create companyData="@companyData" GoToNext="@(() => GoToNextStepAsync())">
 
-                         <FSM.Blazor.Pages.Company.Create companyData="@companyData" GoToNext="@(() => GoToNextStepAsync())" >
+                    </FSM.Blazor.Pages.Company.Create>
 
-                         </FSM.Blazor.Pages.Company.Create>
+                </RadzenStepsItem>
 
-                    </RadzenStepsItem>
+                <RadzenStepsItem Text="Personal Details" Disabled="true">
 
-                     <RadzenStepsItem Text="Personal Details" Disabled="true">
+                    <FSM.Blazor.Pages.User.Create userData="@userVM" GoBackStep=@GoToBackStep SaveBothStepsValue=@SaveAsync>
 
-                          <FSM.Blazor.Pages.User.Create userData="@userVM" GoBackStep=@GoToBackStep SaveBothStepsValue=@SaveAsync>
+                    </FSM.Blazor.Pages.User.Create>
 
-                         </FSM.Blazor.Pages.User.Create>
+                </RadzenStepsItem>
 
-                    </RadzenStepsItem>
-
-                </Steps>
-            </RadzenSteps>
+            </Steps>
+        </RadzenSteps>
 
 
-        </RadzenCard>
     </div>
 </div>
-

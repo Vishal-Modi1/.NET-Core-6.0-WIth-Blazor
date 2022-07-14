@@ -398,7 +398,9 @@
                       OnClose="@(()=> {isDisplayMakePopup = false;})">
         <Body>
 
-            <FSM.Blazor.Pages.Aircraft.AircraftMake.Create CloseDialogCallBack="@CloseMakeDialogAsync"></FSM.Blazor.Pages.Aircraft.AircraftMake.Create>
+            <FSM.Blazor.Pages.AircraftMake.Create CloseDialogCallBack="@CloseMakeDialogAsync">
+
+            </FSM.Blazor.Pages.AircraftMake.Create>
 
         </Body>
     </CustomPopupComponent>
@@ -412,7 +414,9 @@
                       OnClose="@(()=> {isDisplayModelPopup = false;})">
         <Body>
 
-            <FSM.Blazor.Pages.Aircraft.AircraftMake.Create CloseDialogCallBack="@CloseModelDialogAsync"></FSM.Blazor.Pages.Aircraft.AircraftMake.Create>
+            <FSM.Blazor.Pages.AircraftModel.Create CloseDialogCallBack="@CloseModelDialogAsync">
+
+            </FSM.Blazor.Pages.AircraftModel.Create>
 
         </Body>
     </CustomPopupComponent>

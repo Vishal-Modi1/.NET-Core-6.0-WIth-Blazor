@@ -58,8 +58,16 @@ namespace Service
         {
             try
             {
-                _aircraftScheduleDetailRepository.UnCheckOut(id);
-                CreateResponse(true, HttpStatusCode.OK, "Aircraft uncheck out successfully");
+                var response = _aircraftScheduleDetailRepository.UnCheckOut(id);
+
+                if (response == null)
+                {
+                    CreateResponse(true, HttpStatusCode.NotFound, "No reservation found for this id.");
+                }
+                else
+                {
+                    CreateResponse(true, HttpStatusCode.OK, "Aircraft uncheck out successfully");
+                }
 
                 return _currentResponse;
             }

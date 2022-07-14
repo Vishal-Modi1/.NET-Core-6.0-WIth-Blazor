@@ -17,17 +17,15 @@ namespace FSMAPI.Controllers
     {
         private readonly IAircraftService _airCraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
-        private readonly IAircraftMakeService _aircraftMakeService;
         private readonly IAircraftModelService _aircraftModelService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public AircraftController(IAircraftService airCraftService, IAircraftMakeService aircraftMakeService,
+        public AircraftController(IAircraftService airCraftService, 
             IAircraftModelService aircraftModelService, IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _airCraftService = airCraftService;
-            _aircraftMakeService = aircraftMakeService;
             _aircraftModelService = aircraftModelService;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
@@ -167,49 +165,27 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        #region Aircraft Make
+        //#region Aircraft Model
 
-        [HttpPost]
-        [Route("createmake")]
-        public IActionResult CreateMake(AircraftMake aircraftMake)
-        {
-            CurrentResponse response = _aircraftMakeService.Create(aircraftMake);
+        //[HttpPost]
+        //[Route("createmodel")]
+        //public IActionResult CreateModel(AircraftModel aircraftModel)
+        //{
+        //    CurrentResponse response = _aircraftModelService.Create(aircraftModel);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
-        [HttpGet]
-        [Route("makelist")]
-        public IActionResult MakeList()
-        {
-            CurrentResponse response = _aircraftMakeService.List();
+        //[HttpGet]
+        //[Route("modellist")]
+        //public IActionResult ModelList()
+        //{
+        //    CurrentResponse response = _aircraftModelService.List();
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
-        #endregion
-
-        #region Aircraft Model
-
-        [HttpPost]
-        [Route("createmodel")]
-        public IActionResult CreateModel(AircraftModel aircraftModel)
-        {
-            CurrentResponse response = _aircraftModelService.Create(aircraftModel);
-
-            return Ok(response);
-        }
-
-        [HttpGet]
-        [Route("modellist")]
-        public IActionResult ModelList()
-        {
-            CurrentResponse response = _aircraftModelService.List();
-
-            return Ok(response);
-        }
-
-        #endregion
+        //#endregion
 
         #region Aircraft Equipment
         [HttpPost]

@@ -2,5 +2,9 @@
   {
     "outputFile": "wwwroot/css/BlazorSite.css",
     "inputFile": "Shared/Styles/BlazorSite.scss"
+  },
+  {
+    "outputFile": "wwwroot/css/EmptyLayout.css",
+    "inputFile": "Shared/Styles/EmptyLayout.scss"
   }
 ]

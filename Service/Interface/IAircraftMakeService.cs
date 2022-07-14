@@ -8,5 +8,11 @@ namespace Service.Interface
         CurrentResponse Create(AircraftMake aircraftMake);
 
         CurrentResponse List();
+
+        CurrentResponse List(DatatableParams datatableParams);
+
+        CurrentResponse Delete(int id);
+
+        CurrentResponse Edit(AircraftMake aircraftMake);
     }
 }

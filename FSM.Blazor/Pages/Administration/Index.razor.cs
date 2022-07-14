@@ -26,5 +26,11 @@ namespace FSM.Blazor.Pages.Administration
 
             isDisplayLoader = false;
         }
+
+        void Change(int value)
+        {
+            
+            StateHasChanged();
+        }
     }
 }

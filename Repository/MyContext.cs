@@ -1,6 +1,8 @@
 ﻿using DataModels.Entities;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
+using DataModels.VM.AircraftMake;
+using DataModels.VM.AircraftModel;
 using DataModels.VM.BillingHistory;
 using DataModels.VM.Company;
 using DataModels.VM.Document;
@@ -125,6 +127,10 @@ namespace Repository
         public DbSet<Timezone> Timezones { get; set; }
     
         public DbSet<LocationDataVM> LocationsList { get; set; }
+
+        public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }
+
+        public DbSet<AircraftModelDataVM> AircraftModelsList { get; set; }
     }
 
 }

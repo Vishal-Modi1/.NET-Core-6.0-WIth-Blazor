@@ -5,14 +5,14 @@ using FSM.Blazor.Extensions;
 using Radzen;
 using FSM.Blazor.Utilities;
 
-namespace FSM.Blazor.Pages.Aircraft.AircraftMake
+namespace FSM.Blazor.Pages.AircraftModel
 {
     public partial class Create
     {
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
-        DE.AircraftMake aircraftMake = new DE.AircraftMake();
+        [Parameter] public DE.AircraftModel AircraftModel { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
@@ -21,7 +21,7 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftMake
         public async Task Submit()
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
-            CurrentResponse response = await AircraftMakeService.SaveandUpdateAsync(dependecyParams, aircraftMake);
+            CurrentResponse response = await AircraftModelService.SaveandUpdateAsync(dependecyParams, AircraftModel);
 
             NotificationMessage message;
 
@@ -33,12 +33,12 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftMake
             else if (((int)response.Status) == 200)
             {
                 CloseDialog(false);
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Make", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Model", response.Message);
                 NotificationService.Notify(message);
             }
             else
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Make", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Model", response.Message);
                 NotificationService.Notify(message);
             }
 

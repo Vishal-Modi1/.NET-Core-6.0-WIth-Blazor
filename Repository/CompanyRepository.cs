@@ -19,11 +19,11 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).
-                                                   Select(n => new CompanyVM 
+                                                   Select(n => new CompanyVM
                                                    { Id = n.Id, Name = n.Name }).ToList();
 
                 return companyDataList;
-            
+
             }
         }
 
@@ -32,12 +32,12 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> companyList = (from company in _myContext.Companies
-                                                     where company.IsDeleted == false
-                                                     select new DropDownValues()
-                                                     {
-                                                         Id = company.Id,
-                                                         Name = company.Name
-                                                     }).ToList();
+                                                    where company.IsDeleted == false
+                                                    select new DropDownValues()
+                                                    {
+                                                        Id = company.Id,
+                                                        Name = company.Name
+                                                    }).ToList();
 
                 return companyList;
             }
@@ -48,11 +48,11 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> companyServices = (from companyService in _myContext.CompanyServices
-                                                    select new DropDownValues()
-                                                    {
-                                                        Id = (int)companyService.Id,
-                                                        Name = companyService.Name
-                                                    }).ToList();
+                                                        select new DropDownValues()
+                                                        {
+                                                            Id = (int)companyService.Id,
+                                                            Name = companyService.Name
+                                                        }).ToList();
 
                 return companyServices;
             }
@@ -87,9 +87,8 @@ namespace Repository
 
                     existingCompany.UpdatedBy = company.UpdatedBy;
                     existingCompany.UpdatedOn = company.UpdatedOn;
+                    _myContext.SaveChanges();
                 }
-
-                _myContext.SaveChanges();
 
                 return company;
             }

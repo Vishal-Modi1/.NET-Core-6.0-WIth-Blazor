@@ -179,8 +179,6 @@ namespace FSM.Blazor.Pages.Reservation
             //    datatableParams.UserId = UserId;
             //}
 
-            
-
             await LoadDataAsync();
         }
 

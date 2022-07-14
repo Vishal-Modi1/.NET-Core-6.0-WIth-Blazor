@@ -1,4 +1,5 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.AircraftModel;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,15 @@ namespace Repository.Interface
 
         List<DropDownValues> ListDropDownValues();
 
+        List<AircraftModelDataVM> List(DatatableParams datatableParams);
 
         AircraftModel FindByCondition(Expression<Func<AircraftModel, bool>> predicate);
+
+        void Delete(int id);
+
+        AircraftModel Edit(AircraftModel aircraftModel);
+
+        bool IsAlreadyUsed(int id);
 
     }
 }

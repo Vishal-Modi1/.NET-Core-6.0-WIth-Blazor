@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using DataModels.VM.Common;
+using DataModels.VM.AircraftModel;
 
 namespace Service
 {
@@ -71,5 +72,74 @@ namespace Service
                 return _currentResponse;
             }
         }
+
+        public CurrentResponse List(DatatableParams datatableParams)
+        {
+            try
+            {
+                List<AircraftModelDataVM> aircraftModelList = _aircraftModelRepository.List(datatableParams);
+                CreateResponse(aircraftModelList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse Delete(int id)
+        {
+            try
+            {
+                bool isAlreadyUsed = _aircraftModelRepository.IsAlreadyUsed(id);
+
+                if (isAlreadyUsed)
+                {
+                    CreateResponse(true, HttpStatusCode.BadRequest, "Aircraft model can't be deleted because it is used in aircraft details!");
+                    return _currentResponse;
+                }
+
+                _aircraftModelRepository.Delete(id);
+                CreateResponse(true, HttpStatusCode.OK, "Aircraft model deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse Edit(AircraftModel aircraftModel)
+        {
+            try
+            {
+                bool isAircraftModelExist = IsAircraftModelExist(aircraftModel);
+
+                if (isAircraftModelExist)
+                {
+                    CreateResponse(aircraftModel, HttpStatusCode.Ambiguous, "Aircraft model is already exist");
+                }
+                else
+                {
+                    aircraftModel = _aircraftModelRepository.Edit(aircraftModel);
+                    CreateResponse(aircraftModel, HttpStatusCode.OK, "Aircraft model updated successfully");
+                }
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+            }
     }
 }

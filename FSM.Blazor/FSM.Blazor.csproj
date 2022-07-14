@@ -16,10 +16,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Shared\Styles\EmptyLayout.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="BlazorMaterialIcons" Version="0.0.1" />
     <PackageReference Include="BuildWebCompiler2022" Version="1.14.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />

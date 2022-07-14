@@ -23,7 +23,7 @@
         return;
     }
 
-    <RadzenTabs RenderMode="TabRenderMode.Client">
+    <RadzenTabs RenderMode="TabRenderMode.Client" Change="@(args => Change(args))">
         <Tabs>
 
             @foreach (var tab in menuItems)
@@ -67,6 +67,19 @@
                 <FSM.Blazor.Pages.Location.Index></FSM.Blazor.Pages.Location.Index>
 
             </RadzenTabsItem>
+
+              <RadzenTabsItem Text="Make" Icon="flight_takeoff">
+
+                <FSM.Blazor.Pages.AircraftMake.Index></FSM.Blazor.Pages.AircraftMake.Index>
+
+            </RadzenTabsItem>
+
+             <RadzenTabsItem Text="Model" Icon="flight_takeoff">
+
+                <FSM.Blazor.Pages.AircraftModel.Index></FSM.Blazor.Pages.AircraftModel.Index>
+
+            </RadzenTabsItem>
+
         </Tabs>
 
     </RadzenTabs>
