@@ -6,6 +6,10 @@ $BG-SUCCESS-COLOR: #009B51;
 $BG-WARNING-COLOR: #FFAE11;
 $BG-DANGER-COLOR: #F31155;
 
+body {
+    background: none !important;
+}
+
 .bg-primary-f {
     background-color: $BG-PRIMARY-COLOR;
 }
