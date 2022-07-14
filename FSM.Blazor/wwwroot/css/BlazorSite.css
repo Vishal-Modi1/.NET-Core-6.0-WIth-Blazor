@@ -1,4 +1,8 @@
-﻿.bg-primary-f {
+﻿body {
+  background: none !important;
+}
+
+.bg-primary-f {
   background-color: #1151F3;
 }
 
