@@ -4,8 +4,22 @@
 
 <RadzenNotification />
 
-<div class="main">    
-    <div class="content px-4">
-        @Body
+<link href="css/EmptyLayout.min.css" rel="stylesheet" />
+
+<div class="row" style="width:100%;">
+    <div class="column">
+
+        <RadzenImage Style="width:100%;height:100%" Path="../img/login-page-aircraft.jpeg"></RadzenImage>
+
+    </div>
+
+    <div class="column">
+        <div class="row vh-100 d-flex justify-content-center align-items-center">
+           @* <div style="width:10%;height:10%">
+                <RadzenImage  Path="../img/fly-manager-logo.jpeg"></RadzenImage>
+            </div>
+*@
+            @Body
+        </div>
     </div>
 </div>

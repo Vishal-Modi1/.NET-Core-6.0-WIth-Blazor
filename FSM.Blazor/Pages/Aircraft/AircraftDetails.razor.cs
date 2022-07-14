@@ -5,7 +5,6 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Radzen;
 using System.Net;
@@ -16,42 +15,39 @@ namespace FSM.Blazor.Pages.Aircraft
     {
         public string AircraftId { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
 
         [Parameter]
         public AircraftVM AircraftData { get; set; }
 
         public string CompanyName;
 
-        public bool isDataLoaded = false, isBusy = false;
+        public bool isDataLoaded = false, isBusy = false, isDisplayLoader;
         private CurrentUserPermissionManager _currentUserPermissionManager;
-        string moduleName = "Aircraft";
-        public bool isAllowToEdit;
+        string moduleName = "Aircraft", popupTitle;
+        public bool isAllowToEdit, isDisplayPopup;
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            isDisplayLoader = true;
+
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
 
-            if(link.Count() == 0 || link[0] == "")
+            if (link.Count() == 0 || link[0] == "")
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager","");
-            
-            AircraftData = await AircraftService.GetDetailsAsync(_httpClient, Convert.ToInt64(AircraftId));
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            AircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
 
             try
             {
@@ -60,7 +56,7 @@ namespace FSM.Blazor.Pages.Aircraft
                     var webClient = new WebClient();
                     byte[] imageBytes = webClient.DownloadData(AircraftData.ImagePath);
 
-                    AircraftData.ImagePath =   "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                    AircraftData.ImagePath = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                 }
             }
             catch (Exception e)
@@ -80,24 +76,28 @@ namespace FSM.Blazor.Pages.Aircraft
                 isAllowToEdit = true;
             }
 
+            isDisplayLoader = false;
+
             SetCompanyName();
         }
 
         async Task AircraftEditDialog(int id, string title)
         {
             isBusy = true;
-            StateHasChanged();
 
-            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(_httpClient, id);
-
-            isBusy = false;
-            StateHasChanged();
-
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "aircraftData", AircraftData } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
             SetCompanyName();
+
+            isBusy = false;
+            isDisplayPopup = true;
+            popupTitle = title;
+        }
+
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
         }
 
         private void SetCompanyName()

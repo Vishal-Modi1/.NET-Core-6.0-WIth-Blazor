@@ -12,5 +12,9 @@ namespace Service.Interface
         CurrentResponse Edit(CompanyVM companyVM);
         CurrentResponse GetDetails(int id);
         CurrentResponse Delete(int id, long deletedBy);
+        CurrentResponse ListCompanyServiceDropDownValues();
+        CurrentResponse UpdateImageName(int id, string logoName);
+        CurrentResponse UpdateCreatedBy(int id, long createdBy);
+        CurrentResponse IsCompanyExist(int id, string name);
     }
 }

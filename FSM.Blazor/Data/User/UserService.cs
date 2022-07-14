@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
+using Microsoft.JSInterop;
 using DataModels.VM.UserPreference;
 
 namespace FSM.Blazor.Data.User
@@ -12,16 +13,17 @@ namespace FSM.Blazor.Data.User
     {
         private readonly HttpCaller _httpCaller;
 
-        public UserService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public UserService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<UserDataVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<UserDataVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "user/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "user/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -33,40 +35,44 @@ namespace FSM.Blazor.Data.User
             return userDataList; 
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, UserVM userVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, UserVM userVM)
         {
-            string jsonData = JsonConvert.SerializeObject(userVM);
-            
-            string url = "user/create";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(userVM);
+
+            dependecyParams.URL = "user/create";
 
             if (userVM.Id > 0)
             {
-                url = "user/edit";
+                dependecyParams.URL  = "user/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, long id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, long id)
         {
-            string url = $"user/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"user/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UpdateIsUserActive(IHttpClientFactory httpClient, long id, bool isActive)
+        public async Task<CurrentResponse> UpdateIsUserActive(DependecyParams dependecyParams, long id, bool isActive)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/updatestatus?id={id}&isActive={isActive}");
+            dependecyParams.URL = $"user/updatestatus?id={id}&isActive={isActive}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<UserVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
+        public async Task<UserVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"user/getDetails?id={id}");
+            dependecyParams.URL = $"user/getDetails?id={id}";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             UserVM userVM = new UserVM();
 
@@ -78,9 +84,26 @@ namespace FSM.Blazor.Data.User
             return userVM;
         }
 
-        public async Task<UserFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)
+        public async Task<UserVM> GetMasterDetailsAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"user/getfilters");
+            dependecyParams.URL = $"user/getMasterDetails";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            UserVM userVM = new UserVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
+            }
+
+            return userVM;
+        }
+
+        public async Task<UserFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"user/getfilters";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             UserFilterVM userFilterVM = new UserFilterVM();
 
@@ -92,25 +115,30 @@ namespace FSM.Blazor.Data.User
             return userFilterVM;
         }
 
-        public async Task<CurrentResponse> IsEmailExistAsync(IHttpClientFactory httpClient, string email)
+        public async Task<CurrentResponse> IsEmailExistAsync(DependecyParams dependecyParams, string email)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/isemailexist?email={email}");
+            dependecyParams.URL = $"user/isemailexist?email={email}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> FindById(IHttpClientFactory httpClient)
+        public async Task<CurrentResponse> FindById(DependecyParams dependecyParams)
         {
-            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id"));
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findbyid?id={id}");
+            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id", dependecyParams.AuthenticationStateProvider));
+
+            dependecyParams.URL = $"user/findbyid?id={id}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<List<UserPreferenceVM>> FindMyPreferencesById(IHttpClientFactory httpClient)
+        public async Task<List<UserPreferenceVM>> FindMyPreferencesById(DependecyParams dependecyParams)
         {
-            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id"));
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"user/findmypreferencesbyid?id={id}");
+            long id = Convert.ToInt64(_httpCaller.GetClaimValue("Id", dependecyParams.AuthenticationStateProvider));
+
+            dependecyParams.URL = $"user/findmypreferencesbyid?id={id}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             List<UserPreferenceVM> listUserPreferences = new List<UserPreferenceVM>();
 
@@ -122,20 +150,20 @@ namespace FSM.Blazor.Data.User
             return listUserPreferences;
         }
 
-        public async Task<CurrentResponse> UploadProfileImageAsync(IHttpClientFactory httpClient, MultipartFormDataContent fileContent)
+        public async Task<CurrentResponse> UploadProfileImageAsync(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
         {
-            string url = $"user/uploadprofileimage";
+            dependecyParams.URL = $"user/uploadprofileimage";
 
-            CurrentResponse response = await _httpCaller.PostFileAsync(httpClient, url, fileContent);
+            CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
 
             return response;
         }
 
-        public async Task<List<DropDownLargeValues>> ListDropDownValuesByCompanyId(IHttpClientFactory httpClient, int companyId)
+        public async Task<List<DropDownLargeValues>> ListDropDownValuesByCompanyId(DependecyParams dependecyParams, int companyId)
         {
-            string url = $"user/listdropdownvaluesbycompanyid?companyId={companyId}";
+            dependecyParams.URL = $"user/listdropdownvaluesbycompanyid?companyId={companyId}";
 
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
             List<DropDownLargeValues> usersList = new List<DropDownLargeValues>();
 
             if(response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)

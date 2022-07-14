@@ -1,9 +1,9 @@
-﻿using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using DataModels.VM.AircraftMake;
 using DataModels.VM.Common;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using DE = DataModels.Entities;
-using Microsoft.AspNetCore.Components;
 
 namespace FSM.Blazor.Data.AircraftMake
 {
@@ -11,25 +11,56 @@ namespace FSM.Blazor.Data.AircraftMake
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftMakeService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AircraftMakeService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager,authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, DE.AircraftMake aircraftMake)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DE.AircraftMake aircraftMake)
         {
-            string jsonData = JsonConvert.SerializeObject(aircraftMake);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(aircraftMake);
 
-            string url = "aircraft/createmake";
+            dependecyParams.URL = "aircraftmake/create";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            if (aircraftMake.Id > 0)
+            {
+                dependecyParams.URL = "aircraftmake/edit";
+            }
+
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> ListDropdownValues(IHttpClientFactory httpClient)
+        public async Task<CurrentResponse> ListDropdownValues(DependecyParams dependecyParams)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"aircraft/makelist");
+            dependecyParams.URL = "aircraftmake/list";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<List<AircraftMakeDataVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
+        {
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "aircraftmake/list";
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
+
+            if (response == null || response.Status != System.Net.HttpStatusCode.OK)
+            {
+                return new List<AircraftMakeDataVM>();
+            }
+
+            List<AircraftMakeDataVM> aircraftMakeList = JsonConvert.DeserializeObject<List<AircraftMakeDataVM>>(response.Data.ToString());
+
+            return aircraftMakeList;
+        }
+
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, int id)
+        {
+            dependecyParams.URL = $"aircraftmake/delete?id={id}";
+
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }

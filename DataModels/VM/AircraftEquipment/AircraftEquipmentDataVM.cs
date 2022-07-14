@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.AircraftEquipment
 {
@@ -16,6 +17,8 @@ namespace DataModels.VM.AircraftEquipment
 
         public string Classification { get; set; }
 
+        [NotMapped]
+        public bool IsLoadingEditButton { get; set; }
         public string Item { get; set; }
 
         public string Model { get; set; }
@@ -28,9 +31,9 @@ namespace DataModels.VM.AircraftEquipment
 
         public string SerialNumber { get; set; }
 
-        public Nullable<DateTime> ManufacturerDate { get; set; }
+        public DateTime? ManufacturerDate { get; set; }
 
-        public Nullable<DateTime> LogEntryDate { get; set; } 
+        public DateTime? LogEntryDate { get; set; } 
 
         public Nullable<int> AircraftTTInstall { get; set; }
 

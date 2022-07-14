@@ -1,0 +1,26 @@
+﻿@using Radzen.Blazor;
+
+@inject IJSRuntime JSRuntime
+
+@if (isTokenValid)
+{
+    <p style="color:red">
+        Your token has been expired! Please 
+
+       @* <a href="javascript:void(0)"
+       @onclick="@((ui) => OpenDocumentPreviewPopupAsync())">
+            Login
+        </a>*@
+
+         <a href="/Logout">Login</a> 
+
+        again.
+    </p>
+}
+else
+{
+    <p> Token has been expired. Please Click on 
+        <a href="/Logout">Login</a> 
+    </p>
+}
+

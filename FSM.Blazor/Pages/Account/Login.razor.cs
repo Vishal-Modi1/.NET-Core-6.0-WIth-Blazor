@@ -2,6 +2,8 @@
 using Microsoft.JSInterop;
 using Radzen;
 using FSM.Blazor.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 
 namespace FSM.Blazor.Pages.Account
 {
@@ -14,6 +16,21 @@ namespace FSM.Blazor.Pages.Account
         
         private string? result;
         private DotNetObjectReference<Login>? objRef;
+        bool isSessionTimeout;
+
+        protected override Task OnInitializedAsync()
+        {
+            StringValues link;
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("TokenExpired", out link);
+
+            if (link.Count() > 0 && link[0] == "true")
+            {
+                isSessionTimeout = true;
+            }
+
+            return base.OnInitializedAsync();
+        }
 
         async Task Submit()
         {
@@ -23,7 +40,9 @@ namespace FSM.Blazor.Pages.Account
             await authModule.InvokeVoidAsync("SignIn", loginVM.Email, loginVM.Password, "/");
 
             objRef = DotNetObjectReference.Create(this);
-            result = await authModule.InvokeAsync<string>("ManageLoginResponse", objRef, "");
+            result = await authModule.InvokeAsync<string>("SetDotNetObject", objRef, "");
+
+            this.StateHasChanged();
         }
 
         [JSInvokable]

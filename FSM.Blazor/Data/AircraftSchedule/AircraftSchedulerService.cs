@@ -1,8 +1,6 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 
@@ -12,14 +10,15 @@ namespace FSM.Blazor.Data.AircraftSchedule
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftSchedulerService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AircraftSchedulerService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<SchedulerVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
+        public async Task<SchedulerVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"aircraftscheduler/getDetails?id={id}");
+            dependecyParams.URL = $"aircraftscheduler/getDetails?id={id}";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             SchedulerVM schedulerVM = new SchedulerVM();
 
@@ -31,7 +30,7 @@ namespace FSM.Blazor.Data.AircraftSchedule
             return schedulerVM;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, SchedulerVM schedulerVM, DateTime startTime, DateTime endTime)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, SchedulerVM schedulerVM, DateTime startTime, DateTime endTime)
         {
             DateTime localStartTime = schedulerVM.StartTime;
             DateTime localEndTime = schedulerVM.EndTime;
@@ -39,28 +38,29 @@ namespace FSM.Blazor.Data.AircraftSchedule
             schedulerVM.StartTime = startTime;
             schedulerVM.EndTime = endTime;
 
-            string jsonData = JsonConvert.SerializeObject(schedulerVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(schedulerVM);
            
             schedulerVM.StartTime = localStartTime;
             schedulerVM.EndTime = localEndTime;
 
-            string url = "aircraftscheduler/create";
+            dependecyParams.URL = "aircraftscheduler/create";
 
             if (schedulerVM.Id > 0)
             {
-                url = "aircraftscheduler/edit";
+                dependecyParams.URL = "aircraftscheduler/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<List<SchedulerVM>> ListAsync(IHttpClientFactory httpClient, SchedulerFilter schedulerFilter)
+        public async Task<List<SchedulerVM>> ListAsync(DependecyParams dependecyParams, SchedulerFilter schedulerFilter)
         {
-            string jsonData = JsonConvert.SerializeObject(schedulerFilter);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(schedulerFilter);
+            dependecyParams.URL = "aircraftscheduler/list";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "aircraftscheduler/list", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -72,27 +72,28 @@ namespace FSM.Blazor.Data.AircraftSchedule
             return appointmentsList;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, long id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, long id)
         {
-            string url = $"aircraftscheduler/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"aircraftscheduler/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UpdateScheduleEndTime(IHttpClientFactory httpClient, SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
+        public async Task<CurrentResponse> UpdateScheduleEndTime(DependecyParams dependecyParams, SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
         {
-            string url = $"aircraftscheduler/editendtime";
-            string jsonData = JsonConvert.SerializeObject(schedulerEndTimeDetailsVM);
+            dependecyParams.URL = $"aircraftscheduler/editendtime";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(schedulerEndTimeDetailsVM);
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<List<DropDownValues>> ListActivityTypeDropDownValues(IHttpClientFactory httpClient)
+        public async Task<List<DropDownValues>> ListActivityTypeDropDownValues(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"aircraftscheduler/listactivitytypedropdownvalues");
+            dependecyParams.URL = $"aircraftscheduler/listactivitytypedropdownvalues";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             List<DropDownValues> activityList = new List<DropDownValues>();
 

@@ -3,6 +3,7 @@
 
 @inject Radzen.DialogService DialogService
 @inject SubscriptionPlanService SubscriptionPlanService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <style>
     form .row {
@@ -21,7 +22,7 @@
                 <RadzenLabel Text="Name" />
             </div>
             <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Placeholder="Please enter name" Name="Name" @bind-Value="@subscriptionPlanData.Name" />
+                <RadzenTextBox style="width: 100%;" Placeholder="Name" Name="Name" @bind-Value="@subscriptionPlanData.Name" />
                 <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -46,7 +47,7 @@
                 <RadzenLabel Text="Duration (In Months)" />
             </div>
             <div class="col-md-8">
-                <RadzenNumeric style="width: 100%;" Placeholder="Please enter months" Name="Duration" @bind-Value="@subscriptionPlanData.Duration" />
+                <RadzenNumeric style="width: 100%;" Placeholder="Months" Name="Duration" @bind-Value="@subscriptionPlanData.Duration" />
                 <RadzenNumericRangeValidator Component="Duration" Min="1" Text="Duration should be greater than 0" Style="position: relative" />
             </div>
         </div>
@@ -57,7 +58,7 @@
                 <RadzenLabel Text="Price" />
             </div>
             <div class="col-md-8">
-                <RadzenNumeric style="width: 100%;" Placeholder="Please enter name" Name="Price" @bind-Value="@subscriptionPlanData.Price" />
+                <RadzenNumeric style="width: 100%;" Placeholder="Price" Name="Price" @bind-Value="@subscriptionPlanData.Price" />
                 <RadzenNumericRangeValidator Component="Price" Min="1" Text="Price should be greater than 0" Style="position: relative" />
             </div>
         </div>
@@ -67,7 +68,7 @@
                 <RadzenLabel Text="Description" />
             </div>
             <div class="col-md-8">
-                <RadzenTextArea  style="width: 100%;" Placeholder="Please enter description" Name="Price" @bind-Value="@subscriptionPlanData.Description" />
+                <RadzenTextArea  style="width: 100%;" Placeholder="Description" Name="Price" @bind-Value="@subscriptionPlanData.Description" />
             </div>
         </div>
 

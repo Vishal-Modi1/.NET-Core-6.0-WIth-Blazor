@@ -8,6 +8,7 @@ using Radzen.Blazor;
 using FSM.Blazor.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Caching.Memory;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.InstructorType
 {
@@ -15,20 +16,12 @@ namespace FSM.Blazor.Pages.InstructorType
     {
         #region Params
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
         [CascadingParameter]
         public RadzenDataGrid<InstructorTypeVM> grid { get; set; }
 
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -41,11 +34,16 @@ namespace FSM.Blazor.Pages.InstructorType
         string searchText;
         string moduleName = "InstructorType";
 
+        bool isDisplayPopup { get; set; }
+        string popupTitle { get; set; }
+        private InstructorTypeVM _instructorTypeData;
+
+        OperationType operationType = OperationType.Create;
         #endregion
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -61,24 +59,33 @@ namespace FSM.Blazor.Pages.InstructorType
             pageSize = datatableParams.Length;
             datatableParams.SearchText = searchText;
 
-            data = await InstructorTypeService.ListAsync(_httpClient,datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            data = await InstructorTypeService.ListAsync(dependecyParams,datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
             isLoading = false;            
         }
 
         async Task InstructorTypeCreateDialog(InstructorTypeVM instructorTypeData, string title)
         {
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "instructorTypeData", instructorTypeData } },
-                  new DialogOptions() { Width = "500px", Height = "380px" });
+            if (instructorTypeData.Id == 0)
+            {
+                operationType = OperationType.Create;
+            }
+            else
+            {
+                operationType = OperationType.Edit;
+            }
 
-            await grid.Reload();
-
+            _instructorTypeData = instructorTypeData;
+            popupTitle = title;
+            isDisplayPopup = true;
         }
 
         async Task DeleteAsync(int id)
         {
-            CurrentResponse response = await InstructorTypeService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await InstructorTypeService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
 
@@ -89,7 +96,7 @@ namespace FSM.Blazor.Pages.InstructorType
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "InstructorType Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -102,5 +109,22 @@ namespace FSM.Blazor.Pages.InstructorType
             await grid.Reload();
         }
 
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
+            if (!isCancelled)
+            {
+                await grid.Reload();
+            }
+        }
+
+        async Task OpenDeleteDialog(InstructorTypeVM instructorTypeVM)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            _instructorTypeData = instructorTypeVM;
+            popupTitle = "Delete Instructor Type";
+        }
     }
 }

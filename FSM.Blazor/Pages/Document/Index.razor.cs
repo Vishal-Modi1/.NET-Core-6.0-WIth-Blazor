@@ -1,9 +1,7 @@
-﻿using DataModels.VM;
-using FSM.Blazor.Utilities;
+﻿using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Radzen.Blazor;
 using DataModels.VM.Document;
 using DataModels.VM.Common;
@@ -11,7 +9,6 @@ using FSM.Blazor.Extensions;
 using Microsoft.JSInterop;
 using System.Net;
 using DataModels.Enums;
-using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Document
 {
@@ -19,23 +16,13 @@ namespace FSM.Blazor.Pages.Document
     {
         #region Params
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [Parameter] public string ParentModuleName { get; set; }
 
-        [Parameter]
-        public string ParentModuleName { get; set; }
+        [Parameter] public int? CompanyIdParam { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [CascadingParameter]
-        public RadzenDataGrid<DocumentDataVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
+        [CascadingParameter] public RadzenDataGrid<DocumentDataVM> grid { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
         private DotNetObjectReference<Index>? objRef;
@@ -44,28 +31,36 @@ namespace FSM.Blazor.Pages.Document
 
         IList<DocumentDataVM> data;
         int count, ModuleId, CompanyId;
-        bool isLoading, isBusyAddNewButton, isBusyDeleteButton;
-        string searchText;
+        bool isLoading, isBusyAddNewButton, isBusyDeleteButton, isDisplayPopup, isImageType;
+        string searchText, popupTitle;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         DocumentFilterVM documentFilterVM;
-        string moduleName = "Document";
+        string moduleName = "Document", documentPath ;
         private string? result;
-     
+
         string[] imageFormats = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
-        string[] previewSupportedFormats = new string[] { ".pdf",".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
+        string[] previewSupportedFormats = new string[] { ".pdf", ".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
+        BaseComponent.BaseComponent baseComponent;
+        HttpCaller httpCaller = new HttpCaller();
+        OperationType operationType = OperationType.Create;
+        DocumentVM documentData;
+        DocumentDataVM documentDataVM;
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+
+            //  ValidateTokenAsync();
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
                 NavManager.NavigateTo("/Dashboard");
             }
 
-            documentFilterVM = await DocumentService.GetFiltersAsync(_httpClient);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
         }
 
         async Task LoadData(LoadDataArgs args)
@@ -75,19 +70,28 @@ namespace FSM.Blazor.Pages.Document
             args.OrderBy = args.OrderBy.Replace("@", "");
             DocumentDatatableParams datatableParams = new DocumentDatatableParams().Create(args, "DisplayName");
 
-            datatableParams.CompanyId = CompanyId;
             datatableParams.ModuleId = ModuleId;
 
-            if (!string.IsNullOrWhiteSpace(ParentModuleName))
+            if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
-                datatableParams.ModuleId = documentFilterVM.ModulesList.Where(p => p.Name == ParentModuleName).FirstOrDefault().Id;
+                datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
+            }
+
+            if (ParentModuleName == Module.Company.ToString())
+            {
+                datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
+            }
+            else
+            {
+                datatableParams.CompanyId = CompanyId;
             }
 
             datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            data = await DocumentService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
 
             isLoading = false;
@@ -97,28 +101,33 @@ namespace FSM.Blazor.Pages.Document
         {
             if (isCreate)
             {
+                operationType = OperationType.Create;
                 SetAddNewButtonState(true);
             }
             else
             {
+                operationType = OperationType.Edit;
                 SetEditButtonState(id.Value, true);
             }
 
-            DocumentVM documentData = await DocumentService.GetDetailsAsync(_httpClient, id == null ? Guid.Empty : id.Value);
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(_httpClient);
-            
-            string height = "420px";
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            documentData = await DocumentService.GetDetailsAsync(dependecyParams, id == null ? Guid.Empty : id.Value);
+            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {
-                height = "470";
-                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(_httpClient, documentData.CompanyId);
+                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
             }
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
             {
-                height = "520";
-                documentData.CompniesList = await CompanyService.ListDropDownValues(_httpClient);
+                documentData.CompniesList = await CompanyService.ListDropDownValues(dependecyParams);
+            }
+
+            if (!string.IsNullOrWhiteSpace(ParentModuleName))
+            {
+                documentData.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
+                documentData.IsFromParentModule = true;
             }
 
             if (isCreate)
@@ -127,20 +136,11 @@ namespace FSM.Blazor.Pages.Document
             }
             else
             {
-                SetEditButtonState(id.Value,false);
+                SetEditButtonState(id.Value, false);
             }
 
-            if (!string.IsNullOrWhiteSpace(ParentModuleName))
-            {
-                documentData.ModuleId = documentFilterVM.ModulesList.Where(p => p.Name == ParentModuleName).FirstOrDefault().Id;
-                documentData.IsFromParentModule = true;
-            }
-
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "documentData", documentData } },
-                  new DialogOptions() { Width = "500px", Height = height });
-
-            await grid.Reload();
+            isDisplayPopup = true;
+            popupTitle = title;
         }
 
         private void SetAddNewButtonState(bool isBusy)
@@ -152,17 +152,15 @@ namespace FSM.Blazor.Pages.Document
         private void SetEditButtonState(Guid id, bool isBusy)
         {
             var details = data.Where(p => p.Id == id).First();
-
             details.IsLoadingEditButton = isBusy;
-
-            StateHasChanged();
         }
 
         async Task DeleteAsync(Guid id)
         {
             await SetDeleteButtonState(true);
 
-            CurrentResponse response = await DocumentService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await DocumentService.DeleteAsync(dependecyParams, id);
 
             await SetDeleteButtonState(false);
 
@@ -175,7 +173,7 @@ namespace FSM.Blazor.Pages.Document
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DialogService.Close(true);
+                await CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Document Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -184,19 +182,19 @@ namespace FSM.Blazor.Pages.Document
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Document Details", response.Message);
                 NotificationService.Notify(message);
             }
-
-            await grid.Reload();
         }
 
         async Task CopyLinkToClipboard(string link)
         {
+            popupTitle = "Share Document";
+
             var jsFile = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await jsFile.InvokeVoidAsync("copyTextToClipboard", link);
 
             NotificationMessage message = new NotificationMessage().Build(NotificationSeverity.Success, "Link copied to the clipboard", "");
             NotificationService.Notify(message);
 
-            DialogService.Close();
+            await CloseDialog(true);
         }
 
         [JSInvokable]
@@ -206,7 +204,8 @@ namespace FSM.Blazor.Pages.Document
 
             documentDataVM.TotalDownloads += 1;
 
-            await DocumentService.UpdateTotalDownloadsAsync(_httpClient, Guid.Parse(id));
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            await DocumentService.UpdateTotalDownloadsAsync(dependecyParams, Guid.Parse(id));
         }
 
         async Task DownloadDocument(Guid id)
@@ -222,12 +221,12 @@ namespace FSM.Blazor.Pages.Document
             string fileName = documentDataVM.DisplayName;
             bool hasExtension = Path.HasExtension(documentDataVM.DisplayName);
 
-            if(!hasExtension)
+            if (!hasExtension)
             {
                 fileName += "." + documentDataVM.Type;
             }
 
-            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName , streamRef, id.ToString());
+            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef, id.ToString());
 
             objRef = DotNetObjectReference.Create(this);
             result = await jsFile.InvokeAsync<string>("ManageDocumentDownloadResponse", objRef, id.ToString());
@@ -262,5 +261,75 @@ namespace FSM.Blazor.Pages.Document
             isBusyDeleteButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
         }
+
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
+            if (!isCancelled)
+            {
+                await grid.Reload();
+            }
+        }
+
+        async Task OpenDeleteDialog(DocumentDataVM documentInfo)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete Document";
+
+            documentData = new DocumentVM();
+
+            documentData.Id = documentInfo.Id;
+            documentData.DisplayName = documentInfo.DisplayName;
+        }
+
+        async Task OpenShareDocumentDialog(Guid id)
+        {
+            documentDataVM = data.Where(p => p.Id == id).First();
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            await DocumentService.UpdateTotalSharesAsync(dependecyParams, documentDataVM.Id);
+            documentDataVM.TotalShares += 1;
+
+            operationType = OperationType.DocumentShare;
+            isDisplayPopup = true;
+        }
+
+        async void OpenDocumentViewer(string link, bool isImage)
+        {
+            documentPath = link;
+            isImageType = isImage;
+
+            operationType = OperationType.DocumentViewer;
+            isDisplayPopup = true;
+        }
+
+        async void OpenDocumentPreviewPopupAsync(string link)
+        {
+            string extension = Path.GetExtension(link);
+
+            if (previewSupportedFormats.Contains(extension))
+            {
+                popupTitle = "Document Viewer";
+                operationType = OperationType.DocumentViewer;
+
+                if (imageFormats.Contains(extension))
+                {
+                    OpenDocumentViewer(link, true);
+                }
+                else
+                {
+                    OpenDocumentViewer(link, false);
+                }
+            }
+            else
+            {
+                popupTitle = "Document Viewer";
+                operationType = 0;
+            }
+
+            isDisplayPopup = true;
+        }
+
     }
 }

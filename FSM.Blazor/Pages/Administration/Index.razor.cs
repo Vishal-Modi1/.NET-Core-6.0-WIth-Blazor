@@ -20,11 +20,17 @@ namespace FSM.Blazor.Pages.Administration
         {
             isDisplayLoader = true;
 
-            menuItems = await MenuService.ListMenuItemsAsync(AuthStat);
+            menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);
 
             menuItems = menuItems.Where(p=>p.IsAdministrationModule == true).ToList();
 
             isDisplayLoader = false;
+        }
+
+        void Change(int value)
+        {
+            
+            StateHasChanged();
         }
     }
 }

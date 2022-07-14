@@ -4,6 +4,7 @@
 
 @inject Radzen.DialogService DialogService
 @inject DocumentService DocumentService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <style>
     form .row {
@@ -22,7 +23,7 @@
                 <RadzenLabel Text="Tag Name" />
             </div>
             <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Placeholder="Please enter tag name" Name="TagName" @bind-Value="@documentTagVM.TagName" />
+                <RadzenTextBox style="width: 100%;" Placeholder="Tag Name" Name="TagName" @bind-Value="@documentTagVM.TagName" />
                 <RadzenRequiredValidator Component="TagName" Text="Tag is required" Popup="@isPopup" Style="position: relative"/>
             </div>
         </div>

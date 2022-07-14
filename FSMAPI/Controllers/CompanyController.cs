@@ -15,17 +15,27 @@ namespace FSMAPI.Controllers
     {
         private readonly ICompanyService _companyService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly FileUploader _fileUploader;
 
-        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor)
+        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor,
+             IWebHostEnvironment webHostEnvironment)
         {
             _companyService = companyService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpPost]
         [Route("list")]
         public IActionResult List(DatatableParams datatableParams)
         {
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+
+            if (!string.IsNullOrWhiteSpace(companyId))
+            {
+                datatableParams.CompanyId = Convert.ToInt32(companyId);
+            }
+
             CurrentResponse response = _companyService.List(datatableParams);
 
             return Ok(response);
@@ -49,11 +59,27 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("listcompanyservicesdropdownvalues")]
+        public IActionResult ListCompanyServicesDropDownValues()
+        {
+            CurrentResponse response = _companyService.ListCompanyServiceDropDownValues();
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("create")]
         public IActionResult Create(CompanyVM companyVM)
         {
-            companyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+
+            if (!string.IsNullOrEmpty(loggedInUser))
+            {
+                companyVM.CreatedBy = Convert.ToInt64(loggedInUser);
+            }
 
             CurrentResponse response = _companyService.Create(companyVM);
             return Ok(response);
@@ -84,6 +110,58 @@ namespace FSMAPI.Controllers
             long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _companyService.Delete(id, deletedBy);
+
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [Route("uploadlogo")]
+        public async Task<IActionResult> UploadLogoAsync()
+        {
+            if (!Request.HasFormContentType)
+            {
+                return Ok(false);
+            }
+
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            IFormCollection form = Request.Form;
+
+            string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["CompanyId"]}.jpeg";
+
+            if (string.IsNullOrWhiteSpace(companyId))
+            {
+                companyId = form["CompanyId"];
+            }
+
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.CompanyLogo, form, fileName);
+
+            CurrentResponse response = new CurrentResponse();
+            response.Data = "";
+
+            if (isFileUploaded)
+            {
+                response = _companyService.UpdateImageName(Convert.ToInt32(form["CompanyId"]), fileName);
+            }
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("updatecreatedby")]
+        public IActionResult UpdateCreatedBy(int id, long createdBy)
+        {
+            CurrentResponse response = _companyService.UpdateCreatedBy(id, createdBy);
+            
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("iscompanyexist")]
+        public IActionResult IsCompanyExist(int id, string name)
+        {
+            CurrentResponse response = _companyService.IsCompanyExist(id, name);
 
             return Ok(response);
         }

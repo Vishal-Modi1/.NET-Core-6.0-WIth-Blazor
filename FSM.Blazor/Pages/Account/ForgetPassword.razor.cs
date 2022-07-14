@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Account;
 using DataModels.VM.Common;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 
@@ -10,20 +11,13 @@ namespace FSM.Blazor.Pages.Account
     {
         bool isBusy;
         
-        string submitButtonText = "Submit";
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
+        string submitButtonText = "Email me a recovery link";
 
         ForgotPasswordVM ForgotPasswordVM { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             ForgotPasswordVM = new ForgotPasswordVM();
             base.OnInitialized();
@@ -35,7 +29,9 @@ namespace FSM.Blazor.Pages.Account
 
             ForgotPasswordVM.ResetURL = NavigationManager.BaseUri + "/ResetPassword?Token=";
 
-            CurrentResponse response = await AccountService.ForgetPasswordAsync(_httpClient, ForgotPasswordVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+            CurrentResponse response = await AccountService.ForgetPasswordAsync(dependecyParams, ForgotPasswordVM);
 
             NotificationMessage message;
 

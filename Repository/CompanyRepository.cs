@@ -19,11 +19,11 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).
-                                                   Select(n => new CompanyVM 
+                                                   Select(n => new CompanyVM
                                                    { Id = n.Id, Name = n.Name }).ToList();
 
                 return companyDataList;
-            
+
             }
         }
 
@@ -32,14 +32,29 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> companyList = (from company in _myContext.Companies
-                                                     where company.IsDeleted == false
-                                                     select new DropDownValues()
-                                                     {
-                                                         Id = company.Id,
-                                                         Name = company.Name
-                                                     }).ToList();
+                                                    where company.IsDeleted == false
+                                                    select new DropDownValues()
+                                                    {
+                                                        Id = company.Id,
+                                                        Name = company.Name
+                                                    }).ToList();
 
                 return companyList;
+            }
+        }
+
+        public List<DropDownValues> ListCompanyServicesDropDownValues()
+        {
+            using (_myContext = new MyContext())
+            {
+                List<DropDownValues> companyServices = (from companyService in _myContext.CompanyServices
+                                                        select new DropDownValues()
+                                                        {
+                                                            Id = (int)companyService.Id,
+                                                            Name = companyService.Name
+                                                        }).ToList();
+
+                return companyServices;
             }
         }
 
@@ -66,12 +81,14 @@ namespace Repository
                     existingCompany.Address = company.Address;
                     existingCompany.ContactNo = company.ContactNo;
                     existingCompany.TimeZone = company.TimeZone;
+                    existingCompany.Website = company.Website;
+                    existingCompany.PrimaryAirport = company.PrimaryAirport;
+                    existingCompany.PrimaryServiceId = company.PrimaryServiceId;
 
                     existingCompany.UpdatedBy = company.UpdatedBy;
                     existingCompany.UpdatedOn = company.UpdatedOn;
+                    _myContext.SaveChanges();
                 }
-
-                _myContext.SaveChanges();
 
                 return company;
             }
@@ -101,7 +118,7 @@ namespace Repository
                 int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<CompanyVM> list;
 
-                string sql = $"EXEC dbo.GetCompanyList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+                string sql = $"EXEC dbo.GetCompanyList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
 
                 list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
 
@@ -114,6 +131,24 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 return _myContext.Companies.Where(predicate).FirstOrDefault();
+            }
+        }
+
+        public bool UpdateImageName(int id, string logoName)
+        {
+            using (_myContext = new MyContext())
+            {
+                Company existingCompany = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+
+                if (existingCompany != null)
+                {
+                    existingCompany.Logo = logoName;
+                    _myContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
             }
         }
     }

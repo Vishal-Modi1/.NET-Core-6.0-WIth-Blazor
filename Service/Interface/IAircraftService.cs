@@ -10,10 +10,10 @@ namespace Service.Interface
         CurrentResponse List(AircraftDatatableParams datatableParams);
         CurrentResponse ListAllByCompanyId(int companyId);
         CurrentResponse Edit(AircraftVM airCraftVM);
-        CurrentResponse GetDetails(int id, int companyId);
-        CurrentResponse Delete(int id, long deletedBy);
-        CurrentResponse UpdateImageName(int id, string imageName);
-        CurrentResponse IsAirCraftExist(int id, string tailNo);
+        CurrentResponse GetDetails(long id, int companyId);
+        CurrentResponse Delete(long id, long deletedBy);
+        CurrentResponse UpdateImageName(long id, string imageName);
+        CurrentResponse IsAirCraftExist(long id, string tailNo);
         CurrentResponse GetFiltersValue(int companyId);
 
         CurrentResponse ListAircraftDropdownValues(int companyId);

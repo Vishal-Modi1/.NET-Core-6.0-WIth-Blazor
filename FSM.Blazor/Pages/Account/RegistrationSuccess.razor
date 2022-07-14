@@ -1,0 +1,33 @@
+﻿@using Data.Account;
+
+@inject AccountService AccountService
+
+@page "/RegistrationSuccess"
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@layout EmptyLayout
+
+<PageTitle>Registered Successfully | Fly Manager </PageTitle>
+
+<div class="row vh-100 d-flex justify-content-center align-items-center">
+    <div class="col-lg-6 col-xl-4">
+        <RadzenCard class="m-3 text-center">
+
+            <lottie-player src="../json/circle-success-or-approved.json"
+                           background="transparent"
+                           speed="0.5"
+                           autoplay>
+            </lottie-player>
+
+            <h1 class="mb-3" style="color:#1151F3">Congratulations!</h1>
+
+            <h5 style="font-weight:normal"> Your account has been successfully created.</h5>
+            <h5 style="font-weight:normal"> We have sent an account activation link in your mail, Please activate your account.</h5>
+            <RadzenLink Path="/Login" Text="Go to Login" />
+        </RadzenCard>
+    </div>
+</div>
+
+
+

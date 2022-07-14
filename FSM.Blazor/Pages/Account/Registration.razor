@@ -1,0 +1,52 @@
+﻿@using FSM.Blazor.Data.Company;
+@using FSM.Blazor.Data.User;
+@using Syncfusion.Blazor.Spinner
+
+@inject CompanyService CompanyService
+@inject UserService UserService
+
+@page "/Registration"
+
+@layout EmptyLayout
+
+<PageTitle> Register | Fly Manager </PageTitle>
+
+<div id="container">
+    <SfSpinner @bind-Visible="@isLoading">
+    </SfSpinner>
+</div>
+
+<div class="col-lg-6 @(currentStep == 0 ? "col-xl-9" : "col-xl-10")">
+
+    <div class="m-3">
+
+        <div class="d-flex">
+            <div class="w-100">
+                <h3 class="mb-4">Sign up to Fly Manager </h3>
+            </div>
+        </div>
+
+        <RadzenSteps ShowStepsButtons="false" SelectedIndex="@currentStep">
+            <Steps>
+                <RadzenStepsItem Text="Company Details" Disabled="true">
+
+                    <FSM.Blazor.Pages.Company.Create companyData="@companyData" GoToNext="@(() => GoToNextStepAsync())">
+
+                    </FSM.Blazor.Pages.Company.Create>
+
+                </RadzenStepsItem>
+
+                <RadzenStepsItem Text="Personal Details" Disabled="true">
+
+                    <FSM.Blazor.Pages.User.Create userData="@userVM" GoBackStep=@GoToBackStep SaveBothStepsValue=@SaveAsync>
+
+                    </FSM.Blazor.Pages.User.Create>
+
+                </RadzenStepsItem>
+
+            </Steps>
+        </RadzenSteps>
+
+
+    </div>
+</div>

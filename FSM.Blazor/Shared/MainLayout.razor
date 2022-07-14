@@ -1,4 +1,7 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using FSM.Blazor.Extensions;
+
+@inject NavigationManager NavigationManager
+@inject DialogService DialogService
 @inject IJSRuntime JSRuntime
 @inject IHttpContextAccessor httpContextAccessor
 @inherits LayoutComponentBase
@@ -42,10 +45,11 @@
             <RadzenContentContainer Name="main">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-12 pt-4 pb-5 px-3 px-lg-5">
-                            <ErrorBoundary>
+                        <div class="col-12 pt-4 pb-5 px-2 px-lg-2">
+                            <FSM.Blazor.Extensions.CustomErrorBoundry @ref="@errorBoundary" 
+                            navigationManager="@NavigationManager" DialogService="@DialogService">
                                 @Body
-                            </ErrorBoundary>
+                            </FSM.Blazor.Extensions.CustomErrorBoundry>
 
                         </div>
                     </div>
@@ -57,3 +61,16 @@
     <NavMenu Expanded="@sidebarExpanded" />
 
 </RadzenLayout>
+
+@code {
+    private ErrorBoundary errorBoundary;
+    protected override void OnParametersSet()
+    {
+        //if(errorBoundary.CurrentException.Message == "Unauthorized")
+        //{
+
+        //    NavigationManager.NavigateTo("/Login");
+        //}
+        errorBoundary?.Recover();
+    }
+}

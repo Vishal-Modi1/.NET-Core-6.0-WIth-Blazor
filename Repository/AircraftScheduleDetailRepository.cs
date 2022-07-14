@@ -20,6 +20,7 @@ namespace Repository
                                           on aircraftSchedule.Id equals aircraftScheduleDetails.AircraftScheduleId
                                           where aircraftSchedule.AircraftId == aircraftId
                                           && aircraftScheduleDetails.IsCheckOut == true
+                                          && aircraftSchedule.IsDeleted == false
                                           select new { Id = aircraftSchedule.Id }).Count() > 0;
 
                 return isAlreadyCheckOut;
@@ -42,6 +43,10 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 AircraftScheduleDetail aircraftScheduleDetail =  _myContext.AircraftScheduleDetails.Where(p=> p.Id == id).FirstOrDefault();
+                
+                if (aircraftScheduleDetail == null)
+                    return null;
+
                 _myContext.Remove(aircraftScheduleDetail);
 
                 _myContext.SaveChanges();

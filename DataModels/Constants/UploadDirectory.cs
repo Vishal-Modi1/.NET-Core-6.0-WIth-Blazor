@@ -7,5 +7,6 @@
         public const string UserProfileImage = "UserProfileImages";
         public const string Document = "Documents";
         public const string TempDocument = "TempDocuments";
+        public const string CompanyLogo = "CompanyLogos";
     }
 }

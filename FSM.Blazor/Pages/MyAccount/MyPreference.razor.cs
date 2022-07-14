@@ -4,14 +4,12 @@ using DataModels.VM.UserPreference;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.MyAccount
 {
     partial class MyPreference
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [Parameter]
         public List<UserPreferenceVM> UserPreferencesList { get; set; }
 
@@ -25,7 +23,7 @@ namespace FSM.Blazor.Pages.MyAccount
         int preferenceTypeId = 0;
         IEnumerable<string> multipleValues = new string[] { "" };
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             int i = 0;
             foreach (var item in Enum.GetNames(typeof(PreferenceType)).ToList())
@@ -49,9 +47,11 @@ namespace FSM.Blazor.Pages.MyAccount
                 return;
             }
 
-            if((int)values == (int)PreferenceType.ScheduleActivityType)
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+            if ((int)values == (int)PreferenceType.ScheduleActivityType)
             {
-                activityTypeList = await AircraftSchedulerService.ListActivityTypeDropDownValues(_httpClient);
+                activityTypeList = await AircraftSchedulerService.ListActivityTypeDropDownValues(dependecyParams);
                 var activityTypeData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.ScheduleActivityType).FirstOrDefault();
 
                 if (activityTypeData != null)
@@ -61,7 +61,7 @@ namespace FSM.Blazor.Pages.MyAccount
             }
             else if ((int)values == (int)PreferenceType.Aircraft)
             {
-                aircraftList = await AircraftService.ListDropdownValues(_httpClient);
+                aircraftList = await AircraftService.ListDropdownValues(dependecyParams);
                 var aircraftData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
 
                 if (aircraftData != null)
@@ -132,7 +132,8 @@ namespace FSM.Blazor.Pages.MyAccount
                 }
             }
 
-            CurrentResponse response = await MyAccountService.AddMyPreference(_httpClient, userPreferenceVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await MyAccountService.AddMyPreference(dependecyParams, userPreferenceVM);
 
             isBusy = false;
 

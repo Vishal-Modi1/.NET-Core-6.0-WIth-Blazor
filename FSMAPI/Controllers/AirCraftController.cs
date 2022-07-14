@@ -7,7 +7,6 @@ using Service.Interface;
 using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
-using System.Security.Claims;
 
 namespace FSMAPI.Controllers
 {
@@ -18,17 +17,15 @@ namespace FSMAPI.Controllers
     {
         private readonly IAircraftService _airCraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
-        private readonly IAircraftMakeService _aircraftMakeService;
         private readonly IAircraftModelService _aircraftModelService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public AircraftController(IAircraftService airCraftService, IAircraftMakeService aircraftMakeService,
+        public AircraftController(IAircraftService airCraftService, 
             IAircraftModelService aircraftModelService, IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _airCraftService = airCraftService;
-            _aircraftMakeService = aircraftMakeService;
             _aircraftModelService = aircraftModelService;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
@@ -66,7 +63,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(AircraftVM airCraftVM)
         {
-            airCraftVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Create(airCraftVM);
 
             return Ok(response);
@@ -76,7 +73,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftVM airCraftVM)
         {
-            airCraftVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Edit(airCraftVM);
 
             return Ok(response);
@@ -84,7 +81,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("getDetails")]
-        public IActionResult GetDetails(int id)
+        public IActionResult GetDetails(long id)
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
@@ -106,9 +103,9 @@ namespace FSMAPI.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _airCraftService.Delete(id, deletedBy);
 
@@ -123,7 +120,7 @@ namespace FSMAPI.Controllers
             {
                 return Ok(false);
             }
-
+            
             IFormCollection form = Request.Form;
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
@@ -150,7 +147,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("isaircraftexist")]
-        public IActionResult IsAirCraftExist(int id, string tailNo)
+        public IActionResult IsAirCraftExist(long id, string tailNo)
         {
             CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
 
@@ -168,49 +165,27 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        #region Aircraft Make
+        //#region Aircraft Model
 
-        [HttpPost]
-        [Route("createmake")]
-        public IActionResult CreateMake(AircraftMake aircraftMake)
-        {
-            CurrentResponse response = _aircraftMakeService.Create(aircraftMake);
+        //[HttpPost]
+        //[Route("createmodel")]
+        //public IActionResult CreateModel(AircraftModel aircraftModel)
+        //{
+        //    CurrentResponse response = _aircraftModelService.Create(aircraftModel);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
-        [HttpGet]
-        [Route("makelist")]
-        public IActionResult MakeList()
-        {
-            CurrentResponse response = _aircraftMakeService.List();
+        //[HttpGet]
+        //[Route("modellist")]
+        //public IActionResult ModelList()
+        //{
+        //    CurrentResponse response = _aircraftModelService.List();
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
-        #endregion
-
-        #region Aircraft Model
-
-        [HttpPost]
-        [Route("createmodel")]
-        public IActionResult CreateModel(AircraftModel aircraftModel)
-        {
-            CurrentResponse response = _aircraftModelService.Create(aircraftModel);
-
-            return Ok(response);
-        }
-
-        [HttpGet]
-        [Route("modellist")]
-        public IActionResult ModelList()
-        {
-            CurrentResponse response = _aircraftModelService.List();
-
-            return Ok(response);
-        }
-
-        #endregion
+        //#endregion
 
         #region Aircraft Equipment
         [HttpPost]

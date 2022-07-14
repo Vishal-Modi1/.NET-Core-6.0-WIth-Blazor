@@ -25,7 +25,7 @@ namespace Repository
             }
         }
 
-        public void Delete(int id, long deletedBy)
+        public void Delete(long id, long deletedBy)
         {
             using (_myContext = new MyContext())
             {
@@ -34,7 +34,7 @@ namespace Repository
                 if (airCraft != null)
                 {
                     airCraft.IsDeleted = true;
-                    airCraft.DeletedBy = 0;
+                    airCraft.DeletedBy = deletedBy;
                     airCraft.DeletedOn = DateTime.UtcNow;
 
                     _myContext.SaveChanges();
@@ -127,7 +127,7 @@ namespace Repository
             }
         }
 
-        public bool UpdateImageName(int id, string imageName)
+        public bool UpdateImageName(long id, string imageName)
         {
             using (_myContext = new MyContext())
             {
@@ -150,15 +150,14 @@ namespace Repository
             using (_myContext = new MyContext())
             {
                 List<DropDownLargeValues> aircraftsList = (from aircraft in _myContext.AirCrafts
-                                                    where aircraft.IsDeleted == false
-                                                    && aircraft.IsActive == true
-                                                    && aircraft.CompanyId == companyId
-                                                    select new DropDownLargeValues()
-                                                    {
-                                                        Id = aircraft.Id,
-                                                        Name = aircraft.TailNo
-
-                                                    }).ToList();
+                                                           where aircraft.IsDeleted == false
+                                                           && aircraft.IsActive == true
+                                                           && (companyId == 0 || (aircraft.CompanyId == companyId))
+                                                           select new DropDownLargeValues()
+                                                           {
+                                                                Id = aircraft.Id,
+                                                                Name = aircraft.TailNo
+                                                           }).ToList();
 
                 return aircraftsList;
             }

@@ -10,5 +10,17 @@
 @using FSM.Blazor.Shared
 @using Radzen
 @using Radzen.Blazor
+@using FSM.Blazor.Shared.Components;
+@using FSM.Blazor.Utilities;
+@using Configuration;
+@using DataModels.Enums
+@using Microsoft.Extensions.Caching.Memory
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Radzen.DialogService DialogService
+@inject IHttpClientFactory HttpClient 
+@inject IMemoryCache MemoryCache 
+@inject NotificationService NotificationService
 
 @attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]

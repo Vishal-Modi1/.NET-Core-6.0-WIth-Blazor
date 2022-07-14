@@ -3,24 +3,20 @@ using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
 using DataModels.VM.Document;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.Document.DocumentTag
 {
     public partial class Create
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         DocumentTagVM documentTagVM = new DocumentTagVM();
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
         public async Task Submit()
         {
-            CurrentResponse response = await DocumentService.SaveTagAsync(_httpClient, documentTagVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await DocumentService.SaveTagAsync(dependecyParams, documentTagVM);
 
             NotificationMessage message;
 

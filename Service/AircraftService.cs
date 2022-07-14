@@ -75,7 +75,7 @@ namespace Service
         //    return true;
         //}
 
-        public CurrentResponse IsAirCraftExist(int id, string tailNo)
+        public CurrentResponse IsAirCraftExist(long id, string tailNo)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(int id, long deletedBy)
+        public CurrentResponse Delete(long id, long deletedBy)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse GetDetails(int id, int companyId)
+        public CurrentResponse GetDetails(long id, int companyId)
         {
             Aircraft airCraft = _airCraftRepository.FindByCondition(p => p.Id == id && (companyId == 0 ? true : p.CompanyId == companyId));
             AircraftVM airCraftVM = new AircraftVM();
@@ -362,7 +362,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse UpdateImageName(int id, string imageName)
+        public CurrentResponse UpdateImageName(long id, string imageName)
         {
             try
             {

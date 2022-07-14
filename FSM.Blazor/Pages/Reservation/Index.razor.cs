@@ -26,21 +26,17 @@ namespace FSM.Blazor.Pages.Reservation
         [Parameter]
         public long? AircraftId { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
+        [Parameter]
+        public string ParentModuleName { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
+        [Parameter]
+        public int? CompanyId { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
-
         [CascadingParameter]
         public RadzenDataGrid<ReservationDataVM> grid { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -58,25 +54,27 @@ namespace FSM.Blazor.Pages.Reservation
         #endregion
 
         #region Filters
-        public int CompanyId;
+       
         public DateTime? startDate, endDate;
         IList<ReservationDataVM> data;
-        int count;
+        int count, reservationFilterTypeId;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         bool isLoading;
         int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         IEnumerable<int> pageSizeOptions = Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions;
         string searchText;
+        DependecyParams dependecyParams;
 
         #endregion
 
         string moduleName = "Reservation";
 
         UIOptions uiOptions = new UIOptions();
+        List<DropDownValues> ReservationTypeFilter = new List<DropDownValues>();
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
@@ -86,8 +84,44 @@ namespace FSM.Blazor.Pages.Reservation
             isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
             isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
 
-            timezone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
-            reservationFilterVM = await ReservationService.GetFiltersAsync(_httpClient);
+            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
+
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            reservationFilterVM = await ReservationService.GetFiltersAsync(dependecyParams);
+
+            if (CompanyId != 0 || !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.CompanyId).Result) )
+            {
+                reservationFilterVM.CompanyId = CompanyId == null ? Convert.ToInt32(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.CompanyId).Result) : CompanyId.Value;
+                reservationFilterVM.Users = await UserService.ListDropDownValuesByCompanyId(dependecyParams, reservationFilterVM.CompanyId);
+            }
+
+            GetReservationTypeFilter();
+        }
+
+        private void GetReservationTypeFilter()
+        {
+            List<ReservationType> reservationFilterList = Enum.GetValues(typeof(ReservationType))
+                           .Cast<ReservationType>()
+                           .ToList();
+
+            foreach (ReservationType reservationFilter in reservationFilterList)
+            {
+                ReservationTypeFilter.Add(new DropDownValues()
+                {
+                    Id = ((int)reservationFilter),
+                    Name = reservationFilter.ToString()
+                });
+            }
+        }
+
+        async void GetUsersList()
+        {
+            isLoading = true;
+
+            reservationFilterVM.Users = await UserService.ListDropDownValuesByCompanyId(dependecyParams, reservationFilterVM.CompanyId);
+            grid.Reload();
+
+            isLoading = false ;
         }
 
         async void OnStartDateChange(DateTime? value)
@@ -111,14 +145,39 @@ namespace FSM.Blazor.Pages.Reservation
             datatableParams.SearchText = searchText;
             datatableParams.StartDate = startDate;
             datatableParams.EndDate = endDate;
-            datatableParams.CompanyId = reservationFilterVM.CompanyId;
 
-            if (!isSuperAdmin && !isAdmin)
+            if (reservationFilterTypeId != 0)
             {
-                datatableParams.UserId = UserId;
+                datatableParams.ReservationType = (ReservationType)reservationFilterTypeId;
             }
 
-            datatableParams.AircraftId = AircraftId;
+            if (ParentModuleName == Module.Company.ToString())
+            {
+                datatableParams.CompanyId = CompanyId.GetValueOrDefault();
+            }
+            else
+            {
+                datatableParams.CompanyId = reservationFilterVM.CompanyId;
+            }
+
+            if(reservationFilterVM.UserId > 0)
+            {
+                datatableParams.UserId = reservationFilterVM.UserId;
+            }
+
+            if (AircraftId == null)
+            {
+                datatableParams.AircraftId = reservationFilterVM.AircraftId;
+            }
+            else
+            {
+                datatableParams.AircraftId = AircraftId;
+            }
+
+            //if (!isSuperAdmin && !isAdmin)
+            //{
+            //    datatableParams.UserId = UserId;
+            //}
 
             await LoadDataAsync();
         }
@@ -135,7 +194,8 @@ namespace FSM.Blazor.Pages.Reservation
                 datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), timezone);
             }
 
-            data = await ReservationService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            data = await ReservationService.ListAsync(dependecyParams, datatableParams);
 
             data.ToList().ForEach(p =>
             {
@@ -165,7 +225,9 @@ namespace FSM.Blazor.Pages.Reservation
 
             InitializeValues();
 
-            schedulerVM = await AircraftSchedulerService.GetDetailsAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+            schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, id);
 
             schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
             schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);

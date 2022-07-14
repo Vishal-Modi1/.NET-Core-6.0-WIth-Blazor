@@ -136,7 +136,7 @@ namespace Service
             mailSettings.Body = body;
             mailSettings.IsBodyHTML = true;
             mailSettings.IsEnableSSL = true;
-            mailSettings.CC = "";
+            mailSettings.CC = "vmodi@cendien.com";
 
             return mailSettings;
         }

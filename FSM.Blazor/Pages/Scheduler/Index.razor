@@ -23,11 +23,8 @@
 @inject AircraftService AircraftService
 @inject UserService UserService
 @layout MainLayout
-@inject NavigationManager NavigationManager
-@inject NotificationService NotificationService
-@inject DialogService DialogService
 @inject AircraftSchedulerDetailService AircraftSchedulerDetailService
-@inject AuthenticationStateProvider authenticationStateProvider
+
 
 @page "/Scheduler"
 
@@ -85,14 +82,20 @@
 
 @if (isDisplayScheduler)
 {
-    <div class="row">
-              <div class="col-md-2 align-items-center d-flex" style="margin-right:-96px">
-                <RadzenLabel Text="Select aircraft: " Style="font-weight:bold" />
+
+    <div class="row" style="margin-bottom:2%">
+        <div class="col-md-2 align-items-center d-flex" style="margin-right: -8%;margin-left: 0.5%;">
+            <RadzenLabel Text="Select aircraft: " Style="font-size:15px" />
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" style="margin-right: 7%;">
             <RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                         Multiple="true" Placeholder="Select aircraft" Data=@allAircraftList TextProperty="TailNo" ValueProperty="TailNo"
                         Name="Aircraft" Class="w-100" @bind-Value=@multipleValues Change="@(args => OnAircraftsListChange())" />
+        </div>
+
+        <div class="col-md-6">
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
+            Click="@(args =>OpenCreateScheduleDialogAsync(null, null, null))"/>
         </div>
     </div>
 

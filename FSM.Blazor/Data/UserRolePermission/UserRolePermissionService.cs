@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using DataModels.VM.Common;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.UserRolePermission
 {
@@ -11,14 +12,15 @@ namespace FSM.Blazor.Data.UserRolePermission
     {
         private readonly HttpCaller _httpCaller;
 
-        public UserRolePermissionService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public UserRolePermissionService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<UserRolePermissionFilterVM> GetFiltersAsync(IHttpClientFactory httpClient)
+        public async Task<UserRolePermissionFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"userrolepermission/getfilters");
+            dependecyParams.URL = "userrolepermission/getfilters";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             UserRolePermissionFilterVM userFilterVM = new UserRolePermissionFilterVM();
 
@@ -30,11 +32,12 @@ namespace FSM.Blazor.Data.UserRolePermission
             return userFilterVM;
         }
 
-        public async Task<List<UserRolePermissionDataVM>> ListAsync(IHttpClientFactory httpClient, UserRolePermissionDatatableParams datatableParams)
+        public async Task<List<UserRolePermissionDataVM>> ListAsync(DependecyParams dependecyParams, UserRolePermissionDatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "userrolepermission/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "userrolepermission/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -46,30 +49,31 @@ namespace FSM.Blazor.Data.UserRolePermission
             return userrolePermissions;
         }
 
-        public async Task<CurrentResponse> UpdatePermissionAsync(IHttpClientFactory httpClient, long id, bool isAllow, bool isForWeb)
+        public async Task<CurrentResponse> UpdatePermissionAsync(DependecyParams dependecyParams, long id, bool isAllow, bool isForWeb)
         {
-            string url = $"userrolepermission/updatepermission?id={id}&isAllow={isAllow}";
+            dependecyParams.URL = $"userrolepermission/updatepermission?id={id}&isAllow={isAllow}";
 
             if(!isForWeb)
             {
-                url = $"userrolepermission/updatemobileapppermission?id={id}&isAllow={isAllow}";
+                dependecyParams.URL = $"userrolepermission/updatemobileapppermission?id={id}&isAllow={isAllow}";
             }
 
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> UpdatePermissionsAsync(IHttpClientFactory httpClient, UserRolePermissionFilterVM userRolePermissionFilterVM, bool isForWeb)
+        public async Task<CurrentResponse> UpdatePermissionsAsync(DependecyParams dependecyParams, UserRolePermissionFilterVM userRolePermissionFilterVM, bool isForWeb)
         {
-            string url = $"userrolepermission/updatepermissions";
+            dependecyParams.URL = $"userrolepermission/updatepermissions";
             
             if (!isForWeb)
             {
-                url = $"userrolepermission/updatemobileapppermissions";
+                dependecyParams.URL = $"userrolepermission/updatemobileapppermissions";
             }
-            string jsonData = JsonConvert.SerializeObject(userRolePermissionFilterVM);
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient,  url, jsonData);
+
+            dependecyParams.JsonData = JsonConvert.SerializeObject(userRolePermissionFilterVM);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }

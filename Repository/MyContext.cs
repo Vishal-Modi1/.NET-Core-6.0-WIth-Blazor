@@ -1,10 +1,13 @@
 ﻿using DataModels.Entities;
 using DataModels.VM.Aircraft;
 using DataModels.VM.AircraftEquipment;
+using DataModels.VM.AircraftMake;
+using DataModels.VM.AircraftModel;
 using DataModels.VM.BillingHistory;
 using DataModels.VM.Company;
 using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
+using DataModels.VM.Location;
 using DataModels.VM.Reservation;
 using DataModels.VM.SubscriptionPlan;
 using DataModels.VM.User;
@@ -112,9 +115,22 @@ namespace Repository
         public DbSet<AircraftScheduleHobbsTime> AircraftScheduleHobbsTimes { get; set; }
     
         public DbSet<Document> Documents { get; set; }
+        
         public DbSet<DocumentTag> DocumentTags { get; set; }
-
+        
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
+        
+        public DbSet<CompanyService> CompanyServices { get; set; }
+        
+        public DbSet<Location> Locations { get; set; }
+
+        public DbSet<Timezone> Timezones { get; set; }
+    
+        public DbSet<LocationDataVM> LocationsList { get; set; }
+
+        public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }
+
+        public DbSet<AircraftModelDataVM> AircraftModelsList { get; set; }
     }
 
 }

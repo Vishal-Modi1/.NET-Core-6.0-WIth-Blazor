@@ -1,4 +1,6 @@
-﻿namespace DataModels.VM.User
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DataModels.VM.User
 {
     public class UserDataVM
     {
@@ -9,8 +11,14 @@
         public string LastName { get; set; }
 
         public string CompanyName { get; set; }
+        public int? CompanyId { get; set; }
+
+        public string ProfileImage { get; set; }
 
         public string Email { get; set; }
+
+        [NotMapped]
+        public bool IsLoadingEditButton { get; set; }
 
         public bool IsInstructor { get; set; }
         

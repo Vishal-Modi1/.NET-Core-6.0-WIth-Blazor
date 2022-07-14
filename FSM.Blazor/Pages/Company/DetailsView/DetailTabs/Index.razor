@@ -1,0 +1,69 @@
+﻿@using DataModels.Enums
+
+<RadzenTabs RenderMode="TabRenderMode.Client">
+    <Tabs>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
+        {
+            <RadzenTabsItem Text="Users" Icon="person">
+
+                <FSM.Blazor.Pages.User.Index CompanyIdParam="@CompanyData.Id" ParentModuleName="@Module.Company.ToString()">
+
+                </FSM.Blazor.Pages.User.Index>
+
+            </RadzenTabsItem>
+        }
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Reservation.ToString()))
+        {
+            <RadzenTabsItem Text="Reservations" Icon="book_online">
+
+                <FSM.Blazor.Pages.Reservation.Index ParentModuleName="@Module.Company.ToString()" CompanyId="@CompanyData.Id">
+
+                </FSM.Blazor.Pages.Reservation.Index>
+
+            </RadzenTabsItem>
+        }
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Document.ToString()))
+        {
+            <RadzenTabsItem Text="Documents" Icon="description">
+
+                <FSM.Blazor.Pages.Document.Index ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
+
+                </FSM.Blazor.Pages.Document.Index>
+
+            </RadzenTabsItem>
+        }
+
+        <RadzenTabsItem Text="Aircrafts" Icon="flight" >
+
+            <FSM.Blazor.Pages.Aircraft.Index ParentModuleName="@Module.Company.ToString()" ParentCompanyId="@CompanyData.Id">
+
+            </FSM.Blazor.Pages.Aircraft.Index>
+
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Maintenance" Icon="engineering">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Settings" Icon="settings">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Expenses" Icon="local_atm">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Flights" Icon="connecting_airports">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Quotes" Icon="">
+
+        </RadzenTabsItem>
+
+    </Tabs>
+</RadzenTabs>

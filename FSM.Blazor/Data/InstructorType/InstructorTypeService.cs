@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.InstructorType
 {
@@ -11,16 +12,17 @@ namespace FSM.Blazor.Data.InstructorType
     {
         private readonly HttpCaller _httpCaller;
 
-        public InstructorTypeService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public InstructorTypeService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<InstructorTypeVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<InstructorTypeVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "instructorType/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "instructorType/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -32,27 +34,26 @@ namespace FSM.Blazor.Data.InstructorType
             return instructorTypes; 
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, InstructorTypeVM instructorTypeVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, InstructorTypeVM instructorTypeVM)
         {
-            string jsonData = JsonConvert.SerializeObject(instructorTypeVM);
-            
-            string url = "instructorType/create";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(instructorTypeVM);
+
+            dependecyParams.URL = "instructorType/create";
 
             if (instructorTypeVM.Id > 0)
             {
-                url = "instructorType/edit";
+                dependecyParams.URL = "instructorType/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, int id)
         {
-            
-            string url = $"instructorType/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"instructorType/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }

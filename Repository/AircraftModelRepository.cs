@@ -1,5 +1,7 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.AircraftModel;
 using DataModels.VM.Common;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -52,6 +54,61 @@ namespace Repository
                                                          }).ToList();
 
                 return aircraftModelList;
+            }
+        }
+
+        public List<AircraftModelDataVM> List(DatatableParams datatableParams)
+        {
+            using (_myContext = new MyContext())
+            {
+                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
+                List<AircraftModelDataVM> list;
+
+                string sql = $"EXEC dbo.GetAircraftModelsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                    $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+
+                list = _myContext.AircraftModelsList.FromSqlRaw<AircraftModelDataVM>(sql).ToList();
+
+                return list;
+
+            }
+        }
+
+        public void Delete(int id)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftModel aircraftModel = _myContext.AircraftModels.Where(p => p.Id == id).FirstOrDefault();
+
+                if (aircraftModel != null)
+                {
+                    _myContext.AircraftModels.Remove(aircraftModel);
+                    _myContext.SaveChanges();
+                }
+            }
+        }
+
+        public bool IsAlreadyUsed(int id)
+        {
+            using (_myContext = new MyContext())
+            {
+                return _myContext.AirCrafts.Where(p => p.AircraftModelId == id).Any();
+            }
+        }
+
+        public AircraftModel Edit(AircraftModel aircraftModel)
+        {
+            using (_myContext = new MyContext())
+            {
+                AircraftModel existingAircraftModel = _myContext.AircraftModels.Where(p => p.Id == aircraftModel.Id).FirstOrDefault();
+
+                if (existingAircraftModel != null)
+                {
+                    existingAircraftModel.Name = aircraftModel.Name;
+                    _myContext.SaveChanges();
+                }
+
+                return aircraftModel;
             }
         }
     }

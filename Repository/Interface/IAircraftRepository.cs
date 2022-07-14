@@ -20,11 +20,11 @@ namespace Repository.Interface
 
         Aircraft FindByCondition(Expression<Func<Aircraft, bool>> predicate);
 
-        void Delete(int id, long deletedBy);
+        void Delete(long id, long deletedBy);
 
         List<FlightSimulatorClass> FlightSimulatorClassList();
 
-        bool UpdateImageName(int id, string imageName);
+        bool UpdateImageName(long id, string imageName);
 
         List<DropDownValues> ListFlightSimulatorClassDropDownValues();
 

@@ -5,21 +5,15 @@ using FSM.Blazor.Extensions;
 using Radzen;
 using Utilities;
 using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.Constants;
 
 namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 {
     partial class Create
     {
-        [Parameter]
-        public AircraftEquipmentsVM AirCraftEquipmentsVM { get; set; }
+        [Parameter] public AircraftEquipmentsVM AircraftEquipmentsVM { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isBusySaveButton;
@@ -28,12 +22,13 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         {
             SetSaveButtonState(true);
 
-            string timeZone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            string timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             airCraftEquipmentsVM.LogEntryDate = DateConverter.ToUTC(airCraftEquipmentsVM.LogEntryDate.Value, timeZone);
             airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToUTC(airCraftEquipmentsVM.ManufacturerDate.Value, timeZone);
 
-            CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(_httpClient, airCraftEquipmentsVM);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(dependecyParams, airCraftEquipmentsVM);
 
             SetSaveButtonState(false);
 
@@ -51,11 +46,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    DialogService.Close(true);
-                }
-
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, response.Message);
                 NotificationService.Notify(message);
             }
@@ -70,6 +61,11 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         {
             isBusySaveButton = isBusy;
             StateHasChanged();
+        }
+
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

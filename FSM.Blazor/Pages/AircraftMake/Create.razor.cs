@@ -3,25 +3,25 @@ using DE = DataModels.Entities;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
+using FSM.Blazor.Utilities;
 
-
-namespace FSM.Blazor.Pages.Aircraft.AircraftModel
+namespace FSM.Blazor.Pages.AircraftMake
 {
     public partial class Create
     {
         [Inject]
         IHttpClientFactory _httpClient { get; set; }
 
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
-        DE.AircraftModel aircraftModel = new DE.AircraftModel();
+        [Parameter] public DE.AircraftMake AircraftMake { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
 
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+
         public async Task Submit()
         {
-            CurrentResponse response = await AircraftModelService.SaveandUpdateAsync(_httpClient, aircraftModel);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftMakeService.SaveandUpdateAsync(dependecyParams, AircraftMake);
 
             NotificationMessage message;
 
@@ -32,15 +32,20 @@ namespace FSM.Blazor.Pages.Aircraft.AircraftModel
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Model", response.Message);
+                CloseDialog(false);
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Make", response.Message);
                 NotificationService.Notify(message);
             }
             else
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Model", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Make", response.Message);
                 NotificationService.Notify(message);
             }
+
+        }
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

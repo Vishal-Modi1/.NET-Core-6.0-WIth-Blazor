@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using Newtonsoft.Json;
 using DataModels.VM.Account;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Account
 {
@@ -11,39 +12,44 @@ namespace FSM.Blazor.Data.Account
     {
         private readonly HttpCaller _httpCaller;
 
-        public AccountService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AccountService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> ForgetPasswordAsync(IHttpClientFactory httpClient, ForgotPasswordVM forgotPasswordVM)
+        public async Task<CurrentResponse> ForgetPasswordAsync(DependecyParams dependecyParams, ForgotPasswordVM forgotPasswordVM)
         {
-            string jsonData = JsonConvert.SerializeObject(forgotPasswordVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(forgotPasswordVM);
+            dependecyParams.URL = "account/forgotpassword";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "account/forgotpassword", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> ValidateResetPasswordTokenAsync(IHttpClientFactory httpClient, string token)
+        public async Task<CurrentResponse> ValidateResetPasswordTokenAsync(DependecyParams dependecyParams, string token)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"account/validatetoken?token={token}");
+            dependecyParams.URL = $"account/validatetoken?token={token}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> ResetPasswordAsync(IHttpClientFactory httpClient, ResetPasswordVM resetPasswordVM)
+        public async Task<CurrentResponse> ResetPasswordAsync(DependecyParams dependecyParams, ResetPasswordVM resetPasswordVM)
         {
-            string jsonData = JsonConvert.SerializeObject(resetPasswordVM);
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "account/resetpassword", jsonData);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(resetPasswordVM);
+            dependecyParams.URL = "account/resetpassword";
+
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
 
             return response; 
         }
 
-        public async Task<CurrentResponse> ActivateAccountAsync(IHttpClientFactory httpClient, string token)
+        public async Task<CurrentResponse> ActivateAccountAsync(DependecyParams dependecyParams, string token)
         {
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, $"account/activateaccount?token={token}");
+            dependecyParams.URL = $"account/activateaccount?token={token}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
             
             return response;
         }

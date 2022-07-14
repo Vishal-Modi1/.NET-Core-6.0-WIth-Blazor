@@ -2,19 +2,19 @@
 
 <RadzenTabs RenderMode="TabRenderMode.Client">
     <Tabs>
-        <RadzenTabsItem Text="Aircraft Times">
+        <RadzenTabsItem Text="Aircraft Times" Icon="schedule">
 
             <AircraftEquipmentsTimes AircraftData=@AircraftData></AircraftEquipmentsTimes>
 
         </RadzenTabsItem>
-
-        <RadzenTabsItem Text="Description">
+        @*
+            <RadzenTabsItem Text="Description">
 
             <Description AircraftData=@AircraftData></Description>
 
-        </RadzenTabsItem>
+            </RadzenTabsItem>*@
 
-        <RadzenTabsItem Text="Equipments">
+        <RadzenTabsItem Text="Equipments" Icon="handyman">
 
             <FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index AircraftId=@AircraftData.Id CreatedBy=@AircraftData.CreatedBy>
 
@@ -24,17 +24,17 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
         {
-            <RadzenTabsItem Text="Reservation">
+            <RadzenTabsItem Text="Reservations" Icon="book_online">
 
-                <FSM.Blazor.Pages.Reservation.Index AircraftId="@AircraftData.Id">
+                <FSM.Blazor.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@AircraftData.Id">
 
                 </FSM.Blazor.Pages.Reservation.Index>
 
             </RadzenTabsItem>
         }
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Aircraft"))
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
         {
-            <RadzenTabsItem Text="Document">
+            <RadzenTabsItem Text="Documents" Icon="description">
 
                 <FSM.Blazor.Pages.Document.Index ParentModuleName="Aircraft">
 
@@ -42,5 +42,26 @@
 
             </RadzenTabsItem>
         }
+
+        <RadzenTabsItem Text="Maintenance" Icon="engineering">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Financials" Icon="paid">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Performance" Icon="query_stats">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Settings" Icon="settings">
+
+        </RadzenTabsItem>
+
+        <RadzenTabsItem Text="Crew" Icon="people">
+
+        </RadzenTabsItem>
+
     </Tabs>
 </RadzenTabs>

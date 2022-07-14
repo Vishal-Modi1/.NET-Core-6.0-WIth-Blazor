@@ -1,9 +1,8 @@
-﻿using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
-using DataModels.VM.BillingHistory;
-using Microsoft.AspNetCore.Components;
-using Newtonsoft.Json;
+﻿using DataModels.VM.BillingHistory;
 using DataModels.VM.Common;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.BillingHistory
 {
@@ -11,16 +10,17 @@ namespace FSM.Blazor.Data.BillingHistory
     {
         private readonly HttpCaller _httpCaller;
 
-        public BillingHistoryService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public BillingHistoryService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<BillingHistoryDataVM>> ListAsync(IHttpClientFactory httpClient, BillingHistoryDatatableParams datatableParams)
+        public async Task<List<BillingHistoryDataVM>> ListAsync(DependecyParams dependecyParams, BillingHistoryDatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "BillingHistory/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, "BillingHistory/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {

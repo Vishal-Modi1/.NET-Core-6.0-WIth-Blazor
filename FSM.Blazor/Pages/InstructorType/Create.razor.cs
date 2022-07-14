@@ -3,19 +3,16 @@ using DataModels.VM.InstructorType;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Extensions;
 using Radzen;
+using FSM.Blazor.Utilities;
 
 namespace FSM.Blazor.Pages.InstructorType
 {
     public partial class Create
     {
         [Parameter]
-        public InstructorTypeVM instructorTypeData { get; set; }
-
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
+        public InstructorTypeVM InstructorTypeData { get; set; }
+        
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         bool isBusy = false;
@@ -24,7 +21,8 @@ namespace FSM.Blazor.Pages.InstructorType
         {
             SetSaveButtonState(true);
 
-            CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(_httpClient, instructorTypeData);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(dependecyParams, instructorTypeData);
 
             SetSaveButtonState(false);
 
@@ -37,15 +35,20 @@ namespace FSM.Blazor.Pages.InstructorType
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
-                message = new NotificationMessage().Build(NotificationSeverity.Success, "InstructorType Details", response.Message);
+                CloseDialog(false);
+                message = new NotificationMessage().Build(NotificationSeverity.Success, "Instructor Type Details", response.Message);
                 NotificationService.Notify(message);
             }
             else
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "InstructorType Details", response.Message);
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "Instructor Type Details", response.Message);
                 NotificationService.Notify(message);
             }
+        }
+
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
 
         private void SetSaveButtonState(bool isBusyState)

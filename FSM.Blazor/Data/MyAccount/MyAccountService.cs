@@ -1,10 +1,9 @@
-﻿using FSM.Blazor.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
-using DataModels.VM.Common;
-using Newtonsoft.Json;
+﻿using DataModels.VM.Common;
 using DataModels.VM.MyAccount;
-using Microsoft.AspNetCore.Components;
 using DataModels.VM.UserPreference;
+using FSM.Blazor.Utilities;
+using Microsoft.AspNetCore.Components.Authorization;
+using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.MyAccount
 {
@@ -12,27 +11,27 @@ namespace FSM.Blazor.Data.MyAccount
     {
         private readonly HttpCaller _httpCaller;
 
-        public MyAccountService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public MyAccountService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> ChangePassword(IHttpClientFactory httpClient, ChangePasswordVM changePasswordVM)
+        public async Task<CurrentResponse> ChangePassword(DependecyParams dependecyParams, ChangePasswordVM changePasswordVM)
         {
-            string url = "myaccount/changepassword";
-            string jsonData = JsonConvert.SerializeObject(changePasswordVM);
+            dependecyParams.URL = "myaccount/changepassword";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(changePasswordVM);
             
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> AddMyPreference(IHttpClientFactory httpClient, UserPreferenceVM userPreferenceVM)
+        public async Task<CurrentResponse> AddMyPreference(DependecyParams dependecyParams, UserPreferenceVM userPreferenceVM)
         {
-            string url = "userpreference/create";
-            string jsonData = JsonConvert.SerializeObject(userPreferenceVM);
+            dependecyParams.URL = "userpreference/create";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(userPreferenceVM);
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }

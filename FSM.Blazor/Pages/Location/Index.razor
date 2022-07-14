@@ -1,0 +1,101 @@
+﻿@namespace FSM.Blazor.Pages.Location
+@using DataModels.Enums
+@using FSM.Blazor.Data.Location
+@using FSM.Blazor.Data.Timezone
+@using DataModels.VM.Location
+@using FSM.Blazor.Utilities;
+@using Configuration;
+
+@inject NavigationManager NavigationManager
+@inject LocationService LocationService
+@layout MainLayout
+@inject DialogService DialogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject TimezoneService TimezoneService
+
+@page "/Location"
+
+@{
+   // if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+   // {
+        <div class="row">
+            <div class="col">
+                <h2 style="float:left">Manage Locations Details</h2>
+                <RadzenButton Style="float:right" Text="Add New" IsBusy="@isBusyAddButton" BusyText="Add New .." Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" Click=@(() => LocationCreateDialog(0, "Create Location")) />
+            </div>
+        </div>
+  //  }
+}
+
+<div class="row" style="margin-bottom:22px;">
+
+    <div class="col-md-4" >
+        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
+                       Placeholder="Search Location" @bind-Value="@searchText" />
+    </div>
+
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="@pageSize"
+                AllowSorting="true" Data="@data" TItem="LocationDataVM"
+                PageSizeOptions="@pageSizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="LocationDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Property="AirportCode" Title="Airport Code"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Sortable="false" Property="PhysicalAddress" Title="Physical Address"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Sortable="false" Property="Timezone" Title="Timezone"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="LocationDataVM" Filterable="false" Sortable="false" Property="Offset" Title="Offset"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="LocationDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+
+                <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" IsBusy="@data.IsLoadingEditButton" Class="m-1" Click=@(() => LocationCreateDialog(data.Id,"Edit Location")) />
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Create locationData="@locationData" CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                  <p class="mb-4">Are you sure, You want to delete <b> @locationData.AirportCode </b>?</p>  
+                  
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(locationData.Id) " Class="mr-1" Style="width: 80px;" />
+                            <RadzenButton Text="No" Click="@(() => isDisplayPopup = false)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
+                </div>
+            }
+           
+        </Body>
+    </CustomPopupComponent>
+}

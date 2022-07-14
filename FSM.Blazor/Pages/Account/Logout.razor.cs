@@ -8,8 +8,6 @@ namespace FSM.Blazor.Pages.Account
 {
     public partial class Logout
     {
-        [Inject]
-        IMemoryCache memoryCache { get; set; }
 
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
@@ -25,7 +23,7 @@ namespace FSM.Blazor.Pages.Account
                                .Select(c => c.Value).SingleOrDefault();
 
 
-            memoryCache.Remove(Convert.ToInt32(loggedUserId));
+            MemoryCache.Remove(Convert.ToInt32(loggedUserId));
         }
     }
 }

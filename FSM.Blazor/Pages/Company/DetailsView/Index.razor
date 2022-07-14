@@ -1,0 +1,156 @@
+﻿@using FSM.Blazor.Data.Company;
+@using Syncfusion.Blazor.Spinner;
+
+@inject CompanyService CompanyService
+
+@page "/CompanyDetails"
+
+<PageTitle>Company Details | Fly Manager </PageTitle>
+<style>
+
+    .description {
+        font-size: 14px;
+    }
+
+    .rz-fileupload-row {
+        display: none
+    }
+
+    .rz-fileupload {
+        outline: none;
+        margin-bottom: 0;
+    }
+
+    .rz-fileupload-buttonbar {
+        position: absolute;
+        top: 90%;
+        left: 24%;
+        opacity: 0.8;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        size: 53px;
+    }
+
+    .card-img-top {
+        max-width: 100%;
+        max-height: 100%;
+        /*        object-fit:cover;
+                    */
+    }
+
+    .rz-button-icon-left {
+        margin-right: 1px !important;
+    }
+
+    [b-vy5hox7kaq] .rz-fileupload-buttonbar {
+        top: 175px !important
+    }
+
+</style>
+
+<div id="container" class="loader">
+    <SfSpinner @bind-Visible="@isDisplayLoader">
+    </SfSpinner>
+</div>
+
+@if (companyData != null)
+{
+    <div class="m-4">
+        <div class="card">
+
+            <div class="row g-0">
+
+                <div class="col-sm-3" style="position: relative;">
+
+                    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
+                             Path="@(companyData.LogoPath)" Style="width: 200px; height: 200px;object-fit:cover; border: 2px solid #1151f3;" />
+                    <RadzenFileInput Style="outline:none" @bind-Value=@companyData.LogoPath
+                                 Change=@(args => OnChangeAsync()) TValue="string" />
+
+
+                </div>
+                <div class="col-sm-3">
+                    <div class="card-body" style="margin-left:-40px;">
+                        <div>
+                            <label class="description">Company Name : </label>
+                            @(companyData.Name)
+                        </div>
+
+                        <div>
+                            <label class="description">Address : </label> @(companyData.Address)
+                        </div>
+
+                        <br />
+                        <div>
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
+                            {
+                                <RadzenButton Text="Update Details" Click=@(() => CompanyEditDialog())
+                                      BusyText="Update Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" />
+                            }
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card-body">
+                        <div>
+                            <label class="description">Timezone : </label> @(companyData.TimeZone)
+
+                        </div>
+
+                        <div>
+                            <label class="description">Contact No : </label> @(companyData.ContactNo == null ? "-" : companyData.ContactNo)
+                        </div>
+                        <div>
+                            <label class="description">Website : </label> @(companyData.Website == null ? "-" : companyData.Website)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card-body">
+
+                        <div>
+                            <label class="description">Primary Airport : </label> @(companyData.PrimaryAirport == null ? "-" : companyData.PrimaryAirport)
+                        </div>
+
+                        <div>
+                            <label class="description">Primary Service : </label>
+                            @if (companyData.PrimaryServiceId != null)
+                            {
+                                <b> @companyData.PrimaryServicesList.Where(p=>p.Id == companyData.PrimaryServiceId).First().Name </b>
+                            }
+                            else
+                            {
+                                <b>@("-")</b>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-header" style="margin-top:30px">
+
+                <FSM.Blazor.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData>
+
+                </FSM.Blazor.Pages.Company.DetailsView.DetailTabs.Index>
+            </div>
+
+        </div>
+    </div>
+}
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="Edit Profile"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            <Create companyData=@(companyData) CloseDialogCallBack="@CloseDialog"></Create>
+
+        </Body>
+    </CustomPopupComponent>
+}
+

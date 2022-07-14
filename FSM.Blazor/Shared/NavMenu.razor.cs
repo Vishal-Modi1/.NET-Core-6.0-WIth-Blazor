@@ -1,24 +1,20 @@
 ﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Common;
 using FSM.Blazor.Data.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace FSM.Blazor.Shared
 {
     public partial class NavMenu
     {
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-        
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Parameter]
-        public bool Expanded { get; set; }
+        [Parameter]  public bool Expanded { get; set; }
 
-        bool sidebarExpanded = true;
-        bool bodyExpanded = false;
+        bool sidebarExpanded = true, bodyExpanded = false, isSuperAdmin;
 
         string fullName = "", profileImageURL = "";
         
@@ -40,16 +36,20 @@ namespace FSM.Blazor.Shared
                 }
             }
 
-            menuItems = await MenuService.ListMenuItemsAsync(AuthStat);
-
             var cp = (await AuthStat).User;
 
-             fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
-                       .Select(c => c.Value).SingleOrDefault();
+            if (cp.Identity.IsAuthenticated)
+            {
+                menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);
 
-            profileImageURL = cp.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
-                       .Select(c => c.Value).SingleOrDefault();
+                fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                          .Select(c => c.Value).SingleOrDefault();
 
+                profileImageURL = cp.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
+                           .Select(c => c.Value).SingleOrDefault();
+
+                isSuperAdmin = Convert.ToUInt32(cp.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
+            }
         }
     }
 }

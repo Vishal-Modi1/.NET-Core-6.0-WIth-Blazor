@@ -29,19 +29,32 @@
     });
 }
 
-//var BlazorUniversity = BlazorUniversity || {};
-//BlazorUniversity.startRandomGenerator = function (dotNetObject) {
-//    setInterval(function () {
-//        debugger
-//        let text = Math.random() * 1000;
-//        console.log("JS: Generated " + text);
-//        dotNetObject.invokeMethodAsync('AddText', text.toString());
-//    }, 1000);
-//};
+export function RefreshToken(RefreshToken, UserId) {
+
+    debugger
+    var url = "/api/auth/refreshtoken?refreshToken=" + RefreshToken + "&userId=" + UserId;
+    
+    $.ajax({
+
+        url: url,
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+           
+                return dotnetReferenceObject.invokeMethodAsync("ManageRefreshTokenResponse", response);
+        },
+        error: function (errorInfo) {
+
+            debugger
+        }
+    });
+}
+
 
 var dotnetReferenceObject = null
-export function ManageLoginResponse(dotNetHelper) {
+export function SetDotNetObject(dotNetHelper) {
 
+    debugger
     dotnetReferenceObject = dotNetHelper;
 };
 

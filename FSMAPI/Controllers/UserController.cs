@@ -6,6 +6,7 @@ using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.Constants;
 using FSMAPI.Utilities;
+using System.Security.Claims;
 
 namespace FSMAPI.Controllers
 {
@@ -40,20 +41,37 @@ namespace FSMAPI.Controllers
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
-            string roleId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = companyId == "" ? 0 : Convert.ToInt32(roleId);
 
             CurrentResponse response = _userService.GetDetails(id, companyIdValue, roleIdValue);
             return Ok(response);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("getMasterDetails")]
+        public IActionResult GetDetails()
+        {
+            int roleIdValue = (int)DataModels.Enums.UserRole.Admin;
+
+            CurrentResponse response = _userService.GetMasterDetails(roleIdValue);
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
         [HttpPost]
         [Route("create")]
         public IActionResult Create(UserVM userVM)
         {
             string password = _randomPasswordGenerator.Generate();
 
-            userVM.CreatedBy = userVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+
+            if (!string.IsNullOrEmpty(loggedInUser))
+            {
+                userVM.CreatedBy = userVM.UpdatedBy = Convert.ToInt64(loggedInUser);
+            }
 
             userVM.Password = password.Encrypt();
             CurrentResponse response = _userService.Create(userVM);
@@ -81,6 +99,7 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("isemailexist")]
         public IActionResult IsEmailExist(string email)

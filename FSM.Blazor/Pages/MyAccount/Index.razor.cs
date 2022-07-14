@@ -1,10 +1,10 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.User;
 using FSM.Blazor.Extensions;
+using FSM.Blazor.Shared;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Radzen;
 using UP = FSM.Blazor.Pages.User;
@@ -14,17 +14,8 @@ namespace FSM.Blazor.Pages.MyAccount
     partial class Index
     {
         #region Objects
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        [Inject]
-        NotificationService NotificationService { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
         private CurrentUserPermissionManager _currentUserPermissionManager;
 
@@ -33,10 +24,13 @@ namespace FSM.Blazor.Pages.MyAccount
         UserVM userVM = new UserVM();
 
         private bool isDisplayLoader { get; set; } = false;
+        bool isDisplayPopup;
 
         protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+
+            base.StateHasChanged();
             await LoadData();
         }
 
@@ -44,7 +38,10 @@ namespace FSM.Blazor.Pages.MyAccount
         {
             isDisplayLoader = true;
 
-            CurrentResponse response = await UserService.FindById(_httpClient);
+            var user = (await AuthStat).User;
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await UserService.FindById(dependecyParams);
 
             NotificationMessage message;
 
@@ -62,12 +59,9 @@ namespace FSM.Blazor.Pages.MyAccount
         public async Task OpenUpdateProfileDialog()
         {
             userVM.IsFromMyProfile = true;
-
-            await DialogService.OpenAsync<UP.Create>("Edit",
-                  new Dictionary<string, object>() { { "userData", userVM } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
-
             userVM.Country = userVM.Countries.Where(p => p.Id == userVM.CountryId).First().Name;
+
+            isDisplayPopup = true;
         }
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
@@ -81,11 +75,7 @@ namespace FSM.Blazor.Pages.MyAccount
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                if (isCloseDialog)
-                {
-                    DialogService.Close(true);
-                }
-
+                CloseDialog();
                 message = new NotificationMessage().Build(NotificationSeverity.Success, summary, "");
                 NotificationService.Notify(message);
             }
@@ -95,6 +85,11 @@ namespace FSM.Blazor.Pages.MyAccount
                 NotificationService.Notify(message);
             }
         }
+
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
+        } 
 
         async Task OnChangeAsync()
         {
@@ -121,7 +116,9 @@ namespace FSM.Blazor.Pages.MyAccount
                 multiContent.Add(new StringContent(userVM.Id.ToString()), "UserId");
                 multiContent.Add(new StringContent(companyId), "CompanyId");
 
-                CurrentResponse response = await UserService.UploadProfileImageAsync(_httpClient, multiContent);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+                CurrentResponse response = await UserService.UploadProfileImageAsync(dependecyParams, multiContent);
 
                 ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
             }
@@ -129,6 +126,7 @@ namespace FSM.Blazor.Pages.MyAccount
             {
 
             }
+
             isDisplayLoader = false;
         }
     }

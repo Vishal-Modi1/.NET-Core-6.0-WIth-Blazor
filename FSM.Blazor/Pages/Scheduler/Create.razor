@@ -17,25 +17,23 @@
 @using Syncfusion.Blazor.Popups;
 @using DataModels.Entities;
 @using DataModels.VM;
-@using Utilities;
 
 @inject AircraftSchedulerService AircraftSchedulerService
 @inject AircraftService AircraftService
 @layout MainLayout
-@inject NavigationManager NavigationManager
-@inject NotificationService NotificationService
-@inject DialogService DialogService
 @inject AircraftSchedulerDetailService AircraftSchedulerDetailService
-@inject AuthenticationStateProvider authenticationStateProvider
 
 
 <style>
-    .rz-textbox, .rz-dropdown
-    {
-        margin-bottom:0;
+    .rz-textbox, .rz-dropdown {
+        margin-bottom: 0;
+    }
+
+    .e-dlg-container {
+        z-index: 2000 !important;
     }
 </style>
-    
+
 
 @if (uiOptions.isDisplayMainForm)
 {
@@ -165,7 +163,7 @@
                                     Placeholder="Select Member 2" Data=@schedulerVM.Member2List TextProperty="Name"
                                     ValueProperty="Id" Name="Member2Id" @bind-Value="@(schedulerVM.Member2Id)" />
 
-                                <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(schedulerVM.Member1Id.ToString())) Value=@schedulerVM.Member1Id
+                                <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(schedulerVM.Member2Id.ToString())) Value=@schedulerVM.Member1Id
                                             Component="Member2Id" Operator="CompareOperator.NotEqual" Text="Member 2 is not valid" Style="position: relative" />
                             </td>
                         </tr>
@@ -450,7 +448,7 @@
             else
             {
                 <RadzenButton ButtonType="Radzen.ButtonType.Submit" BusyText="Saving ..." IsBusy="@isBusy" Text="Save" Style="width: 130px" />
-                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => InitializeValues())" Text="Back" Style="width: 130px" />
+                <RadzenButton ButtonStyle="ButtonStyle.Secondary" Click="@((args) => OpenMainForm())" Text="Back" Style="width: 130px" />
                 <RadzenButton Click="@((args) => CloseDialog())" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
             }
         </div>
@@ -607,13 +605,13 @@ else
                         {
                             <RadzenNumeric style="width: 123px;" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime
                                    Name="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName" TValue="decimal"
-                                   Placeholder="Please enter hours" @oninput="@(args => TextBoxChangeEvent(args, indexValue))" />
+                                   Placeholder="Hours" @oninput="@(args => TextBoxChangeEvent(args, indexValue))" />
                         }
                         else
                         {
                             <RadzenNumeric style="width: 123px;" @bind-Value="@aircraftScheduleHobbsTime.InTime"
                                    Name="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName" TValue="decimal"
-                                   Placeholder="Please enter hours" @oninput=@(args => EditFlightTimeTextBoxChangeEvent(args, indexValue)) />
+                                   Placeholder="Hours" @oninput=@(args => EditFlightTimeTextBoxChangeEvent(args, indexValue)) />
                         }
 
                         <RadzenCompareValidator Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"

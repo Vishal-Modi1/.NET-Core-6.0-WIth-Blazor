@@ -3,25 +3,17 @@ using FSM.Blazor.Pages.MyAccount;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Radzen;
+using System.Security.Claims;
 
 namespace FSM.Blazor.Shared
 {
     public partial class MainLayout
     {
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
-        private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        bool sidebarExpanded = true;
-        bool bodyExpanded = false;
-        string userFullName = "";
-        string loggedUserId;
+        bool sidebarExpanded = true, bodyExpanded = false;
+        string userFullName = "", loggedUserId;
 
         dynamic themes = new[]
         {
@@ -40,14 +32,13 @@ namespace FSM.Blazor.Shared
             }
         }
 
-
         protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();
 
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
-
             var user = (await AuthStat).User;
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user1 = authState.User;
 
             if (!user.Identity.IsAuthenticated)
             {
@@ -59,6 +50,8 @@ namespace FSM.Blazor.Shared
 
             loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
                                .Select(c => c.Value).SingleOrDefault();
+
+            base.StateHasChanged();
 
         }
 
@@ -90,6 +83,21 @@ namespace FSM.Blazor.Shared
             {
                await OpenChangePasswordDailog();
             }
+        }
+
+        public string GetClaimValue(string claimType)
+        {
+            if (AuthenticationStateProvider == null)
+            {
+                return "";
+            }
+
+            ClaimsPrincipal cp = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+
+            string claimValue = cp.Claims.Where(c => c.Type == claimType)
+                               .Select(c => c.Value).SingleOrDefault();
+
+            return claimValue;
         }
     }
 }

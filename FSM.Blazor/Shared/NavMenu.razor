@@ -4,6 +4,7 @@
 @inject IJSRuntime JSRuntime
 @inject IHttpContextAccessor httpContextAccessor
 @inject IHttpClientFactory ClientFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <RadzenSidebar @bind-Expanded="Expanded" Style=" top: 51px; width: 250px;transform: translateX(0px);">
 
@@ -43,6 +44,7 @@
                     }
                 }
 
+                <RadzenPanelMenuItem Visible="@isSuperAdmin" Text="Subscription Plans" Path="/SubscriptionPlan" Icon="monetization_on"></RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Log Out" Path="/Logout" Icon="open_in_new"></RadzenPanelMenuItem>
             }
 

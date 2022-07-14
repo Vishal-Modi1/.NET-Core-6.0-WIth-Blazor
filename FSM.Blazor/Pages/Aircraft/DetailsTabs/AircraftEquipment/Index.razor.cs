@@ -8,7 +8,7 @@ using Utilities;
 using FSM.Blazor.Utilities;
 using DataModels.Constants;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
+using DataModels.Enums;
 
 namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 {
@@ -20,9 +20,6 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         [Parameter]
         public long CreatedBy { get; set; }
 
-        [Inject]
-        protected IMemoryCache memoryCache { get; set; }
-
         [CascadingParameter]
         protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -30,26 +27,21 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
         string moduleName = "Aircraft";
         public bool isAllowToEdit;
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
         [CascadingParameter]
         public RadzenDataGrid<AircraftEquipmentDataVM> grid { get; set; }
 
-        [Inject]
-        NotificationService NotificationService { get; set; }
-
         List<AircraftEquipmentDataVM> data;
         int count;
-        bool isLoading, isBusyAddNewButton;
+        bool isLoading, isBusyAddNewButton, isDisplayPopup;
         string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
+        string timeZone = "", popupTitle;
+        AircraftEquipmentsVM aircraftEquipmentsVM;
+        OperationType operationType;
 
-        string timeZone = "";
-
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(memoryCache);
-            timeZone = ClaimManager.GetClaimValue(authenticationStateProvider, CustomClaimTypes.TimeZone);
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
             bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
@@ -73,7 +65,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             AircraftEquipmentDatatableParams datatableParams = new AircraftEquipmentDatatableParams().Create(args, "Status");
             datatableParams.AircraftId = AircraftId;
 
-            data = await AircraftEquipmentService.ListAsync(_httpClient, datatableParams);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            data = await AircraftEquipmentService.ListAsync(dependecyParams, datatableParams);
 
             data.ForEach(p =>
             {
@@ -87,7 +80,8 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async Task DeleteAsync(long id)
         {
-            CurrentResponse response = await AircraftEquipmentService.DeleteAsync(_httpClient, id);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftEquipmentService.DeleteAsync(dependecyParams, id);
 
             NotificationMessage message;
 
@@ -98,7 +92,7 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
             }
             else if (((int)response.Status) == 200)
             {
-                DialogService.Close(true);
+                CloseDialog(false);
                 message = new NotificationMessage().Build(NotificationSeverity.Success, "Aircraft Equipment Details", response.Message);
                 NotificationService.Notify(message);
             }
@@ -107,49 +101,90 @@ namespace FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Aircraft Equipment Details", response.Message);
                 NotificationService.Notify(message);
             }
+        }
 
-            await grid.Reload();
+        private void SetEditButtonState(long id, bool isBusy)
+        {
+            var details = data.Where(p => p.Id == id).First();
+            details.IsLoadingEditButton = isBusy;
         }
 
         async void AircraftEquipmentCreateDialog(long id, string title)
         {
-            SetAddNewButtonState(true);
-
-            AircraftEquipmentsVM airCraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(_httpClient, id);
-
-            if (airCraftEquipmentsVM.LogEntryDate == null)
+            if (id == 0)
             {
-                airCraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+                SetAddNewButtonState(true);
+                operationType = OperationType.Create;
             }
             else
             {
-                airCraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(airCraftEquipmentsVM.LogEntryDate.Value, timeZone);
+                SetEditButtonState(id, true);
+                operationType = OperationType.Edit;
             }
 
-            if (airCraftEquipmentsVM.ManufacturerDate == null)
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            aircraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, id);
+
+            if (aircraftEquipmentsVM.LogEntryDate == null)
             {
-                airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+                aircraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
             }
             else
             {
-                airCraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(airCraftEquipmentsVM.ManufacturerDate.Value, timeZone);
+                aircraftEquipmentsVM.LogEntryDate = DateConverter.ToLocal(aircraftEquipmentsVM.LogEntryDate.Value, timeZone);
+            }
+
+            if (aircraftEquipmentsVM.ManufacturerDate == null)
+            {
+                aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(DateTime.UtcNow, timeZone);
+            }
+            else
+            {
+                aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(aircraftEquipmentsVM.ManufacturerDate.Value, timeZone);
             }
 
             SetAddNewButtonState(false);
 
-            airCraftEquipmentsVM.AirCraftId = AircraftId;
+            aircraftEquipmentsVM.AirCraftId = AircraftId;
 
-            await DialogService.OpenAsync<Create>(title,
-                  new Dictionary<string, object>() { { "airCraftEquipmentsVM", airCraftEquipmentsVM } },
-                  new DialogOptions() { Width = "800px", Height = "580px" });
+            isDisplayPopup = true;
+            popupTitle = title;
 
-            await grid.Reload();
+            if (id == 0)
+            {
+                SetAddNewButtonState(false);
+            }
+            else
+            {
+                SetEditButtonState(id, false);
+            }
         }
 
         private void SetAddNewButtonState(bool isBusy)
         {
             isBusyAddNewButton = isBusy;
             StateHasChanged();
+        }
+
+        async Task CloseDialog(bool isCancelled)
+        {
+            isDisplayPopup = false;
+
+            if (!isCancelled)
+            {
+                await grid.Reload();
+            }
+        }
+
+        void OpenDeleteDialog(AircraftEquipmentDataVM aircraftEquipmentDataVM)
+        {
+            isDisplayPopup = true;
+            popupTitle = "Delete Equipment Item";
+            operationType = OperationType.Delete;
+
+            aircraftEquipmentsVM = new AircraftEquipmentsVM();
+            aircraftEquipmentsVM.Item = aircraftEquipmentDataVM.Item;
+            aircraftEquipmentsVM.Id = aircraftEquipmentDataVM.Id;
         }
     }
 }

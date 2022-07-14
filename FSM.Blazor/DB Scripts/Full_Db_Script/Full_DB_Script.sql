@@ -27,6 +27,24 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/****** Object:  Table [dbo].[CompanyServices]    Script Date: 22-04-2022 11:37:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CompanyServices](
+	[Id] [smallint] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](250) NULL,
+ CONSTRAINT [PK_CompanyServices] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
 /****** Object:  Table [dbo].[AirCraftEquipments]    Script Date: 01-02-2022 09:37:22 ******/
 SET ANSI_NULLS ON
 GO
@@ -240,11 +258,15 @@ CREATE TABLE [dbo].[Companies](
 	[Name] [varchar](200) NOT NULL,
 	[Address] [varchar](300) NOT NULL,
 	[ContactNo] [varchar](20) NULL,
+	[TimeZone] [varchar](100) NOT NULL,
+	[Website] [varchar](50) NULL,
+	[PrimaryAirport] [varchar](200) NULL,
+	[PrimaryServiceId] [smallint] NULL,
+	[Logo] [varchar](200) NULL,
 	[IsActive] [bit] NOT NULL,
-	[TimeZone] varchar(100) NOT NULL,
 	[IsDeleted] [bit] NOT NULL,
 	[CreatedOn] [datetime] NULL,
-	[CreatedBy] [bigint] NOT NULL,
+	[CreatedBy] [bigint] NULL,
 	[UpdatedOn] [datetime] NULL,
 	[UpdatedBy] [bigint] NULL,
 	[DeletedOn] [datetime] NULL,
@@ -645,7 +667,48 @@ CREATE TABLE [dbo].[BillingHistories](
 ) ON [PRIMARY]
 GO
 
+/****** Object:  Table [dbo].[Timezones]    Script Date: 06-05-2022 15:23:03 ******/
+SET ANSI_NULLS ON
+GO
 
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Timezones](
+	[Id] [smallint] IDENTITY(1,1) NOT NULL,
+	[Timezone] [varchar](100) NOT NULL,
+	[Offset] [varchar](10) NOT NULL,
+ CONSTRAINT [PK_Timezones] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Table [dbo].[Locations]    Script Date: 06-05-2022 15:38:32 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Locations](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[PhysicalAddress] [varchar](max) NOT NULL,
+	[TimezoneId] [smallint] NOT NULL,
+	[AirportCode] [varchar](100) NULL,
+	[CreatedBy] [bigint] NOT NULL,
+	[CreatedOn] [datetime] NOT NULL,
+	[UpdatedBy] [bigint] NULL,
+	[UpdatedOn] [datetime] NULL,
+	[DeletedBy] [bigint] NULL,
+	[DeletedOn] [datetime] NULL,
+ CONSTRAINT [PK_Locations] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 ---------------------------------------------------------------------------------------------------------------
 --					CONSTRAINT
 ---------------------------------------------------------------------------------------------------------------
@@ -843,6 +906,9 @@ REFERENCES [dbo].[Users] ([Id])
 GO
 ALTER TABLE [dbo].[AircraftSchedules] CHECK CONSTRAINT [FK_AircraftSchedules_UsersUpdatedBy]
 GO
+ALTER TABLE [dbo].[Companies]  WITH CHECK ADD FOREIGN KEY([PrimaryServiceId])
+REFERENCES [dbo].[CompanyServices] ([Id])
+GO
 ALTER TABLE [dbo].[Companies]  WITH CHECK ADD  CONSTRAINT [FK_Companies_Users] FOREIGN KEY([CreatedBy])
 REFERENCES [dbo].[Users] ([Id])
 GO
@@ -1008,6 +1074,35 @@ GO
 
 ALTER TABLE [dbo].[BillingHistories] CHECK CONSTRAINT [FK_BillingHistories_Users]
 GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Timezones] FOREIGN KEY([TimezoneId])
+REFERENCES [dbo].[Timezones] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Timezones]
+GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Users] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Users]
+GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Users1] FOREIGN KEY([UpdatedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Users1]
+GO
+
+ALTER TABLE [dbo].[Locations]  WITH CHECK ADD  CONSTRAINT [FK_Locations_Users2] FOREIGN KEY([DeletedBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Locations] CHECK CONSTRAINT [FK_Locations_Users2]
+GO
+
 
 ---------------------------------------------------------------------------------------------------------------------
 						--PROCEDURE
@@ -1200,7 +1295,9 @@ AS BEGIN
    
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetCompanyList]    Script Date: 01-02-2022 09:37:22 ******/
+
+
+/****** Object:  StoredProcedure [dbo].[GetCompanyList]    Script Date: 28-04-2022 15:57:20 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1211,7 +1308,8 @@ CREATE PROCEDURE [dbo].[GetCompanyList]
     @PageNo INT = 1,  
     @PageSize INT = 10,  
     @SortColumn NVARCHAR(20) = 'Name',  
-    @SortOrder NVARCHAR(20) = 'ASC'  
+    @SortOrder NVARCHAR(20) = 'ASC',
+	@CompanyId INT = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -1222,7 +1320,10 @@ AS BEGIN
     (  
         SELECT * from Companies 
 		
-        WHERE  IsDeleted = 0 and ( @SearchValue= '' OR  (   
+        WHERE  IsDeleted = 0 and 
+		((ISNULL(@CompanyId,0)=0)
+				OR (Id = @CompanyId))
+				and (@SearchValue= '' OR  (   
               Name LIKE '%' + @SearchValue + '%' 
             )  )
   
@@ -1241,7 +1342,10 @@ AS BEGIN
     (  
         select count(ID) as TotalRecords from Companies 
 		
-        WHERE IsDeleted = 0 and ( @SearchValue= '' OR  (   
+        WHERE  IsDeleted = 0 and 
+		((ISNULL(@CompanyId,0)=0)
+				OR (Id = @CompanyId))
+				and (@SearchValue= '' OR  (   
               Name LIKE '%' + @SearchValue + '%' 
             )  )
     )  
@@ -1253,10 +1357,8 @@ END
 
 /****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 03-12-2021 16:50:57 ******/
 SET ANSI_NULLS ON
-GO
-/****** Object:  StoredProcedure [dbo].[GetInstructorTypeList]    Script Date: 01-02-2022 09:37:22 ******/
-SET ANSI_NULLS ON
-GO
+
+
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[GetInstructorTypeList]  
@@ -1305,12 +1407,13 @@ AS BEGIN
    
 END
 GO
-/****** Object:  StoredProcedure [dbo].[GetUserList]    Script Date: 01-02-2022 09:37:22 ******/
+
+/****** Object:  StoredProcedure [dbo].[GetUsersList]    Script Date: 10-05-2022 17:53:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE PROCEDURE [dbo].[GetUserList]  
+CREATE PROCEDURE [dbo].[GetUsersList]  
 (       
     @SearchValue NVARCHAR(50) = NULL,  
     @PageNo INT = 1,  
@@ -1422,20 +1525,16 @@ AS BEGIN
    
     )  
     Select TotalRecords, U.Id, U.FirstName, U.LastName,U.Email,ISNULL(U.IsInstructor, 0 ) 
-	AS IsInstructor,ISNULL(U.IsActive, 0 ) AS IsActive,Ur.Name as UserRole, CP.Name AS CompanyName from Users U
+	AS IsInstructor,ISNULL(U.IsActive, 0 ) AS IsActive,Ur.Name as UserRole, CP.Id AS CompanyId,
+	CP.Name AS CompanyName,	U.ImageName as ProfileImage from Users U
 	LEFT JOIN  UserRoles UR on UR.Id=U.RoleId
 	LEFT JOIN  Companies CP on CP.Id = U.CompanyId
 	, CTE_TotalRows   
     WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = U.ID)  
    
 END
-
-
-/****** Object:  StoredProcedure [dbo].[GetUserRolePermissionList]    Script Date: 02-03-2022 09:02:52 ******/
-SET ANSI_NULLS ON
 GO
-SET QUOTED_IDENTIFIER ON
-GO
+
 CREATE PROCEDURE [dbo].[GetUserRolePermissionList]    
 (         
     @SearchValue NVARCHAR(50) = NULL,    
@@ -1559,7 +1658,7 @@ AS BEGIN
      
 END  
 
-/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 12-04-2022 17:15:42 ******/
+/****** Object:  StoredProcedure [dbo].[GetReservationList]    Script Date: 28-04-2022 16:08:36 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1575,7 +1674,8 @@ CREATE PROCEDURE [dbo].[GetReservationList]
 	@StartDate DATETIME = NULL,
 	@EndDate DATETIME = NULL,
 	@UserId BIGINT = NULL,
-	@AircraftId BIGINT = NULL
+	@AircraftId BIGINT = NULL,
+	@ReservationType VARCHAR(10) = NULL
 )  
 AS BEGIN  
     SET NOCOUNT ON;  
@@ -1618,6 +1718,12 @@ AS BEGIN
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
 				OR (acs.EndDateTime  <= @EndDate ))
+				AND
+				(((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Past') AND EndDateTime < SYSDATETIME()))
+				OR
+				((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Future') AND StartDateTime > SYSDATETIME())))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1625,7 +1731,7 @@ AS BEGIN
               ScheduleTitle LIKE '%' + @SearchValue + '%' OR
 			  ReservationId LIKE '%' + @SearchValue + '%' OR
 			  TailNo LIKE '%' + @SearchValue + '%' 
-            ))  
+            )) 
   
             ORDER BY  
             CASE WHEN (@SortColumn = 'StartDateTime' AND @SortOrder='ASC')  
@@ -1668,12 +1774,11 @@ AS BEGIN
 		LEFT JOIN AircraftScheduleDetails acd ON acs.Id = acd.AircraftScheduleId
 		LEFT JOIN Users u ON ACS.Member1Id = u.Id
 		LEFT JOIN Aircrafts a ON acs.AircraftId = a.Id
-		LEFT JOIN  Companies cp on a.CompanyId = cp.Id  
+		LEFT JOIN  Companies cp on a.CompanyId = cp.Id   
 		LEFT JOIN AircraftScheduleHobbsTimes ah
 		ON acs.Id = ah.AircraftScheduleId
 		LEFT JOIN AircraftEquipmentTimes at
 		ON ah.AircraftEquipmentTimeId = at.Id
-
         WHERE
 			(cp.IsDeleted = 0 OR  cp.IsDeleted IS NULL) AND
 			(at.IsDeleted = 0 or at.IsDeleted Is NULL) and
@@ -1681,7 +1786,7 @@ AS BEGIN
 			AND
 			1 = 1 AND 
 		      (
-			   ((ISNULL(@UserId,0)=0)
+				((ISNULL(@UserId,0)=0)
 				OR (acs.CreatedBy = @UserId))
 				AND
 				((ISNULL(@AircraftId,0)=0)
@@ -1694,7 +1799,13 @@ AS BEGIN
 				OR (acs.StartDateTime   >= @StartDate ))
 				AND
 				((ISNULL(@EndDate,0)='1900-01-01 00:00:00.000')
-				OR (acs.EndDateTime <= @EndDate ))
+				OR (acs.EndDateTime  <= @EndDate ))
+				AND
+				(((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Past') AND EndDateTime < SYSDATETIME()))
+				OR
+				((ISNULL(@ReservationType,'')='')
+				OR ((@ReservationType = 'Future') AND StartDateTime > SYSDATETIME())))
 		      )
 			AND 
 			acs.IsDeleted = 0 AND
@@ -1702,13 +1813,68 @@ AS BEGIN
               ScheduleTitle LIKE '%' + @SearchValue + '%' OR
 			  ReservationId LIKE '%' + @SearchValue + '%' OR
 			  TailNo LIKE '%' + @SearchValue + '%' 
-            ))  
+            )) 
     )
 	
     SELECT TotalRecords, CTE_Results.* From CTE_Results,CTE_TotalRows
 
 END
+GO
 
+/****** Object:  StoredProcedure [dbo].[GetLocationsList]    Script Date: 10-05-2022 11:10:44 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetLocationsList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'AirportCode',  
+    @SortOrder NVARCHAR(20) = 'ASC'  
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+        SELECT l.*, tz.Offset, tz.Timezone from Locations l
+		INNER JOIN Timezones  tz
+		ON l.TimezoneId = tz.Id
+
+  
+        WHERE  (@SearchValue= '' OR  (   
+              AirportCode LIKE '%' + @SearchValue + '%' 
+            )) AND l.DeletedBy Is  null  
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'AirportCode' AND @SortOrder='ASC')  
+                        THEN [AirportCode]  
+            END ASC,
+			CASE WHEN (@SortColumn = 'AirportCode' AND @SortOrder='DESC')  
+                        THEN [AirportCode]  
+            END DESC
+
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(ID) as TotalRecords from Locations 
+		
+        WHERE  (@SearchValue= '' OR  (   
+              AirportCode LIKE '%' + @SearchValue + '%' 
+            ))   AND DeletedBy Is  null
+    )  
+    Select   * from CTE_Results 
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = ID)  
+   
+END
+GO
 
 CREATE Trigger [dbo].[Trg_Company_InsertUserRolePermission]
 On [dbo].[Companies]
@@ -2451,3 +2617,106 @@ AS BEGIN
    
 END
 
+/****** Object:  StoredProcedure [dbo].[GetAircraftModelsList]    Script Date: 08-07-2022 10:39:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetAircraftModelsList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'Name',  
+    @SortOrder NVARCHAR(20) = 'ASC'  
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+        SELECT * from AircraftModels
+  
+        WHERE  (@SearchValue= '' OR  (   
+              [Name] LIKE '%' + @SearchValue + '%' 
+            ))
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='ASC')  
+                        THEN [Name]  
+            END ASC,
+			CASE WHEN (@SortColumn = 'Name' AND @SortOrder='DESC')  
+                        THEN [Name]
+            END DESC
+
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(ID) as TotalRecords from AircraftModels 
+		
+        WHERE  (@SearchValue= '' OR  (   
+              [Name] LIKE '%' + @SearchValue + '%' 
+            ))
+    )  
+
+    Select   * from CTE_Results 
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = ID)  
+   
+END
+
+/****** Object:  StoredProcedure [dbo].[GetAircraftMakesList]    Script Date: 08-07-2022 10:54:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[GetAircraftMakesList]  
+(       
+    @SearchValue NVARCHAR(50) = NULL,  
+    @PageNo INT = 1,  
+    @PageSize INT = 10,  
+    @SortColumn NVARCHAR(20) = 'Name',  
+    @SortOrder NVARCHAR(20) = 'ASC'  
+)  
+AS BEGIN  
+    SET NOCOUNT ON;  
+  
+    SET @SearchValue = LTRIM(RTRIM(@SearchValue))  
+  
+    ; WITH CTE_Results AS   
+    (  
+        SELECT * from AircraftMakes
+  
+        WHERE  (@SearchValue= '' OR  (   
+              [Name] LIKE '%' + @SearchValue + '%' 
+            ))
+  
+            ORDER BY  
+            CASE WHEN (@SortColumn = 'Name' AND @SortOrder='ASC')  
+                        THEN [Name]  
+            END ASC,
+			CASE WHEN (@SortColumn = 'Name' AND @SortOrder='DESC')  
+                        THEN [Name]
+            END DESC
+
+            OFFSET @PageSize * (@PageNo - 1) ROWS  
+            FETCH NEXT @PageSize ROWS ONLY  
+    ),  
+    CTE_TotalRows AS   
+    (  
+        select count(ID) as TotalRecords from AircraftMakes 
+		
+        WHERE  (@SearchValue= '' OR  (   
+              [Name] LIKE '%' + @SearchValue + '%' 
+            ))
+    )  
+
+    Select   * from CTE_Results 
+	, CTE_TotalRows   
+    WHERE EXISTS (SELECT 1 FROM CTE_Results WHERE CTE_Results.ID = ID)  
+   
+END

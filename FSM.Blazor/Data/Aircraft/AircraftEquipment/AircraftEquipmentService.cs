@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
+using Microsoft.JSInterop;
 using DataModels.VM.AircraftEquipment;
 
 namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
@@ -11,51 +12,52 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
     {
         private readonly HttpCaller _httpCaller;
 
-        public AircraftEquipmentService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public AircraftEquipmentService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<AircraftEquipmentDataVM>> ListAsync(IHttpClientFactory httpClient, AircraftEquipmentDatatableParams datatableParams)
+        public async Task<List<AircraftEquipmentDataVM>> ListAsync(DependecyParams dependecyParams, AircraftEquipmentDatatableParams datatableParams)
         {
-            string url = "airCraftequipment/list";
+            dependecyParams.URL = "airCraftequipment/list";
 
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
             List<AircraftEquipmentDataVM> aircraftEquipmentsList = JsonConvert.DeserializeObject<List<AircraftEquipmentDataVM>>(response.Data.ToString());
 
             return aircraftEquipmentsList;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, AircraftEquipmentsVM airCraftEquipmentsVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, AircraftEquipmentsVM airCraftEquipmentsVM)
         {
-            string jsonData = JsonConvert.SerializeObject(airCraftEquipmentsVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(airCraftEquipmentsVM);
 
-            string url = "airCraftequipment/create";
+            dependecyParams.URL = "airCraftequipment/create";
 
             if (airCraftEquipmentsVM.Id > 0)
             {
-                url = "airCraftequipment/edit";
+                dependecyParams.URL = "airCraftequipment/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, long id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, long id)
         {
-            string url = $"airCraftequipment/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"airCraftequipment/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
        
-        private async Task<AircraftEquipmentsVM> GetDetailsAsync(IHttpClientFactory httpClient, long id)
+        private async Task<AircraftEquipmentsVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"airCraftequipment/fetchbyid?id={id}");
+            dependecyParams.URL = $"airCraftequipment/fetchbyid?id={id}";
+            var response = await _httpCaller.GetAsync(dependecyParams);
 
             AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
 
@@ -67,7 +69,7 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
             return airCraftEquipmentsVM;
         }
 
-        public async Task<AircraftEquipmentsVM> GetEquipmentDetailsAsync(IHttpClientFactory httpClient, long id)
+        public async Task<AircraftEquipmentsVM> GetEquipmentDetailsAsync(DependecyParams dependecyParams, long id)
         {
             AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
             airCraftEquipmentsVM.Id = id;
@@ -76,18 +78,20 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
 
             if (id > 0)
             {
-                airCraftEquipmentsVM = await GetDetailsAsync(httpClient, id);
+                airCraftEquipmentsVM = await GetDetailsAsync(dependecyParams, id);
             }
 
-            airCraftEquipmentsVM.statusList = await GetStatusListAsync(httpClient);
-            airCraftEquipmentsVM.classificationList = await GetClassificationListAsync(httpClient);
+            airCraftEquipmentsVM.statusList = await GetStatusListAsync(dependecyParams);
+            airCraftEquipmentsVM.classificationList = await GetClassificationListAsync(dependecyParams);
 
             return airCraftEquipmentsVM;
         }
 
-        private async Task<List<StatusVM>> GetStatusListAsync(IHttpClientFactory httpClient)
+        private async Task<List<StatusVM>> GetStatusListAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient,$"equipmentstatus/list");
+            dependecyParams.URL = "equipmentstatus/list";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
             List<StatusVM> statusVMList = new List<StatusVM>();
 
             if (response.Status == System.Net.HttpStatusCode.OK)
@@ -98,9 +102,11 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
             return statusVMList;
         }
 
-        private async Task<List<EquipmentClassificationVM>> GetClassificationListAsync(IHttpClientFactory httpClient)
+        private async Task<List<EquipmentClassificationVM>> GetClassificationListAsync(DependecyParams dependecyParams)
         {
-            var response = await _httpCaller.GetAsync(httpClient, $"equipmentclassification/list");
+            dependecyParams.URL = "equipmentclassification/list";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
             List<EquipmentClassificationVM> ClassificationVMList = new List<EquipmentClassificationVM>();
 
             if (response.Status == System.Net.HttpStatusCode.OK)

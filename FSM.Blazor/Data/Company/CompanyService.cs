@@ -1,8 +1,7 @@
-﻿using DataModels.VM.Company;
-using Microsoft.AspNetCore.Components;
+﻿using DataModels.VM.Common;
+using DataModels.VM.Company;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
-using DataModels.VM.Common;
 using Newtonsoft.Json;
 
 namespace FSM.Blazor.Data.Company
@@ -11,16 +10,17 @@ namespace FSM.Blazor.Data.Company
     {
         private readonly HttpCaller _httpCaller;
 
-        public CompanyService(NavigationManager navigationManager, AuthenticationStateProvider authenticationStateProvider)
+        public CompanyService(AuthenticationStateProvider authenticationStateProvider)
         {
-            _httpCaller = new HttpCaller(navigationManager, authenticationStateProvider);
+            _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<CompanyVM>> ListAsync(IHttpClientFactory httpClient, DatatableParams datatableParams)
+        public async Task<List<CompanyVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
         {
-            string jsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+            dependecyParams.URL = "Company/List";
 
-            CurrentResponse response = await _httpCaller.PostAsync( httpClient, "Company/List", jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -29,38 +29,38 @@ namespace FSM.Blazor.Data.Company
 
             List<CompanyVM> companies = JsonConvert.DeserializeObject<List<CompanyVM>>(response.Data.ToString());
 
-            return companies; 
+            return companies;
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(IHttpClientFactory httpClient, CompanyVM companyVM)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, CompanyVM companyVM)
         {
-            string jsonData = JsonConvert.SerializeObject(companyVM);
-            
-            string url = "company/create";
+            dependecyParams.JsonData = JsonConvert.SerializeObject(companyVM);
+            dependecyParams.URL = "Company/create";
 
             if (companyVM.Id > 0)
             {
-                url = "company/edit";
+                dependecyParams.URL = "Company/edit";
             }
 
-            CurrentResponse response = await _httpCaller.PostAsync(httpClient, url, jsonData);
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<CurrentResponse> DeleteAsync(IHttpClientFactory httpClient, int id)
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, int id)
         {
-            string url = $"company/delete?id={id}";
-            CurrentResponse response = await _httpCaller.DeleteAsync(httpClient, url);
+            dependecyParams.URL = $"company/delete?id={id}";
+
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<List<DropDownValues>> ListDropDownValues(IHttpClientFactory httpClient)
+        public async Task<List<DropDownValues>> ListDropDownValues(DependecyParams dependecyParams)
         {
-            string url = $"company/listdropdownvalues";
+            dependecyParams.URL = $"company/listdropdownvalues";
 
-            CurrentResponse response = await _httpCaller.GetAsync(httpClient, url);
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
             List<DropDownValues> companiesList = new List<DropDownValues>();
 
             if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
@@ -69,6 +69,54 @@ namespace FSM.Blazor.Data.Company
             }
 
             return companiesList;
+        }
+
+        public async Task<List<DropDownValues>> ListCompanyServiceDropDownValues(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"company/listcompanyservicesdropdownvalues";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<DropDownValues> companyServicesList = new List<DropDownValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                companyServicesList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+            }
+
+            return companyServicesList;
+        }
+
+        public async Task<CurrentResponse> GetDetailsAsync(DependecyParams dependecyParams, int id)
+        {
+            dependecyParams.URL = $"company/getDetails?id={id}";
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> IsCompanyExistAsync(DependecyParams dependecyParams, int id, string name)
+        {
+            dependecyParams.URL = $"company/iscompanyexist?id={id}&name={name}";
+            var response = await _httpCaller.PutAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UpdateCreatedByAsync(DependecyParams dependecyParams, int id, long createdBy)
+        {
+            dependecyParams.URL = $"company/updatecreatedby?id={id}&createdBy={createdBy}";
+            var response = await _httpCaller.PutAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UploadLogo(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
+        {
+            dependecyParams.URL = $"company/uploadlogo";
+
+            CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
+
+            return response;
         }
     }
 }

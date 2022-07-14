@@ -33,5 +33,7 @@ namespace Service.Interface
         UserVM GetUserDetails(long id, int companyId, int roleId);
 
         CurrentResponse FindMyPreferencesById(long id);
+
+        CurrentResponse GetMasterDetails(int roleId);
     }
 }

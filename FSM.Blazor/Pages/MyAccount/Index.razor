@@ -8,6 +8,7 @@
 @inject DialogService DialogService
 @inject NavigationManager NavManager
 @inject UserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @page "/MyProfile"
 
@@ -16,7 +17,6 @@
 
     .description {
         font-size: 14px;
-        font-weight: 530;
     }
 
     .rz-fileupload-row {
@@ -41,10 +41,22 @@
     .card-img-top {
         max-width: 100%;
         max-height: 100%;
-        /*        object-fit:cover;
-        */
     }
 
+    .rz-button-icon-left {
+        margin-right: 1px !important;
+    }
+
+    [b-vy5hox7kaq] .rz-fileupload-buttonbar {
+        top: 120px !important
+    }
+
+    /* .rz-button.btn-primary {
+            margin-top: 28px;
+        }*/
+    .rz-fileupload-buttonbar {
+        top: 84% !important;
+    }
 </style>
 
 
@@ -55,73 +67,123 @@
 
 <div class="m-4">
     <div class="card">
-        <div class="row g-0">
 
-            <div class="col-sm-3" style="position: relative;">
+        <RadzenPanel AllowCollapse="true">
 
-                <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
-                             Path="@userVM.ImageName" class="card-img-top h-100" style="width:200px !important;height : 200px !important" />
+            <HeaderTemplate>
+                <RadzenLabel Text=""></RadzenLabel>
+            </HeaderTemplate>
 
-                <RadzenFileInput Style="outline:none" @bind-Value=@userVM.ImageName
-                                 Change=@(args => OnChangeAsync()) TValue="string" />
+            <ChildContent>
 
-            </div>
-            <div class="col-sm-3">
-                <div class="card-body" style="margin-left:-40px;">
-                    <div>
-                        <label class="description">Name : </label> @userVM.FirstName  @userVM.LastName
+                <div class="row g-0">
+
+                    <div class="col-sm-3" style="position: relative;">
+
+                        <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                                     Path="@userVM.ImageName" class="card-img-top h-100" style="width:200px !important;height : 200px !important" />
+
+                        <RadzenFileInput Style="outline:none" @bind-Value=@userVM.ImageName
+                                         Change=@(args => OnChangeAsync()) TValue="string" />
+
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card-body" style="margin-left:-40px;">
+                            <div>
+                                <label class="description">Name : </label> @userVM.FirstName  @userVM.LastName
+                            </div>
+
+                            <div>
+                                <label class="description">Email : </label> @userVM.Email
+                            </div>
+                            <div>
+                                <label class="description">Phone No : </label> @userVM.Phone
+                            </div>
+                            <br />
+
+                            <div style="margin-top:64px;">
+                                <RadzenButton Text="Update Details" Click="@OpenUpdateProfileDialog"></RadzenButton>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card-body">
+                            <div>
+                                <label class="description">Date of Birth : </label> @(userVM.DateofBirth != null ? userVM.DateofBirth.Value.ToShortDateString() : "" )
+                            </div>
+
+                            <div>
+                                <label class="description">Gender : </label> @userVM.Gender
+                            </div>
+
+                            <div>
+                                <label class="description">Country : </label> @userVM.Country
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card-body">
+                            <div>
+                                <label class="description">Role : </label> @userVM.Role
+                            </div>
+
+
+                            <div>
+                                <label class="description">Company Name : </label> @userVM.CompanyName
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </ChildContent>
+
+            <SummaryTemplate>
+                @*   <RadzenCard class="mt-1" Style="padding:0.5rem;">*@
+                <div class="row g-0" style="align-items:center">
+
+                    <div class="col-sm-1" style="position: relative;">
+                        <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                                     Path="@userVM.ImageName" class="card-img-top h-100" style="width:70px !important;height : 70px !important" />
+                    </div>
+                    <div class="col-sm-3">
+                        <div>
+                            <label class="description">Name : </label> @userVM.FirstName  @userVM.LastName
+                        </div>
+
+                        <div>
+                            <label class="description">Company Name : </label> @userVM.CompanyName
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="description">Email : </label> @userVM.Email
-                    </div>
-                    <div>
-                        <label class="description">Phone No : </label> @userVM.Phone
-                    </div>
-                    <br />
+                    <div class="col-sm-3">
+                        <div> <label class="description">Email : </label> @userVM.Email</div>
+                        <div>  <label class="description">Phone No : </label> @userVM.Phone</div>
 
-                    <div>
-                        <RadzenButton Text="Update Details" Click="@OpenUpdateProfileDialog"></RadzenButton>
+                    </div>
+                    <div class="col-sm-3">
+                        <div>
+                            <label class="description">Date of Birth : </label> @(userVM.DateofBirth != null ? userVM.DateofBirth.Value.ToShortDateString() : "" )
+                        </div>
 
+                        <div>
+                            <label class="description">Country : </label> @userVM.Country
+                        </div>
                     </div>
 
                 </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card-body">
-                    <div>
-                        <label class="description">Date of Birth : </label> @(userVM.DateofBirth != null ? userVM.DateofBirth.Value.ToShortDateString() : "" )
-                    </div>
+                @*  </RadzenCard>*@
+            </SummaryTemplate>
 
-                    <div>
-                        <label class="description">Gender : </label> @userVM.Gender
-                    </div>
-
-                    <div>
-                        <label class="description">Country : </label> @userVM.Country
-                    </div>
-
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card-body">
-                    <div>
-                        <label class="description">Role : </label> @userVM.Role
-                    </div>
+        </RadzenPanel>
 
 
-                    <div>
-                        <label class="description">Company Name : </label> @userVM.CompanyName
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
         <div class="card-header" style="margin-top:30px">
             <RadzenTabs RenderMode="TabRenderMode.Client">
                 <Tabs>
-                    <RadzenTabsItem Text="My Preference">
+                    <RadzenTabsItem Text="My Preference" Icon="manage_accounts">
 
                         <MyPreference UserPreferencesList=@userVM.UserPreferences></MyPreference>
 
@@ -129,7 +191,7 @@
 
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
                     {
-                        <RadzenTabsItem Text="Document">
+                        <RadzenTabsItem Text="Document" Icon="description">
 
                             <FSM.Blazor.Pages.Document.Index ParentModuleName="User">
 
@@ -140,9 +202,9 @@
 
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
                     {
-                        <RadzenTabsItem Text="Reservation">
+                        <RadzenTabsItem Text="Reservation" Icon="book_online">
 
-                            <FSM.Blazor.Pages.Reservation.Index UserId="@userVM.Id">
+                            <FSM.Blazor.Pages.Reservation.Index ParentModuleName="MyProfile" UserId="@userVM.Id">
 
                             </FSM.Blazor.Pages.Reservation.Index>
 
@@ -156,6 +218,18 @@
     </div>
 </div>
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="Update User"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+            <FSM.Blazor.Pages.User.Create userData="@userVM" CloseDialogCallBack="@CloseDialog">
+            </FSM.Blazor.Pages.User.Create>
+        </Body>
+    </CustomPopupComponent>
+}
 
 
 

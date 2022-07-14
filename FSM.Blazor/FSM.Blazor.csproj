@@ -8,11 +8,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\SubscriptionPlan\Index.razor~RFe28820.TMP" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Shared\Styles\EmptyLayout.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="BlazorMaterialIcons" Version="0.0.1" />
+    <PackageReference Include="BuildWebCompiler2022" Version="1.14.7" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
@@ -21,6 +35,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="6.0.0" />
+    <PackageReference Include="Microsoft.JSInterop" Version="6.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Radzen.Blazor" Version="3.13.6" />
     <PackageReference Include="Syncfusion.Blazor.Schedule" Version="19.4.0.42" />

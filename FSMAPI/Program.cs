@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using Configuration;
 using DataModels.Constants;
 using FSMAPI.CustomServicesExtensions;
@@ -42,6 +43,47 @@ builder.Services.AddSwaggerGen(c =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
 });
+
+#region API rate limit configuraiton
+
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(options =>
+{
+    options.EnableEndpointRateLimiting = true;
+    options.StackBlockedRequests = false;
+    options.HttpStatusCode = 429;
+    options.RealIpHeader = "X-Real-IP";
+    options.ClientIdHeader = "X-ClientId";
+    options.GeneralRules = new List<RateLimitRule>
+        {
+            new RateLimitRule
+            {
+                Endpoint = "POST:/api/company/create",
+                Period = "10s",
+                Limit = 2,
+            },
+             new RateLimitRule
+            {
+                Endpoint = "POST:/api/user/create",
+                Period = "10s",
+                Limit = 2,
+            },
+             new RateLimitRule
+            {
+                Endpoint = "PUT:/api/user/updatecreatedby",
+                Period = "10s",
+                Limit = 2,
+            }
+        };
+});
+
+builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+builder.Services.AddInMemoryRateLimiting();
+
+#endregion
 
 #region
 
@@ -104,6 +146,7 @@ Directory.CreateDirectory(uploadsPath);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.UserProfileImage);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.Document);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.CompanyLogo);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
@@ -127,6 +170,8 @@ app.UseDirectoryBrowser(new DirectoryBrowserOptions
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseIpRateLimiting();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,61 +1,61 @@
-﻿@using DataModels.VM.Account
-
+﻿@using DataModels.VM.Account;
 @page "/Login"
 
 @layout EmptyLayout
 @namespace FSM.Blazor.Pages.Account
 
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRunTime
-@inject NavigationManager NavigationManager
-@inject NotificationService NotificationService
-
-<style>
-    form .row {
-        margin-bottom: 16px;
-    }
-</style>
 
 <PageTitle>Login | Fly Manager </PageTitle>
-<div class="row vh-100 d-flex justify-content-center align-items-center">
-    <div class="col-lg-6 col-xl-4">
-        <RadzenCard class="m-3">
-            <h2 class="mb-4">Login</h2>
 
-            <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+<div class="col-lg-6 col-xl-10">
+    <div class="m-3">
 
-                <div class="row">
-                    <div class="col-md-4 align-items-center d-flex">
-                        <RadzenLabel Text="Email" />
-                    </div>
-                    <div class="col-md-8">
-                        <RadzenTextBox Placeholder="Please enter email" Name="Email" Class="w-100" @bind-Value=@loginVM.Email />
-                        <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
-                        <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
-                    </div>
-                </div>
+        @if (isSessionTimeout)
+        {
+            <div style="color: red;">Session Timeout!</div>
+        }
 
-                <div class="row">
-                    <div class="col-md-4 align-items-center d-flex">
-                        <RadzenLabel Text="Password" />
-                    </div>
-                    <div class="col-md-8">
-                        <RadzenPassword Placeholder="Please enter password" Name="Password" Class="w-100" @bind-Value=@loginVM.Password />
-                        <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
+        <RadzenTemplateForm TItem="LoginVM" Data=@loginVM Submit="@((LoginVM args) => {  Submit(); })">
+            <div class="login-wrap p-4 p-md-5">
+                <div class="d-flex">
+                    <div class="w-100">
+                        <h3 class="mb-4">Sign in to Fly Manager </h3>
                     </div>
                 </div>
+                <div class="form-group mb-3">
+                    <RadzenLabel Text="Email" />
 
-                <div class="row">
-                    <div class="col-md-6 col-12 d-flex align-items-center ">
-                        <RadzenLink Path="/forgetpassword" Text="Forget Password ?" />
-                    </div>
-                    <div class="col-md-6 col-12 d-flex justify-content-end align-content-center  ">
-                        <RadzenButton ButtonType="ButtonType.Submit" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
-                    </div>
+                    <RadzenTextBox Placeholder="Email" Name="Email" Class="form-control" @bind-Value=@loginVM.Email />
+                    <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative" />
+                    <RadzenEmailValidator Component="Email" Text="Email is invalid" Popup="@isPopup" Style="position: relative" />
 
                 </div>
-            </RadzenTemplateForm>
+                <div class="form-group mb-3">
+                    <RadzenLabel Text="Password" />
 
-        </RadzenCard>
+                    <RadzenPassword Placeholder="Password" Name="Password" Class="form-control" @bind-Value=@loginVM.Password />
+                    <RadzenRequiredValidator Component="Password" Text="Password is required" Popup="@isPopup" Style="position: relative" />
+
+                </div>
+                <div class="form-group">
+                    <RadzenButton ButtonType="ButtonType.Submit" Style="height:40px;" class="form-control btn btn-primary rounded submit px-3" Text="Login" BusyText="Login ..." IsBusy="@isBusy" />
+
+                </div>
+                <div class="d-md-flex">
+                    <div class="w-50 text-left">
+                        <RadzenLink Path="/Registration" Text="Register" Style="color:#1151F3" />
+
+                    </div>
+
+                    <div class="w-50 text-md-right">
+                        <RadzenLink Path="/forgetpassword" Text="Forget Password ?" Style="color:#1151F3" />
+
+                    </div>
+                </div>
+            </div>
+
+        </RadzenTemplateForm>
+      
     </div>
 </div>

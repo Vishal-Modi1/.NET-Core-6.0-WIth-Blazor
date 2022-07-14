@@ -4,9 +4,8 @@ using Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using DataModels.VM.Aircraft;
 using DataModels.VM.Common;
-
+using DataModels.VM.AircraftMake;
 
 namespace Service
 {
@@ -62,6 +61,23 @@ namespace Service
             }
         }
 
+        public CurrentResponse List(DatatableParams datatableParams)
+        {
+            try
+            {
+                List<AircraftMakeDataVM> aircraftMakeList = _aircraftMakeRepository.List(datatableParams);
+                CreateResponse(aircraftMakeList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         private bool IsAircraftMakeExist(AircraftMake aircraftMake)
         {
             AircraftMake aircraftMakeInfo = _aircraftMakeRepository.FindByCondition(p => p.Name == aircraftMake.Name && p.Id != aircraftMake.Id);
@@ -72,6 +88,58 @@ namespace Service
             }
 
             return true;
+        }
+
+        public CurrentResponse Delete(int id)
+        {
+            try
+            {
+                bool isAlreadyUsed = _aircraftMakeRepository.IsAlreadyUsed(id);
+
+                if(isAlreadyUsed)
+                {
+                    CreateResponse(true, HttpStatusCode.BadRequest, "Aircraft make can't be deleted because it is used in aircraft details!");
+                    return _currentResponse;
+                }
+
+                _aircraftMakeRepository.Delete(id);
+                CreateResponse(true, HttpStatusCode.OK, "Aircraft make deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse Edit(AircraftMake aircraftMake)
+        {
+            try
+            {
+                bool isAircraftMakeExist = IsAircraftMakeExist(aircraftMake);
+
+                if (isAircraftMakeExist)
+                {
+                    CreateResponse(aircraftMake, HttpStatusCode.Ambiguous, "Aircraft make is already exist");
+                }
+                else
+                {
+                    aircraftMake = _aircraftMakeRepository.Edit(aircraftMake);
+                    CreateResponse(aircraftMake, HttpStatusCode.OK, "Aircraft make updated successfully");
+                }
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
         }
     }
 }

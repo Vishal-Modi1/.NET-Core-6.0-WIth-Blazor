@@ -1,8 +1,8 @@
 ﻿@using DataModels.VM.InstructorType
 @using FSM.Blazor.Data.InstructorType
 
-@inject Radzen.DialogService DialogService
 @inject InstructorTypeService InstructorTypeService
+
 
 <style>
     form .row {
@@ -10,30 +10,41 @@
     }
 </style>
 
-<RadzenTemplateForm Data="@instructorTypeData" Submit="@((InstructorTypeVM args) => {  Submit(args); })">
+<RadzenTemplateForm Data="@InstructorTypeData" Submit="@((InstructorTypeVM args) => {  Submit(args); })">
 
-    <input type="hidden" value="@instructorTypeData.Id" name="Id" />
-
-    <RadzenFieldset Text="Instructor Type Info">
+    <div class="popup-content">
+        <input type="hidden" value="@InstructorTypeData.Id" name="Id" />
 
         <div class="row">
-            <div class="col-md-4 align-items-center d-flex">
+            <div class="col-md-12 align-items-center d-flex">
                 <RadzenLabel Text="Name" />
             </div>
-            <div class="col-md-8">
-                <RadzenTextBox style="width: 100%;" Placeholder="Please enter name" Name="Name" @bind-Value="@instructorTypeData.Name" />
+            <div class="col-md-12">
+                <RadzenTextBox style="width: 100%;" Placeholder="Name" Name="Name" @bind-Value="@InstructorTypeData.Name" />
                 <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
 
-    </RadzenFieldset>
+        <hr />
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
 
-    <div class="row" style="margin-top:4%">
-        <div class="col-md-12 text-right">
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Save" Style="width: 120px" IsBusy=@isBusy BusyText="Saving ..." />
-            <RadzenButton Click="@((args) => DialogService.Close(false))"
-                          ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="width: 120px" Class="mr-1" />
+                @if (InstructorTypeData.Id == 0)
+                {
+                    <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary"
+                              Text="Save" Style="width: 120px" IsBusy=@isBusy />
+                }
+                else
+                {
+                     <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Success"
+                              Text="Save" Style="width: 120px" IsBusy=@isBusy />
+                }
+
+                  <RadzenButton Click="@((args) => CloseDialog(true))"
+                              ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
+            </div>
         </div>
+
     </div>
 
 </RadzenTemplateForm>

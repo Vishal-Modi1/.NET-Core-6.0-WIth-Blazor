@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.Common;
+using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
@@ -15,10 +16,7 @@ namespace FSM.Blazor.Pages.Account
 
         public bool ShowError { get; set; }
 
-        [Inject]
-        IHttpClientFactory _httpClient { get; set; }
-
-        protected override async void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
             base.OnInitialized();
             
@@ -41,7 +39,8 @@ namespace FSM.Blazor.Pages.Account
                 message = "Validating token ...";
                 StateHasChanged();
 
-                CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(_httpClient, Link);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, Link);
                 ManageResponseAsync(response);
                 ShowError = false;
             }
@@ -58,7 +57,9 @@ namespace FSM.Blazor.Pages.Account
             {
                 if (Convert.ToBoolean(response.Data))
                 {
-                    response = await AccountService.ActivateAccountAsync(_httpClient, Link);
+                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+                    response = await AccountService.ActivateAccountAsync(dependecyParams, Link);
                     IsValidToken = true;
 
                     message = response.Message;

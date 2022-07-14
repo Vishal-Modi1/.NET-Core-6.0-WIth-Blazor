@@ -1,0 +1,93 @@
+﻿.bg-primary-f {
+  background-color: #1151F3;
+}
+
+.bg-secondary-f {
+  background-color: rgba(17, 81, 243, 0.16);
+}
+
+.bg-light-f {
+  background-color: #E9EAED;
+}
+
+.bg-info-f {
+  background-color: #12A4F5;
+}
+
+.bg-success-f {
+  background-color: #009B51;
+}
+
+.bg-warning-f {
+  background-color: #FFAE11;
+}
+
+.bg-danger-f {
+  background-color: #F31155;
+}
+
+/* RADZEN TEXTBOX,TEXTAREA START*/
+.rz-textbox.valid, .rz-textarea.valid {
+  background-color: #F5F5F5;
+}
+.rz-textbox.invalid, .rz-textarea.invalid {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
+}
+
+.rz-spinner.valid {
+  background-color: #F5F5F5;
+}
+.rz-spinner.invalid {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
+}
+
+.invalid {
+  outline: hidden;
+}
+.invalid .rz-calendar .rz-inputtext {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
+}
+
+.valid .rz-calendar .rz-inputtext {
+  background-color: #F5F5F5;
+}
+
+/*.invalid {
+    .rz-calendar, .rz-inputtext {
+        background-color: #FFD1D178;
+        border: 1px solid #FF0000;
+    }
+}
+
+.valid {
+    .rz-calendar,.rz-inputtext{
+        background-color: #F5F5F5;
+    }
+}*/
+/* RADZEN TEXTBOX,TEXTAREA END*/
+.rz-dropdown.valid {
+  background-color: #F5F5F5;
+}
+.rz-dropdown.invalid {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
+}
+
+.rz-label {
+  margin-bottom: 5px;
+}
+
+form .btn-primary {
+  margin-right: 4px;
+}
+
+form .btn-success {
+  margin-right: 4px;
+}
+
+form .btn-danger {
+  margin-right: 4px;
+}

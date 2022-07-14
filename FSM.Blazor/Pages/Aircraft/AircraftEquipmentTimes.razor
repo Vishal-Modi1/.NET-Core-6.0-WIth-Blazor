@@ -2,52 +2,85 @@
 @using DataModels.VM.Aircraft;
 @using DataModels.Entities;
 
-<RadzenFieldset Text="Aircraft Equipment Times Info">
+<div class="row">
 
-    <div class="row mt-2 mb-2">
-        <div class="col-md-6 col-12 align-items-center d-flex">
-            <RadzenLabel Text=@("Air Frame Hours") />
-        </div>
-        <div class="col-md-6 col-12">
-
-            <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[0].Hours
-                           Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(0, args)) />
-
-        </div>
+    <div class="col-md-6 align-items-center d-flex">
+        <RadzenLabel Text=@("Air Frame Hours") />
     </div>
 
-    @{ engineIndex = 0;}
+    <div class="col-md-6 align-items-center d-flex">
+    </div>
+
+    <div class="col-md-6">
+        <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[0].Hours
+                       Placeholder="Hours" ValueChanged=@(args => ManageHoursChange(0, args)) />
+    </div>
+
+    <div class="col-md-6">
+    </div>
+
+</div>
+
+    @{
+    engineIndex = 0;
+}
+
+@if (AircraftData.NoofEngines > 0)
+{
+    <hr />
+}
+
+<div class="row">
 
     @for (int engineNo = 1; engineNo <= AircraftData.NoofEngines; engineNo++)
     {
         int engineIndexValue = engineNo;
         engineIndex++;
 
-        <div class="row mt-2 mb-2">
-            <div class="col-md-6 col-12 align-items-center d-flex">
-                <RadzenLabel Text=@("Engine " + engineIndex + " Hours") />
-            </div>
-            <div class="col-md-6 col-12">
-                <RadzenNumeric style="width: 100%;"  TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[engineNo].Hours
-                           Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(engineIndexValue, args)) />
+        <div class="col-md-6 align-items-center d-flex mb-3">
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <RadzenLabel Text=@("Engine " + engineIndex + " Hours") />
+                </div>
+                <div class="col-md-12 align-items-center d-flex">
+
+                    <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[engineNo].Hours
+                               Placeholder="Hours" ValueChanged=@(args => ManageHoursChange(engineIndexValue, args)) />
+                </div>
             </div>
         </div>
     }
 
-    @{propellerIndex = 0;}
-    @for (int proppellerNo = AircraftData.NoofEngines + 1; proppellerNo < (AircraftData.NoofPropellers + AircraftData.NoofEngines + 1); proppellerNo++)
-    {
-        int proppellerIndexValue = proppellerNo;
-        propellerIndex++;
+</div>
 
-        <div class="row mt-2 mb-2">
-            <div class="col-md-6 col-12 align-items-center d-flex">
-                <RadzenLabel Text=@("Propeller " + propellerIndex + " Hours") />
-            </div>
-            <div class="col-md-6 col-12">
-                <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours
-                           Placeholder="Please enter hours" ValueChanged=@(args => ManageHoursChange(proppellerIndexValue, args)) />
+@{
+    propellerIndex = 0;
+}
+
+@if (AircraftData.NoofPropellers > 0)
+{
+    <hr />
+}
+
+<div class="row">
+
+@for (int proppellerNo = AircraftData.NoofEngines + 1; proppellerNo < (AircraftData.NoofPropellers + AircraftData.NoofEngines + 1); proppellerNo++)
+{
+    int proppellerIndexValue = proppellerNo;
+    propellerIndex++;
+
+     <div class="col-md-6 align-items-center d-flex mb-3">
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                      <RadzenLabel Text=@("Propeller " + propellerIndex + " Hours") />
+                </div>
+                <div class="col-md-12 align-items-center d-flex">
+
+                    <RadzenNumeric style="width: 100%;" TValue="decimal" Value=@AircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours
+                       Placeholder="Hours" ValueChanged=@(args => ManageHoursChange(proppellerIndexValue, args)) />
+                </div>
             </div>
         </div>
-    }
-</RadzenFieldset>
+}
+
+</div>
