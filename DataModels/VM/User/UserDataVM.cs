@@ -11,6 +11,7 @@ namespace DataModels.VM.User
         public string LastName { get; set; }
 
         public string CompanyName { get; set; }
+
         public int? CompanyId { get; set; }
 
         public string ProfileImage { get; set; }

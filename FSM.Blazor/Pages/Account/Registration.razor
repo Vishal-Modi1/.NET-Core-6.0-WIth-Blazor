@@ -1,8 +1,10 @@
 ﻿@using FSM.Blazor.Data.Company;
 @using FSM.Blazor.Data.User;
+@using FSM.Blazor.Data.Account;
 @using Syncfusion.Blazor.Spinner
 
 @inject CompanyService CompanyService
+@inject AccountService AccountService
 @inject UserService UserService
 
 @page "/Registration"
@@ -30,7 +32,7 @@
             <Steps>
                 <RadzenStepsItem Text="Company Details" Disabled="true">
 
-                    <FSM.Blazor.Pages.Company.Create companyData="@companyData" GoToNext="@(() => GoToNextStepAsync())">
+                    <FSM.Blazor.Pages.Company.Create CompanyData="@companyData" IsInvited=@userVM.IsInvited GoToNext="@(() => GoToNextStepAsync())">
 
                     </FSM.Blazor.Pages.Company.Create>
 
@@ -46,7 +48,6 @@
 
             </Steps>
         </RadzenSteps>
-
 
     </div>
 </div>

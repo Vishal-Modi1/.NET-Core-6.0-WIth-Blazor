@@ -45,10 +45,6 @@ namespace FSM.Blazor.Pages.InstructorType
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
-            {
-                NavManager.NavigateTo("/Dashboard");
-            }
         }
 
         async Task LoadData(LoadDataArgs args)
@@ -60,9 +56,9 @@ namespace FSM.Blazor.Pages.InstructorType
             datatableParams.SearchText = searchText;
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            data = await InstructorTypeService.ListAsync(dependecyParams,datatableParams);
+            data = await InstructorTypeService.ListAsync(dependecyParams, datatableParams);
             count = data.Count() > 0 ? data[0].TotalRecords : 0;
-            isLoading = false;            
+            isLoading = false;
         }
 
         async Task InstructorTypeCreateDialog(InstructorTypeVM instructorTypeData, string title)
@@ -106,7 +102,7 @@ namespace FSM.Blazor.Pages.InstructorType
                 NotificationService.Notify(message);
             }
 
-            await grid.Reload();
+              await grid.Reload();
         }
 
         async Task CloseDialog(bool isCancelled)
@@ -115,7 +111,7 @@ namespace FSM.Blazor.Pages.InstructorType
 
             if (!isCancelled)
             {
-                await grid.Reload();
+                 await grid.Reload();
             }
         }
 

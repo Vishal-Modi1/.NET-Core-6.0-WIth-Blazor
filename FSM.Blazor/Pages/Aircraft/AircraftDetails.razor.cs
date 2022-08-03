@@ -1,11 +1,15 @@
 ﻿using DataModels.Constants;
+using DataModels.Entities;
+using DataModels.Enums;
 using DataModels.VM.Aircraft;
+using DataModels.VM.Common;
 using FSM.Blazor.Data.Aircraft;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using Radzen;
 using System.Net;
 
@@ -23,16 +27,20 @@ namespace FSM.Blazor.Pages.Aircraft
 
         public string CompanyName;
 
-        public bool isDataLoaded = false, isBusy = false, isDisplayLoader;
+        public bool isDataLoaded = false, isBusy = false, isUpdateButtonBusy = false, isDisplayLoader;
         private CurrentUserPermissionManager _currentUserPermissionManager;
         string moduleName = "Aircraft", popupTitle;
         public bool isAllowToEdit, isDisplayPopup;
+        OperationType operationType = OperationType.Edit;
+        DataModels.Enums.UserRole userRole;
+        string modelWidth = "600px";
 
         protected override async Task OnInitializedAsync()
         {
             isDisplayLoader = true;
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
 
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -81,12 +89,15 @@ namespace FSM.Blazor.Pages.Aircraft
             SetCompanyName();
         }
 
-        async Task AircraftEditDialog(int id, string title)
+
+        async Task AircraftEditDialog(long id, string title)
         {
             isBusy = true;
+            operationType = OperationType.Edit;
+            modelWidth = "600px";
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            AircraftVM aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
+            AircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
 
             SetCompanyName();
 
@@ -95,9 +106,36 @@ namespace FSM.Blazor.Pages.Aircraft
             popupTitle = title;
         }
 
+        async Task OpenStatusUpdateDialog(long id)
+        {
+            isUpdateButtonBusy = true;
+            operationType = OperationType.UpdateStatus;
+            modelWidth = "400px";
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            AircraftData = await AircraftService.GetDetailsAsync(dependecyParams, id);
+
+            isUpdateButtonBusy = false;
+            isDisplayPopup = true;
+            popupTitle = "Update Status";
+        }
+
         async Task CloseDialog()
         {
             isDisplayPopup = false;
+        }
+
+        async Task UpdateStatus(int id)
+        {
+            AircraftData.AircraftStatusId = Convert.ToByte(id);
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftStatusService.GetById(dependecyParams, AircraftData.AircraftStatusId);
+
+            if (response != null && response.Status == HttpStatusCode.OK)
+            {
+                AircraftData.AircraftStatus = JsonConvert.DeserializeObject<AircraftStatus>(response.Data.ToString());
+            }
         }
 
         private void SetCompanyName()

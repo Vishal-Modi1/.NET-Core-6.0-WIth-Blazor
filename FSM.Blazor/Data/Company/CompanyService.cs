@@ -71,6 +71,21 @@ namespace FSM.Blazor.Data.Company
             return companiesList;
         }
 
+        public async Task<List<DropDownValues>> ListDropDownValuesByUserId(DependecyParams dependecyParams, long userId)
+        {
+            dependecyParams.URL = $"company/listdropdownvaluesbyuserid?userid={userId}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<DropDownValues> companiesList = new List<DropDownValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                companiesList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+            }
+
+            return companiesList;
+        }
+
         public async Task<List<DropDownValues>> ListCompanyServiceDropDownValues(DependecyParams dependecyParams)
         {
             dependecyParams.URL = $"company/listcompanyservicesdropdownvalues";

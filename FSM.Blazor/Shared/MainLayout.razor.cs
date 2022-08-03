@@ -1,4 +1,6 @@
 ﻿using DataModels.Constants;
+using DataModels.Enums;
+using DataModels.VM.Common;
 using FSM.Blazor.Pages.MyAccount;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
@@ -12,8 +14,12 @@ namespace FSM.Blazor.Shared
     {
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
-        bool sidebarExpanded = true, bodyExpanded = false;
-        string userFullName = "", loggedUserId;
+        bool sidebarExpanded = true, bodyExpanded = false, isDisplayPopup = false;
+        string userFullName = "", loggedUserId, popupTitle = "";
+        OperationType operationType;
+        List<DropDownValues> companyList = new List<DropDownValues>();
+        public int companyId;
+        string companyName; bool isSuperAdmin;
 
         dynamic themes = new[]
         {
@@ -38,7 +44,6 @@ namespace FSM.Blazor.Shared
 
             var user = (await AuthStat).User;
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user1 = authState.User;
 
             if (!user.Identity.IsAuthenticated)
             {
@@ -50,6 +55,20 @@ namespace FSM.Blazor.Shared
 
             loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
                                .Select(c => c.Value).SingleOrDefault();
+
+            companyId = Convert.ToInt32(user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyId)
+                               .Select(c => c.Value).SingleOrDefault());
+
+            companyName = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
+                               .Select(c => c.Value).SingleOrDefault();
+
+            if(string.IsNullOrEmpty(companyName))
+            {
+                companyName = "Flight Schedule Management";
+            }
+
+            isSuperAdmin = Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role)
+                               .Select(c => c.Value).SingleOrDefault()) == (int)UserRole.SuperAdmin;
 
             base.StateHasChanged();
 
@@ -73,8 +92,31 @@ namespace FSM.Blazor.Shared
 
         async Task OpenChangePasswordDailog()
         {
-            await DialogService.OpenAsync<ChangePassword>("Change Password",
-                 new Dictionary<string, object>() { { "Id", loggedUserId } },  new DialogOptions() { Width = "500px", Height = "380px" });
+            isDisplayPopup = true;
+            popupTitle = "Change Password";
+            operationType = OperationType.ChangePassword;
+
+            //await DialogService.OpenAsync<ChangePassword>("Change Password",
+            //     new Dictionary<string, object>() { { "Id", loggedUserId } },  new DialogOptions() { Width = "500px", Height = "380px" });
+        }
+
+        async Task OpenChangeCompanyDailog()
+        {
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            companyList = await CompanyService.ListDropDownValuesByUserId(dependecyParams,Convert.ToInt64(loggedUserId));
+            
+            isDisplayPopup = true;
+            popupTitle = "Change Company";
+            operationType = OperationType.ChangeCompany;
+
+            //await DialogService.OpenAsync<ChangePassword>("Change Password",
+            //     new Dictionary<string, object>() { { "Id", loggedUserId } },  new DialogOptions() { Width = "500px", Height = "380px" });
+        }
+
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
+
         }
 
         async Task ManageMenuClickEvent(MenuItemEventArgs eventArgs)

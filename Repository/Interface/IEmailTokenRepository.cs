@@ -9,5 +9,9 @@ namespace Repository.Interface
         EmailToken Create(EmailToken emailTokens);
 
         EmailToken FindByCondition(Expression<Func<EmailToken, bool>> predicate);
+
+        bool IsValidToken(string token);
+
+        void UpdateStatus(string token);
     }
 }

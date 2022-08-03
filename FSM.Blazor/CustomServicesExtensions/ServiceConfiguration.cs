@@ -18,6 +18,8 @@ using FSM.Blazor.Data.ModuleDetail;
 using FSM.Blazor.Data.BillingHistory;
 using FSM.Blazor.Data.Location;
 using FSM.Blazor.Data.Timezone;
+using FSM.Blazor.Data.AircraftStatus;
+using FSM.Blazor.Data.InviteUser;
 
 namespace FSM.Blazor.CustomServicesExtensions
 {
@@ -46,6 +48,8 @@ namespace FSM.Blazor.CustomServicesExtensions
             builder.Services.AddScoped<TokenValidatorService>();
             builder.Services.AddScoped<LocationService>();
             builder.Services.AddScoped<TimezoneService>();
+            builder.Services.AddScoped<AircraftStatusService>();
+            builder.Services.AddScoped<InviteUserService>();
         }
     }
 }

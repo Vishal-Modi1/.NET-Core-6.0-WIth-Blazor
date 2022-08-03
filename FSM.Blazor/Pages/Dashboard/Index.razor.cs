@@ -3,11 +3,9 @@ using DataModels.VM.User;
 using FSM.Blazor.Data.User;
 using FSM.Blazor.Extensions;
 using FSM.Blazor.Shared;
-using FSM.Blazor.Shared.Components;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Radzen;
 
@@ -34,6 +32,7 @@ namespace FSM.Blazor.Pages.Dashboard
         private bool isDisplayLoader { get; set; } = false;
         UserVM userVM = new UserVM();
         DateTime DateofBirth { get; set; } = DateTime.Now;
+
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -41,6 +40,7 @@ namespace FSM.Blazor.Pages.Dashboard
             base.StateHasChanged();
             await LoadData();
         }
+
         async Task LoadData()
         {
             isDisplayLoader = true;

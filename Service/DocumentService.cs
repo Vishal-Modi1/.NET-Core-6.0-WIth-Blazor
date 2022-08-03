@@ -254,7 +254,7 @@ namespace Service
 
             foreach (DocumentDataVM documentDataVM in documentsList)
             {
-                documentDataVM.DocumentPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.Document}/{documentDataVM.CompanyId}/{documentDataVM.UserId}/{documentDataVM.Name}";
+                documentDataVM.DocumentPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.Document}/{documentDataVM.CompanyId}/{documentDataVM.UserId}/{documentDataVM.Name}";
             }
 
             return documentsList;

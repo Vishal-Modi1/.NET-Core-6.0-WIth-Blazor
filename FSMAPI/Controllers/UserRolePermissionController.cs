@@ -5,7 +5,6 @@ using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 using System;
 using DataModels.Constants;
-using Microsoft.AspNetCore.Http;
 using FSMAPI.Utilities;
 using System.Security.Claims;
 

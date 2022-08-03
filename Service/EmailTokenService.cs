@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using Repository.Interface;
 using Service.Interface;
 using System;
+using System.Net;
 
 namespace Service
 {
@@ -32,29 +33,45 @@ namespace Service
         {
             try
             {
-                EmailToken emailToken = _emailTokenRepository.FindByCondition(p => p.Token == refreshToken && p.UserId == userId && p.EmailType == EmailType.RefreshToken);
+                EmailToken emailToken = _emailTokenRepository.FindByCondition(p => p.Token == refreshToken && p.UserId == userId && p.EmailType == EmailTypes.RefreshToken);
 
                 if (emailToken == null)
                 {
-                    CreateResponse(false, System.Net.HttpStatusCode.BadRequest, "Refresh token is not valid.");
+                    CreateResponse(false, HttpStatusCode.BadRequest, "Refresh token is not valid.");
                 }
                 else if (emailToken.ExpireOn < DateTime.UtcNow)
                 {
-                    CreateResponse(false, System.Net.HttpStatusCode.BadRequest, "Refresh token has been expired.");
+                    CreateResponse(false,HttpStatusCode.BadRequest, "Refresh token has been expired.");
                 }
                 else
                 {
-                    CreateResponse(true, System.Net.HttpStatusCode.OK, "");
+                    CreateResponse(true, HttpStatusCode.OK, "");
                 }
 
                 return _currentResponse;
             }
             catch (Exception exc)
             {
-                CreateResponse(false, System.Net.HttpStatusCode.InternalServerError, exc.ToString());
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
 
                 return _currentResponse;
             }
+        }
+
+        public CurrentResponse IsValidToken(string token)
+        {
+            bool isValidToken = _emailTokenRepository.IsValidToken(token);
+
+            if (isValidToken)
+            {
+                CreateResponse(isValidToken, HttpStatusCode.OK, "Valid Token");
+            }
+            else
+            {
+                CreateResponse(isValidToken, HttpStatusCode.OK, "Token is expired");
+            }
+
+            return _currentResponse;
         }
     }
 }

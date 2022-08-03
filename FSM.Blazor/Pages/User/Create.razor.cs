@@ -30,7 +30,7 @@ namespace FSM.Blazor.Pages.User
         bool isBusy;
 
         protected override async Task OnInitializedAsync()
-        {
+        { 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
@@ -44,7 +44,7 @@ namespace FSM.Blazor.Pages.User
                 userData = new UserVM();
             }
 
-            if (!isAuthenticated)
+            if (!isAuthenticated && !userData.IsInvited)
             {
                 userData.RoleId = userData.UserRoles.Where(p => p.Name == UserRole.Owner.ToString()).First().Id;
             }

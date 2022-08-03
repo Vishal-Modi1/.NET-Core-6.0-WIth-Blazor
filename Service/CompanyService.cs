@@ -7,6 +7,7 @@ using DataModels.VM.Company;
 using DataModels.VM.Common;
 using Service.Interface;
 using DataModels.Constants;
+using System.Linq.Expressions;
 
 namespace Service
 {
@@ -89,7 +90,7 @@ namespace Service
 
                 foreach (CompanyVM companyVM in companyList)
                 {
-                    companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{companyVM.Logo}";
+                    companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.CompanyLogo}/{companyVM.Logo}";
                 }
 
                 CreateResponse(companyList, HttpStatusCode.OK, "");
@@ -143,6 +144,26 @@ namespace Service
             }
         }
 
+
+        public CurrentResponse ListDropDownValuesByUserId(long userId)
+        {
+            try
+            {
+                List<DropDownValues> companiesList = _companyRepository.ListDropDownValuesByUserId(userId);
+
+                CreateResponse(companiesList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse ListCompanyServiceDropDownValues()
         {
             try
@@ -180,7 +201,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse GetDetails(int id)
+        public CurrentResponse FindById(int id)
         {
             Company company = _companyRepository.FindByCondition(p => p.Id == id);
             CompanyVM companyVM = new CompanyVM();
@@ -195,6 +216,13 @@ namespace Service
             return _currentResponse;
         }
 
+        public Company FindByCondition(Expression<Func<Company, bool>> predicate)
+        {
+            Company company = _companyRepository.FindByCondition(predicate);
+
+            return company;
+        }
+
         public CurrentResponse UpdateImageName(int id, string logoName)
         {
             try
@@ -202,7 +230,7 @@ namespace Service
                 bool isImageNameUpdated = _companyRepository.UpdateImageName(id, logoName);
 
                 Company company = _companyRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
-                company.Logo = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{company.Logo}";
+                company.Logo = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.CompanyLogo}/{company.Logo}";
 
                 CreateResponse(company, HttpStatusCode.OK, "Company logo updated successfully.");
 
@@ -261,7 +289,7 @@ namespace Service
         {
             try
             {
-                Company company = _companyRepository.FindByCondition(p =>  p.Id == id);
+                Company company = _companyRepository.FindByCondition(p => p.Id == id);
 
                 if (company == null)
                 {
@@ -272,7 +300,7 @@ namespace Service
                 company.CreatedBy = createdBy;
                 company = _companyRepository.Edit(company);
 
-                CreateResponse(company, HttpStatusCode.OK, "Company details updated successfully."); 
+                CreateResponse(company, HttpStatusCode.OK, "Company details updated successfully.");
 
                 return _currentResponse;
             }
@@ -301,7 +329,7 @@ namespace Service
             companyVM.PrimaryServiceId = company.PrimaryServiceId;
             companyVM.Logo = company.Logo;
 
-            companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.CompanyLogo}/{companyVM.Logo}";
+            companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.CompanyLogo}/{companyVM.Logo}";
 
             return companyVM;
         }
@@ -319,20 +347,22 @@ namespace Service
             company.PrimaryAirport = companyVM.PrimaryAirport;
             company.PrimaryServiceId = companyVM.PrimaryServiceId == null ? null : (short)companyVM.PrimaryServiceId;
 
-            company.CreatedBy = companyVM.CreatedBy;
-            company.UpdatedBy = companyVM.UpdatedBy;
             company.IsActive = true;
+            company.CreatedBy = companyVM.CreatedBy;
 
             if (companyVM.Id == 0)
             {
                 company.CreatedOn = DateTime.UtcNow;
             }
+            else
+            {
+                company.UpdatedBy = companyVM.UpdatedBy;
+                company.UpdatedOn = DateTime.UtcNow;
+            }
 
-            company.UpdatedOn = DateTime.UtcNow;
 
             return company;
         }
-       
         #endregion
     }
 }

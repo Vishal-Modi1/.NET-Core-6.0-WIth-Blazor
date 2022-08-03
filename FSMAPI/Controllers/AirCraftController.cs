@@ -85,8 +85,8 @@ namespace FSMAPI.Controllers
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
-
             CurrentResponse response = _airCraftService.GetDetails(id, companyIdValue);
+
             return Ok(response);
         }
 
@@ -132,7 +132,7 @@ namespace FSMAPI.Controllers
                 companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.AircraftImage + "\\" + companyId , form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.AircraftImage + "\\" + companyId , form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "false";
@@ -165,27 +165,14 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
-        //#region Aircraft Model
+        [HttpGet]
+        [Route("updatestatus")]
+        public IActionResult UpdateStatus(long id, byte statusId)
+        {
+            CurrentResponse response = _airCraftService.UpdateStatus(id, statusId);
 
-        //[HttpPost]
-        //[Route("createmodel")]
-        //public IActionResult CreateModel(AircraftModel aircraftModel)
-        //{
-        //    CurrentResponse response = _aircraftModelService.Create(aircraftModel);
-
-        //    return Ok(response);
-        //}
-
-        //[HttpGet]
-        //[Route("modellist")]
-        //public IActionResult ModelList()
-        //{
-        //    CurrentResponse response = _aircraftModelService.List();
-
-        //    return Ok(response);
-        //}
-
-        //#endregion
+            return Ok(response);
+        }
 
         #region Aircraft Equipment
         [HttpPost]

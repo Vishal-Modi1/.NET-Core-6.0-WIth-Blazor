@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Repository;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
@@ -124,12 +125,15 @@ builder.Services.AddAuthorization(cfg =>
 #endregion
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<MyContext>();
+
 
 //Services
 builder.Services.AddCustomServices();
 
 //Repositories
 builder.Services.AddCustomRepositories();
+
 
 var app = builder.Build();
 
@@ -140,13 +144,13 @@ if (_environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory);
+string uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), UploadDirectories.RootDirectory);
 Directory.CreateDirectory(uploadsPath);
 
-Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.AircraftImage);
-Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.UserProfileImage);
-Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.Document);
-Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectory.CompanyLogo);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.AircraftImage);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.UserProfileImage);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.Document);
+Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.CompanyLogo);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
@@ -154,16 +158,16 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-    Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory)),
-    RequestPath = $"/{UploadDirectory.RootDirectory}"
+    Path.Combine(Directory.GetCurrentDirectory(), UploadDirectories.RootDirectory)),
+    RequestPath = $"/{UploadDirectories.RootDirectory}"
 });
 
 //Enable directory browsing
 app.UseDirectoryBrowser(new DirectoryBrowserOptions
 {
     FileProvider = new PhysicalFileProvider(
-                Path.Combine(Directory.GetCurrentDirectory(), UploadDirectory.RootDirectory)),
-    RequestPath = $"/{UploadDirectory.RootDirectory}"
+                Path.Combine(Directory.GetCurrentDirectory(), UploadDirectories.RootDirectory)),
+    RequestPath = $"/{UploadDirectories.RootDirectory}"
 });
 
 

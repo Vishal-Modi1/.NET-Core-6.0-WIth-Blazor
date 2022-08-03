@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.UserPreference;
 
 namespace DataModels.VM.User
 {
-    public class UserVM
+    public class UserVM : CommonField
     {
         public long Id { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
-        
+
         public string Email { get; set; }
 
         public bool IsSendEmailInvite { get; set; }
@@ -29,35 +32,39 @@ namespace DataModels.VM.User
         public Nullable<int> InstructorTypeId { get; set; }
 
         public string CompanyName { get; set; }
-
         public int? CompanyId { get; set; }
-
         public string ExternalId { get; set; }
-
         public Nullable<System.DateTime> DateofBirth { get; set; }
         public string Gender { get; set; }
-
+        [NotMapped]
         public int GenderId { get; set; }
 
         public Nullable<int> CountryId { get; set; }
         public string Country { get; set; }
         public string ImageName { get; set; }
+        [NotMapped]
         public string Password { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
-        public Nullable<System.DateTime> CreatedOn { get; set; }
-        public Nullable<long> CreatedBy { get; set; }
-        public Nullable<System.DateTime> UpdatedOn { get; set; }
-        public Nullable<long> UpdatedBy { get; set; }
-
+        [NotMapped]
         public string ActivationLink { get; set; }
-
+        [NotMapped]
         public List<DropDownValues> UserRoles { get; set; }
+        [NotMapped]
         public List<DropDownValues> InstructorTypes { get; set; }
+        [NotMapped]
         public List<DropDownValues> Countries { get; set; }
+        [NotMapped]
         public List<DropDownValues> Companies { get; set; }
 
+        [NotMapped]
         public List<UserPreferenceVM> UserPreferences { get; set; }
+
+        [NotMapped]
         public bool IsFromMyProfile { get; set; }
+
+        [NotMapped]
+        public bool IsInvited { get; set; }
+
+        [NotMapped]
+        public new long? CreatedBy { get; set; }
     }
 }

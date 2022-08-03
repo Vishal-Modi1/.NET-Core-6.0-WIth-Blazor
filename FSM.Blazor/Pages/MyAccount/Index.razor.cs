@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Radzen;
-using UP = FSM.Blazor.Pages.User;
 
 namespace FSM.Blazor.Pages.MyAccount
 {

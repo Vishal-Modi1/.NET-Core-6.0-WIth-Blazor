@@ -56,13 +56,6 @@ namespace Repository
 
         public DbSet<BillingHistory> BillingHistories { get; set; }
 
-        public DbSet<UserDataVM> UserSearchList { get; set; }
-
-        public DbSet<BillingHistoryDataVM> BillingHistoryList { get; set; }
-
-        public DbSet<SubscriptionPlanDataVM> SubscriptionPlanData { get; set; }
-
-        public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
         public DbSet<EmailToken> EmailTokens { get; set; }
 
@@ -73,7 +66,7 @@ namespace Repository
         public DbSet<AircraftMake> AircraftMakes { get; set; }
 
         public DbSet<AircraftModel> AircraftModels { get; set; }
-        
+
         public DbSet<AircraftEquipmentTime> AircraftEquipmentTimes { get; set; }
 
         public DbSet<AircraftCategory> AircraftCategories { get; set; }
@@ -89,21 +82,15 @@ namespace Repository
         public DbSet<FlightSimulatorClass> FlightSimulatorClasses { get; set; }
 
         public DbSet<UserRolePermission> UserRolePermissions { get; set; }
-        
+
         public DbSet<Permission> Permissions { get; set; }
 
         public DbSet<ModuleDetail> ModuleDetails { get; set; }
 
         public DbSet<Company> Companies { get; set; }
+
         public DbSet<UserPreference> UserPreferences { get; set; }
 
-        public DbSet<CompanyVM> CompanyData { get; set; }
-        public DbSet<ReservationDataVM> ReservationDataVM { get; set; }
-        public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
-
-        public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
-
-        public DbSet<AircraftEquipmentDataVM> AircraftEquipmentData { get; set; }
         public DbSet<ScheduleActivityType> ScheduleActivityTypes { get; set; }
 
         public DbSet<UserRoleVsScheduleActivityType> UserRoleVsScheduleActivityType { get; set; }
@@ -113,24 +100,51 @@ namespace Repository
         public DbSet<AircraftScheduleDetail> AircraftScheduleDetails { get; set; }
 
         public DbSet<AircraftScheduleHobbsTime> AircraftScheduleHobbsTimes { get; set; }
-    
+
         public DbSet<Document> Documents { get; set; }
-        
+
         public DbSet<DocumentTag> DocumentTags { get; set; }
-        
+
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
-        
+
         public DbSet<CompanyService> CompanyServices { get; set; }
-        
+
         public DbSet<Location> Locations { get; set; }
 
         public DbSet<Timezone> Timezones { get; set; }
-    
+
+        public DbSet<InviteUser> InvitedUsers { get; set; }
+
+        public DbSet<AircraftStatus> AircraftStatuses { get; set; }
+
+        public DbSet<UserVSCompany> UsersVsCompanies { get; set; }
+
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
         public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }
 
         public DbSet<AircraftModelDataVM> AircraftModelsList { get; set; }
+
+        public DbSet<UserDataVM> UserSearchList { get; set; }
+        public DbSet<CompanyVM> CompanyData { get; set; }
+        public DbSet<InviteUserDataVM> InviteUserData { get; set; }
+
+        public DbSet<ReservationDataVM> ReservationDataVM { get; set; }
+
+        public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
+
+        public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
+
+        public DbSet<UserVM> UserDetails { get; set; }
+
+        public DbSet<AircraftEquipmentDataVM> AircraftEquipmentData { get; set; }
+
+        public DbSet<BillingHistoryDataVM> BillingHistoryList { get; set; }
+
+        public DbSet<SubscriptionPlanDataVM> SubscriptionPlanData { get; set; }
+
+        public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
+
     }
 
 }

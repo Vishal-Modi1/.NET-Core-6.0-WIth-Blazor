@@ -5,6 +5,8 @@ using DataModels.VM.User;
 using FSM.Blazor.Extensions;
 using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Radzen;
 using System.Security.Claims;
@@ -17,25 +19,107 @@ namespace FSM.Blazor.Pages.Account
         public UserVM userVM = new UserVM();
 
         int currentStep = 0;
-        bool isLoading;
+        bool isLoading, isValidToken, showError;
         DependecyParams dependecyParams;
+
+        string link;
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                StringValues url;
+
+                var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+                QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out url);
+
+                try
+                {
+                    if (url.Count() > 0 && url[0] != "")
+                    {
+                        this.link = url[0];
+                        NotificationMessage message = new NotificationMessage().Build(NotificationSeverity.Info, "", "Validating token ...");
+                        NotificationService.Notify(message);
+                        StateHasChanged();
+
+                        DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                        CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, this.link);
+                        await ManageResponseAsync(response);
+                        showError = false;
+                    }
+
+                    else
+                    {
+                        ClaimsPrincipal cp = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+
+                        string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.AccessToken)
+                                           .Select(c => c.Value).SingleOrDefault();
+
+                        if (!string.IsNullOrEmpty(claimValue))
+                        {
+                            NavigationManager.NavigateTo("/Login");
+                        }
+
+                        dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                        companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
+
+                        userVM = await UserService.GetMasterDetailsAsync(dependecyParams, false, "");
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+        }
 
         protected override async Task OnInitializedAsync()
         {
-            ClaimsPrincipal cp = AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User;
+           
+        }
 
-            string claimValue = cp.Claims.Where(c => c.Type == CustomClaimTypes.AccessToken)
-                               .Select(c => c.Value).SingleOrDefault();
+        private async Task ManageResponseAsync(CurrentResponse response)
+        {
+            NotificationMessage message;
 
-            if(!string.IsNullOrEmpty(claimValue))
+            if (response == null)
             {
-                NavigationManager.NavigateTo("/Login");
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "", "Token is not valid. Please try with valid token!");
+                NotificationService.Notify(message);
+                isValidToken = false;
             }
+            else if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                if (Convert.ToBoolean(response.Data))
+                {
+                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
+                    userVM = await UserService.GetMasterDetailsAsync(dependecyParams, true, link);
+                    await GetCompanyDetails(dependecyParams);
 
-            userVM = await UserService.GetMasterDetailsAsync(dependecyParams);
+                    isValidToken = true;
+                    message = new NotificationMessage().Build(NotificationSeverity.Success, "", response.Message);
+                    NotificationService.Notify(message);
+
+                    StateHasChanged();
+                }
+                else
+                {
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "", response.Message);
+                    NotificationService.Notify(message);
+
+                    isValidToken = false;
+                    StateHasChanged();
+                }
+            }
+            else
+            {
+                message = new NotificationMessage().Build(NotificationSeverity.Error, "", response.Message);
+                NotificationService.Notify(message);
+
+                isValidToken = false;
+                StateHasChanged();
+            }
         }
 
         async Task GoToNextStepAsync()
@@ -56,6 +140,7 @@ namespace FSM.Blazor.Pages.Account
 
         async Task<bool> IsCompanyExistAsync()
         {
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.IsCompanyExistAsync(dependecyParams, companyData.Id, companyData.Name);
 
             bool isCompanyExist = ManageIsCompanyExistResponse(response, companyData.Name);
@@ -81,42 +166,54 @@ namespace FSM.Blazor.Pages.Account
         {
             isLoading = true;
             base.StateHasChanged();
- 
-            CurrentResponse response = await UserService.IsEmailExistAsync(dependecyParams, userVM.Email);
 
-            bool isEmailExist = ManageIsEmailExistResponse(response, userVM.Email);
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-            if (isEmailExist)
+            if (!userVM.IsInvited)
             {
-                isLoading = false;
-                base.StateHasChanged();
-                return;
-            }
+                CurrentResponse response = await UserService.IsEmailExistAsync(dependecyParams, userVM.Email);
 
-            response = await CompanyService.SaveandUpdateAsync(dependecyParams, companyData);
+                bool isEmailExist = ManageIsEmailExistResponse(response, userVM.Email);
 
-            NotificationMessage message;
+                if (isEmailExist)
+                {
+                    isLoading = false;
+                    base.StateHasChanged();
+                    return;
+                }
 
-            if (response == null)
-            {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later or contact to our administrator department.");
-                NotificationService.Notify(message);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                userVM.ActivationLink = NavigationManager.BaseUri + "AccountActivation?Token=";
+                response = await CompanyService.SaveandUpdateAsync(dependecyParams, companyData);
 
-                companyData = JsonConvert.DeserializeObject<CompanyVM>(response.Data.ToString());
+                NotificationMessage message;
 
-                userVM.CompanyId = companyData.Id;
-                response = await UserService.SaveandUpdateAsync(dependecyParams, userVM);
+                if (response == null)
+                {
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Something went Wrong!", "Please try again later or contact to our administrator department.");
+                    NotificationService.Notify(message);
+                }
+                else if (response.Status == System.Net.HttpStatusCode.OK)
+                {
+                    userVM.ActivationLink = NavigationManager.BaseUri + "AccountActivation?Token=";
 
-                await ManageUserCreateResponseAsync(response);
+                    companyData = JsonConvert.DeserializeObject<CompanyVM>(response.Data.ToString());
+
+                    userVM.CompanyId = companyData.Id;
+                    response = await UserService.SaveandUpdateAsync(dependecyParams, userVM);
+
+                        await ManageUserCreateResponseAsync(response);
+                }
+                else
+                {
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "Company Details", response.Message);
+                    NotificationService.Notify(message);
+                }
             }
             else
             {
-                message = new NotificationMessage().Build(NotificationSeverity.Error, "Company Details", response.Message);
-                NotificationService.Notify(message);
+                userVM.ActivationLink = NavigationManager.BaseUri + "AccountActivation?Token=";
+                CurrentResponse response = await UserService.SaveandUpdateAsync(dependecyParams, userVM);
+
+                await ManageUserCreateResponseAsync(response);
             }
 
             isLoading = false;
@@ -147,6 +244,8 @@ namespace FSM.Blazor.Pages.Account
         private async Task UpdateCreatedByAsync(UserVM userVM)
         {
             companyData.CreatedBy = userVM.Id;
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             var response = await CompanyService.UpdateCreatedByAsync(dependecyParams, companyData.Id , userVM.Id);
            
@@ -235,6 +334,13 @@ namespace FSM.Blazor.Pages.Account
             }
 
             return isCompanyExist;
+        }
+
+        private async Task GetCompanyDetails(DependecyParams dependecyParams)
+        {
+            CurrentResponse response = await CompanyService.GetDetailsAsync(dependecyParams, userVM.CompanyId.GetValueOrDefault());
+            companyData = JsonConvert.DeserializeObject<CompanyVM>(response.Data.ToString());
+            companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
         }
     }
 }

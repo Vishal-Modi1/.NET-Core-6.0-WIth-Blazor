@@ -1,4 +1,5 @@
 ﻿@using FSM.Blazor.Data.Aircraft;
+@using FSM.Blazor.Data.AircraftStatus;
 @using DataModels.Enums;
 @using Syncfusion.Blazor.Spinner;
 
@@ -6,6 +7,7 @@
 @inject Radzen.DialogService DialogService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AircraftStatusService AircraftStatusService
 
 @page "/AircraftDetails"
 
@@ -21,7 +23,7 @@
         max-width: 100%;
         max-height: 100%;
         /*        object-fit:cover;
-                        */
+                                */
     }
 
     .rz-button-icon-left {
@@ -29,8 +31,8 @@
     }
 
     /*.rz-button.btn-primary {
-            margin-top: 26px;
-        }*/
+                    margin-top: 26px;
+                }*/
 
 </style>
 
@@ -45,10 +47,11 @@
         <div class="card">
             <div class="row g-0">
 
-                <div class="col-sm-3" style="position: relative;">
+                <div class="col-sm-3 icon-container" style="position: relative;">
 
                     <RadzenImage onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" Path="@(AircraftData.ImagePath)" Style="width: 100%; height: 140px;object-fit:cover; border: 2px solid #1151f3;" />
-
+                    <div class='status-circle' style="background-color:@AircraftData.AircraftStatus.Indicator">
+                    </div>
                 </div>
                 <div class="col-sm-3">
                     <div class="card-body" style="margin-left:-40px;">
@@ -64,7 +67,12 @@
                         <div>
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
                             {
-                                <RadzenButton Text="Update Details" BusyText="Update Aircraft Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(0, "Edit Aircraft")) />
+                                <RadzenButton Text="Update Details" BusyText="Update Aircraft Details ..." IsBusy="@isBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => AircraftEditDialog(AircraftData.Id, "Edit Aircraft")) />
+                            }
+
+                            @if (userRole == UserRole.Admin || userRole == UserRole.SuperAdmin || userRole == UserRole.Mechanic || userRole == UserRole.Owner)
+                            {
+                                <RadzenButton Text="Update Status" BusyText="Update Status ..." IsBusy="@isUpdateButtonBusy" Icon="edit" ButtonStyle="ButtonStyle.Primary" Click=@(() => OpenStatusUpdateDialog(AircraftData.Id)) />
                             }
 
                         </div>
@@ -117,11 +125,18 @@
 {
     <CustomPopupComponent Title="@popupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
-                      CloseOnOutsideClick="false" Width="600px"
+                      CloseOnOutsideClick="false" Width="@modelWidth"
                       OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 
-          <Create AircraftData=@(AircraftData) CloseDialogCallBack="@CloseDialog"></Create>
+            @if (operationType == OperationType.Edit)
+            {
+                <Create AircraftData=@(AircraftData) CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else
+            {
+                <UpdateStatus AircraftData=@(AircraftData) UpdateStatusCallBack="@UpdateStatus" CloseDialogCallBack="@CloseDialog"></UpdateStatus>
+            }
 
         </Body>
     </CustomPopupComponent>

@@ -9,13 +9,9 @@ using DataModels.VM.UserPreference;
 
 namespace Repository.Interface
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
-        User Create(User user);
-
         bool IsEmailExist(string email);
-
-        User FindByCondition(Expression<Func<User, bool>> predicate);
 
         User Edit(User user);
 
@@ -29,7 +25,7 @@ namespace Repository.Interface
 
         List<DropDownLargeValues> ListDropdownValuesbyCondition(Expression<Func<User, bool>> predicate);
 
-        UserVM FindById(long id);
+        UserVM FindById(long id,bool isSuperAdmin, bool isInvited, int? companyId);
 
         bool UpdateImageName(long id, string imageName);
 

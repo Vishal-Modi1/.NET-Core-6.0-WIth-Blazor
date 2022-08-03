@@ -16,11 +16,9 @@ namespace FSM.Blazor.Pages.Aircraft
 {
     public partial class Create
     {
-        [Parameter]
-        public AircraftVM AircraftData { get; set; }
+        [Parameter] public AircraftVM AircraftData { get; set; }
 
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 

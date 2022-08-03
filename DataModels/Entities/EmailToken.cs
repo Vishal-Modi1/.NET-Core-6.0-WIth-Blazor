@@ -9,6 +9,8 @@ namespace DataModels.Entities
         public DateTime? CreatedOn { get; set; }
         public DateTime? ExpireOn { get; set; }
         public long? UserId { get; set; }
+        public long? InvitedUserId { get; set; }
         public string EmailType { get; set; }
+        public bool IsUsed { get; set; }
     }
 }

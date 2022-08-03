@@ -20,16 +20,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-
                 return _myContext.Users.Where(p => p.Email == email && p.Password == password).FirstOrDefault();
-            }
-        }
-
-        public bool IsValidToken(string token)
-        {
-            using (_myContext = new MyContext())
-            {
-                return _myContext.EmailTokens.Where(p => p.Token == token && p.ExpireOn >= DateTime.UtcNow).Count() > 0;
             }
         }
 
@@ -49,6 +40,7 @@ namespace Repository
                 if (user == null)
                     return false;
 
+                emailToken.IsUsed = true;
                 user.IsActive = true;
                 _myContext.SaveChanges();
 
