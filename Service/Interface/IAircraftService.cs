@@ -15,8 +15,7 @@ namespace Service.Interface
         CurrentResponse UpdateImageName(long id, string imageName);
         CurrentResponse IsAirCraftExist(long id, string tailNo);
         CurrentResponse GetFiltersValue(int companyId);
-
         CurrentResponse ListAircraftDropdownValues(int companyId);
-
+        CurrentResponse UpdateStatus(long id, byte statusId);
     }
 }

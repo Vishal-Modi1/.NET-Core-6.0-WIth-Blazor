@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Components;
 using FSM.Blazor.Shared;
 using DE = DataModels.Entities;
-using Microsoft.JSInterop;
 
 namespace FSM.Blazor.Data.Aircraft
 {
@@ -152,6 +151,14 @@ namespace FSM.Blazor.Data.Aircraft
             dependecyParams.URL = $"aircraft/uploadfile";
 
             CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> UpdateStatus(DependecyParams dependecyParams, long id, byte statusId)
+        {
+            dependecyParams.URL = $"aircraft/updatestatus?id={id}&statusId={statusId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;
         }

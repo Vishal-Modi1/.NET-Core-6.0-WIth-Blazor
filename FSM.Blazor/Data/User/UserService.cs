@@ -32,7 +32,7 @@ namespace FSM.Blazor.Data.User
 
             List<UserDataVM> userDataList = JsonConvert.DeserializeObject<List<UserDataVM>>(response.Data.ToString());
 
-            return userDataList; 
+            return userDataList;
         }
 
         public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, UserVM userVM)
@@ -43,7 +43,7 @@ namespace FSM.Blazor.Data.User
 
             if (userVM.Id > 0)
             {
-                dependecyParams.URL  = "user/edit";
+                dependecyParams.URL = "user/edit";
             }
 
             CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
@@ -84,9 +84,10 @@ namespace FSM.Blazor.Data.User
             return userVM;
         }
 
-        public async Task<UserVM> GetMasterDetailsAsync(DependecyParams dependecyParams)
+        public async Task<UserVM> GetMasterDetailsAsync(DependecyParams dependecyParams, bool isInvited, string token)
         {
-            dependecyParams.URL = $"user/getMasterDetails";
+            token = token == "" ? "dummy token" : token;
+            dependecyParams.URL = $"user/getMasterDetails?isInvited={isInvited}&token={token}";
 
             var response = await _httpCaller.GetAsync(dependecyParams);
 
@@ -166,7 +167,7 @@ namespace FSM.Blazor.Data.User
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
             List<DropDownLargeValues> usersList = new List<DropDownLargeValues>();
 
-            if(response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
             {
                 usersList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
             }

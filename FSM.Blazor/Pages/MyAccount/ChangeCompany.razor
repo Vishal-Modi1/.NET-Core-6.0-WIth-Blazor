@@ -1,0 +1,38 @@
+﻿
+@inject IJSRuntime JSRunTime
+
+<PageTitle>Change Company | Fly Manager </PageTitle>
+
+<RadzenTemplateForm  Data="@CompanyId" Submit="@((int args) => {  Update(args); })">
+<div class="popup-content">
+    <input type="hidden" value="@Id" name="Id" />
+
+    <div class="row">
+        <div class="col-md-12 align-items-center d-flex">
+            <RadzenLabel Text="Company" />
+        </div>
+        <div class="col-md-12">
+            <RadzenDropDown @bind-Value="@CompanyId" Style="width:100%;" TValue="int"
+                            TextProperty="Name" Placeholder="Select Company"
+                            Data="@CompanyList"
+                            Name="companyId" ValueProperty="Id" AllowClear="true">
+
+            </RadzenDropDown>
+            <RadzenRequiredValidator DefaultValue="0" Component="companyId" Text="Company is required" Style="position: relative" />
+
+        </div>
+    </div>
+
+    <hr />
+    <div class="row" style="margin-top:4%">
+        <div class="col-md-12 text-right">
+
+            <RadzenButton ButtonType="ButtonType.Submit" BusyText="Updating .." IsBusy="@isBusy" ButtonStyle="ButtonStyle.Primary" Text="Update" Style="width: 125px" />
+            <RadzenButton Click="@((args) => CloseDialog(true))" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
+
+        </div>
+    </div>
+</div>
+
+
+</RadzenTemplateForm>

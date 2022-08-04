@@ -8,5 +8,8 @@ namespace Service.Interface
         EmailToken Create(EmailToken emailToken);
 
         CurrentResponse ValidateToken(string refreshToken, long userId);
+
+        CurrentResponse IsValidToken(string token);
+
     }
 }

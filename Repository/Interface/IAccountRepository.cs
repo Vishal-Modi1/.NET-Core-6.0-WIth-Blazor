@@ -6,8 +6,6 @@ namespace Repository.Interface
     {
         User GetValidUser(string email, string password);
 
-        bool IsValidToken(string token);
-
         bool ActivateAccount(string token);
     }
 }

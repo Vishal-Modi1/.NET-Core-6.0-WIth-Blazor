@@ -1,23 +1,17 @@
 ﻿using DataModels.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using DataModels.VM.Company;
 using DataModels.VM.Common;
 
 namespace Repository.Interface
 {
-    public interface ICompanyRepository
+    public interface ICompanyRepository : IBaseRepository<Company>
     {
         List<CompanyVM> ListAll();
-
-        Company Create(Company company);
 
         List<CompanyVM> List(DatatableParams datatableParams);
 
         Company Edit(Company company);
-
-        Company FindByCondition(Expression<Func<Company, bool>> predicate);
 
         void Delete(int id, long deletedBy);
 
@@ -26,5 +20,7 @@ namespace Repository.Interface
         List<DropDownValues> ListCompanyServicesDropDownValues();
 
         bool UpdateImageName(int id, string logoName);
+
+        List<DropDownValues> ListDropDownValuesByUserId(long userId);
     }
 }

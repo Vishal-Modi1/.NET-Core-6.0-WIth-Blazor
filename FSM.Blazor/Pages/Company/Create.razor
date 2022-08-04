@@ -13,7 +13,7 @@
     }
 </style>
 
-<RadzenTemplateForm @ref=@compnayForm Data="@companyData" Submit="@((CompanyVM args) => { Submit(args); })">
+<RadzenTemplateForm @ref=@compnayForm Data="@CompanyData" Submit="@((CompanyVM args) => { Submit(args); })">
     <div class="popup-content">
 
         @if (!isAuthenticated)
@@ -21,14 +21,14 @@
             <hr style="margin-bottom:35px" />
         }
 
-        <input type="hidden" value="@companyData.Id" name="Id" />
+        <input type="hidden" value="@CompanyData.Id" name="Id" />
 
         <div class="row">
             <div class="col-md-12 align-items-center d-flex">
                 <RadzenLabel Text="Company Name" />
             </div>
             <div class="col-md-12">
-                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@companyData.Name" Placeholder="Company Name" />
+                <RadzenTextBox style="width: 100%;" Name="Name" @bind-Value="@CompanyData.Name" Placeholder="Company Name" Disabled=@IsInvited />
                 <RadzenRequiredValidator Component="Name" Text="Name is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -38,7 +38,7 @@
                 <RadzenLabel Text="Company Address" />
             </div>
             <div class="col-md-12">
-                <RadzenTextArea style="width: 100%;" Name="Address" @bind-Value="@companyData.Address" Placeholder="Company Address" />
+                <RadzenTextArea style="width: 100%;" Name="Address" @bind-Value="@CompanyData.Address" Placeholder="Company Address" Disabled=@IsInvited />
                 <RadzenRequiredValidator Component="Address" Text="Address is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -49,9 +49,9 @@
             </div>
             <div class="col-md-12">
                 <RadzenDropDown AllowClear="true" TValue="string" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Class="w-100"
+                                AllowFiltering="true" Class="w-100" Disabled=@IsInvited
                                 Placeholder="Select timezone" Data=@timeZoneInfos TextProperty="DisplayName"
-                                ValueProperty="StandardName" Name="TimeZone" @bind-Value="@companyData.TimeZone" />
+                                ValueProperty="StandardName" Name="TimeZone" @bind-Value="@CompanyData.TimeZone" />
                 <RadzenRequiredValidator Component="TimeZone" Text="Timezone is required" Popup="@isPopup" Style="position: relative" />
             </div>
         </div>
@@ -64,11 +64,11 @@
                 <RadzenLabel Text="Company Website" />
             </div>
             <div class="col-md-6">
-                <RadzenMask Mask="(***) ***-****" Style="width: 100%;" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="ContactNo" @bind-Value=@companyData.ContactNo />
+                <RadzenMask Mask="(***) ***-****" Style="width: 100%;" CharacterPattern="[0-9]" Placeholder="(000) 000-0000" Name="ContactNo" @bind-Value=@CompanyData.ContactNo Disabled=@IsInvited />
                 <RadzenRegexValidator Component="ContactNo" Text="Please enter 10 digits no" Pattern="^\(\d{3}\)\s\d{3}-\d{4}" Popup=@isPopup Style="position: relative" />
             </div>
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@companyData.Website" Placeholder="Website" />
+                <RadzenTextBox style="width: 100%;" Name="Website" @bind-Value="@CompanyData.Website" Placeholder="Website" Disabled=@IsInvited />
                 @* <RadzenRegexValidator Component="Website" Text="Please enter valid webiste" Pattern="/^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;" Style="position: relative" />*@
             </div>
         </div>
@@ -81,12 +81,12 @@
                 <RadzenLabel Text="Primary Service" />
             </div>
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" Name="PrimaryAirport" @bind-Value="@companyData.PrimaryAirport" Placeholder="Primary Airport" />
+                <RadzenTextBox style="width: 100%;" Name="PrimaryAirport" @bind-Value="@CompanyData.PrimaryAirport" Placeholder="Primary Airport" Disabled=@IsInvited />
             </div>
             <div class="col-md-6">
                 <RadzenDropDown AllowClear="true" TValue="int?" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Class="w-100"
-                                Placeholder="Select company service" Data=@companyData.PrimaryServicesList TextProperty="Name"
+                                AllowFiltering="true" Class="w-100" Disabled=@IsInvited
+                                Placeholder="Select company service" Data=@CompanyData.PrimaryServicesList TextProperty="Name"
                                 ValueProperty="Id" Name="PrimaryServiceId" @bind-Value="@(primaryServiceId)" />
             </div>
         </div>
@@ -97,7 +97,7 @@
 
                 @if (isAuthenticated)
                 {
-                    if (companyData.Id == 0)
+                    if (CompanyData.Id == 0)
                     {
                         <RadzenButton ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Save" IsBusy=@isBusy Style="width: 120px" />
                     }

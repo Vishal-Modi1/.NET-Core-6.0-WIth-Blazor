@@ -95,11 +95,12 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("getDetails")]
         public IActionResult GetDetails(int id)
         {
-            CurrentResponse response = _companyService.GetDetails(id);
+            CurrentResponse response = _companyService.FindById(id);
             return Ok(response);
         }
 
@@ -133,7 +134,7 @@ namespace FSMAPI.Controllers
                 companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.CompanyLogo, form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.CompanyLogo, form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "";
@@ -162,6 +163,15 @@ namespace FSMAPI.Controllers
         public IActionResult IsCompanyExist(int id, string name)
         {
             CurrentResponse response = _companyService.IsCompanyExist(id, name);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("listdropdownvaluesbyuserid")]
+        public IActionResult ListDropDownValuesByUserId(long userId)
+        {
+            CurrentResponse response = _companyService.ListDropDownValuesByUserId(userId);
 
             return Ok(response);
         }

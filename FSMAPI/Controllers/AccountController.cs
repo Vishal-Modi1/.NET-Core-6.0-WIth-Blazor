@@ -56,39 +56,7 @@ namespace FSMAPI.Controllers
 
             if (user != null)
             {
-                response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
-                List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
-
-                string accessToken = _jWTTokenGenerator.Generate(user);
-                string refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
-
-                SaveRefreshToken(refreshToken, user.Id);
-
-                string timeZone = "";
-
-                if (!string.IsNullOrWhiteSpace(loginVM.TimeZone))
-                {
-                    //timeZone =  loginVM.TimeZone.Substring(1, loginVM.TimeZone.Length - 2);
-                    timeZone = loginVM.TimeZone;
-                }
-
-                response.Data = new LoginResponseVM
-                {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken,
-                    CompanyName = user.CompanyName,
-                    DateofBirth = user.DateofBirth,
-                    Email = user.Email,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Phone = user.Phone,
-                    RoleId = user.RoleId,
-                    Id = user.Id,
-                    UserPermissionList = userRolePermissionsList,
-                    ImageURL = user.ImageName,
-                    LocalTimeZone = timeZone,
-                    CompanyId = user.CompanyId.GetValueOrDefault()
-                };
+                response = GetDetails(response, user, loginVM.TimeZone);
 
                 return Ok(response);
             }
@@ -96,11 +64,62 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("changecompany")]
+        
+        public IActionResult ChangeCompany(long userId, int companyId, string timezone)
+        {
+            CurrentResponse response = _userService.GetById(userId, companyId);
+            User user = (User)(response.Data);
+            response = GetDetails(response, user, timezone);
+
+            return Ok(response);
+        }
+
+        private CurrentResponse GetDetails(CurrentResponse response, User user, string userTimeZone)
+        {
+            response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
+            List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
+
+            string accessToken = _jWTTokenGenerator.Generate(user);
+            string refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
+
+            SaveRefreshToken(refreshToken, user.Id);
+
+            string timeZone = "";
+
+            if (!string.IsNullOrWhiteSpace(userTimeZone))
+            {
+                //timeZone =  loginVM.TimeZone.Substring(1, loginVM.TimeZone.Length - 2);
+                timeZone = userTimeZone;
+            }
+
+            response.Data = new LoginResponseVM
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
+                CompanyName = user.CompanyName,
+                DateofBirth = user.DateofBirth,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                RoleId = user.RoleId,
+                Id = user.Id,
+                UserPermissionList = userRolePermissionsList,
+                ImageURL = user.ImageName,
+                LocalTimeZone = timeZone,
+                CompanyId = user.CompanyId.GetValueOrDefault()
+            };
+
+            return response;
+        }
+
         private void SaveRefreshToken(string refreshToken, long userId)
         {
             EmailToken emailToken = new EmailToken();
 
-            emailToken.EmailType = EmailType.RefreshToken;
+            emailToken.EmailType = EmailTypes.RefreshToken;
             emailToken.UserId = userId;
             emailToken.CreatedOn = DateTime.UtcNow;
             emailToken.ExpireOn = DateTime.UtcNow.AddMinutes(_configurationSettings.JWTRefreshTokenExpireDays);
@@ -160,7 +179,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = new CurrentResponse();
 
-            response = _accountService.IsValidToken(token);
+            response = _emailTokenService.IsValidToken(token);
 
             return Ok(response);
         }
@@ -170,9 +189,7 @@ namespace FSMAPI.Controllers
         [AllowAnonymous]
         public IActionResult ActivateAccount(string token)
         {
-            CurrentResponse response = new CurrentResponse();
-
-            response = _accountService.ActivateAccount(token);
+            CurrentResponse response = _accountService.ActivateAccount(token);
 
             return Ok(response);
         }
@@ -189,7 +206,10 @@ namespace FSMAPI.Controllers
                 return Ok(response);
             }
 
-            response = _userService.FindById(userId);
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int? companyIdValue = companyId == "" ? null : Convert.ToInt32(companyId);
+
+            response = _userService.FindById(userId,false, companyIdValue);
 
             UserVM userVM = (UserVM)(response.Data);
 
@@ -215,13 +235,5 @@ namespace FSMAPI.Controllers
 
             return Ok(response);
         }
-
-        //[HttpGet]
-        //[Route("istokenvalid")]
-        //[Authorize]
-        //public IActionResult ActivateAccount()
-        //{
-        //    return Ok();
-        //}
     }
 }

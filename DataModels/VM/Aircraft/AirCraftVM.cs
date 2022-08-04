@@ -22,6 +22,7 @@ namespace DataModels.VM.Aircraft
         public string File { get; set; }
         [Display(Name = "year")]
         public string Year { get; set; }
+        public byte AircraftStatusId { get; set; }
 
         [Required]
         [Display(Name = "Make")]
@@ -82,6 +83,7 @@ namespace DataModels.VM.Aircraft
         public List<DropDownValues> AircraftClassList { get; set; }
         public List<DropDownValues> FlightSimulatorClassList { get; set; }
         public List<DropDownValues> Companies { get; set; }
+        public List<DropDownValues> AircraftStatusList { get; set; }
         public List<AircraftEquipmentTime> AircraftEquipmentTimesList { get; set; }
 
         public List<Entities.AircraftEquipment>  AirCraftEquipmentList { get; set; }
@@ -89,6 +91,8 @@ namespace DataModels.VM.Aircraft
         public int TotalRecords { get; set; }
 
         public bool IsEquipmentTimesListChanged { get; set; }
+
+        public AircraftStatus AircraftStatus { get; set; }
 
     }
 }

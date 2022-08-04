@@ -56,8 +56,27 @@ namespace FSM.Blazor
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "Account/login", jsonData, null);
             
             var response = await _httpCaller.PostAsync(dependecyParams);
+            //jsonData = JsonConvert.SerializeObject(response.Data);
 
-            jsonData = JsonConvert.SerializeObject(response.Data);
+            if (response.Status == HttpStatusCode.OK)
+            {
+                await AddCookieAsync(response.Data);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("api/auth/changecompany")]
+        public async Task<IActionResult> ChangeCompany(long userId, int companyId, string timezone)
+        {
+            string url = $"Account/changecompany?userId={userId}&companyId={companyId}&timezone={timezone}";
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, url, null, null);
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            //jsonData = JsonConvert.SerializeObject(response.Data);
 
             if (response.Status == HttpStatusCode.OK)
             {

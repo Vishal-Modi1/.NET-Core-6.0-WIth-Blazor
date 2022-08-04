@@ -15,6 +15,9 @@ namespace DataModels.VM.Aircraft
 
         [NotMapped]
         public bool IsLoadingEditButton { get; set; }
+        public byte AircraftStatusId { get; set; }
+        public string AircraftStatus { get; set; }
+        public string Indicator { get; set; }
         public string Year { get; set; }
         public string CompanyName { get; set; }
         public string MakeName { get; set; }

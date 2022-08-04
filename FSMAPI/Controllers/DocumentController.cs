@@ -103,7 +103,7 @@ namespace FSMAPI.Controllers
                     companyId = form["CompanyId"];
                 }
 
-                string filePath = UploadDirectory.Document + "\\" + companyId + "\\" + documentVM.UserId;
+                string filePath = UploadDirectories.Document + "\\" + companyId + "\\" + documentVM.UserId;
 
                 Directory.CreateDirectory(filePath);
 

@@ -12,5 +12,7 @@ namespace Repository.Interface
         List<DropDownValues> ListDropDownValues(int roleId);
 
         UserRole FindById(int id);
+
+        UserRole FindByUserIdAndCompanyId(long userId, int? companyId);
     }
 }

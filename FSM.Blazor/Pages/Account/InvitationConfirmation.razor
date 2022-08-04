@@ -1,0 +1,22 @@
+﻿@using Data.Account
+@using Data.User
+@using Data.InviteUser
+
+@inject AccountService AccountService
+@inject UserService UserService
+@inject InviteUserService InviteUserService
+
+@page "/InvitationConfirmation"
+
+@layout EmptyLayout
+
+@if (isValidToken)
+{
+    <div class="row">
+
+        <p>Welcome to @userVM.CompanyName </p>
+        <RadzenButton Click=@(args => AcceptInvitation()) ButtonType="ButtonType.Submit" ButtonStyle="ButtonStyle.Primary" Text="Accept"  Style="width: 120px" />
+        <p>the invitation and join @userVM.CompanyName as @userVM.Role</p> 
+    </div>
+}
+

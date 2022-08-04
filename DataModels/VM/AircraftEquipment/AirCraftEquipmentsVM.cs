@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DataModels.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataModels.VM.AircraftEquipment
 {
-    public class AircraftEquipmentsVM
+    public class AircraftEquipmentsVM : CommonField
     {
         public long Id { get; set; }
 
@@ -53,13 +54,6 @@ namespace DataModels.VM.AircraftEquipment
         
         [Display(Name = "In Use?")]
         public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
-        public Nullable<System.DateTime> CreatedOn { get; set; }
-        public Nullable<long> CreatedBy { get; set; }
-        public Nullable<long> DeletedBy { get; set; }
-        public Nullable<System.DateTime> DeletedOn { get; set; }
-        public Nullable<long> UpdatedBy { get; set; }
-        public Nullable<System.DateTime> UpdatedOn { get; set; }
 
         public List<StatusVM> statusList { get; set; }
         public List<EquipmentClassificationVM> classificationList { get; set; }

@@ -9,8 +9,8 @@ namespace FSM.Blazor.Pages.MyAccount
 {
     partial class ChangePassword
     {
-        [Parameter]
-        public string Id { get; set; }
+        [Parameter] public string Id { get; set; }
+        [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         private ChangePasswordVM changePasswordVM = new ChangePasswordVM();
 
@@ -47,6 +47,11 @@ namespace FSM.Blazor.Pages.MyAccount
                 message = new NotificationMessage().Build(NotificationSeverity.Error, "Change Password", response.Message);
                 NotificationService.Notify(message);
             }
+        }
+
+        public void CloseDialog(bool isCancelled)
+        {
+            CloseDialogCallBack.InvokeAsync(isCancelled);
         }
     }
 }

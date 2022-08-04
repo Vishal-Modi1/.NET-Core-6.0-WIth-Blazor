@@ -7,11 +7,6 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<style>
-    form .row {
-        margin-bottom: 16px;
-    }
-</style>
 
 <RadzenTemplateForm @ref=@userForm Data="@userData" Submit="@((UserVM args) => {  Submit(args); })">
 
@@ -53,7 +48,7 @@
             </div>
 
             <div class="col-md-6">
-                <RadzenTextBox style="width: 100%;" ReadOnly="@(userData.Id > 0)" Name="Email" @bind-Value="@userData.Email" Placeholder="Email" />
+                <RadzenTextBox style="width: 100%;" ReadOnly="@(userData.Id > 0)" Name="Email" @bind-Value="@userData.Email" Placeholder="Email" Disabled=@userData.IsInvited />
                 <RadzenEmailValidator Component="Email" Text="Please enter valid email address" Popup="@isPopup" Style="position: relative"></RadzenEmailValidator>
                 <RadzenRequiredValidator Component="Email" Text="Email is required" Popup="@isPopup" Style="position: relative"></RadzenRequiredValidator>
             </div>

@@ -1,6 +1,6 @@
 ﻿namespace DataModels.Constants
 {
-    public class UploadDirectory
+    public class UploadDirectories
     {
         public const string RootDirectory = "Uploads";
         public const string AircraftImage = "AircraftImages";

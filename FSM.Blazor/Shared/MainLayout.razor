@@ -1,4 +1,5 @@
 ﻿@using FSM.Blazor.Extensions;
+@using FSM.Blazor.Data.Company;
 
 @inject NavigationManager NavigationManager
 @inject DialogService DialogService
@@ -6,6 +7,7 @@
 @inject IHttpContextAccessor httpContextAccessor
 @inherits LayoutComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CompanyService CompanyService
 
 @inject DialogService DialogService
 
@@ -21,13 +23,21 @@
     <RadzenHeader>
         <ChildContent>
             <div class="row justify-content-start align-items-center">
-                <div class="col-5 d-flex align-items-center">
+                <div class="col-4 d-flex align-items-center">
                     <RadzenSidebarToggle Click="@(args => { sidebarExpanded = !sidebarExpanded; bodyExpanded = !bodyExpanded; })">
                     </RadzenSidebarToggle>
-                    <RadzenLabel Text="Flight Schedule Management">
+                    <RadzenLabel Text="@companyName">
                     </RadzenLabel>
                 </div>
-                <div class="col-7 d-flex align-items-center justify-content-end" style="margin-left:-60px;">
+
+                <div class="col-4 d-flex align-items-center justify-content-center">
+                    @if (!isSuperAdmin)
+                    {
+                        <RadzenButton Text="Change Company" Click=@(args => OpenChangeCompanyDailog())></RadzenButton>
+                    }
+                </div>
+
+                <div class="col-4 d-flex align-items-center justify-content-end" style="margin-left:-25px;">
                     <RadzenMenu Click=@(args => ManageMenuClickEvent(args))>
                         <RadzenMenuItem Text="@userFullName" Icon="account_circle">
                             <RadzenMenuItem Text="My Profile" Path="/MyProfile" Icon="manage_accounts"></RadzenMenuItem>
@@ -46,8 +56,8 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12 pt-4 pb-5 px-2 px-lg-2">
-                            <FSM.Blazor.Extensions.CustomErrorBoundry @ref="@errorBoundary" 
-                            navigationManager="@NavigationManager" DialogService="@DialogService">
+                            <FSM.Blazor.Extensions.CustomErrorBoundry @ref="@errorBoundary"
+                                                                      navigationManager="@NavigationManager" DialogService="@DialogService">
                                 @Body
                             </FSM.Blazor.Extensions.CustomErrorBoundry>
 
@@ -61,6 +71,29 @@
     <NavMenu Expanded="@sidebarExpanded" />
 
 </RadzenLayout>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.ChangePassword)
+            {
+                <FSM.Blazor.Pages.MyAccount.ChangePassword Id=@loggedUserId CloseDialogCallBack="@CloseDialog">
+                </FSM.Blazor.Pages.MyAccount.ChangePassword>
+            }
+            else if (operationType == OperationType.ChangeCompany)
+            {
+                <FSM.Blazor.Pages.MyAccount.ChangeCompany Id=@loggedUserId CompanyId=@companyId CompanyList=@companyList CloseDialogCallBack="@CloseDialog">
+                </FSM.Blazor.Pages.MyAccount.ChangeCompany>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}
 
 @code {
     private ErrorBoundary errorBoundary;

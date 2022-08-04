@@ -1,0 +1,1 @@
+ALTER TABLE EmailTokens Add InvitedUserId bigint,IsUsed BIT DEFAULT 0 NOT NULL
