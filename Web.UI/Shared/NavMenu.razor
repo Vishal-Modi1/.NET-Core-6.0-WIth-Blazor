@@ -1,0 +1,136 @@
+﻿@inherits LayoutComponentBase
+
+<style>
+    html, body, app, .k-drawer-container, .k-drawer-content, .main {
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+    }
+
+    .main {
+        overflow-y: auto;
+    }
+
+    .k-drawer-content {
+        overflow-x: auto;
+    }
+
+    .top-row {
+        left: 0;
+    }
+
+    .drawer-hamburger {
+        position: absolute;
+        z-index: 2;
+    }
+
+    .k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
+        color: whitesmoke !important;
+        background-color: #ff6358;
+    }
+</style>
+
+@if (menuItems != null)
+{
+    <TelerikDrawer Data="@menuItems"
+               @bind-Expanded="@DrawerExpanded"
+               MiniMode="true"
+               Mode="@DrawerMode.Push"
+               @ref="@DrawerRef"
+               @bind-SelectedItem="@SelectedItem">
+        <Template>
+            @if (DrawerExpanded)
+            {
+            <div class="k-d-flex-col k-align-items-center k-justify-content-evenly" style="height:218px;">
+                <div class="k-avatar k-avatar-circle k-avatar-image k-avatar-lg" id="avatar"><img src='/assets/navigation/Avatar.svg' /></div>
+                <div id="name"><strong>Jacksons Danniels</strong></div>
+                <div id="email">jaxons.danniels@company.com</div>
+                <TelerikButton OnClick="@LogoutClick">Logout</TelerikButton>
+            </div>
+            }
+
+        <div class="k-drawer-items">
+            <ul>
+
+                @foreach (var item in menuItems)
+                    {
+                    <li @onclick="@(() => NavigateToPage(item))"
+                    @onclick:stopPropagation
+                    class="k-drawer-item @GetSelectedItemClass(item)" style="white-space:nowrap">
+                        <span class="k-icon k-i-@item.FavIconStyle" style="margin-right: 8px;"></span>
+                        @if (DrawerExpanded)
+                            {
+                            <div>
+                                <div>@item.DisplayName</div>
+                            </div>
+                            }
+                    </li>
+                    }
+            </ul>
+        </div>
+    </Template>
+    <DrawerContent>
+        <div class="main">
+            <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
+           @* <div class="top-row px-4">
+                <NavLink href="/about" style="text-decoration: none; color: #424242">About</NavLink>
+                <a href="https://docs.telerik.com/blazor-ui/introduction#support-options" style="text-decoration: none; color: #424242" target="_blank">Contacts</a>
+            </div>*@
+
+            <div class="content px-4">
+                @Body
+            </div>
+        </div>
+    </DrawerContent>
+</TelerikDrawer>
+
+}
+
+@code {
+    bool DrawerExpanded { get; set; } = true;
+    //DrawerItem SelectedItem { get; set; }
+    //TelerikDrawer<DrawerItem> DrawerRef { get; set; }
+
+    List<DrawerItem> NavigablePages { get; set; } = new List<DrawerItem>
+    {
+            new DrawerItem { Text = "Dashboard1", Url = "/", Icon = "grid", IsSeparator = true },
+            new DrawerItem { Text = "Performance & Sales", Url = "/performance-and-sales", Icon = "globe", IsSeparator = true },
+            new DrawerItem { Text = "Products", Url = "/products", Icon = "aggregate-fields", IsSeparator = true },
+            new DrawerItem { Text = "Settings", Url = "/settings", Icon = "gear" , IsSeparator = true}
+    };
+
+    //protected override void OnInitialized()
+    //{
+    //        string currPage = NavigationManager.Uri;
+    //        DrawerItem ActivePage = NavigablePages.Where(p => p.Url.ToLowerInvariant() == GetCurrentPage().ToLowerInvariant()).FirstOrDefault();
+    //        if (ActivePage != null)
+    //        {
+    //            SelectedItem = ActivePage;
+    //        }
+
+    //    base.OnInitialized();
+    //}
+
+
+
+    public string GetCurrentPage()
+    {
+        string uriWithoutQueryString = NavigationManager.Uri.Split("?")[0];
+        string currPage = uriWithoutQueryString.Substring(Math.Min(NavigationManager.Uri.Length, NavigationManager.BaseUri.Length));
+        return string.IsNullOrWhiteSpace(currPage) ? "/" : currPage;
+    }
+
+
+
+    public class DrawerItem
+    {
+        public string Text { get; set; }
+        public string Url { get; set; }
+        public string Icon { get; set; }
+        public bool IsSeparator { get; set; }
+    }
+
+    async Task LogoutClick()
+    {
+    }
+}

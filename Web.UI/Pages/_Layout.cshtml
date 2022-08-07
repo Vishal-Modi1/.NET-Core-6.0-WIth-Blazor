@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@namespace Web.UI.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="Web.UI.styles.css" rel="stylesheet" />
+
+    <!-- Choose only one of the themes -->
+    <!--
+        <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor/css/kendo-theme-default/all.css" />
+        <link href="_content/Telerik.UI.for.Blazor/css/kendo-theme-bootstrap/all.css" rel="stylesheet" />
+        <link href="_content/Telerik.UI.for.Blazor/css/kendo-theme-material/all.css" rel="stylesheet" />
+    -->
+    <!-- For Trial licenses use one of the following -->
+    <!--
+        <link href="_content/Telerik.UI.for.Blazor.Trial/css/kendo-theme-default/all.css" rel="stylesheet" />
+        <link href="_content/Telerik.UI.for.Blazor.Trial/css/kendo-theme-bootstrap/all.css" rel="stylesheet" />
+
+      -->
+
+       <!-- Choose only one of the themes -->
+    <!--
+        <link rel="stylesheet" href="https://blazor.cdn.telerik.com/blazor/3.5.0/kendo-theme-default/all.css" />
+        <link href="https://blazor.cdn.telerik.com/blazor/3.5.0/kendo-theme-bootstrap/all.css" rel="stylesheet" />
+    <link href="https://blazor.cdn.telerik.com/blazor/3.5.0/kendo-theme-material/all.css" rel="stylesheet" />
+
+    -->
+
+    <link href="_content/Telerik.UI.for.Blazor.Trial/css/kendo-theme-material/all.css" rel="stylesheet" />
+
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+</head>
+<body>
+    @RenderBody()
+
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://blazor.cdn.telerik.com/blazor/3.5.0/telerik-blazor.min.js" defer></script>
+
+    <script src="_framework/blazor.server.js"></script>
+
+</body>
+</html>

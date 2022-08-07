@@ -1,0 +1,28 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Web.UI
+@using Web.UI.Shared
+@using Telerik.Blazor
+@using Telerik.Blazor.Components
+@using Microsoft.Extensions.Caching.Memory
+@using Web.UI.Data.User
+@using Web.UI.Data.Company
+@using Web.UI.Data.Common
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inject IHttpClientFactory HttpClient 
+@inject IMemoryCache MemoryCache 
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+
+@inject UserService UserService 
+@inject CompanyService CompanyService
+@inject MenuService MenuService
