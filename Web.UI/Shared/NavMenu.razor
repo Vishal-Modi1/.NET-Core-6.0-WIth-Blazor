@@ -24,10 +24,11 @@
         z-index: 2;
     }
 
-    .k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
-        color: whitesmoke !important;
-        background-color: #ff6358;
-    }
+    /*    .k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
+            color: whitesmoke !important;
+            background-color: #ff6358;
+        }*/
+
 </style>
 
 @if (menuItems != null)
@@ -39,24 +40,44 @@
                @ref="@DrawerRef"
                @bind-SelectedItem="@SelectedItem">
         <Template>
+            @*<div class="k-d-flex-col k-align-items-center k-justify-content-evenly">
+                <div class="drawer-expander">
+                    <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
+                </div>
+            </div>*@
+            <div class="d-flex align-items-center justify-content-start" style="height:54px;">
+                <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
+            </div>
+            <hr class="hr-blue mt-0" />
             @if (DrawerExpanded)
             {
-            <div class="k-d-flex-col k-align-items-center k-justify-content-evenly" style="height:218px;">
-                <div class="k-avatar k-avatar-circle k-avatar-image k-avatar-lg" id="avatar"><img src='/assets/navigation/Avatar.svg' /></div>
-                <div id="name"><strong>Jacksons Danniels</strong></div>
-                <div id="email">jaxons.danniels@company.com</div>
-                <TelerikButton OnClick="@LogoutClick">Logout</TelerikButton>
+            <div class="k-d-flex k-align-items-center k-justify-content-evenly" style="height:118px;">
+                <label class="d-flex flex-row user-face">
+                    <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
+                     style="height: 54px;width: 54px;border-radius:50px" />
+                    <div id="name"><strong>Jacksons Danniels </strong> (Super Admin)</div>
+                </label>
             </div>
             }
+            else
+            {
+            <div class="k-d-flex k-align-items-center k-justify-content-evenly" style="height:118px;">
+                <label class="d-flex">
+                    <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
+                     style="height: 44px;width: 44px;border-radius:50px" />
+                    <div id="name">Admin</div>
+                </label>
+            </div>
+            }
+        <hr class="hr-blue" />
+            <div class="k-drawer-items">
+                <ul>
 
-        <div class="k-drawer-items">
-            <ul>
-
-                @foreach (var item in menuItems)
+                    @foreach (var item in menuItems)
                     {
                     <li @onclick="@(() => NavigateToPage(item))"
                     @onclick:stopPropagation
-                    class="k-drawer-item @GetSelectedItemClass(item)" style="white-space:nowrap">
+                    class="k-drawer-item @(GetSelectedItemClass(item))" style="white-space:nowrap">
                         <span class="k-icon k-i-@item.FavIconStyle" style="margin-right: 8px;"></span>
                         @if (DrawerExpanded)
                             {
@@ -71,13 +92,12 @@
     </Template>
     <DrawerContent>
         <div class="main">
-            <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
-           @* <div class="top-row px-4">
-                <NavLink href="/about" style="text-decoration: none; color: #424242">About</NavLink>
-                <a href="https://docs.telerik.com/blazor-ui/introduction#support-options" style="text-decoration: none; color: #424242" target="_blank">Contacts</a>
+            @* <div class="top-row px-4">
+            <NavLink href="/about" style="text-decoration: none; color: #424242">About</NavLink>
+            <a href="https://docs.telerik.com/blazor-ui/introduction#support-options" style="text-decoration: none; color: #424242" target="_blank">Contacts</a>
             </div>*@
-
-            <div class="content px-4">
+            <div class="content">
+                <LeftHeader></LeftHeader>
                 @Body
             </div>
         </div>

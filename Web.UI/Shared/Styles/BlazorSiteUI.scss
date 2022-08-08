@@ -1,0 +1,181 @@
+﻿
+
+$BG-DARK-BLUE: #022254;
+$BG-MENU-ITEM: #0062FE;
+$BG-MENU-ITEM-SELECTED: #0062FE;
+$BG-MENU-ITEM-HOVER: #022a6a;
+$BG-MAIN-MENU: $BG-DARK-BLUE;
+
+$BG-LIGHT-BLUE: #96B9EF;
+$BG-BLUE: #0062FE;
+$BG-COMMON-GRAY: #E1DEDE;
+
+$BG-PRIMARY-COLOR: #1151F3;
+$BG-SECONDARY-COLOR: rgba(17, 81, 243, 0.16);
+$BG-LIGHT-COLOR: #E9EAED;
+$BG-INFO-COLOR: #12A4F5;
+$BG-SUCCESS-COLOR: #009B51;
+$BG-WARNING-COLOR: #FFAE11;
+$BG-DANGER-COLOR: #F31155;
+
+body {
+    background: $BG-COMMON-GRAY !important;
+}
+
+.bg-primary-f {
+    background-color: $BG-PRIMARY-COLOR;
+}
+
+.bg-secondary-f {
+    background-color: $BG-SECONDARY-COLOR;
+}
+
+.bg-light-f {
+    background-color: $BG-LIGHT-COLOR;
+}
+
+.bg-info-f {
+    background-color: $BG-INFO-COLOR;
+}
+
+.bg-success-f {
+    background-color: $BG-SUCCESS-COLOR;
+}
+
+.bg-warning-f {
+    background-color: $BG-WARNING-COLOR;
+}
+
+.bg-danger-f {
+    background-color: $BG-DANGER-COLOR;
+}
+
+form .btn-primary {
+    margin-right: 4px
+}
+
+form .btn-success {
+    margin-right: 4px
+}
+
+form .btn-danger {
+    margin-right: 4px
+}
+
+.icon-container {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}
+
+form .row {
+    margin-bottom: 16px;
+}
+
+/*img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}*/
+
+.status-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid white;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+}
+
+.TelerikNotification .k-notification-container .k-notification-wrap {
+    width: 300px;
+    height: 50px;
+    font-size: 1.5em;
+    text-align: center;
+    align-items: center;
+}
+
+.big-notification .k-notification-container .k-notification-wrap {
+    width: 350px;
+    height: 100px;
+}
+
+.big-notification {
+    z-index: 1234;
+}
+
+html, body, app, .k-drawer-container, .k-drawer-content, .main {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+.main {
+    overflow-y: auto;
+    background-color: $BG-COMMON-GRAY;
+
+    .content {
+        margin-left: 16px !important;
+        padding: 0;
+        /*margin-right: 16px !important;*/
+        /*background-color: red;*/
+
+        .left-header {
+            max-height: 54px;
+            min-height: 54px;
+            background-color: $BG-MAIN-MENU;
+            color: white;
+        }
+    }
+}
+
+.k-drawer-content {
+    overflow-x: auto;
+    font-size: 16px
+}
+
+.top-row {
+    left: 0;
+}
+
+.drawer-hamburger {
+    position: absolute;
+    z-index: 2;
+}
+
+.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
+    color: whitesmoke !important;
+    background-color: #96B9EF;
+}
+/*LEFT MENU NAV BAR*/
+.user-face {
+    padding: 34px;
+    font-size: 16px;
+}
+.k-button.drawer-hamburger {
+    background: transparent;
+    color: white;
+    border: 0;
+    box-shadow: none;
+    padding: 34px;
+    /* .k-button-md.k-icon-button {
+        padding: 34px;
+    }*/
+}
+.telerik-blazor {
+
+    &.k-drawer {
+        background-color: $BG-MAIN-MENU;
+        color: white;
+
+        .selected-nav-item {
+            background-color: $BG-MENU-ITEM-SELECTED;
+        }
+
+        .k-drawer-item:hover, .k-drawer-item.k-state-hover {
+            background-color: $BG-MENU-ITEM-HOVER;
+        }
+    }
+}
+

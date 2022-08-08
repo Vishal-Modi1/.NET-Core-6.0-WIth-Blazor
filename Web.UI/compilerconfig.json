@@ -1,7 +1,7 @@
 ﻿[
-  {
-    "outputFile": "wwwroot/css/BlazorSite.css",
-    "inputFile": "Shared/Styles/BlazorSite.scss"
+    {
+    "outputFile": "wwwroot/css/BlazorSiteUI.css",
+    "inputFile": "Shared/Styles/BlazorSiteUI.scss"
   },
   {
     "outputFile": "wwwroot/css/EmptyLayout.css",

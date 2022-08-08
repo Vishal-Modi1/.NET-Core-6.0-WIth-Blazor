@@ -75,7 +75,7 @@ namespace Web.UI.Shared
             {
                 return string.Empty;
             }
-            return SelectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "text-info" : "";
+            return SelectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "selected-nav-item" : "";
         }
     }
 }
