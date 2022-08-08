@@ -1,4 +1,6 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.Common;
+using System.Collections.Generic;
 
 namespace Repository.Interface
 {
@@ -7,5 +9,7 @@ namespace Repository.Interface
         UserVSCompany GetDefaultCompanyByUserId(long userId);
 
         UserVSCompany Edit(UserVSCompany userVSCompany);
+
+        List<UserVSCompany> ListByCompanyId(int companyId);
     }
 }
