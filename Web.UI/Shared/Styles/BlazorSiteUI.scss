@@ -2,9 +2,21 @@
 
 $BG-DARK-BLUE: #022254;
 $BG-MENU-ITEM: #0062FE;
-$BG-MENU-ITEM-SELECTED: #0062FE;
+$BG-MENU-ITEM-SELECTED: #013587;
+$BG-MENU-ITEM-SELECTED-L-BORDER: #0062FE;
 $BG-MENU-ITEM-HOVER: #022a6a;
 $BG-MAIN-MENU: $BG-DARK-BLUE;
+
+$BG-BTN-PRIMARY: $BG-DARK-BLUE;
+$BG-BTN-PRIMARY-HOVER: #022a6a;
+/*$BG-BTN-SECONDARY:#022A6A;
+$BG-BTN-SUCCESS: #022A6A;
+$BG-BTN-DANGER: #022A6A;
+$BG-BTN-WARNING: #022A6A;
+$BG-BTN-INFO: #022A6A;
+$BG-BTN-LIGHT: #022A6A;
+$BG-BTN-DARK: #022A6A;
+$BG-BTN-LINK: #022A6A;*/
 
 $BG-LIGHT-BLUE: #96B9EF;
 $BG-BLUE: #0062FE;
@@ -62,11 +74,11 @@ form .btn-danger {
     margin-right: 4px
 }
 
-.icon-container {
+/*.icon-container {
     width: 50px;
     height: 50px;
     position: relative;
-}
+}*/
 
 form .row {
     margin-bottom: 16px;
@@ -144,11 +156,28 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     z-index: 2;
 }
 
-.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
+/*.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
     color: whitesmoke !important;
     background-color: #96B9EF;
-}
+}*/
 /*LEFT MENU NAV BAR*/
+.k-drawer-mini .k-drawer-wrapper {
+    /*width: calc(2 * 2rem + 16px);*/
+    width: 84px;
+}
+.k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
+    /*.k-drawer-wrapper {
+        //width: 0;
+    }*/
+
+    &.k-drawer-expanded {
+        .k-drawer-wrapper {
+            width: 270px !important;
+        }
+    }
+}
+
+
 .user-face {
     padding: 34px;
     font-size: 16px;
@@ -169,13 +198,45 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         background-color: $BG-MAIN-MENU;
         color: white;
 
+        .k-drawer-item {
+            border-left: 6px solid $BG-MAIN-MENU;
+            /*height: 35px;*/
+
+            .selected-arrow {
+                width: 0;
+                height: 0;
+                position: absolute;
+                right: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid #e1dede;
+            }
+        }
+
         .selected-nav-item {
             background-color: $BG-MENU-ITEM-SELECTED;
+            border-left: 6px solid $BG-MENU-ITEM-SELECTED-L-BORDER;
         }
 
         .k-drawer-item:hover, .k-drawer-item.k-state-hover {
+            color: white;
             background-color: $BG-MENU-ITEM-HOVER;
         }
     }
 }
+.btn {
+    &.k-btn-primary {
+        border: 1px solid $BG-BTN-PRIMARY !important;
+        background-color: $BG-BTN-PRIMARY !important;
+    }
+    &.k-btn-primary:hover {
+            color:white;
+            border: 1px solid $BG-BTN-PRIMARY-HOVER !important;
+            background-color: $BG-BTN-PRIMARY-HOVER !important;
+    }
+}
+.login-button {
+    width: 100% !important;
+}
 
+/*.k-button-solid-info:hover, .k-button-solid-info.k-hover*/

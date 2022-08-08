@@ -1,34 +1,29 @@
 ﻿@inherits LayoutComponentBase
 
 <style>
-    html, body, app, .k-drawer-container, .k-drawer-content, .main {
-        width: 100%;
-        height: 100%;
-        max-height: 100%;
-    }
+    /*    html, body, app, .k-drawer-container, .k-drawer-content, .main {
+                width: 100%;
+                height: 100%;
+                max-height: 100%;
+            }
 
-    .main {
-        overflow-y: auto;
-    }
+            .main {
+                overflow-y: auto;
+            }
 
-    .k-drawer-content {
-        overflow-x: auto;
-    }
+            .k-drawer-content {
+                overflow-x: auto;
+            }
 
-    .top-row {
-        left: 0;
-    }
+            .top-row {
+                left: 0;
+            }
 
-    .drawer-hamburger {
-        position: absolute;
-        z-index: 2;
-    }
-
-    /*    .k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
-            color: whitesmoke !important;
-            background-color: #ff6358;
-        }*/
-
+            .drawer-hamburger {
+                position: absolute;
+                z-index: 2;
+            }
+        */
 </style>
 
 @if (menuItems != null)
@@ -40,53 +35,68 @@
                @ref="@DrawerRef"
                @bind-SelectedItem="@SelectedItem">
         <Template>
-            @*<div class="k-d-flex-col k-align-items-center k-justify-content-evenly">
-                <div class="drawer-expander">
-                    <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
-                </div>
-            </div>*@
-            <div class="d-flex align-items-center justify-content-start" style="height:54px;">
+            <div class="d-flex align-items-center @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
                 <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
             </div>
-            <hr class="hr-blue mt-0" />
+            <hr class="hr-blue mt-0 mb-0" />
             @if (DrawerExpanded)
             {
-            <div class="k-d-flex k-align-items-center k-justify-content-evenly" style="height:118px;">
+            <div class="d-flex align-items-center justify-content-evenly" style="height:118px;">
                 <label class="d-flex flex-row user-face">
                     <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
                      style="height: 54px;width: 54px;border-radius:50px" />
-                    <div id="name"><strong>Jacksons Danniels </strong> (Super Admin)</div>
+                    <div id="name" class="mx-2">Vishal Modi (Super Admin)</div>
                 </label>
             </div>
             }
             else
             {
-            <div class="k-d-flex k-align-items-center k-justify-content-evenly" style="height:118px;">
-                <label class="d-flex">
-                    <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
-                     style="height: 44px;width: 44px;border-radius:50px" />
-                    <div id="name">Admin</div>
-                </label>
+            <div class="d-flex align-items-center justify-content-center" style="height:118px;">
+                <div>
+                    <div class="d-flex justify-content-center">
+                        <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
+                         style="height: 44px;width: 44px;border-radius:50px" />
+                    </div>
+                    <div class="d-flex justify-content-center">Admin</div>
+                </div>
             </div>
             }
-        <hr class="hr-blue" />
-            <div class="k-drawer-items">
-                <ul>
+        <hr class="hr-blue mt-0 mb-0" />
+        <div class="k-drawer-items my-2">
+            <ul>
 
-                    @foreach (var item in menuItems)
+                @foreach (var item in menuItems)
                     {
                     <li @onclick="@(() => NavigateToPage(item))"
                     @onclick:stopPropagation
-                    class="k-drawer-item @(GetSelectedItemClass(item))" style="white-space:nowrap">
-                        <span class="k-icon k-i-@item.FavIconStyle" style="margin-right: 8px;"></span>
+                    class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
+                        @*<span class="k-icon k-i-@(string.IsNullOrEmpty(item.FavIconStyle)? "accessibility": item.FavIconStyle)" style="margin-right: 8px;"></span>*@
+                        
+                            <span class="k-icon k-i-accessibility" style="margin-right: 8px;"></span>
                         @if (DrawerExpanded)
                             {
-                            <div>
                                 <div>@item.DisplayName</div>
-                            </div>
                             }
+                        @if (@item.DisplayName == SelectedItem.DisplayName)
+                            {
+                            <div class="selected-arrow"></div>
+                            }
+
                     </li>
                     }
+            </ul>
+        </div>
+        <hr class="hr-blue mt-0 mb-0" />
+        <div class="k-drawer-items mt-2 mb-2">
+            <ul>
+                <li @onclick="@(() => LogoutClick())" @onclick:stopPropagation class="k-drawer-item" style="white-space:nowrap">
+                    <span class="k-icon k-i-" style="margin-right: 8px;"></span>
+                    @if (DrawerExpanded)
+                        {
+                        <div>@("Log Out")</div>
+                        }
+                </li>
+
             </ul>
         </div>
     </Template>
