@@ -1,4 +1,12 @@
-﻿body {
+﻿/*$BG-BTN-SECONDARY:#022A6A;
+$BG-BTN-SUCCESS: #022A6A;
+$BG-BTN-DANGER: #022A6A;
+$BG-BTN-WARNING: #022A6A;
+$BG-BTN-INFO: #022A6A;
+$BG-BTN-LIGHT: #022A6A;
+$BG-BTN-DARK: #022A6A;
+$BG-BTN-LINK: #022A6A;*/
+body {
   background: #E1DEDE !important;
 }
 
@@ -42,12 +50,11 @@ form .btn-danger {
   margin-right: 4px;
 }
 
-.icon-container {
-  width: 50px;
-  height: 50px;
-  position: relative;
-}
-
+/*.icon-container {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}*/
 form .row {
   margin-bottom: 16px;
 }
@@ -121,12 +128,25 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   z-index: 2;
 }
 
-.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
-  color: whitesmoke !important;
-  background-color: #96B9EF;
+/*.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
+    color: whitesmoke !important;
+    background-color: #96B9EF;
+}*/
+/*LEFT MENU NAV BAR*/
+.k-drawer-mini .k-drawer-wrapper {
+  /*width: calc(2 * 2rem + 16px);*/
+  width: 84px;
 }
 
-/*LEFT MENU NAV BAR*/
+.k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
+  /*.k-drawer-wrapper {
+      //width: 0;
+  }*/
+}
+.k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini.k-drawer-expanded .k-drawer-wrapper {
+  width: 270px !important;
+}
+
 .user-face {
   padding: 34px;
   font-size: 16px;
@@ -147,9 +167,40 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   background-color: #022254;
   color: white;
 }
+.telerik-blazor.k-drawer .k-drawer-item {
+  border-left: 6px solid #022254;
+  /*height: 35px;*/
+}
+.telerik-blazor.k-drawer .k-drawer-item .selected-arrow {
+  width: 0;
+  height: 0;
+  position: absolute;
+  right: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #e1dede;
+}
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: #0062FE;
+  background-color: #013587;
+  border-left: 6px solid #0062FE;
 }
 .telerik-blazor.k-drawer .k-drawer-item:hover, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover {
+  color: white;
   background-color: #022a6a;
 }
+
+.btn.k-btn-primary {
+  border: 1px solid #022254 !important;
+  background-color: #022254 !important;
+}
+.btn.k-btn-primary:hover {
+  color: white;
+  border: 1px solid #022a6a !important;
+  background-color: #022a6a !important;
+}
+
+.login-button {
+  width: 100% !important;
+}
+
+/*.k-button-solid-info:hover, .k-button-solid-info.k-hover*/
