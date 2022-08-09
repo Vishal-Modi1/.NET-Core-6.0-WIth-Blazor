@@ -42,7 +42,7 @@ form .row {
 }
 
 .login-page-aircraft {
-  background-image: url(../../Shared/img/login-page-aircraft.jpeg);
+  background-image: url(/img/login-page-aircraft.jpeg);
   background-size: 100% 100%;
 }
 

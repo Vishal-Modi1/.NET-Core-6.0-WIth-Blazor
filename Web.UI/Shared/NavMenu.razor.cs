@@ -19,7 +19,7 @@ namespace Web.UI.Shared
 
         string fullName = "", profileImageURL = "";
         
-        IEnumerable<MenuItem> menuItems;
+        List<MenuItem> menuItems;
         TelerikDrawer<MenuItem> DrawerRef { get; set; }
         MenuItem SelectedItem { get; set; }
 
@@ -43,7 +43,11 @@ namespace Web.UI.Shared
 
             if (cp.Identity.IsAuthenticated)
             {
-                menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);
+                menuItems = new List<MenuItem>();
+                menuItems.Add(new MenuItem() { Controller = "/", DisplayName = "Dashboard", FavIconStyle = "group" });
+                menuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
+
+                menuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out", FavIconStyle = "group" });
 
                 fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
                           .Select(c => c.Value).SingleOrDefault();
@@ -66,7 +70,9 @@ namespace Web.UI.Shared
         public void NavigateToPage(MenuItem item)
         {
             SelectedItem = item;
-            NavigationManager.NavigateTo(SelectedItem.Controller);
+            NavigationManager.NavigateTo("/" + SelectedItem.Controller);
+
+            base.StateHasChanged();
         }
 
         public string GetSelectedItemClass(MenuItem item)

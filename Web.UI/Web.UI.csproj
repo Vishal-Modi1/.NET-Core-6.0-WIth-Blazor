@@ -186,4 +186,8 @@
     <Content Include="Shared\Styles\EmptyLayout.scss" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

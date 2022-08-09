@@ -238,6 +238,13 @@ namespace Service
         {
             try
             {
+                bool isValidToken = _emailTokenRepository.IsValidToken(resetPasswordVM.Token);
+
+                if (!isValidToken)
+                {
+                    return CreateResponse(isValidToken, HttpStatusCode.NotFound, "Token is expired");
+                }
+
                 bool isUserPasswordReset = _userRepository.ResetUserPassword(resetPasswordVM);
 
                 if (isUserPasswordReset)

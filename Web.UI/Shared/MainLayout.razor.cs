@@ -13,7 +13,7 @@ namespace Web.UI.Shared
 {
     public partial class MainLayout
     {
-        Notification Notification { get; set; } = new Notification();
+        UINotification UINotification { get; set; } = new UINotification();
 
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 

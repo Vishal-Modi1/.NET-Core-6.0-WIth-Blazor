@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Telerik.Blazor.Components;
-using Web.UI.Models.Enums;
+using static Telerik.Blazor.ThemeConstants;
 
 namespace Web.UI.Pages.Dashboard
 {
     public partial class Index
     {
-        [CascadingParameter] protected Notification Notification { get; set; }
+        [CascadingParameter] protected UINotification UINotification { get; set; }
 
         public UserVM userData { get; set; }
         public bool isPopup { get; set; }
@@ -55,8 +55,8 @@ namespace Web.UI.Pages.Dashboard
 
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
-                message = new NotificationModel().Build(TelerikNotificationTypes.info, "Something went Wrong!, Please try again later.");
-                Notification.Instance.Show(message);
+                message = new NotificationModel().Build(Notification.ThemeColor.Success, "Something went Wrong!, Please try again later.");
+                UINotification.Instance.Show(message);
             }
 
             userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
