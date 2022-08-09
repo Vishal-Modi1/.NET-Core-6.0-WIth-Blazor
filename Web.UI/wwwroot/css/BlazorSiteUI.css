@@ -1,4 +1,13 @@
-﻿/*$BG-BTN-SECONDARY:#022A6A;
+﻿@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
+html, body {
+  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.k-drawer {
+  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
 $BG-BTN-WARNING: #022A6A;

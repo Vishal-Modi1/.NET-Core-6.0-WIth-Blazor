@@ -56,9 +56,12 @@
                 </FormItems>
                 <FormButtons>
 
-                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusy)">Login
+                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusy)">
+                        Login
 
+                        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusy">
                         </TelerikLoader>
+
                     </TelerikButton>
 
                 </FormButtons>

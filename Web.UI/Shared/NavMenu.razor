@@ -1,31 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-<style>
-    /*    html, body, app, .k-drawer-container, .k-drawer-content, .main {
-                width: 100%;
-                height: 100%;
-                max-height: 100%;
-            }
-
-            .main {
-                overflow-y: auto;
-            }
-
-            .k-drawer-content {
-                overflow-x: auto;
-            }
-
-            .top-row {
-                left: 0;
-            }
-
-            .drawer-hamburger {
-                position: absolute;
-                z-index: 2;
-            }
-        */
-</style>
-
 @if (menuItems != null)
 {
     <TelerikDrawer Data="@menuItems"
@@ -36,7 +10,9 @@
                @bind-SelectedItem="@SelectedItem">
         <Template>
             <div class="d-flex align-items-center @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
-                <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Icon="menu" Class="drawer-hamburger"></TelerikButton>
+                <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Class="drawer-hamburger">
+                    <CustomIcons IconName="Menu"></CustomIcons>
+                </TelerikButton>
             </div>
             <hr class="hr-blue mt-0 mb-0" />
             @if (DrawerExpanded)
@@ -67,45 +43,62 @@
 
                 @foreach (var item in menuItems)
                     {
-                    <li @onclick="@(() => NavigateToPage(item))"
+                        if (item.IsAdministrationModule)
+                        {
+                            if (!isAdministrationTabAdded)
+                            {
+                                isAdministrationTabAdded = true;
+
+                            <li @onclick="@(() => NavigateToPage(item))"
                     @onclick:stopPropagation
                     class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
-                        @*<span class="k-icon k-i-@(string.IsNullOrEmpty(item.FavIconStyle)? "accessibility": item.FavIconStyle)" style="margin-right: 8px;"></span>*@
-                        
-                            <span class="k-icon k-i-accessibility" style="margin-right: 8px;"></span>
-                        @if (DrawerExpanded)
-                            {
-                                <div>@item.DisplayName</div>
+                                <div class="px-2"><CustomIcons IconName="Administration"></CustomIcons></div>
+
+                                @if (DrawerExpanded)
+                                    {
+                                    <div>Administration</div>
+                                    }
+                                @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
+                                    {
+                                    <div class="selected-arrow"></div>
+                                    }
+
+                            </li>
                             }
-                        @if (@item.DisplayName == SelectedItem.DisplayName)
+                        }
+                        else
+                        {
+
+                            if (item.DisplayName == "Log out")
                             {
-                            <div class="selected-arrow"></div>
+                            <hr class="hr-blue mt-0 mb-0" />
                             }
 
-                    </li>
+                        <li @onclick="@(() => NavigateToPage(item))"
+                    @onclick:stopPropagation
+                    class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
+                            <div class="px-2"><CustomIcons IconName="@item.DisplayName"></CustomIcons></div>
+
+                            @if (DrawerExpanded)
+                                {
+                                <div>@item.DisplayName</div>
+                                }
+                            @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
+                                {
+                                <div class="selected-arrow"></div>
+                                }
+
+                        </li>
+
+                        }
                     }
             </ul>
         </div>
-        <hr class="hr-blue mt-0 mb-0" />
-        <div class="k-drawer-items mt-2 mb-2">
-            <ul>
-                <li @onclick="@(() => LogoutClick())" @onclick:stopPropagation class="k-drawer-item" style="white-space:nowrap">
-                    <span class="k-icon k-i-" style="margin-right: 8px;"></span>
-                    @if (DrawerExpanded)
-                        {
-                        <div>@("Log Out")</div>
-                        }
-                </li>
 
-            </ul>
-        </div>
     </Template>
     <DrawerContent>
         <div class="main">
-            @* <div class="top-row px-4">
-            <NavLink href="/about" style="text-decoration: none; color: #424242">About</NavLink>
-            <a href="https://docs.telerik.com/blazor-ui/introduction#support-options" style="text-decoration: none; color: #424242" target="_blank">Contacts</a>
-            </div>*@
+           
             <div class="content">
                 <LeftHeader></LeftHeader>
 
@@ -116,53 +109,4 @@
     </DrawerContent>
 </TelerikDrawer>
 
-}
-
-@code {
-    bool DrawerExpanded { get; set; } = true;
-    //DrawerItem SelectedItem { get; set; }
-    //TelerikDrawer<DrawerItem> DrawerRef { get; set; }
-
-    List<DrawerItem> NavigablePages { get; set; } = new List<DrawerItem>
-    {
-            new DrawerItem { Text = "Dashboard1", Url = "/", Icon = "grid", IsSeparator = true },
-            new DrawerItem { Text = "Performance & Sales", Url = "/performance-and-sales", Icon = "globe", IsSeparator = true },
-            new DrawerItem { Text = "Products", Url = "/products", Icon = "aggregate-fields", IsSeparator = true },
-            new DrawerItem { Text = "Settings", Url = "/settings", Icon = "gear" , IsSeparator = true}
-    };
-
-    //protected override void OnInitialized()
-    //{
-    //        string currPage = NavigationManager.Uri;
-    //        DrawerItem ActivePage = NavigablePages.Where(p => p.Url.ToLowerInvariant() == GetCurrentPage().ToLowerInvariant()).FirstOrDefault();
-    //        if (ActivePage != null)
-    //        {
-    //            SelectedItem = ActivePage;
-    //        }
-
-    //    base.OnInitialized();
-    //}
-
-
-
-    public string GetCurrentPage()
-    {
-        string uriWithoutQueryString = NavigationManager.Uri.Split("?")[0];
-        string currPage = uriWithoutQueryString.Substring(Math.Min(NavigationManager.Uri.Length, NavigationManager.BaseUri.Length));
-        return string.IsNullOrWhiteSpace(currPage) ? "/" : currPage;
-    }
-
-
-
-    public class DrawerItem
-    {
-        public string Text { get; set; }
-        public string Url { get; set; }
-        public string Icon { get; set; }
-        public bool IsSeparator { get; set; }
-    }
-
-    async Task LogoutClick()
-    {
-    }
 }

@@ -22,6 +22,8 @@ namespace Web.UI.Shared
         List<MenuItem> menuItems;
         TelerikDrawer<MenuItem> DrawerRef { get; set; }
         MenuItem SelectedItem { get; set; }
+        bool isAdministrationTabAdded = false;
+        bool DrawerExpanded { get; set; } = true;
 
         protected override async Task OnInitializedAsync()
         {

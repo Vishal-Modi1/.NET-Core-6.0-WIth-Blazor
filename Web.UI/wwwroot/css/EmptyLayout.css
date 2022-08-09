@@ -1,4 +1,13 @@
-﻿body {
+﻿@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
+html, body {
+  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.k-drawer {
+  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
   background: none !important;
 }
 
