@@ -12,13 +12,14 @@ namespace Web.UI.Shared
     public partial class NavMenu
     {
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+        UINotification UINotification { get; set; } = new UINotification();
 
-        [Parameter]  public bool Expanded { get; set; }
+        [Parameter] public bool Expanded { get; set; }
 
         bool sidebarExpanded = true, bodyExpanded = false, isSuperAdmin;
 
         string fullName = "", profileImageURL = "";
-        
+
         List<MenuItem> menuItems;
         TelerikDrawer<MenuItem> DrawerRef { get; set; }
         MenuItem SelectedItem { get; set; }
@@ -41,12 +42,15 @@ namespace Web.UI.Shared
                 }
             }
 
+            isAdministrationTabAdded = false;
+
             var cp = (await AuthStat).User;
 
             if (cp.Identity.IsAuthenticated)
             {
                 menuItems = new List<MenuItem>();
                 menuItems.Add(new MenuItem() { Controller = "/", DisplayName = "Dashboard", FavIconStyle = "group" });
+                menuItems.Add(new MenuItem() { Controller = "Administration", DisplayName = "Administration"});
                 menuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
 
                 menuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out", FavIconStyle = "group" });
@@ -71,10 +75,17 @@ namespace Web.UI.Shared
 
         public void NavigateToPage(MenuItem item)
         {
-            SelectedItem = item;
-            NavigationManager.NavigateTo("/" + SelectedItem.Controller);
+            try
+            {
+                SelectedItem = item;
+                NavigationManager.NavigateTo("/" + SelectedItem.Controller);
 
-            base.StateHasChanged();
+                base.StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public string GetSelectedItemClass(MenuItem item)

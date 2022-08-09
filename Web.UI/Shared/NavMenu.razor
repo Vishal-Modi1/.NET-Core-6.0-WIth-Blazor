@@ -43,32 +43,8 @@
 
                 @foreach (var item in menuItems)
                     {
-                        if (item.IsAdministrationModule)
+                        if (!item.IsAdministrationModule)
                         {
-                            if (!isAdministrationTabAdded)
-                            {
-                                isAdministrationTabAdded = true;
-
-                            <li @onclick="@(() => NavigateToPage(item))"
-                    @onclick:stopPropagation
-                    class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
-                                <div class="px-2"><CustomIcons IconName="Administration"></CustomIcons></div>
-
-                                @if (DrawerExpanded)
-                                    {
-                                    <div>Administration</div>
-                                    }
-                                @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
-                                    {
-                                    <div class="selected-arrow"></div>
-                                    }
-
-                            </li>
-                            }
-                        }
-                        else
-                        {
-
                             if (item.DisplayName == "Log out")
                             {
                             <hr class="hr-blue mt-0 mb-0" />
@@ -102,7 +78,6 @@
             <div class="content">
                 <LeftHeader></LeftHeader>
 
-                <h1>Hello users</h1>
                 @Body
             </div>
         </div>
