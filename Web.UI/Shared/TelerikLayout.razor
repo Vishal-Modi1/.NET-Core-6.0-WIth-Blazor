@@ -1,5 +1,20 @@
 @inherits LayoutComponentBase
 
 <TelerikRootComponent>
-    @Body
+     <Web.UI.Extensions.CustomErrorBoundry @ref="@errorBoundary">
+        @Body
+    </Web.UI.Extensions.CustomErrorBoundry>
 </TelerikRootComponent>
+
+@code {
+    private ErrorBoundary errorBoundary;
+    protected override void OnParametersSet()
+    {
+        //if(errorBoundary.CurrentException.Message == "Unauthorized")
+        //{
+
+        //    NavigationManager.NavigateTo("/Login");
+        //}
+        errorBoundary?.Recover();
+    }
+}

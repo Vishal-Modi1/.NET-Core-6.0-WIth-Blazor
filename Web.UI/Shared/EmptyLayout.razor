@@ -11,21 +11,35 @@
 
 <TelerikRootComponent>
 
-    <CascadingValue IsFixed="true" Value="@UINotification">
-        <div class="row" style="width:100%;">
-            <div class="column">
-                <div class="row vh-100 d-flex justify-content-center align-items-center login-page-aircraft"></div>
-            </div>
-            <div class="column">
-                <div class="row vh-100 d-flex justify-content-center align-items-center">
-                    @Body
+    <Web.UI.Extensions.CustomErrorBoundry @ref="@errorBoundary">
+
+        <CascadingValue IsFixed="true" Value="@UINotification">
+            <div class="row" style="width:100%;">
+                <div class="column">
+                    <div class="row vh-100 d-flex justify-content-center align-items-center login-page-aircraft"></div>
+                </div>
+                <div class="column">
+                    <div class="row vh-100 d-flex justify-content-center align-items-center">
+                        @Body
+                    </div>
                 </div>
             </div>
-        </div>
-    </CascadingValue>
+        </CascadingValue>
+    </Web.UI.Extensions.CustomErrorBoundry>
 </TelerikRootComponent>
 
 @code {
 
     UINotification UINotification { get; set; } = new UINotification();
+
+    private ErrorBoundary errorBoundary;
+    protected override void OnParametersSet()
+    {
+        //if(errorBoundary.CurrentException.Message == "Unauthorized")
+        //{
+
+        //    NavigationManager.NavigateTo("/Login");
+        //}
+        errorBoundary?.Recover();
+    }
 }

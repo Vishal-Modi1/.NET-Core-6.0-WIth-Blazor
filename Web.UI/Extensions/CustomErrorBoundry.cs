@@ -8,12 +8,7 @@ namespace Web.UI.Extensions
 {
     public class CustomErrorBoundry : ErrorBoundary
     {
-        [Parameter]
-        public NavigationManager NavigationManager { get; set; }
         
-        // TODO
-        //[Parameter]
-        //public DialogService DialogService { get; set; }
 
         protected override async Task<Task> OnErrorAsync(Exception exception)
         {
