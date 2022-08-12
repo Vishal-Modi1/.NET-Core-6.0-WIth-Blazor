@@ -23,12 +23,12 @@ namespace Repository.Interface
 
         bool ResetUserPassword(ResetPasswordVM resetPasswordVM);
 
-        List<DropDownLargeValues> ListDropdownValuesbyCondition(Expression<Func<User, bool>> predicate);
-
         UserVM FindById(long id,bool isSuperAdmin, bool isInvited, int? companyId);
 
         bool UpdateImageName(long id, string imageName);
 
         List<UserPreferenceVM> FindPreferenceById(long id);
+
+        List<DropDownLargeValues> ListDropdownValuesbyCompanyId(int companyId);
     }
 }

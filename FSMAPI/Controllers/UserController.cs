@@ -183,7 +183,7 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvaluesbycompanyid")]
         public IActionResult ListDropDownValuesByCompanyId(int companyId)
         {
-            CurrentResponse response = _userService.ListDropDownValuesByCompanyId(companyId);
+            CurrentResponse response = _userService.ListDropdownValuesByCompanyId(companyId);
 
             return Ok(response);
         }

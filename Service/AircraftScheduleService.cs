@@ -110,13 +110,13 @@ namespace Service
         {
             schedulerVM.ScheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
 
-            var usersList = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false);
+            var usersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
             List<UserVSCompany> userVsRoleList = _userVSCompanyRepository.ListByCompanyId(companyId);
 
             List<long> instructorsList = userVsRoleList.Where(p => p.RoleId == (int)DataModels.Enums.UserRole.Instructors).Select(p => p.UserId).ToList();
 
-            schedulerVM.Member1List = schedulerVM.Member2List = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false && !instructorsList.Contains(p.Id));
-            schedulerVM.InstructorsList = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false && instructorsList.Contains(p.Id));
+            schedulerVM.Member1List = schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
+            schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
             
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
         }
