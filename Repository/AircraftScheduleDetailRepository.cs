@@ -42,7 +42,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                AircraftScheduleDetail aircraftScheduleDetail =  _myContext.AircraftScheduleDetails.Where(p=> p.Id == id).FirstOrDefault();
+                AircraftScheduleDetail aircraftScheduleDetail =  _myContext.AircraftScheduleDetails.Where(p=> p.AircraftScheduleId == id).FirstOrDefault();
                 
                 if (aircraftScheduleDetail == null)
                     return null;
