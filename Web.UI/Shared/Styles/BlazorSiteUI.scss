@@ -239,4 +239,33 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     width: 100% !important;
 }
 
-/*.k-button-solid-info:hover, .k-button-solid-info.k-hover*/
+/*TOP HORIZONTAL HEADER START*/
+
+.header-profile-dropdown {
+    &:hover {
+        background-color: $BG-BTN-PRIMARY !important;
+    }
+
+    background-color: $BG-BTN-PRIMARY !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.dropdown-menu {
+    box-shadow: 0 4px 8px 0 rgb(2 34 84 / 35%), 0 6px 20px 0 rgb(2 34 84 / 61%) !important;
+}
+.show-notification-dot{
+    position: relative !important;
+    top: -3px !important;
+    color: red;
+    content: '';
+    height: .60em;
+    width: .60em;
+    background: currentColor;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: -.65em;
+    transform: translateY(-50%);
+}
+/*TOP HORIZONTAL HEADER END*/

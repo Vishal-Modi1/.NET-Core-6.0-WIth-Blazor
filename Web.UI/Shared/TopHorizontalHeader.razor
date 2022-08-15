@@ -1,0 +1,25 @@
+﻿@using Web.UI.Models.Shared
+<div class="d-flex me-2">
+    <span class="d-flex align-items-center justify-content-center">
+        <Web.UI.Shared.Component.CustomIconSVG IconName="bell">
+        </Web.UI.Shared.Component.CustomIconSVG>
+        @if (ShowNotificationDot)
+        {
+            <span class="show-notification-dot"></span>
+        }
+    </span>
+    <span class="d-flex align-items-center justify-content-center">
+        <Web.UI.Shared.Component.BSDropdownButton BSDropdownItemList="@BSDropdownItemList" StyleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
+        </Web.UI.Shared.Component.BSDropdownButton>
+    </span>
+
+</div>
+
+@code {
+    private bool ShowNotificationDot { get; set; } = true;
+    protected List<BSDropdownItem> BSDropdownItemList = new List<BSDropdownItem>()
+    {
+        new BSDropdownItem{ DisplayValue = "Update profile",URL="/myprofile" },
+        new BSDropdownItem{ DisplayValue = "Log Out",URL="/logout" },
+    };
+}
