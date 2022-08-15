@@ -1,17 +1,10 @@
 ﻿using DataModels.Constants;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.JSInterop;
 
 namespace Web.UI.Pages.Account
 {
     public partial class Logout
     {
-
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");

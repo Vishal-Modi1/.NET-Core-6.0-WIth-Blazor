@@ -14,24 +14,8 @@ namespace Web.UI.Pages.Dashboard
 {
     public partial class Index
     {
-        [CascadingParameter] protected UINotification UINotification { get; set; }
-
         public UserVM userData { get; set; }
-        public bool isPopup { get; set; }
        
-        #region Objects
-       
-        [CascadingParameter]
-        protected Task<AuthenticationState> AuthStat { get; set; }
-
-        [CascadingParameter]
-        public MainLayout Layout { get; set; }
-
-        private CurrentUserPermissionManager _currentUserPermissionManager;
-
-        #endregion
-
-        private bool isDisplayLoader { get; set; } = false;
         UserVM userVM = new UserVM();
         DateTime DateofBirth { get; set; } = DateTime.Now;
 
@@ -56,7 +40,7 @@ namespace Web.UI.Pages.Dashboard
             if (response == null || response.Status != System.Net.HttpStatusCode.OK)
             {
                 message = new NotificationModel().Build(Notification.ThemeColor.Success, "Something went Wrong!, Please try again later.");
-                UINotification.Instance.Show(message);
+                uiNotification.Instance.Show(message);
             }
 
             userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());

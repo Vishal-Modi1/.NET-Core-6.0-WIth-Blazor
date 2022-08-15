@@ -8,7 +8,6 @@ namespace Web.UI.Pages.Account
 {
     partial class ForgetPassword
     {
-        [CascadingParameter] protected UINotification uiNotification { get; set; }
         bool isBusy; 
         ForgotPasswordVM forgotPasswordVM { get; set; }
 

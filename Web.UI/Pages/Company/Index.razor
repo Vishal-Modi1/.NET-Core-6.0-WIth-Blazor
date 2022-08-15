@@ -87,23 +87,18 @@
 
 <TelerikRootComponent>
     <TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true"
-                 EditMode="@GridEditMode.Popup" OnCreate="@CreateHandler"
                  Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
-
-        <GridToolBar>
-            <GridCommandButton Command="Add" Icon="add">Add Company</GridCommandButton>
-        </GridToolBar>
 
         <GridSettings>
             <GridPagerSettings InputType="PagerInputType.Input"
                                PageSizes="@pageSizeOptions"
                                ButtonCount="5"
-                               Adaptive="true">
+                               Adaptive="true" >
             </GridPagerSettings>
         </GridSettings>
 
         <GridColumns>
-            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company Name" />
+            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company Name" Sortable="true" />
             <GridColumn Field="@nameof(CompanyVM.Address)" />
             <GridColumn Field="@nameof(CompanyVM.TimeZone)" />
             <GridColumn Field="@nameof(CompanyVM.ContactNo)" />

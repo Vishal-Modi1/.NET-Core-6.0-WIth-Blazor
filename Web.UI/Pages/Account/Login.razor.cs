@@ -12,8 +12,6 @@ namespace Web.UI.Pages.Account
 {
     public partial class Login 
     {
-        [CascadingParameter] protected UINotification uiNotification { get; set; }
-
         public LoginVM loginVM = new LoginVM();
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         

@@ -21,7 +21,7 @@ namespace Web.UI.Pages.Company
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
@@ -49,12 +49,6 @@ namespace Web.UI.Pages.Company
         {
             await LoadData(args);
         }
-
-        async Task CreateHandler(GridCommandEventArgs args)
-        {
-            
-        }
-
 
         async Task CompanyCreateDialog(CompanyVM companyData, string title)
         {

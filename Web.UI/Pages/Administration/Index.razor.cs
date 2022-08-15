@@ -6,12 +6,8 @@ namespace Web.UI.Pages.Administration
 {
     partial class Index
     {
-        [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
-
         List<MenuItem> menuItems = new List<MenuItem>();
-
-        private bool isDisplayLoader { get; set; } = false;
-
+        
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)

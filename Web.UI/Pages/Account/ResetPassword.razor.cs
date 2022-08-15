@@ -13,7 +13,6 @@ namespace Web.UI.Pages.Account
 {
     partial class ResetPassword
     {
-        [CascadingParameter] protected UINotification uiNotification { get; set; }
         NotificationModel message;
         CurrentResponse response;
 

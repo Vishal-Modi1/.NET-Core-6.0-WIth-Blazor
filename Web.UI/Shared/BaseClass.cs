@@ -20,6 +20,5 @@ namespace Web.UI.Shared
         [CascadingParameter] public Task<AuthenticationState> AuthStat { get; set; }
         [CascadingParameter] public UINotification uiNotification { get; set; }
         public CurrentUserPermissionManager _currentUserPermissionManager;
-
     }
 }
