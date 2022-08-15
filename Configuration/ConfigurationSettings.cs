@@ -99,6 +99,8 @@ namespace Configuration
 
         public IEnumerable<int> BlazorGridPagesizeOptions = new int[] { 10, 20, 30, 50, 100 };
 
+        public IEnumerable<int?> GridPagesizeOptions = new int?[] { 10, 20, 30, 50, 100, null };
+
         public int BlazorGridDefaultPagesize = 10;
 
         public bool IsDiplsayValidationInPopupEffect = false;
