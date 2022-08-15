@@ -1,5 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
+<TelerikNotification @ref="@UINotification.Instance"
+                     HorizontalPosition="@NotificationHorizontalPosition.Right"
+                     VerticalPosition="@NotificationVerticalPosition.Top"
+                     Class="big-notification">
+
+</TelerikNotification>
+
 @if (menuItems != null)
 {
     <TelerikDrawer Data="@menuItems"
@@ -74,11 +81,12 @@
     </Template>
     <DrawerContent>
         <div class="main">
-           
-            <div class="content">
-                <LeftHeader></LeftHeader>
 
-                @Body
+            <div class="content">
+                <CascadingValue IsFixed="true" Value="@UINotification">
+                <LeftHeader></LeftHeader>
+                    @Body
+                </CascadingValue>
             </div>
         </div>
     </DrawerContent>

@@ -1,0 +1,36 @@
+﻿@using DataModels.Enums;
+
+@page "/administration"
+
+<PageTitle> Administration | Fly Manager  </PageTitle>
+
+<div id="container">
+
+    <TelerikTabStrip>
+
+        @foreach (var tab in menuItems)
+        {
+            string name = tab.Name;
+
+            @if (name == Module.Company.ToString())
+            {
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <TelerikIcon Icon="email" />
+                        <strong>@tab.DisplayName</strong>
+                    </HeaderTemplate>
+                    <Content>
+                          <Web.UI.Pages.Company.Index></Web.UI.Pages.Company.Index>
+                    </Content>
+                </TabStripTab>
+            }
+        }
+
+    </TelerikTabStrip>
+
+</div>
+
+
+   
+
+   

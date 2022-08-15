@@ -44,6 +44,11 @@ namespace Web.UI.Utilities
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
+                if (response == null)
+                {
+                    response = GetDefaultResponse();
+                }
+
                 return response;
             }
             catch (Exception exc)
@@ -97,6 +102,11 @@ namespace Web.UI.Utilities
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
+                if (response == null)
+                {
+                    response = GetDefaultResponse();
+                }
+
                 return response;
             }
             catch (Exception exc)
@@ -124,6 +134,11 @@ namespace Web.UI.Utilities
                 }
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+
+                if (response == null)
+                {
+                    response = GetDefaultResponse();
+                }
 
                 return response;
             }
@@ -158,6 +173,11 @@ namespace Web.UI.Utilities
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
+                if (response == null)
+                {
+                    response = GetDefaultResponse();
+                }
+
                 return response;
             }
             catch (Exception exc)
@@ -187,6 +207,11 @@ namespace Web.UI.Utilities
 
                 CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
 
+                if (response == null)
+                {
+                    response = GetDefaultResponse();
+                }
+
                 return response;
             }
             catch (Exception exc)
@@ -208,6 +233,15 @@ namespace Web.UI.Utilities
                                .Select(c => c.Value).SingleOrDefault();
 
             return claimValue;
+        }
+
+        private CurrentResponse GetDefaultResponse()
+        {
+            CurrentResponse response = new CurrentResponse();
+            response.Status = HttpStatusCode.BadRequest;
+            response.Message = "Something went Wrong!, Please try again later";
+
+            return response;
         }
     }
 }

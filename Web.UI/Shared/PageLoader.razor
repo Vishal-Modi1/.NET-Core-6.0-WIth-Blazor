@@ -1,0 +1,27 @@
+﻿<div class="loader">
+    <TelerikLoader Class="loader-indicator" Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
+    </TelerikLoader>
+</div>
+
+<style>
+    .loader {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+    }
+
+    .loader-container {
+        text-align: center;
+        width: 550px;
+        display: inline-table;
+        padding-top: 10px;
+    }
+
+    .k-loader-segment {
+        background-color: #022254 !important
+    }
+
+</style>

@@ -6,33 +6,34 @@ using DataModels.VM.Reservation;
 using DataModels.VM.BillingHistory;
 using DataModels.VM.User;
 using DataModels.VM.UserRolePermission;
+using Telerik.Blazor.Components;
 
 namespace Web.UI.Extensions
 {
     public static class DataGridFilterCreator
     {
-        // TODO: Datatables
-        //public static DatatableParams Create(this DatatableParams datatableParam, LoadDataArgs args, string defaultSearchOrderColumn)
-        //{
-        //    DatatableParams datatableParams = new DatatableParams();
+        //TODO: Datatables
+        public static DatatableParams Create(this DatatableParams datatableParam, GridReadEventArgs args, string defaultSearchOrderColumn)
+        {
+            DatatableParams datatableParams = new DatatableParams();
 
-        //    datatableParams.Length = args.Top.GetValueOrDefault();
-        //    datatableParams.Start = args.Skip.GetValueOrDefault() + 1;
+            datatableParams.Length = args.Request.PageSize;
+            datatableParams.Start = args.Request.Page;
 
-        //    if (string.IsNullOrWhiteSpace(args.OrderBy))
-        //    {
-        //        datatableParams.SortOrderColumn = defaultSearchOrderColumn;
-        //        datatableParams.OrderType = "asc";
+            //if (string.IsNullOrWhiteSpace(args.OrderBy))
+            //{
+            //    datatableParams.SortOrderColumn = defaultSearchOrderColumn;
+            //    datatableParams.OrderType = "asc";
 
-        //    }
-        //    else
-        //    {
-        //        datatableParams.SortOrderColumn = args.OrderBy.Split(new char[] { ' ' })[0];
-        //        datatableParams.OrderType = args.OrderBy.Split(new char[] { ' ' })[1];
-        //    }
+            //}
+            //else
+            //{
+            //    datatableParams.SortOrderColumn = args.OrderBy.Split(new char[] { ' ' })[0];
+            //    datatableParams.OrderType = args.OrderBy.Split(new char[] { ' ' })[1];
+            //}
 
-        //    return datatableParams;
-        //}
+            return datatableParams;
+        }
 
         //public static UserDatatableParams Create(this UserDatatableParams userDatatableParams, LoadDataArgs args, string defaultSearchOrderColumn)
         //{

@@ -1,0 +1,34 @@
+﻿.modal {
+    position: fixed;
+    z-index: 1055;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    display: block;
+
+    .close {
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .modal-dialog {
+        z-index: 1055;
+        border-radius: 0.2rem;
+        background-color: #ffffff;
+    }
+
+    .modal-header {
+        border-radius: 0.2rem 0.2rem 0 0;
+        height:50px;
+    }
+
+    .modal-content {
+        border-radius: 0.2rem;
+    }
+
+    .modal-backdrop.show {
+        opacity: .2;
+    }
+}

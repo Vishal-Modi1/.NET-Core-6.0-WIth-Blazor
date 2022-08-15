@@ -44,24 +44,29 @@ namespace Web.UI.Shared
 
             isAdministrationTabAdded = false;
 
-            var cp = (await AuthStat).User;
+            var user = (await AuthStat).User;
 
-            if (cp.Identity.IsAuthenticated)
+            if (!user.Identity.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo("/Login");
+            }
+
+            if (user.Identity.IsAuthenticated)
             {
                 menuItems = new List<MenuItem>();
-                menuItems.Add(new MenuItem() { Controller = "/", DisplayName = "Dashboard", FavIconStyle = "group" });
+                menuItems.Add(new MenuItem() { Controller = "Dashboard", DisplayName = "Dashboard", FavIconStyle = "group" });
                 menuItems.Add(new MenuItem() { Controller = "Administration", DisplayName = "Administration"});
                 menuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
 
                 menuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out", FavIconStyle = "group" });
 
-                fullName = cp.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                fullName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
                           .Select(c => c.Value).SingleOrDefault();
 
-                profileImageURL = cp.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
+                profileImageURL = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
                            .Select(c => c.Value).SingleOrDefault();
 
-                isSuperAdmin = Convert.ToUInt32(cp.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
+                isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
 
                 string currPage = NavigationManager.Uri;
                 MenuItem ActivePage = menuItems.FirstOrDefault();

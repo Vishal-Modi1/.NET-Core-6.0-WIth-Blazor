@@ -15,6 +15,9 @@
 @using Web.UI.Data.Company
 @using Web.UI.Data.Common
 @using Web.UI.Data.Account
+
+@using Web.UI.Shared.Components
+
 @using static Telerik.Blazor.ThemeConstants;
 
 @inject NavigationManager NavigationManager
@@ -29,3 +32,5 @@
 @inject CompanyService CompanyService
 @inject MenuService MenuService
 @inject AccountService AccountService
+
+@inherits BaseClass

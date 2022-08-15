@@ -12,11 +12,7 @@ namespace Web.UI.Shared
 
         public void DisplayNotification(TelerikNotification instance, CurrentResponse response)
         {
-            if (response == null)
-            {
-                DisplayErrorNotification(instance);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
                DisplaySuccessNotification(instance,response.Message);
             }
