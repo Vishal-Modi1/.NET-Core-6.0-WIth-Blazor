@@ -38,11 +38,11 @@ namespace Service
             _emailTokenRepository = emailTokenRepository;
         }
 
-        public CurrentResponse ListDropDownValuesByCompanyId(int companyId)
+        public CurrentResponse ListDropdownValuesByCompanyId(int companyId)
         {
             try
             {
-                List<DropDownLargeValues> usersList = _userRepository.ListDropdownValuesbyCondition(p => p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false);
+                List<DropDownLargeValues> usersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
                 CreateResponse(usersList, HttpStatusCode.OK, "");
             }
             catch (Exception ex)
@@ -238,6 +238,13 @@ namespace Service
         {
             try
             {
+                bool isValidToken = _emailTokenRepository.IsValidToken(resetPasswordVM.Token);
+
+                if (!isValidToken)
+                {
+                    return CreateResponse(isValidToken, HttpStatusCode.NotFound, "Token is expired");
+                }
+
                 bool isUserPasswordReset = _userRepository.ResetUserPassword(resetPasswordVM);
 
                 if (isUserPasswordReset)

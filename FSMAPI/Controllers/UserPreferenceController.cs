@@ -26,7 +26,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(UserPreferenceVM userPreferenceVM)
         {
-            userPreferenceVM.UserId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            userPreferenceVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _userPreferenceService.Create(userPreferenceVM);
 

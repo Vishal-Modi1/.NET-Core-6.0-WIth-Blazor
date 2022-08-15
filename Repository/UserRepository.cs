@@ -86,9 +86,20 @@ namespace Repository
             return false;
         }
 
-        public List<DropDownLargeValues> ListDropdownValuesbyCondition(Expression<Func<User, bool>> predicate)
+        public List<DropDownLargeValues> ListDropdownValuesbyCompanyId(int companyId)
         {
-            return _myContext.Users.Where(predicate).Select(p => new DropDownLargeValues() { Id = p.Id, Name = p.FirstName + " " + p.LastName }).ToList();
+            List<DropDownLargeValues> usersList = (from user in _myContext.Users 
+                        join userVSCompany in _myContext.UsersVsCompanies 
+                        on user.Id equals userVSCompany.UserId
+                        where userVSCompany.CompanyId == companyId
+                        && user.IsActive == true &&  user.IsDeleted == false
+                        select new DropDownLargeValues()
+                        {
+                            Id = user.Id,
+                            Name = user.FirstName + " " + user.LastName
+                        }).ToList();
+
+            return usersList;
         }
 
         public List<UserDataVM> List(UserDatatableParams datatableParams)

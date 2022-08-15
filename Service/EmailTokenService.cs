@@ -68,7 +68,7 @@ namespace Service
             }
             else
             {
-                CreateResponse(isValidToken, HttpStatusCode.OK, "Token is expired");
+                CreateResponse(isValidToken, HttpStatusCode.NotFound, "Token is expired");
             }
 
             return _currentResponse;

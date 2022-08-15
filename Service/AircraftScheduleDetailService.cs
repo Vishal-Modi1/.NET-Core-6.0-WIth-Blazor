@@ -31,8 +31,16 @@ namespace Service
 
         public CurrentResponse CheckOut(AircraftSchedulerDetailsVM aircraftScheduleDetailVM)
         {
-            AircraftScheduleDetail aircraftScheduleDetail = new AircraftScheduleDetail();
+            AircraftScheduleDetail aircraftScheduleDetail = _aircraftScheduleDetailRepository.FindByCondition(p=>p.AircraftScheduleId == aircraftScheduleDetailVM.AircraftScheduleId && p.FlightStatus == "CheckedOut");
 
+            if(aircraftScheduleDetail != null)
+            {
+                CreateResponse(null, HttpStatusCode.BadRequest, "Aircraft is already checked out");
+
+                return _currentResponse;
+            }
+
+            aircraftScheduleDetail = new AircraftScheduleDetail();
             aircraftScheduleDetail.AircraftScheduleId = aircraftScheduleDetailVM.AircraftScheduleId;
             aircraftScheduleDetail.CheckOutBy = aircraftScheduleDetailVM.CheckOutBy;
             aircraftScheduleDetail.CheckOutTime = DateTime.UtcNow;
@@ -62,7 +70,7 @@ namespace Service
 
                 if (response == null)
                 {
-                    CreateResponse(true, HttpStatusCode.NotFound, "No reservation found for this id.");
+                    CreateResponse(null, HttpStatusCode.NotFound, "No reservation found for this id");
                 }
                 else
                 {

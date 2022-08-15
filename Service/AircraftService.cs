@@ -8,6 +8,7 @@ using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.User;
 using DataModels.Constants;
+using DataModels.Enums;
 
 namespace Service
 {
@@ -281,7 +282,11 @@ namespace Service
             airCraft.IsIdentifyMeterMismatch = airCraftVM.IsIdentifyMeterMismatch;
             airCraft.IsActive = true;
             airCraft.CompanyId = airCraftVM.CompanyId;
-            airCraft.AircraftStatusId = airCraftVM.AircraftStatusId;
+
+            if (airCraftVM.AircraftStatusId == 0)
+            {
+                airCraft.AircraftStatusId = (int)AircraftStatuses.ReadyForFlight;
+            }
 
             airCraft.CreatedBy = airCraftVM.CreatedBy;
             airCraft.UpdatedBy = airCraftVM.UpdatedBy;

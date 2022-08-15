@@ -1,4 +1,15 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+
+
+html, body {
+    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.k-drawer {
+    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body {
     background: none !important;
 }
 
@@ -42,7 +53,7 @@ form .row {
 }
 
 .login-page-aircraft {
-    background-image: url(../img/login-page-aircraft.jpeg);
+    background-image: url(/img/login-page-aircraft.jpeg);
     background-size: 100% 100%;
 }
 
@@ -86,3 +97,4 @@ form .row {
     border: 1px solid #1151F3 !important;
     color: #fff !important
 }
+

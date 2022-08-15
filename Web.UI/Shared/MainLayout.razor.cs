@@ -13,7 +13,7 @@ namespace Web.UI.Shared
 {
     public partial class MainLayout
     {
-        Notification Notification { get; set; } = new Notification();
+        UINotification UINotification { get; set; } = new UINotification();
 
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
@@ -24,40 +24,40 @@ namespace Web.UI.Shared
         public int companyId;
         string companyName; bool isSuperAdmin;
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            base.OnInitialized();
-
-            var user = (await AuthStat).User;
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-            if (!user.Identity.IsAuthenticated)
+            if(firstRender)
             {
-                NavigationManager.NavigateTo($"/Login");
+                var user = (await AuthStat).User;
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+                if (!user.Identity.IsAuthenticated)
+                {
+                        NavigationManager.NavigateTo("/Login");
+                }
+
+                userFullName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                                   .Select(c => c.Value).SingleOrDefault();
+
+                loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
+                                   .Select(c => c.Value).SingleOrDefault();
+
+                companyId = Convert.ToInt32(user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyId)
+                                   .Select(c => c.Value).SingleOrDefault());
+
+                companyName = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
+                                   .Select(c => c.Value).SingleOrDefault();
+
+                if (string.IsNullOrEmpty(companyName))
+                {
+                    companyName = "Flight Schedule Management";
+                }
+
+                isSuperAdmin = Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role)
+                                   .Select(c => c.Value).SingleOrDefault()) == (int)UserRole.SuperAdmin;
+
+                base.StateHasChanged();
             }
-
-            userFullName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
-                               .Select(c => c.Value).SingleOrDefault();
-
-            loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
-                               .Select(c => c.Value).SingleOrDefault();
-
-            companyId = Convert.ToInt32(user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyId)
-                               .Select(c => c.Value).SingleOrDefault());
-
-            companyName = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
-                               .Select(c => c.Value).SingleOrDefault();
-
-            if(string.IsNullOrEmpty(companyName))
-            {
-                companyName = "Flight Schedule Management";
-            }
-
-            isSuperAdmin = Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role)
-                               .Select(c => c.Value).SingleOrDefault()) == (int)UserRole.SuperAdmin;
-
-            base.StateHasChanged();
-
         }
 
         async Task OpenChangePasswordDailog()

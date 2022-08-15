@@ -1,5 +1,7 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.Common;
 using Repository.Interface;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Repository
@@ -35,6 +37,13 @@ namespace Repository
         public UserVSCompany GetDefaultCompanyByUserId(long userId)
         {
             return _myContext.UsersVsCompanies.Where(p => p.UserId == userId && p.IsActive && !p.IsDeleted).FirstOrDefault();
+        }
+
+        public List<UserVSCompany> ListByCompanyId(int companyId)
+        {
+            List<UserVSCompany> userRolesList = _myContext.UsersVsCompanies.Where(p=>p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false).ToList();
+
+            return userRolesList;
         }
     }
 }

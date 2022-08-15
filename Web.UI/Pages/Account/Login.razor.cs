@@ -4,15 +4,15 @@ using Web.UI.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Telerik.Blazor.Components;
-using Web.UI.Models.Enums;
 using Microsoft.AspNetCore.Components;
 using Web.UI.Shared;
+using static Telerik.Blazor.ThemeConstants;
 
 namespace Web.UI.Pages.Account
 {
     public partial class Login 
     {
-        [CascadingParameter] protected Notification Notification { get; set; }
+        [CascadingParameter] protected UINotification uiNotification { get; set; }
 
         public LoginVM loginVM = new LoginVM();
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
@@ -60,11 +60,7 @@ namespace Web.UI.Pages.Account
         [JSInvokable]
         public void ManageLoginResponse(string responseMessage)
         {
-            NotificationModel message;
-
-            message = new NotificationModel().Build(TelerikNotificationTypes.info, "Something went Wrong!, Please try again later.");
-            Notification.Instance.Show(message);
-
+            uiNotification.DisplayErrorNotification(uiNotification.Instance);
             SetButtonState(false);
         }
 
