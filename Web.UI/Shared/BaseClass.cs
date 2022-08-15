@@ -7,8 +7,7 @@ namespace Web.UI.Shared
 {
     public class BaseClass : ComponentBase
     {
-        public int count;
-        public bool isLoading, isBusyAddButton, isBusyEditButton, isBusyDeleteButton;
+        public bool isDisplayLoader, isBusyAddButton, isBusyEditButton, isBusyDeleteButton;
         public string searchText;
         public string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         public int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
