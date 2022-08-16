@@ -84,8 +84,10 @@
 
             <div class="content">
                 <CascadingValue IsFixed="true" Value="@UINotification">
-                <LeftHeader></LeftHeader>
-                    @Body
+                    <LeftHeader></LeftHeader>
+                    <TelerikRootComponent>
+                        @Body
+                    </TelerikRootComponent>
                 </CascadingValue>
             </div>
         </div>

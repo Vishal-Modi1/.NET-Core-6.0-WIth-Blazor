@@ -1,0 +1,132 @@
+﻿@using System.ComponentModel.DataAnnotations;
+
+<TelerikForm Model="@companyData" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        @if (!isAuthenticated)
+        {
+            <hr style="margin-bottom:35px" />
+        }
+
+        <input type="hidden" value="@companyData.Id" name="Id" />
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <label for="name" class="k-label k-form-label">Company Name</label>
+            </div>
+            <div class="col-md-12">
+                <TelerikTextBox Id="name" @bind-Value="@companyData.Name" PlaceHolder="Company Name" Enabled=@(!IsInvited)></TelerikTextBox>
+                <TelerikValidationMessage For="@(() => companyData.Name)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <label for="address" class="k-label k-form-label">Company Address</label>
+            </div>
+            <div class="col-md-12">
+                <TelerikTextBox Id="address" @bind-Value="@companyData.Address" PlaceHolder="Company Address" Enabled=@(!IsInvited)></TelerikTextBox>
+                <TelerikValidationMessage For="@(() => companyData.Address)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <label for="timezone" class="k-label k-form-label">Company Timezone</label>
+            </div>
+            <div class="col-md-12">
+
+                <TelerikDropDownList Id=timezone Data="@timeZoneInfos" TextField="DisplayName"
+                                     DefaultText="Select Timezone" ValueField="StandardName" @bind-Value="@companyData.TimeZone" Enabled=@(!IsInvited)>
+                </TelerikDropDownList>
+
+                <TelerikValidationMessage For="@(() => companyData.TimeZone)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="contactNo" class="k-label k-form-label">Company Contact No</label>
+            </div>
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="website" class="k-label k-form-label">Company Website</label>
+            </div>
+            <div class="col-md-6">
+                <TelerikMaskedTextBox Id="contactNo" @bind-Value="@companyData.ContactNo" Mask="(999) 000-0000" Enabled=@(!IsInvited)></TelerikMaskedTextBox>
+                <TelerikValidationMessage For="@(() => companyData.ContactNo)"></TelerikValidationMessage>
+            </div>
+            <div class="col-md-6">
+                <TelerikTextBox Id="website" @bind-Value="@companyData.Website" PlaceHolder="Company Website" Enabled=@(!IsInvited)></TelerikTextBox>
+                <TelerikValidationMessage For="@(() => companyData.Website)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="primaryAirport" class="k-label k-form-label">Primary Airport</label>
+            </div>
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="primaryServiceId" class="k-label k-form-label">Primary Service</label>
+            </div>
+            <div class="col-md-6">
+                <TelerikTextBox Id="primaryAirport" @bind-Value="@companyData.PrimaryAirport" PlaceHolder="Primary Airport" Enabled=@(!IsInvited)></TelerikTextBox>
+            </div>
+            <div class="col-md-6">
+
+                <TelerikDropDownList Id=primaryServiceId Data="@companyData.PrimaryServicesList" TextField="Name"
+                                     DefaultText="Select Service" ValueField="Id" @bind-Value="@primaryServiceId" Enabled=@(!IsInvited)>
+                </TelerikDropDownList>
+
+            </div>
+        </div>
+
+    </FormItems>
+    <FormButtons>
+
+        <hr style="margin-top:35px" />
+
+        <div class="row" style="margin-bottom:0px">
+            <div class="col-md-12 text-right">
+
+                @if (isAuthenticated)
+                {
+                    if (companyData.Id == 0)
+                    {
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+                            Save
+                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                            </TelerikLoader>
+
+                        </TelerikButton>
+                    }
+                    else
+                    {
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
+                            Update
+                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                            </TelerikLoader>
+
+                        </TelerikButton>
+                    }
+
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                        Cancel
+                    </TelerikButton>
+                }
+                else
+                {
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@GotoNextStep" ThemeColor="info" Class="btn k-btn-primary"> Next </TelerikButton>
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@RedirectToLogin" ThemeColor="secondary" Class="btn k-btn-secondary"> Cancel </TelerikButton>
+                }
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

@@ -37,7 +37,7 @@
                     <FormItem Field="@nameof(LoginVM.Email)">
                         <Template>
                             <div class="form-group mb-3">
-                                <label for="Email" class="k-label k-form-label">Email</label>
+                                <label for="email" class="k-label k-form-label">Email</label>
                                 <TelerikTextBox Id="email" @bind-Value="@loginVM.Email" InputMode="email" PlaceHolder="Email"></TelerikTextBox>
                                 <TelerikValidationMessage For="@(() => loginVM.Email)"></TelerikValidationMessage>
                             </div>
@@ -47,8 +47,8 @@
                     <FormItem Field="@nameof(LoginVM.Password)">
                         <Template>
                             <div class="form-group mb-3">
-                                <label for="Password" class="k-label k-form-label">Password</label>
-                                <TelerikTextBox Id="Password" @bind-Value="@loginVM.Password" Password="true" PlaceHolder="Password"></TelerikTextBox>
+                                <label for="password" class="k-label k-form-label">Password</label>
+                                <TelerikTextBox Id="password" @bind-Value="@loginVM.Password" Password="true" PlaceHolder="Password"></TelerikTextBox>
                                 <TelerikValidationMessage For="@(() => loginVM.Password)"></TelerikValidationMessage>
                             </div>
                         </Template>

@@ -5,18 +5,20 @@
 
 @page "/Company"
 
-@layout EmptyLayout
-
+@layout TelerikLayout
 
 <div class="row">
     <div class="col">
-        <h2 style="float:left">Manage Companies Details</h2>
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
-        {
-            @*<RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" IsBusy="@isBusyAddButton" BusyText="Add New .."
-                ButtonStyle="ButtonStyle.Primary" Click=@(() => CompanyCreateDialog(new CompanyVM(), "Create Company")) />*@
+        <h4 style="float:left">Manage Companies Details</h4>
 
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+        {
+            popupTitle = "Create Company";
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM(), popupTitle)">
+                Add New
+            </TelerikButton>
         }
+
     </div>
 </div>
 
@@ -24,126 +26,85 @@
 <div class="row" style="margin-bottom:22px;">
 
     <div class="col-md-4">
-        @*<RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
-            Placeholder="Search Company" @bind-Value="@searchText" />*@
+
+        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" @bind-Value="@searchText" />
+
     </div>
 
 </div>
 
-@*<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-    FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
-    PageSize="@pageSize"
-    AllowSorting="true" Data="@data" TItem="CompanyVM"
-    PageSizeOptions="@pageSizeOptions"
-    Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
-    PagingSummaryFormat="@pagingSummaryFormat">
-    <Columns>
+<TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-    <RadzenDataGridColumn TItem="CompanyVM" Title="Logo" Sortable="false" Filterable="false" Width="65px">
-    <Template Context="data">
-    <RadzenImage onerror="this.onerror=null;this.src='../img/company-default-logo.png';" Path="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 22px;" />
-    </Template>
-    </RadzenDataGridColumn>
+    <GridSettings>
+        <GridPagerSettings InputType="PagerInputType.Input"
+                           PageSizes="@pageSizeOptions"
+                           ButtonCount="5"
+                           Adaptive="true">
+        </GridPagerSettings>
+    </GridSettings>
 
-    <RadzenDataGridColumn TItem="CompanyVM" Title="Name" Filterable="false" Sortable="false">
-    <Template Context="value">
-
-    <a href="javascript:void(0)" @onclick="@((ui) => OpenCompanyDetailPage(value))">@value.Name</a>
-
-    </Template>
-    </RadzenDataGridColumn>
-
-    <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Property="Name" Title="Name"></RadzenDataGridColumn>
-    <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="Address" Title="Address"></RadzenDataGridColumn>
-    <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="TimeZone" Title="TimeZone"></RadzenDataGridColumn>
-    <RadzenDataGridColumn TItem="CompanyVM" Filterable="false" Sortable="false" Property="ContactNo" Title="Contact No"></RadzenDataGridColumn>
-
-    <RadzenDataGridColumn TItem="CompanyVM" Title="Website" Filterable="false" Sortable="false">
-    <Template Context="value">
-
-    @if (!string.IsNullOrWhiteSpace(value.Website))
-    {
-    <a href="@value.Website" target="_blank">@value.Website</a>
-    }
-    else
-    {
-    <RadzenLabel Text="-"></RadzenLabel>
-    }
-
-    </Template>
-    </RadzenDataGridColumn>
-
-    <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="CompanyVM" Property="Id" Title="Actions">
-    <Template Context="data">
-
-    <RadzenButton ButtonStyle="ButtonStyle.Primary" Icon="settings"  Class="m-1" Click=@(() => OpenCompanyDetailPage(data)) />
-    <RadzenButton ButtonStyle="ButtonStyle.Success" Icon="mode_edit" IsBusy="@data.IsLoadingEditButton" Class="m-1" Click=@(() => CompanyCreateDialog(data,"Edit Company")) />
-    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
-    Click=@(args => OpenDeleteDialog(data)) />
-    </Template>
-    </RadzenDataGridColumn>
-    </Columns>
-    </RadzenDataGrid>*@
-
-<TelerikRootComponent>
-    <TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true"
-                 Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
-
-        <GridSettings>
-            <GridPagerSettings InputType="PagerInputType.Input"
-                               PageSizes="@pageSizeOptions"
-                               ButtonCount="5"
-                               Adaptive="true" >
-            </GridPagerSettings>
-        </GridSettings>
-
-        <GridColumns>
-            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company Name" Sortable="true" />
-            <GridColumn Field="@nameof(CompanyVM.Address)" />
-            <GridColumn Field="@nameof(CompanyVM.TimeZone)" />
-            <GridColumn Field="@nameof(CompanyVM.ContactNo)" />
-            <GridColumn Field="@nameof(CompanyVM.Website)" />
-
-            <GridCommandColumn Context="dataItem" Title="Action">
+    <GridColumns>
+        <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company Name" Sortable="true">
+            <Template>
                 @{
-                    popupTitle = "Update Company Details";
-                    CompanyVM companyVM = dataItem as CompanyVM;
-
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                    {
-                        <TelerikButton Class="btn k-btn-primary" @onclick="()=>CompanyCreateDialog(companyVM, popupTitle)" Enabled=!companyVM.IsLoadingEditButton>
-
-                            <CustomIcons IconName="edit"></CustomIcons>
-                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="companyVM.IsLoadingEditButton">
-                            </TelerikLoader>
-                        </TelerikButton>
-                    }
-                    //@if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                    //{
-                    <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenDeleteDialog(companyVM)">
-                        <CustomIcons IconName="delete"></CustomIcons>
-                    </TelerikButton>
-                    //}
+                    var data = context as CompanyVM;
+                    <u> <a href="javascript:void(0)" @onclick="@((ui) => OpenCompanyDetailPage(data))">@data.Name</a></u>
                 }
-            </GridCommandColumn>
+            </Template>
+        </GridColumn>
+        <GridColumn Field="@nameof(CompanyVM.Address)" Sortable="false" />
+        <GridColumn Field="@nameof(CompanyVM.TimeZone)" Sortable="false" />
+        <GridColumn Field="@nameof(CompanyVM.ContactNo)" Sortable="false" />
+        <GridColumn Field="@nameof(CompanyVM.Website)" Sortable="false" />
 
-        </GridColumns>
+        <GridCommandColumn Context="dataItem" Title="Action">
+            @{
+                popupTitle = "Update Company Details";
+                CompanyVM companyVM = dataItem as CompanyVM;
 
-    </TelerikGrid>
+                <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenCompanyDetailPage(companyVM)">
 
-</TelerikRootComponent>
+                    <CustomIcons IconName="settings"></CustomIcons>
+
+                </TelerikButton>
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-primary" OnClick="()=>CompanyCreateDialog(companyVM, popupTitle)" Enabled=!companyVM.IsLoadingEditButton>
+
+                        <CustomIcons IconName="edit"></CustomIcons>
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="companyVM.IsLoadingEditButton">
+                        </TelerikLoader>
+
+                    </TelerikButton>
+                }
+
+                // TODO:
+                //@if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                //  {
+                <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenDeleteDialog(companyVM)">
+                    <CustomIcons IconName="delete"></CustomIcons>
+                </TelerikButton>
+                //   }
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
+
 
 @if (isDisplayPopup)
 {
     <CustomPopupComponent Title="@popupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
-                      CloseOnOutsideClick="false"
-                      OnClose="@(()=> {isDisplayPopup = false;})">
+                      CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                @* <Create companyData=@(_companyData) CloseDialogCallBack="@CloseDialog"></Create>*@
+                <Create companyData=@(_companyData) CloseDialogCallBack="@CloseDialog"></Create>
             }
             else
             {
@@ -153,9 +114,9 @@
                     <div class="row" style="text-align:right">
                         <div class="col">
 
-                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_companyData.Id)">
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_companyData.Id)" Enabled="@(!isBusyDeleteButton)">
                                 Yes
-                                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" >
+                                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
                                 </TelerikLoader>
                             </TelerikButton>
 

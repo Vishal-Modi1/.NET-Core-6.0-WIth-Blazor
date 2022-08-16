@@ -34,7 +34,7 @@ namespace Web.UI.Data.AircraftModel
 
         public async Task<CurrentResponse> ListDropdownValues(DependecyParams dependecyParams)
         {
-            dependecyParams.URL = "aircraftmodel/list";
+            dependecyParams.URL = "aircraftmodel/listdropdownvalues";
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;

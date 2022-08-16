@@ -45,11 +45,6 @@ namespace Web.UI.Pages.Company
             pageSize = newPageSize;
         }
 
-        protected async Task ReadItems(GridReadEventArgs args)
-        {
-            await LoadData(args);
-        }
-
         async Task CompanyCreateDialog(CompanyVM companyData, string title)
         {
             if (companyData.Id == 0)
@@ -80,12 +75,6 @@ namespace Web.UI.Pages.Company
             }
         }
 
-        private void SetEditButtonState(int id, bool isBusy)
-        {
-            var details = data.Where(p => p.Id == id).First();
-            details.IsLoadingEditButton = isBusy;
-        }
-
         async Task CloseDialog(bool reloadGrid)
         {
             isDisplayPopup = false;
@@ -111,6 +100,8 @@ namespace Web.UI.Pages.Company
 
         async Task DeleteAsync(int id)
         {
+            isBusyDeleteButton = true;
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.DeleteAsync(dependecyParams, id);
 
@@ -124,11 +115,14 @@ namespace Web.UI.Pages.Company
             {
                await CloseDialog(false);
             }
+
+            isBusyDeleteButton = false;
         }
 
         async Task OpenDeleteDialog(CompanyVM companyVM)
         {
             isDisplayPopup = true;
+            
             operationType = OperationType.Delete;
             _companyData = companyVM;
             popupTitle = "Delete Company";
