@@ -58,7 +58,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 NoofPropellersDropDown.Add(new DropDownValues() { Id = year, Name = year.ToString() });
             }
 
-            for (int year = 1800; year <= DateTime.Now.Year; year++)
+            for (int year = 1945; year <= DateTime.Now.Year; year++)
             {
                 YearDropDown.Add(new DropDownValues() { Id = year, Name = year.ToString() });
             }
@@ -180,6 +180,7 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             if ((int)value == int.MaxValue)
             {
+
                 isDisplayModelPopup = true;
             }
         }
@@ -259,6 +260,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 || ClassId == (int)AircraftClass.SingleEngineSea || ClassId == 0) && isDisplayClassDropDown)
             {
                 isDisplayNoofEnginesDropDown = false;
+                NoofEnginesId = 1;
             }
             else
             {
@@ -377,9 +379,10 @@ namespace FSM.Blazor.Pages.Aircraft
 
                 AircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
 
-                MakeId = 0;
-                isDisplayMakePopup = false;
             }
+
+            MakeId = 0;
+            isDisplayMakePopup = false;
         }
 
         public async Task CloseModelDialogAsync(bool isCancelled)
