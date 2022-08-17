@@ -1,0 +1,90 @@
+﻿@using DataModels.VM.Aircraft.AircraftStatusLog
+@using DataModels.VM.AircraftEquipment;
+@using FSM.Blazor.Data.Aircraft.AircraftStatusLog;
+@using DataModels.Enums;
+
+@inject AircraftStatusLogService AircraftStatusLogService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="row mb-4">
+    <div class="col">
+        <h2 style="float:left">Manage Aircraft Status</h2>
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
+        {
+            <RadzenButton Style="float:right" Text="Add New" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary"
+                      BusyText="Add New ..." IsBusy="@isBusyAddNewButton" Click=@(() => AircraftEquipmentCreateDialog(0, "Update Status")) />
+        }
+    </div>
+</div>
+
+<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
+                PageSize="Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize"
+                AllowSorting="true" Data="@data" TItem="AircraftStatusLogDataVM"
+                PageSizeOptions="Configuration.ConfigurationSettings.Instance.BlazorGridPagesizeOptions"
+                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
+                PagingSummaryFormat="@pagingSummaryFormat">
+    <Columns>
+
+        <RadzenDataGridColumn Width="50px" TItem="AircraftStatusLogDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+            <Template Context="value">
+                @(data.IndexOf(value) + 1)
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TItem="AircraftStatusLogDataVM" Filterable="false" Property="AircraftStatus" Title="AircraftStatus"></RadzenDataGridColumn>
+        <RadzenDataGridColumn TItem="AircraftStatusLogDataVM" Filterable="false" Property="Reason" Title="Reason"></RadzenDataGridColumn>
+
+        <RadzenDataGridColumn TextAlign="TextAlign.Center" Width="160px" Sortable="false" Filterable="false" TItem="AircraftEquipmentDataVM" Property="Id" Title="Actions">
+            <Template Context="data">
+               @* @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName) && isAllowToEdit)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" IsBusy="@data.IsLoadingEditButton" Icon="mode_edit" Class="m-1" Click=@(() => AircraftEquipmentCreateDialog(data.Id, "Edit Equipment")) />
+                }*@
+
+               @* @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName) && isAllowToEdit)
+                {
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete_sweep" Class="m-1"
+                              Click=@(args => OpenDeleteDialog(data)) />
+                }*@
+
+            </Template>
+        </RadzenDataGridColumn>
+
+    </Columns>
+</RadzenDataGrid>
+
+@*@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftSettings.AircraftEquipment.Create AircraftEquipmentsVM=@aircraftStatusLogVM CloseDialogCallBack="@CloseDialog">
+                </FSM.Blazor.Pages.Aircraft.DetailsTabs.AircraftSettings.AircraftEquipment.Create>
+
+            }
+            else if(operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete <b> @aircraftStatusLogVM.Item </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync(aircraftStatusLogVM.Id)" Class="mr-1" Style="width: 80px;" />
+                            <RadzenButton Text="No" Click="() => CloseDialog(true)" ButtonStyle="ButtonStyle.Light" Class="mr-1" Style="width: 80px;" />
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </Body>
+    </CustomPopupComponent>
+}*@
+

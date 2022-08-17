@@ -90,6 +90,23 @@ namespace Service
             }
         }
 
+        public CurrentResponse ListDropDownValues()
+        {
+            try
+            {
+                List<DropDownValues> aircraftMakeList = _aircraftModelRepository.ListDropDownValues();
+                CreateResponse(aircraftMakeList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse Delete(int id)
         {
             try

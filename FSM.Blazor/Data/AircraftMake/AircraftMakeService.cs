@@ -34,7 +34,7 @@ namespace FSM.Blazor.Data.AircraftMake
 
         public async Task<CurrentResponse> ListDropdownValues(DependecyParams dependecyParams)
         {
-            dependecyParams.URL = "aircraftmake/list";
+            dependecyParams.URL = "aircraftmake/listdropdownvalues";
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;

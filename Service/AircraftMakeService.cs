@@ -78,6 +78,23 @@ namespace Service
             }
         }
 
+        public CurrentResponse ListDropDownValues()
+        {
+            try
+            {
+                List<DropDownValues> aircraftMakeList = _aircraftMakeRepository.ListDropDownValues();
+                CreateResponse(aircraftMakeList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         private bool IsAircraftMakeExist(AircraftMake aircraftMake)
         {
             AircraftMake aircraftMakeInfo = _aircraftMakeRepository.FindByCondition(p => p.Name == aircraftMake.Name && p.Id != aircraftMake.Id);

@@ -17,5 +17,8 @@ namespace DataModels.VM.Reservation
         public string CompanyName { get; set; }
         public decimal? AirFrameTime { get; set; }
         public int TotalRecords { get; set; }
+        public string Member1 { get; set; }
+        public string Instructor { get; set; }
+        public long? InstructorId { get; set; }
     }
 }

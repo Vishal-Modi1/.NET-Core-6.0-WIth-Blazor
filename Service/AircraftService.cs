@@ -82,7 +82,7 @@ namespace Service
         {
             try
             {
-                Aircraft airCraft = _aircraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id);
+                Aircraft airCraft = _aircraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id && p.IsDeleted == false);
 
                 if (airCraft != null)
                 {
