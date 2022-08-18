@@ -207,6 +207,24 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border: 1px solid #022a6a !important;
   background-color: #022a6a !important;
 }
+.btn.k-btn-danger {
+  border: 1px solid #BA0000 !important;
+  background-color: #BA0000 !important;
+}
+.btn.k-btn-danger:hover {
+  color: white;
+  border: 1px solid #CA2323 !important;
+  background-color: #CA2323 !important;
+}
+.btn.k-btn-info {
+  border: 1px solid #008EA4 !important;
+  background-color: #008EA4 !important;
+}
+.btn.k-btn-info:hover {
+  color: white;
+  border: 1px solid #17A2B8 !important;
+  background-color: #17A2B8 !important;
+}
 
 .login-button {
   width: 100% !important;

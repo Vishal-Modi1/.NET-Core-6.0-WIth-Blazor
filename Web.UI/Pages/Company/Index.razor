@@ -8,29 +8,26 @@
 @layout TelerikLayout
 
 <div class="row">
-    <div class="col">
-        <h4 style="float:left">Manage Companies Details</h4>
+    <div class="col d-flex justify-content-between">
+        <div><h4>Manage Companies Details</h4></div>
+        <div>
+            <div class="row d-flex justify-content-end my-2">
+                <div class="col-md-8">
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" @bind-Value="@searchText" />
+                </div>
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-        {
-            popupTitle = "Create Company";
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM(), popupTitle)">
-                Add New
-            </TelerikButton>
-        }
-
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                {
+                    popupTitle = "Create Company";
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM(), popupTitle)">
+                            Add New
+                        </TelerikButton>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
-</div>
-
-
-<div class="row" style="margin-bottom:22px;">
-
-    <div class="col-md-4">
-
-        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" @bind-Value="@searchText" />
-
-    </div>
-
 </div>
 
 <TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -63,27 +60,23 @@
                 popupTitle = "Update Company Details";
                 CompanyVM companyVM = dataItem as CompanyVM;
 
-                <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenCompanyDetailPage(companyVM)">
-
+                <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenCompanyDetailPage(companyVM)">
                     <CustomIcons IconName="settings"></CustomIcons>
-
                 </TelerikButton>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-primary" OnClick="()=>CompanyCreateDialog(companyVM, popupTitle)" Enabled=!companyVM.IsLoadingEditButton>
-
+                    <TelerikButton Class="btn k-btn-info mx-1" OnClick="()=>CompanyCreateDialog(companyVM, popupTitle)" Enabled=!companyVM.IsLoadingEditButton>
                         <CustomIcons IconName="edit"></CustomIcons>
                         <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="companyVM.IsLoadingEditButton">
                         </TelerikLoader>
-
                     </TelerikButton>
                 }
 
                 // TODO:
                 //@if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 //  {
-                <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenDeleteDialog(companyVM)">
+                <TelerikButton Class="btn k-btn-danger mx-1" OnClick="()=>OpenDeleteDialog(companyVM)">
                     <CustomIcons IconName="delete"></CustomIcons>
                 </TelerikButton>
                 //   }

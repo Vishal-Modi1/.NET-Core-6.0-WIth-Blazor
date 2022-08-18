@@ -18,6 +18,10 @@ $BG-MAIN-MENU: $BG-DARK-BLUE;
 
 $BG-BTN-PRIMARY: $BG-DARK-BLUE;
 $BG-BTN-PRIMARY-HOVER: #022a6a;
+$BG-BTN-DANGER: #BA0000;
+$BG-BTN-DANGER-HOVER: #CA2323;
+$BG-BTN-INFO: #008EA4;
+$BG-BTN-INFO-HOVER: #17A2B8;
 /*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
@@ -238,10 +242,33 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         border: 1px solid $BG-BTN-PRIMARY !important;
         background-color: $BG-BTN-PRIMARY !important;
     }
+
     &.k-btn-primary:hover {
-            color:white;
-            border: 1px solid $BG-BTN-PRIMARY-HOVER !important;
-            background-color: $BG-BTN-PRIMARY-HOVER !important;
+        color: white;
+        border: 1px solid $BG-BTN-PRIMARY-HOVER !important;
+        background-color: $BG-BTN-PRIMARY-HOVER !important;
+    }
+
+    &.k-btn-danger {
+        border: 1px solid $BG-BTN-DANGER !important;
+        background-color: $BG-BTN-DANGER !important;
+    }
+
+    &.k-btn-danger:hover {
+        color: white;
+        border: 1px solid $BG-BTN-DANGER-HOVER !important;
+        background-color: $BG-BTN-DANGER-HOVER !important;
+    }
+
+    &.k-btn-info {
+        border: 1px solid $BG-BTN-INFO !important;
+        background-color: $BG-BTN-INFO !important;
+    }
+
+    &.k-btn-info:hover {
+        color: white;
+        border: 1px solid $BG-BTN-INFO-HOVER !important;
+        background-color: $BG-BTN-INFO-HOVER !important;
     }
 }
 .login-button {
