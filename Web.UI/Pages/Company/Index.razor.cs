@@ -13,7 +13,6 @@ namespace Web.UI.Pages.Company
     partial class Index 
     {
         [CascadingParameter] public TelerikGrid<CompanyVM> grid { get; set; }
-        List<CompanyVM> data = new List<CompanyVM>();
         string moduleName = Module.Company.ToString();
         CompanyVM _companyData { get; set; }
 

@@ -41,9 +41,10 @@
             </div>
             <div class="col-md-12">
 
-                <TelerikDropDownList Id=timezone Data="@timeZoneInfos" TextField="DisplayName"
-                                     DefaultText="Select Timezone" ValueField="StandardName" @bind-Value="@companyData.TimeZone" Enabled=@(!IsInvited)>
-                </TelerikDropDownList>
+                <TelerikComboBox Id=timezone Data="@timeZoneInfos" TextField="DisplayName"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Timezone" ValueField="StandardName" @bind-Value="@companyData.TimeZone" Enabled=@(!IsInvited)>
+                </TelerikComboBox>
 
                 <TelerikValidationMessage For="@(() => companyData.TimeZone)"></TelerikValidationMessage>
             </div>
@@ -57,7 +58,7 @@
                 <label for="website" class="k-label k-form-label">Company Website</label>
             </div>
             <div class="col-md-6">
-                <TelerikMaskedTextBox Id="contactNo" @bind-Value="@companyData.ContactNo" Mask="(999) 000-0000" Enabled=@(!IsInvited)></TelerikMaskedTextBox>
+                <TelerikMaskedTextBox Id="contactNo" @bind-Value="@companyData.ContactNo" Mask="(000) 000-0000" Enabled=@(!IsInvited)></TelerikMaskedTextBox>
                 <TelerikValidationMessage For="@(() => companyData.ContactNo)"></TelerikValidationMessage>
             </div>
             <div class="col-md-6">
@@ -78,9 +79,10 @@
             </div>
             <div class="col-md-6">
 
-                <TelerikDropDownList Id=primaryServiceId Data="@companyData.PrimaryServicesList" TextField="Name"
-                                     DefaultText="Select Service" ValueField="Id" @bind-Value="@primaryServiceId" Enabled=@(!IsInvited)>
-                </TelerikDropDownList>
+                <TelerikComboBox Id=primaryServiceId Data="@companyData.PrimaryServicesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Service" ValueField="Id" @bind-Value="@primaryServiceId" Enabled=@(!IsInvited)>
+                </TelerikComboBox>
 
             </div>
         </div>

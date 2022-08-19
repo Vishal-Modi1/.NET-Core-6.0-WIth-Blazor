@@ -68,9 +68,9 @@ namespace Web.UI.Data.User
             return response;
         }
 
-        public async Task<UserVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
+        public async Task<UserVM> GetDetailsAsync(DependecyParams dependecyParams, long id, int companyId)
         {
-            dependecyParams.URL = $"user/getDetails?id={id}";
+            dependecyParams.URL = $"user/getDetails?id={id}&companyId={companyId}";
 
             var response = await _httpCaller.GetAsync(dependecyParams);
 

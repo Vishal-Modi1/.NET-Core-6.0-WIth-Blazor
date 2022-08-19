@@ -42,6 +42,18 @@
     </GridSettings>
 
     <GridColumns>
+
+        <GridColumn Context="dataItem" Title="Photo" Sortable="true">
+            <Template>
+                @{
+                    var data = dataItem as CompanyVM;
+                    <img class="rounded" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
+                         src="@data.Logo" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+                }
+
+            </Template>
+        </GridColumn>
+
         <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company Name" Sortable="true">
             <Template>
                 @{
@@ -76,7 +88,7 @@
                 // TODO:
                 //@if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 //  {
-                <TelerikButton Class="btn k-btn-danger mx-1" OnClick="()=>OpenDeleteDialog(companyVM)">
+                <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenDeleteDialog(companyVM)">
                     <CustomIcons IconName="delete"></CustomIcons>
                 </TelerikButton>
                 //   }
@@ -113,7 +125,7 @@
                                 </TelerikLoader>
                             </TelerikButton>
 
-                            <TelerikButton Class="btn k-btn-danger" OnClick="() => isDisplayPopup = false">
+                            <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
                                 No
                             </TelerikButton>
 

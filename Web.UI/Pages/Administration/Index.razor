@@ -20,7 +20,19 @@
                         <strong>@tab.DisplayName</strong>
                     </HeaderTemplate>
                     <Content>
-                          <Web.UI.Pages.Company.Index></Web.UI.Pages.Company.Index>
+                        <Web.UI.Pages.Company.Index></Web.UI.Pages.Company.Index>
+                    </Content>
+                </TabStripTab>
+            }
+            else if (name == Module.User.ToString())
+            {
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <TelerikIcon Icon="email" />
+                        <strong>@tab.DisplayName</strong>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.User.Index></Web.UI.Pages.User.Index>
                     </Content>
                 </TabStripTab>
             }
@@ -31,6 +43,6 @@
 </div>
 
 
-   
 
-   
+
+

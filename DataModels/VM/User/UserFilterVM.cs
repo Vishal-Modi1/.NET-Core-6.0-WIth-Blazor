@@ -4,6 +4,6 @@ namespace DataModels.VM.User
 {
     public class UserFilterVM : CompanyFilterVM
     {
-        // pending to add more filters
+        public int RoleId { get; set; }
     }
 }

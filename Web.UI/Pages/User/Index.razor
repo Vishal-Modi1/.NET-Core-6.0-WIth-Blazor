@@ -1,3 +1,27 @@
-﻿@page "/Users"
+﻿@layout TelerikLayout
 
-<h1>Hello Users List</h1>
+@page "/Users"
+
+  <TelerikTabStrip>
+
+      <TabStripTab>
+                    <HeaderTemplate>
+                        <TelerikIcon Icon="email" />
+                        <strong>Users</strong>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.User.UsersList ParentModuleName="Administration"></Web.UI.Pages.User.UsersList>
+                    </Content>
+                </TabStripTab>
+
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <TelerikIcon Icon="email" />
+                        <strong>Invited Users</strong>
+                    </HeaderTemplate>
+                    <Content>
+                        @*<Web.UI.Pages.User.InvitedUsersList ParentModuleName="Administration"></Web.UI.Pages.User.InvitedUsersList>*@
+                    </Content>
+                </TabStripTab>
+
+      </TelerikTabStrip>

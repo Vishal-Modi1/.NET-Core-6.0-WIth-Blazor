@@ -80,11 +80,7 @@ namespace Service
                 userVM.CompanyId = companyId;
                 userVM.CompanyName = _companyRepository.FindByCondition(p => p.Id == companyId).Name;
             }
-            else
-            {
-                userVM.Companies = _companyRepository.ListDropDownValues();
-            }
-
+            
             if (userVM.Id > 0)
             {
                 var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && p.CompanyId == userVM.CompanyId);
@@ -102,6 +98,7 @@ namespace Service
             userVM.Countries = _countryRepository.ListDropDownValues();
             userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
             userVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
+            userVM.Companies = _companyRepository.ListDropDownValues();
         }
 
         public CurrentResponse GetMasterDetails(int roleId, bool isInvited, string token)
@@ -222,7 +219,14 @@ namespace Service
             {
                 bool isEmailExist = _userRepository.IsEmailExist(email);
 
-                CreateResponse(isEmailExist, HttpStatusCode.OK, "");
+                if (isEmailExist)
+                {
+                    CreateResponse(isEmailExist, HttpStatusCode.Found, "");
+                }
+                else
+                {
+                    CreateResponse(isEmailExist, HttpStatusCode.OK, "");
+                }
 
                 return _currentResponse;
             }

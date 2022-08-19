@@ -1,11 +1,4 @@
-﻿using DataModels.VM.Aircraft;
-using DataModels.VM.AircraftEquipment;
-using DataModels.VM.Common;
-using DataModels.VM.Document;
-using DataModels.VM.Reservation;
-using DataModels.VM.BillingHistory;
-using DataModels.VM.User;
-using DataModels.VM.UserRolePermission;
+﻿using DataModels.VM.Common;
 using Telerik.Blazor.Components;
 
 namespace Web.UI.Extensions
@@ -19,6 +12,8 @@ namespace Web.UI.Extensions
 
             datatableParams.Length = args.Request.PageSize;
             datatableParams.Start = args.Request.Page;
+            datatableParams.SortOrderColumn = defaultSearchOrderColumn;
+            datatableParams.OrderType = "asc";
 
             if (args.Request.Sorts.Count > 0)
             {

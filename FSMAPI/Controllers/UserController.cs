@@ -23,7 +23,7 @@ namespace FSMAPI.Controllers
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public UserController(IUserService userService, ISendMailService sendMailService, 
+        public UserController(IUserService userService, ISendMailService sendMailService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
@@ -36,15 +36,18 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("getDetails")]
-        public IActionResult GetDetails(long id)
+        public IActionResult GetDetails(long id, int companyId)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            if (companyId == 0)
+            {
+                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                companyId = company == "" ? 0 : Convert.ToInt32(company);
+            }
 
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
-            CurrentResponse response = _userService.GetDetails(id, companyIdValue, roleIdValue);
+            CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
             return Ok(response);
         }
 
@@ -133,7 +136,7 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(UserDatatableParams datatableParams)
         {
-            if(datatableParams.CompanyId == 0)
+            if (datatableParams.CompanyId == 0)
             {
                 string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
                 datatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
@@ -207,7 +210,7 @@ namespace FSMAPI.Controllers
                 companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.UserProfileImage + "\\" + companyId , form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.UserProfileImage + "\\" + companyId, form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "";
