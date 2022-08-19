@@ -13,7 +13,7 @@ namespace DataModels.VM.User
         public long InvitedBy { get; set; }
         public DateTime InvitedOn { get; set; }
         public int TotalRecords { get; set; }
-        [NotMapped]
+        [NotMapped] 
         public bool IsLoadingEditButton { get; set; }
     }
 }

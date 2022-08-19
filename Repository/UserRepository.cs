@@ -141,7 +141,7 @@ namespace Repository
 
         public UserVM FindById(long id, bool isSuperAdmin, bool isInvited, int? companyId)
         {
-            UserVM userVM = _myContext.UserDetails.FromSqlRaw("EXECUTE GetUserDetailsById {0},{1},{2},{3}", id, isSuperAdmin, isInvited, companyId).AsEnumerable().FirstOrDefault();
+            UserVM userVM = _myContext.UserDetails.FromSqlRaw("EXECUTE GetUserDetailsById {0},{1},{2},{3}", id, isSuperAdmin, isInvited, companyId.GetValueOrDefault()).AsEnumerable().FirstOrDefault();
 
             if (userVM != null)
             {

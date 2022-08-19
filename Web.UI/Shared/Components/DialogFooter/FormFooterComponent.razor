@@ -1,0 +1,23 @@
+﻿@if (id == 0)
+{
+    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!IsSubmitButtonLoading)">
+        Save
+        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
+        </TelerikLoader>
+
+    </TelerikButton>
+}
+else
+{
+    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!IsSubmitButtonLoading)">
+        Update
+        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
+        </TelerikLoader>
+
+    </TelerikButton>
+}
+
+<TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!IsSubmitButtonLoading)">
+    Cancel
+</TelerikButton>
+

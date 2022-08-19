@@ -13,7 +13,7 @@
         <div>
             <div class="row d-flex justify-content-end my-2">
                 <div class="col-md-8">
-                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" @bind-Value="@searchText" />
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )"  />
                 </div>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)

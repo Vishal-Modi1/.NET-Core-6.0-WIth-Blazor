@@ -39,14 +39,31 @@ namespace Web.UI.Pages.User
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
         }
 
-        void PageSizeChangedHandler(int newPageSize)
+        private void OnCompanyValueChanges(int selectedValue)
         {
-            pageSize = newPageSize;
+            if(userFilterVM.CompanyId != selectedValue)
+            {
+                grid.Rebind();
+                userFilterVM.CompanyId = selectedValue;
+            }
         }
+
+        private void OnRoleValueChanges(int selectedValue)
+        {
+            if (userFilterVM.RoleId != selectedValue)
+            {
+                grid.Rebind();
+                userFilterVM.RoleId = selectedValue;
+            }
+        }
+
+        //private void OnSearchValueChanges(string selectedValue)
+        //{
+        //    OnSearchValueChanges<UserDataVM>(selectedValue, grid);
+        //}
 
         async Task LoadData(GridReadEventArgs args)
         {
-
             UserDatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime").Cast<UserDatatableParams>();
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
@@ -63,7 +80,7 @@ namespace Web.UI.Pages.User
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
-            args.Data =  data;
+            args.Data = data;
         }
 
         async Task UserCreateDialog(UserDataVM userInfo)
