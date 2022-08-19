@@ -18,7 +18,7 @@ $BG-MAIN-MENU: $BG-DARK-BLUE;
 
 $BG-BTN-PRIMARY: $BG-DARK-BLUE;
 $BG-BTN-PRIMARY-HOVER: #022a6a;
-$BG-BTN-DANGER: #BA0000;
+$BG-BTN-DANGER: #EE0808;
 $BG-BTN-DANGER-HOVER: #CA2323;
 $BG-BTN-INFO: #008EA4;
 $BG-BTN-INFO-HOVER: #17A2B8;
@@ -41,14 +41,14 @@ $BG-LIGHT-COLOR: #E9EAED;
 $BG-INFO-COLOR: #12A4F5;
 $BG-SUCCESS-COLOR: #009B51;
 $BG-WARNING-COLOR: #FFAE11;
-$BG-DANGER-COLOR: #F31155;
+$BG-DANGER-COLOR: #EE0808;
 
 body {
     background: $BG-COMMON-GRAY !important;
 }
 
 .bg-primary-f {
-    background-color: $BG-PRIMARY-COLOR;
+    background-color: $BG-DARK-BLUE;
 }
 
 .bg-secondary-f {
@@ -141,7 +141,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     background-color: $BG-COMMON-GRAY;
 
     .content {
-        margin-left: 16px !important;
+        /*margin-left: 16px !important;*/
         padding: 0;
         /*margin-right: 16px !important;*/
         /*background-color: red;*/
@@ -250,6 +250,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     }
 
     &.k-btn-danger {
+        color: white;
         border: 1px solid $BG-BTN-DANGER !important;
         background-color: $BG-BTN-DANGER !important;
     }
@@ -269,6 +270,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         color: white;
         border: 1px solid $BG-BTN-INFO-HOVER !important;
         background-color: $BG-BTN-INFO-HOVER !important;
+    }
+
+    &.k-btn-secondary {
+       margin-left:5px;
+    }
+
+    &.k-btn-secondary:hover {
+        color: white;
     }
 }
 .login-button {
@@ -305,3 +314,33 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     transform: translateY(-50%);
 }
 /*TOP HORIZONTAL HEADER END*/
+
+/*TelerikTabStrip START*/
+.k-tabstrip-list {
+    .k-tabstrip-items-wrapper {
+        z-index: 0;
+    }
+}
+
+/* Popup buttons */
+
+.close-button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #FFFF;
+}
+
+.k-actions-start {
+    justify-content: flex-end;
+}
+
+.cancel-btn{
+    margin-left:8px;
+}
+/*TelerikTabStrip END*/
+
+/*Telerik toastr notification*/
+.sm-notification {
+    z-index:1;
+}

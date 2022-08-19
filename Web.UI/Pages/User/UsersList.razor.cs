@@ -78,7 +78,7 @@ namespace Web.UI.Pages.User
             {
                 operationType = OperationType.Edit;
                 userInfo.IsLoadingEditButton = true;
-                popupTitle = "Create User Details";
+                popupTitle = "Update User Details";
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);

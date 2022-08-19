@@ -16,16 +16,18 @@
 }
 
 <div class="row">
-    <div class="col">
-        <h4 style="float:left">Manage Users Details</h4>
-
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-        {
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())">
-                Add New
-            </TelerikButton>
-        }
-
+    <div class="col d-flex justify-content-between">
+        <div><h4>Manage Users Details</h4></div>
+        <div>
+            <div class="row d-flex justify-content-end m-2">
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                {
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())">
+                        Add New
+                    </TelerikButton>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
@@ -73,8 +75,8 @@
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
-                    <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
-                         src="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+                        <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                             src="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 22px !important;" />
                 }
 
             </Template>
@@ -90,7 +92,7 @@
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
-                    <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserStatusDialog(data)"
+                        <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserStatusDialog(data)"
                                  Id="@("chkIsActive"+ data.Id)" @bind-Value="@(data.IsActive)" />
 
                 }
@@ -100,26 +102,26 @@
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{
-                popupTitle = "Update User Details";
+                //popupTitle = "Create User Details";
                 UserDataVM userData = dataItem as UserDataVM;
 
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-edit" OnClick="()=>UserCreateDialog(userData)"
+                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>UserCreateDialog(userData)"
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
-                        <CustomIcons IconName="edit"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="userData.IsLoadingEditButton">
-                        </TelerikLoader>
+                            <CustomIcons IconName="edit"></CustomIcons>
+                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="userData.IsLoadingEditButton">
+                            </TelerikLoader>
 
-                    </TelerikButton>
+                        </TelerikButton>
                 }
 
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
-                        <CustomIcons IconName="delete"></CustomIcons>
-                    </TelerikButton>
+                        <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
+                            <CustomIcons IconName="delete"></CustomIcons>
+                        </TelerikButton>
                 }
             }
         </GridCommandColumn>
@@ -151,13 +153,13 @@
 
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                             {
-                                <TelerikButton Class="mr-1 btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>DeleteAsync(userData.Id)">
+                                <TelerikButton Class="btn k-btn-danger" ThemeColor="error" OnClick="()=>DeleteAsync(userData.Id)">
                                     Yes
                                 </TelerikButton>
 
                             }
 
-                            <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>isDisplayPopup = false">
+                            <TelerikButton Class="btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>isDisplayPopup = false">
                                 No
                             </TelerikButton>
                         </div>

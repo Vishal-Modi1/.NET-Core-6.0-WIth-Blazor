@@ -6,7 +6,7 @@
 
 <div id="container">
 
-    <TelerikTabStrip>
+    <TelerikTabStrip Class="k-tabstrip-list my-3">
 
         @foreach (var tab in menuItems)
         {
@@ -14,7 +14,7 @@
 
             @if (name == Module.Company.ToString())
             {
-                <TabStripTab>
+                <TabStripTab  >
                     <HeaderTemplate>
                         <TelerikIcon Icon="email" />
                         <strong>@tab.DisplayName</strong>

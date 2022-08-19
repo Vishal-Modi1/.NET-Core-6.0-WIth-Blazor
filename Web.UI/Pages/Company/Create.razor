@@ -116,14 +116,14 @@
                         </TelerikButton>
                     }
 
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary cancel-btn" Enabled="@(!isBusySubmitButton)">
                         Cancel
                     </TelerikButton>
                 }
                 else
                 {
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="@GotoNextStep" ThemeColor="info" Class="btn k-btn-primary"> Next </TelerikButton>
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@RedirectToLogin" ThemeColor="secondary" Class="btn k-btn-secondary"> Cancel </TelerikButton>
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@RedirectToLogin" ThemeColor="secondary" Class="btn k-btn-secondary cancel-btn"> Cancel </TelerikButton>
                 }
             </div>
 

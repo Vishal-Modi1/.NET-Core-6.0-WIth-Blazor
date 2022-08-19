@@ -31,6 +31,8 @@ namespace Web.UI.Pages.Dashboard
         {
             isDisplayLoader = true;
             NotificationModel message;
+            message = new NotificationModel().Build(Notification.ThemeColor.Error, "Something went Wrong!, Please try again later.");
+            uiNotification.Instance.Show(message);
 
             var user = (await AuthStat).User;
 

@@ -20,7 +20,7 @@ body {
 }
 
 .bg-primary-f {
-  background-color: #1151F3;
+  background-color: #022254;
 }
 
 .bg-secondary-f {
@@ -44,7 +44,7 @@ body {
 }
 
 .bg-danger-f {
-  background-color: #F31155;
+  background-color: #EE0808;
 }
 
 form .btn-primary {
@@ -111,7 +111,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   background-color: #E1DEDE;
 }
 .main .content {
-  margin-left: 16px !important;
+  /*margin-left: 16px !important;*/
   padding: 0;
   /*margin-right: 16px !important;*/
   /*background-color: red;*/
@@ -208,8 +208,9 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   background-color: #022a6a !important;
 }
 .btn.k-btn-danger {
-  border: 1px solid #BA0000 !important;
-  background-color: #BA0000 !important;
+  color: white;
+  border: 1px solid #EE0808 !important;
+  background-color: #EE0808 !important;
 }
 .btn.k-btn-danger:hover {
   color: white;
@@ -224,6 +225,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: white;
   border: 1px solid #17A2B8 !important;
   background-color: #17A2B8 !important;
+}
+.btn.k-btn-secondary {
+  margin-left: 5px;
+}
+.btn.k-btn-secondary:hover {
+  color: white;
 }
 
 .login-button {
@@ -261,3 +268,29 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 /*TOP HORIZONTAL HEADER END*/
+/*TelerikTabStrip START*/
+.k-tabstrip-list .k-tabstrip-items-wrapper {
+  z-index: 0;
+}
+
+/* Popup buttons */
+.close-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: #FFFF;
+}
+
+.k-actions-start {
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  margin-left: 8px;
+}
+
+/*TelerikTabStrip END*/
+/*Telerik toastr notification*/
+.sm-notification {
+  z-index: 1;
+}
