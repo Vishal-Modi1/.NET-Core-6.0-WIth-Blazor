@@ -44,24 +44,25 @@ namespace Web.UI.Pages.Company
             pageSize = newPageSize;
         }
 
-        async Task CompanyCreateDialog(CompanyVM companyData, string title)
+        async Task CompanyCreateDialog(CompanyVM companyData)
         {
             if (companyData.Id == 0)
             {
                 operationType = OperationType.Create;
                 isBusyAddButton = true;
+                popupTitle = "Create Company";
             }
             else
             {
                 operationType = OperationType.Edit;
                 companyData.IsLoadingEditButton = true;
+                popupTitle = "Update Company Details";
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
 
             _companyData = companyData;
-            popupTitle = title;
             isDisplayPopup = true;
 
             if (companyData.Id == 0)

@@ -18,9 +18,8 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
                 {
-                    popupTitle = "Create Company";
                     <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM(), popupTitle)">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
                             Add New
                         </TelerikButton>
                     </div>
@@ -69,7 +68,6 @@
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{
-                popupTitle = "Update Company Details";
                 CompanyVM companyVM = dataItem as CompanyVM;
 
                 <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenCompanyDetailPage(companyVM)">
@@ -78,7 +76,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-info mx-1" OnClick="()=>CompanyCreateDialog(companyVM, popupTitle)" Enabled=!companyVM.IsLoadingEditButton>
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>CompanyCreateDialog(companyVM)" Enabled=!companyVM.IsLoadingEditButton>
                         <CustomIcons IconName="edit"></CustomIcons>
                         <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="companyVM.IsLoadingEditButton">
                         </TelerikLoader>
@@ -88,7 +86,7 @@
                 // TODO:
                 //@if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 //  {
-                <TelerikButton Class="btn k-btn-primary" OnClick="()=>OpenDeleteDialog(companyVM)">
+                <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error"  OnClick="()=>OpenDeleteDialog(companyVM)">
                     <CustomIcons IconName="delete"></CustomIcons>
                 </TelerikButton>
                 //   }

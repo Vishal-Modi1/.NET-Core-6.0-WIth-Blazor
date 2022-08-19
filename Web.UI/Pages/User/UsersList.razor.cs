@@ -66,17 +66,19 @@ namespace Web.UI.Pages.User
             args.Data =  data;
         }
 
-        async Task UserCreateDialog(UserDataVM userInfo, string title)
+        async Task UserCreateDialog(UserDataVM userInfo)
         {
             if (userInfo.Id == 0)
             {
                 operationType = OperationType.Create;
                 isBusyAddButton = true;
+                popupTitle = "Create User";
             }
             else
             {
                 operationType = OperationType.Edit;
                 userInfo.IsLoadingEditButton = true;
+                popupTitle = "Create User Details";
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -101,7 +103,6 @@ namespace Web.UI.Pages.User
                 userInfo.IsLoadingEditButton = false;
             }
 
-            popupTitle = title;
             isDisplayPopup = true;
         }
 

@@ -37,9 +37,9 @@ namespace Web.UI.Pages.Dashboard
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserService.FindById(dependecyParams);
 
-            if (response == null || response.Status != System.Net.HttpStatusCode.OK)
+            if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                message = new NotificationModel().Build(Notification.ThemeColor.Success, "Something went Wrong!, Please try again later.");
+                message = new NotificationModel().Build(Notification.ThemeColor.Error, "Something went Wrong!, Please try again later.");
                 uiNotification.Instance.Show(message);
             }
 

@@ -21,8 +21,7 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
         {
-            popupTitle = "Create User";
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM(), popupTitle)">
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())">
                 Add New
             </TelerikButton>
         }
@@ -106,7 +105,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-edit" OnClick="()=>UserCreateDialog(userData, popupTitle)"
+                    <TelerikButton Class="btn k-btn-grid-edit" OnClick="()=>UserCreateDialog(userData)"
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
                         <CustomIcons IconName="edit"></CustomIcons>
