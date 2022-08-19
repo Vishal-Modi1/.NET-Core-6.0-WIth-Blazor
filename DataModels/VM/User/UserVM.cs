@@ -19,7 +19,7 @@ namespace DataModels.VM.User
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
-        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "Invalid email")]
         public string Email { get; set; }
 
         public bool IsSendEmailInvite { get; set; }

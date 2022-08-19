@@ -21,8 +21,11 @@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
         {
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())">
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" 
+            OnClick="() => UserCreateDialog(new UserDataVM())" Enabled="!isBusyAddButton">
                 Add New
+                 <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton">
+                        </TelerikLoader>
             </TelerikButton>
         }
 
@@ -31,9 +34,9 @@
 
 <div class="row" style="margin-bottom:22px;">
     <div class="col-md-4">
-        <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" OnChange="() => grid.Rebind()"
+        <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Role" ValueField="Id" @bind-Value="@userFilterVM.RoleId">
+                         Placeholder="Select Role" ValueField="Id">
         </TelerikComboBox>
 
     </div>
@@ -42,16 +45,16 @@
     {
         <div class="col-md-4">
 
-            <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" OnChange="() => grid.Rebind()"
+            <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id" @bind-Value="@userFilterVM.CompanyId">
+                         Placeholder="Select Company" ValueField="Id">
             </TelerikComboBox>
 
         </div>
     }
 
     <div class="col-md-4">
-        <TelerikTextBox Name="SearchText" PlaceHolder="Search User" @bind-Value="@searchText" OnChange="() => grid.Rebind()" />
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search User" ValueChanged="@( (string value) => OnSearchValueChanges<UserDataVM>(value, grid) )" />
     </div>
 
 </div>
@@ -100,7 +103,6 @@
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{
-                popupTitle = "Update User Details";
                 UserDataVM userData = dataItem as UserDataVM;
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))

@@ -86,8 +86,8 @@
                     @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
                     {
                         <TelerikComboBox Id=roleId Data="@userData.UserRoles" TextField="Name" Enabled=@(isAuthenticated)
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" 
-                                     Placeholder="Select Role" ValueField="Id" @bind-Value="@userData.RoleId" >
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Role" ValueField="Id" @bind-Value="@userData.RoleId">
                         </TelerikComboBox>
                         <TelerikValidationMessage For="@(() => userData.RoleId)"></TelerikValidationMessage>
                     }
@@ -142,7 +142,7 @@
                         @if (isInstructorTypeDropdownVisible)
                         {
                             <TelerikComboBox Id=instructorTypeId Data="@userData.InstructorTypes" TextField="Name"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" 
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                      Placeholder="Select Instructor Type" ValueField="Id" @bind-Value="@userData.InstructorTypeId">
                             </TelerikComboBox>
                             <TelerikValidationMessage For="@(() => userData.InstructorTypeId)"></TelerikValidationMessage>
@@ -245,28 +245,8 @@
 
                 @if (isAuthenticated)
                 {
-                    if (userData.Id == 0)
-                    {
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
-                            Save
-                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                            </TelerikLoader>
-
-                        </TelerikButton>
-                    }
-                    else
-                    {
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
-                            Update
-                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                            </TelerikLoader>
-
-                        </TelerikButton>
-                    }
-
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(false)" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
-                        Cancel
-                    </TelerikButton>
+                    <FormFooterComponent id="@userData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
                 }
                 else
                 {

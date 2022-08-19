@@ -1,6 +1,7 @@
 ﻿using DataModels.Enums;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Telerik.Blazor.Components;
 using Web.UI.Utilities;
 
 namespace Web.UI.Shared
@@ -20,5 +21,19 @@ namespace Web.UI.Shared
         [CascadingParameter] public Task<AuthenticationState> AuthStat { get; set; }
         [CascadingParameter] public UINotification uiNotification { get; set; }
         public CurrentUserPermissionManager _currentUserPermissionManager;
+
+        public void OnSearchValueChanges<TypeOfValue>(string selectedValue, TelerikGrid<TypeOfValue> grid) where TypeOfValue : class
+        {
+            if (searchText != selectedValue)
+            {
+                grid.Rebind();
+                searchText = selectedValue;
+            }
+        }
+
+        public void PageSizeChangedHandler(int newPageSize)
+        {
+            pageSize = newPageSize;
+        }
     }
 }

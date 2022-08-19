@@ -1,0 +1,78 @@
+﻿@using DataModels.VM.User
+
+<PageTitle>Invite User | Fly Manager </PageTitle>
+
+<TelerikForm Model="@inviteUserVM" OnValidSubmit="@Invite">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="popup-content">
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="email" class="k-label k-form-label">User Email</label>
+                </div>
+                <div class="col-md-12">
+
+                    <TelerikTextBox Id="email" @bind-Value="@inviteUserVM.Email" PlaceHolder="Enter User Email" Enabled="@(inviteUserVM.Id == 0)"></TelerikTextBox>
+                    <TelerikValidationMessage For="@(() => inviteUserVM.Email)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+
+            @if (isSuperAdmin)
+            {
+                <div class="row">
+                    <div class="col-md-12 align-items-center d-flex">
+                        <label for="companyId" class="k-label k-form-label">Company</label>
+                    </div>
+                    <div class="col-md-12">
+
+                        <TelerikComboBox Id=companyId Data="@inviteUserVM.ListCompanies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Company" ValueField="Id" @bind-Value="@inviteUserVM.CompanyId">
+                        </TelerikComboBox>
+                        <TelerikValidationMessage For="@(() => inviteUserVM.CompanyId)"></TelerikValidationMessage>
+
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="roleId" class="k-label k-form-label">Role</label>
+                </div>
+                <div class="col-md-12">
+
+
+                    <TelerikComboBox Id=roleId Data="@inviteUserVM.ListRoles" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Role" ValueField="Id" @bind-Value="@inviteUserVM.RoleId">
+                    </TelerikComboBox>
+                    <TelerikValidationMessage For="@(() => inviteUserVM.RoleId)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+
+        </div>
+    </FormItems>
+
+    <FormButtons>
+
+        <hr />
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@inviteUserVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>
