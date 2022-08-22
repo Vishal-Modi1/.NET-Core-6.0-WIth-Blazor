@@ -1,0 +1,109 @@
+﻿@namespace Web.UI.Pages.InstructorType
+@using DataModels.Enums
+@using Web.UI.Data.InstructorType
+@using DataModels.VM.InstructorType
+@using Configuration;
+
+@layout TelerikLayout
+
+@page "/InstructorType"
+
+<div class="row">
+    <div class="col">
+        <h2 style="float:left">Manage Instructor Types Details</h2>
+
+        <div class="row d-flex justify-content-end my-2">
+            <div class="col-md-8">
+                <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<InstructorTypeVM>(value, grid) )" />
+            </div>
+
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InstructorTypeCreateDialog(new InstructorTypeVM())">
+                        Add New
+                    </TelerikButton>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<TelerikGrid TItem="InstructorTypeVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+
+    <GridSettings>
+        <GridPagerSettings InputType="PagerInputType.Input"
+                           PageSizes="@pageSizeOptions"
+                           ButtonCount="5"
+                           Adaptive="true">
+        </GridPagerSettings>
+    </GridSettings>
+
+    <GridColumns>
+
+        <GridColumn Field="@nameof(InstructorTypeVM.Name)" Sortable="true" />
+
+        <GridCommandColumn Context="dataItem" Title="Action">
+            @{
+                InstructorTypeVM instructorTypeVM = dataItem as InstructorTypeVM;
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>InstructorTypeCreateDialog(instructorTypeVM)">
+                        <CustomIcons IconName="edit"></CustomIcons>
+
+                    </TelerikButton>
+                }
+
+                // TODO:
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(instructorTypeVM)">
+                        <CustomIcons IconName="delete"></CustomIcons>
+                    </TelerikButton>
+                }
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Create InstructorTypeData=@(_instructorTypeData) CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to remove <b> @_instructorTypeData.Name </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_instructorTypeData.Id)" Enabled="@(!isBusyDeleteButton)">
+                                Yes
+                                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+
+                            <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </Body>
+    </CustomPopupComponent>
+}

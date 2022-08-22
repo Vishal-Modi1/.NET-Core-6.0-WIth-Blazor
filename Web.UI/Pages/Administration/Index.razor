@@ -36,7 +36,23 @@
                     </Content>
                 </TabStripTab>
             }
+            @*else if (name == Module.UserRolePermission.ToString())
+                {
+                <RadzenTabsItem Text=@tab.DisplayName Icon="lock_open">
+                <FSM.Blazor.Pages.UserRolePermission.Index></FSM.Blazor.Pages.UserRolePermission.Index>
+                </RadzenTabsItem>
+                }*@
         }
+
+        <TabStripTab>
+            <HeaderTemplate>
+                <TelerikIcon Icon="email" />
+                <strong>Instructor Types</strong>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.InstructorType.Index></Web.UI.Pages.InstructorType.Index>
+            </Content>
+        </TabStripTab>
 
     </TelerikTabStrip>
 

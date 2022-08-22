@@ -1,0 +1,32 @@
+﻿@using DataModels.VM.InstructorType
+
+<TelerikForm Model="@instructorTypeData" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <TelerikTextBox Id="name" @bind-Value="@instructorTypeData.Name" PlaceHolder="Instructor Type"></TelerikTextBox>
+        <TelerikValidationMessage For="@(() => instructorTypeData.Name)"></TelerikValidationMessage>
+
+    </FormItems>
+
+    <FormButtons>
+
+        <hr style="margin-top:35px" />
+
+        <div class="row" style="margin-bottom:0px">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@instructorTypeData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>
+
