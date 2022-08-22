@@ -57,11 +57,6 @@ namespace Web.UI.Pages.User
             }
         }
 
-        //private void OnSearchValueChanges(string selectedValue)
-        //{
-        //    OnSearchValueChanges<UserDataVM>(selectedValue, grid);
-        //}
-
         async Task LoadData(GridReadEventArgs args)
         {
             UserDatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime").Cast<UserDatatableParams>();
@@ -136,11 +131,21 @@ namespace Web.UI.Pages.User
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                await CloseDialog(true);
+                CloseDialog(true);
             }
             else
             {
-                await CloseDialog(false);
+                CloseDialog(false);
+            }
+        }
+
+        async Task CloseDialog(bool reloadGrid)
+        {
+            isDisplayPopup = false;
+
+            if (reloadGrid)
+            {
+                grid.Rebind();
             }
         }
 
@@ -158,11 +163,11 @@ namespace Web.UI.Pages.User
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                await CloseDialog(true);
+                CloseDialog(true);
             }
             else
             {
-                await CloseDialog(false);
+                CloseDialog(false);
             }
         }
 
@@ -170,16 +175,6 @@ namespace Web.UI.Pages.User
         {
             isDisplayPopup = false;
             data.Where(p => p.Id == userData.Id).First().IsActive = !userData.IsActive;
-        }
-
-        async Task CloseDialog(bool reloadGrid)
-        {
-            isDisplayPopup = false;
-
-            if (reloadGrid)
-            {
-                grid.Rebind();
-            }
         }
 
         async Task OpenDeleteDialog(UserDataVM userInfo)

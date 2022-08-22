@@ -14,7 +14,7 @@
 
             @if (name == Module.Company.ToString())
             {
-                <TabStripTab  >
+                <TabStripTab>
                     <HeaderTemplate>
                         <TelerikIcon Icon="email" />
                         <strong>@tab.DisplayName</strong>
@@ -36,12 +36,18 @@
                     </Content>
                 </TabStripTab>
             }
-            @*else if (name == Module.UserRolePermission.ToString())
-                {
-                <RadzenTabsItem Text=@tab.DisplayName Icon="lock_open">
-                <FSM.Blazor.Pages.UserRolePermission.Index></FSM.Blazor.Pages.UserRolePermission.Index>
-                </RadzenTabsItem>
-                }*@
+            else if (name == Module.UserRolePermission.ToString())
+            {
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <TelerikIcon Icon="email" />
+                        <strong>@tab.DisplayName</strong>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.UserRolePermission.Index></Web.UI.Pages.UserRolePermission.Index>
+                    </Content>
+                </TabStripTab>
+            }
         }
 
         <TabStripTab>

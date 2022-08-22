@@ -11,16 +11,19 @@
 @using Telerik.Blazor
 @using Telerik.Blazor.Components
 @using Microsoft.Extensions.Caching.Memory
+
+@*Data Services*@
 @using Web.UI.Data.User
 @using Web.UI.Data.Company
 @using Web.UI.Data.Common
 @using Web.UI.Data.Account
 @using Web.UI.Data.InviteUser
 @using Web.UI.Data.InstructorType
+@using Web.UI.Data.UserRolePermission
 
 @using Web.UI.Shared.Components.DialogFooter;
-
-@using Web.UI.Shared.Components
+@using Web.UI.Shared.Components.CustomPopup;
+@using Web.UI.Shared.Components.TelerikGridPager;
 
 @using static Telerik.Blazor.ThemeConstants;
 
@@ -38,5 +41,6 @@
 @inject AccountService AccountService
 @inject InviteUserService InviteUserService
 @inject InstructorTypeService InstructorTypeService
+@inject UserRolePermissionService UserRolePermissionService
 
 @inherits BaseClass

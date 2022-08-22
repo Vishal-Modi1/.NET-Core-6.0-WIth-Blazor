@@ -1,7 +1,7 @@
 ﻿using DataModels.Enums;
 using Microsoft.AspNetCore.Components;
 
-namespace Web.UI.Shared.Components
+namespace Web.UI.Shared.Components.CustomPopup
 {
     public partial class CustomPopupComponent
     {
