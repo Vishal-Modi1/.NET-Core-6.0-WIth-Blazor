@@ -13,7 +13,7 @@
         <div>
             <div class="row d-flex justify-content-end my-2">
                 <div class="col-md-8">
-                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )"  />
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )" />
                 </div>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
@@ -80,12 +80,12 @@
                 }
 
                 // TODO:
-                //@if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                //  {
-                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error"  OnClick="()=>OpenDeleteDialog(companyVM)">
-                    <CustomIcons IconName="delete"></CustomIcons>
-                </TelerikButton>
-                //   }
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
+                        <CustomIcons IconName="delete"></CustomIcons>
+                    </TelerikButton>
+                }
             }
         </GridCommandColumn>
 

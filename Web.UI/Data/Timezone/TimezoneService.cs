@@ -21,7 +21,7 @@ namespace Web.UI.Data.Timezone
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
             List<DropDownValues> companiesList = new List<DropDownValues>();
 
-            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
             {
                 companiesList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
             }

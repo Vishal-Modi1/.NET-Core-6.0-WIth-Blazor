@@ -1,16 +1,16 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.Enums;
+using DataModels.VM.Common;
 using DataModels.VM.Company;
-using Web.UI.Data.Company;
-using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
-using Web.UI.Extensions;
 using System.Text;
-using DataModels.Enums;
 using Telerik.Blazor.Components;
+using Web.UI.Data.Company;
+using Web.UI.Extensions;
+using Web.UI.Utilities;
 
 namespace Web.UI.Pages.Company
 {
-    partial class Index 
+    partial class Index
     {
         [CascadingParameter] public TelerikGrid<CompanyVM> grid { get; set; }
         string moduleName = Module.Company.ToString();
@@ -37,11 +37,6 @@ namespace Web.UI.Pages.Company
             var data = await CompanyService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
-        }
-
-        void PageSizeChangedHandler(int newPageSize)
-        {
-            pageSize = newPageSize;
         }
 
         async Task CompanyCreateDialog(CompanyVM companyData)
@@ -107,13 +102,13 @@ namespace Web.UI.Pages.Company
 
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 
-            if(response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 await CloseDialog(true);
             }
             else
             {
-               await CloseDialog(false);
+                await CloseDialog(false);
             }
 
             isBusyDeleteButton = false;
@@ -122,7 +117,7 @@ namespace Web.UI.Pages.Company
         async Task OpenDeleteDialog(CompanyVM companyVM)
         {
             isDisplayPopup = true;
-            
+
             operationType = OperationType.Delete;
             _companyData = companyVM;
             popupTitle = "Delete Company";

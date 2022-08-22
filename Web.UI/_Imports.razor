@@ -20,6 +20,10 @@
 @using Web.UI.Data.InviteUser
 @using Web.UI.Data.InstructorType
 @using Web.UI.Data.UserRolePermission
+@using Web.UI.Data.Location
+@using Web.UI.Data.AircraftMake
+@using Web.UI.Data.AircraftModel
+@using Web.UI.Data.Timezone
 
 @using Web.UI.Shared.Components.DialogFooter;
 @using Web.UI.Shared.Components.CustomPopup;
@@ -42,5 +46,9 @@
 @inject InviteUserService InviteUserService
 @inject InstructorTypeService InstructorTypeService
 @inject UserRolePermissionService UserRolePermissionService
+@inject LocationService LocationService
+@inject AircraftMakeService AircraftMakeService
+@inject AircraftModelService AircraftModelService
+@inject TimezoneService TimezoneService
 
 @inherits BaseClass

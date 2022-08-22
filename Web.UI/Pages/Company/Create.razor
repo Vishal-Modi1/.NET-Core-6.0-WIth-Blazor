@@ -97,28 +97,8 @@
 
                 @if (isAuthenticated)
                 {
-                    if (companyData.Id == 0)
-                    {
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
-                            Save
-                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                            </TelerikLoader>
-
-                        </TelerikButton>
-                    }
-                    else
-                    {
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
-                            Update
-                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                            </TelerikLoader>
-
-                        </TelerikButton>
-                    }
-
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary cancel-btn" Enabled="@(!isBusySubmitButton)">
-                        Cancel
-                    </TelerikButton>
+                    <FormFooterComponent id="@companyData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
                 }
                 else
                 {

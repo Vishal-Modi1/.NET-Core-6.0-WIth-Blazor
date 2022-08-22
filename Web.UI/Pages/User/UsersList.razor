@@ -22,7 +22,9 @@
             <div class="row d-flex justify-content-end m-2">
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
                 {
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())" Enabled="@(!isBusyAddButton)">
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
                         Add New
                     </TelerikButton>
                 }
@@ -71,8 +73,8 @@
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
-                        <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
-                             src="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+                    <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                         src="@data.ProfileImage" style="width: 45px; height: 45px; border-radius: 22px !important;" />
                 }
 
             </Template>
@@ -88,7 +90,7 @@
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
-                        <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserStatusDialog(data)"
+                    <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserStatusDialog(data)"
                                  Id="@("chkIsActive"+ data.Id)" @bind-Value="@(data.IsActive)" />
 
                 }
@@ -101,23 +103,23 @@
                 popupTitle = "Update User Details";
                 UserDataVM userData = dataItem as UserDataVM;
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>UserCreateDialog(userData)"
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>UserCreateDialog(userData)"
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
-                            <CustomIcons IconName="edit"></CustomIcons>
-                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="userData.IsLoadingEditButton">
-                            </TelerikLoader>
+                        <CustomIcons IconName="edit"></CustomIcons>
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="userData.IsLoadingEditButton">
+                        </TelerikLoader>
 
-                        </TelerikButton>
+                    </TelerikButton>
                 }
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                        <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
-                            <CustomIcons IconName="delete"></CustomIcons>
-                        </TelerikButton>
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
+                        <CustomIcons IconName="delete"></CustomIcons>
+                    </TelerikButton>
                 }
             }
         </GridCommandColumn>
