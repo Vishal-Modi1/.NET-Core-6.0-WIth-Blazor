@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSM.Blazor", "FSM.Blazor\FS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.UI", "Web.UI\Web.UI.csproj", "{11BBE62A-88D7-495C-9542-3CE755311253}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.UI", "Web.UI\Web.UI.csproj", "{11BBE62A-88D7-495C-9542-3CE755311253}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

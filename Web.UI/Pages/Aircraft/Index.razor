@@ -1,3 +1,25 @@
 ﻿@page "/Aircraft"
 
-<h1>Hello Aircraft List</h1>
+<h1>Manage Aircrafts Details</h1>
+
+
+<div class="row">
+    <div class="col-12 col-md-2 col-lg-2 col-sm-4">
+        @* Blazor Card with all building blocks included *@
+
+        <TelerikCard Width="300px">
+            <CardHeader>
+                <CardTitle>N2015S</CardTitle>
+            </CardHeader>
+            <CardImage Src="https://fly-manager-dev-api.azurewebsites.net/Uploads//AircraftImages/28/20220816210808_22.jpeg" ></CardImage>
+            <CardActions Layout="@CardActionsLayout.Stretched">
+                <TelerikButton Class="k-flat" Icon="heart-outline">Like</TelerikButton>
+                <TelerikButton Class="k-flat" @onclick="@(() => OpenDetails())">Read More</TelerikButton>
+            </CardActions>
+            <CardFooter>
+                <span >Added by @@john</span>
+                <span >March 05, 2021</span>
+            </CardFooter>
+        </TelerikCard>
+    </div>
+</div>

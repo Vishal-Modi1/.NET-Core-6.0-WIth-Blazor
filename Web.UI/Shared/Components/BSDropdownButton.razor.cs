@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Web.UI.Shared.Component
+namespace Web.UI.Shared.Components
 {
     public partial class BSDropdownButton
     {

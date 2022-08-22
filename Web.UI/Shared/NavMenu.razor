@@ -82,11 +82,13 @@
     <DrawerContent>
         <div class="main">
 
-            <div class="content mx-3">
+            <div class="content ms-3">
                 <CascadingValue IsFixed="true" Value="@UINotification">
                     <LeftHeader></LeftHeader>
                     <TelerikRootComponent>
-                        @Body
+                        <div class="card me-3 my-3 p-3">
+                            @Body
+                        </div>
                     </TelerikRootComponent>
                 </CascadingValue>
             </div>

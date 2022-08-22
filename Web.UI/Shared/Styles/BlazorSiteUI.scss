@@ -8,6 +8,31 @@ html, body {
 .k-drawer {
     font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
+/*NEW COLOR PLATE*/
+$PRIMARY-COLOR: #042455;
+$SECONDARY-COLOR: #3066F8;
+$NEUTRAL-COLOR: #1F1F1F;
+$SOLID-COLOR: #9E27B0;
+
+$STATE-INFO-COLOR: #2F80ED;
+$STATE-SUCCESS-COLOR: #27AE60;
+$STATE-WARNING-COLOR: #E2B93B;
+$STATE-ERROR-COLOR: #EB5757;
+/*Title Text Color*/
+$TITLE-TEXT-VWHITE: #020E22;
+$TITLE-TEXT-VDARK: #F7FAFF;
+/*Paragraph Text Color*/
+$PARAGRAPH-TEXT-VWHITE: #4D4D4D;
+$PARAGRAPH-TEXT-VDARK: #042455;
+/*Body Background Color*/
+$BODY-BACKGROUND-VWHITE: #042455;
+$BODY-BACKGROUND-VDARK: #042455;
+
+/*Button Text Color*/
+$BUTTON-TEXT-VWHITE: #042455;
+$BUTTON-TEXT-VDARK: #042455;
+/*Disabled Text Color*/
+$DISABLED-TEXT-VDARK: #042455;
 
 $BG-DARK-BLUE: #022254;
 $BG-MENU-ITEM: #0062FE;
@@ -42,6 +67,9 @@ $BG-INFO-COLOR: #12A4F5;
 $BG-SUCCESS-COLOR: #009B51;
 $BG-WARNING-COLOR: #FFAE11;
 $BG-DANGER-COLOR: #EE0808;
+
+/*Card BACKGROUND COLOR */
+$BG-FLIGHT-CARD: #537AB7;
 
 body {
     background: $BG-COMMON-GRAY !important;
@@ -138,7 +166,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .main {
     overflow-y: auto;
-    background-color: $BG-COMMON-GRAY;
+    background-color: #F5F7FF;
 
     .content {
         /*margin-left: 16px !important;*/
@@ -222,7 +250,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
                 right: 0;
                 border-top: 10px solid transparent;
                 border-bottom: 10px solid transparent;
-                border-right: 10px solid #e1dede;
+                border-right: 10px solid rgb(245 247 255);
             }
         }
 
@@ -343,4 +371,34 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 /*Telerik toastr notification*/
 .sm-notification {
     z-index:1;
+}
+
+/*Telerik Card Css*/
+.flight-info-card {
+    width: 1106px;
+    border: 2px solid #E0E0E0;
+    border-radius:8px;
+}
+
+.card-fonts{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.image-card-info {
+    border: 1px solid #575757;
+    border-radius: 8px;
+    width: 251px;
+}
+
+.flight-cards {
+    width: 251px;
+    background: $BG-FLIGHT-CARD !important;
+    border: 1px solid #575757;
+    border-radius: 8px;
+    color: #FFFF;
+}
+
+.k-tabstrip-items-wrapper .k-item {
+    color: #CCCCCC;
 }

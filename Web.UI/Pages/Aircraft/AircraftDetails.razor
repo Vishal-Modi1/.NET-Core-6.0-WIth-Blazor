@@ -1,0 +1,117 @@
+﻿@page "/AircraftDetails"
+
+
+<div class="d-flex justify-content-between">
+    <div><h3>N1234WC - Cirrus SR22</h3></div>
+    <div>
+        <button type="button" class="btn btn-primary" @onclick="(() => NotDevelop())">Edit</button>
+        <button type="button" class="btn btn-outline-primary" @onclick="(() => NotDevelop())">Add</button>
+    </div>
+</div>
+<div class="mx-1">
+    <hr class="p-0 m-1" />
+</div>
+<div class="card mt-2 flight-info-card">
+    <div class="card-body">
+        <div class="k-card-deck">
+            <TelerikCard Class="image-card-info">
+                <CardImage Src="https://fly-manager-dev-api.azurewebsites.net/Uploads//AircraftImages/28/20220816210808_22.jpeg"></CardImage>
+            </TelerikCard>
+            <TelerikCard Class="flight-cards">
+                <CardBody>
+                    <div class="card-fonts">Tail No : N1234WC</div>
+                    <div class="card-fonts">Model : SR22</div>
+                    <div class="card-fonts">Make : Cirrus</div>
+                    <div class="card-fonts">Category : Airplane</div>
+                    <div class="card-fonts">Turbines : Available</div>
+                </CardBody>
+            </TelerikCard>
+            <TelerikCard Class="flight-cards">
+                <CardBody>
+                    <CardTitle>Maintenance</CardTitle>
+                    <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                </CardBody>
+            </TelerikCard>
+            <TelerikCard Class="flight-cards">
+                <CardBody>
+                    <CardTitle>Reservation</CardTitle>
+                    <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                </CardBody>
+            </TelerikCard>
+        </div>
+    </div>
+</div>
+<div class="card mt-5">
+    <TelerikTabStrip>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="FlightAircraftTime"></CustomIcons></span>
+                <strong>Aircraft Times</strong>
+            </HeaderTemplate>
+            <Content>
+                <table border="1" class="table table-bordered">
+                    <tr>
+                        <th>Equipment Name</th>
+                        <th>Hours</th>
+                    </tr>
+                    <tr>
+                        <td>Total Air Frame</td>
+                        <td>150.00 Hours</td>
+                    </tr>
+                    <tr>
+                        <td>Propeller 1</td>
+                        <td>160.00 Hours</td>
+                    </tr>
+                </table>
+            </Content>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="wrench"></CustomIcons></span>
+                <strong>Equipment</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="FlightReservation"></CustomIcons></span>
+                <strong>Reservation</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="Flightdocument"></CustomIcons></span>
+                <strong>Documents</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="Maintenance"></CustomIcons></span>
+                <strong>Maintenance</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="Financials"></CustomIcons></span>
+                <strong>Financials</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="Performance"></CustomIcons></span>
+                <strong>Performance</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="Settings"></CustomIcons></span>
+                <strong>Setting</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><CustomIcons IconName="Crew"></CustomIcons></span>
+                <strong>Crew</strong>
+            </HeaderTemplate>
+        </TabStripTab>
+    </TelerikTabStrip>
+</div>

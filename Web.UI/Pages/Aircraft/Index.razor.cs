@@ -1,11 +1,19 @@
-﻿namespace Web.UI.Pages.Aircraft
-{
-    partial class Index
-    {
+﻿using Microsoft.AspNetCore.Components;
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+namespace Web.UI.Pages.Aircraft
+{
+    public partial class Index
+    {
+        [Inject] NavigationManager? NavManager { get; set; }
+
+        //protected override Task OnAfterRenderAsync(bool firstRender)
+        //{
+        //    return base.OnAfterRenderAsync(firstRender);
+        //}
+        private void OpenDetails() 
         {
-            return base.OnAfterRenderAsync(firstRender);
+            NavManager.NavigateTo("/AircraftDetails?AircraftId=N0ZseU1hbmFnZXI=");
+
         }
     }
 }
