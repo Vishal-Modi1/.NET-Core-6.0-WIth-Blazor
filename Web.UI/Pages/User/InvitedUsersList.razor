@@ -62,12 +62,8 @@
 <TelerikGrid TItem="InviteUserDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-    <GridSettings>
-        <GridPagerSettings InputType="PagerInputType.Input"
-                           PageSizes="@pageSizeOptions"
-                           ButtonCount="5"
-                           Adaptive="true">
-        </GridPagerSettings>
+     <GridSettings>
+        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
     </GridSettings>
 
     <GridColumns>
