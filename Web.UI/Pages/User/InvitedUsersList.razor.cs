@@ -63,7 +63,7 @@ namespace Web.UI.Pages.User
             if (inviteUserDataVM.Id == 0)
             {
                 operationType = OperationType.Create;
-                popupTitle = "Invit User";
+                popupTitle = "Invite User";
                 isBusyAddButton = true;
             }
             else

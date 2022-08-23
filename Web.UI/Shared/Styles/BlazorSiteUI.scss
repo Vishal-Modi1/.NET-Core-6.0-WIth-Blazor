@@ -35,13 +35,14 @@ $BUTTON-TEXT-VDARK: #042455;
 $DISABLED-TEXT-VDARK: #042455;
 
 $BG-DARK-BLUE: #022254;
+$BG-LIGHT-BLUE: #3066F8;
 $BG-MENU-ITEM: #0062FE;
-$BG-MENU-ITEM-SELECTED: #013587;
-$BG-MENU-ITEM-SELECTED-L-BORDER: #0062FE;
+$BG-MENU-ITEM-SELECTED: #9e27b03d;
+$BG-MENU-ITEM-SELECTED-L-BORDER: #9e27b0;
 $BG-MENU-ITEM-HOVER: #022a6a;
-$BG-MAIN-MENU: $BG-DARK-BLUE;
+$BG-MAIN-MENU: $BG-LIGHT-BLUE;
 
-$BG-BTN-PRIMARY: $BG-DARK-BLUE;
+$BG-BTN-PRIMARY: $BG-LIGHT-BLUE;
 $BG-BTN-PRIMARY-HOVER: #022a6a;
 $BG-BTN-DANGER: #EE0808;
 $BG-BTN-DANGER-HOVER: #CA2323;
@@ -69,7 +70,10 @@ $BG-WARNING-COLOR: #FFAE11;
 $BG-DANGER-COLOR: #EE0808;
 
 /*Card BACKGROUND COLOR */
-$BG-FLIGHT-CARD: #537AB7;
+$BG-FLIGHT-CARD: #1E8A88;
+$TEXT-TAB-STRIP: #CCCCCC;
+$BG-ACTIVE-TAB: #1E8A88;
+$WHITE-TEXT: #FFFFFF;
 
 body {
     background: $BG-COMMON-GRAY !important;
@@ -169,10 +173,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     background-color: #F5F7FF;
 
     .content {
-        /*margin-left: 16px !important;*/
         padding: 0;
-        /*margin-right: 16px !important;*/
-        /*background-color: red;*/
 
         .left-header {
             max-height: 54px;
@@ -197,27 +198,17 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     z-index: 2;
 }
 
-/*.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
-    color: whitesmoke !important;
-    background-color: #96B9EF;
-}*/
 /*LEFT MENU NAV BAR*/
 .k-drawer-mini .k-drawer-wrapper {
-    /*width: calc(2 * 2rem + 16px);*/
     width: 84px;
 }
 .k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
-    /*.k-drawer-wrapper {
-        //width: 0;
-    }*/
-
     &.k-drawer-expanded {
         .k-drawer-wrapper {
             width: 270px !important;
         }
     }
 }
-
 
 .user-face {
     padding: 34px;
@@ -229,19 +220,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     border: 0;
     box-shadow: none;
     padding: 34px;
-    /* .k-button-md.k-icon-button {
-        padding: 34px;
-    }*/
 }
 .telerik-blazor {
-
     &.k-drawer {
         background-color: $BG-MAIN-MENU;
         color: white;
 
         .k-drawer-item {
             border-left: 6px solid $BG-MAIN-MENU;
-            /*height: 35px;*/
 
             .selected-arrow {
                 width: 0;
@@ -257,6 +243,8 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         .selected-nav-item {
             background-color: $BG-MENU-ITEM-SELECTED;
             border-left: 6px solid $BG-MENU-ITEM-SELECTED-L-BORDER;
+            /*Update class according */
+            
         }
 
         .k-drawer-item:hover, .k-drawer-item.k-state-hover {
@@ -266,6 +254,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     }
 }
 .btn {
+    &.edit-button {
+        background-color: $SOLID-COLOR !important;
+        color: $WHITE-TEXT !important;
+    }
+
     &.k-btn-primary {
         border: 1px solid $BG-BTN-PRIMARY !important;
         background-color: $BG-BTN-PRIMARY !important;
@@ -301,7 +294,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     }
 
     &.k-btn-secondary {
-       margin-left:5px;
+        margin-left: 5px;
     }
 
     &.k-btn-secondary:hover {
@@ -375,9 +368,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*Telerik Card Css*/
 .flight-info-card {
-    width: 1106px;
     border: 2px solid #E0E0E0;
-    border-radius:8px;
+    border-radius: 8px;
+
+    .k-card.telerik-blazor 
+    {
+        height:200px;
+    }
 }
 
 .card-fonts{
@@ -388,17 +385,23 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .image-card-info {
     border: 1px solid #575757;
     border-radius: 8px;
-    width: 251px;
 }
 
 .flight-cards {
-    width: 251px;
     background: $BG-FLIGHT-CARD !important;
     border: 1px solid #575757;
     border-radius: 8px;
-    color: #FFFF;
+    color: $WHITE-TEXT !important;
 }
 
 .k-tabstrip-items-wrapper .k-item {
-    color: #CCCCCC;
+    color: $TEXT-TAB-STRIP !important;
+}
+.k-tabstrip-items {
+    .k-tabstrip-item.k-item.k-active {
+        .k-link {
+            background: $BG-ACTIVE-TAB !important;
+            color: $WHITE-TEXT !important;
+        }
+    }
 }

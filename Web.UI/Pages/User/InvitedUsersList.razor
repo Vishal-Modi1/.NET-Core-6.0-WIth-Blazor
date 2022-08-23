@@ -17,16 +17,14 @@
 
 
 <div class="row">
-    <div class="col">
+    <div class="col d-flex justify-content-between m-2">
         <h2 style="float:left">Manage Invited Users Details</h2>
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" 
-            OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
                 Invite User
-                 <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton">
-                        </TelerikLoader>
+                 <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
             </TelerikButton>
         }
 
@@ -79,7 +77,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-edit" OnClick="()=>InviteUserDialog(userData)"
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InviteUserDialog(userData)"
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
                         <CustomIcons IconName="edit"></CustomIcons>
@@ -91,7 +89,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
                         <CustomIcons IconName="delete"></CustomIcons>
                     </TelerikButton>
                 }

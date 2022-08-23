@@ -49,32 +49,31 @@
             <ul>
 
                 @foreach (var item in menuItems)
+                {
+                    if (!item.IsAdministrationModule)
                     {
-                        if (!item.IsAdministrationModule)
+                        if (item.DisplayName == "Log out")
                         {
-                            if (item.DisplayName == "Log out")
-                            {
-                            <hr class="hr-blue mt-0 mb-0" />
-                            }
+                        <hr class="hr-blue mt-0 mb-0" />
+                        }
 
-                        <li @onclick="@(() => NavigateToPage(item))"
-                    @onclick:stopPropagation
-                    class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
-                            <div class="px-2"><CustomIcons IconName="@item.DisplayName"></CustomIcons></div>
+                        <li @onclick="@(() => NavigateToPage(item))" @onclick:stopPropagation
+                            class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
+                            <div class="px-2"><CustomIcons IconName="@item.DisplayName" PrimaryColor="white"></CustomIcons></div>
 
                             @if (DrawerExpanded)
-                                {
+                            {
                                 <div>@item.DisplayName</div>
-                                }
+                            }
                             @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
-                                {
+                            {
                                 <div class="selected-arrow"></div>
-                                }
+                            }
 
                         </li>
 
-                        }
                     }
+                }
             </ul>
         </div>
 

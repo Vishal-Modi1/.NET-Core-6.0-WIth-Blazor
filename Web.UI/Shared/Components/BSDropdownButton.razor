@@ -10,7 +10,7 @@
  
     @if (BSDropdownItemList.Count > 0)
     {
-        <div class="dropdown-menu @(ShowMenuItem ? "d-block":"")" aria-labelledby="dropdownMenuButton">
+        <div class="dropdown-menu ms-2 @(ShowMenuItem ? "d-block":"")" aria-labelledby="dropdownMenuButton">
             @foreach (var item in BSDropdownItemList)
             {
                  <a class="dropdown-item" href="@(item.URL)">@(item.DisplayValue)</a>

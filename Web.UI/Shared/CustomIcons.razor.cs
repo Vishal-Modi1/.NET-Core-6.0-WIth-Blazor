@@ -6,5 +6,13 @@ namespace Web.UI.Shared
     {
         [Parameter]
         public string IconName { get; set; }
+        [Parameter]
+        public string PrimaryColor { get; set; } 
+        [Parameter]
+        public string SecondaryColor { get; set; }
+
+        [Parameter]
+        public bool IsTransparent { get; set; }
+
     }
 }

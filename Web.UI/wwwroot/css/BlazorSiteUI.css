@@ -118,15 +118,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   background-color: #F5F7FF;
 }
 .main .content {
-  /*margin-left: 16px !important;*/
   padding: 0;
-  /*margin-right: 16px !important;*/
-  /*background-color: red;*/
 }
 .main .content .left-header {
   max-height: 54px;
   min-height: 54px;
-  background-color: #022254;
+  background-color: #3066F8;
   color: white;
 }
 
@@ -144,21 +141,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   z-index: 2;
 }
 
-/*.k-drawer-item:hover, .k-drawer-item.k-state-hover, .text-info {
-    color: whitesmoke !important;
-    background-color: #96B9EF;
-}*/
 /*LEFT MENU NAV BAR*/
 .k-drawer-mini .k-drawer-wrapper {
-  /*width: calc(2 * 2rem + 16px);*/
   width: 84px;
 }
 
-.k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
-  /*.k-drawer-wrapper {
-      //width: 0;
-  }*/
-}
 .k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini.k-drawer-expanded .k-drawer-wrapper {
   width: 270px !important;
 }
@@ -174,18 +161,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border: 0;
   box-shadow: none;
   padding: 34px;
-  /* .k-button-md.k-icon-button {
-      padding: 34px;
-  }*/
 }
 
 .telerik-blazor.k-drawer {
-  background-color: #022254;
+  background-color: #3066F8;
   color: white;
 }
 .telerik-blazor.k-drawer .k-drawer-item {
-  border-left: 6px solid #022254;
-  /*height: 35px;*/
+  border-left: 6px solid #3066F8;
 }
 .telerik-blazor.k-drawer .k-drawer-item .selected-arrow {
   width: 0;
@@ -197,17 +180,22 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border-right: 10px solid #f5f7ff;
 }
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: #013587;
-  border-left: 6px solid #0062FE;
+  background-color: #9e27b03d;
+  border-left: 6px solid #9e27b0;
+  /*Update class according */
 }
 .telerik-blazor.k-drawer .k-drawer-item:hover, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover {
   color: white;
   background-color: #022a6a;
 }
 
+.btn.edit-button {
+  background-color: #9E27B0 !important;
+  color: #FFFFFF !important;
+}
 .btn.k-btn-primary {
-  border: 1px solid #022254 !important;
-  background-color: #022254 !important;
+  border: 1px solid #3066F8 !important;
+  background-color: #3066F8 !important;
 }
 .btn.k-btn-primary:hover {
   color: white;
@@ -246,13 +234,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*TOP HORIZONTAL HEADER START*/
 .header-profile-dropdown {
-  background-color: #022254 !important;
+  background-color: #3066F8 !important;
   color: white !important;
   border: none !important;
   box-shadow: none !important;
 }
 .header-profile-dropdown:hover {
-  background-color: #022254 !important;
+  background-color: #3066F8 !important;
 }
 
 .dropdown-menu {
@@ -304,9 +292,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*Telerik Card Css*/
 .flight-info-card {
-  width: 1106px;
   border: 2px solid #E0E0E0;
   border-radius: 8px;
+}
+.flight-info-card .k-card.telerik-blazor {
+  height: 200px;
 }
 
 .card-fonts {
@@ -317,17 +307,20 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .image-card-info {
   border: 1px solid #575757;
   border-radius: 8px;
-  width: 251px;
 }
 
 .flight-cards {
-  width: 251px;
-  background: #537AB7 !important;
+  background: #1E8A88 !important;
   border: 1px solid #575757;
   border-radius: 8px;
-  color: #FFFF;
+  color: #FFFFFF !important;
 }
 
 .k-tabstrip-items-wrapper .k-item {
-  color: #CCCCCC;
+  color: #CCCCCC !important;
+}
+
+.k-tabstrip-items .k-tabstrip-item.k-item.k-active .k-link {
+  background: #1E8A88 !important;
+  color: #FFFFFF !important;
 }

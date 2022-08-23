@@ -9,10 +9,10 @@
 @page "/InstructorType"
 
 <div class="row">
-    <div class="col">
-        <h2 style="float:left">Manage Instructor Types Details</h2>
+    <div class="col d-flex justify-content-between">
+        <h2>Manage Instructor Types Details</h2>
 
-        <div class="row d-flex justify-content-end my-2">
+        <div class="row my-2">
             <div class="col-md-8">
                 <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<InstructorTypeVM>(value, grid) )" />
             </div>

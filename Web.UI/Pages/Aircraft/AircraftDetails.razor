@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-between">
     <div><h3>N1234WC - Cirrus SR22</h3></div>
     <div>
-        <button type="button" class="btn btn-primary" @onclick="(() => NotDevelop())">Edit</button>
+        <button type="button" class="btn edit-button" @onclick="(() => NotDevelop())">Edit</button>
         <button type="button" class="btn btn-outline-primary" @onclick="(() => NotDevelop())">Add</button>
     </div>
 </div>
@@ -14,38 +14,50 @@
 <div class="card mt-2 flight-info-card">
     <div class="card-body">
         <div class="k-card-deck">
-            <TelerikCard Class="image-card-info">
-                <CardImage Src="https://fly-manager-dev-api.azurewebsites.net/Uploads//AircraftImages/28/20220816210808_22.jpeg"></CardImage>
-            </TelerikCard>
-            <TelerikCard Class="flight-cards">
-                <CardBody>
-                    <div class="card-fonts">Tail No : N1234WC</div>
-                    <div class="card-fonts">Model : SR22</div>
-                    <div class="card-fonts">Make : Cirrus</div>
-                    <div class="card-fonts">Category : Airplane</div>
-                    <div class="card-fonts">Turbines : Available</div>
-                </CardBody>
-            </TelerikCard>
-            <TelerikCard Class="flight-cards">
-                <CardBody>
-                    <CardTitle>Maintenance</CardTitle>
-                    <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
-                </CardBody>
-            </TelerikCard>
-            <TelerikCard Class="flight-cards">
-                <CardBody>
-                    <CardTitle>Reservation</CardTitle>
-                    <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
-                </CardBody>
-            </TelerikCard>
+            <div class="row p-0">
+                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                    <TelerikCard Class="image-card-info">
+                        <CardImage Src="https://fly-manager-dev-api.azurewebsites.net/Uploads//AircraftImages/28/20220816210808_22.jpeg"></CardImage>
+                    </TelerikCard>
+                </div>
+                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                    <TelerikCard Class="flight-cards">
+                        <CardBody>
+                            <div><span class="card-fonts">Tail No:</span> N1234WC</div>
+                            <div><span class="card-fonts">Model :</span> SR22</div>
+                            <div><span class="card-fonts">Make :</span> Cirrus</div>
+                            <div><span class="card-fonts">Category :</span> Airplane</div>
+                            <div><span class="card-fonts">Turbines :</span> Available</div>
+                        </CardBody>
+                    </TelerikCard>
+                </div>
+                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+
+                    <TelerikCard Class="flight-cards">
+                        <CardBody>
+                            <CardTitle>Maintenance</CardTitle>
+                            <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                        </CardBody>
+                    </TelerikCard>
+                </div>
+                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                    <TelerikCard Class="flight-cards">
+                        <CardBody>
+                            <CardTitle>Reservation</CardTitle>
+                            <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                        </CardBody>
+                    </TelerikCard>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <div class="card mt-5">
-    <TelerikTabStrip>
+    <TelerikTabStrip @bind-ActiveTabIndex="@ActiveTabIndex">
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="FlightAircraftTime"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="FlightAircraftTime" IsTransparent="@(IsTabSelectedFlag(0))" 
+                    PrimaryColor="#CCCCCC00" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Aircraft Times</strong>
             </HeaderTemplate>
             <Content>
@@ -67,49 +79,57 @@
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="wrench"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="wrench" IsTransparent="@(IsTabSelectedFlag(1))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Equipment</strong>
             </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="FlightReservation"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="FlightReservation" IsTransparent="@(IsTabSelectedFlag(2))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Reservation</strong>
             </HeaderTemplate>
-        </TabStripTab>
+        </TabStripTab >
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="Flightdocument"></CustomIcons></span>
+                <spn class="mx-2"><CustomIcons IconName="Flightdocument" IsTransparent="@(IsTabSelectedFlag(3))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></spn>
                 <strong>Documents</strong>
             </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="Maintenance"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="Maintenance" IsTransparent="@(IsTabSelectedFlag(4))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Maintenance</strong>
             </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="Financials"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="Financials" IsTransparent="@(IsTabSelectedFlag(5))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Financials</strong>
             </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="Performance"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="Performance" IsTransparent="@(IsTabSelectedFlag(6))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Performance</strong>
             </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="Settings"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="Settings" IsTransparent="@(IsTabSelectedFlag(7))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Setting</strong>
             </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
             <HeaderTemplate>
-                <span class="mx-2"><CustomIcons IconName="Crew"></CustomIcons></span>
+                <span class="mx-2"><CustomIcons IconName="Crew" IsTransparent="@(IsTabSelectedFlag(8))"
+                    PrimaryColor="white" SecondaryColor="#CCCCCC"></CustomIcons></span>
                 <strong>Crew</strong>
             </HeaderTemplate>
         </TabStripTab>
