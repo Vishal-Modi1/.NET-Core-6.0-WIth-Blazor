@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Security.Claims;
 
-namespace Web.UI
+namespace Web.UI.Controllers
 {
     [ApiController]
     public class AuthController : ControllerBase
@@ -34,12 +34,11 @@ namespace Web.UI
         };
 
 
-        [Authorize]
         [HttpGet]
         [Route("api/auth/test")]
         public async Task<IActionResult> SignInPost1()
         {
-            return Ok("");
+            return Ok("test");
         }
 
         [HttpPost]

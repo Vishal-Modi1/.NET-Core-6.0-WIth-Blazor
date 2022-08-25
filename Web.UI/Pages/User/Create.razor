@@ -1,4 +1,4 @@
-﻿@using DataModels.Models
+﻿@using Models.Shared
 @using DataModels.VM.Common
 @using DataModels.VM.User
 @using DataModels.Enums
@@ -201,8 +201,8 @@
                         </div>
                         <div class="col-md-12 align-items-center d-flex">
 
-                            <TelerikRadioGroup Data="@GenderOptions" ValueField="@nameof(GenderModel.GenderId)"
-                                               TextField="@nameof(GenderModel.GenderText)" @bind-Value="@userData.GenderId"
+                            <TelerikRadioGroup Data="@genderOptions" ValueField="@nameof(RadioButtonItem.Id)"
+                                               TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@userData.GenderId"
                                                Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnGenderValueChange()"
                                                LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
 

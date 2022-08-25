@@ -147,7 +147,7 @@ namespace Service
         }
 
         public CurrentResponse Create(UserVM userVM)
-        {
+        {     
             try
             {
                 User user = ToDataObject(userVM);
@@ -156,7 +156,7 @@ namespace Service
                 userVM.Id = user.Id;
 
                 SaveUserVSCompany(userVM);
-                CreateResponse(user, HttpStatusCode.OK, "User added successfully");
+                CreateResponse(user, HttpStatusCode.OK, "User added          ");
 
                 return _currentResponse;
             }

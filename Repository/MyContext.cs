@@ -107,7 +107,7 @@ namespace Repository
 
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 
-        public DbSet<CompanyService> CompanyServices { get; set; }
+        public DbSet<CompanyInfoService> CompanyServices { get; set; }
 
         public DbSet<Location> Locations { get; set; }
 

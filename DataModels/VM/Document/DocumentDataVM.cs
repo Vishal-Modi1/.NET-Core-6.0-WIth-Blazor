@@ -31,6 +31,9 @@ namespace DataModels.VM.Document
         [NotMapped]
         public bool IsLoadingEditButton { get; set; }
 
+        [NotMapped]
+        public bool IsLoadingDownloadButton { get; set; }
+
         public int CompanyId { get; set; }
 
         public string CompanyName { get; set; }

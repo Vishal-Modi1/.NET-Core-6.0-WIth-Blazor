@@ -6,7 +6,9 @@
 
 <div id="container">
 
-    <TelerikTabStrip Class="k-tabstrip-list my-3">
+    <TelerikTabStrip Class="k-tabstrip-list my-3" @ref="@telerikTabStrip">
+
+
 
         @foreach (var tab in menuItems)
         {
@@ -50,43 +52,43 @@
             }
         }
         <TabStripTab>
-                <HeaderTemplate>
-                    <span class="mx-2"><TelerikIcon Icon="email" /></span>
-                    <strong>Instructor Types</strong>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.InstructorType.Index></Web.UI.Pages.InstructorType.Index>
-                </Content>
-            </TabStripTab>
+            <HeaderTemplate>
+                  <span class="mx-2"><TelerikIcon Icon="email" /></span>
+                <strong>Instructor Types</strong>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.InstructorType.Index></Web.UI.Pages.InstructorType.Index>
+            </Content>
+        </TabStripTab>
 
-            <TabStripTab>
-                <HeaderTemplate>
-                    <span class="mx-2"><TelerikIcon Icon="email" /></span>
-                    <strong>Location</strong>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.Location.Index></Web.UI.Pages.Location.Index>
-                </Content>
-            </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><TelerikIcon Icon="email" /></span>
+                <strong>Location</strong>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.Location.Index></Web.UI.Pages.Location.Index>
+            </Content>
+        </TabStripTab>
 
-            <TabStripTab>
-                <HeaderTemplate>
-                    <span class="mx-2"><TelerikIcon Icon="email" /></span>
-                    <strong>Make</strong>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.AircraftMake.Index></Web.UI.Pages.AircraftMake.Index>
-                </Content>
-            </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><TelerikIcon Icon="email" /></span>
+                <strong>Make</strong>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.AircraftMake.Index></Web.UI.Pages.AircraftMake.Index>
+            </Content>
+        </TabStripTab>
 
-            <TabStripTab>
-                <HeaderTemplate>
-                    <span class="mx-2"><TelerikIcon Icon="email" /></span>
-                    <strong>Model</strong>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.AircraftModel.Index></Web.UI.Pages.AircraftModel.Index>
-                </Content>
-            </TabStripTab>
+        <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2"><TelerikIcon Icon="email" /></span>
+                <strong>Model</strong>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.AircraftModel.Index></Web.UI.Pages.AircraftModel.Index>
+            </Content>
+        </TabStripTab>
     </TelerikTabStrip>
 </div>

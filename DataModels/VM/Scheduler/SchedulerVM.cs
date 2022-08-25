@@ -4,6 +4,7 @@ using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.Scheduler
 {
@@ -48,7 +49,7 @@ namespace DataModels.VM.Scheduler
         [Required]
         public long? AircraftId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Title is required")]
         public string DisplayTitle { get; set; }
 
         public string FlightRoutes { get; set; }
@@ -83,6 +84,8 @@ namespace DataModels.VM.Scheduler
 
         public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
+        [NotMapped]
+        public bool IsAllDay { get; set; }
         public string CssClass { get; set; } 
         public string Color { get; set; }
 

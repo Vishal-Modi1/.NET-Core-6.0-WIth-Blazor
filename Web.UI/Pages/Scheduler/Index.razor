@@ -1,0 +1,135 @@
+﻿@using DataModels.VM.AircraftEquipment
+@using DataModels.VM.Common
+@using System.Collections.ObjectModel
+@using System.ComponentModel
+@using DataModels.VM.Scheduler;
+@using DataModels.Entities;
+@using DataModels.VM;
+
+@page "/Scheduler"
+
+<PageTitle>Scheduler | Fly Manager </PageTitle>
+
+@*@if (isDisplayScheduler)
+{*@
+    <div class="row" style="margin-bottom:2%">
+        <div class="col-md-2 align-items-center d-flex" style="margin-right: -8%;margin-left: 0.5%;">
+            <label for="firstName" class="k-label k-form-label">Select aircraft: </label>
+        </div>
+        <div class="col-md-4" style="margin-right: 7%;">
+
+           @* <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleValues" Placeholder="Select aircraft"
+                            TextField="TailNo" ValueField="TailNo" OnChange="@OnAircraftsListChange" />
+*@
+                <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@TheValues" 
+                    TextField="TailNo" ValueField="Id" />
+
+        </div>
+
+        <div class="col-md-6">
+
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                       Enabled="@(!isBusyAddButton)">
+                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                </TelerikLoader>
+                Add New
+            </TelerikButton>
+        </div>
+    </div>
+
+    <TelerikScheduler Data="@dataSource" @bind-Date="@currentDate" Height="600px" @bind-View="@currentView"
+                  OnCreate="@OpenCreateAppointmentDialog" @ref="@scheduleRef"
+                  AllowCreate="true"
+                  IdField="@(nameof(SchedulerVM.Id))"
+                  StartField="@(nameof(SchedulerVM.StartTime))"
+                  EndField="@(nameof(SchedulerVM.EndTime))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))">
+
+        <SchedulerSettings>
+            <SchedulerGroupSettings Resources="@resources" Orientation="SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
+        </SchedulerSettings>
+
+          <SchedulerViews>
+        <SchedulerDayView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" />
+        <SchedulerWeekView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" />
+        <SchedulerMultiDayView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" NumberOfDays="10" />
+        <SchedulerMonthView></SchedulerMonthView>
+        <SchedulerTimelineView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" />
+    </SchedulerViews>
+
+        <SchedulerResources>
+            <SchedulerResource Field="Aircrafts" TextField="AircraftTailNo" ValueField="Id" Data="@observableAircraftsData"></SchedulerResource>
+        </SchedulerResources>
+
+    </TelerikScheduler>
+@*
+    <SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"
+            @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate"
+            @bind-CurrentView="@currentView">
+
+        <ScheduleGroup EnableCompactView="false" Resources="@resources"></ScheduleGroup>
+
+        <ScheduleEventSettings DataSource="@dataSource" EnableTooltip="true">
+
+            <ScheduleField Id="Id">
+                <FieldSubject Name="DisplayTitle"></FieldSubject>
+                <FieldStartTime Name="StartTime"></FieldStartTime>
+                <FieldEndTime Name="EndTime"></FieldEndTime>
+            </ScheduleField>
+
+        </ScheduleEventSettings>
+        <ScheduleEvents ActionCompleted="OnActionCompletedAsync" TValue="SchedulerVM" OnEventDoubleClick="OnEventClick" EventRendered="OnEventRendered"
+                    OnCellDoubleClick="OpenCreateAppointmentDialog" OnCellClick="OpenCreateAppointmentDialog" OnEventClick="OnEventClick"></ScheduleEvents>
+
+        <ScheduleResources>
+
+            <ScheduleResource TItem="ResourceData" TValue="long[]" DataSource="@observableAircraftsData" Field="AircraftId" Title="Aircraft"
+                          Name="Aircrafts" TextField="AircraftTailNo" IdField="Id" AllowMultiple="true">
+            </ScheduleResource>
+
+        </ScheduleResources>
+
+        <ScheduleViews>
+            <ScheduleView Option="View.TimelineDay"></ScheduleView>
+            <ScheduleView Option="View.TimelineWeek"></ScheduleView>
+            <ScheduleView Option="View.TimelineMonth"></ScheduleView>
+            <ScheduleView Option="View.Day"></ScheduleView>
+            <ScheduleView Option="View.Week"></ScheduleView>
+            <ScheduleView Option="View.Month"></ScheduleView>
+        </ScheduleViews>
+
+    </SfSchedule>*@
+@*}*@
+
+@*<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" Height="auto" ShowCloseIcon="true">
+
+    <DialogTemplates>
+        <Header> <h5>Schedule Appointment</h5> </Header>
+        <Content>
+
+            <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
+                    DeleteParentEvent="@DeleteEventAsync" InitializeValuesParentEvent="@InitializeValues"
+                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                    OpenDialogParentEvent="@OpenDialog"
+                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+
+        </Content>
+    </DialogTemplates>
+
+</SfDialog>
+*@
+@code{
+    List<int> TheValues { get; set; }
+    List<OptionsModel> Options { get; set; } = new List<OptionsModel>
+    {
+        new OptionsModel { StringRepresentation = "first",  MyValueField = 1 },
+        new OptionsModel { StringRepresentation = "second", MyValueField = 2 },
+        new OptionsModel { StringRepresentation = "third",  MyValueField = 3 }
+    };
+
+    public class OptionsModel
+    {
+        public string StringRepresentation { get; set; }
+        public int MyValueField { get; set; } // this determines the type of the values list
+    }
+}

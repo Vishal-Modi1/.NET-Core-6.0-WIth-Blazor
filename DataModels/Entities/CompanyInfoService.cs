@@ -1,6 +1,6 @@
 ﻿namespace DataModels.Entities
 {
-    public class CompanyService
+    public class CompanyInfoService
     {
         public short Id { get; set; }
 

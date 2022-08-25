@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using DataModels.Constants;
 using DataModels.Enums;
 using DataModels.Models;
+using Web.UI.Models.Shared;
 
 namespace Web.UI.Pages.User
 {
@@ -24,10 +25,10 @@ namespace Web.UI.Pages.User
         //public TelerikEditForm<UserVM> userForm;
         bool isInstructorTypeDropdownVisible = false, isAuthenticated = false;
         int? roleId;
-        List<GenderModel> GenderOptions { get; set; } = new List<GenderModel>
+        List<RadioButtonItem> genderOptions { get; set; } = new List<RadioButtonItem>
         {
-            new GenderModel { GenderId = 0, GenderText = "Female" },
-            new GenderModel { GenderId = 1, GenderText = "Male" },
+            new RadioButtonItem { Id = 0,Text = "Female" },
+            new RadioButtonItem { Id = 1, Text = "Male" },
         };
 
         protected override async Task OnInitializedAsync()

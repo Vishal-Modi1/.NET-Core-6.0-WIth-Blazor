@@ -46,7 +46,8 @@
     {
         <div class="col-md-4">
 
-            <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+            <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" 
+            ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                          Placeholder="Select Company" ValueField="Id">
             </TelerikComboBox>

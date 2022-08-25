@@ -20,6 +20,7 @@ namespace Web.UI.Pages.UserRolePermission
         bool isAllow, isForWebApp, isAllowForMobileApp;
         string popupTitle, message;
         string moduleName = "UserRolePermission";
+        IEnumerable<UserRolePermissionDataVM> selectedItems = new List<UserRolePermissionDataVM>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -35,6 +36,11 @@ namespace Web.UI.Pages.UserRolePermission
             userrolePermissionFilterVM = await UserRolePermissionService.GetFiltersAsync(dependecyParams);
         }
 
+        protected void OnSelect(IEnumerable<UserRolePermissionDataVM> permissions)
+        {
+            selectedItems = permissions;
+        }
+
         async Task LoadData(GridReadEventArgs args)
         {
             UserRolePermissionDatatableParams datatableParams = new DatatableParams().Create(args, "Name").Cast<UserRolePermissionDatatableParams>();
@@ -48,6 +54,7 @@ namespace Web.UI.Pages.UserRolePermission
             data = await UserRolePermissionService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
+            selectedItems = data.Where(p => p.IsAllowed).ToList();
         }
 
         private void OnCompanyValueChanges(int selectedValue)

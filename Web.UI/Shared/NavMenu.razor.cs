@@ -55,7 +55,7 @@ namespace Web.UI.Shared
             {
                 menuItems = new List<MenuItem>();
                 menuItems.Add(new MenuItem() { Controller = "Dashboard", DisplayName = "Dashboard", FavIconStyle = "group" });
-                menuItems.Add(new MenuItem() { Controller = "Administration", DisplayName = "Administration"});
+                menuItems.Add(new MenuItem() { Controller = "Administration", DisplayName = "Administration" , });
                 menuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
 
                 menuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out", FavIconStyle = "group" });

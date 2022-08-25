@@ -1,13 +1,13 @@
 ﻿using DataModels.VM.Common;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
+using Telerik.Blazor.Components;
 
 namespace Web.UI.Pages.Administration
 {
     partial class Index
     {
         List<MenuItem> menuItems = new List<MenuItem>();
-        
+        TelerikTabStrip telerikTabStrip;
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -18,7 +18,8 @@ namespace Web.UI.Pages.Administration
                 menuItems = menuItems.Where(p => p.IsAdministrationModule == true).ToList();
 
                 isDisplayLoader = false;
-
+                telerikTabStrip.ActiveTabIndex = 4;
+                
                 base.StateHasChanged();
             }
         }

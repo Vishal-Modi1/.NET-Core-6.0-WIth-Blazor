@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Web.UI.Shared
+namespace Web.UI.Shared.Components.CustomIcon
 {
     public partial class CustomIcons
     {

@@ -59,7 +59,7 @@
 
                         <li @onclick="@(() => NavigateToPage(item))" @onclick:stopPropagation
                             class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
-                            <div class="px-2"><CustomIcons IconName="@item.DisplayName" PrimaryColor="white"></CustomIcons></div>
+                            <div class="px-2"><CustomIcons IconName="@item.DisplayName" PrimaryColor="#3066F8"></CustomIcons></div>
 
                             @if (DrawerExpanded)
                             {
