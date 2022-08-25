@@ -18,7 +18,9 @@
         <Template>
             <div class="d-flex align-items-center @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
                 <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Class="drawer-hamburger">
-                    <CustomIcons IconName="Menu"></CustomIcons>
+                    <Web.UI.Shared.Components.CustomIcon.CustomIcons 
+                    IconName="Menu" 
+                    PrimaryColor="@("#3066F8")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
                 </TelerikButton>
             </div>
             <hr class="hr-blue mt-0 mb-0" />
@@ -59,11 +61,17 @@
 
                         <li @onclick="@(() => NavigateToPage(item))" @onclick:stopPropagation
                             class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
-                            <div class="px-2"><CustomIcons IconName="@item.DisplayName" PrimaryColor="#3066F8"></CustomIcons></div>
+                            <div class="px-2">
+                                <Web.UI.Shared.Components.CustomIcon.CustomIcons 
+                                IconName="@item.DisplayName" 
+                                PrimaryColor="@(item.DisplayName == "Dashboard" ? "#3066F800":"#3066F8")"
+                                SecondaryColor="#3066F8">
+                                </Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                                </div>
 
                             @if (DrawerExpanded)
                             {
-                                <div>@item.DisplayName</div>
+                                <div class="menu-item-text-color">@item.DisplayName</div>
                             }
                             @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
                             {

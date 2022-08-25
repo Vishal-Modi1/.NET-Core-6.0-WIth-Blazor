@@ -12,7 +12,8 @@ html, body {
 $PRIMARY-COLOR: #042455;
 $SECONDARY-COLOR: #3066F8;
 $NEUTRAL-COLOR: #1F1F1F;
-$SOLID-COLOR: #9E27B0;
+/*$SOLID-COLOR: #9E27B0;*/
+$SOLID-COLOR: #438AFE;
 
 $STATE-INFO-COLOR: #2F80ED;
 $STATE-SUCCESS-COLOR: #27AE60;
@@ -37,10 +38,12 @@ $DISABLED-TEXT-VDARK: #042455;
 $BG-DARK-BLUE: #022254;
 $BG-LIGHT-BLUE: #3066F8;
 $BG-MENU-ITEM: #0062FE;
-$BG-MENU-ITEM-SELECTED: #9e27b03d;
-$BG-MENU-ITEM-SELECTED-L-BORDER: #9e27b0;
-$BG-MENU-ITEM-HOVER: #022a6a;
-$BG-MAIN-MENU: $BG-LIGHT-BLUE;
+$BG-MENU-ITEM-TEXT-COLOR: #3066f8;
+$BG-MENU-ITEM-SELECTED: #3066F83d;
+$BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
+$BG-MENU-TITLE-HEADER: #3066F8;
+$BG-MENU-ITEM-HOVER: #8bb8ff;
+$BG-MAIN-MENU: WHITE;
 
 $BG-BTN-PRIMARY: $BG-LIGHT-BLUE;
 $BG-BTN-PRIMARY-HOVER: #022a6a;
@@ -70,7 +73,7 @@ $BG-WARNING-COLOR: #FFAE11;
 $BG-DANGER-COLOR: #EE0808;
 
 /*Card BACKGROUND COLOR */
-$BG-FLIGHT-CARD: #1E8A88;
+$BG-FLIGHT-CARD: #FFFFFF;
 $TEXT-TAB-STRIP: #CCCCCC;
 $BG-ACTIVE-TAB: #1E8A88;
 $WHITE-TEXT: #FFFFFF;
@@ -79,6 +82,9 @@ body {
     background: $BG-COMMON-GRAY !important;
 }
 
+hr {
+    border: 1px solid #3066F8;
+}
 .bg-primary-f {
     background-color: $BG-DARK-BLUE;
 }
@@ -178,7 +184,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         .left-header {
             max-height: 54px;
             min-height: 54px;
-            background-color: $BG-MAIN-MENU;
+            background-color: $BG-MENU-TITLE-HEADER;
             color: white;
         }
     }
@@ -199,9 +205,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 /*LEFT MENU NAV BAR*/
+.menu-item-text-color {
+    color: $BG-MENU-ITEM-TEXT-COLOR !important;
+}
+
 .k-drawer-mini .k-drawer-wrapper {
     width: 84px;
 }
+
 .k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
     &.k-drawer-expanded {
         .k-drawer-wrapper {
@@ -213,14 +224,17 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .user-face {
     padding: 34px;
     font-size: 16px;
+    color: black !important;
 }
+
 .k-button.drawer-hamburger {
     background: transparent;
-    color: white;
+    color: $BG-MENU-ITEM-TEXT-COLOR !important;
     border: 0;
     box-shadow: none;
     padding: 34px;
 }
+
 .telerik-blazor {
     &.k-drawer {
         background-color: $BG-MAIN-MENU;
@@ -244,7 +258,6 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             background-color: $BG-MENU-ITEM-SELECTED;
             border-left: 6px solid $BG-MENU-ITEM-SELECTED-L-BORDER;
             /*Update class according */
-            
         }
 
         .k-drawer-item:hover, .k-drawer-item.k-state-hover {
@@ -253,6 +266,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         }
     }
 }
+
 .btn {
     &.edit-button {
         background-color: $SOLID-COLOR !important;
@@ -301,6 +315,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         color: white;
     }
 }
+
 .login-button {
     width: 100% !important;
 }
@@ -317,10 +332,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     border: none !important;
     box-shadow: none !important;
 }
+
 .dropdown-menu {
     box-shadow: 0 4px 8px 0 rgb(2 34 84 / 35%), 0 6px 20px 0 rgb(2 34 84 / 61%) !important;
 }
-.show-notification-dot{
+
+.show-notification-dot {
     position: relative !important;
     top: -3px !important;
     color: red;
@@ -356,52 +373,71 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     justify-content: flex-end;
 }
 
-.cancel-btn{
-    margin-left:8px;
+.cancel-btn {
+    margin-left: 8px;
 }
 /*TelerikTabStrip END*/
 
 /*Telerik toastr notification*/
 .sm-notification {
-    z-index:1;
+    z-index: 1;
 }
 
 /*Telerik Card Css*/
 .flight-info-card {
+    background: #EEF1F5;
     border: 2px solid #E0E0E0;
     border-radius: 8px;
 
-    .k-card.telerik-blazor 
-    {
-        height:200px;
+    .k-card.telerik-blazor {
+        height: 200px;
     }
 }
 
-.card-fonts{
+.card-fonts {
     font-size: 18px;
     font-weight: 600;
 }
 
 .image-card-info {
-    border: 1px solid #575757;
     border-radius: 8px;
 }
 
 .flight-cards {
     background: $BG-FLIGHT-CARD !important;
-    border: 1px solid #575757;
     border-radius: 8px;
-    color: $WHITE-TEXT !important;
+    color: black !important;
+    box-shadow: 0px 2px 4px rgb(0 0 0 / 15%);
+    border: 0px solid;
 }
 
 .k-tabstrip-items-wrapper .k-item {
     color: $TEXT-TAB-STRIP !important;
 }
+
 .k-tabstrip-items {
-    .k-tabstrip-item.k-item.k-active {
+    padding: 15px;
+
+    .k-tabstrip-item.k-item {
         .k-link {
-            background: $BG-ACTIVE-TAB !important;
-            color: $WHITE-TEXT !important;
+            color: #111111 !important;
+            border-right: 2px solid rgba(17, 17, 17, 0.141);
+        }
+    }
+
+    .k-tabstrip-item.k-item:focus {
+        box-shadow: none !important;
+    }
+
+    .k-tabstrip-item.k-item.k-active {
+        &.k-tab-on-top {
+            border: 0 !important;
+        }
+
+        .k-link {
+            border-bottom: 4px solid #3066F8;
+            /*background: $BG-ACTIVE-TAB !important;
+            color: $WHITE-TEXT !important;*/
         }
     }
 }
