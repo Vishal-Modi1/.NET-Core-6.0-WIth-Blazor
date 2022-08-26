@@ -85,6 +85,7 @@ body {
 hr {
     border: 1px solid #eee;
 }
+
 .bg-primary-f {
     background-color: $BG-DARK-BLUE;
 }
@@ -150,7 +151,11 @@ form .row {
     right: 0;
     position: absolute;
 }
-
+/*GLOBAL CLASSES*/
+.card, .k-card.telerik-blazor{
+    box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
 .TelerikNotification .k-notification-container .k-notification-wrap {
     width: 300px;
     height: 50px;
@@ -205,18 +210,42 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 /*LEFT MENU NAV BAR*/
+.k-drawer-mini {
+    .k-drawer.k-drawer-start {
+        border-right-width: 0;
+    }
+}
+
+.k-drawer-expanded {
+    .k-drawer.k-drawer-start {
+        border-right-width: 0;
+    }
+}
+
+.k-drawer-left.k-drawer-mini {
+    .k-drawer {
+        border-right-width: 0;
+    }
+}
+
+.k-drawer-left.k-drawer-expanded {
+    .k-drawer {
+        border-right-width: 0;
+    }
+}
+
 .menu-item-text-color {
     color: $BG-MENU-ITEM-TEXT-COLOR !important;
 }
 
 .k-drawer-mini .k-drawer-wrapper {
-    width: 84px;
+    width: 70px;
 }
 
 .k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
     &.k-drawer-expanded {
         .k-drawer-wrapper {
-            width: 270px !important;
+            width: 230px !important;
         }
     }
 }
@@ -246,7 +275,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
         .k-drawer-item {
             border-left: 6px solid $BG-MAIN-MENU;
-            font-size:14px;
+            font-size: 14px;
 
             .selected-arrow {
                 width: 0;
@@ -329,10 +358,10 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .header-profile-dropdown {
     &:hover {
-        background-color: $BG-BTN-PRIMARY !important;
+        background-color: $BG-MENU-TITLE-HEADER !important;
     }
 
-    background-color: $BG-BTN-PRIMARY !important;
+    background-color: $BG-MENU-TITLE-HEADER !important;
     color: white !important;
     border: none !important;
     box-shadow: none !important;
@@ -419,9 +448,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .k-tabstrip-items-wrapper .k-item {
     color: $TEXT-TAB-STRIP !important;
 }
-
+.k-tabstrip-top {
+    .k-tabstrip-items-wrapper {
+        margin-bottom: 0;
+    }
+} 
 .k-tabstrip-items {
-    padding: 15px;
+    /*padding: 15px;*/
 
     .k-tabstrip-item.k-item {
         .k-link {
@@ -441,19 +474,17 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
         .k-link {
             border-bottom: 4px solid #3066F8;
-            /*background: $BG-ACTIVE-TAB !important;
-            color: $WHITE-TEXT !important;*/
+            background: $BG-MENU-ITEM-SELECTED !important;
+            /*color: $WHITE-TEXT !important;*/
         }
     }
 }
 
 .k-input-solid {
-    
-        background-color: #d4ecf370 !important;
-    }
+    background-color: #d4ecf370 !important;
+}
 
-    .invalid {
-        background-color: #FFD1D178;
-        border: 1px solid #FF0000;
-    }
-
+.invalid {
+    background-color: #FFD1D178;
+    border: 1px solid #FF0000;
+}
