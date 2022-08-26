@@ -80,6 +80,10 @@ form .row {
   margin-bottom: 16px;
 }
 
+.telerik-blazor.k-invalid input {
+  background: rgba(220, 53, 69, 0.25);
+}
+
 /*img {
     height: 100%;
     width: 100%;
