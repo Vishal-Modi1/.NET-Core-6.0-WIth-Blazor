@@ -2,11 +2,11 @@
 
 
 html, body {
-    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
-.k-drawer {
-    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif;
+.k-drawer, .k-tabstrip-items {
+    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 /*NEW COLOR PLATE*/
 $PRIMARY-COLOR: #042455;
@@ -234,9 +234,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     }
 }
 
-.menu-item-text-color {
-    color: $BG-MENU-ITEM-TEXT-COLOR !important;
-}
+
 
 .k-drawer-mini .k-drawer-wrapper {
     width: 70px;
@@ -288,15 +286,26 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             }
         }
 
+        .menu-item-text-color {
+            color: $BG-MENU-ITEM-TEXT-COLOR;
+        }
+
         .selected-nav-item {
             background-color: $BG-MENU-ITEM-SELECTED;
             border-left: 6px solid $BG-MENU-ITEM-SELECTED-L-BORDER;
             /*Update class according */
+            .menu-item-text-color {
+                color: #3066F8 !important;
+            }
         }
 
         .k-drawer-item:hover, .k-drawer-item.k-state-hover {
-            color: white;
+            color: white !important;
             background-color: $BG-MENU-ITEM-HOVER;
+
+            .menu-item-text-color {
+                color: #3066F8;
+            }
         }
     }
 }
@@ -451,6 +460,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .k-tabstrip-top {
     .k-tabstrip-items-wrapper {
         margin-bottom: 0;
+
+        .k-tabstrip-item.k-item:hover {
+            background-color: $BG-MENU-ITEM-HOVER;
+            color: #3066F8 !important;
+        }
     }
 } 
 .k-tabstrip-items {
@@ -458,6 +472,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
     .k-tabstrip-item.k-item {
         .k-link {
+            font-size: 14px;
             color: #111111 !important;
             border-right: 2px solid rgba(17, 17, 17, 0.141);
         }

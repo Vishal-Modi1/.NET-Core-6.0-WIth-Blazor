@@ -18,9 +18,8 @@
         <Template>
             <div class="d-flex align-items-center k-drawer-top-header @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
                 <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Class="drawer-hamburger">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons 
-                    IconName="Menu" 
-                    PrimaryColor="@("white")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Menu"
+                                                                 PrimaryColor="@("white")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
                 </TelerikButton>
             </div>
             <hr class="hr-blue mt-0 mb-0" />
@@ -28,9 +27,10 @@
             {
             <div class="d-flex align-items-center justify-content-evenly" style="height:118px;">
                 <label class="d-flex flex-row user-face">
-                    <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
+                    <img src='@profileImageURL'
+                     onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
                      style="height: 54px;width: 54px;border-radius:50px" />
-                    <div id="name" class="mx-2">Vishal Modi (Super Admin)</div>
+                    <div id="name" class="mx-2">@fullName</div>
                 </label>
             </div>
             }
@@ -39,8 +39,9 @@
             <div class="d-flex align-items-center justify-content-center" style="height:118px;">
                 <div>
                     <div class="d-flex justify-content-center">
-                        <img src='https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg'
-                         style="height: 44px;width: 44px;border-radius:50px" />
+                        <img src='@profileImageURL'
+                         onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                         style="height: 54px;width: 54px;border-radius:50px" />
                     </div>
                     <div class="d-flex justify-content-center">Admin</div>
                 </div>
@@ -51,37 +52,36 @@
             <ul>
 
                 @foreach (var item in menuItems)
-                {
-                    if (!item.IsAdministrationModule)
                     {
-                        if (item.DisplayName == "Log out")
+                        if (!item.IsAdministrationModule)
                         {
-                        <hr class="hr-blue mt-0 mb-0" />
-                        }
+                            if (item.DisplayName == "Log out")
+                            {
+                            <hr class="hr-blue mt-0 mb-0" />
+                            }
 
                         <li @onclick="@(() => NavigateToPage(item))" @onclick:stopPropagation
-                            class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
+                    class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
                             <div class="px-2">
-                                <Web.UI.Shared.Components.CustomIcon.CustomIcons 
-                                IconName="@item.DisplayName" 
-                                PrimaryColor="@(item.DisplayName == "Dashboard" ? "#3066F800":"#3066F8")"
-                                SecondaryColor="#3066F8">
+                                <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.DisplayName"
+                                                                         PrimaryColor="@(item.DisplayName == "Dashboard" ? "#3066F800":"#3066F8")"
+                                                                         SecondaryColor="#3066F8">
                                 </Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                                </div>
+                            </div>
 
                             @if (DrawerExpanded)
-                            {
+                                {
                                 <div class="menu-item-text-color">@item.DisplayName</div>
-                            }
+                                }
                             @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
-                            {
+                                {
                                 <div class="selected-arrow"></div>
-                            }
+                                }
 
                         </li>
 
+                        }
                     }
-                }
             </ul>
         </div>
 

@@ -77,3 +77,5 @@
 /FSM.Blazor_Backup_2022.08.04_10.41.21
 /Web.UI/bin/Debug/net6.0
 /Web.UI/obj
+/FSMAPI/appsettings.Production.json
+/FSM.Blazor/appsettings.Production.json

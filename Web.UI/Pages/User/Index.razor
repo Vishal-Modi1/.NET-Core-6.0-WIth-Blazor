@@ -6,8 +6,12 @@
 
       <TabStripTab>
                     <HeaderTemplate>
-                        <TelerikIcon Icon="email" />
-                        <strong>Users</strong>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mx-2">
+                                <CustomIcons IconName="company" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Users</span>
+                        </div>
                     </HeaderTemplate>
                     <Content>
                         <Web.UI.Pages.User.UsersList ParentModuleName="Administration"></Web.UI.Pages.User.UsersList>
@@ -16,8 +20,12 @@
 
                 <TabStripTab>
                     <HeaderTemplate>
-                        <TelerikIcon Icon="email" />
-                        <strong>Invited Users</strong>
+                         <div class="d-flex justify-content-center align-items-center">
+                            <span class="mx-2">
+                                <CustomIcons IconName="company" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                             <span>Invited Users</span>
+                        </div>
                     </HeaderTemplate>
                     <Content>
                         <Web.UI.Pages.User.InvitedUsersList ParentModuleName="Administration"></Web.UI.Pages.User.InvitedUsersList>

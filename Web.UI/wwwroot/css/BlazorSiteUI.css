@@ -1,10 +1,10 @@
 ﻿@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
 html, body {
-  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
-.k-drawer {
-  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif;
+.k-drawer, .k-tabstrip-items {
+  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 /*NEW COLOR PLATE*/
@@ -169,10 +169,6 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border-right-width: 0;
 }
 
-.menu-item-text-color {
-  color: #121D2D !important;
-}
-
 .k-drawer-mini .k-drawer-wrapper {
   width: 70px;
 }
@@ -216,14 +212,23 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border-bottom: 10px solid transparent;
   border-right: 10px solid #f5f7ff;
 }
+.telerik-blazor.k-drawer .menu-item-text-color {
+  color: #121D2D;
+}
 .telerik-blazor.k-drawer .selected-nav-item {
   background-color: #d4ecf3;
   border-left: 6px solid #3066F8;
   /*Update class according */
 }
+.telerik-blazor.k-drawer .selected-nav-item .menu-item-text-color {
+  color: #3066F8 !important;
+}
 .telerik-blazor.k-drawer .k-drawer-item:hover, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover {
-  color: white;
+  color: white !important;
   background-color: #eee;
+}
+.telerik-blazor.k-drawer .k-drawer-item:hover .menu-item-text-color, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover .menu-item-text-color {
+  color: #3066F8;
 }
 
 .btn.edit-button {
@@ -361,11 +366,16 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .k-tabstrip-top .k-tabstrip-items-wrapper {
   margin-bottom: 0;
 }
+.k-tabstrip-top .k-tabstrip-items-wrapper .k-tabstrip-item.k-item:hover {
+  background-color: #eee;
+  color: #3066F8 !important;
+}
 
 .k-tabstrip-items {
   /*padding: 15px;*/
 }
 .k-tabstrip-items .k-tabstrip-item.k-item .k-link {
+  font-size: 14px;
   color: #111111 !important;
   border-right: 2px solid rgba(17, 17, 17, 0.141);
 }
