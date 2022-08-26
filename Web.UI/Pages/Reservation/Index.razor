@@ -1,9 +1,9 @@
-﻿@*@namespace Web.UI.Pages.Reservation
+﻿@namespace Web.UI.Pages.Reservation
 @using DataModels.Enums
 @using DataModels.VM.Reservation
-@using Configuration;
+@using Configuration
+@using Web.UI.Pages.Scheduler
 
-@layout TelerikLayout
 
 @page "/Reservation"
 
@@ -11,13 +11,6 @@
 {
     <PageTitle>Reservation | Fly Manager </PageTitle>
 }
-
-<style>
-    .e-dialog {
-        max-height: 588px !important;
-    }
-
-</style>
 
 
 <div class="row">
@@ -28,156 +21,188 @@
 
 <div class="row" style="margin-bottom:22px;">
 
-        <div class="col-md-4">
+    <div class="col-md-4">
 
-        <RadzenDatePicker TValue="DateTime?" Name="StartDate" AllowClear="true"
-                          @bind-Value="@startDate" Placeholder="Select Start Date"
-                          Change=@(args => OnStartDateChange(args))
-                          DateFormat="dd/MM/yyyy" Style="width:49.5%" />
+        <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange"
+                           Format="MM/dd/yyyy %h:mm tt" Placeholder="Select Start Date" Id="startDate">
+        </TelerikDatePicker>
 
-        <RadzenDatePicker TValue="DateTime?" Name="EndDate" AllowClear="true"
-                          @bind-Value="@endDate" Placeholder="Select End Date"
-                          Change=@(args => OnEndDateChange(args))
-                          DateFormat="dd/MM/yyyy" Style="width:49.5%"/>
+        <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange"
+                           Format="MM/dd/yyyy %h:mm tt" Id="endDate" Placeholder="Select End Date">
+        </TelerikDatePicker>
+
     </div>
 
     @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
     {
         <div class="col-md-4">
-            <RadzenDropDown @bind-Value="@reservationFilterVM.CompanyId" TValue="int"
-                        TextProperty="Name" Placeholder="Select Company" style="width: 100%;"
-                        Data="@reservationFilterVM.Companies" Change="@(args =>  GetUsersList())"
-                        Name="CompanyId" ValueProperty="Id" AllowClear="true">
-            </RadzenDropDown>
+
+            <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Company" ValueField="Id"
+                         Value="@reservationFilterVM.CompanyId"
+                         ValueExpression="@( () => reservationFilterVM.CompanyId )"
+                         ValueChanged="@( (int value) => GetUsersList(value) )">
+            </TelerikComboBox>
+
+        </div>
+
+        <div class="col-md-4">
+            <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select User" ValueField="Id"
+                         @bind-Value="@reservationFilterVM.UserId"
+                         OnChange="() => grid.Rebind()">
+            </TelerikComboBox>
         </div>
     }
-
-    <div class="col-md-4">
-        <RadzenDropDown @bind-Value="@reservationFilterVM.UserId" TValue="long"
-                        TextProperty="Name" Placeholder="Select User" style="width: 100%;"
-                        Data="@reservationFilterVM.Users" Change="@(args =>  grid.Reload())"
-                        Name="UserId" ValueProperty="Id" AllowClear="true">
-        </RadzenDropDown>
-    </div>
 
     @if (AircraftId == null)
     {
         <div class="col-md-4">
-            <RadzenDropDown @bind-Value="@reservationFilterVM.AircraftId" TValue="long"
-                        TextProperty="Name" Placeholder="Select Aircraft" style="width: 100%;"
-                        Data="@reservationFilterVM.Aircrafts" Change="@(args =>  grid.Reload())"
-                        Name="AircraftId" ValueProperty="Id" AllowClear="true">
-            </RadzenDropDown>
-      </div>
+
+            <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Aircraft" ValueField="Id"
+                         @bind-Value="@reservationFilterVM.AircraftId"
+                         OnChange="() => grid.Rebind()">
+            </TelerikComboBox>
+
+        </div>
     }
 
     <div class="col-md-4">
-        <RadzenTextBox style="width: 100%;" Name="SearchText" Change="@(args =>  grid.Reload())"
-                       Placeholder="Search Reservation" AllowClear="true" @bind-Value="@searchText" />
+
+        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation"
+                        ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
+
     </div>
 
     <div class="col-md-4">
-        <RadzenDropDown @bind-Value="@reservationFilterTypeId" TValue="int"
-                        TextProperty="Name" Placeholder="Select Reservation Type" style="width: 100%;"
-                        Data="@ReservationTypeFilter" Change="@(args =>  grid.Reload())"
-                        Name="ReservationType" ValueProperty="Id" AllowClear="true">
-        </RadzenDropDown>
+
+        <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Reservation Type" ValueField="Id"
+                         @bind-Value="@reservationFilterTypeId"
+                         OnChange="() => grid.Rebind()">
+        </TelerikComboBox>
+
     </div>
 
 </div>
 
-<RadzenDataGrid AllowFiltering="true" @ref="grid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                FilterMode="FilterMode.Simple" AllowPaging="true" IsLoading="@isLoading"
-                PageSize="@pageSize"
-                AllowSorting="true" Data="@data" TItem="ReservationDataVM"
-                PageSizeOptions="@pageSizeOptions"
-                Count="@count" LoadData="@LoadData" ShowPagingSummary="true"
-                PagingSummaryFormat="@pagingSummaryFormat">
-    <Columns>
+<TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-        <RadzenDataGridColumn Width="50px" TItem="ReservationDataVM" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-            <Template Context="value">
-                @(data.IndexOf(value) + 1)
-            </Template>
-        </RadzenDataGridColumn>
+    <GridSettings>
+        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+    </GridSettings>
 
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="ScheduleTitle" Filterable="false" Title="Title"></RadzenDataGridColumn>
+    <GridColumns>
+
+        <GridColumn Field="@nameof(ReservationDataVM.ScheduleTitle)" Title="Title" Sortable="true" />
 
         @if (AircraftId.GetValueOrDefault() == 0)
         {
-            <RadzenDataGridColumn TItem="ReservationDataVM" Property="TailNo" Filterable="false" Title="Aircraft"></RadzenDataGridColumn>
+            <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
         }
 
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="From">
-            <Template Context="value">
+        <GridCommandColumn Context="dataItem" Title="From">
+            @{
+                ReservationDataVM value = dataItem as ReservationDataVM;
+                <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+            }
 
-                @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")
+        </GridCommandColumn>
 
-            </Template>
-        </RadzenDataGridColumn>
+        <GridCommandColumn Context="dataItem" Title="To">
+            @{
+                ReservationDataVM value = dataItem as ReservationDataVM;
+                <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+            }
 
+        </GridCommandColumn>
 
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="EndDateTime" Filterable="false" Title="To">
-            <Template Context="value">
+        <GridCommandColumn Context="dataItem" Title="Flight Hours">
+            @{
+                ReservationDataVM value = dataItem as ReservationDataVM;
+                <label>  @value.AirFrameTime.GetValueOrDefault() </label>
+            }
 
-                @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")
+        </GridCommandColumn>
 
-            </Template>
-        </RadzenDataGridColumn>
+        <GridCommandColumn Context="dataItem" Title="Flight Status">
+            @{
+                ReservationDataVM value = dataItem as ReservationDataVM;
+            }
 
-        <RadzenDataGridColumn Width="90px" TItem="ReservationDataVM" Property="AirFrameTime" Filterable="false" Title="Flight Hours" TextAlign="TextAlign.Center">
-            <Template Context="value">
+            @if (string.IsNullOrWhiteSpace(value.FlightStatus))
+            {
+                <label>Scheduled</label>
+            }
+            else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
+            {
+                <label>Checked Out</label>
+            }
+            else
+            {
+                <label>Checked In</label>
+            }
 
-                @value.AirFrameTime.GetValueOrDefault()
-
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn TItem="ReservationDataVM" Property="FlightStatus" Filterable="false" Title="FlightStatus" TextAlign="TextAlign.Center">
-            <Template Context="value">
-
-                @if (string.IsNullOrWhiteSpace(value.FlightStatus))
-                {
-                    <RadzenBadge BadgeStyle="BadgeStyle.Primary" Text="Scheduled" Style="width:88px;" />
-                }
-                else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
-                {
-                    <RadzenBadge BadgeStyle="BadgeStyle.Success" Text="Checked Out" Style="width:88px;" />
-                }
-                else
-                {
-                    <RadzenBadge BadgeStyle="BadgeStyle.Light" Text="Checked In" Style="width:88px;" />
-                }
-
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn TextAlign="TextAlign.Center" Sortable="false" Filterable="false" TItem="ReservationDataVM" Property="Id" Title="Actions">
-            <Template Context="data">
-
-                <RadzenButton Text="View" ButtonStyle="ButtonStyle.Primary" Click="@((args) => OpenSchedulerDialog(data.Id))">
-                </RadzenButton>
-
-            </Template>
-        </RadzenDataGridColumn>
-    </Columns>
-</RadzenDataGrid>
+        </GridCommandColumn>
 
 
-<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" ShowCloseIcon="true">
+        <GridCommandColumn Context="dataItem" Title="Action">
+            @{
+                ReservationDataVM value = dataItem as ReservationDataVM;
+
+                <TelerikButton Class="btn k-btn-grid-view mx-1" ThemeColor="info" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!isBusyAddButton)">
+                    View
+                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+
+                </TelerikButton>
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+
+        <Body>
+            <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
+                InitializeValuesParentEvent="@InitializeValues"
+                OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
+                RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@ReloadData"></Create>
+
+        </Body>
+
+    </CustomPopupComponent>
+}
+@*<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" ShowCloseIcon="true">
+
+
 
     <DialogTemplates>
-        <Header> <h5>Schedule Appointment</h5> </Header>
-        <Content>
+    <Header> <h5>Schedule Appointment</h5> </Header>
+    <Content>
 
-            <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-                    InitializeValuesParentEvent="@InitializeValues"
-                    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
-                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+    <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
+    InitializeValuesParentEvent="@InitializeValues"
+    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
+    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
 
-        </Content>
+    </Content>
     </DialogTemplates>
 
-</SfDialog>
+    </SfDialog>
 *@

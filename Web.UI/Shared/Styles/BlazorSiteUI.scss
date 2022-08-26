@@ -38,11 +38,11 @@ $DISABLED-TEXT-VDARK: #042455;
 $BG-DARK-BLUE: #022254;
 $BG-LIGHT-BLUE: #3066F8;
 $BG-MENU-ITEM: #0062FE;
-$BG-MENU-ITEM-TEXT-COLOR: #3066f8;
-$BG-MENU-ITEM-SELECTED: #3066F83d;
+$BG-MENU-ITEM-TEXT-COLOR: #121D2D;
+$BG-MENU-ITEM-SELECTED: #d4ecf3;
 $BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
-$BG-MENU-TITLE-HEADER: #3066F8;
-$BG-MENU-ITEM-HOVER: #8bb8ff;
+$BG-MENU-TITLE-HEADER: #121D2D;
+$BG-MENU-ITEM-HOVER: #eee;
 $BG-MAIN-MENU: WHITE;
 
 $BG-BTN-PRIMARY: $BG-LIGHT-BLUE;
@@ -83,7 +83,7 @@ body {
 }
 
 hr {
-    border: 1px solid #3066F8;
+    border: 1px solid #eee;
 }
 .bg-primary-f {
     background-color: $BG-DARK-BLUE;
@@ -221,9 +221,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     }
 }
 
+.k-drawer-top-header {
+    background-color: $BG-MENU-TITLE-HEADER
+}
+
 .user-face {
     padding: 34px;
-    font-size: 16px;
+    font-size: 14px;
     color: black !important;
 }
 
@@ -242,6 +246,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
         .k-drawer-item {
             border-left: 6px solid $BG-MAIN-MENU;
+            font-size:14px;
 
             .selected-arrow {
                 width: 0;
@@ -441,3 +446,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         }
     }
 }
+
+.k-input-solid {
+    
+        background-color: #d4ecf370 !important;
+    }
+
+    .invalid {
+        background-color: #FFD1D178;
+        border: 1px solid #FF0000;
+    }
+

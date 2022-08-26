@@ -11,19 +11,19 @@ using Utilities;
 using DE = DataModels.Entities;
 using Telerik.Blazor;
 using Telerik.Blazor.Components;
+using FSM.Blazor.Data.AircraftSchedule;
 
 namespace Web.UI.Pages.Scheduler
 {
     partial class Index
     {
-
         public TelerikScheduler<SchedulerVM> scheduleRef;
 
         SchedulerVM schedulerVM;
         DE.AircraftEquipmentTime aircraftEquipmentTime = new DE.AircraftEquipmentTime();
 
         List<SchedulerVM> dataSource;
-        public SchedulerView currentView { get; set; } = SchedulerView.Timeline;
+        public SchedulerView currentView { get; set; } = SchedulerView.Week;
 
         public List<string> resources;
         public ObservableCollection<ResourceData> observableAircraftsData { get; set; }
@@ -33,16 +33,17 @@ namespace Web.UI.Pages.Scheduler
         public UIOptions uiOptions = new UIOptions();
 
         string timezone = "";
-        DateTime currentDate = DateTime.Now;
 
         SchedulerFilter schedulerFilter = new SchedulerFilter();
         private bool isDisplayScheduler { get; set; } = false;
         List<DE.Aircraft> allAircraftList = new List<DE.Aircraft>();
         IEnumerable<string> multipleValues = new string[] { "Test" };
-        public DateTime DayStart { get; set; } = new DateTime(2000, 1, 1, 8, 0, 0);
-        public DateTime DayEnd { get; set; } = new DateTime(2000, 1, 1, 20, 0, 0);
-        public DateTime WorkDayStart { get; set; } = new DateTime(2000, 1, 1, 9, 0, 0);
-        public DateTime WorkDayEnd { get; set; } = new DateTime(2000, 1, 1, 17, 0, 0);
+        public DateTime dayStart { get; set; } = new DateTime(2000, 1, 1, 8, 0, 0);
+        public DateTime dayEnd { get; set; } = new DateTime(2000, 1, 1, 20, 0, 0);
+        public DateTime workDayStart { get; set; } = new DateTime(2000, 1, 1, 9, 0, 0);
+        public DateTime workDayEnd { get; set; } = new DateTime(2000, 1, 1, 17, 0, 0);
+        int multiDayDaysCount { get; set; } = 10;
+        DateTime currentDate = DateTime.Now;
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,8 +51,8 @@ namespace Web.UI.Pages.Scheduler
             observableAircraftsData = new ObservableCollection<ResourceData>();
             resources = new List<string>() { "Aircrafts" };
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
+            currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
 
-            DateTime currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
             isDisplayLoader = true;
             InitializeValues();
 
@@ -78,7 +79,7 @@ namespace Web.UI.Pages.Scheduler
             {
                 isDisplayScheduler = false;
 
-                await LoadDataAsync();
+                await LoadDataAsync(currentDate);
 
                 isDisplayScheduler = true;
                 isDisplayLoader = false;
@@ -93,38 +94,24 @@ namespace Web.UI.Pages.Scheduler
         //    }
         //}
 
-        public async Task LoadDataAsync()
+        async Task DateChangedHandler(DateTime currDate)
+        {
+            currentDate = currDate;
+            await LoadDataAsync(currDate);
+        }
+
+        public async Task LoadDataAsync(DateTime currDate)
         {
             isDisplayLoader = true;
             base.StateHasChanged();
 
-            if (scheduleRef != null)
-            {
-                //TODO:
-                //List<DateTime> viewDates = scheduleRef.GetCurrentViewDates();
+            Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currDate, currentView, multiDayDaysCount);
 
-                //schedulerFilter.StartTime = viewDates.First();
-                //schedulerFilter.EndTime = viewDates.Last();
-            }
-            else
-            {
-                schedulerFilter.StartTime = DateTime.UtcNow.Date.AddYears(-1);
-                schedulerFilter.EndTime = DateTime.UtcNow.Date;
-            }
+            schedulerFilter.StartTime = dates.Item1;
+            schedulerFilter.EndTime = dates.Item2;
 
-            //TODO: remove below one
-            schedulerFilter.StartTime = DateTime.UtcNow.Date.AddYears(-1);
-            schedulerFilter.EndTime = DateTime.UtcNow.Date;
-
-            if (schedulerFilter.StartTime != null)
-            {
-                schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, timezone);
-            }
-
-            if (schedulerFilter.EndTime != null)
-            {
-                schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
-            }
+            schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, timezone);
+            schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             dataSource = await AircraftSchedulerService.ListAsync(dependecyParams, schedulerFilter);
@@ -282,7 +269,7 @@ namespace Web.UI.Pages.Scheduler
             }
             else
             {
-                schedulerVM.StartTime =  DateTime.Now;
+                schedulerVM.StartTime = DateTime.Now;
                 schedulerVM.EndTime = DateTime.Now.AddMinutes(30);
             }
 
@@ -338,7 +325,7 @@ namespace Web.UI.Pages.Scheduler
         {
             if (scheduleOperations == ScheduleOperations.Schedule)
             {
-                await LoadDataAsync();
+                await LoadDataAsync(currentDate);
                 return;
             }
 
@@ -403,7 +390,7 @@ namespace Web.UI.Pages.Scheduler
         public async Task DeleteEventAsync()
         {
             //TODO:
-           // await scheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
+            // await scheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
 
             base.StateHasChanged();
         }

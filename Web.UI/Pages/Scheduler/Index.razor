@@ -37,9 +37,10 @@
         </div>
     </div>
 
-    <TelerikScheduler Data="@dataSource" @bind-Date="@currentDate" Height="600px" @bind-View="@currentView"
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" @bind-View="@currentView"
                   OnCreate="@OpenCreateAppointmentDialog" @ref="@scheduleRef"
                   AllowCreate="true"
+                  DateChanged="@DateChangedHandler"
                   IdField="@(nameof(SchedulerVM.Id))"
                   StartField="@(nameof(SchedulerVM.StartTime))"
                   EndField="@(nameof(SchedulerVM.EndTime))"
@@ -50,11 +51,11 @@
         </SchedulerSettings>
 
           <SchedulerViews>
-        <SchedulerDayView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" />
-        <SchedulerWeekView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" />
-        <SchedulerMultiDayView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" NumberOfDays="10" />
-        <SchedulerMonthView></SchedulerMonthView>
-        <SchedulerTimelineView StartTime="@DayStart" EndTime="@DayEnd" WorkDayStart="@WorkDayStart" WorkDayEnd="@WorkDayEnd" />
+        <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMultiDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" NumberOfDays="@multiDayDaysCount" />
+        <SchedulerMonthView ></SchedulerMonthView>
+        <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
     </SchedulerViews>
 
         <SchedulerResources>

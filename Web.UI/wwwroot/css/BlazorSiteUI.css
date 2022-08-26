@@ -28,7 +28,7 @@ body {
 }
 
 hr {
-  border: 1px solid #3066F8;
+  border: 1px solid #eee;
 }
 
 .bg-primary-f {
@@ -128,7 +128,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .main .content .left-header {
   max-height: 54px;
   min-height: 54px;
-  background-color: #3066F8;
+  background-color: #121D2D;
   color: white;
 }
 
@@ -148,7 +148,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*LEFT MENU NAV BAR*/
 .menu-item-text-color {
-  color: #3066f8 !important;
+  color: #121D2D !important;
 }
 
 .k-drawer-mini .k-drawer-wrapper {
@@ -159,15 +159,19 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   width: 270px !important;
 }
 
+.k-drawer-top-header {
+  background-color: #121D2D;
+}
+
 .user-face {
   padding: 34px;
-  font-size: 16px;
+  font-size: 14px;
   color: black !important;
 }
 
 .k-button.drawer-hamburger {
   background: transparent;
-  color: #3066f8 !important;
+  color: #121D2D !important;
   border: 0;
   box-shadow: none;
   padding: 34px;
@@ -179,6 +183,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .telerik-blazor.k-drawer .k-drawer-item {
   border-left: 6px solid WHITE;
+  font-size: 14px;
 }
 .telerik-blazor.k-drawer .k-drawer-item .selected-arrow {
   width: 0;
@@ -190,13 +195,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border-right: 10px solid #f5f7ff;
 }
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: #3066F83d;
+  background-color: #d4ecf3;
   border-left: 6px solid #3066F8;
   /*Update class according */
 }
 .telerik-blazor.k-drawer .k-drawer-item:hover, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover {
   color: white;
-  background-color: #8bb8ff;
+  background-color: #eee;
 }
 
 .btn.edit-button {
@@ -348,4 +353,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border-bottom: 4px solid #3066F8;
   /*background: $BG-ACTIVE-TAB !important;
   color: $WHITE-TEXT !important;*/
+}
+
+.k-input-solid {
+  background-color: #d4ecf370 !important;
+}
+
+.invalid {
+  background-color: #FFD1D178;
+  border: 1px solid #FF0000;
 }

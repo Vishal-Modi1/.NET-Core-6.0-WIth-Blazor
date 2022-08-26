@@ -20,5 +20,6 @@ namespace DataModels.VM.Reservation
         public string Member1 { get; set; }
         public string Instructor { get; set; }
         public long? InstructorId { get; set; }
+        public bool IsButtonLoading { get; set; }
     }
 }

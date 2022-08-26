@@ -16,11 +16,11 @@
                @ref="@DrawerRef"
                @bind-SelectedItem="@SelectedItem">
         <Template>
-            <div class="d-flex align-items-center @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
+            <div class="d-flex align-items-center k-drawer-top-header @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
                 <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Class="drawer-hamburger">
                     <Web.UI.Shared.Components.CustomIcon.CustomIcons 
                     IconName="Menu" 
-                    PrimaryColor="@("#3066F8")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                    PrimaryColor="@("white")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
                 </TelerikButton>
             </div>
             <hr class="hr-blue mt-0 mb-0" />

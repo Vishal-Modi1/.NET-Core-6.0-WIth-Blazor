@@ -14,5 +14,8 @@ namespace Web.UI.Shared.Components.CustomIcon
         [Parameter]
         public bool IsTransparent { get; set; }
 
+        string iconHeight = "17";
+        string iconWidth = "17";
+
     }
 }

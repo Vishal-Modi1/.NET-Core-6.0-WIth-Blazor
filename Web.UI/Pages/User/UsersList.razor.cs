@@ -12,15 +12,13 @@ namespace Web.UI.Pages.User
     partial class UsersList
     {
         [CascadingParameter] public TelerikGrid<UserDataVM> grid { get; set; }
-        //[CascadingParameter] public RadzenDropDown<int> roleFilter { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
         [Parameter] public int? CompanyIdParam { get; set; }
 
         UserFilterVM userFilterVM;
 
         UserVM userData;
-        string message = "";
-        string moduleName = "User";
+        string message = "", moduleName = "User";
         bool isBusyUpdateStatusButton;
         List<UserDataVM> data;
 
