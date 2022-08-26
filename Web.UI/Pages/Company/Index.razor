@@ -73,7 +73,7 @@
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
                     <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>CompanyCreateDialog(companyVM)" Enabled=!companyVM.IsLoadingEditButton>
-                        <CustomIcons IconName="edit"></CustomIcons>
+                        <CustomIcons IconName="grid-edit"></CustomIcons>
                         <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="companyVM.IsLoadingEditButton">
                         </TelerikLoader>
                     </TelerikButton>
@@ -82,9 +82,11 @@
                 // TODO:
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
-                        <CustomIcons IconName="delete"></CustomIcons>
-                    </TelerikButton>
+                    <CustomIcons IconName="grid-delete"></CustomIcons>
+
+                    //<TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
+                    //    <CustomIcons IconName="delete"></CustomIcons>
+                    //</TelerikButton>
                 }
             }
         </GridCommandColumn>

@@ -25,7 +25,7 @@
             <hr class="hr-blue mt-0 mb-0" />
             @if (DrawerExpanded)
             {
-            <div class="d-flex align-items-center justify-content-evenly" style="height:118px;">
+            <div class="d-flex align-items-center justify-content-evenly" style="height:95px;">
                 <label class="d-flex flex-row user-face">
                     <img src='@profileImageURL'
                      onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
@@ -36,14 +36,13 @@
             }
             else
             {
-            <div class="d-flex align-items-center justify-content-center" style="height:118px;">
+            <div class="d-flex align-items-center justify-content-center" style="height:95px;margin-top:25px">
                 <div>
                     <div class="d-flex justify-content-center">
                         <img src='@profileImageURL'
                          onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
                          style="height: 54px;width: 54px;border-radius:50px" />
                     </div>
-                    <div class="d-flex justify-content-center">Admin</div>
                 </div>
             </div>
             }
@@ -64,8 +63,7 @@
                     class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
                             <div class="px-2">
                                 <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.DisplayName"
-                                                                         PrimaryColor="@(item.DisplayName == "Dashboard" ? "#3066F800":"#3066F8")"
-                                                                         SecondaryColor="#3066F8">
+                                                                         PrimaryColor="#3066F8">
                                 </Web.UI.Shared.Components.CustomIcon.CustomIcons>
                             </div>
 
