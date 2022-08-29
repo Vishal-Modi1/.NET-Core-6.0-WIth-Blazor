@@ -532,3 +532,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .k-btn-grid-download {
     background-color: $BLUE-COLOR !important
 }
+
+.initial-data-loader .k-loader-container-overlay.k-overlay-light {
+    background-color: white;
+}
+
+.k-loader-container {
+    z-index: 100;
+}

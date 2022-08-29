@@ -16,10 +16,6 @@ namespace Web.UI.Pages.AircraftMake
 
         IList<AircraftMakeDataVM> data;
         string moduleName = Module.Aircraft.ToString();
-
-        bool isDisplayPopup { get; set; }
-        string popupTitle { get; set; }
-
         DE.AircraftMake _aircraftMake { get; set; }
 
         protected override async Task OnInitializedAsync()

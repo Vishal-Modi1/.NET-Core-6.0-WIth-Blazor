@@ -17,7 +17,7 @@ namespace Web.UI.Pages.UserRolePermission
         UserRolePermissionFilterVM userrolePermissionFilterVM;
         UserRolePermissionDataVM userRolePermissionDataVM;
 
-        bool isAllow, isForWebApp, isAllowForMobileApp;
+        bool isAllow, isForWebApp, isAllowForMobileApp, IsInitialDataLoadComplete;
         string popupTitle, message;
         string moduleName = "UserRolePermission";
         IEnumerable<UserRolePermissionDataVM> selectedItems = new List<UserRolePermissionDataVM>();
@@ -43,6 +43,7 @@ namespace Web.UI.Pages.UserRolePermission
 
         async Task LoadData(GridReadEventArgs args)
         {
+            IsInitialDataLoadComplete = true;
             UserRolePermissionDatatableParams datatableParams = new DatatableParams().Create(args, "Name").Cast<UserRolePermissionDatatableParams>();
 
             datatableParams.CompanyId = userrolePermissionFilterVM.CompanyId;
@@ -55,6 +56,8 @@ namespace Web.UI.Pages.UserRolePermission
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
             selectedItems = data.Where(p => p.IsAllowed).ToList();
+
+            IsInitialDataLoadComplete = false;
         }
 
         private void OnCompanyValueChanges(int selectedValue)

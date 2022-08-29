@@ -19,7 +19,6 @@
                     <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Location" ValueChanged="@( (string value) => OnSearchValueChanges<LocationDataVM>(value, grid) )" />
                 </div>
 
-
                 <div class="col-md-4">
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => LocationCreateDialog(new LocationDataVM())" Enabled="@(!isBusyAddButton)">
                         <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">

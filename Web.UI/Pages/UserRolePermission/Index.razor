@@ -8,7 +8,6 @@
 
 @page "/UserRolePermission"
 
-
 <div class="row">
     <div class="col">
         <h2 style="float:left">Manage Users Permissions</h2>
@@ -48,6 +47,17 @@
 
 </div>
 
+<div style="position: relative; width:100%; min-height: 400px;">
+    <TelerikLoaderContainer OverlayThemeColor="light"
+                            Visible="@(IsInitialDataLoadComplete)"
+                            Text="@null" Class="initial-data-loader">
+        <Template>
+            <TelerikLoader Type="@LoaderType.InfiniteSpinner"
+                           Size="@(ThemeConstants.Loader.Size.Large)">
+            </TelerikLoader>
+        </Template>
+    </TelerikLoaderContainer>
+
 <TelerikGrid TItem="UserRolePermissionDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
              SelectionMode="GridSelectionMode.Multiple" SelectedItems="@selectedItems"
@@ -56,7 +66,6 @@
     <GridSettings>
 
         <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-
     </GridSettings>
 
     <GridColumns>
@@ -96,10 +105,11 @@
             //    </Template>
             //</RadzenDataGridColumn>
         }
-
     </GridColumns>
 
 </TelerikGrid>
+
+</div>
 
 @*@if (isDisplayPopup)
     //{
