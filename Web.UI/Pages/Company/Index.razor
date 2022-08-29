@@ -20,7 +20,7 @@
                 {
                     <div class="col-md-4">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
-                            Add <CustomIcons IconName="add"></CustomIcons>
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
                         </TelerikButton>
                     </div>
                 }
@@ -67,26 +67,28 @@
                 CompanyVM companyVM = dataItem as CompanyVM;
 
                 <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenCompanyDetailPage(companyVM)">
-                    <CustomIcons IconName="settings"></CustomIcons>
+                    <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>CompanyCreateDialog(companyVM)" Enabled=!companyVM.IsLoadingEditButton>
-                        <CustomIcons IconName="grid-edit"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="companyVM.IsLoadingEditButton">
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>CompanyCreateDialog(companyVM)"
+                           ThemeColor="success" Enabled=!companyVM.IsLoadingEditButton>
+
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="companyVM.IsLoadingEditButton">
                         </TelerikLoader>
+
                     </TelerikButton>
                 }
 
                 // TODO:
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                    <CustomIcons IconName="grid-delete"></CustomIcons>
-
-                    //<TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
-                    //    <CustomIcons IconName="delete"></CustomIcons>
-                    //</TelerikButton>
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    </TelerikButton>
                 }
             }
         </GridCommandColumn>

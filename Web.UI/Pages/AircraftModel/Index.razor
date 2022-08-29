@@ -1,6 +1,6 @@
 ﻿@namespace Web.UI.Pages.AircraftModel
 @using DataModels.Enums
-@using DataModels.VM.AircraftMake
+@using DataModels.VM.AircraftModel
 
 @layout TelerikLayout
 
@@ -8,18 +8,18 @@
 
 <div class="row">
     <div class="col d-flex justify-content-between">
-        <div><h4>Manage Aircraft Makes</h4></div>
+        <div><h4>Manage Aircraft Models</h4></div>
         <div>
             <div class="row d-flex justify-content-end my-2">
                 <div class="col-md-8">
-                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftMakeDataVM>(value, grid) )" />
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftModelDataVM>(value, grid) )" />
                 </div>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
                 {
                     <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftMakeCreateDialog(new AircraftMakeDataVM())">
-                            Add <CustomIcons IconName="add"></CustomIcons>
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftModelCreateDialog(new AircraftModelDataVM())">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
                         </TelerikButton>
                     </div>
                 }
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<TelerikGrid TItem="AircraftMakeDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+<TelerikGrid TItem="AircraftModelDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
     <GridSettings>
@@ -37,27 +37,32 @@
 
     <GridColumns>
 
-        <GridColumn Field="@nameof(AircraftMakeDataVM.Name)" />
+        <GridColumn Field="@nameof(AircraftModelDataVM.Name)" />
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{
-                AircraftMakeDataVM aircraftMakeDataVM = dataItem as AircraftMakeDataVM;
+                AircraftModelDataVM aircraftModelDataVM = dataItem as AircraftModelDataVM;
 
                 // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 // {
-                <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>AircraftMakeCreateDialog(aircraftMakeDataVM)"
-                           Enabled=!aircraftMakeDataVM.IsLoadingEditButton>
-                    <CustomIcons IconName="edit"></CustomIcons>
-                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="aircraftMakeDataVM.IsLoadingEditButton">
+
+                 <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftModelCreateDialog(aircraftModelDataVM)"
+                           ThemeColor="success" Enabled=!aircraftModelDataVM.IsLoadingEditButton>
+
+                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="aircraftModelDataVM.IsLoadingEditButton">
                     </TelerikLoader>
+
                 </TelerikButton>
+           
                 //  }
 
                 // TODO:
                 // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 //  {
-                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftMakeDataVM)">
-                    <CustomIcons IconName="delete"></CustomIcons>
+                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftModelDataVM)">
+                   <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
                 // }
             }
@@ -77,13 +82,13 @@
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                <Web.UI.Pages.AircraftMake.Create AircraftMake=@_aircraftMake CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.AircraftMake.Create>
+                <Web.UI.Pages.AircraftModel.Create AircraftModel=@_aircraftModel CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.AircraftModel.Create>
             }
             else
             {
                 //Delete popup
                 <div>
-                    <p class="mb-4">Are you sure, You want to remove <b> @_aircraftMake.Name </b>?</p>
+                    <p class="mb-4">Are you sure, You want to remove <b> @_aircraftModel.Name </b>?</p>
                     <div class="row" style="text-align:right">
                         <div class="col">
 
@@ -91,7 +96,7 @@
                             {
                             }
 
-                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_aircraftMake.Id)" Enabled="@(!isBusyDeleteButton)">
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_aircraftModel.Id)" Enabled="@(!isBusyDeleteButton)">
                                 Yes
                                 <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
                                 </TelerikLoader>

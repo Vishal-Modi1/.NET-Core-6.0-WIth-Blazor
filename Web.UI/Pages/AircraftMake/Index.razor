@@ -19,7 +19,7 @@
                 {
                     <div class="col-md-4">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftMakeCreateDialog(new AircraftMakeDataVM())">
-                            Add <CustomIcons IconName="add"></CustomIcons>
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
                         </TelerikButton>
                     </div>
                 }
@@ -45,11 +45,15 @@
 
                 // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 // {
-                <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>AircraftMakeCreateDialog(aircraftMakeDataVM)"
-                           Enabled=!aircraftMakeDataVM.IsLoadingEditButton>
-                    <CustomIcons IconName="edit"></CustomIcons>
-                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="aircraftMakeDataVM.IsLoadingEditButton">
+
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftMakeCreateDialog(aircraftMakeDataVM)"
+                           ThemeColor="success" Enabled=!aircraftMakeDataVM.IsLoadingEditButton>
+
+                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="aircraftMakeDataVM.IsLoadingEditButton">
                     </TelerikLoader>
+
                 </TelerikButton>
                 //  }
 
@@ -57,7 +61,7 @@
                 // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 //  {
                 <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftMakeDataVM)">
-                    <CustomIcons IconName="delete"></CustomIcons>
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
                 // }
             }

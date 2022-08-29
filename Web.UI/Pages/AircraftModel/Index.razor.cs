@@ -1,8 +1,8 @@
 ﻿using DataModels.VM.Common;
-using Web.UI.Data.AircraftMake;
+using Web.UI.Data.AircraftModel;
 using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
-using DataModels.VM.AircraftMake;
+using DataModels.VM.AircraftModel;
 using DataModels.Enums;
 using DE = DataModels.Entities;
 using Web.UI.Extensions;
@@ -12,15 +12,15 @@ namespace Web.UI.Pages.AircraftModel
 {
     partial class Index
     {
-        [CascadingParameter] public TelerikGrid<AircraftMakeDataVM> grid { get; set; }
+        [CascadingParameter] public TelerikGrid<AircraftModelDataVM> grid { get; set; }
 
-        IList<AircraftMakeDataVM> data;
+        IList<AircraftModelDataVM> data;
         string moduleName = Module.Aircraft.ToString();
 
         bool isDisplayPopup { get; set; }
         string popupTitle { get; set; }
 
-        DE.AircraftMake _aircraftMake { get; set; }
+        DE.AircraftModel _aircraftModel { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -35,39 +35,39 @@ namespace Web.UI.Pages.AircraftModel
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
             
-            data = await AircraftMakeService.ListAsync(dependecyParams, datatableParams);
+            data = await AircraftModelService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
         }
 
-        async Task AircraftMakeCreateDialog(AircraftMakeDataVM aircraftMake)
+        async Task AircraftModelCreateDialog(AircraftModelDataVM aircraftModel)
         {
-            _aircraftMake = new DE.AircraftMake();
-            _aircraftMake.Id = aircraftMake.Id;
-            _aircraftMake.Name = aircraftMake.Name;
+            _aircraftModel = new DE.AircraftModel();
+            _aircraftModel.Id = aircraftModel.Id;
+            _aircraftModel.Name = aircraftModel.Name;
 
-            if (_aircraftMake.Id == 0)
+            if (_aircraftModel.Id == 0)
             {
                 operationType = OperationType.Create;
                 isBusyAddButton = true;
-                popupTitle = "Add Make";
+                popupTitle = "Add Model";
             }
             else
             {
                 operationType = OperationType.Edit;
-                popupTitle = "Edit Make";
-                aircraftMake.IsLoadingEditButton = true;
+                popupTitle = "Edit Model";
+                aircraftModel.IsLoadingEditButton = true;
             }
 
             isDisplayPopup = true;
 
-            if (_aircraftMake.Id == 0)
+            if (_aircraftModel.Id == 0)
             {
                 isBusyAddButton = false;
             }
             else
             {
-                aircraftMake.IsLoadingEditButton = false;
+                aircraftModel.IsLoadingEditButton = false;
             }
         }
 
@@ -84,7 +84,7 @@ namespace Web.UI.Pages.AircraftModel
         async Task DeleteAsync(int id)
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            CurrentResponse response = await AircraftMakeService.DeleteAsync(dependecyParams, id);
+            CurrentResponse response = await AircraftModelService.DeleteAsync(dependecyParams, id);
 
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 
@@ -98,16 +98,16 @@ namespace Web.UI.Pages.AircraftModel
             }
         }
 
-        async Task OpenDeleteDialog(AircraftMakeDataVM aircraftMake)
+        async Task OpenDeleteDialog(AircraftModelDataVM aircraftModel)
         {
             isDisplayPopup = true;
             operationType = OperationType.Delete;
-            _aircraftMake = new DE.AircraftMake();
+            _aircraftModel = new DE.AircraftModel();
 
-            _aircraftMake.Id = aircraftMake.Id;
-            _aircraftMake.Name = aircraftMake.Name;
+            _aircraftModel.Id = aircraftModel.Id;
+            _aircraftModel.Name = aircraftModel.Name;
 
-            popupTitle = "Delete Make";
+            popupTitle = "Delete Model";
         }
     }
 }

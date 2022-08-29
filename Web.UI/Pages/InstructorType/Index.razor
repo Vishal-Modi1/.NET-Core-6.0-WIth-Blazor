@@ -21,7 +21,7 @@
             {
                 <div class="col-md-4">
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InstructorTypeCreateDialog(new InstructorTypeVM())">
-                        Add <CustomIcons IconName="add"></CustomIcons>
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
                     </TelerikButton>
                 </div>
             }
@@ -44,13 +44,13 @@
             @{
                 InstructorTypeVM instructorTypeVM = dataItem as InstructorTypeVM;
 
-                <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>InstructorTypeCreateDialog(instructorTypeVM)">
-                    <CustomIcons IconName="edit"></CustomIcons>
-
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InstructorTypeCreateDialog(instructorTypeVM)"
+                           ThemeColor="success">
+                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
 
-                <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(instructorTypeVM)">
-                    <CustomIcons IconName="delete"></CustomIcons>
+                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(instructorTypeVM)">
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
             }
         </GridCommandColumn>

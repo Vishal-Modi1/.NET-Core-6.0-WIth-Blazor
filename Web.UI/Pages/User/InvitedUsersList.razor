@@ -23,7 +23,7 @@
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
-                Invite User
+                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Invite User
                  <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
             </TelerikButton>
         }
@@ -77,11 +77,12 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InviteUserDialog(userData)"
+                     <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InviteUserDialog(userData)"
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
-                        <CustomIcons IconName="edit"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="userData.IsLoadingEditButton">
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="userData.IsLoadingEditButton">
                         </TelerikLoader>
 
                     </TelerikButton>
@@ -89,8 +90,8 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
-                        <CustomIcons IconName="delete"></CustomIcons>
+                     <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                     </TelerikButton>
                 }
             }
