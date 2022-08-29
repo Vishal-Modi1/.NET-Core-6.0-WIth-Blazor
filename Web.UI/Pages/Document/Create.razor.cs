@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Telerik.Blazor.Components;
+using DataModels.Enums;
 
 namespace Web.UI.Pages.Document
 {
@@ -17,7 +18,8 @@ namespace Web.UI.Pages.Document
         [Parameter] public DocumentVM documentData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        //RadzenAutoComplete autoComplete;
+        TelerikMultiSelect<DocumentTagVM, int> autoComplete { get; set; }
+        List<int> values { get; set; }
 
         string uploadedFilePath = "";
         public long userId = long.MaxValue;
@@ -28,8 +30,11 @@ namespace Web.UI.Pages.Document
         public long maxFileSize = ConfigurationSettings.Instance.MaxDocumentUploadSize;
         List<string> supportedDocumentsFormat = ConfigurationSettings.Instance.SupportedDocuments.Split(new String[] { ","}, StringSplitOptions.RemoveEmptyEntries).ToList();
         int maxSizeInMB = 1;
-        string errorMessage = "";
-        List<string> selectedTagsList = new List<string>();
+        public EditContext editContext { get; set; }
+        string errorMessage;
+        bool isFileUploadHasError;
+        bool isDisplayChildPopup = false;
+
         //RadzenTemplateForm<DocumentVM> form;
 
         public string ToAbsoluteUrl(string url)
@@ -48,11 +53,13 @@ namespace Web.UI.Pages.Document
 
                 if (!string.IsNullOrWhiteSpace(documentData.Tags))
                 {
-                    selectedTagsList = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    values =  documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p=> Convert.ToInt32(p)).ToList();
                 }
 
                // OnChange(documentData.CompanyId);
             }
+
+            editContext = new EditContext(documentData);
 
             maxSizeInMB = (int)ConfigurationSettings.Instance.MaxDocumentUploadSize / (1024 * 1024);
             errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
@@ -72,57 +79,36 @@ namespace Web.UI.Pages.Document
             base.StateHasChanged();
         }
 
-        //public void Enter(KeyboardEventArgs e)
-        //{
-        //    if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        //    {
-        //        string[] listTags = autoComplete.Value.ToString().Split(",", StringSplitOptions.RemoveEmptyEntries);
-
-        //        if (listTags.Length == 0)
-        //        {
-        //            return;
-        //        }
-
-        //        foreach (string tag in listTags)
-        //        {
-        //            if (!selectedTagsList.Contains(tag))
-        //            {
-        //                selectedTagsList.Add(tag);
-        //            }
-
-        //            autoComplete.Value = "";
-        //        }
-
-        //    }
-        //}
-
         private async Task UploadFilesAsync()
         {
-            //if (!form.EditContext.Validate())
-            //{
-            //    return;
-            //}
+            isFileUploadHasError = false;
+
+            if (!editContext.Validate())
+            {
+                return;
+            }
 
             if ((selectedFiles == null || selectedFiles.Count() == 0) && documentData.Id == Guid.Empty)
             {
-                //await OpenErrorDialog("Please upload document.");
+                isFileUploadHasError = true;
+                errorMessage = "Please upload document";
                 return;
             }
 
             if (selectedFiles != null && selectedFiles.Count() > 0 && selectedFiles[0].Size > maxFileSize)
             {
-                //await OpenErrorDialog(errorMessage);
+                isFileUploadHasError = true;
                 return;
             }
 
             isBusySubmitButton = true;
 
-            if (documentData.UserId == 0 && userId == long.MaxValue)
-            {
-                documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-            }
+            //if (documentData.UserId == 0 && userId == long.MaxValue)
+            //{
+            //    documentData.UserId = userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+            //}
 
-            documentData.UserId = userId;
+            //documentData.UserId = userId;
             byte[] fileData = new byte[0];
 
             if (!string.IsNullOrWhiteSpace(uploadedFilePath))
@@ -149,7 +135,7 @@ namespace Web.UI.Pages.Document
             multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
             multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
-            multiContent.Add(new StringContent(String.Join(",", selectedTagsList)), "Tags");
+            multiContent.Add(new StringContent(String.Join(",", values)), "Tags");
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -158,19 +144,6 @@ namespace Web.UI.Pages.Document
             isBusySubmitButton = false;
 
             ManageFileUploadResponse(response, "Document Details");
-        }
-
-        public void RemoveTag(string value)
-        {
-            selectedTagsList.Remove(value);
-        }
-
-        public void SubmitFormIgnore(KeyboardEventArgs e)
-        {
-            if (e.Code == "Enter")
-            {
-                return;
-            }
         }
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary)
@@ -194,6 +167,7 @@ namespace Web.UI.Pages.Document
 
         async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
+            isFileUploadHasError = false;
             documentData.DisplayName = "";
             selectedFiles = e.GetMultipleFiles();
 
@@ -203,7 +177,8 @@ namespace Web.UI.Pages.Document
                 {
                     if (file.Size > maxFileSize)
                     {
-                       // await OpenErrorDialog(errorMessage);
+                        errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
+                        isFileUploadHasError = true;
                         return;
                     }
 
@@ -230,33 +205,27 @@ namespace Web.UI.Pages.Document
             this.StateHasChanged();
         }
 
-        void OntestChange(object value)
-        {
-            var selectedTag = documentData.DocumentTagsList.Where(p => p.TagName == value).FirstOrDefault();
-
-            if (selectedTag != null)
-            {
-                if (!selectedTagsList.Contains(selectedTag.TagName))
-                {
-                    selectedTagsList.Add(selectedTag.TagName);
-                }
-                
-                //autoComplete.Value = "";
-            }
-        }
-
         public async Task OpenCreateTagDialogAsync()
         {
-            //await DialogService.OpenAsync<DocumentTag.Create>("Create",
-            //      null, new DialogOptions() { Width = "500px", Height = "300px" });
-
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+            popupTitle = "Create Tag";
+            isDisplayChildPopup = true;
+                      
         }
 
-        public void CloseDialog(bool isCancelled)
+        public void CloseDialog(bool reloadGrid)
         {
-            CloseDialogCallBack.InvokeAsync(isCancelled);
+            CloseDialogCallBack.InvokeAsync(reloadGrid);
+        }
+
+        public async Task CloseChildDialog(bool reloaList)
+        {
+            isDisplayChildPopup = false;
+
+            if (reloaList)
+            {
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.CustomValidations;
+using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,7 +24,7 @@ namespace DataModels.VM.Document
 
         public long? TotalShares { get; set; }
 
-        [Required(ErrorMessage = "Last share date is required")]
+        [RequiredIf("IsShareable", true, ErrorMessage = "Last share date is required")]
         public DateTime? LastShareDate { get; set; }
 
         public bool IsShareable { get; set; }
@@ -32,13 +33,13 @@ namespace DataModels.VM.Document
 
         public DateTime? ExpirationDate { get; set; }
 
-        [Required(ErrorMessage = "Company is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Company is required")]
         public int CompanyId { get; set; }
 
-        [Required(ErrorMessage = "User is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "User is required")]
         public long UserId { get; set; }
 
-        [Required(ErrorMessage = "Module is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Document type is required")]
         public int ModuleId { get; set; }
 
         [NotMapped]

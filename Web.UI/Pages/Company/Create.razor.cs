@@ -9,7 +9,6 @@ namespace Web.UI.Pages.Company
 {
     public partial class Create
     {
-
         [Parameter] public CompanyVM companyData { get; set; }
         [Parameter] public bool IsInvited { get; set; }
 

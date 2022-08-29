@@ -3,7 +3,7 @@
 @using DataModels.VM.Common;
 @using DataModels.Constants;
 
-<TelerikForm Model="@documentData" OnValidSubmit="@UploadFilesAsync">
+<TelerikForm Model="@documentData" EditContext="@editContext" OnValidSubmit="@UploadFilesAsync">
 
     <FormValidation>
         <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -26,12 +26,13 @@
 
                 <div class="col-md-6">
 
-                    @*  <TelerikUpload AllowedExtensions="@supportedDocumentsFormat" SaveUrl="@SaveUrl"
-                        OnSelect="@OnInputFileChangeAsync">
-                        </TelerikUpload>*@
-
                     <InputFile Id="" OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName"
                                accept="@supportedDocumentsFormat" />
+
+                    @if (isFileUploadHasError)
+                    {
+                        <span>@errorMessage</span>
+                    }
                 </div>
 
                 <div class="col-md-6">
@@ -50,16 +51,16 @@
 
                 <div class="col-md-12">
 
-                    @*  <RadzenAutoComplete Placeholder="Search a tag..." Data=@documentData.DocumentTagsList @onkeyup="@Enter"
-                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" @ref="@autoComplete"
-                        TextProperty="TagName" Change=@(args => OntestChange(args)) Style="width: 100%;" />
+                    <TelerikMultiSelect @ref="@autoComplete" Data="@documentData.DocumentTagsList"
+                                        @bind-Value="@values" AutoClose="false" Placeholder="Search a tag..."
+                                        TextField="TagName" ValueField="Id">
+                    </TelerikMultiSelect>
 
-                        <RadzenButton Click=@(args => OpenCreateTagDialogAsync()) Icon="add_circle_outline" ButtonStyle="ButtonStyle.Primary" />
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick=@(args => OpenCreateTagDialogAsync())
+                                   Class="btn k-btn-primary" ThemeColor="primary">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons>
 
-                        @foreach (var data in selectedTagsList)
-                        {
-                        <RadzenButton Click=@(args => RemoveTag(data)) Text="@data" Icon="highlight_off" ButtonStyle="ButtonStyle.Light" />
-                        }*@
+                    </TelerikButton>
 
                 </div>
             </div>
@@ -99,16 +100,14 @@
                         </div>
                         <div class="col-md-12 align-items-center d-flex">
 
-                            @*<TelerikComboBox Id=userId Data="@documentData.UsersList" TextField="Name"
+                            <TelerikComboBox Id=userId Data="@documentData.UsersList" TextField="Name"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select User" ValueField="Id" @bind-Value="@(documentData.UserId)">
-                            </TelerikComboBox>*@
+                            </TelerikComboBox>
 
-                            <TelerikTextBox Id="displayName" @bind-Value="@documentData.DisplayName" PlaceHolder="Display Name"></TelerikTextBox>
-
-                            <div class="col-md-12 align-items-center d-flex">
-                                <TelerikValidationMessage For="@(() => documentData.UserId)"></TelerikValidationMessage>
-                            </div>
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
+                            <TelerikValidationMessage For="@(() => documentData.UserId)"></TelerikValidationMessage>
                         </div>
                     </div>
                 </div>
@@ -136,7 +135,6 @@
                     </div>
                 </div>
             }
-
 
             <div class="row">
                 <div class="col-md-6 align-items-center d-flex">
@@ -176,7 +174,7 @@
             </div>
 
         </div>
-        s
+
     </FormItems>
 
     <FormButtons>
@@ -203,27 +201,18 @@
 
 </TelerikForm>
 
-@code {
-    private void MyValueChangeHandler(int theUserChoice)
-    {
-        documentData.CompanyId = theUserChoice;
-    }
+@if (isDisplayChildPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            <Web.UI.Pages.Document.DocumentTag.Create CloseDialogCallBack="@CloseChildDialog">
+
+            </Web.UI.Pages.Document.DocumentTag.Create>
+
+        </Body>
+    </CustomPopupComponent>
 }
-@*@code {
-
-    async Task OpenErrorDialog(string message)
-    {
-    var result = await DialogService.OpenAsync("Error", ds =>
-    @<div>
-    <p class="mb-4"> @message </p>
-    <div class="row" style="text-align:right">
-    <div class="col">
-
-    <RadzenButton Text="Close" Click="() => ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
-
-    </div>
-    </div>
-    </div>
-    , new DialogOptions { Width = "360px" });
-    }
-    }*@

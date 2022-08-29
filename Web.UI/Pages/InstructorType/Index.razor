@@ -21,7 +21,7 @@
             {
                 <div class="col-md-4">
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InstructorTypeCreateDialog(new InstructorTypeVM())">
-                        Add New
+                        Add <CustomIcons IconName="add"></CustomIcons>
                     </TelerikButton>
                 </div>
             }
@@ -44,21 +44,14 @@
             @{
                 InstructorTypeVM instructorTypeVM = dataItem as InstructorTypeVM;
 
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>InstructorTypeCreateDialog(instructorTypeVM)">
-                        <CustomIcons IconName="edit"></CustomIcons>
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success" OnClick="()=>InstructorTypeCreateDialog(instructorTypeVM)">
+                    <CustomIcons IconName="edit"></CustomIcons>
 
-                    </TelerikButton>
-                }
+                </TelerikButton>
 
-                // TODO:
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                {
-                    <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(instructorTypeVM)">
-                        <CustomIcons IconName="delete"></CustomIcons>
-                    </TelerikButton>
-                }
+                <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(instructorTypeVM)">
+                    <CustomIcons IconName="delete"></CustomIcons>
+                </TelerikButton>
             }
         </GridCommandColumn>
 

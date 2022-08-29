@@ -79,3 +79,5 @@
 /Web.UI/obj
 /FSMAPI/appsettings.Production.json
 /FSM.Blazor/appsettings.Production.json
+/Web.UI/appsettings.Development.json
+/FSMAPI/appsettings.Development.json

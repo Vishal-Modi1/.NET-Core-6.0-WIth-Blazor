@@ -19,9 +19,9 @@
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
         {
             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
-                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                <CustomIcons IconName="upload" PrimaryColor="White"></CustomIcons> 
+               Upload <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                 </TelerikLoader>
-                Add New
             </TelerikButton>
         }
 
@@ -120,7 +120,7 @@
             <GridColumn Field="@nameof(DocumentDataVM.UserName)" Title="User" Sortable="true" />
         }
 
-        <GridCommandColumn Context="dataItem" Title="Name">
+        <GridCommandColumn Context="dataItem" Title="Expiration Date">
             @{
                 DocumentDataVM value = dataItem as DocumentDataVM;
                 string date = "-";
@@ -137,37 +137,27 @@
         <GridCommandColumn Context="dataItem" Title="Name">
             @{
                 DocumentDataVM value = dataItem as DocumentDataVM;
+                bool isShareble = !value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date);
 
-                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error"
+                <TelerikButton Class="btn k-btn-grid-download mx-1" ThemeColor="error"
                            OnClick="()=>DownloadDocument(value)" Enabled=!value.IsLoadingDownloadButton>
-                    <CustomIcons IconName="download"></CustomIcons>
+                    <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
                     @value.TotalDownloads.ToString()
                     <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
                     </TelerikLoader>
                 </TelerikButton>
 
-                @if (!value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date))
-                {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" Enabled="false" ThemeColor="success" OnClick="()=>OpenShareDocumentDialog(value.Id)">
-                        <CustomIcons IconName="share"></CustomIcons>
-                        @value.TotalShares.ToString()
-                    </TelerikButton>
-                }
-                else
-                {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" ThemeColor="success"
-                           OnClick="()=>OpenShareDocumentDialog(value.Id)">
-                        <CustomIcons IconName="share"></CustomIcons>
-                        @value.TotalShares.ToString()
-                    </TelerikButton>
-                }
+                <TelerikButton Class="btn k-btn-grid-share mx-1" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
+                    <CustomIcons IconName="grid-share" PrimaryColor="white"></CustomIcons>
+                    @value.TotalShares.ToString()
+                </TelerikButton>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
                     <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>DocumentCreateDialog(value)"
                            ThemeColor="success" Enabled=!value.IsLoadingEditButton>
 
-                        <CustomIcons IconName="edit"></CustomIcons>
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                         <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
                                Visible="value.IsLoadingEditButton">
                         </TelerikLoader>
@@ -178,7 +168,7 @@
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
                     <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
-                        <CustomIcons IconName="delete"></CustomIcons>
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                     </TelerikButton>
                 }
             }

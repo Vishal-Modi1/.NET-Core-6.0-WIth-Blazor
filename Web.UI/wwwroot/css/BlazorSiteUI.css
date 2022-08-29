@@ -23,6 +23,7 @@ $BG-BTN-LIGHT: #022A6A;
 $BG-BTN-DARK: #022A6A;
 $BG-BTN-LINK: #022A6A;*/
 /*Card BACKGROUND COLOR */
+/*Custom Colors*/
 body {
   background: #E1DEDE !important;
 }
@@ -80,8 +81,11 @@ form .row {
   margin-bottom: 16px;
 }
 
-.telerik-blazor.k-invalid input {
-  background: rgba(220, 53, 69, 0.25);
+.telerik-blazor.k-invalid input, .telerik-blazor.k-invalid button {
+  background: #ffd1d178;
+}
+.telerik-blazor.k-invalid button {
+  background: #ffd1d1;
 }
 
 /*img {
@@ -402,4 +406,20 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .invalid {
   background-color: #FFD1D178;
   border: 1px solid #FF0000;
+}
+
+.k-btn-grid-delete {
+  background-color: #c00 !important;
+}
+
+.k-btn-grid-edit {
+  background-color: #009B51 !important;
+}
+
+.k-btn-grid-share {
+  background-color: #673AB7 !important;
+}
+
+.k-btn-grid-download {
+  background-color: #0d6efd !important;
 }
