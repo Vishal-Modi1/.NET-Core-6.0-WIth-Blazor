@@ -1,4 +1,4 @@
-﻿.modal {
+﻿/*.modal {
     position: fixed;
     z-index: 1055;
     width: 100%;
@@ -15,20 +15,23 @@
 
     .modal-dialog {
         z-index: 1055;
-        border-radius: 0.2rem;
         background-color: #ffffff;
+        border-radius: 12px;
     }
 
     .modal-header {
         border-radius: 0.2rem 0.2rem 0 0;
-        height:50px;
+        height: 50px;
     }
 
     .modal-content {
         border-radius: 0.2rem;
+        background-color: #fff0;
+        border: 0;
     }
 
     .modal-backdrop.show {
-        opacity: .2;
+        opacity: .8;
     }
 }
+*/

@@ -9,8 +9,12 @@
 <PageTitle>Aircraft | Fly Manager </PageTitle>
 
 <div class="row">
-    <div class="col">
-        <h2 style="float:left">Manage Aircrafts Details</h2>
+    <div class="col d-flex justify-content-between">
+        <div class="component-title">
+            <span>
+                Manage Aircrafts Details
+            </span>
+        </div>
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
         {
@@ -23,31 +27,29 @@
         }
 
     </div>
+    <hr class="hr-blue mt-3 mb-3" />
 </div>
+ <div class="row">
+    <div class="col d-flex justify-content-between">
+        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+        {
+            <div class="col-md-4">
 
-<div class="row" style="margin-bottom:22px;">
+                <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
+                             ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Company" ValueField="Id">
+                </TelerikComboBox>
 
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-    {
+            </div>
+        }
         <div class="col-md-4">
-
-            <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
-                         ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id">
-            </TelerikComboBox>
-
+            <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText"
+                            OnChange="@(args =>  RefreshGrid())" />
         </div>
-    }
-
-    <div class="col-md-4">
-
-        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText"
-                        OnChange="@(args =>  RefreshGrid())" />
-
     </div>
-
-</div>
+    <hr class="hr-blue mt-3 mb-3" />
+ </div>
 
 <TelerikTabStrip>
 
@@ -62,7 +64,7 @@
         </HeaderTemplate>
         <Content>
 
-            <TelerikListView @ref="dataListView"
+            <TelerikListView @ref="dataListView" Class="row"
                              Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
                              OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
 
@@ -73,20 +75,21 @@
                 </ListViewSettings>
 
                 <Template>
+                    <div class="col-12 col-md-2 col-lg-2">
+                        <a @onclick="@(() => OpenDetailPage(context.Id))" style="cursor:pointer">
+                            <TelerikCard Width="300px">
+                                <CardHeader>
+                                    <CardTitle>@context.TailNo</CardTitle>
+                                </CardHeader>
+                                <img onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+                                @*<CardImage Src="@context.ImagePath" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"></CardImage>*@
 
-                    <a @onclick="@(() => OpenDetailPage(context.Id))" style="cursor:pointer">
-                        <TelerikCard Width="300px" >
-                            <CardHeader>
-                                <CardTitle>@context.TailNo</CardTitle>
-                            </CardHeader>
-                            <img onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-                            @*<CardImage Src="@context.ImagePath" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"></CardImage>*@
-                            
-                            <CardFooter>
-                                <span>@context.TailNo</span>
-                            </CardFooter>
-                        </TelerikCard>
+                                <CardFooter>
+                                    <span>@context.TailNo</span>
+                                </CardFooter>
+                            </TelerikCard>
                         </a>
+                    </div>
                 </Template>
 
             </TelerikListView>

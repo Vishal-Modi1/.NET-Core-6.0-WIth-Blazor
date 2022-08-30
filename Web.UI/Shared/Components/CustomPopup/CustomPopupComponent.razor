@@ -3,7 +3,7 @@
         <div class="modal-content" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
             <div class="modal-header @(HeaderCssClass)">
                 <h5 class="modal-title text-white">@Title</h5>
-                <button onclick="@Close" class="close-button">
+                <button onclick="@Close" class="close-button d-none">
                     <TelerikIcon Icon="x"></TelerikIcon>
                 </button>
             </div>
