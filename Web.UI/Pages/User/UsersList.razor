@@ -17,23 +17,26 @@
 
 <div class="row">
     <div class="col d-flex justify-content-between">
-        <div><h4>Manage Users Details</h4></div>
         <div>
-            <div class="row d-flex justify-content-end m-2">
+            <ComponentTitle Title="Manage Users Details" Type="AdministrationTitle" />
+        </div>
+        <div>
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
                 {
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())" Enabled="@(!isBusyAddButton)">
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                        </TelerikLoader>
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
-                    </TelerikButton>
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())" Enabled="@(!isBusyAddButton)">
+                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                </div>
+                   
                 }
-            </div>
         </div>
     </div>
 </div>
 
-<div class="row" style="margin-bottom:22px;">
+<div class="row my-2" >
     <div class="col-md-4">
         <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"

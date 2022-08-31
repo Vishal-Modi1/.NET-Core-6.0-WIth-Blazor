@@ -1,33 +1,34 @@
 ﻿@namespace Web.UI.Pages.AircraftMake
 @using DataModels.Enums
 @using DataModels.VM.AircraftMake
-
+@using Web.UI.Shared.Components;
 @layout TelerikLayout
 
 @page "/AircraftMake"
 
 <div class="row">
-    <div class="col d-flex justify-content-between">
-        <div><h4>Manage Aircraft Makes</h4></div>
+    <div class="col-12 d-flex justify-content-between">
         <div>
-            <div class="row d-flex justify-content-end my-2">
-                <div class="col-md-8">
-                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftMakeDataVM>(value, grid) )" />
+            <ComponentTitle Title="Manage Aircraft Makes" Type="AdministrationTitle" />
+        </div>
+        <div>
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftMakeCreateDialog(new AircraftMakeDataVM())">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    </TelerikButton>
                 </div>
-
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-                {
-                    <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftMakeCreateDialog(new AircraftMakeDataVM())">
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
-                        </TelerikButton>
-                    </div>
-                }
-            </div>
+            }
         </div>
     </div>
 </div>
-
+<div class="row my-2">
+    <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftMakeDataVM>(value, grid) )" />
+    </div>
+</div>
+ 
 <TelerikGrid TItem="AircraftMakeDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 

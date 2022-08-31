@@ -3,18 +3,23 @@
 @using DataModels.VM.UserRolePermission
 @using Web.UI.Utilities;
 @using Configuration;
+@using Web.UI.Shared.Components;
 
 @layout TelerikLayout
 
 @page "/UserRolePermission"
 
 <div class="row">
-    <div class="col">
-        <h2 style="float:left">Manage Users Permissions</h2>
+    <div class="col d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Manage Users Permissions" Type="AdministrationTitle" />
+        </div>
+        <div>
+                <!--ADD BUTTONS HERE IF ANY-->
+        </div>
     </div>
 </div>
-
-<div class="row" style="margin-bottom:22px;">
+<div class="row my-2">
     <div class="col-md-4">
 
         <TelerikComboBox Id=roleId Data="@userrolePermissionFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"

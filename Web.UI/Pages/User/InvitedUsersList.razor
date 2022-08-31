@@ -17,23 +17,29 @@
 
 
 <div class="row">
-    <div class="col d-flex justify-content-between m-2">
-        <h2 style="float:left">Manage Invited Users Details</h2>
+    <div class="col d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Manage Invited Users Details" Type="AdministrationTitle" />
+        </div>
+        <div>
 
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
-        {
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
-                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Invite User
-                 <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
-            </TelerikButton>
-        }
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Invite User
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
+                    </TelerikButton>
+                </div>
+            }
 
+        </div>
     </div>
 </div>
 
-<div class="row" style="margin-bottom:22px;">
+<div class="row my-2">
     <div class="col-md-4">
-         <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
+        <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                          Placeholder="Select Role" ValueField="Id">
         </TelerikComboBox>
@@ -43,7 +49,7 @@
     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
     {
         <div class="col-md-4">
-          
+
             <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                          Placeholder="Select Company" ValueField="Id">
@@ -60,13 +66,13 @@
 <TelerikGrid TItem="InviteUserDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-     <GridSettings>
+    <GridSettings>
         <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
     </GridSettings>
 
     <GridColumns>
 
-     
+
 
         <GridColumn Field="@nameof(InviteUserDataVM.Email)" Title="First Name" Sortable="true"></GridColumn>
         <GridColumn Field="@nameof(InviteUserDataVM.Role)" Title="Last Name" Sortable="true"></GridColumn>
@@ -77,7 +83,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                     <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InviteUserDialog(userData)"
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InviteUserDialog(userData)"
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
                         <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
@@ -90,7 +96,7 @@
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                     <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
                         <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                     </TelerikButton>
                 }
@@ -118,7 +124,7 @@
 
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                             {
-                                 <TelerikButton Class="mr-1 btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>DeleteAsync(userData.Id)">
+                                <TelerikButton Class="mr-1 btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>DeleteAsync(userData.Id)">
                                     Yes
                                 </TelerikButton>
                             }

@@ -5,39 +5,69 @@
 @using DataModels.VM.Scheduler;
 @using DataModels.Entities;
 @using DataModels.VM;
+@using Web.UI.Shared.Components;
 
 @page "/Scheduler"
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
-
-@*@if (isDisplayScheduler)
-{*@
-    <div class="row" style="margin-bottom:2%">
-        <div class="col-md-2 align-items-center d-flex" style="margin-right: -8%;margin-left: 0.5%;">
-            <label for="firstName" class="k-label k-form-label">Select aircraft: </label>
+<div class="row">
+    <div class="col-12 d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
         </div>
-        <div class="col-md-4" style="margin-right: 7%;">
-
-           @* <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleValues" Placeholder="Select aircraft"
-                            TextField="TailNo" ValueField="TailNo" OnChange="@OnAircraftsListChange" />
-*@
-                <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@TheValues" 
-                    TextField="TailNo" ValueField="Id" />
-
-        </div>
-
-        <div class="col-md-6">
-
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
-                       Enabled="@(!isBusyAddButton)">
-                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                </TelerikLoader>
-                Add <CustomIcons IconName="add"></CustomIcons>
-            </TelerikButton>
+        <div>
+            <div class="col-md-4">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                               Enabled="@(!isBusyAddButton)">
+                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                </TelerikButton>
+            </div>
         </div>
     </div>
+</div>
+<div class="row my-2">
+    <div class="col-md-2 col-sm-6 me-2">
+        <ComponentTitle Title="Select aircraft:" Type="AdministrationTitle" />
+    </div>
+    <div class="col-md-2 col-sm-6 mx-2">
+        <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@TheValues"
+                            TextField="TailNo" ValueField="Id" />
+    </div>
+</div>
+<!--OLD CODE-->
+<!--
+@*@if (isDisplayScheduler)
+{*@
+<div class="row" style="margin-bottom:2%">
+    <div class="col-md-2 align-items-center d-flex" style="margin-right: -8%;margin-left: 0.5%;">
+        <label for="firstName" class="k-label k-form-label">Select aircraft: </label>
+    </div>
+    <div class="col-md-4" style="margin-right: 7%;">
 
-    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" @bind-View="@currentView"
+@* <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleValues" Placeholder="Select aircraft"
+        TextField="TailNo" ValueField="TailNo" OnChange="@OnAircraftsListChange" />
+        *@
+        <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@TheValues"
+                            TextField="TailNo" ValueField="Id" />
+
+    </div>
+
+    <div class="col-md-6">
+        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                       Enabled="@(!isBusyAddButton)">
+            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+            </TelerikLoader>
+            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+        </TelerikButton>
+    </div>
+</div>
+
+-->
+
+
+<TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" @bind-View="@currentView"
                   OnCreate="@OpenCreateAppointmentDialog" @ref="@scheduleRef"
                   AllowCreate="true"
                   DateChanged="@DateChangedHandler"
@@ -46,23 +76,23 @@
                   EndField="@(nameof(SchedulerVM.EndTime))"
                   TitleField="@(nameof(SchedulerVM.DisplayTitle))">
 
-        <SchedulerSettings>
-            <SchedulerGroupSettings Resources="@resources" Orientation="SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
-        </SchedulerSettings>
+    <SchedulerSettings>
+        <SchedulerGroupSettings Resources="@resources" Orientation="SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
+    </SchedulerSettings>
 
-          <SchedulerViews>
+    <SchedulerViews>
         <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
         <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
         <SchedulerMultiDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" NumberOfDays="@multiDayDaysCount" />
-        <SchedulerMonthView ></SchedulerMonthView>
+        <SchedulerMonthView></SchedulerMonthView>
         <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
     </SchedulerViews>
 
-        <SchedulerResources>
-            <SchedulerResource Field="Aircrafts" TextField="AircraftTailNo" ValueField="Id" Data="@observableAircraftsData"></SchedulerResource>
-        </SchedulerResources>
+    <SchedulerResources>
+        <SchedulerResource Field="Aircrafts" TextField="AircraftTailNo" ValueField="Id" Data="@observableAircraftsData"></SchedulerResource>
+    </SchedulerResources>
 
-    </TelerikScheduler>
+</TelerikScheduler>
 @*
     <SfSchedule AllowResizing="false" TValue="SchedulerVM" Height="auto"
             @ref="@ScheduleRef" ShowQuickInfo="false" @bind-SelectedDate="@currentDate"
@@ -119,7 +149,7 @@
 
 </SfDialog>
 *@
-@code{
+@code {
     List<int> TheValues { get; set; }
     List<OptionsModel> Options { get; set; } = new List<OptionsModel>
     {

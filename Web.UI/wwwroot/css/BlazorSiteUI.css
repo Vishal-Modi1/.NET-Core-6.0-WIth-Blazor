@@ -1,5 +1,5 @@
 ﻿@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
-html, body {
+html, body, .selected-font {
   font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 

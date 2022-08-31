@@ -1,30 +1,31 @@
 ﻿@namespace Web.UI.Pages.AircraftModel
 @using DataModels.Enums
 @using DataModels.VM.AircraftModel
-
+@using Web.UI.Shared.Components;
 @layout TelerikLayout
 
 @page "/AircraftModel"
 
 <div class="row">
-    <div class="col d-flex justify-content-between">
-        <div><h4>Manage Aircraft Models</h4></div>
+    <div class="col-12 d-flex justify-content-between">
         <div>
-            <div class="row d-flex justify-content-end my-2">
-                <div class="col-md-8">
-                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftModelDataVM>(value, grid) )" />
-                </div>
-
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-                {
-                    <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftModelCreateDialog(new AircraftModelDataVM())">
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
-                        </TelerikButton>
-                    </div>
-                }
-            </div>
+            <ComponentTitle Title="Manage Aircraft Models" Type="AdministrationTitle" />
         </div>
+        <div>
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftModelCreateDialog(new AircraftModelDataVM())">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    </TelerikButton>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftModelDataVM>(value, grid) )" />
     </div>
 </div>
 
@@ -46,7 +47,7 @@
                 // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 // {
 
-                 <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftModelCreateDialog(aircraftModelDataVM)"
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftModelCreateDialog(aircraftModelDataVM)"
                            ThemeColor="success" Enabled=!aircraftModelDataVM.IsLoadingEditButton>
 
                     <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
@@ -55,14 +56,14 @@
                     </TelerikLoader>
 
                 </TelerikButton>
-           
+
                 //  }
 
                 // TODO:
                 // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 //  {
                 <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftModelDataVM)">
-                   <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
                 // }
             }

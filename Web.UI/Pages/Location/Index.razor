@@ -5,31 +5,31 @@
 @using DataModels.VM.Location
 @using Web.UI.Utilities;
 @using Configuration;
+@using Web.UI.Shared.Components;
 
 @layout TelerikLayout
 
 @page "/Location"
-
 <div class="row">
-    <div class="col d-flex justify-content-between">
-        <div><h4>Manage Locations Details</h4></div>
+    <div class="col-12 d-flex justify-content-between">
         <div>
-            <div class="row d-flex justify-content-end my-2">
-                <div class="col-md-8">
-                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Location" ValueChanged="@( (string value) => OnSearchValueChanges<LocationDataVM>(value, grid) )" />
-                </div>
-
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => LocationCreateDialog(new LocationDataVM())" Enabled="@(!isBusyAddButton)">
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                        </TelerikLoader>
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
-                    </TelerikButton>
-                </div>
-
+            <ComponentTitle Title="Manage Locations Details" Type="AdministrationTitle" />
+        </div>
+        <div>
+            <div class="col-md-4">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => LocationCreateDialog(new LocationDataVM())" Enabled="@(!isBusyAddButton)">
+                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                </TelerikButton>
             </div>
         </div>
     </div>
+</div>
+<div class="row my-2">
+        <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Location" ValueChanged="@( (string value) => OnSearchValueChanges<LocationDataVM>(value, grid) )" />
+        </div>
 </div>
 
 <TelerikGrid TItem="LocationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"

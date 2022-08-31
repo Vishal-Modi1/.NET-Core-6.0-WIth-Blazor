@@ -3,30 +3,32 @@
 @using Web.UI.Data.InstructorType
 @using DataModels.VM.InstructorType
 @using Configuration;
+@using Web.UI.Shared.Components;
 
 @layout TelerikLayout
-
 @page "/InstructorType"
 
 <div class="row">
-    <div class="col d-flex justify-content-between">
-        <h2>Manage Instructor Types Details</h2>
-
-        <div class="row my-2">
-            <div class="col-md-8">
-                <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<InstructorTypeVM>(value, grid) )" />
-            </div>
-
+    <div class="col-12 d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Manage Instructor Types Details" Type="AdministrationTitle" />
+        </div>
+        <div>
             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
             {
                 <div class="col-md-4">
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InstructorTypeCreateDialog(new InstructorTypeVM())">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add 
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
                     </TelerikButton>
                 </div>
             }
         </div>
     </div>
+</div>
+<div class="row my-2">
+        <div class="col-md-4">
+            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<InstructorTypeVM>(value, grid) )" />
+        </div>
 </div>
 
 <TelerikGrid TItem="InstructorTypeVM" OnRead="@LoadData" Pageable="true" @ref="@grid"

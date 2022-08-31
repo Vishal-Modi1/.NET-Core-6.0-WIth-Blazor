@@ -3,53 +3,48 @@
 @using DataModels.VM.Aircraft
 @using DataModels.Enums;
 @using DataModels.VM.AircraftMake
+@using Web.UI.Shared.Components;
 
 @page "/Aircraft"
 
 <PageTitle>Aircraft | Fly Manager </PageTitle>
-
 <div class="row">
-    <div class="col d-flex justify-content-between">
-        <div class="component-title">
-            <span>
-                Manage Aircrafts Details
-            </span>
+    <div class="col-12 d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Manage Aircrafts Details" Type="AdministrationTitle" />
         </div>
-
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
-        {
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
-                       OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
-                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                </TelerikLoader>
-                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-            </TelerikButton>
-        }
-
+        <div>
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+            {
+                <div class="col-md-4">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                           OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
+                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                </TelerikButton>
+                 </div>
+            }
+        </div>
     </div>
-    <hr class="hr-blue mt-3 mb-3" />
 </div>
- <div class="row">
-    <div class="col d-flex justify-content-between">
-        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-        {
-            <div class="col-md-4">
-
-                <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
-                             ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                             Placeholder="Select Company" ValueField="Id">
-                </TelerikComboBox>
-
-            </div>
-        }
+<div class="row my-2">
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+    {
         <div class="col-md-4">
-            <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText"
-                            OnChange="@(args =>  RefreshGrid())" />
+            <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
+                         ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Company" ValueField="Id">
+            </TelerikComboBox>
         </div>
+    }
+    <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
-    <hr class="hr-blue mt-3 mb-3" />
- </div>
+</div>
+
+   @* <hr class="hr-blue mt-3 mb-3" />*@
 
 <TelerikTabStrip>
 
