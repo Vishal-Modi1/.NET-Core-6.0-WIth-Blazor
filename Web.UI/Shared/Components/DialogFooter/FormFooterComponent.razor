@@ -1,6 +1,6 @@
 ﻿@if (id == 0)
 {
-    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!IsSubmitButtonLoading)">
+    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!IsSubmitButtonLoading)">
         Save
         <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
         </TelerikLoader>
@@ -9,7 +9,7 @@
 }
 else
 {
-    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!IsSubmitButtonLoading)">
+    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success mx-1" Enabled="@(!IsSubmitButtonLoading)">
         Update
         <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
         </TelerikLoader>
@@ -17,7 +17,7 @@ else
     </TelerikButton>
 }
 
-<TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!IsSubmitButtonLoading)">
+<TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline"  Class="mx-1 k-btn-secondary-outline" Enabled="@(!IsSubmitButtonLoading)">
     Cancel
 </TelerikButton>
 

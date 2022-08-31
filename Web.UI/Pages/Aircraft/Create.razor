@@ -354,7 +354,7 @@
                                         <TelerikButton ButtonType="ButtonType.Submit" Class=""> Next </TelerikButton>
                                     }
 
-                                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
                                         Cancel
                                     </TelerikButton>
                                 }
@@ -375,7 +375,6 @@
             </TelerikWizard>
 
         </div>
-
     </FormItems>
 
     <FormButtons></FormButtons>

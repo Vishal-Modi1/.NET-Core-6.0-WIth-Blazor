@@ -52,6 +52,7 @@ $BG-BTN-DANGER: #EE0808;
 $BG-BTN-DANGER-HOVER: #CA2323;
 $BG-BTN-INFO: #008EA4;
 $BG-BTN-INFO-HOVER: #17A2B8;
+$BG-SECONDARY: #979797;
 /*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
@@ -371,8 +372,20 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     &.k-btn-secondary:hover {
         color: white;
     }
-}
 
+    
+}
+.k-button {
+    &.k-button-Outline-secondary {
+        border-color: $BG-SECONDARY !important;
+        color: $BG-SECONDARY !important;
+    }
+
+    &.k-button-Outline-secondary:hover {
+        border-color: $BG-SECONDARY !important;
+        color: $BG-SECONDARY !important;
+    }
+}
 .login-button {
     width: 100% !important;
 }
@@ -425,14 +438,21 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     background: none;
     color: #FFFF;
 }
-
-.k-actions-start {
+.hr-gray {
+    border: 1px solid #bfbfbf;
+}
+.k-form-buttons {
+    margin-top: 0;
+}
+.k-form-buttons.k-actions-start {
+    justify-content: flex-end !important;
+    display: flex !important;
+}
+/*.k-actions-start {
     justify-content: flex-end;
 }
+*/
 
-.cancel-btn {
-    margin-left: 8px;
-}
 /*TelerikTabStrip END*/
 
 /*Telerik toastr notification*/

@@ -278,6 +278,15 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: white;
 }
 
+.k-button.k-button-Outline-secondary {
+  border-color: #979797 !important;
+  color: #979797 !important;
+}
+.k-button.k-button-Outline-secondary:hover {
+  border-color: #979797 !important;
+  color: #979797 !important;
+}
+
 .login-button {
   width: 100% !important;
 }
@@ -326,14 +335,23 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: #FFFF;
 }
 
-.k-actions-start {
-  justify-content: flex-end;
+.hr-gray {
+  border: 1px solid #bfbfbf;
 }
 
-.cancel-btn {
-  margin-left: 8px;
+.k-form-buttons {
+  margin-top: 0;
 }
 
+.k-form-buttons.k-actions-start {
+  justify-content: flex-end !important;
+  display: flex !important;
+}
+
+/*.k-actions-start {
+    justify-content: flex-end;
+}
+*/
 /*TelerikTabStrip END*/
 /*Telerik toastr notification*/
 .sm-notification {

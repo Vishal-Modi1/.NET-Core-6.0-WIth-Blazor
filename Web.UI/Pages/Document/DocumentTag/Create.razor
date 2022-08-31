@@ -21,13 +21,10 @@
                 <TelerikValidationMessage For="@(() => documentTagVM.TagName)"></TelerikValidationMessage>
             </div>
         </div>
-
+        <hr class="hr-gray mt-3 mb-3" />
     </FormItems>
     <FormButtons>
-
-        <hr style="margin-top:35px" />
-
-        <div class="row" style="margin-bottom:0px">
+        <div class="row">
             <div class="col-md-12 text-right">
 
                 <FormFooterComponent id="@documentTagVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
