@@ -339,6 +339,10 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border: 1px solid #bfbfbf;
 }
 
+.hr-blue {
+  border: 1px solid #EBECF3;
+}
+
 .k-form-buttons {
   margin-top: 0;
 }
@@ -418,7 +422,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-solid {
-  background-color: #d4ecf370 !important;
+  background-color: #FCFCFC !important;
 }
 
 .invalid {
@@ -456,6 +460,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   font-weight: 500;
   font-size: 18px;
   line-height: 23px;
+}
+
+.custom-elipse {
+  box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
+  width: 40px;
+  height: 40px;
 }
 
 /*Modal style*/
