@@ -10,7 +10,7 @@ namespace DataModels.VM.Aircraft
     {
         public long Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tail no is required")]
         [Display(Name = "Tail No")]
         public string TailNo { get; set; }
 
@@ -22,23 +22,27 @@ namespace DataModels.VM.Aircraft
         public string File { get; set; }
         [Display(Name = "year")]
         public string Year { get; set; }
+
+        [Range(1, byte.MaxValue,ErrorMessage = "Aircraft status is required")]
         public byte AircraftStatusId { get; set; }
 
-        [Required]
+        [Range(1, byte.MaxValue, ErrorMessage = "Aircraft make is required")]
         [Display(Name = "Make")]
         public int AircraftMakeId { get; set; }
 
-        [Required]
+        [Range(1, byte.MaxValue, ErrorMessage = "Aircraft model is required")]
         [Display(Name = "Model")]
         public int AircraftModelId { get; set; }
 
-        [Required]
+        [Range(1, byte.MaxValue, ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
         public int AircraftCategoryId { get; set; }
 
+        [Required(ErrorMessage = "Class is required")]
         [Display(Name = "Class")]
         public Nullable<int> AircraftClassId { get; set; }
 
+        [Required(ErrorMessage = "Flight Simulator is required")]
         [Display(Name = "Flight Simulator")]
         public Nullable<int> FlightSimulatorClassId { get; set; }
 
@@ -63,7 +67,7 @@ namespace DataModels.VM.Aircraft
         [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Company is required")]
         public int? CompanyId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -73,7 +77,6 @@ namespace DataModels.VM.Aircraft
         public long CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
-
 
         //Dropdowns list
 

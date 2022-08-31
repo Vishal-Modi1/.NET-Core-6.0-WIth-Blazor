@@ -99,8 +99,15 @@ namespace Web.UI.Pages.Aircraft
 
         void RefreshGrid()
         {
-            dataGridView.Rebind();
-            dataListView.Rebind();
+            if (dataGridView != null)
+            {
+                dataGridView.Rebind();
+            }
+
+            if (dataListView != null)
+            {
+                dataListView.Rebind();
+            }
         }
 
         async Task AircraftCreateDialog(AircraftDataVM aircraftVM)

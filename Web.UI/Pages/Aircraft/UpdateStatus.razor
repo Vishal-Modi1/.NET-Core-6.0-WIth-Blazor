@@ -1,0 +1,52 @@
+﻿@using DataModels.VM.Aircraft
+@using Web.UI.Utilities;
+@using DataModels.Enums;
+
+
+<TelerikForm Model="@aircraftData" OnValidSubmit="@Update">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="popup-content">
+
+            <input type="hidden" value="@aircraftData.Id" name="Id" />
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="status" class="k-label k-form-label">Aircraft Status</label>
+                </div>
+                <div class="col-md-12">
+
+
+                    <TelerikComboBox Id=status Data="@aircraftData.AircraftStatusList" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Status" ValueField="Id" @bind-Value="@aircraftData.AircraftStatusId">
+                    </TelerikComboBox>
+
+                     <TelerikValidationMessage For="@(() => aircraftData.AircraftStatusId)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+        </div>
+
+    </FormItems>
+
+    <FormButtons>
+        <hr />
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="0" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+
+            </div>
+        </div>
+    </FormButtons>
+
+
+
+</TelerikForm>
