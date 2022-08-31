@@ -1,11 +1,20 @@
 ﻿@namespace Web.UI.Pages.Dashboard
+@using Web.UI.Shared.Components;
 @page "/"
 
 
 <PageTitle>Dashboard | Fly Manager </PageTitle>
-
-<h1>Dasboard</h1>
-<button @onclick="@(() => LoadData())">Load data</button>
+<div class="row">
+    <div class="col-12 d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Dasboard" Type="AdministrationTitle" />
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</div>
+<div>Welcome...</div>
 @* TODO 
 <AuthorizeView>
     <div class="container-fluid p-0" style="position: relative">
