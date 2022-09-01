@@ -44,6 +44,7 @@ namespace Web.UI.Pages.Scheduler
         public DateTime workDayEnd { get; set; } = new DateTime(2000, 1, 1, 17, 0, 0);
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
+        List<int> TheValues { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -118,8 +119,8 @@ namespace Web.UI.Pages.Scheduler
 
             dataSource.ForEach(x =>
             {
-                x.StartTime = DateConverter.ToLocal(x.StartTime, timezone);
-                x.EndTime = DateConverter.ToLocal(x.EndTime, timezone);
+                x.StartTime = Convert.ToDateTime(DateConverter.ToLocal(x.StartTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
+                x.EndTime = Convert.ToDateTime(DateConverter.ToLocal(x.EndTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
 
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {

@@ -25,9 +25,9 @@
                 {
                     <div class="col-md-4">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())" Enabled="@(!isBusyAddButton)">
-                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                            </TelerikLoader>
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                             <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
                         </TelerikButton>
                 </div>
                    
@@ -90,14 +90,13 @@
         <GridColumn Field="@nameof(UserDataVM.UserRole)" Title="User Role" Sortable="true"></GridColumn>
         <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company Name" Sortable="true"></GridColumn>
 
-        <GridColumn Context="dataItem" Title="Status" Sortable="true">
+        <GridColumn Context="dataItem" Title="Is Active" Sortable="true">
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
                     <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserStatusDialog(data)"
                                  Id="@("chkIsActive"+ data.Id)" @bind-Value="@(data.IsActive)" />
                 }
-
             </Template>
         </GridColumn>
 

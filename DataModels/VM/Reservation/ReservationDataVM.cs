@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.Reservation
 {
@@ -20,6 +21,8 @@ namespace DataModels.VM.Reservation
         public string Member1 { get; set; }
         public string Instructor { get; set; }
         public long? InstructorId { get; set; }
+
+        [NotMapped]
         public bool IsButtonLoading { get; set; }
     }
 }

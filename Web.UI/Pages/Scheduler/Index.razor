@@ -74,7 +74,9 @@
                   IdField="@(nameof(SchedulerVM.Id))"
                   StartField="@(nameof(SchedulerVM.StartTime))"
                   EndField="@(nameof(SchedulerVM.EndTime))"
-                  TitleField="@(nameof(SchedulerVM.DisplayTitle))">
+                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))">
 
     <SchedulerSettings>
         <SchedulerGroupSettings Resources="@resources" Orientation="SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
@@ -149,18 +151,3 @@
 
 </SfDialog>
 *@
-@code {
-    List<int> TheValues { get; set; }
-    List<OptionsModel> Options { get; set; } = new List<OptionsModel>
-    {
-        new OptionsModel { StringRepresentation = "first",  MyValueField = 1 },
-        new OptionsModel { StringRepresentation = "second", MyValueField = 2 },
-        new OptionsModel { StringRepresentation = "third",  MyValueField = 3 }
-    };
-
-    public class OptionsModel
-    {
-        public string StringRepresentation { get; set; }
-        public int MyValueField { get; set; } // this determines the type of the values list
-    }
-}

@@ -52,17 +52,13 @@ namespace Web.UI.Pages.Company
             {
                  CloseDialog(true);
             }
-            else
-            {
-                 CloseDialog(false);
-            }
 
             isBusySubmitButton = false;
         }
 
-        public void CloseDialog(bool isCancelled)
+        public void CloseDialog(bool reloadGrid)
         {
-            CloseDialogCallBack.InvokeAsync(isCancelled);
+            CloseDialogCallBack.InvokeAsync(reloadGrid);
         }
 
         async void GotoNextStep()

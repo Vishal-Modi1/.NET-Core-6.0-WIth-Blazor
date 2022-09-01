@@ -12,15 +12,18 @@ namespace Web.UI.Pages.UserRolePermission
     partial class Index
     {
         [CascadingParameter] public TelerikGrid<UserRolePermissionDataVM> grid { get; set; }
+        [CascadingParameter] public TelerikGrid<UserRolePermissionDataVM> mobileAppPermissionGrid { get; set; }
 
-        IList<UserRolePermissionDataVM> data;
+        List<UserRolePermissionDataVM> data = new List<UserRolePermissionDataVM>();
         UserRolePermissionFilterVM userrolePermissionFilterVM;
         UserRolePermissionDataVM userRolePermissionDataVM;
 
         bool isAllow, isForWebApp, isAllowForMobileApp, IsInitialDataLoadComplete;
-        string popupTitle, message;
+        string message;
         string moduleName = "UserRolePermission";
-        IEnumerable<UserRolePermissionDataVM> selectedItems = new List<UserRolePermissionDataVM>();
+        IEnumerable<UserRolePermissionDataVM> webPermissions = new List<UserRolePermissionDataVM>();
+        IEnumerable<UserRolePermissionDataVM> mobileAppPermissions = new List<UserRolePermissionDataVM>();
+        TelerikTabStrip permissionsTabs;
 
         protected override async Task OnInitializedAsync()
         {
@@ -38,7 +41,30 @@ namespace Web.UI.Pages.UserRolePermission
 
         protected void OnSelect(IEnumerable<UserRolePermissionDataVM> permissions)
         {
-            selectedItems = permissions;
+            if (webPermissions.Count() > permissions.Count())
+            {
+                userRolePermissionDataVM = webPermissions.Where(p => !permissions.Contains(p)).First();
+            }
+            else
+            {
+                userRolePermissionDataVM = permissions.Where(p => !webPermissions.Contains(p)).First();
+            }
+
+            OpenUpdateUserPermissionDialog(!userRolePermissionDataVM.IsAllowed, userRolePermissionDataVM, true);
+        }
+
+        protected void OnMobilePermissionSelect(IEnumerable<UserRolePermissionDataVM> permissions)
+        {
+            if (mobileAppPermissions.Count() > permissions.Count())
+            {
+                userRolePermissionDataVM = mobileAppPermissions.Where(p => !permissions.Contains(p)).First();
+            }
+            else
+            {
+                userRolePermissionDataVM = permissions.Where(p => !mobileAppPermissions.Contains(p)).First();
+            }
+
+            OpenUpdateUserPermissionDialog(!userRolePermissionDataVM.IsAllowedForMobileApp, userRolePermissionDataVM, false);
         }
 
         async Task LoadData(GridReadEventArgs args)
@@ -55,16 +81,123 @@ namespace Web.UI.Pages.UserRolePermission
             data = await UserRolePermissionService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
-            selectedItems = data.Where(p => p.IsAllowed).ToList();
+            webPermissions = data.Where(p => p.IsAllowed).ToList();
+            mobileAppPermissions =  data.Where(p => p.IsAllowedForMobileApp).ToList();
 
             IsInitialDataLoadComplete = false;
+        }
+
+        bool? selectAllWebPermissions
+        {
+            get
+            {
+                if (IsAllWebPermissionSelected())
+                {
+                    return true;
+                }
+                else if (IsAnyWebPermissionSelected())
+                {
+                    return null;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (value.HasValue && value.Value == true)
+                {
+                    webPermissions = data;
+                }
+                else
+                {
+                    webPermissions = new List<UserRolePermissionDataVM>();
+                }
+            }
+        }
+
+        bool? selectAllMobileAppPermissions
+        {
+            get
+            {
+                if (IsAllMobilePermissionSelected())
+                {
+                    return true;
+                }
+                else if (IsAnyMobileAppPermissionSelected())
+                {
+                    return null;
+                }
+
+                return false;
+            }
+
+            set
+            {
+                if (value.HasValue && value.Value == true)
+                {
+                    mobileAppPermissions = data;
+                }
+                else
+                {
+                    mobileAppPermissions = new List<UserRolePermissionDataVM>();
+                }
+            }
+        }
+
+        bool IsAnyWebPermissionSelected()
+        {
+            return grid.SelectedItems.Count() > 0 && grid.SelectedItems.Count() < data.Count() ;
+        }
+
+        bool IsAnyMobileAppPermissionSelected()
+        {
+            return mobileAppPermissionGrid.SelectedItems.Count() > 0 && mobileAppPermissionGrid.SelectedItems.Count() < data.Count();
+        }
+
+        bool IsAllWebPermissionSelected()
+        {
+            return grid.SelectedItems.Count() == data.Count();
+        }
+
+        bool IsAllMobilePermissionSelected()
+        {
+            return mobileAppPermissionGrid.SelectedItems.Count() == data.Count();
+        }
+
+        void SelectAllWebPermissions()
+        {
+            if (selectAllWebPermissions.HasValue && selectAllWebPermissions.Value)
+            {
+                selectAllWebPermissions = false;
+                OpenUpdateUserPermissionsDialog(false, true);
+            }
+            else
+            {
+                selectAllWebPermissions = true;
+                OpenUpdateUserPermissionsDialog(true, true);
+            }
+        }
+
+        void SelectAllMobileAppPermissions()
+        {
+            if (selectAllMobileAppPermissions.HasValue && selectAllMobileAppPermissions.Value)
+            {
+                selectAllMobileAppPermissions = false;
+                OpenUpdateUserPermissionsDialog(false, false);
+            }
+            else
+            {
+                selectAllMobileAppPermissions = true;
+                OpenUpdateUserPermissionsDialog(true, false);
+            }
         }
 
         private void OnCompanyValueChanges(int selectedValue)
         {
             if (userrolePermissionFilterVM.CompanyId != selectedValue)
             {
-                grid.Rebind();
+                RefreshGrid();
                 userrolePermissionFilterVM.CompanyId = selectedValue;
             }
         }
@@ -73,7 +206,7 @@ namespace Web.UI.Pages.UserRolePermission
         {
             if (userrolePermissionFilterVM.ModuleId != selectedValue)
             {
-                grid.Rebind();
+                RefreshGrid();
                 userrolePermissionFilterVM.ModuleId = selectedValue;
             }
         }
@@ -82,13 +215,15 @@ namespace Web.UI.Pages.UserRolePermission
         {
             if (userrolePermissionFilterVM.UserRoleId != selectedValue)
             {
-                grid.Rebind();
+                RefreshGrid();
                 userrolePermissionFilterVM.UserRoleId = selectedValue;
             }
         }
 
         async Task UpdatePermissionAsync(bool? value, long id, bool isForWeb)
         {
+            isBusySubmitButton = true;
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(dependecyParams, id, value.GetValueOrDefault(), isForWeb);
 
@@ -98,24 +233,36 @@ namespace Web.UI.Pages.UserRolePermission
             {
                 CloseDialog(true);
             }
-            else
-            {
-                CloseDialog(false);
-            }
+
+            isBusySubmitButton = false;
         }
 
-        async Task CloseDialog(bool reloadGrid)
+        void CloseDialog(bool reloadGrid)
         {
             isDisplayPopup = false;
 
             if (reloadGrid)
             {
+                RefreshGrid();
+            }
+        }
+
+        void RefreshGrid()
+        {
+            if (permissionsTabs.ActiveTabIndex == 0)
+            {
                 grid.Rebind();
+            }
+            else
+            {
+                mobileAppPermissionGrid.Rebind();
             }
         }
 
         async Task UpdatePermissionsAsync(bool value, bool isForWeb)
         {
+            isBusySubmitButton = true;
+
             if (isForWeb)
             {
                 userrolePermissionFilterVM.IsAllow = value;
@@ -124,10 +271,6 @@ namespace Web.UI.Pages.UserRolePermission
             {
                 userrolePermissionFilterVM.IsAllowForMobileApp = value;
             }
-
-            //userrolePermissionFilterVM.CompanyId = CompanyId;
-            //userrolePermissionFilterVM.ModuleId = ModuleId;
-            //userrolePermissionFilterVM.UserRoleId = RoleId;
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionsAsync(dependecyParams, userrolePermissionFilterVM, isForWeb);
@@ -142,12 +285,17 @@ namespace Web.UI.Pages.UserRolePermission
             {
                 CloseDialog(false);
             }
+
+            isBusySubmitButton = false;
         }
 
-        async Task RevokeUserStatusChange()
+        void RevokeUserPermissionStatusChange()
         {
             isDisplayPopup = false;
+            RefreshGrid();
+
             data.Where(p => p.Id == userRolePermissionDataVM.Id).First().IsAllowed = !userRolePermissionDataVM.IsAllowed;
+            //base.StateHasChanged();
         }
 
         void OpenUpdateUserPermissionDialog(bool value, UserRolePermissionDataVM permissionData, bool isForWeb)

@@ -8,9 +8,9 @@ namespace Web.UI.Shared.Components.DialogFooter
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         [Parameter] public bool IsSubmitButtonLoading { get; set; }
 
-        public void CloseDialog(bool isCancelled)
+        public void CloseDialog(bool reloadGrid)
         {
-            CloseDialogCallBack.InvokeAsync(isCancelled);
+            CloseDialogCallBack.InvokeAsync(reloadGrid);
         }
     }
 }

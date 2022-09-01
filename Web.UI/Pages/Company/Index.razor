@@ -45,7 +45,7 @@
                 @{
                     var data = dataItem as CompanyVM;
                     <img class="rounded" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
-                         src="@data.Logo" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+                         src="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
                 }
 
             </Template>
@@ -55,7 +55,7 @@
             <Template>
                 @{
                     var data = context as CompanyVM;
-                    <u> <a href="javascript:void(0)" @onclick="@((ui) => OpenCompanyDetailPage(data))">@data.Name</a></u>
+                    <u> <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenCompanyDetailPage(data))">@data.Name</a></u>
                 }
             </Template>
         </GridColumn>
@@ -69,7 +69,7 @@
                 CompanyVM companyVM = dataItem as CompanyVM;
 
                 <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenCompanyDetailPage(companyVM)">
-                    <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
+                    <CustomIcons IconName="settings" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
