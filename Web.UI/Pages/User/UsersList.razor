@@ -103,8 +103,7 @@
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{
-                popupTitle = "Update User Details";
-                UserDataVM userData = dataItem as UserDataVM;
+               UserDataVM userData = dataItem as UserDataVM;
 
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {

@@ -11,7 +11,7 @@ using Utilities;
 using DE = DataModels.Entities;
 using Telerik.Blazor;
 using Telerik.Blazor.Components;
-using FSM.Blazor.Data.AircraftSchedule;
+using Web.UI.Data.AircraftSchedule;
 
 namespace Web.UI.Pages.Scheduler
 {

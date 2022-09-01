@@ -1,17 +1,145 @@
-﻿namespace Web.UI.Pages.Aircraft
+﻿using DataModels.Constants;
+using DataModels.Entities;
+using DataModels.Enums;
+using DataModels.VM.Aircraft;
+using DataModels.VM.Common;
+using Web.UI.Data.Aircraft;
+using Web.UI.Utilities;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using System.Net;
+
+namespace Web.UI.Pages.Aircraft
 {
-    public partial class AircraftDetails
+    partial class AircraftDetails
     {
-        public int ActiveTabIndex { get; set; }
+        public string AircraftId { get; set; }
 
-        private void NotDevelop() 
-        { 
+        [Parameter]
+        public AircraftVM aircraftData { get; set; }
 
+        public string CompanyName;
+
+        public bool isDataLoaded = false, isBusy = false, isUpdateButtonBusy = false, isDisplayLoader;
+        string moduleName = "Aircraft";
+        public bool isAllowToEdit;
+        DataModels.Enums.UserRole userRole;
+        string modelWidth = "600px";
+
+        protected override async Task OnInitializedAsync()
+        {
+            isDisplayLoader = true;
+
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
+
+            StringValues link;
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
+
+            if (link.Count() == 0 || link[0] == "")
+            {
+                NavigationManager.NavigateTo("/Dashboard");
+            }
+
+            var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
+
+            try
+            {
+                if (!string.IsNullOrEmpty(aircraftData.ImagePath))
+                {
+                    var webClient = new WebClient();
+                    byte[] imageBytes = webClient.DownloadData(aircraftData.ImagePath);
+
+                    aircraftData.ImagePath = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
+            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
+
+            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+
+            bool isCreator = userId == aircraftData.CreatedBy;
+
+            if (isAdmin || isSuperAdmin || isCreator)
+            {
+                isAllowToEdit = true;
+            }
+
+            isDisplayLoader = false;
+
+            SetCompanyName();
         }
 
-        public bool IsTabSelectedFlag(int activeTab)
+
+        async Task AircraftEditDialog()
         {
-            return ActiveTabIndex == activeTab;
+            isBusy = true;
+            operationType = OperationType.Edit;
+            popupTitle = "Edit Aircraft Details";
+            modelWidth = "600px";
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
+
+            SetCompanyName();
+
+            isBusy = false;
+            isDisplayPopup = true;
+        }
+
+        async Task OpenStatusUpdateDialog()
+        {
+            isUpdateButtonBusy = true;
+            operationType = OperationType.UpdateStatus;
+            modelWidth = "400px";
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
+
+            isUpdateButtonBusy = false;
+            isDisplayPopup = true;
+            popupTitle = "Update Status";
+        }
+
+        async Task CloseDialog()
+        {
+            isDisplayPopup = false;
+        }
+
+        async Task UpdateStatus(int id)
+        {
+            aircraftData.AircraftStatusId = Convert.ToByte(id);
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AircraftStatusService.GetById(dependecyParams, aircraftData.AircraftStatusId);
+
+            if (response.Status == HttpStatusCode.OK)
+            {
+                aircraftData.AircraftStatus = JsonConvert.DeserializeObject<AircraftStatus>(response.Data.ToString());
+            }
+        }
+
+        private void SetCompanyName()
+        {
+            CompanyName = aircraftData.CompanyName;
+
+            if (string.IsNullOrEmpty(CompanyName))
+            {
+                CompanyName = aircraftData.Companies.Where(p => p.Id == aircraftData.CompanyId).FirstOrDefault().Name;
+            }
         }
     }
 }

@@ -1,0 +1,45 @@
+﻿<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Equipment Name</th>
+            <th>Hours</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Air Frame") && x.IsDeleted == false).Count() > 0)
+        {
+            foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Air Frame") && x.IsDeleted == false).ToList())
+            {
+                <tr>
+                    <td>Total @(item.EquipmentName)</td>
+                    <td><h4><span class="badge bg-success">@(item.Hours) Hours</span></h4></td>
+                </tr>
+            }
+        }
+
+        @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Engine") && x.IsDeleted == false).Count() > 0)
+        {
+            foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Engine") && x.IsDeleted == false).ToList())
+            {
+                <tr>
+                    <td>@(item.EquipmentName)</td>
+                    <td><h4><span class="badge bg-primary">@(item.Hours) Hours</span></h4></td>
+                </tr>
+            }
+        }
+
+        @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Propeller") && x.IsDeleted == false).Count() > 0)
+        {
+            foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Propeller") && x.IsDeleted == false).ToList())
+            {
+                <tr>
+                    <td>@(item.EquipmentName)</td>
+                    <td><h4><span class="badge bg-secondary">@(item.Hours) Hours</span></h4></td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>

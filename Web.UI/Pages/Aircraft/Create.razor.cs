@@ -82,7 +82,7 @@ namespace Web.UI.Pages.Aircraft
                     return;
                 }
 
-                await OpenNextTab();
+                OpenNextTab();
             }
             else
             {
@@ -260,10 +260,9 @@ namespace Web.UI.Pages.Aircraft
             }
         }
 
-        async Task OpenNextTab()
+        void OpenNextTab()
         {
             steps.Value = 1;
-            base.StateHasChanged();
         }
 
         void OpenPreviousTab()

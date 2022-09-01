@@ -131,10 +131,6 @@ namespace Web.UI.Pages.User
             {
                 CloseDialog(true);
             }
-            else
-            {
-                CloseDialog(false);
-            }
         }
 
         async Task CloseDialog(bool reloadGrid)

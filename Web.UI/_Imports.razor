@@ -28,6 +28,8 @@
 @using Web.UI.Data.AircraftSchedule
 @using Web.UI.Data.Reservation
 @using Web.UI.Data.Aircraft
+@using Web.UI.Data.AircraftStatus
+@using Web.UI.Data.Aircraft.AircraftEquipment
 
 @using Web.UI.Shared.Components.DialogFooter;
 @using Web.UI.Shared.Components.CustomPopup;
@@ -60,5 +62,7 @@
 @inject ReservationService ReservationService
 @inject AircraftService AircraftService
 @inject AircraftSchedulerDetailService AircraftSchedulerDetailService
+@inject AircraftStatusService AircraftStatusService
+@inject AircraftEquipmentService AircraftEquipmentService
 
 @inherits BaseClass

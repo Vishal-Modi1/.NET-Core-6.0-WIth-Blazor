@@ -1,6 +1,6 @@
 ﻿using Telerik.Blazor;
 
-namespace FSM.Blazor.Data.AircraftSchedule
+namespace Web.UI.Data.AircraftSchedule
 {
     public static class TelerikSchedulerDateHelper
     {

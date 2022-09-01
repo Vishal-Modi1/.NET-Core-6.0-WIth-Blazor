@@ -7,6 +7,51 @@
 
 @page "/Aircraft"
 
+<style>
+    .k-listview-header,
+    .k-listview-content {
+        padding: 20px;
+    }
+
+    .k-listview-footer {
+        border-width: 0;
+        padding: 10px 20px;
+    }
+
+    .k-listview-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 180px);
+        gap: 30px 20px;
+    }
+
+    .k-card {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .k-card-body {
+        padding: 10px 0;
+    }
+
+    .k-card .k-card-title {
+        padding: 0;
+        font-size: 1em;
+        font-weight: bold;
+        line-height: normal;
+    }
+
+    .k-card-subtitle {
+        font-size: 0.85em;
+    }
+
+    .footer-note {
+        text-align: right;
+        font-style: italic;
+        font-size: 0.85em;
+    }
+</style>
+
 <PageTitle>Aircraft | Fly Manager </PageTitle>
 <div class="row">
     <div class="col-12 d-flex justify-content-between">
@@ -17,13 +62,13 @@
             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
             {
                 <div class="col-md-4">
-                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
-                           OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
-                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                    </TelerikLoader>
-                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                </TelerikButton>
-                 </div>
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                               OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    </TelerikButton>
+                </div>
             }
         </div>
     </div>
@@ -74,32 +119,39 @@
             </div>
         </HeaderTemplate>
         <Content>
-            
-                <TelerikListView @ref="dataListView" Class="row"
+
+
+            <TelerikListView @ref="dataListView" Class="row"
                              Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
                              OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
 
                 <ListViewSettings>
                     <GridPagerSettings InputType="PagerInputType.Input"
                                        PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
+
                     </GridPagerSettings>
                 </ListViewSettings>
 
                 <Template>
-                    <a @onclick="@(() => OpenDetailPage(context.Id))" style="cursor:pointer">
-                        <TelerikCard Width="300px">
-                            <CardHeader>
-                                <CardTitle>@context.TailNo</CardTitle>
-                            </CardHeader>
-                            <img onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
 
-                            <CardFooter>
-                                <span>@context.TailNo</span>
-                            </CardFooter>
-                        </TelerikCard>
-                    </a>
+                     <a @onclick="@(() => OpenDetailPage(context.Id))" style="cursor:pointer">
+                    <div style="box-sizing: border-box;width: 100%;height: 100%;padding: 30px;border: 1px solid #0d0d0d;">
+
+                        <div class="k-card">
+                            <img onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+                            <div class="k-card-body">
+                                <h4 class="k-card-title">@context.TailNo</h4>
+                            </div>
+                        </div>
+                    </div>
+                     </a>
+
                 </Template>
+
+
             </TelerikListView>
+
+
         </Content>
     </TabStripTab>
 

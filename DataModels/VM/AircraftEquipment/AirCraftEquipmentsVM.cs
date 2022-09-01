@@ -9,12 +9,13 @@ namespace DataModels.VM.AircraftEquipment
     {
         public long Id { get; set; }
 
+        [Range(1, int.MaxValue, ErrorMessage = "Status is required")]
         [Display(Name = "Status")]
         public int StatusId { get; set; }
 
         public long AirCraftId { get; set; }
         
-        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Classification is required")]
         [Display(Name = "Classification")]
         public int ClassificationId { get; set; }
         
@@ -38,9 +39,11 @@ namespace DataModels.VM.AircraftEquipment
         public string SerialNumber { get; set; }
 
         [Display(Name = "Manufacturer Date")]
+        [Required(ErrorMessage = "Manufacturer date is required")]
         public Nullable<DateTime> ManufacturerDate { get; set; } 
 
         [Display(Name = "Log Entry Date")]
+        [Required(ErrorMessage = "Log entry date is required")]
         public Nullable<DateTime> LogEntryDate { get; set; } 
 
         [Display(Name = "Aircraft TT at Install")]
@@ -55,8 +58,8 @@ namespace DataModels.VM.AircraftEquipment
         [Display(Name = "In Use?")]
         public bool IsActive { get; set; }
 
-        public List<StatusVM> statusList { get; set; }
-        public List<EquipmentClassificationVM> classificationList { get; set; }
+        public List<StatusVM> StatusList { get; set; }
+        public List<EquipmentClassificationVM> ClassificationList { get; set; }
 
     }
 }

@@ -1,137 +1,100 @@
-﻿@page "/AircraftDetails"
+﻿@using DataModels.Enums;
+
+@page "/AircraftDetails"
+
+<PageTitle>Aircraft Details | Fly Manager </PageTitle>
 
 
-<div class="d-flex justify-content-between">
-    <div><h3>N1234WC - Cirrus SR22</h3></div>
-    <div>
-        <button type="button" class="btn edit-button" @onclick="(() => NotDevelop())">Edit</button>
-        <button type="button" class="btn btn-outline-primary" @onclick="(() => NotDevelop())">Add</button>
+@if (aircraftData != null)
+{
+    <div class="d-flex justify-content-between">
+        <div><h3>@aircraftData.TailNo</h3></div>
+        <div>
+            <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" OnClick="@AircraftEditDialog" Class="btn edit-button" Enabled="@(!isBusyAddButton)">
+                 <CustomIcons IconName="grid-edit" PrimaryColor="White" ></CustomIcons>Edit
+                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                </TelerikLoader>
+
+            </TelerikButton>
+
+             <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn edit-button" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton)">
+                 <CustomIcons IconName="grid-edit" PrimaryColor="White" ></CustomIcons> Update Status
+                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                </TelerikLoader>
+
+            </TelerikButton>
+            <TelerikButton  class="btn btn-outline-primary">Back</TelerikButton>
+
+        </div>
     </div>
-</div>
-<div class="mx-1">
-    <hr class="p-0 m-1" />
-</div>
-<div class="card mt-2 flight-info-card">
-    <div class="card-body">
-        <div class="k-card-deck">
-            <div class="row p-0">
-                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
-                    <TelerikCard Class="image-card-info">
-                        <CardImage Src="https://fly-manager-dev-api.azurewebsites.net/Uploads//AircraftImages/28/20220816210808_22.jpeg"></CardImage>
-                    </TelerikCard>
-                </div>
-                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
-                    <TelerikCard Class="flight-cards">
-                        <CardBody>
-                            <div><span class="card-fonts">Tail No:</span> N1234WC</div>
-                            <div><span class="card-fonts">Model :</span> SR22</div>
-                            <div><span class="card-fonts">Make :</span> Cirrus</div>
-                            <div><span class="card-fonts">Category :</span> Airplane</div>
-                            <div><span class="card-fonts">Turbines :</span> Available</div>
-                        </CardBody>
-                    </TelerikCard>
-                </div>
-                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
-                    <TelerikCard Class="flight-cards">
-                        <CardBody>
-                            <CardTitle>Maintenance</CardTitle>
-                            <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
-                        </CardBody>
-                    </TelerikCard>
-                </div>
-                <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
-                    <TelerikCard Class="flight-cards">
-                        <CardBody>
-                            <CardTitle>Reservation</CardTitle>
-                            <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
-                        </CardBody>
-                    </TelerikCard>
+
+    <div class="card mt-2 flight-info-card">
+        <div class="card-body">
+            <div class="k-card-deck">
+                <div class="row p-0">
+                    <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                        <TelerikCard Class="image-card-info">
+                            <img src="@aircraftData.ImagePath" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" />
+                        </TelerikCard>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                        <TelerikCard Class="flight-cards">
+                            <CardBody>
+                                <div><span class="card-fonts">Tail No:</span> @aircraftData.TailNo</div>
+                                <div><span class="card-fonts">Model :</span> @(aircraftData.AircraftModelList?.Where(p=>p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</div>
+                                <div><span class="card-fonts">Make :</span> @(aircraftData.AircraftMakeList?.Where(p=>p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</div>
+                                <div><span class="card-fonts">Category :</span> @(aircraftData.AircraftCategoryList?.Where(p=>p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</div>
+                                <div><span class="card-fonts">Turbines :</span>  @(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</div>
+                            </CardBody>
+                        </TelerikCard>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                        <TelerikCard Class="flight-cards">
+                            <CardBody>
+                                <CardTitle>Maintenance</CardTitle>
+                                <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                            </CardBody>
+                        </TelerikCard>
+                    </div>
+                    <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
+                        <TelerikCard Class="flight-cards">
+                            <CardBody>
+                                <CardTitle>Reservation</CardTitle>
+                                <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                            </CardBody>
+                        </TelerikCard>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="card mt-5">
-    <TelerikTabStrip @bind-ActiveTabIndex="@ActiveTabIndex">
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><CustomIcons  IconName="FlightAircraftTime" 
-                    IsTransparent="@(IsTabSelectedFlag(0))" 
-                    PrimaryColor="#3066F8" SecondaryColor="#CCCCCC00"></CustomIcons></span>
-                <span>Aircraft Times</span>
-            </HeaderTemplate>
-            <Content>
-                <table border="1" class="table table-bordered">
-                    <tr>
-                        <th>Equipment Name</th>
-                        <th>Hours</th>
-                    </tr>
-                    <tr>
-                        <td>Total Air Frame</td>
-                        <td>150.00 Hours</td>
-                    </tr>
-                    <tr>
-                        <td>Propeller 1</td>
-                        <td>160.00 Hours</td>
-                    </tr>
-                </table>
-            </Content>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="wrench" IsTransparent="@(IsTabSelectedFlag(1))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Equipment</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="FlightReservation" IsTransparent="@(IsTabSelectedFlag(2))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Reservation</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="Flightdocument" IsTransparent="@(IsTabSelectedFlag(3))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Documents</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="Maintenance" IsTransparent="@(IsTabSelectedFlag(4))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Maintenance</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="Financials" IsTransparent="@(IsTabSelectedFlag(5))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Financials</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="Performance" IsTransparent="@(IsTabSelectedFlag(6))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Performance</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="Settings" IsTransparent="@(IsTabSelectedFlag(7))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Setting</span>
-            </HeaderTemplate>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2"><Web.UI.Shared.Components.CustomIcon.CustomIcons  IconName="Crew" IsTransparent="@(IsTabSelectedFlag(8))"
-                    PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons></span>
-                <span>Crew</span>
-            </HeaderTemplate>
-        </TabStripTab>
-    </TelerikTabStrip>
-</div>
+    <div class="card-header" style="margin-top:30px">
+
+      <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData>
+
+        </Web.UI.Pages.Aircraft.DetailsTabs.Index>
+    </div>
+
+}
+
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false" Width="@modelWidth"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Edit)
+            {
+                <Create aircraftData=@(aircraftData) CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else
+            {
+                <UpdateStatus aircraftData=@(aircraftData) UpdateStatusCallBack="@UpdateStatus" CloseDialogCallBack="@CloseDialog"></UpdateStatus>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}
