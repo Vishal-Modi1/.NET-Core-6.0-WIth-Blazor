@@ -174,7 +174,7 @@
                 <Template>
                     <a @onclick="@(() => OpenDetailPage(context.Id))" style="cursor:pointer">
                         <div class="custom-aircraft-item">
-                            <span class="active-airplane @( true ? "inactive-airplane" : "")">&nbsp;</span>
+                            @*<span class="active-airplane @( true ? "inactive-airplane" : "")">&nbsp;</span>*@
                             <span class="expande-airplane"><CustomIcons IconName="arrow-expand" PrimaryColor="#FEFEFE" /></span>
                             <div class="k-card">
                                 <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
