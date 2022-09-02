@@ -14,7 +14,9 @@ namespace Web.UI.Shared
         public int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         public List<int?> pageSizeOptions = Configuration.ConfigurationSettings.Instance.GridPagesizeOptions.ToList();
         public bool isDisplayPopup { get; set; }
+        public bool isDisplayChildPopup { get; set; }
         public string popupTitle { get; set; }
+        public string childPopupTitle { get; set; }
 
         public OperationType operationType = OperationType.Create;
 

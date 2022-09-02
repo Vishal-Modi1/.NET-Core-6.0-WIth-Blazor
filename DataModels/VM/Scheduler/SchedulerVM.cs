@@ -1,4 +1,5 @@
-﻿using DataModels.Entities;
+﻿using DataModels.CustomValidations;
+using DataModels.Entities;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using System;
@@ -27,6 +28,7 @@ namespace DataModels.VM.Scheduler
         public DateTime StartTime { get; set; }
 
         [Required(ErrorMessage = "End time is required")]
+        [DateGreaterThan("StartTime", "End time must not exceed start time")]
         public DateTime EndTime { get; set; }
 
         public bool IsRecurring { get; set; }

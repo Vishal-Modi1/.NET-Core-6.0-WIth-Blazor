@@ -123,10 +123,7 @@ namespace Web.UI.Pages.User
             {
                 CloseDialog(true);
             }
-            else
-            {
-                CloseDialog(false);
-            }
+            
         }
 
         private bool ManageIsEmailExistResponse(CurrentResponse response)

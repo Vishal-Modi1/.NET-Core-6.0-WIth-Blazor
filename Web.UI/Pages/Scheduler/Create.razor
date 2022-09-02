@@ -86,14 +86,14 @@
                                 <td class="e-textlabel d-flex align-items-start">Aircraft</td>
                                 <td colspan="4">
 
-                                    <TelerikComboBox Id=companyId Data="@schedulerVM.AircraftsList" TextField="Name"
+                                    <TelerikComboBox Id=aircraftId Data="@schedulerVM.AircraftsList" TextField="Name"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                         Placeholder="Select Activity" ValueField="Id"
+                                         Placeholder="Select Aircraft" ValueField="Id"
                                          @bind-Value="@(schedulerVM.AircraftId)">
 
                                     </TelerikComboBox>
 
-                                    <TelerikValidationMessage For="@(() => schedulerVM.ScheduleActivityId)"></TelerikValidationMessage>
+                                    <TelerikValidationMessage For="@(() => schedulerVM.AircraftId)"></TelerikValidationMessage>
 
                                 </td>
                             </tr>
@@ -387,7 +387,7 @@
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckInAircraft"
                            Class="btn k-btn-primary" Enabled="@(!uiOptions.isBusyCheckOutButton)">
-                                    Save
+                                    Check In
                                     <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
                                     </TelerikLoader>
                                 </TelerikButton>
@@ -396,7 +396,7 @@
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckOutAircraft"
                            Class="btn k-btn-primary" Enabled="@(!uiOptions.isBusyCheckOutButton)">
-                                    Save
+                                    Check Out
                                     <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
                                     </TelerikLoader>
                                 </TelerikButton>
@@ -410,9 +410,8 @@
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@ShowEditEndTimeForm"
                            Class="btn k-btn-primary"> Edit End Time </TelerikButton>
 
-                           //TODO
-                               @* <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@UnCheckOut"
-                                Class="btn k-btn-primary"> Un-Check Out </TelerikButton>*@
+                                <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenUnCheckOutDialog"
+                           Class="btn k-btn-primary"> Un-Check Out </TelerikButton>
                             }
                         }
                         else
@@ -420,14 +419,13 @@
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenForm"
-                           Class="btn k-btn-primary"> Edit </TelerikButton>
+                                Class="btn k-btn-primary"> Edit </TelerikButton>
 
                             }
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, "Scheduler") && isAllowToDelete)
                             {
-                                //TODO
-                               @* <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="danger" OnClick="@OpenDeleteDialog"
-                           Class="btn k-btn-error"> Delete </TelerikButton>*@
+                                <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="@OpenDeleteDialog"
+                                Class="btn k-btn-error"> Delete </TelerikButton>
                             }
                         }
                     }
@@ -458,8 +456,6 @@
                            ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
                         Cancel
                     </TelerikButton>
-
-                    }
                 </div>
             }
 
@@ -505,6 +501,8 @@
             }
 
         </FormItems>
+
+        <FormButtons></FormButtons>
     </TelerikForm>
 
     @if (schedulerVM.AircraftSchedulerDetailsVM != null
@@ -652,17 +650,21 @@ else
                                 @if (aircraftScheduleHobbsTime == null)
                                 {
                                     <TelerikNumericTextBox Placeholder="Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
-                                               @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime"
-                                               @oninput="@(args => TextBoxChangeEvent(args, indexValue))"></TelerikNumericTextBox>
+                                               Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime"
+                                               ValueExpression="@( () => @schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime )"
+                                               ValueChanged="@( (decimal value) => TextBoxChangeEvent(value, indexValue) )">
+                                    </TelerikNumericTextBox>
                                 }
                                 else
                                 {
                                     <TelerikNumericTextBox Placeholder="Hours"
-                                               @bind-Value="@aircraftScheduleHobbsTime.InTime"
-                                               @oninput="@(args => EditFlightTimeTextBoxChangeEvent(args, indexValue))"></TelerikNumericTextBox>
+                                               Value="@aircraftScheduleHobbsTime.InTime"
+                                               ValueExpression="@(() => aircraftScheduleHobbsTime.InTime)"
+                                               ValueChanged="@( (decimal value) => EditFlightTimeTextBoxChangeEvent(value, indexValue) )">
+                                    </TelerikNumericTextBox>
                                 }
 
-                                //TODO
+                                @*//TODO*@
                                 @* <RadzenCompareValidator Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"
                                     Component="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
                                     Operator=CompareOperator.GreaterThan
@@ -693,73 +695,64 @@ else
 
             </div>
         </FormItems>
-
+        <FormButtons></FormButtons>
     </TelerikForm>
 }
-
-@*<SfDialog ID="DeleteDialog" Width="360px" MinHeight="150px" Target="Body" ShowCloseIcon="true" @bind-Visible="@uiOptions.isVisibleDeleteDialog">
-
-    <DialogTemplates>
-
-    <Header> Delete Appointment </Header>
-
-    <Content>
-
-    <div>
-    <p class="mb-4">Are you sure, You want to delete appointment?</p>
-    <div class="row m-2">
-    <div class="col">
-    <div class="d-flex btn-grp  justify-content-evenly ">
-    <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Primary" Click="() => DeleteAsync() " BusyText="Deleting ..." IsBusy=@uiOptions.isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
-    <RadzenButton Text="No" Click="() => CloseChildDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
-    </div>
-    </div>
-    </div>
-    </div>
-
-    </Content>
-    </DialogTemplates>
-    <DialogPositionData X="center" Y="center"></DialogPositionData>
-    </SfDialog>*@
-
-@*@{
-
-    async Task OpenDeleteDialog()
+@{
+    if (isDisplayChildPopup)
     {
-    CloseDialog();
-    uiOptions.dialogVisibility = false;
-    var result = await DialogService.OpenAsync("Delete", ds =>
-    @<div>
-    <p class="mb-4">Are you sure, You want to delete appointment ?</p>
-    <div class="row m-2">
-    <div class="col">
-    <div class="d-flex btn-grp  justify-content-evenly ">
-    <RadzenButton Text="Yes" ButtonStyle="ButtonStyle.Danger" Click="() => DeleteAsync() " BusyText="Deleting ..." IsBusy=@uiOptions.isBusyDeleteButton Class="mr-1" Style="width: 80px;" />
-    <RadzenButton Text="No" Click="() => CloseChildDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
-    </div>
-    </div>
-    </div>
-    </div>
-    , new DialogOptions { Width = "360px" });
+        <CustomPopupComponent Title="@childPopupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayChildPopup = false;})">
 
+            <Body>
+
+                @if (operationType == OperationType.UnCheckOut)
+                {
+                    <div>
+                        <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
+                        <div class="row" style="text-align:right">
+                            <div class="col">
+
+                                <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
+                                    Yes
+                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+
+
+                                <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                    No
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                else if (operationType == OperationType.Delete)
+                {
+                    <div>
+                        <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
+                        <div class="row" style="text-align:right">
+                            <div class="col">
+
+                                <TelerikButton Class="btn k-btn-danger" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
+                                    Yes
+                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+
+
+                                <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                    No
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </Body>
+
+        </CustomPopupComponent>
     }
-
-    async Task UnCheckOut()
-    {
-    CloseDialog();
-    var result = await DialogService.OpenAsync("Un-Check out appointment", ds =>
-    @<div>
-    <p class="mb-4">Are you sure, You want to un-check out appointment ?</p>
-    <div class="row m-2">
-    <div class="col">
-    <div class="d-flex btn-grp  justify-content-evenly ">
-    <RadzenButton Text="Un-Checkout" ButtonStyle="ButtonStyle.Primary" Click="() => UnCheckOutAppointment() " BusyText="un-checking out ..." IsBusy=@uiOptions.isBusyUnCheckOutButton Class="mr-1" Style="width: 160px;" />
-    <RadzenButton Text="Cancel" Click="() => CloseChildDialog()" ButtonStyle="ButtonStyle.Secondary" Class="mr-1" Style="width: 80px;" />
-    </div>
-    </div>
-    </div>
-    </div>
-    , new DialogOptions { Width = "360px" });
-
-    }
-    }*@
+}

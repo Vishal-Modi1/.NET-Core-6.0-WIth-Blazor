@@ -97,19 +97,19 @@ namespace Web.UI.Pages.Reservation
         {
             reservationFilterVM.CompanyId = value;
             reservationFilterVM.Users = await UserService.ListDropDownValuesByCompanyId(dependecyParams, reservationFilterVM.CompanyId);
-            grid.Rebind();
+            ReloadData();
         }
 
         async void OnStartDateChange()
         {
             datatableParams.StartDate = startDate;
-            grid.Rebind();
+            ReloadData();
         }
 
         async void OnEndDateChange()
         {
             datatableParams.EndDate = endDate;
-            grid.Rebind();
+            ReloadData();
         }
 
         async Task LoadData(GridReadEventArgs args)
@@ -213,8 +213,6 @@ namespace Web.UI.Pages.Reservation
                 schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
             }
 
-            uiOptions.dialogVisibility = true;
-
             uiOptions.isDisplayForm = false;
             uiOptions.isDisplayCheckOutOption = false;
 
@@ -226,13 +224,14 @@ namespace Web.UI.Pages.Reservation
             uiOptions.isDisplayMainForm = true;
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
 
+            popupTitle = "Schedule Appointment";
             isDisplayPopup = true;
             reservationDataVM.IsButtonLoading = false;
         }
 
-        public async Task RefreshSchedulerDataSourceAsync(ScheduleOperations scheduleOperations)
+        public void RefreshSchedulerDataSourceAsync(ScheduleOperations scheduleOperations)
         {
-            grid.Rebind();
+            ReloadData();
         }
 
         public void ReloadData()
@@ -242,19 +241,17 @@ namespace Web.UI.Pages.Reservation
 
         private void CloseDialog()
         {
-            uiOptions.dialogVisibility = false;
-            base.StateHasChanged();
+            isDisplayPopup = false;
         }
 
         private void OpenDialog()
         {
-            uiOptions.dialogVisibility = true;
-            base.StateHasChanged();
+            isDisplayPopup = true;
         }
 
         public async Task DeleteEventAsync()
         {
-          ReloadData();
+            ReloadData();
         }
 
         public void InitializeValues()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DataModels.CustomValidations;
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.UserPreference;
@@ -36,6 +37,7 @@ namespace DataModels.VM.User
 
         public bool IsInstructor { get; set; }
 
+        [RequiredIf("IsInstructor", true, ErrorMessage = "Instructor type is required")]
         public Nullable<int> InstructorTypeId { get; set; }
 
         public string CompanyName { get; set; }

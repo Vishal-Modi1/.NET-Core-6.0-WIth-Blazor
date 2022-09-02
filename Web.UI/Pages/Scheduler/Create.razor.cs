@@ -107,6 +107,21 @@ namespace Web.UI.Pages.Scheduler
             await LoadDataAsync();
         }
 
+        void OpenUnCheckOutDialog()
+        {
+            childPopupTitle = "Un-Check out appointment";
+            isDisplayChildPopup = true;
+            operationType = OperationType.UnCheckOut;
+        }
+
+        void OpenDeleteDialog()
+        {
+            childPopupTitle = "Delete Appointment";
+            isDisplayChildPopup = true;
+            operationType = OperationType.Delete;
+        }
+
+
         private void CloseDialog()
         {
             CloseDialogParentEvent.InvokeAsync();
@@ -239,7 +254,7 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        public void OnActivityTypeValueChanged(object value)
+        public void OnActivityTypeValueChanged(int? value)
         {
             InitializeValues();
 
@@ -248,33 +263,33 @@ namespace Web.UI.Pages.Scheduler
                 return;
             }
 
-            if ((int)value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
+            if (value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
             {
                 uiOptions.isDisplayMember2Dropdown = true;
                 uiOptions.isDisplayFlightRoutes = true;
             }
 
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
-            {
-                uiOptions.isDisplayMember2Dropdown = true;
-                uiOptions.isDisplayFlightRoutes = true;
-                uiOptions.isDisplayFlightInfo = true;
-            }
-
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
             {
                 uiOptions.isDisplayMember2Dropdown = true;
                 uiOptions.isDisplayFlightRoutes = true;
                 uiOptions.isDisplayFlightInfo = true;
             }
 
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
+            {
+                uiOptions.isDisplayMember2Dropdown = true;
+                uiOptions.isDisplayFlightRoutes = true;
+                uiOptions.isDisplayFlightInfo = true;
+            }
+
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
             {
                 uiOptions.isDisplayFlightRoutes = true;
                 uiOptions.isDisplayFlightInfo = true;
             }
 
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
             {
                 uiOptions.isDisplayRecurring = false;
                 uiOptions.isDisplayMember1Dropdown = false;
@@ -282,22 +297,23 @@ namespace Web.UI.Pages.Scheduler
                 uiOptions.isDisplayStandBy = false;
             }
 
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
             {
                 uiOptions.isDisplayInstructor = true;
             }
 
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
             {
                 uiOptions.isDisplayInstructor = true;
             }
 
-            else if ((int)value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
+            else if (value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
             {
                 //IsDisplayAircraftDropDown = false;
                 uiOptions.isDisplayInstructor = true;
             }
 
+            schedulerVM.ScheduleActivityId = value;
             base.StateHasChanged();
         }
 
@@ -351,27 +367,21 @@ namespace Web.UI.Pages.Scheduler
             await InvokeAsync(() => StateHasChanged());
         }
 
-        public void TextBoxChangeEvent(ChangeEventArgs args, int index)
+        public void TextBoxChangeEvent(decimal value, int index)
         {
-            if (string.IsNullOrWhiteSpace(args.Value.ToString()))
-            {
-                return;
-            }
-
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(args.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-
-            base.StateHasChanged();
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = value - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+            schedulerVM.AircraftEquipmentsTimeList[index].InTime = value;
         }
 
-        public void EditFlightTimeTextBoxChangeEvent(ChangeEventArgs value, int index)
+        public void EditFlightTimeTextBoxChangeEvent(decimal value, int index)
         {
-            if (string.IsNullOrWhiteSpace(value.ToString()))
-            {
-                return;
-            }
+            //if (string.IsNullOrWhiteSpace(value.ToString()))
+            //{
+            //    return;
+            //}
 
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = Convert.ToDecimal(value.Value) - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = Convert.ToDecimal(value.Value);
+            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = value - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
+            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = value;
 
             base.StateHasChanged();
         }
@@ -427,12 +437,12 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task UnCheckOutAppointment()
         {
-            await SetUnCheckOutButtonState(true);
+            uiOptions.isBusyUnCheckOutButton = true; 
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(dependecyParams, schedulerVM.AircraftSchedulerDetailsVM.Id);
 
-            await SetUnCheckOutButtonState(false);
+            uiOptions.isBusyUnCheckOutButton = false;
 
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 
@@ -457,14 +467,8 @@ namespace Web.UI.Pages.Scheduler
 
         private void CloseChildDialog()
         {
-           // DialogService.Close(true);
+            isDisplayChildPopup = false;
             OpenDialog();
-        }
-
-        private async Task SetUnCheckOutButtonState(bool isBusy)
-        {
-            uiOptions.isBusyUnCheckOutButton = isBusy;
-            await InvokeAsync(() => StateHasChanged());
         }
 
         async Task DeleteAsync()

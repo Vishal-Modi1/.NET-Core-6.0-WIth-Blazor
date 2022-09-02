@@ -119,8 +119,11 @@ namespace Web.UI.Pages.Scheduler
 
             dataSource.ForEach(x =>
             {
-                x.StartTime = Convert.ToDateTime(DateConverter.ToLocal(x.StartTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
-                x.EndTime = Convert.ToDateTime(DateConverter.ToLocal(x.EndTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
+                //x.StartTime = Convert.ToDateTime(DateConverter.ToLocal(x.StartTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
+                //x.EndTime = Convert.ToDateTime(DateConverter.ToLocal(x.EndTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
+
+                x.StartTime = DateConverter.ToLocal(x.StartTime, timezone);
+                x.EndTime = DateConverter.ToLocal(x.EndTime, timezone);
 
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
@@ -236,6 +239,26 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.isDisplayMainForm = true;
         }
 
+        private void OnDoubleClickHandler(SchedulerItemDoubleClickEventArgs args)
+        {
+            var currentItem = args.Item as SchedulerVM;
+
+            args.ShouldRender = false;
+        }
+
+        private void OnClickHandler(SchedulerItemClickEventArgs args)
+        {
+            var currentItem = args.Item as SchedulerVM;
+
+            args.ShouldRender = false;
+        }
+
+        async Task EditHandler(SchedulerEditEventArgs args)
+        {
+            args.IsCancelled = true;
+            await OpenCreateScheduleDialogAsync(args.Start, args.End, 1);
+        }
+
         public async Task OpenCreateAppointmentDialog(SchedulerCreateEventArgs args)
         {
             //var SelectedResource = ScheduleRef.GetResourceByIndex(args.);
@@ -280,7 +303,7 @@ namespace Web.UI.Pages.Scheduler
             }
 
             //  args.Cancel = true;
-            uiOptions.dialogVisibility = true;
+            isDisplayPopup = true;
 
             isDisplayLoader = false;
         }
@@ -379,21 +402,24 @@ namespace Web.UI.Pages.Scheduler
 
         private void CloseDialog()
         {
-            uiOptions.dialogVisibility = false;
+            isDisplayPopup = false; 
         }
 
         private void OpenDialog()
         {
-            uiOptions.dialogVisibility = true;
-            base.StateHasChanged();
+            isDisplayPopup = true;
         }
 
         public async Task DeleteEventAsync()
         {
             //TODO:
             // await scheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
-
             base.StateHasChanged();
+        }
+
+        void ReloadData()
+        {
+            
         }
 
         public class ResourceData : INotifyPropertyChanged
@@ -437,7 +463,6 @@ namespace Web.UI.Pages.Scheduler
         public bool isBusyDeleteButton { get; set; }
         public bool isDisplayCheckOutOption { get; set; }
         public bool isDisplayForm { get; set; }
-        public bool dialogVisibility { get; set; }
         public bool isDisplayFlightInfo { get; set; }
         public bool isDisplayInstructor { get; set; }
         public bool isDisplayFlightRoutes { get; set; }

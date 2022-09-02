@@ -89,75 +89,6 @@
     </div>
 </div>
  
-<!--OLD CODE-->
-<!--
-<div class="row" style="margin-bottom:22px;">
-
-    <div class="col-md-4">
-
-        <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange"
-                           Format="MM/dd/yyyy %h:mm tt" Placeholder="Select Start Date" Id="startDate">
-        </TelerikDatePicker>
-
-        <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange"
-                           Format="MM/dd/yyyy %h:mm tt" Id="endDate" Placeholder="Select End Date">
-        </TelerikDatePicker>
-
-    </div>
-
-    @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
-    {
-        <div class="col-md-4">
-
-            <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id"
-                         Value="@reservationFilterVM.CompanyId"
-                         ValueExpression="@( () => reservationFilterVM.CompanyId )"
-                         ValueChanged="@( (int value) => GetUsersList(value) )">
-            </TelerikComboBox>
-
-        </div>
-
-        <div class="col-md-4">
-            <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select User" ValueField="Id"
-                         @bind-Value="@reservationFilterVM.UserId"
-                         OnChange="() => grid.Rebind()">
-            </TelerikComboBox>
-        </div>
-    }
-
-    @if (AircraftId == null)
-    {
-        <div class="col-md-4">
-            <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Aircraft" ValueField="Id"
-                         @bind-Value="@reservationFilterVM.AircraftId"
-                         OnChange="() => grid.Rebind()">
-            </TelerikComboBox>
-        </div>
-    }
-
-    <div class="col-md-4">
-
-        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation"
-                        ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
-    </div>
-
-    <div class="col-md-4">
-        <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Reservation Type" ValueField="Id"
-                         @bind-Value="@reservationFilterTypeId"
-                         OnChange="() => grid.Rebind()">
-        </TelerikComboBox>
-    </div>
-</div>
--->
-
 <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
@@ -185,6 +116,8 @@
         <GridCommandColumn Context="dataItem" Title="To">
             @{
                 ReservationDataVM value = dataItem as ReservationDataVM;
+                <GridColumn Field="@nameof(ReservationDataVM.ScheduleTitle)" Title="Title" Sortable="true" />
+
                 <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
             }
 
@@ -223,9 +156,9 @@
             @{
                 ReservationDataVM value = dataItem as ReservationDataVM;
 
-                <TelerikButton Class="btn k-btn-grid-view mx-1" ThemeColor="info" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!isBusyAddButton)">
-                    View
-                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!value.IsButtonLoading)">
+                  <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons> View
+                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@value.IsButtonLoading">
                     </TelerikLoader>
 
                 </TelerikButton>
@@ -254,22 +187,3 @@
 
     </CustomPopupComponent>
 }
-@*<SfDialog @bind-Visible="@uiOptions.dialogVisibility" AllowDragging="true" IsModal="true" Width="624px" ShowCloseIcon="true">
-
-
-
-    <DialogTemplates>
-    <Header> <h5>Schedule Appointment</h5> </Header>
-    <Content>
-
-    <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-    InitializeValuesParentEvent="@InitializeValues"
-    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
-    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
-
-    </Content>
-    </DialogTemplates>
-
-    </SfDialog>
-*@
