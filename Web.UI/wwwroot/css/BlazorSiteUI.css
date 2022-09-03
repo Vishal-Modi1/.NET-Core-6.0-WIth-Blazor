@@ -304,6 +304,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .dropdown-menu {
   box-shadow: 0 4px 8px 0 rgba(2, 34, 84, 0.35), 0 6px 20px 0 rgba(2, 34, 84, 0.61) !important;
+  z-index: 1051;
 }
 
 .show-notification-dot {

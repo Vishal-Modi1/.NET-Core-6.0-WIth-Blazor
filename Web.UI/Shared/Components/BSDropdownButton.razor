@@ -13,8 +13,11 @@
         <div class="dropdown-menu ms-2 @(ShowMenuItem ? "d-block":"")" aria-labelledby="dropdownMenuButton">
             @foreach (var item in BSDropdownItemList)
             {
-                 <a class="dropdown-item" href="@(item.URL)">@(item.DisplayValue)</a>
+                <a class="dropdown-item" href="@(item.URL)" @onclick=@(() => ToggleShowMenu())>@(item.DisplayValue)</a>
             }
         </div>
+        @if (ShowMenuItem) {
+            <div class="modal-backdrop fade show" @onclick=@(() => ToggleShowMenu())></div>
+        }
     }
 </div> 

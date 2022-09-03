@@ -15,6 +15,7 @@ namespace Web.UI.Shared
         UINotification UINotification { get; set; } = new UINotification();
 
         [Parameter] public bool Expanded { get; set; }
+        [Parameter] public bool IsMainContainerTransparent { get; set; } = true;
 
         bool sidebarExpanded = true, bodyExpanded = false, isSuperAdmin;
 

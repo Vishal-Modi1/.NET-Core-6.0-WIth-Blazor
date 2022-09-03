@@ -91,7 +91,7 @@
                 <CascadingValue IsFixed="true" Value="@UINotification">
                     <LeftHeader></LeftHeader>
                     <TelerikRootComponent>
-                        <div class="card ms-3 me-3 my-3 p-3">
+                            <div class="@(IsMainContainerTransparent ? "ms-3 me-3 my-3 p-3" : "card ms-3 me-3 my-3 p-3")">
                             @Body
                         </div>
                     </TelerikRootComponent>

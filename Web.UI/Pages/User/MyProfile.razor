@@ -1,0 +1,245 @@
+﻿@namespace Web.UI.Pages.Dashboard
+@using Web.UI.Shared.Components;
+
+@page "/myprofile"
+<style>
+    .nav-item {
+        border-right: 2px solid rgba(17, 17, 17, 0.3);
+    }
+
+        .nav-item:last-child {
+            border-right: none;
+        }
+
+    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+        color: inherit;
+        background-color: inherit;
+        border-bottom: 4px solid #3066F8;
+    }
+
+    .nav.nav {
+        border-bottom: 1px solid #D9D9D9;
+    }
+    .custom-label{
+        color: #8A8C9B;
+    }
+</style>
+<div class="row my-2">
+    <div class="col-md-4 col-lg-4 col-12">
+        <div class="card p-0"
+             style="height: 350px !important;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
+            <div class="card-body p-0">
+                <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;background-color:transparent;">
+                    <span class="d-flex justify-content-end mt-3 k-cursor-pointer" @onclick="@(() => DummyAction())">
+                        <CustomIcons IconName="edit-square" PrimaryColor="white" />
+                    </span>
+                    <img src="https://fly-manager-dev-api.azurewebsites.net/Uploads//UserProfileImages/1/20220511090500_3.jpeg" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                         style="height: 126px;width: auto;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
+                </div>
+                <div class="row bg-white d-flex align-items-center w-100 m-0" style="height: 200px;border-radius: 0 0 7px 7px;">
+                    <div class="col-12 text-center">
+                        <h3><b>Vishal Modi (Super Admin)</b></h3>
+                        <h6>Pilot Supervisor</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 col-lg-8 col-12">
+        <div class="card" style="height: 350px !important;">
+            <div class="card-body">
+                <ul class="nav nav-pills mb-3 d-flex" id="pills-tab" role="tablist">
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Personal Information"))">
+                        <button class="nav-link flex-fill @(currentActiveInfoTab == "Personal Information" ? "active" : "")" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                            <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons></span>
+                            Personal Information
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Company Information"))">
+                        <button class="nav-link flex-fill @(currentActiveInfoTab == "Company Information" ? "active" : "")" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons></span>
+                            Company Information
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Aircraft Type"))">
+                        <button class="nav-link flex-fill @(currentActiveInfoTab == "Aircraft Type" ? "active" : "")" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <span class="mx-2"><CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons></span>
+                            Aircraft Type
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade @(currentActiveInfoTab == "Personal Information" ? "show active" : "")" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <div class="row my-3">
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">First Name :</label>
+                                        <label for="inputFirstName" class="">Vishal</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Last Name :</label>
+                                        <label for="inputFirstName" class="">Modi</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">User role :</label>
+                                        <label for="inputFirstName" class="">Pilot</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Email :</label>
+                                        <label for="inputFirstName" class="">vishal@cendien.com</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Mobile :</label>
+                                        <label for="inputFirstName" class="">241 345 2548</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Date of Birth :</label>
+                                        <label for="inputFirstName" class="">10/05/02</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Is Instructor</label>
+                                        <label for="inputFirstName" class=""><TelerikSwitch Class="float-right" @bind-Value="@IsInstructor"></TelerikSwitch></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Country :</label>
+                                        <label for="inputFirstName" class="">USA</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="row g-3 align-items-center mx-2">
+                                    <div class="col-12">
+                                        <label for="inputFirstName" class="col-form-label custom-label">Gender :</label>
+                                        <label for="inputFirstName" class="">Male</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-lg-12 d-flex justify-content-end mx-2">
+                                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary m-3" Enabled="@(!isBusySubmitButton)">
+                                    Update Details
+                                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade @(currentActiveInfoTab == "Company Information" ? "show active" : "")" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <h3>Company Information</h3>
+                    </div>
+                    <div class="tab-pane fade @(currentActiveInfoTab == "Aircraft Type" ? "show active" : "")" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <h3>Aircraft Type</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col-md-12 col-lg-12 col-12">
+        <div class="card" style="height: 350px;">
+            <div class="card-body">
+                <ul class="nav nav-pills mb-3 d-flex" id="pills-tab" role="tablist">
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfo2Tab("My Preference"))">
+                        <button class="nav-link flex-fill @(currentActiveInfo2Tab == "My Preference" ? "active" : "")" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                            <span class="mx-2"><CustomIcons IconName="documents" PrimaryColor="#3066f8"></CustomIcons></span> My Preference
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfo2Tab("Document"))">
+                        <button class="nav-link flex-fill @(currentActiveInfo2Tab == "Document" ? "active" : "")" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            <span class="mx-2"><CustomIcons IconName="folder" PrimaryColor="#3066f8"></CustomIcons></span> Document
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfo2Tab("Reservation"))">
+                        <button class="nav-link flex-fill @(currentActiveInfo2Tab == "Reservation" ? "active" : "")" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <span class="mx-2"><CustomIcons IconName="medical-chart" SecondaryColor="white"  PrimaryColor="#3066f8"></CustomIcons></span> Reservation
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfo2Tab("Total Aircraft Time"))">
+                        <button class="nav-link flex-fill @(currentActiveInfo2Tab == "Total Aircraft Time" ? "active" : "")" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <span class="mx-2"><CustomIcons IconName="plane-line" PrimaryColor="#3066f8" SecondaryColor="white"></CustomIcons></span> Total Aircraft Time
+                        </button>
+                    </li>
+                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfo2Tab("Total Time"))">
+                        <button class="nav-link flex-fill @(currentActiveInfo2Tab == "Total Time" ? "active" : "")" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <span class="mx-2"><CustomIcons IconName="clock" PrimaryColor="#3066f8"></CustomIcons></span> Total Time
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade @(currentActiveInfo2Tab == "My Preference" ? "show active" : "")" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <h3>My Preference</h3>
+                    </div>
+                    <div class="tab-pane fade @(currentActiveInfo2Tab == "Document" ? "show active" : "")" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <h3>Document </h3>
+                    </div>
+                    <div class="tab-pane fade @(currentActiveInfo2Tab == "Reservation" ? "show active" : "")" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <h3>Reservation</h3>
+                    </div>
+                    <div class="tab-pane fade @(currentActiveInfo2Tab == "Total Aircraft Time" ? "show active" : "")" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <h3>Total Aircraft Time</h3>
+                    </div>
+                    <div class="tab-pane fade @(currentActiveInfo2Tab == "Total Time" ? "show active" : "")" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <h3>Total Time</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    string currentActiveInfoTab { get; set; } = "Personal Information";
+    string currentActiveInfo2Tab { get; set; } = "My Preference";
+    bool IsInstructor { get; set; } = false;
+    bool isBusySubmitButton { get; set; } = false;
+
+    void SetCurrentActiveInfoTab(string activeInfoTab)
+    {
+        if (currentActiveInfoTab != activeInfoTab)
+        {
+            currentActiveInfoTab = activeInfoTab;
+        }
+    }
+    void SetCurrentActiveInfo2Tab(string activeInfoTab)
+    {
+        if (currentActiveInfo2Tab != activeInfoTab)
+        {
+            currentActiveInfo2Tab = activeInfoTab;
+        }
+    }
+    void DummyAction() {}
+}
