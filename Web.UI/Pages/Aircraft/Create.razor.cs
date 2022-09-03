@@ -13,6 +13,9 @@ namespace Web.UI.Pages.Aircraft
     {
         [Parameter] public AircraftVM aircraftData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+
+        TelerikTabStrip telerikTabStrip;
+
         public TelerikWizard steps;
         public List<DropDownValues> YearDropDown { get; set; }
         public List<DropDownValues> NoofEnginesDropDown { get; set; }
@@ -262,12 +265,14 @@ namespace Web.UI.Pages.Aircraft
 
         void OpenNextTab()
         {
-            steps.Value = 1;
+            //steps.Value = 1;
+            telerikTabStrip.ActiveTabIndex = 1;
         }
 
         void OpenPreviousTab()
         {
-            steps.Value = 0;
+            //steps.Value = 0;
+            telerikTabStrip.ActiveTabIndex = 0;
         }
 
         private bool ManageIsAircraftExistResponse(CurrentResponse response, string summary)
