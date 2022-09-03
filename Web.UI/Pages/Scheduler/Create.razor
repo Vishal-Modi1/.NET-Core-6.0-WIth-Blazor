@@ -19,6 +19,183 @@
         <FormItems>
             @if (uiOptions.isDisplayForm)
             {
+                <div class="row">
+                    <div class="col-6">
+                        <label>Display Title</label>
+                        <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => schedulerVM.DisplayTitle)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>Activity Type</label>
+                        <TelerikComboBox Id=companyId Data="@schedulerVM.ScheduleActivitiesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Activity" ValueField="Id"
+                                 Value="@schedulerVM.ScheduleActivityId"
+                                 ValueExpression="@( () => schedulerVM.ScheduleActivityId )"
+                                 ValueChanged="@( (int? value) => OnActivityTypeValueChanged(value) )">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => schedulerVM.ScheduleActivityId)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>Start Time</label>
+                        <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime"
+                                       Format="MM/dd/yyyy %h:mm tt" Id="startTime">
+
+                            <DateTimePickerSteps Minute="30" />
+
+                        </TelerikDateTimePicker>
+
+                        <TelerikValidationMessage For="@(() => schedulerVM.StartTime)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>End Time</label>
+                        <TelerikDateTimePicker @bind-Value="@schedulerVM.EndTime"
+                                       Format="MM/dd/yyyy %h:mm tt" Id="endTime">
+
+                            <DateTimePickerSteps Minute="30" />
+
+                        </TelerikDateTimePicker>
+
+                        <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
+                    </div>
+                    @if (uiOptions.isDisplayAircraftDropDown)
+                    {
+                        <div class="col-6">
+                            <label>Aircraft</label>
+                            <TelerikComboBox Id=aircraftId Data="@schedulerVM.AircraftsList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Aircraft" ValueField="Id"
+                                 @bind-Value="@(schedulerVM.AircraftId)">
+
+                            </TelerikComboBox>
+
+                            <TelerikValidationMessage For="@(() => schedulerVM.AircraftId)"></TelerikValidationMessage>
+                        </div>
+                    }
+
+                    <div class="col-6">
+                        <label>DisplayTitle</label>
+                        <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => schedulerVM.DisplayTitle)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>DisplayTitle</label>
+                        <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => schedulerVM.DisplayTitle)"></TelerikValidationMessage>
+                    </div>
+                    @if (schedulerVM.ScheduleActivityId > 0)
+                    {
+                        @if (uiOptions.isDisplayRecurring)
+                        {
+                            <div class="col-6">
+                                <label>Recurring ?</label>
+                                <TelerikSwitch Id="isRecurring" @bind-Value=@schedulerVM.IsRecurring />
+                            </div>
+                        }
+
+                        @if (uiOptions.isDisplayMember1Dropdown)
+                        {
+
+                            <div class="col-6">
+                                <label>Member 1</label>
+                                <TelerikComboBox Id=member1Id Data="@schedulerVM.Member1List" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Member 1" ValueField="Id"
+                                 @bind-Value="@(schedulerVM.Member1Id)">
+
+                                </TelerikComboBox>
+                            </div>
+                        }
+
+                        @if (uiOptions.isDisplayMember2Dropdown)
+                        {
+                            <div class="col-6">
+                                <label>Member 2</label>
+                                <TelerikComboBox Id=member2Id Data="@schedulerVM.Member2List" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Member 2" ValueField="Id"
+                                 @bind-Value="@(schedulerVM.Member2Id)">
+
+                                </TelerikComboBox>
+                            </div>
+
+                        }
+
+                        @if (uiOptions.isDisplayFlightInfo)
+                        {
+                            <div class="col-6">
+                                <label>Flight Type</label>
+                                <TelerikRadioGroup Data="@flightTypes" ValueField="@nameof(RadioButtonItem.Text)"
+                                   TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerVM.FlightType"
+                                   Layout="@RadioGroupLayout.Horizontal"
+                                   LabelPosition="@RadioGroupLabelPosition.After" />
+                            </div>
+
+
+
+                            <div class="col-6">
+                                <label>Flight Rules</label>
+                                <TelerikRadioGroup Data="@flightRules" ValueField="@nameof(RadioButtonItem.Text)"
+                                   TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerVM.FlightRules"
+                                   Layout="@RadioGroupLayout.Horizontal"
+                                   LabelPosition="@RadioGroupLabelPosition.After" />
+                            </div>
+
+
+
+                            <div class="col-6">
+                                <label>Est Hours</label>
+                                <TelerikNumericTextBox Placeholder="Enter Hours" @bind-Value="@schedulerVM.EstHours" />
+
+                            </div>
+                        }
+                        @if (uiOptions.isDisplayInstructor)
+                        {
+                            <div class="col-6">
+                                <label>Instructor</label>
+                                <TelerikComboBox Id=instructorId Data="@schedulerVM.InstructorsList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Instructor" ValueField="Id"
+                                 @bind-Value="@(schedulerVM.InstructorId)" />
+                            </div>
+                        }
+
+                        @if (uiOptions.isDisplayFlightRoutes)
+                        {
+                            <div class="col-6">
+                                <label>Flight Routes</label>
+                                <TelerikTextArea Class="w-100" PlaceHolder="Enter fligt routes" AutoSize="true"
+                                 @bind-Value="@schedulerVM.FlightRoutes" />
+                            </div>
+                        }
+
+                        <div class="col-6">
+                            <label>Comments</label>
+                            <TelerikTextArea Class="w-100" PlaceHolder="Enter comments" AutoSize="true"
+                                 @bind-Value="@schedulerVM.Comments" />
+                        </div>
+                        <div class="col-6">
+                            <label>Internal Comments</label>
+
+                            <TelerikTextArea Class="w-100" PlaceHolder="Enter internal comments" AutoSize="true"
+                                 @bind-Value="@schedulerVM.InternalComments" />
+                        </div>
+
+
+                    }
+                    @if (uiOptions.isDisplayStandBy)
+                    {
+                        <div class="col-6">
+                            <label>StandBy</label>
+
+                            <TelerikCheckBox @bind-Value="@schedulerVM.IsStandBy" Id="isRecurring" />
+                        </div>
+                    }
+                </div>
+                
+                <!--OLD CODE START-->
+                <!-- 
                 <table class="custom-event-editor" width="100%" cellpadding="5">
                     <tbody>
 
@@ -241,18 +418,17 @@
 
                     </tbody>
                 </table>
-
-                <div class="row" style="margin-top:4%">
-                    <div class="col-md-12 text-right">
-                        <div class="d-flex btn-grp justify-content-evenly">
-                            <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary">
-                                Continue
-                            </TelerikButton>
-
-                            <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" Class="btn k-btn-secondary mr-1">
-                                Cancel
-                            </TelerikButton>
-                        </div>
+                        -->
+                <!--OLD CODE END-->
+                <hr />
+                <div class="row bg-gray d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary">
+                            Continue
+                        </TelerikButton>
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" Class="btn k-btn-secondary mr-1">
+                            Cancel
+                        </TelerikButton>
                     </div>
                 </div>
             }
@@ -701,58 +877,58 @@ else
 @{
     if (isDisplayChildPopup)
     {
-        <CustomPopupComponent Title="@childPopupTitle"
+    <CustomPopupComponent Title="@childPopupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false"
                       OnClose="@(()=> {isDisplayChildPopup = false;})">
 
-            <Body>
+                <Body>
 
-                @if (operationType == OperationType.UnCheckOut)
+                    @if (operationType == OperationType.UnCheckOut)
                 {
-                    <div>
-                        <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
-                        <div class="row" style="text-align:right">
-                            <div class="col">
+                        <div>
+                            <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
+                            <div class="row" style="text-align:right">
+                                <div class="col">
 
-                                <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
-                                    Yes
-                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
-                                    </TelerikLoader>
-                                </TelerikButton>
+                                    <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
+                                        Yes
+                                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
+                                        </TelerikLoader>
+                                    </TelerikButton>
 
 
-                                <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
-                                    No
-                                </TelerikButton>
+                                    <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                        No
+                                    </TelerikButton>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 }
 
                 else if (operationType == OperationType.Delete)
                 {
-                    <div>
-                        <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
-                        <div class="row" style="text-align:right">
-                            <div class="col">
+                        <div>
+                            <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
+                            <div class="row" style="text-align:right">
+                                <div class="col">
 
-                                <TelerikButton Class="btn k-btn-danger" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
-                                    Yes
-                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
-                                    </TelerikLoader>
-                                </TelerikButton>
+                                    <TelerikButton Class="btn k-btn-danger" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
+                                        Yes
+                                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
+                                        </TelerikLoader>
+                                    </TelerikButton>
 
 
-                                <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
-                                    No
-                                </TelerikButton>
+                                    <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                        No
+                                    </TelerikButton>
+                                </div>
                             </div>
                         </div>
-                    </div>
                 }
-            </Body>
+                </Body>
 
-        </CustomPopupComponent>
+    </CustomPopupComponent>
     }
 }

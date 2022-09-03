@@ -13,5 +13,6 @@ namespace DataModels.VM.Account
         public string Password { get; set; }
 
         public string TimeZone { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

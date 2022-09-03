@@ -74,7 +74,8 @@
                         </button>
                     </li>
                 </ul>
-                <div class="tab-content" id="pills-tabContent" style="overflow-y: scroll;max-height: 205px;">
+                @*style="overflow-y: scroll;max-height: 205px;"*@
+                <div class="tab-content" id="pills-tabContent" >
                     <div class="tab-pane fade @(currentActiveInfoTab == "Personal Information" ? "show active" : "")" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="row my-3">
                             <div class="col-lg-4">
@@ -154,15 +155,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row my-3">
-                            <div class="col-lg-12 d-flex justify-content-end mx-2">
-                                <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenUpdateProfileDialog" ThemeColor="info" Class="btn k-btn-primary m-3" Enabled="@(!isBusySubmitButton)">
-                                    Update Details
-                                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                                    </TelerikLoader>
-                                </TelerikButton>
-                            </div>
-                        </div>
+                        @if (true) //_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName)
+                        {
+                             <div class="row my-3">
+                                    <div class="col-lg-12 d-flex justify-content-end mx-2">
+                                        <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenUpdateProfileDialog" ThemeColor="info" Class="btn k-btn-primary m-3" Enabled="@(!isBusySubmitButton)">
+                                            Update Details
+                                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                                            </TelerikLoader>
+                                        </TelerikButton>
+                                    </div>
+                             </div>
+                        }
+                       
                     </div>
                     <div class="tab-pane fade @(currentActiveInfoTab == "Company Information" ? "show active" : "")" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <h3>Company Information</h3>
@@ -285,3 +290,21 @@
     }
 
 </TelerikTabStrip>
+
+
+                    
+@if (isDisplayPopup)
+{
+    popupTitle = "Update User";
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <UpdateMyProfile userVM="@userVM" CloseDialogCallBack="@CloseDialog" />
+            }
+        </Body>
+    </CustomPopupComponent>
+}

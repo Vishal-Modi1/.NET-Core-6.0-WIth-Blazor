@@ -1,0 +1,109 @@
+﻿@using DataModels.VM.Aircraft
+@using Web.UI.Utilities;
+@using DataModels.Enums;
+@using Web.UI.Pages.AircraftModel;
+
+<TelerikForm Model="@userVM" OnValidSubmit="@Submit">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="row">
+            <div class="col-6">
+                <label>First Name</label>
+                <TelerikTextBox @bind-Value="@userVM.FirstName" Enabled="false"></TelerikTextBox>
+                <input type="hidden" id="CompanyId" value="@userVM.Id" />
+            </div>
+            <div class="col-6">
+                <label>Last Name</label>
+                <TelerikTextBox @bind-Value="@userVM.LastName" Enabled="false"></TelerikTextBox>
+            
+            </div>
+            <div class="col-6">
+                <label>Email Address</label>
+                <TelerikTextBox @bind-Value="@userVM.Email" Enabled="false"></TelerikTextBox>
+            
+            </div>
+            <div class="col-6">
+                <label>Mobile No</label>
+                <TelerikTextBox @bind-Value="@userVM.Phone" Enabled="false"></TelerikTextBox>
+                        </div>
+            <div class="col-6">
+                <label>User Role</label>
+                <TelerikComboBox Id="Id" Data="@userVM.UserRoles" TextField="Name"
+                                 @bind-Value="@userVM.RoleId"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Make" ValueField="Id">
+                </TelerikComboBox>
+            </div>
+            <div class="col-6">
+                <label>Country</label>
+                @*<TelerikComboBox Id="Id" Data="@userVM.Countries" TextField="Name" @bind-Value="@userVM.Country"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Make" ValueField="Id">
+                </TelerikComboBox>*@
+            </div>
+            <div class="col-6">
+                <label>Date of Birth</label>
+                <TelerikDateTimePicker @bind-Value="@userVM.DateofBirth"
+                                       Format="dd MMM yyyy HH:mm:ss" Width="250px"></TelerikDateTimePicker>
+            </div>
+            <div class="col-6">
+                <label>Aircraft Type</label>
+                <TelerikComboBox Id="Id" Data="@userVM.InstructorTypes" TextField="Name"
+                                 ValueExpression="@(() => userVM.InstructorTypeId)"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Make" ValueField="Id">
+                </TelerikComboBox>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label>Gender</label>
+                <TelerikRadioGroup Data="@GenderOptions"
+                                   @bind-Value="@userVM.GenderId"
+                                   ValueField="@nameof(GenderModel.GenderId)"
+                                   TextField="@nameof(GenderModel.GenderText)">
+                </TelerikRadioGroup>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <label>Is Instructor</label>
+                <div>
+                    <TelerikSwitch Class="float-right" @bind-Value="@userVM.IsInstructor"></TelerikSwitch>
+                </div>
+            </div>
+            <div class="col-4">
+                <label>Send Email Invite</label>
+                <div>
+                    <TelerikSwitch Class="float-right" @bind-Value="@userVM.IsSendEmailInvite"></TelerikSwitch>
+                </div>
+            </div>
+            <div class="col-4">
+                <label>Send Text Invite</label>
+                <div>
+                    <TelerikSwitch Class="float-right" @bind-Value="@userVM.IsSendTextMessage"></TelerikSwitch>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row bg-gray d-flex justify-content-end">
+            <div class="d-flex justify-content-end">
+                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+                    Update <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
+                </TelerikButton>
+
+                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                    Cancel
+                </TelerikButton>
+            </div>
+        </div>
+    </FormItems>
+
+    <FormButtons></FormButtons>
+
+</TelerikForm>
