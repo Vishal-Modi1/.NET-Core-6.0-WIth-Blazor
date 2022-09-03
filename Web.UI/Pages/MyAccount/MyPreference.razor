@@ -1,0 +1,89 @@
+﻿@using DataModels.VM.Common
+@using DataModels.VM.UserPreference
+
+<h3>MyPreference</h3>
+
+<TelerikForm Model="@userPreferenceVM" OnValidSubmit="@Submit">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@userPreferenceVM.Id" name="Id" />
+
+        <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <label for="preferenceType" class="k-label k-form-label">Preference Type</label>
+            </div>
+            <div class="col-md-4">
+
+                <TelerikComboBox Id=preferenceType Data="@preferenceTypesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Preference Type" ValueField="Id"
+                                 Value="@preferenceTypeId"
+                                 ValueExpression="@( () => preferenceTypeId)"
+                                 ValueChanged="@( (int value) => GetPreferenceValues(value) )">
+                </TelerikComboBox>
+
+                @*TODO: Pending to add validations*@
+                <TelerikValidationMessage For="@(() => preferenceTypeId)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        @if (aircraftList.Count() > 0)
+        {
+            <div class="row">
+                <div class="col-md-2 align-items-center d-flex">
+                    <label for="aircraft" class="k-label k-form-label">Aircraft</label>
+                </div>
+                <div class="col-md-4">
+
+                    @*TODO: Pending to add validations*@
+                    <TelerikMultiSelect Data="@aircraftList"
+                                    @bind-Value="@multipleValues" AutoClose="false" Placeholder="Select aircrafts"
+                                    TextField="Name" ValueField="Id">
+                    </TelerikMultiSelect>
+
+
+                </div>
+            </div>
+        }
+
+        @if (activityTypeList.Count() > 0)
+        {
+            <div class="row">
+                <div class="col-md-2 align-items-center d-flex">
+                    <label for="activityType" class="k-label k-form-label">Activity Type</label>
+                </div>
+                <div class="col-md-4">
+
+                    <TelerikMultiSelect Data="@activityTypeList"
+                                    @bind-Value="@multipleActivites" AutoClose="false" Placeholder="Select activities"
+                                    TextField="Name" ValueField="Id">
+                    </TelerikMultiSelect>
+                </div>
+            </div>
+        }
+
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+
+                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
+                    Save
+                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                    </TelerikLoader>
+
+                </TelerikButton>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

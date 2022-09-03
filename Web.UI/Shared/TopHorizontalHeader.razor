@@ -10,7 +10,8 @@
     <span class="d-flex align-items-center justify-content-center">
         <Web.UI.Shared.Components.BSDropdownButton BSDropdownItemList="@BSDropdownItemList" StyleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
         </Web.UI.Shared.Components.BSDropdownButton>
-    </span>
+
+    </span> 
 
 </div>
 
@@ -19,6 +20,7 @@
     protected List<BSDropdownItem> BSDropdownItemList = new List<BSDropdownItem>()
     {
         new BSDropdownItem{ DisplayValue = "Update profile",URL="/myprofile" },
+        new BSDropdownItem{ DisplayValue = "Change Password",URL="/myprofile" },
         new BSDropdownItem{ DisplayValue = "Log Out",URL="/logout" },
     };
 }

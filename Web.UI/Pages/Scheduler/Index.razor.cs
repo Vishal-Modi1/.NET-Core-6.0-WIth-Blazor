@@ -54,7 +54,6 @@ namespace Web.UI.Pages.Scheduler
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
 
-            isDisplayLoader = true;
             InitializeValues();
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -83,7 +82,6 @@ namespace Web.UI.Pages.Scheduler
                 await LoadDataAsync(currentDate);
 
                 isDisplayScheduler = true;
-                isDisplayLoader = false;
             }
         }
 
@@ -103,9 +101,6 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task LoadDataAsync(DateTime currDate)
         {
-            isDisplayLoader = true;
-            base.StateHasChanged();
-
             Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currDate, currentView, multiDayDaysCount);
 
             schedulerFilter.StartTime = dates.Item1;
@@ -169,10 +164,6 @@ namespace Web.UI.Pages.Scheduler
             {
                 schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
             }
-
-            isDisplayLoader = false;
-
-            base.StateHasChanged();
         }
 
         private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
@@ -279,8 +270,6 @@ namespace Web.UI.Pages.Scheduler
                 return;
             }
 
-            isDisplayLoader = true;
-
             InitializeValues();
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -304,8 +293,7 @@ namespace Web.UI.Pages.Scheduler
 
             //  args.Cancel = true;
             isDisplayPopup = true;
-
-            isDisplayLoader = false;
+            popupTitle = "Schedule Appointment";
         }
 
         //public async Task OnEventClick(EventClickArgs<SchedulerVM> args)
