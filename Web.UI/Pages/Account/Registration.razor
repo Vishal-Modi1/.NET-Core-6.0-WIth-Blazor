@@ -1,0 +1,58 @@
+﻿@page "/Registration"
+
+@layout EmptyLayout
+
+<PageTitle> Register | Fly Manager </PageTitle>
+
+
+<div class="col-lg-6 @(currentStep == 0 ? "col-xl-9" : "col-xl-10")">
+
+    <div class="m-3">
+
+        <div class="d-flex">
+            <div class="w-100">
+                <h3 class="mb-4">Sign up to Fly Manager </h3>
+            </div>
+        </div>
+
+
+        <TelerikTabStrip Class="k-tabstrip-list" ActiveTabIndex="@currentStep">
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+                        </span>
+                        <span>Company Details</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <Web.UI.Pages.Company.Create CompanyData="@companyData" IsInvited=@userVM.IsInvited GoToNext="@(() => GoToNextStepAsync())">
+
+                    </Web.UI.Pages.Company.Create>
+                </Content>
+
+            </TabStripTab>
+
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+                        </span>
+                        <span>Personal Details</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                     <Web.UI.Pages.User.Create userData="@userVM" GoBackStep=@GoToBackStep SaveBothStepsValue=@SaveAsync>
+
+                    </Web.UI.Pages.User.Create>
+                </Content>
+
+            </TabStripTab>
+
+
+        </TelerikTabStrip>
+       
+    </div>
+</div>
