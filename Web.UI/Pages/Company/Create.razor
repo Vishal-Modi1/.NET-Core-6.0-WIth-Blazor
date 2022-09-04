@@ -9,7 +9,11 @@
     <FormItems>
         @if (!isAuthenticated)
         {
-            <hr style="margin-bottom:35px" />
+            if (!FromAuthoriseSection)
+            {
+                <hr style="margin-bottom:35px" />
+            
+            }
         }
 
         <input type="hidden" value="@companyData.Id" name="Id" />

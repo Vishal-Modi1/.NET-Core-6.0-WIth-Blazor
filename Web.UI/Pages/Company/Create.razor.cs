@@ -11,6 +11,7 @@ namespace Web.UI.Pages.Company
     {
         [Parameter] public CompanyVM companyData { get; set; }
         [Parameter] public bool IsInvited { get; set; }
+        [Parameter] public bool FromAuthoriseSection { get; set; }
 
         [Parameter] public Action GoToNext { get; set; }
 

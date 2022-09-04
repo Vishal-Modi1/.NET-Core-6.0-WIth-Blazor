@@ -15,6 +15,8 @@ namespace Web.UI.Pages.User
     {
         [Parameter] public UserVM userData { get; set; }
 
+        [Parameter] public bool FromAuthoriseSection { get; set; }
+
         [Parameter] public Action SaveBothStepsValue { get; set; }
 
         [Parameter] public Action GoBackStep { get; set; }
