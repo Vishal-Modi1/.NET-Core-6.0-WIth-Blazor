@@ -172,6 +172,7 @@
 @if (isDisplayPopup)
 {
     <CustomPopupComponent Title="@popupTitle"
+                      IsModalLg="true"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false"
                       OnClose="@(()=> {isDisplayPopup = false;})">

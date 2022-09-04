@@ -28,6 +28,16 @@ namespace Web.UI.Shared.Components.CustomPopup
         /// <summary>
         /// 
         /// </summary>
+        [Parameter] public bool IsModalLg { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Parameter] public bool ShowHeaderCloseButton { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         [Parameter] public RenderFragment? Footer { get; set; }
         [Parameter] public bool CloseOnOutsideClick { get; set; }
         [Parameter] public string HeaderCssClass { get; set; }

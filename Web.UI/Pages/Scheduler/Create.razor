@@ -7,7 +7,16 @@
 @using DataModels.Entities;
 @using DataModels.VM;
 @using Models.Shared
-
+@*
+@if (!uiOptions.isDisplayForm)
+{
+    <style type="text/css">
+        .modal-body{
+                padding-right: 0!important;
+                padding-left: 0!important;
+        }
+    </style>
+}*@
 @if (uiOptions.isDisplayMainForm)
 {
     <TelerikForm Model="@schedulerVM" OnValidSubmit="@OnValidSubmit">
@@ -19,7 +28,7 @@
         <FormItems>
             @if (uiOptions.isDisplayForm)
             {
-                <div class="row">
+                <div class="row compact-row">
                     <div class="col-6">
                         <label>Display Title</label>
                         <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
@@ -74,16 +83,6 @@
                         </div>
                     }
 
-                    <div class="col-6">
-                        <label>DisplayTitle</label>
-                        <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => schedulerVM.DisplayTitle)"></TelerikValidationMessage>
-                    </div>
-                    <div class="col-6">
-                        <label>DisplayTitle</label>
-                        <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => schedulerVM.DisplayTitle)"></TelerikValidationMessage>
-                    </div>
                     @if (schedulerVM.ScheduleActivityId > 0)
                     {
                         @if (uiOptions.isDisplayRecurring)
@@ -434,6 +433,7 @@
             }
             else
             {
+
                 <div class="row">
                     <div class="col-12">
                         <h5 class="d-flex justify-content-center">Status</h5>
@@ -444,58 +444,69 @@
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-center align-items-center alert alert-warning">
+                <div class="row justify-content-between align-items-center m-0 custom-border-y my-3">
                     <div class="col-3 d-flex flex-column">
                         <h5 class="d-flex justify-content-center" style="color :#00AFA5;">Start</h5>
-                        <div class="d-flex justify-content-center">@schedulerVM.StartTime.ToString("ddd, MMM dd")</div>
-                        <div class="d-flex justify-content-center">@schedulerVM.StartTime.ToString("%h:mm tt")</div>
+                        <div class="d-flex justify-content-center">@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</div>
                     </div>
                     <div class="col-3 d-flex flex-column">
                         <span class="d-flex justify-content-center">
-                            @*<h6>*@
-                                @*TODO
-                                    <MaterialIcon Theme="@MaterialIcon.Themes.TwoTone" Size="48">arrow_right_alt</MaterialIcon>*@
-                            @*</h6>*@
                             <div class="row">
                                 <div class="col-12">
-                                    <svg width="305" height="96" viewBox="0 0 305 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16.2871 76.8748C59.8182 28.1907 196.173 -2.89787 287.716 76.8748" stroke="url(#paint0_linear_907_6773)"/>
-                                <path d="M20.3555 82.3035C63.8866 71.4848 193.456 64.5762 284.999 82.3035" stroke="url(#paint1_linear_907_6773)"/>
-                                <circle cx="10.8572" cy="85.0178" r="10.3572" stroke="#111111"/>
-                                <circle cx="293.144" cy="85.0178" r="10.3572" stroke="#111111"/>
-                                <path d="M182.735 27.8956C182.735 28.4982 182.614 29.0947 182.379 29.6497C182.145 30.2047 181.801 30.707 181.369 31.1267C180.936 31.5465 180.424 31.8751 179.862 32.0933C179.3 32.3115 178.701 32.4147 178.098 32.3968L167.381 32.0824L159.569 48.2393C158.942 49.5376 157.623 50.3655 156.18 50.3655C155.884 50.3654 155.591 50.3024 155.321 50.1808C155.051 50.0593 154.81 49.8818 154.614 49.6601C154.417 49.4384 154.27 49.1776 154.182 48.8949C154.093 48.6121 154.066 48.3139 154.102 48.0199L156.051 31.7499L147.535 31.5011L146.427 34.5343C146.222 35.0958 145.849 35.5807 145.359 35.9234C144.869 36.266 144.286 36.4499 143.688 36.4502C143.42 36.4502 143.155 36.3974 142.907 36.2948C142.66 36.1923 142.435 36.042 142.246 35.8525C142.057 35.663 141.907 35.4381 141.804 35.1905C141.702 34.943 141.65 34.6778 141.65 34.4099V31.0714L139.818 30.6891C139.176 30.5554 138.6 30.2048 138.186 29.6963C137.773 29.1877 137.547 28.5522 137.547 27.8968C137.547 27.2413 137.773 26.6058 138.186 26.0973C138.6 25.5887 139.176 25.2381 139.818 25.1044L141.65 24.7244V21.3813C141.65 20.3409 142.426 19.4859 143.432 19.3592L143.688 19.3434C144.285 19.3439 144.868 19.5277 145.357 19.8699C145.847 20.2121 146.219 20.6962 146.425 21.2569L147.538 24.2879L156.022 24.0391L154.102 8.0157C154.097 7.97436 154.093 7.93287 154.09 7.8913L154.086 7.76689C154.086 6.61106 155.025 5.67236 156.18 5.67236C157.504 5.67236 158.72 6.36677 159.399 7.48189L159.569 7.79856L167.266 23.7111L178.101 23.3944C179.294 23.3597 180.453 23.8006 181.322 24.6201C182.19 25.4397 182.698 26.5707 182.733 27.7644L182.735 27.8956V27.8956Z" fill="#3066F8"/>
-                                <defs>
-                                <linearGradient id="paint0_linear_907_6773" x1="152.002" y1="40.2319" x2="152.002" y2="98.5892" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#111111"/>
-                                <stop offset="0.505232" stop-opacity="0.3"/>
-                                <stop offset="1" stop-color="#979797" stop-opacity="0"/>
-                                </linearGradient>
-                                <linearGradient id="paint1_linear_907_6773" x1="23.0698" y1="82.3036" x2="278.213" y2="82.3035" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#BABABA" stop-opacity="0.37"/>
-                                <stop offset="0.520535" stop-color="#57576B" stop-opacity="0.11"/>
-                                <stop offset="1" stop-color="#BABABA" stop-opacity="0.37"/>
-                                </linearGradient>
-                                </defs>
-                            </svg>
+                                    <CustomIcons IconName="start-end-plain-time" />
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
-                                    <span>StartTime</span>
-                                    <span>EndTIme</span>
+                                    <span>@schedulerVM.StartTime.ToString("%h:mm tt")</span>
+                                    <span>@schedulerVM.EndTime.ToString("%h:mm tt")</span>
                                 </div>
-                            
-
                             </div>
-
                         </span>
                     </div>
                     <div class="col-3 d-flex flex-column">
                         <h5 class="d-flex justify-content-center" style="color: #FE5722;">End</h5>
-                        <div class="d-flex justify-content-center">@schedulerVM.EndTime.ToString("ddd, MMM dd")</div>
-                        <div class="d-flex justify-content-center">@schedulerVM.EndTime.ToString("%h:mm tt")</div>
+                        <div class="d-flex justify-content-center">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</div>
                     </div>
-                   
                 </div>
-                <div class="row justify-content-center align-items-center ">
+                <div class="row justify-content-between align-items-center m-0 custom-border-y  my-3">
+                    <div class="col-3 d-flex flex-column">
+                        <h5 class="d-flex justify-content-center" style="color :#FE5722;">Departure Airport</h5>
+                        <div class="d-flex justify-content-center">Dummy International Airport</div>
+                    </div>
+                    <div class="col-3 d-flex flex-column">
+                        <span class="d-flex justify-content-center">
+                            <div class="row">
+                                <div class="col-12">
+                                   <CustomIcons IconName="dummy-plain" />
+                                </div>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <span>@schedulerVM.StartTime.ToString("%h:mm tt")</span>
+                                    <span>@schedulerVM.EndTime.ToString("%h:mm tt")</span>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="col-3 d-flex flex-column">
+                        <h5 class="d-flex justify-content-center" style="color: #00AFA5;">Arrival Airpot</h5>
+                        <div class="d-flex justify-content-center">Dummy International Airport</div>
+                    </div>
+                </div>
+                
+               @* <div class="row justify-content-between align-items-center">
+                    <div class="col-3 d-flex flex-column">
+                        <h5 class="d-flex justify-content-center" >Activity</h5>
+                        <div class="d-flex justify-content-center">@schedulerVM.ScheduleActivitiesList.FirstOrDefault(x => x.Id == schedulerVM.ScheduleActivityId).Name</div>
+                    </div>
+                    <div class="col-3 d-flex flex-column">
+                        <h5 class="d-flex justify-content-center" >Aircraft</h5>
+                        <div class="d-flex justify-content-center">@schedulerVM.AircraftsList.FirstOrDefault(x => x.Id == schedulerVM.AircraftId).Name</div>
+                    </div>
+                    <div class="col-3 d-flex flex-column">
+                        <h5 class="d-flex justify-content-center" >Title</h5>
+                        <div class="d-flex justify-content-center">@schedulerVM.DisplayTitle</div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-between align-items-center ">
                     <div class="col-12 d-flex flex-column">
                         <h4 class="d-flex justify-content-center popup-title">Reservation Id</h4>
                         <span class="d-flex justify-content-center">
@@ -509,9 +520,9 @@
                             }
                         </span>
                     </div>
-                </div>
-                <hr />
-                <div class="row justify-content-center mt-1">
+                </div>*@
+                
+                <div class="row justify-content-between align-items-center m-0 custom-border-y  my-3">
                     <div class="col-4 d-flex flex-column">
                         <h4 class="d-flex justify-content-center popup-title">Activity</h4>
                         <span class="d-flex justify-content-center">@(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</span>
@@ -525,8 +536,7 @@
                         <span class="d-flex justify-content-center"> @(schedulerVM.DisplayTitle)</span>
                     </div>
                 </div>
-                <hr />
-                <div class="row justify-content-center d-flex align-items-start">
+                <div class="row justify-content-between align-items-center m-0 custom-border-y  my-3">
                     <div class="col-4 d-flex flex-column">
                         <h4 class="d-flex justify-content-center popup-title">Member 1</h4>
                         <span class="d-flex justify-content-center">
@@ -569,25 +579,29 @@
                         </span>
                     </div>
                 </div>
-                <div class="row justify-content-center d-flex align-items-start mt-1 mb-1 bg-light text-dark alert">
-                    <strong>Comments </strong>
-                </div>
-                <div class="row justify-content-baseline d-flex align-items-start m-1">
-                    <div class="col-12 d-flex flex-column">
-                        @(schedulerVM.Comments ?? "-")
+                <div class="row justify-content-start align-items-center m-0 custom-border-y  my-3" style="background:#2e66ff1f">
+                    <div class="col-12 d-flex justify-content-between">
+                        <div class="mx-3">
+                            <h4 class="d-flex justify-content-start popup-title">Comments</h4>
+                        <span class="d-flex justify-content-start">
+                            @(schedulerVM.Comments ?? "-")
+                        </span>
+                        </div>
                     </div>
+                </div> 
 
-                </div>
-                <div class="row justify-content-center d-flex align-items-start mt-1 mb-1 bg-light text-dark alert">
-                    <strong>Internal Comments </strong>
-                </div>
-                <div class="row justify-content-baseline d-flex align-items-start m-1">
-                    <div class="col-12 d-flex flex-column">
-                        @(schedulerVM.InternalComments ?? "-")
+                <div class="row justify-content-start align-items-center m-0 custom-border-y  my-3" style="background:#2f66ff1f">
+                    <div class="col-12 d-flex justify-content-between">
+                        <div class="mx-3">
+                            <h4 class="d-flex justify-content-start popup-title">Internal Comments </h4>
+                        <span class="d-flex justify-content-start">
+                            @(schedulerVM.InternalComments ?? "-")
+                        </span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="d-flex btn-grp justify-content-evenly">
+                <div class="d-flex justify-content-between">
                     @if (uiOptions.isDisplayCheckOutOption)
                     {
                         if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
@@ -595,7 +609,7 @@
                             if (uiOptions.isDisplayCheckInButton)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckInAircraft"
-                           Class="btn k-btn-primary" Enabled="@(!uiOptions.isBusyCheckOutButton)">
+                                    Class="btn k-btn-primary flex-fill mx-2" Enabled="@(!uiOptions.isBusyCheckOutButton)">
                                     Check In
                                     <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
                                     </TelerikLoader>
@@ -604,7 +618,7 @@
                             else
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckOutAircraft"
-                           Class="btn k-btn-primary" Enabled="@(!uiOptions.isBusyCheckOutButton)">
+                           Class="btn k-btn-primary flex-fill mx-2" Enabled="@(!uiOptions.isBusyCheckOutButton)">
                                     Check Out
                                     <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
                                     </TelerikLoader>
@@ -617,10 +631,12 @@
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@ShowEditEndTimeForm"
-                           Class="btn k-btn-primary"> Edit End Time </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-2"> 
+                           <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                               Edit End Time </TelerikButton>
 
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenUnCheckOutDialog"
-                           Class="btn k-btn-primary"> Un-Check Out </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-2"> Un-Check Out </TelerikButton>
                             }
                         }
                         else
@@ -628,13 +644,15 @@
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenForm"
-                                Class="btn k-btn-primary"> Edit </TelerikButton>
+                                Class="btn k-btn-primary flex-fill mx-2"> 
+                                <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                                Edit </TelerikButton>
 
                             }
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, "Scheduler") && isAllowToDelete)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="@OpenDeleteDialog"
-                                Class="btn k-btn-error"> Delete </TelerikButton>
+                                Class="btn k-btn-error flex-fill mx-2"> Delete </TelerikButton>
                             }
                         }
                     }
@@ -643,15 +661,19 @@
                         if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                         {
                             <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@ShowEditEndTimeForm"
-                           Class="btn k-btn-primary"> Edit End Time </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-2"> 
+                           <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                           Edit End Time </TelerikButton>
 
                             <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@EditFlightTime"
-                           Class="btn k-btn-primary"> Edit Flight Time </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-2">
+                           <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                           Edit Flight Time </TelerikButton>
                         }
                     }
                     else
                     {
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary flex-fill mx-2" Enabled="@(!isBusySubmitButton)">
                             Save
                             <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
                             </TelerikLoader>
@@ -659,10 +681,10 @@
                         </TelerikButton>
 
                         <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@EditFlightTime"
-                           Class="btn k-btn-primary"> Back </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-2"> Back </TelerikButton>
                     }
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()"
-                           ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                           ThemeColor="secondary" Class="btn k-btn-secondary flex-fill mx-2" Enabled="@(!isBusySubmitButton)">
                         Cancel
                     </TelerikButton>
                 </div>
@@ -670,7 +692,7 @@
 
             @if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut || schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
-                <div class="mt-1 mb-1">
+                <div class="my-2">
                     <table style="width:100%;" class="table table-striped table-hover">
                         <thead>
                             <tr>
@@ -717,7 +739,43 @@
     @if (schedulerVM.AircraftSchedulerDetailsVM != null
 && (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) || !string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName)))
     {
-        <div class="alert alert-warning">
+
+        <div class="row justify-content-between align-items-center m-0 custom-border-y my-3">
+            <div class="col-3 d-flex flex-column">
+                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
+                {
+                    <h5 class="d-flex justify-content-center" style="color :#00AFA5;">Checked Out </h5>
+                    <div class="d-flex justify-content-center">@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd, yyyy")</div>
+                }
+            </div>
+            <div class="col-3 d-flex flex-column">
+                <span class="d-flex justify-content-center">
+                    <div class="row">
+                        <div class="col-12">
+                            <CustomIcons IconName="start-end-plain-time" />
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
+                            {
+                                <span>@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("%h:mm tt")</span>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
+                            {
+                                <span>@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("%h:mm tt")</span>
+                            }
+                        </div>
+                    </div>
+                </span>
+            </div>
+            <div class="col-3 d-flex flex-column">
+                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
+                {
+                    <h5 class="d-flex justify-content-center" style="color: #FE5722;">Checked In </h5>
+                    <div class="d-flex justify-content-center">@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd, yyyy")</div>
+                }
+            </div>
+        </div>
+       @* <div class="alert alert-warning">
             <div class="row justify-content-center align-items-center ">
                 @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                 {
@@ -735,7 +793,7 @@
                     </div>
                 }
             </div>
-        </div>
+        </div>*@
     }
 }
 else if (uiOptions.isDisplayEditEndTimeForm)
@@ -747,6 +805,30 @@ else if (uiOptions.isDisplayEditEndTimeForm)
         </FormValidation>
 
         <FormItems>
+            <div class="row compact-row">
+                <div class="col-6">
+                    <label>Start Time</label>
+                     <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime"
+                                       Format="MM/dd/yyyy %h:mm tt" Id="startTime" Class="w-100">
+
+                        <DateTimePickerSteps Minute="30" />
+
+                    </TelerikDateTimePicker>
+                </div>
+                <div class="col-6">
+                    <label>End Time</label>
+                    <TelerikDateTimePicker @bind-Value="@schedulerVM.EndTime"
+                                       Format="MM/dd/yyyy %h:mm tt" Id="endTime" Class="w-100">
+
+                        <DateTimePickerSteps Minute="30" />
+
+                    </TelerikDateTimePicker>
+
+                    <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
+                </div>
+            </div>
+            <!--
+
             <div class="row mt-1 mb-2">
                 <div class="col-md-4 align-items-top d-flex">
 
@@ -790,6 +872,7 @@ else if (uiOptions.isDisplayEditEndTimeForm)
 
                 </div>
             </div>
+            -->
             <hr class="hr-gray mt-3 mb-3" />
         </FormItems>
 
@@ -848,7 +931,7 @@ else
                             <td>@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
                             <td>
 
-                                @schedulerVM.AircraftEquipmentsTimeList[index].Hours
+                                @*@schedulerVM.AircraftEquipmentsTimeList[index].Hours*@
 
                                 <TelerikNumericTextBox Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
                                 @* <RadzenNumeric Visible="false" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours Class="w-100" />*@
@@ -889,20 +972,25 @@ else
                     }
                 </tbody>
             </table>
-            <div class="d-flex btn-grp  justify-content-evenly ">
+            <div>
+                <div class="row d-flex justify-content-end">
+                    <div class="col-4 d-flex justify-content-between">
 
-                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mr-1" Enabled="@(!isBusySubmitButton)">
-                    Check In
-                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                    </TelerikLoader>
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mr-1" Enabled="@(!isBusySubmitButton)">
+                            Check In
+                            <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                            </TelerikLoader>
 
-                </TelerikButton>
+                        </TelerikButton>
 
-                <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
-                    Cancel
-                </TelerikButton>
 
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                            Cancel
+                        </TelerikButton>
+                    </div>
+                </div>
             </div>
+
         </FormItems>
         <FormButtons></FormButtons>
     </TelerikForm>
@@ -915,52 +1003,52 @@ else
                       CloseOnOutsideClick="false"
                       OnClose="@(()=> {isDisplayChildPopup = false;})">
 
-                <Body>
+                    <Body>
 
-                    @if (operationType == OperationType.UnCheckOut)
+                        @if (operationType == OperationType.UnCheckOut)
                 {
-                        <div>
-                            <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
-                            <div class="row" style="text-align:right">
-                                <div class="col">
+                    <div>
+                        <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
+                        <div class="row d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-between">
 
-                                    <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
-                                        Yes
-                                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
-                                        </TelerikLoader>
-                                    </TelerikButton>
+                                <TelerikButton Class="mr-1 btn k-btn-primary flex-fill mx-2" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
+                                    Yes
+                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
 
 
-                                    <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
-                                        No
-                                    </TelerikButton>
-                                </div>
+                                <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                    No
+                                </TelerikButton>
                             </div>
                         </div>
+                    </div>
                 }
 
                 else if (operationType == OperationType.Delete)
                 {
-                        <div>
-                            <p class="mb-4"> Are you sure, You want to un-check out appointment ? </p>
-                            <div class="row" style="text-align:right">
-                                <div class="col">
+                    <div>
+                        <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
+                        <div class="row d-flex justify-content-end">
+                           <div class="col-4 d-flex justify-content-between">
 
-                                    <TelerikButton Class="btn k-btn-danger" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
-                                        Yes
-                                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
-                                        </TelerikLoader>
-                                    </TelerikButton>
+                                <TelerikButton Class="btn k-btn-danger flex-fill mx-2" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
+                                    Yes
+                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
 
 
-                                    <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
-                                        No
-                                    </TelerikButton>
-                                </div>
+                                <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                    No
+                                </TelerikButton>
                             </div>
                         </div>
+                    </div>
                 }
-                </Body>
+                    </Body>
 
     </CustomPopupComponent>
     }

@@ -123,7 +123,7 @@
             @{
                 DocumentDataVM value = dataItem as DocumentDataVM;
 
-                <a href="javascript:void(0)" @onclick="@((ui) => OpenDocumentPreviewPopupAsync(value.DocumentPath))">@value.DisplayName</a>
+                    <a href="javascript:void(0)" @onclick="@((ui) => OpenDocumentPreviewPopupAsync(value.DocumentPath))">@value.DisplayName</a>
             }
         </GridCommandColumn>
 
@@ -131,26 +131,26 @@
             @{
                 DocumentDataVM data = dataItem as DocumentDataVM;
 
-                @if (data.Type == "pdf")
+                    @if (data.Type == "pdf")
                 {
-                    <img src="../img/pdficon.png" style="width: 14%;" />
+                        <img src="../img/pdficon.png" style="width: 14%;" />
                 }
                 else if (data.Type == "doc" || data.Type == "docx")
                 {
-                    <img src="../img/word.png" style="width: 14%;" />
+                        <img src="../img/word.png" style="width: 14%;" />
                 }
                 else if (data.Type == "csv" || data.Type == "xlsx")
                 {
-                    <img src="../img/excelicon.png" style="width: 14%;" />
+                        <img src="../img/excelicon.png" style="width: 14%;" />
                 }
                 else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
                 data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
                 {
-                    <img src="../img/photosicon.png" style="width: 14%;" />
+                        <img src="../img/photosicon.png" style="width: 14%;" />
                 }
                 else
                 {
-                    <img src="../img/defaultdocicon.png" style="width: 14%;" />
+                        <img src="../img/defaultdocicon.png" style="width: 14%;" />
                 }
             }
         </GridCommandColumn>
@@ -182,7 +182,7 @@
                     date = value.ExpirationDate.Value.ToShortDateString();
                 }
 
-                <label>@date</label>
+                    <label>@date</label>
             }
         </GridCommandColumn>
 
@@ -191,37 +191,37 @@
                 DocumentDataVM value = dataItem as DocumentDataVM;
                 bool isShareble = !value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date);
 
-                <TelerikButton Class="btn k-btn-grid-download mx-1" ThemeColor="error"
+                    <TelerikButton Class="btn k-btn-grid-download mx-1" ThemeColor="error"
                            OnClick="()=>DownloadDocument(value)" Enabled=!value.IsLoadingDownloadButton>
-                    <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
-                    @value.TotalDownloads.ToString()
-                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
-                    </TelerikLoader>
-                </TelerikButton>
+                        <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
+                        @value.TotalDownloads.ToString()
+                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
+                        </TelerikLoader>
+                    </TelerikButton>
 
-                <TelerikButton Class="btn k-btn-grid-share mx-1" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
-                    <CustomIcons IconName="grid-share" PrimaryColor="white"></CustomIcons>
-                    @value.TotalShares.ToString()
-                </TelerikButton>
+                    <TelerikButton Class="btn k-btn-grid-share mx-1" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
+                        <CustomIcons IconName="grid-share" PrimaryColor="white"></CustomIcons>
+                        @value.TotalShares.ToString()
+                    </TelerikButton>
 
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>DocumentCreateDialog(value)"
+                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>DocumentCreateDialog(value)"
                            ThemeColor="success" Enabled=!value.IsLoadingEditButton>
 
-                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                            <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
                                Visible="value.IsLoadingEditButton">
-                        </TelerikLoader>
+                            </TelerikLoader>
 
-                    </TelerikButton>
+                        </TelerikButton>
                 }
 
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
-                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                    </TelerikButton>
+                        <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
+                            <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                        </TelerikButton>
                 }
             }
         </GridCommandColumn>
@@ -233,6 +233,7 @@
 @if (isDisplayPopup)
 {
     <CustomPopupComponent Title="@popupTitle"
+                      ShowHeaderCloseButton="operationType == OperationType.DocumentShare"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" Width="600px"
                       OnClose="@(()=> {isDisplayPopup = false;})">
@@ -279,19 +280,19 @@
             }
             else if (operationType == OperationType.DocumentShare)
             {
-                <div class="row bg-gray">
-                    <div class="col-12">
+                <div class="row" >
+                    <div class="col-12 p-2 bg-light my-3" style="border-radius:12px;">
                         <div class="d-flex justify-content-end">
                             <span @onclick="(()=>CopyLinkToClipboard(documentDataVM.DocumentPath))">
                                 <CustomIcons IconName="duplicate" PrimaryColor="#757575" />
                             </span>
                         </div>
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center my-3 mx-3">
                             <a href="@documentDataVM.DocumentPath" target="_blank">@documentDataVM.DocumentPath</a>
                         </div>
                     </div>
                 </div>
-                <div class="row d-flex justify-content-center">
+                <div class="d-flex justify-content-end">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="()=>CopyLinkToClipboard(documentDataVM.DocumentPath)">
                             Copy to clipboard
                         </TelerikButton>

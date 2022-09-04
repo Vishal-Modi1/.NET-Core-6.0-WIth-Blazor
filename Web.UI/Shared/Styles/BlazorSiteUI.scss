@@ -626,3 +626,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         overflow-x: hidden !important;
     }
 }
+
+.custom-border-y {
+    border-bottom: 1px solid #E6E6E6;
+    border-top: 1px solid #E6E6E6;
+    width: 100%;
+    padding: 10px 0;
+}
+.row.compact-row > .col-6 {
+    padding: 10px;
+}
