@@ -8,27 +8,8 @@
     <FormValidation>
         <DataAnnotationsValidator></DataAnnotationsValidator>
 
-        <TelerikValidationSummary>
-                <Template Context="ValidationMessages">
-                    @if (ValidationMessages.Any())
-                    {
-                        <div class="validation-summary">
-                            <div class="validation-summary-heading">Validation Errors</div>
-                                @foreach (var validationMessage in ValidationMessages)
-                                {
-                                    <div class="validation-row">
-                                        @validationMessage
-                                    </div>
-                                }
-                        </div>
-                    }
-                
-                </Template>
-            </TelerikValidationSummary>
-
     </FormValidation>
     
-
     <FormItems>
 
         <div class="popup-content">

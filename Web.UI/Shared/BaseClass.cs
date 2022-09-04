@@ -20,6 +20,8 @@ namespace Web.UI.Shared
 
         public OperationType operationType = OperationType.Create;
 
+        public bool isGridDataLoading { get; set; }
+
         [CascadingParameter] public Task<AuthenticationState> AuthStat { get; set; }
         [CascadingParameter] public UINotification uiNotification { get; set; }
         public CurrentUserPermissionManager _currentUserPermissionManager;

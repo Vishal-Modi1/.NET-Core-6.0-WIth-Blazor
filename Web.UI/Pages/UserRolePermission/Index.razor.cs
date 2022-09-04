@@ -18,7 +18,7 @@ namespace Web.UI.Pages.UserRolePermission
         UserRolePermissionFilterVM userrolePermissionFilterVM;
         UserRolePermissionDataVM userRolePermissionDataVM;
 
-        bool isAllow, isForWebApp, isAllowForMobileApp, IsInitialDataLoadComplete;
+        bool isAllow, isForWebApp, isAllowForMobileApp;
         string message;
         string moduleName = "UserRolePermission";
         IEnumerable<UserRolePermissionDataVM> webPermissions = new List<UserRolePermissionDataVM>();
@@ -69,7 +69,8 @@ namespace Web.UI.Pages.UserRolePermission
 
         async Task LoadData(GridReadEventArgs args)
         {
-            IsInitialDataLoadComplete = true;
+            isGridDataLoading = true;
+
             UserRolePermissionDatatableParams datatableParams = new DatatableParams().Create(args, "Name").Cast<UserRolePermissionDatatableParams>();
 
             datatableParams.CompanyId = userrolePermissionFilterVM.CompanyId;
@@ -84,7 +85,7 @@ namespace Web.UI.Pages.UserRolePermission
             webPermissions = data.Where(p => p.IsAllowed).ToList();
             mobileAppPermissions =  data.Where(p => p.IsAllowedForMobileApp).ToList();
 
-            IsInitialDataLoadComplete = false;
+            isGridDataLoading = false;
         }
 
         bool? selectAllWebPermissions
