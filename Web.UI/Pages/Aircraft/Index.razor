@@ -52,18 +52,18 @@
         font-size: 0.85em;
     }
 
-    .custom-aircraft-item{
+    .custom-aircraft-item {
         box-sizing: border-box;
-       /* width: 100%;
-        height: 100%;
-        padding: 30px;*/
+        /* width: 100%;
+                height: 100%;
+                padding: 30px;*/
         background: #FEFEFE;
         box-shadow: 4.70946px 4.70946px 24.4892px rgb(0 0 0 / 18%);
         border-radius: 7.53514px;
         padding: 15px;
     }
-    .custom-aircraft-img
-    {
+
+    .custom-aircraft-img {
         min-width: 100%;
         min-height: 135px;
         max-width: 100%;
@@ -71,6 +71,7 @@
         width: 100%;
         height: 135px;
     }
+
     .active-airplane {
         position: relative;
         top: 10px;
@@ -80,15 +81,17 @@
         height: 5px;
         width: 5px;
     }
+
     .inactive-airplane {
         background: red;
     }
+
     .expande-airplane {
         position: relative;
         top: 20px;
         left: 120px;
         z-index: 1;
-            background-color: #b1b1b138;
+        background-color: #b1b1b138;
     }
 </style>
 
@@ -104,16 +107,16 @@
                 <div class="col-md-4">
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
                                OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
                         <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                         </TelerikLoader>
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
                     </TelerikButton>
                 </div>
             }
         </div>
     </div>
 </div>
-<hr class="hr-blue mt-1 mb-1" />
+@*<hr class="hr-blue mt-1 mb-1" />*@
 <div class="row my-2">
     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
     {
@@ -129,8 +132,8 @@
         <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
 </div>
-<hr class="hr-blue mt-1 mb-1" />
-<div class="row my-2 search-panel">
+@*<hr class="hr-blue mt-1 mb-1" />*@
+@*<div class="row my-2 search-panel">
     <div class="col-md-6"></div>
     <div class="col-md-2 d-flex align-items-center justify-content-end">
 
@@ -145,18 +148,22 @@
         <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
 </div>
-<hr class="hr-blue mt-1 mb-1" />
+<hr class="hr-blue mt-1 mb-1" />*@
 
 <TelerikTabStrip>
 
     <TabStripTab>
         <HeaderTemplate>
-            <div class="d-flex justify-content-center align-items-center">
+            <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
+            <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
+        </div>
+
+            @*  <div class="d-flex justify-content-center align-items-center">
                 <span class="mx-2">
-                    <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+                <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
                 </span>
                 <span>Grid View</span>
-            </div>
+                </div>*@
         </HeaderTemplate>
         <Content>
 
@@ -193,11 +200,14 @@
 
     <TabStripTab>
         <HeaderTemplate>
-            <div class="d-flex justify-content-center align-items-center">
+            @* <div class="d-flex justify-content-center align-items-center">
                 <span class="mx-2">
-                    <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+                <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
                 </span>
                 <span>List View</span>
+                </div>*@
+            <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
+                <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
             </div>
         </HeaderTemplate>
         <Content>

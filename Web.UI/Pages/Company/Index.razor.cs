@@ -4,7 +4,6 @@ using DataModels.VM.Company;
 using Microsoft.AspNetCore.Components;
 using System.Text;
 using Telerik.Blazor.Components;
-using Web.UI.Data.Company;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
 
@@ -114,7 +113,7 @@ namespace Web.UI.Pages.Company
             isBusyDeleteButton = false;
         }
 
-        async Task OpenDeleteDialog(CompanyVM companyVM)
+        void OpenDeleteDialog(CompanyVM companyVM)
         {
             isDisplayPopup = true;
 

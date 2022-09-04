@@ -27,7 +27,7 @@
             <div class="col-md-6">
                 <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                 AllowFiltering="true" Class="w-100"
-                                Placeholder="Status" Data=@AircraftEquipmentsVM.statusList TextProperty="Name"
+                                Placeholder="Status" Data=@AircraftEquipmentsVM.StatusList TextProperty="Name"
                                 ValueProperty="Id" Name="StatusId" @bind-Value="@(AircraftEquipmentsVM.StatusId)" />
                 <RadzenRequiredValidator DefaultValue="0" Component="StatusId" Text="Please select status"
                                          Popup="@isPopup" Style="position: relative" />
@@ -49,7 +49,7 @@
             <div class="col-md-6">
                 <RadzenDropDown AllowClear="true" TValue="int" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                 AllowFiltering="true" Class="w-100"
-                                Placeholder="Classification" Data=@AircraftEquipmentsVM.classificationList TextProperty="Name"
+                                Placeholder="Classification" Data=@AircraftEquipmentsVM.ClassificationList TextProperty="Name"
                                 ValueProperty="Id" Name="ClassificationId" @bind-Value="@(AircraftEquipmentsVM.ClassificationId)" />
                 <RadzenRequiredValidator DefaultValue="0" Component="ClassificationId" Text="Please select classification" Popup="@isPopup" Style="position: relative" />
 

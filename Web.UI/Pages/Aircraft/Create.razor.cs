@@ -265,14 +265,14 @@ namespace Web.UI.Pages.Aircraft
 
         void OpenNextTab()
         {
-            //steps.Value = 1;
-            telerikTabStrip.ActiveTabIndex = 1;
+            steps.Value = 1;
+            //telerikTabStrip.ActiveTabIndex = 1;
         }
 
         void OpenPreviousTab()
         {
-            //steps.Value = 0;
-            telerikTabStrip.ActiveTabIndex = 0;
+            steps.Value = 0;
+            //telerikTabStrip.ActiveTabIndex = 0;
         }
 
         private bool ManageIsAircraftExistResponse(CurrentResponse response, string summary)
