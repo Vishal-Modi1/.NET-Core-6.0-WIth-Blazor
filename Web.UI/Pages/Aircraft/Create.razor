@@ -48,7 +48,7 @@
                                         <label>Year</label>
                                         <TelerikComboBox Id="year" Data="@YearDropDown" TextField="Name"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Placeholder="Select Year" ValueField="Id"
+                                                         Placeholder="Select Year" ValueField="Name"
                                                          @bind-Value="@aircraftData.Year">
                                         </TelerikComboBox>
                                     </div>
@@ -58,6 +58,7 @@
                                                          ValueChanged="@((int value) => OnMakeValueChanged(value) )"
                                                          ValueExpression="@(() => aircraftData.AircraftMakeId)"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                         Value="@aircraftData.AircraftMakeId"
                                                          Placeholder="Select Make" ValueField="Id">
                                         </TelerikComboBox>
 
@@ -70,6 +71,7 @@
                                                          ValueChanged="@((int value) => OnModelValueChanged(value) )"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                                          ValueExpression="@(() => aircraftData.AircraftModelId)"
+                                                         Value="@aircraftData.AircraftModelId"
                                                          Placeholder="Select Model" ValueField="Id">
                                         </TelerikComboBox>
 
@@ -82,6 +84,7 @@
                                                          ValueChanged="@((int value) => OnCategoryDropDownValueChange(value) )"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                                          ValueExpression="@(() => aircraftData.AircraftCategoryId)"
+                                                         Value="@aircraftData.AircraftCategoryId"
                                                          Placeholder="Select Category" ValueField="Id">
                                         </TelerikComboBox>
                                         <TelerikValidationMessage For="@(() => aircraftData.AircraftCategoryId)"></TelerikValidationMessage>
@@ -94,6 +97,7 @@
                                                          ValueChanged="@((int? value) => OnClassDropDownValueChange(value) )"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                                          ValueExpression="@(() => aircraftData.AircraftClassId)"
+                                                         Value="@aircraftData.AircraftClassId"
                                                          Placeholder="Select Class" ValueField="Id">
                                             </TelerikComboBox>
                                             <TelerikValidationMessage For="@(() => aircraftData.AircraftClassId)"></TelerikValidationMessage>
@@ -119,6 +123,7 @@
                                             <TelerikComboBox Id="engines" Data="@NoofEnginesDropDown" TextField="Name"
                                                          ValueChanged="@((int value) => OnNoOfEngineDropDownValueChange(value) )"
                                                          ValueExpression="@(() => aircraftData.NoofEngines)"
+                                                         Value="@aircraftData.NoofEngines"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                                          Placeholder="Select Engines" ValueField="Id">
                                             </TelerikComboBox>
@@ -228,6 +233,7 @@
                                                  ValueChanged="@((int? value) => OnNoofPropellersDropDownValueChange(value) )"
                                                  Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                                  ValueExpression="@(() => aircraftData.NoofPropellers)"
+                                                 Value="aircraftData.NoofPropellers"
                                                  Placeholder="Select Propellers" ValueField="Id">
                                     </TelerikComboBox>
                                 </div>
@@ -245,7 +251,7 @@
                                 else
                                 {
                                     <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
-                                        Update <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
+                                        Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
                                     </TelerikButton>
                                 }
                                 <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
