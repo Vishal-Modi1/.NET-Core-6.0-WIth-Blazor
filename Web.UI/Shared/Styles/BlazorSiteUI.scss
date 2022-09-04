@@ -616,3 +616,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         opacity: .8;
     }
 }
+
+.k-wizard-buttons {
+    display: none !important;
+}
+
+.k-wizard {
+    .k-wizard-content {
+        overflow-x: hidden !important;
+    }
+}

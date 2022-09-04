@@ -10,20 +10,25 @@
     <div class="d-flex justify-content-between">
         <div><h3>@aircraftData.TailNo</h3></div>
         <div>
-            <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" OnClick="@AircraftEditDialog" Class="btn edit-button" Enabled="@(!isBusyAddButton)">
-                 <CustomIcons IconName="grid-edit" PrimaryColor="White" ></CustomIcons>Edit
+            <TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
+                       Enabled="@(!isBusyAddButton)" Class="btn k-btn-primary" ThemeColor="primary">
+                <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons> 
+                Edit
                 <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
                 </TelerikLoader>
-
             </TelerikButton>
 
-             <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn edit-button" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton)">
-                 <CustomIcons IconName="grid-edit" PrimaryColor="White" ></CustomIcons> Update Status
+
+
+            <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton)"
+                Class="btn k-btn-primary" ThemeColor="primary">
+                <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                Update Status
                 <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
                 </TelerikLoader>
-
             </TelerikButton>
-            <TelerikButton  class="btn btn-outline-primary">Back</TelerikButton>
+
+            <TelerikButton Class="btn btn-outline-primary">Back</TelerikButton>
 
         </div>
     </div>
@@ -68,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div class="card-header" style="margin-top:30px">
+    <div class="card" style="margin-top:30px">
 
       <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData>
 

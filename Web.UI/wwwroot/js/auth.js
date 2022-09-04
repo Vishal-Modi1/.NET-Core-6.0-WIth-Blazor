@@ -1,6 +1,6 @@
 ﻿export function SignIn(email, password, redirect) {
 
-    debugger
+    
     var url = "/api/auth/signin";
 
     // Data to send
@@ -48,7 +48,6 @@ export function ChangeCompany(userId, companyId) {
         contentType: 'application/json',
         success: function (response) {
 
-            debugger
             if (response.status == 200) {
 
                 location.replace("/");
@@ -84,7 +83,6 @@ export function RefreshToken(RefreshToken, UserId) {
 var dotnetReferenceObject = null
 export function SetDotNetObject(dotNetHelper) {
 
-    debugger
     dotnetReferenceObject = dotNetHelper;
 };
 
@@ -131,7 +129,6 @@ export function GetTimeZone() {
 
 export async function downloadFileFromStream(fileName, contentStreamReference, id) {
 
-    debugger
     const arrayBuffer = await contentStreamReference.arrayBuffer();
     const blob = new Blob([arrayBuffer]);
     const url = URL.createObjectURL(blob);

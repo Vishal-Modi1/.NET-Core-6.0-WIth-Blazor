@@ -17,9 +17,9 @@
                 <WizardStep Label="Basic Details">
                     <Content>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-6">
                                         <label>Company</label>
                                         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                                         {
@@ -37,7 +37,14 @@
                                             <input type="hidden" id="CompanyId" value="@aircraftData.CompanyId" />
                                         }
                                     </div>
-                                    <div class="col-12">
+                                                                        <div class="col-6">
+                                        <label>Tail No</label>
+                                        <TelerikTextBox @bind-Value="@aircraftData.TailNo" PlaceHolder="Tail No"></TelerikTextBox>
+                                        <TelerikValidationMessage For="@(() => aircraftData.TailNo)"></TelerikValidationMessage>
+                                    </div>
+
+                                    
+                                    <div class="col-6">
                                         <label>Year</label>
                                         <TelerikComboBox Id="year" Data="@YearDropDown" TextField="Name"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -45,7 +52,19 @@
                                                          @bind-Value="@aircraftData.Year">
                                         </TelerikComboBox>
                                     </div>
-                                    <div class="col-12">
+                                    <div class="col-6">
+                                        <label>Make</label>
+                                        <TelerikComboBox Id="makeId" Data="@aircraftData.AircraftMakeList" TextField="Name"
+                                                         ValueChanged="@((int value) => OnMakeValueChanged(value) )"
+                                                         ValueExpression="@(() => aircraftData.AircraftMakeId)"
+                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                         Placeholder="Select Make" ValueField="Id">
+                                        </TelerikComboBox>
+
+                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftMakeId)"></TelerikValidationMessage>
+                                    </div>
+                                   
+                                    <div class="col-6">
                                         <label>Model</label>
                                         <TelerikComboBox Id="modelId" Data="@aircraftData.AircraftModelList" TextField="Name"
                                                          ValueChanged="@((int value) => OnModelValueChanged(value) )"
@@ -56,9 +75,20 @@
 
                                         <TelerikValidationMessage For="@(() => aircraftData.AircraftModelId)"></TelerikValidationMessage>
                                     </div>
+                                     <div class="col-6">
+                                        <label>Category</label>
+
+                                        <TelerikComboBox Id="category" Data="@aircraftData.AircraftCategoryList" TextField="Name"
+                                                         ValueChanged="@((int value) => OnCategoryDropDownValueChange(value) )"
+                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                         ValueExpression="@(() => aircraftData.AircraftCategoryId)"
+                                                         Placeholder="Select Category" ValueField="Id">
+                                        </TelerikComboBox>
+                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftCategoryId)"></TelerikValidationMessage>
+                                    </div>
                                     @if (isDisplayClassDropDown)
                                     {
-                                        <div class="col-12">
+                                        <div class="col-6">
                                             <label>Class</label>
                                             <TelerikComboBox Id="class" Data="@aircraftData.AircraftClassList" TextField="Name"
                                                          ValueChanged="@((int? value) => OnClassDropDownValueChange(value) )"
@@ -71,7 +101,7 @@
                                     }
                                     @if (isDisplayFlightSimulatorDropDown)
                                     {
-                                        <div class="col-12">
+                                        <div class="col-6">
                                             <label>Flight Simulator</label>
                                             <TelerikComboBox Id="flightSimulator" Data="@aircraftData.FlightSimulatorClassList" TextField="Name"
                                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -81,42 +111,10 @@
                                             <TelerikValidationMessage For="@(() => aircraftData.FlightSimulatorClassId)"></TelerikValidationMessage>
                                         </div>
                                     }
-
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label>Tail No</label>
-                                        <TelerikTextBox @bind-Value="@aircraftData.TailNo" PlaceHolder="Tail No"></TelerikTextBox>
-                                        <TelerikValidationMessage For="@(() => aircraftData.TailNo)"></TelerikValidationMessage>
-                                    </div>
-                                    <div class="col-12">
-                                        <label>Make</label>
-                                        <TelerikComboBox Id="makeId" Data="@aircraftData.AircraftMakeList" TextField="Name"
-                                                         ValueChanged="@((int value) => OnMakeValueChanged(value) )"
-                                                         ValueExpression="@(() => aircraftData.AircraftMakeId)"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Placeholder="Select Make" ValueField="Id">
-                                        </TelerikComboBox>
-
-                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftMakeId)"></TelerikValidationMessage>
-                                    </div>
-                                    <div class="col-12">
-                                        <label>Category</label>
-
-                                        <TelerikComboBox Id="category" Data="@aircraftData.AircraftCategoryList" TextField="Name"
-                                                         ValueChanged="@((int value) => OnCategoryDropDownValueChange(value) )"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         ValueExpression="@(() => aircraftData.AircraftCategoryId)"
-                                                         Placeholder="Select Category" ValueField="Id">
-                                        </TelerikComboBox>
-                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftCategoryId)"></TelerikValidationMessage>
-                                    </div>
-                                    @if (isDisplayNoofEnginesDropDown)
+                                     @if (isDisplayNoofEnginesDropDown)
                                     {
 
-                                        <div class="col-12">
+                                        <div class="col-6">
                                             <label>Engine</label>
                                             <TelerikComboBox Id="engines" Data="@NoofEnginesDropDown" TextField="Name"
                                                          ValueChanged="@((int value) => OnNoOfEngineDropDownValueChange(value) )"
@@ -127,6 +125,14 @@
 
                                         </div>
                                     }
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row">
+
+                                    
+                                   
+                                   
                                 </div>
                             </div>
                         </div>
@@ -271,8 +277,9 @@
                 </WizardStep>
 
             </WizardSteps>
+
              <WizardButtons>
-                 </WizardButtons>
+             </WizardButtons>
         </TelerikWizard>
 
     </FormItems>
