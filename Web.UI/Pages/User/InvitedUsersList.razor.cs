@@ -38,6 +38,8 @@ namespace Web.UI.Pages.User
 
         async Task LoadData(GridReadEventArgs args)
         {
+            isGridDataLoading = true;
+
             DatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime");
             datatableParams.SearchText = searchText;
            
@@ -56,6 +58,8 @@ namespace Web.UI.Pages.User
             data = await InviteUserService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
+
+            isGridDataLoading = false;
         }
 
         async Task InviteUserDialog(InviteUserDataVM inviteUserDataVM)

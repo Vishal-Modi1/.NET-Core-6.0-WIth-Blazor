@@ -63,9 +63,9 @@
 
             </div>
 
-            <div style="position: relative; width:100%; min-height: 400px;">
+              <div style="position: relative; width:100%; min-height: 400px;">
                 <TelerikLoaderContainer OverlayThemeColor="light"
-                                        Visible="@(IsInitialDataLoadComplete)"
+                                        Visible="@(isGridDataLoading)"
                                         Text="@null" Class="initial-data-loader">
                     <Template>
                         <TelerikLoader Type="@LoaderType.InfiniteSpinner"
@@ -173,7 +173,7 @@
 
             <div style="position: relative; width:100%; min-height: 400px;">
                 <TelerikLoaderContainer OverlayThemeColor="light"
-                                        Visible="@(IsInitialDataLoadComplete)"
+                                        Visible="@(isGridDataLoading)"
                                         Text="@null" Class="initial-data-loader">
                     <Template>
                         <TelerikLoader Type="@LoaderType.InfiniteSpinner"

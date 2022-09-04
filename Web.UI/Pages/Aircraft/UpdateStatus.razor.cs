@@ -11,19 +11,18 @@ namespace Web.UI.Pages.Aircraft
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         [Parameter] public EventCallback<int> UpdateStatusCallBack { get; set; }
         
-        //TODO:
-        //public int aircraftStatusId;
+        public int aircraftStatusId;
 
         protected override Task OnInitializedAsync()
         {
-           // aircraftStatusId = aircraftData.AircraftStatusId;
+            aircraftStatusId = aircraftData.AircraftStatusId;
             return base.OnInitializedAsync();
         }
 
         async Task Update()
         {
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            CurrentResponse response = await AircraftService.UpdateStatus(dependecyParams, aircraftData.Id, aircraftData.AircraftStatusId);
+            CurrentResponse response = await AircraftService.UpdateStatus(dependecyParams, aircraftData.Id, Convert.ToByte(aircraftStatusId));
             ManageResponse(response, "", true);
         }
 

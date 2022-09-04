@@ -1,4 +1,5 @@
-﻿using DataModels.Entities;
+﻿using DataModels.CustomValidations;
+using DataModels.Entities;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace DataModels.VM.Aircraft
         [Display(Name = "Class")]
         public Nullable<int> AircraftClassId { get; set; }
 
-        [Required(ErrorMessage = "Flight Simulator is required")]
+        [RequiredIf("AircraftCategoryId", 4,ErrorMessage = "Flight Simulator is required")]
         [Display(Name = "Flight Simulator")]
         public Nullable<int> FlightSimulatorClassId { get; set; }
 

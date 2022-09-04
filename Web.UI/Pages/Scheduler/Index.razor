@@ -28,12 +28,10 @@
     </div>
 </div>
 <div class="row my-2">
-    <div class="col-md-2 col-sm-6 me-2">
-        <ComponentTitle Title="Select aircraft:" Type="AdministrationTitle" />
-    </div>
-    <div class="col-md-2 col-sm-6 mx-2">
+   
+    <div class="col-md-6 col-sm-6">
         <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@TheValues"
-                            TextField="TailNo" ValueField="Id" />
+                            TextField="TailNo" ValueField="Id" Placeholder="Select Aircraft" />
     </div>
 </div>
 <!--OLD CODE-->
