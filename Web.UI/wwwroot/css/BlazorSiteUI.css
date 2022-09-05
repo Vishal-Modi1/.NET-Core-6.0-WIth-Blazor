@@ -433,18 +433,22 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .k-btn-grid-delete {
   background-color: #c00 !important;
+  border-color: #c00 !important;
 }
 
 .k-btn-grid-edit {
   background-color: #009B51 !important;
+  border-color: #009B51 !important;
 }
 
 .k-btn-grid-share {
   background-color: #673AB7 !important;
+  border-color: #673AB7 !important;
 }
 
 .k-btn-grid-download {
   background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
 }
 
 .initial-data-loader .k-loader-container-overlay.k-overlay-light {

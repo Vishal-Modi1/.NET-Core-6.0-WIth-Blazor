@@ -1,6 +1,7 @@
 ﻿@using DataModels.Enums;
-
 @page "/AircraftDetails"
+
+@inject NavigationManager NavigationManager
 
 <PageTitle>Aircraft Details | Fly Manager </PageTitle>
 
@@ -28,7 +29,7 @@
                 </TelerikLoader>
             </TelerikButton>
 
-            <TelerikButton Class="btn btn-outline-primary">Back</TelerikButton>
+            <TelerikButton Class="btn btn-outline-primary text-white" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))" >Back</TelerikButton>
 
         </div>
     </div>

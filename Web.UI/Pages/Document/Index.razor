@@ -119,7 +119,7 @@
 
     <GridColumns>
 
-        <GridCommandColumn Context="dataItem" Title="Name">
+        <GridCommandColumn Context="dataItem" Title="Name" Width="15%">
             @{
                 DocumentDataVM value = dataItem as DocumentDataVM;
 
@@ -127,52 +127,52 @@
             }
         </GridCommandColumn>
 
-        <GridCommandColumn Context="dataItem" Title="Document Type">
+        <GridCommandColumn Context="dataItem" Title="Document Type" Width="5%">
             @{
                 DocumentDataVM data = dataItem as DocumentDataVM;
 
                     @if (data.Type == "pdf")
                 {
-                        <img src="../img/pdficon.png" style="width: 14%;" />
+                        <img src="../img/pdficon.png" style="width: 20%;" />
                 }
                 else if (data.Type == "doc" || data.Type == "docx")
                 {
-                        <img src="../img/word.png" style="width: 14%;" />
+                        <img src="../img/word.png" style="width: 20%;" />
                 }
                 else if (data.Type == "csv" || data.Type == "xlsx")
                 {
-                        <img src="../img/excelicon.png" style="width: 14%;" />
+                        <img src="../img/excelicon.png" style="width: 20%;" />
                 }
                 else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
                 data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
                 {
-                        <img src="../img/photosicon.png" style="width: 14%;" />
+                        <img src="../img/photosicon.png" style="width: 20%;" />
                 }
                 else
                 {
-                        <img src="../img/defaultdocicon.png" style="width: 14%;" />
+                        <img src="../img/defaultdocicon.png" style="width: 20%;" />
                 }
             }
         </GridCommandColumn>
 
-        <GridColumn Field="@nameof(DocumentDataVM.Size)" Title="Size" Sortable="true" />
+        <GridColumn Field="@nameof(DocumentDataVM.Size)" Title="Size" Sortable="true" Width="7%" />
 
         @if (string.IsNullOrWhiteSpace(ParentModuleName))
         {
-            <GridColumn Field="@nameof(DocumentDataVM.ModuleName)" Title="Module Name" Sortable="true" />
+            <GridColumn Field="@nameof(DocumentDataVM.ModuleName)" Title="Module Name" Sortable="true" Width="10%"/>
         }
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
-            <GridColumn Field="@nameof(DocumentDataVM.CompanyName)" Title="Company Name" Sortable="true" />
+            <GridColumn Field="@nameof(DocumentDataVM.CompanyName)" Title="Company Name" Sortable="true" Width="10%" />
         }
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
-            <GridColumn Field="@nameof(DocumentDataVM.UserName)" Title="User" Sortable="true" />
+            <GridColumn Field="@nameof(DocumentDataVM.UserName)" Title="User" Sortable="true" Width="15%"/>
         }
 
-        <GridCommandColumn Context="dataItem" Title="Expiration Date">
+        <GridCommandColumn Context="dataItem" Title="Expiration Date" Width="7%">
             @{
                 DocumentDataVM value = dataItem as DocumentDataVM;
                 string date = "-";
@@ -186,12 +186,13 @@
             }
         </GridCommandColumn>
 
-        <GridCommandColumn Context="dataItem" Title="Name">
+        <GridCommandColumn Context="dataItem" Title="Name" Width="20%">
+            <span class="d-flex">
             @{
                 DocumentDataVM value = dataItem as DocumentDataVM;
                 bool isShareble = !value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date);
 
-                    <TelerikButton Class="btn k-btn-grid-download mx-1" ThemeColor="error"
+                    <TelerikButton Class="btn k-btn-grid-download mx-2 flex-fill" ThemeColor="error"
                            OnClick="()=>DownloadDocument(value)" Enabled=!value.IsLoadingDownloadButton>
                         <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
                         @value.TotalDownloads.ToString()
@@ -199,14 +200,14 @@
                         </TelerikLoader>
                     </TelerikButton>
 
-                    <TelerikButton Class="btn k-btn-grid-share mx-1" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
+                    <TelerikButton Class="btn k-btn-grid-share mx-2 flex-fill" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
                         <CustomIcons IconName="grid-share" PrimaryColor="white"></CustomIcons>
                         @value.TotalShares.ToString()
                     </TelerikButton>
 
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 {
-                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>DocumentCreateDialog(value)"
+                        <TelerikButton Class="btn k-btn-grid-edit mx-2 flex-fill" OnClick="()=>DocumentCreateDialog(value)"
                            ThemeColor="success" Enabled=!value.IsLoadingEditButton>
 
                             <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
@@ -219,11 +220,12 @@
 
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                 {
-                        <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
+                        <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
                             <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                         </TelerikButton>
                 }
             }
+            </span>
         </GridCommandColumn>
 
     </GridColumns>

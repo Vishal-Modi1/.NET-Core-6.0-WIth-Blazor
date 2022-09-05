@@ -2,7 +2,7 @@
     <div class="modal-dialog @(IsModalLg ? "modal-lg" :"")" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
         <div class="modal-content" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
             <div class="modal-header @(HeaderCssClass) @(ShowHeaderCloseButton ? "d-flex justify-content-between" : "")">
-                <h5 class="modal-title text-white">@Title</h5>
+                <FontLabel fontSize="16px" Class="modal-title text-white" fontColor="white">@Title</FontLabel>
                 <button onclick="@Close" class="close-button @(ShowHeaderCloseButton ? "" : "d-none")">
                     <TelerikIcon Icon="x"></TelerikIcon>
                 </button>
@@ -17,7 +17,7 @@
                 else
                 {
                     <div class="body-content">
-                        @(Message)
+                        <FontLabel>@(Message)</FontLabel>
                     </div>
                 }
             </div>

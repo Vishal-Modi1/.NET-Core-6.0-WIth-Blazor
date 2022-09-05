@@ -543,19 +543,23 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-btn-grid-delete {
-    background-color: $RED-COLOR !important
+    background-color: $RED-COLOR !important;
+    border-color: $RED-COLOR !important
 }
 
 .k-btn-grid-edit {
-    background-color: $GREEN-COLOR !important
+    background-color: $GREEN-COLOR !important;
+    border-color: $GREEN-COLOR !important
 }
 
 .k-btn-grid-share {
-    background-color: $PURPLE-COLOR !important
+    background-color: $PURPLE-COLOR !important;
+    border-color: $PURPLE-COLOR !important;
 }
 
 .k-btn-grid-download {
-    background-color: $BLUE-COLOR !important
+    background-color: $BLUE-COLOR !important;
+    border-color: $BLUE-COLOR !important;
 }
 
 .initial-data-loader .k-loader-container-overlay.k-overlay-light {
