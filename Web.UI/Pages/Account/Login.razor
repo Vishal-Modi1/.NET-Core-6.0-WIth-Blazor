@@ -11,75 +11,91 @@
 
 <PageTitle>Login | Fly Manager </PageTitle>
 
-<div class="m-3">
+<div class="row vh-100 align-items-center m-0">
+    <div class="col-md-3 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="upfly-logo mt-2 mb-2 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                </div>
+                <div class="m-3">
 
-    @if (isSessionTimeout)
-    {
-        <div style="color: red;">Session Timeout!</div>
-    }
+                    @if (isSessionTimeout)
+                    {
+                        <div style="color: red;">Session Timeout!</div>
+                    }
 
-    <div class="login-wrap p-4 p-md-5">
+                    <div class="login-wrap">
 
-        <div class="d-flex justify-content-center"><h4>Sign in to Fly Manager</h4></div>
-        <TelerikForm Model="@loginVM" OnValidSubmit="@Submit">
+                        <div class="d-flex justify-content-center"><h5>Sign in to Fly Manager</h5></div>
+                        <TelerikForm Model="@loginVM" OnValidSubmit="@Submit">
 
-            <FormValidation>
-                <DataAnnotationsValidator />
-            </FormValidation>
+                            <FormValidation>
+                                <DataAnnotationsValidator />
+                            </FormValidation>
 
-            <FormItems>
-                <FormItem Field="@nameof(LoginVM.Email)">
-                    <Template>
-                        <div class="form-group my-3">
-                            <label for="email" class="k-label k-form-label">Email</label>
-                            <TelerikTextBox Id="email" @bind-Value="@loginVM.Email" InputMode="email" PlaceHolder="Email" />
-                            <TelerikValidationMessage For="@(() => loginVM.Email)" />
-                        </div>
-                    </Template>
-                </FormItem>
+                            <FormItems>
+                                <FormItem Field="@nameof(LoginVM.Email)">
+                                    <Template>
+                                        <div class="form-group my-3">
+                                            <label for="email" class="k-label k-form-label">Email</label>
+                                            <TelerikTextBox Id="email" @bind-Value="@loginVM.Email" InputMode="email" PlaceHolder="Email" />
+                                            <TelerikValidationMessage For="@(() => loginVM.Email)" />
+                                        </div>
+                                    </Template>
+                                </FormItem>
 
-                <FormItem Field="@nameof(LoginVM.Password)">
-                    <Template>
-                        <div class="form-group my-3">
-                            <div class="d-flex justify-content-between">
-                                <label for="password" class="k-label k-form-label">Password</label>
-                                <span class="w-50" style="text-align:right"><a href="/Forgetpassword" style="color:#1151F3">Forget Password ?</a></span>
+                                <FormItem Field="@nameof(LoginVM.Password)">
+                                    <Template>
+                                        <div class="form-group my-3">
+                                            <div class="d-flex justify-content-between">
+                                                <label for="password" class="k-label k-form-label">Password</label>
+                                                <span class="w-50" style="text-align:right"><a href="/Forgetpassword" style="color:#1151F3">Forget Password ?</a></span>
+                                            </div>
+                                            <TelerikTextBox Id="password" @bind-Value="@loginVM.Password" Password="true" PlaceHolder="Password" />
+                                            <TelerikValidationMessage For="@(() => loginVM.Password)" />
+                                        </div>
+                                    </Template>
+                                </FormItem>
+                                <FormItem Field="@nameof(LoginVM.RememberMe)">
+                                    <Template>
+                                        <div class="d-flex">
+                                            <TelerikCheckBox Id="rememberMe" @bind-Value="@loginVM.RememberMe" />
+                                            <label for="rememberMe" class="k-label k-form-label">Keep me logged in</label>
+                                        </div>
+                                    </Template>
+                                </FormItem>
+                            </FormItems>
+                            <FormButtons>
+                                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusy)">
+                                   <span class="text-14">Login</span>  <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusy" />
+                                </TelerikButton>
+                            </FormButtons>
+                        </TelerikForm>
+
+                        <div class="row my-3 text-14">
+                            <div class="text-center">
+                                Don't have an account? <a href="/Registration" style="color:#1151F3"> Register</a>
                             </div>
-                            <TelerikTextBox Id="password" @bind-Value="@loginVM.Password" Password="true" PlaceHolder="Password" />
-                            <TelerikValidationMessage For="@(() => loginVM.Password)" />
                         </div>
-                    </Template>
-                </FormItem>
-                <FormItem Field="@nameof(LoginVM.RememberMe)">
-                    <Template>
-                        <div class="d-flex">
-                            <TelerikCheckBox Id="rememberMe" @bind-Value="@loginVM.RememberMe" />
-                            <label for="rememberMe" class="k-label k-form-label">Keep me logged in</label>
+                        <div class="row my-3 text-14">
+                            <div class="text-center">
+                                <h4 class="horizon-line"><span class="text-14">Or continue with</span></h4>
+                            </div>
                         </div>
-                    </Template>
-                </FormItem>
-            </FormItems>
-            <FormButtons>
-                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusy)">
-                    Login <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusy" />
-                </TelerikButton>
-            </FormButtons>
-        </TelerikForm>
-
-        <div class="row my-3" >
-            <div class="text-center">
-                Don't have an account? <a href="/Registration" style="color:#1151F3"> Register</a>
-            </div>
-        </div>
-        <div class="row my-3">
-            <div class="text-center">
-                Or continue with
-            </div>
-        </div>
-        <div class="row my-3">
-            <div class="text-center">
-                SOCIAL MEDIA ICONS
+                        <div class="row my-3 text-14">
+                            <div class="text-center">
+                                <div>
+                                    <span class="mx-2 cursor-pointer"><CustomIcons IconName="google-login"/></span>
+                                    <span class="mx-2 cursor-pointer"><CustomIcons IconName="apple-login"/></span>
+                                    <span class="mx-2 cursor-pointer"><CustomIcons IconName="facebook-login"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+

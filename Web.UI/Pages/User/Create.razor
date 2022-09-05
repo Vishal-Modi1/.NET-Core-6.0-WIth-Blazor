@@ -11,15 +11,15 @@
     </FormValidation>
 
     <FormItems>
-        <div class="popup-content">
+        <div class="popup-content my-3">
 
             @if (!isAuthenticated)
             {
                if (!FromAuthoriseSection)
-            {
-                <hr style="margin-bottom:35px" />
+                {
+                    <hr style="margin-bottom:35px" />
             
-            }
+                }
             }
 
             <input type="hidden" value="@userData.Id" name="Id" />

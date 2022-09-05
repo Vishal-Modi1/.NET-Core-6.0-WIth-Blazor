@@ -4,49 +4,57 @@
 
 <PageTitle> Register | Fly Manager </PageTitle>
 
+<div class="row vh-100 align-items-center m-0">
+    <div class="col-md-7 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="upfly-logo mt-2 mb-2 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                </div>
+                <div class="m-1">
+                    <div class="login-wrap">
+                        <div class="d-flex justify-content-center"><h5>sign up to fly manager</h5></div>
+                        <TelerikTabStrip Class="k-tabstrip-list mt-2" ActiveTabIndex="@currentStep">
+                            <TabStripTab>
+                                <HeaderTemplate>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="mx-2">
+                                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+                                        </span>
+                                        <span>Company Details</span>
+                                    </div>
+                                </HeaderTemplate>
+                                <Content>
+                                    <Web.UI.Pages.Company.Create FromAuthoriseSection="true" CompanyData="@companyData" IsInvited=@userVM.IsInvited GoToNext="@(() => GoToNextStepAsync())">
 
-<div class="col-lg-12 col-xl-12">
+                                    </Web.UI.Pages.Company.Create>
+                                </Content>
 
-    <div class="m-3">
+                            </TabStripTab>
 
-        <div class="d-flex justify-content-center"><h4>sign up to fly manager</h4></div>
-        <TelerikTabStrip Class="k-tabstrip-list" ActiveTabIndex="@currentStep">
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="mx-2">
-                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Company Details</span>
+                            <TabStripTab>
+                                <HeaderTemplate>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <span class="mx-2">
+                                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+                                        </span>
+                                        <span>Personal Details</span>
+                                    </div>
+                                </HeaderTemplate>
+                                <Content>
+                                    <Web.UI.Pages.User.Create FromAuthoriseSection="true" userData="@userVM" GoBackStep=@GoToBackStep SaveBothStepsValue=@SaveAsync>
+
+                                    </Web.UI.Pages.User.Create>
+                                </Content>
+
+                            </TabStripTab>
+
+
+                        </TelerikTabStrip>
                     </div>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.Company.Create FromAuthoriseSection="true" CompanyData="@companyData" IsInvited=@userVM.IsInvited GoToNext="@(() => GoToNextStepAsync())">
-
-                    </Web.UI.Pages.Company.Create>
-                </Content>
-
-            </TabStripTab>
-
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="mx-2">
-                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Personal Details</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-                     <Web.UI.Pages.User.Create userData="@userVM" GoBackStep=@GoToBackStep SaveBothStepsValue=@SaveAsync>
-
-                    </Web.UI.Pages.User.Create>
-                </Content>
-
-            </TabStripTab>
-
-
-        </TelerikTabStrip>
-       
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
