@@ -1,0 +1,29 @@
+﻿<span style="font-size:@(fontSize)!important;color:@(fontColor)!important;" class="@(Class)">
+    @ChildContent
+</span>
+
+@code {
+    /// <summary>
+    /// Set html body 
+    /// </summary>
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Set font size in pixel e.g. default is `14px`
+    /// </summary>
+    [Parameter]
+    public string fontSize { get; set; } = "14px";
+
+    /// <summary>
+    /// Set font color in pixel e.g. default is `black`
+    /// </summary>
+    [Parameter]
+    public string fontColor { get; set; } = "black";
+    
+    /// <summary>
+    /// Set font color in pixel e.g. default is `black`
+    /// </summary>
+    [Parameter]
+    public string Class { get; set; } = "";
+}

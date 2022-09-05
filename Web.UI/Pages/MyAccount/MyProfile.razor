@@ -40,7 +40,7 @@
                     </span>
 
                     <img src="@userVM.ImageName" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
-                         style="height: 126px;width: auto;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
+                         style="height: 126px;width: 126px;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
                 </div>
                 <div class="row bg-white d-flex align-items-center w-100 m-0" style="height: 200px;border-radius: 0 0 7px 7px;">
                     <div class="col-12 text-center">
@@ -74,7 +74,6 @@
                         </button>
                     </li>
                 </ul>
-                @*style="overflow-y: scroll;max-height: 205px;"*@
                 <div class="tab-content" id="pills-tabContent" >
                     <div class="tab-pane fade @(currentActiveInfoTab == "Personal Information" ? "show active" : "")" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="row my-3">
