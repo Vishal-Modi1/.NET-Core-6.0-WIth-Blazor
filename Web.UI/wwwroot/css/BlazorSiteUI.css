@@ -538,3 +538,8 @@ label, a,
 .cursor-pointer {
   cursor: pointer !important;
 }
+
+/*TELERIK TEXTBOX INNER TEXT FONT SIZE & PLACEHOLDER SIZE*/
+.k-input-inner {
+  font-size: 14px;
+}

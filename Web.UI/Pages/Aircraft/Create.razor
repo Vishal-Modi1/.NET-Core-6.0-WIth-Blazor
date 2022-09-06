@@ -11,7 +11,7 @@
 
     <FormItems>
 
-        <TelerikWizard @ref="@steps">
+        <TelerikWizard @ref="@steps" Class="p-0">
             <WizardSteps>
 
                 <WizardStep Label="Basic Details">
@@ -215,7 +215,7 @@
                                     <label class="drag-area d-flex align-items-center k-cursor-pointer" for="aircraftImage">
                                         <div class="text-center mx-auto">
                                             <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
-                                            <header class="header">Drag and drop or browse to choose images</header>
+                                            <header class="header">Drag and drop or <br /> browse to choose images</header>
                                         </div>
                                     </label>
 
@@ -238,7 +238,7 @@
                             }
                         </div>
                         <hr />
-                        <div class="row bg-gray d-flex justify-content-end">
+                        <div class="row bg-gray d-flex justify-content-end mb-0">
                             <div class="d-flex justify-content-end">
                                 @if (aircraftData.Id == 0)
                                 {

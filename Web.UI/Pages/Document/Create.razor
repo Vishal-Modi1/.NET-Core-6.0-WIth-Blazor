@@ -10,71 +10,66 @@
     </FormValidation>
 
     <FormItems>
-        <div class="popup-content">
-
+        <div class="row">
             <input type="hidden" value="@documentData.Id" name="Id" />
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Upload</label>
 
-            <div class="row">
+                        <div image-container>
+                            <style>
+                                .drag-area {
+                                    width: 100%;
+                                    height: 106px;
+                                    background: #F8F8F8;
+                                    border: 0.5px dashed #606060;
+                                    border-radius: 8px;
+                                }
 
-                <div class="col-md-6 align-items-center d-flex">
-                    <label for="firstName" class="k-label k-form-label">Upload</label>
-                </div>
+                                .icon > svg {
+                                    width: 30;
+                                    height: 30;
+                                }
 
-                <div class="col-md-6 align-items-center d-flex">
-                    <label for="displayName" class="k-label k-form-label">Document Name</label>
-                </div>
-
-                <div class="col-md-6">
-
-                    <InputFile Id="" OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName"
-                               accept="@supportedDocumentsFormat" />
-
-                    @if (isFileUploadHasError)
-                    {
-                        <span style="color:red !important">@errorMessage</span>
-                    }
-                </div>
-
-                <div class="col-md-6">
-
-                    <TelerikTextBox Id="displayName" @bind-Value="@documentData.DisplayName" PlaceHolder="Display Name"></TelerikTextBox>
-                    <TelerikValidationMessage For="@(() => documentData.DisplayName)"></TelerikValidationMessage>
-
-                </div>
-
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <label for="documentTag" class="k-label k-form-label">Document Tag</label>
-                </div>
-
-                <div class="col-md-12">
-
-                    <TelerikMultiSelect @ref="@autoComplete" Data="@documentData.DocumentTagsList"
-                                        @bind-Value="@values" AutoClose="false" Placeholder="Search a tag..."
-                                        TextField="TagName" ValueField="Id">
-                    </TelerikMultiSelect>
-
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick=@(args => OpenCreateTagDialogAsync())
-                                   Class="btn k-btn-primary" ThemeColor="primary">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons>
-
-                    </TelerikButton>
-
-                </div>
-            </div>
-
-
-            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-            {
-                <div class="col-md-6 align-items-center d-flex">
-                    <div class="row">
-                        <div class="col-md-12 align-items-center d-flex">
-                            <label for="companyId" class="k-label k-form-label">Company</label>
+                                .header {
+                                    font-style: normal;
+                                    font-weight: 300;
+                                    font-size: 12px;
+                                }
+                            </style>
+                            <label class="drag-area d-flex align-items-center k-cursor-pointer" for="aircraftImage">
+                                <div class="text-center mx-auto">
+                                    <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
+                                    <header class="header">Drag and drop or <br /> browse to choose images</header>
+                                </div>
+                            </label>
+                            <InputFile Id="documentImage" style="display:none" OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName" accept="@supportedDocumentsFormat" />
                         </div>
-                        <div class="col-md-12 align-items-center d-flex">
+                        @if (isFileUploadHasError)
+                        {
+                            <span style="color:red !important">@errorMessage</span>
+                        }
+                    </div>
+                    <div class="col-6">
+                        <label>Document Name</label>
+                        <TelerikTextBox Id="displayName" @bind-Value="@documentData.DisplayName" PlaceHolder="Display Name"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => documentData.DisplayName)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>Document Tag</label>
+                        <TelerikMultiSelect @ref="@autoComplete" Data="@documentData.DocumentTagsList"
+                                            @bind-Value="@values" AutoClose="false" Placeholder="Search a tag..." TextField="TagName" ValueField="Id" />
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick=@(args => OpenCreateTagDialogAsync())
+                                       Class="btn k-btn-primary" ThemeColor="primary">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons>
+                        </TelerikButton>
+                    </div>
 
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                    {
+                        <div class="col-6">
+                            <label>Company</label>
                             <TelerikComboBox Id=companyId Data="@documentData.CompniesList" TextField="Name"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Company" ValueField="Id"
@@ -83,96 +78,73 @@
                                          ValueChanged="@( (int value) => OnChange(value) )">
                             </TelerikComboBox>
 
-                        </div>
-                        <div class="col-md-12 align-items-center d-flex">
                             <TelerikValidationMessage For="@(() => documentData.CompanyId)"></TelerikValidationMessage>
                         </div>
-                    </div>
-                </div>
-            }
+                    }
 
-            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
-            {
-                <div class="col-md-6 align-items-center d-flex">
-                    <div class="row">
-                        <div class="col-md-12 align-items-center d-flex">
-                            <label for="userId" class="k-label k-form-label">User</label>
-                        </div>
-                        <div class="col-md-12 align-items-center d-flex">
-
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+                    {
+                        <div class="col-6">
+                            <label>User</label>
                             <TelerikComboBox Id=userId Data="@documentData.UsersList" TextField="Name"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select User" ValueField="Id" @bind-Value="@(documentData.UserId)">
                             </TelerikComboBox>
 
-                        </div>
-                        <div class="col-md-12 align-items-center d-flex">
                             <TelerikValidationMessage For="@(() => documentData.UserId)"></TelerikValidationMessage>
                         </div>
-                    </div>
-                </div>
 
-            }
-
-            @if (!documentData.IsFromParentModule)
-            {
-                <div class="col-md-6 align-items-center d-flex">
-                    <div class="row">
-                        <div class="col-md-12 align-items-center d-flex">
-                            <label for="documentType" class="k-label k-form-label">Document Type</label>
-                        </div>
-                        <div class="col-md-12 align-items-center d-flex">
-
+                    }
+                    @if (!documentData.IsFromParentModule)
+                    {
+                        <div class="col-6">
+                            <label>Document Type</label>
                             <TelerikComboBox Id=documentType Data="@documentData.ModulesList" TextField="Name"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Module" ValueField="Id" @bind-Value="@(documentData.ModuleId)">
                             </TelerikComboBox>
 
-                        </div>
-                        <div class="col-md-12 align-items-center d-flex">
                             <TelerikValidationMessage For="@(() => documentData.ModuleId)"></TelerikValidationMessage>
                         </div>
-                    </div>
-                </div>
-            }
-
-            <div class="row">
-                <div class="col-md-6 align-items-center d-flex">
-                    <label for="isShareable" class="k-label k-form-label">Is Shareable</label>
-                </div>
-
-                <div class="col-md-6 align-items-center d-flex">
-                    @if (documentData.IsShareable)
-                    {
-                        <label for="lastShareDate" class="k-label k-form-label">Last Share Date</label>
                     }
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Is Shareable</label>
+                                        <div>
+                                             <TelerikSwitch Id="isShareable" @bind-Value=@documentData.IsShareable />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (documentData.IsShareable)
+                            {
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label for="lastShareDate" >Last Share Date</label>
+                                            <div>
+                                                <TelerikDatePicker @bind-Value="@documentData.LastShareDate" Id="lastShareDate"></TelerikDatePicker>
+                                                <TelerikValidationMessage For="@(() => documentData.LastShareDate)"></TelerikValidationMessage>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Expiration Date</label>
+                                        <div>
+                                            <TelerikDatePicker @bind-Value="@documentData.ExpirationDate" Id="expirationDate"></TelerikDatePicker>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                 </div>
-
-                <div class="col-md-6">
-                    <TelerikSwitch Id="isShareable" @bind-Value=@documentData.IsShareable />
-                </div>
-
-                <div class="col-md-6">
-                    @if (documentData.IsShareable)
-                    {
-                        <TelerikDatePicker @bind-Value="@documentData.LastShareDate" Id="lastShareDate"></TelerikDatePicker>
-                        <TelerikValidationMessage For="@(() => documentData.LastShareDate)"></TelerikValidationMessage>
-                    }
-                </div>
+                
 
             </div>
-
-            <div class="row">
-                <div class="col-md-6 align-items-center d-flex">
-                    <label for="expirationDate" class="k-label k-form-label">Expiration Date</label>
-                </div>
-                <div class="col-md-6">
-
-                    <TelerikDatePicker @bind-Value="@documentData.ExpirationDate" Id="expirationDate"></TelerikDatePicker>
-
-                </div>
-            </div>
-
         </div>
         <hr class="hr-gray mt-3 mb-3" />
     </FormItems>
