@@ -3,6 +3,7 @@ using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.Company;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
@@ -20,6 +21,9 @@ namespace Web.UI.Pages.Company.DetailsView
       
         protected override async Task OnInitializedAsync()
         {
+            companyData = new CompanyVM();
+            companyData.PrimaryServicesList = new List<DropDownValues>();
+
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             StringValues link;
@@ -36,8 +40,6 @@ namespace Web.UI.Pages.Company.DetailsView
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.GetDetailsAsync(dependecyParams, Convert.ToInt32(CompanyId));
-
-            companyData = new CompanyVM();
 
             if (response.Status == HttpStatusCode.OK)
             {
@@ -81,6 +83,37 @@ namespace Web.UI.Pages.Company.DetailsView
             
         }
 
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                string fileType = Path.GetExtension(e.File.Name);
+                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                if (!supportedImagesFormatsList.Contains(fileType))
+                {
+                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    return;
+                }
+
+                if (e.File.Size > maxProfileImageUploadSize)
+                {
+                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    return;
+                }
+
+                MemoryStream ms = new MemoryStream();
+                await e.File.OpenReadStream(maxProfileImageUploadSize).CopyToAsync(ms);
+                byte[] bytes = ms.ToArray();
+
+                await OnChangeAsync(bytes);
+            }
+            catch (Exception ex)
+            {
+                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+            }
+        }
+
         void CompanyEditDialog()
         {
             isDisplayPopup = true;
@@ -91,7 +124,7 @@ namespace Web.UI.Pages.Company.DetailsView
             isDisplayPopup = false;
         }
 
-        async Task OnChangeAsync()
+        async Task OnChangeAsync(byte[] bytes)
         {
             if (string.IsNullOrWhiteSpace(companyData.LogoPath))
             {
@@ -100,7 +133,7 @@ namespace Web.UI.Pages.Company.DetailsView
 
             isDisplayLoader = true;
 
-            byte[] bytes = Convert.FromBase64String(companyData.LogoPath.Substring(companyData.LogoPath.IndexOf(",") + 1));
+            //byte[] bytes = Convert.FromBase64String(companyData.LogoPath.Substring(companyData.LogoPath.IndexOf(",") + 1));
 
             ByteArrayContent data = new ByteArrayContent(bytes);
 
@@ -117,7 +150,7 @@ namespace Web.UI.Pages.Company.DetailsView
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await CompanyService.UploadLogo(dependecyParams, multiContent);
 
-                ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
+                ManageFileUploadResponse(response, true, bytes);
             }
             catch (Exception ex)
             {
@@ -127,12 +160,14 @@ namespace Web.UI.Pages.Company.DetailsView
             isDisplayLoader = false;
         }
 
-        private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
+        private void ManageFileUploadResponse(CurrentResponse response,  bool isCloseDialog, byte[] byteArray )
         {
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 
-            if (response.Status == System.Net.HttpStatusCode.OK && isCloseDialog)
+            if (response.Status == HttpStatusCode.OK && isCloseDialog)
             {
+                var b64String = Convert.ToBase64String(byteArray);
+                companyData.Logo = "data:image/png;base64," + b64String;
                 CloseDialog();
             }
         }

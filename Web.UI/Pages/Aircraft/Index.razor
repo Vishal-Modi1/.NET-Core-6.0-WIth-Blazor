@@ -176,18 +176,18 @@
     <div class="col-md-6"></div>
     <div class="col-md-2 d-flex align-items-center justify-content-end">
 
-        <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
-            <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-        </div>
-        <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
-            <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-        </div>
+    <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
+    <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
+    </div>
+    <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
+    <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
+    </div>
     </div>
     <div class="col-md-4">
-        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
+    <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
-</div>
-<hr class="hr-blue mt-1 mb-1" />*@
+    </div>
+    <hr class="hr-blue mt-1 mb-1" />*@
 
 <TelerikTabStrip>
 

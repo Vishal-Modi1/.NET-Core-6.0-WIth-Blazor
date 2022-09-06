@@ -13,6 +13,12 @@ namespace Web.UI.Shared
         public string pagingSummaryFormat = Configuration.ConfigurationSettings.Instance.PagingSummaryFormat;
         public int pageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
         public List<int?> pageSizeOptions = Configuration.ConfigurationSettings.Instance.GridPagesizeOptions.ToList();
+
+        public long maxProfileImageUploadSize = Configuration.ConfigurationSettings.Instance.MaxProfileImageSize;
+
+        List<string> supportedDocumentsFormat = Configuration.ConfigurationSettings.Instance.SupportedDocuments.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        public string supportedImagesFormat = Configuration.ConfigurationSettings.Instance.SupportedImageTypes;
+
         public bool isDisplayPopup { get; set; }
         public bool isDisplayChildPopup { get; set; }
         public string popupTitle { get; set; }

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Web.UI.Data.AircraftMake;
 using Web.UI.Utilities;
 using Telerik.Blazor.Components;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -25,6 +26,7 @@ namespace Web.UI.Pages.Aircraft
             isDisplayEnginesHavePropellers, isDisplayEnginesareTurbines, isDisplayNoofPropellersDropDown;
 
         bool isAircraftImageChanged, isDisplayMakePopup, isDisplayModelPopup;
+        byte[] aircraftImageBytes;
 
         protected override Task OnInitializedAsync()
         {
@@ -70,6 +72,37 @@ namespace Web.UI.Pages.Aircraft
 
             OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
             return base.OnInitializedAsync();
+        }
+
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                string fileType = Path.GetExtension(e.File.Name);
+                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                if (!supportedImagesFormatsList.Contains(fileType))
+                {
+                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    return;
+                }
+
+                if (e.File.Size > maxProfileImageUploadSize)
+                {
+                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    return;
+                }
+
+                MemoryStream ms = new MemoryStream();
+                await e.File.OpenReadStream(maxProfileImageUploadSize).CopyToAsync(ms);
+                aircraftImageBytes = ms.ToArray();
+
+                isAircraftImageChanged = true;
+            }
+            catch (Exception ex)
+            {
+                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+            }
         }
 
         async Task Submit()
@@ -121,13 +154,13 @@ namespace Web.UI.Pages.Aircraft
                 {
                     isBusySubmitButton = true;
 
-                    if (response != null && response.Status == System.Net.HttpStatusCode.OK && !string.IsNullOrWhiteSpace(aircraftData.ImagePath))
+                    if (response.Status == System.Net.HttpStatusCode.OK && aircraftImageBytes != null)
                     {
                         //data:image/gif;base64,
                         //this image is a single pixel (black)
-                        byte[] bytes = Convert.FromBase64String(aircraftData.ImagePath.Substring(aircraftData.ImagePath.IndexOf(",") + 1));
+                        //byte[] bytes = Convert.FromBase64String(aircraftData.ImagePath.Substring(aircraftData.ImagePath.IndexOf(",") + 1));
 
-                        ByteArrayContent data = new ByteArrayContent(bytes);
+                        ByteArrayContent data = new ByteArrayContent(aircraftImageBytes);
 
                         MultipartFormDataContent multiContent = new MultipartFormDataContent
                         {

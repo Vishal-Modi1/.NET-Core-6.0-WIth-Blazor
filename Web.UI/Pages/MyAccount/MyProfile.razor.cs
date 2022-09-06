@@ -1,5 +1,6 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.User;
+using Microsoft.AspNetCore.Components.Forms;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
 
@@ -21,8 +22,6 @@ namespace Web.UI.Pages.MyAccount
         }
 
         bool IsInstructor { get; set; } = false;
-        bool isBusySubmitButton { get; set; } = false;
-
 
         void SetCurrentActiveInfo2Tab(string activeInfoTab)
         {
@@ -31,13 +30,10 @@ namespace Web.UI.Pages.MyAccount
                 currentActiveInfo2Tab = activeInfoTab;
             }
         }
-        void DummyAction() { }
 
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-
-            base.StateHasChanged();
             await LoadData();
         }
 
@@ -70,13 +66,16 @@ namespace Web.UI.Pages.MyAccount
             isDisplayPopup = true;
         }
 
-        private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
+        private void ManageFileUploadResponse(CurrentResponse response, byte[] byteArray)
         {
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 CloseDialog();
+
+                var b64String = Convert.ToBase64String(byteArray);
+                userVM.ImageName = "data:image/png;base64," + b64String;
             }
         }
 
@@ -85,7 +84,48 @@ namespace Web.UI.Pages.MyAccount
             isDisplayPopup = false;
         }
 
-        async Task OnChangeAsync()
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                string fileType = Path.GetExtension(e.File.Name);
+                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                if (!supportedImagesFormatsList.Contains(fileType))
+                {
+                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    return;
+                }
+
+                if (e.File.Size > maxProfileImageUploadSize)
+                {
+                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    return;
+                }
+
+                MemoryStream ms = new MemoryStream();
+                await e.File.OpenReadStream(maxProfileImageUploadSize).CopyToAsync(ms);
+                byte[] bytes = ms.ToArray();
+
+                await OnChangeAsync(bytes);
+            }
+            catch (Exception ex)
+            {
+                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+            }
+        }
+
+        private async Task PopulateImageFromStream(Stream stream)
+        {
+            MemoryStream ms = new MemoryStream();
+            stream.CopyTo(ms);
+            byte[] byteArray = ms.ToArray();
+            var b64String = Convert.ToBase64String(byteArray);
+            string imageURL = "data:image/png;base64," + b64String;
+        }
+
+
+        async Task OnChangeAsync(byte[] bytes)
         {
             if (string.IsNullOrWhiteSpace(userVM.ImageName))
             {
@@ -94,7 +134,7 @@ namespace Web.UI.Pages.MyAccount
 
             isDisplayLoader = true;
 
-            byte[] bytes = Convert.FromBase64String(userVM.ImageName.Substring(userVM.ImageName.IndexOf(",") + 1));
+            //byte[] bytes = Convert.FromBase64String(userVM.ImageName.Substring(userVM.ImageName.IndexOf(",") + 1));
 
             ByteArrayContent data = new ByteArrayContent(bytes);
 
@@ -111,10 +151,9 @@ namespace Web.UI.Pages.MyAccount
                 multiContent.Add(new StringContent(companyId), "CompanyId");
 
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
                 CurrentResponse response = await UserService.UploadProfileImageAsync(dependecyParams, multiContent);
 
-                ManageFileUploadResponse(response, "Profile Image updated successfully.", true);
+                ManageFileUploadResponse(response, bytes);
             }
             catch (Exception ex)
             {
