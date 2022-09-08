@@ -14,6 +14,7 @@ html, body, .selected-font {
 /*Body Background Color*/
 /*Button Text Color*/
 /*Disabled Text Color*/
+/*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
 /*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
@@ -224,7 +225,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: #121D2D;
 }
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: #d4ecf3;
+  background-color: #3066f81c;
   border-left: 6px solid #3066F8;
   /*Update class according */
 }
@@ -418,7 +419,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .k-tabstrip-items .k-tabstrip-item.k-item.k-active .k-link {
   border-bottom: 4px solid #3066F8;
-  background: #d4ecf3 !important;
+  background: #3066f81c !important;
   /*color: $WHITE-TEXT !important;*/
 }
 
@@ -429,6 +430,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .invalid {
   background-color: #FFD1D178;
   border: 1px solid #FF0000;
+}
+
+.k-input-inner {
+  background-color: #3066f81c;
+}
+
+.k-input-button, .k-input-button:hover {
+  background-color: #3066f842;
 }
 
 .k-btn-grid-delete {

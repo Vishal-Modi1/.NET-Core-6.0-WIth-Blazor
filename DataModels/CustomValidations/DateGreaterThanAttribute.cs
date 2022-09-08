@@ -51,7 +51,6 @@ namespace DataModels.CustomValidations
 
     public class DateGreaterThanAttribute : ValidationAttribute
     {
-
         public DateGreaterThanAttribute(string otherProperty, string errorMessage)
             : base("{0} must be greater than {1}")
         {
@@ -81,7 +80,7 @@ namespace DataModels.CustomValidations
                     var thing = obj.GetType().GetProperty(OtherProperty);
                     var displayName = (DisplayAttribute)Attribute.GetCustomAttribute(thing, typeof(DisplayAttribute));
 
-                    return new ValidationResult(ErrorMessage);
+                    return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName });
                 }
             }
 

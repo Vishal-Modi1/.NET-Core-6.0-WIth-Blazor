@@ -1,4 +1,11 @@
 ﻿<div class="left-header d-flex align-items-center justify-content-between">
     <div class="ms-2">Flight Schedule Management</div>
-    <TopHorizontalHeader></TopHorizontalHeader>
+    <TopHorizontalHeader userName="@userName" userProfileImage="@userProfileImage" ></TopHorizontalHeader>
 </div>
+
+@code {
+
+    [Parameter] public string userName { get; set; }
+    [Parameter] public string userProfileImage { get; set; }
+
+}

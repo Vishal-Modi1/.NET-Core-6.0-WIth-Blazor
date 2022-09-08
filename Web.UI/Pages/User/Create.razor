@@ -4,7 +4,7 @@
 @using DataModels.Enums
 @using Web.UI.Data.User
 
-<TelerikForm Model="@userData" OnValidSubmit="@Submit">
+<TelerikForm Model="@userData" EditContext="@userForm" OnValidSubmit="@Submit">
 
     <FormValidation>
         <DataAnnotationsValidator></DataAnnotationsValidator>

@@ -44,9 +44,6 @@
             @{
                 AircraftModelDataVM aircraftModelDataVM = dataItem as AircraftModelDataVM;
 
-                // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                // {
-
                 <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftModelCreateDialog(aircraftModelDataVM)"
                            ThemeColor="success" Enabled=!aircraftModelDataVM.IsLoadingEditButton>
 
@@ -57,15 +54,11 @@
 
                 </TelerikButton>
 
-                //  }
 
-                // TODO:
-                // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                //  {
                 <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftModelDataVM)">
                     <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
-                // }
+
             }
         </GridCommandColumn>
 

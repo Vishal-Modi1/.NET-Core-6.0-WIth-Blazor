@@ -95,7 +95,6 @@
                         </TelerikButton>
                     }
 
-                    // TODO:
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
                     {
                         <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">

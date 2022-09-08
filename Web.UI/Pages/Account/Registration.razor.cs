@@ -70,11 +70,6 @@ namespace Web.UI.Pages.Account
             }
         }
 
-        protected override async Task OnInitializedAsync()
-        {
-
-        }
-
         private async Task ManageResponseAsync(CurrentResponse response)
         {
             if (response == null)

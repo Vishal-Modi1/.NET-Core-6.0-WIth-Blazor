@@ -28,7 +28,7 @@
         <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Make" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftMakeDataVM>(value, grid) )" />
     </div>
 </div>
- 
+
 <TelerikGrid TItem="AircraftMakeDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
@@ -44,9 +44,6 @@
             @{
                 AircraftMakeDataVM aircraftMakeDataVM = dataItem as AircraftMakeDataVM;
 
-                // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                // {
-
                 <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftMakeCreateDialog(aircraftMakeDataVM)"
                            ThemeColor="success" Enabled=!aircraftMakeDataVM.IsLoadingEditButton>
 
@@ -56,15 +53,11 @@
                     </TelerikLoader>
 
                 </TelerikButton>
-                //  }
 
-                // TODO:
-                // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                //  {
                 <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftMakeDataVM)">
                     <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
                 </TelerikButton>
-                // }
+
             }
         </GridCommandColumn>
 

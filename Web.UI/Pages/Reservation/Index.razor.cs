@@ -259,7 +259,11 @@ namespace Web.UI.Pages.Reservation
             uiOptions.isDisplayRecurring = true;
             uiOptions.isDisplayMember1Dropdown = true;
             uiOptions.isDisplayAircraftDropDown = true;
-            uiOptions.isDisplayMember2Dropdown = false;
+            if (schedulerVM == null)
+            {
+                schedulerVM = new SchedulerVM();
+                schedulerVM.IsDisplayMember2Dropdown = false;
+            }
             uiOptions.isDisplayFlightRoutes = false;
             uiOptions.isDisplayInstructor = false;
             uiOptions.isDisplayFlightInfo = false;

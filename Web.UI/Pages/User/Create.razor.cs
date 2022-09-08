@@ -8,6 +8,7 @@ using DataModels.Constants;
 using DataModels.Enums;
 using DataModels.Models;
 using Web.UI.Models.Shared;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Web.UI.Pages.User
 {
@@ -23,8 +24,7 @@ namespace Web.UI.Pages.User
 
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        //TODO:
-        //public TelerikEditForm<UserVM> userForm;
+        EditContext userForm;
         bool isInstructorTypeDropdownVisible = false, isAuthenticated = false;
         int? roleId;
         List<RadioButtonItem> genderOptions { get; set; } = new List<RadioButtonItem>
@@ -36,6 +36,7 @@ namespace Web.UI.Pages.User
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            userForm = new EditContext(userData);
 
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
 
@@ -143,11 +144,10 @@ namespace Web.UI.Pages.User
 
         async void GotoSave()
         {
-            //TODO:
-            //if (!userForm.EditContext.Validate())
-            //{
-            //    return;
-            //}
+            if (!userForm.Validate())
+            {
+                return;
+            }
 
             SaveBothStepsValue.Invoke();
         }

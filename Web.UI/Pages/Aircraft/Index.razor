@@ -207,7 +207,7 @@
         <Content>
 
 
-            <TelerikListView @ref="dataListView" 
+            <TelerikListView @ref="dataListView" Pageable="true"
                              Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
                              OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
 

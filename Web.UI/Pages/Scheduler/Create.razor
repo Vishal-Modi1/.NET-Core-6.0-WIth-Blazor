@@ -8,6 +8,12 @@
 @using DataModels.VM;
 @using Models.Shared
 
+<style>
+    .hide {
+        display: none
+    }
+</style>
+
 @if (uiOptions.isDisplayMainForm)
 {
     <TelerikForm Model="@schedulerVM" OnValidSubmit="@OnValidSubmit">
@@ -98,7 +104,7 @@
                             </div>
                         }
 
-                        @if (uiOptions.isDisplayMember2Dropdown)
+                        @if (schedulerVM.IsDisplayMember2Dropdown)
                         {
                             <div class="col-6">
                                 <label>Member 2</label>
@@ -108,6 +114,9 @@
                                  @bind-Value="@(schedulerVM.Member2Id)">
 
                                 </TelerikComboBox>
+
+                                <TelerikValidationMessage For="@(() => schedulerVM.Member2Id)"></TelerikValidationMessage>
+
                             </div>
 
                         }
@@ -184,239 +193,13 @@
                     }
                 </div>
 
-                <!--OLD CODE START-->
-                <!--
-                <table class="custom-event-editor" width="100%" cellpadding="5">
-                    <tbody>
-
-                        <tr>
-                            <td class="e-textlabel d-flex align-items-start">Display Title</td>
-                            <td colspan="4">
-
-                                <TelerikTextBox PlaceHolder="Enter Title" Id="title" @bind-Value="@schedulerVM.DisplayTitle"></TelerikTextBox>
-                                <TelerikValidationMessage For="@(() => schedulerVM.DisplayTitle)"></TelerikValidationMessage>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="e-textlabel d-flex align-items-start">Activity Type</td>
-                            <td colspan="4">
-
-                                <TelerikComboBox Id=companyId Data="@schedulerVM.ScheduleActivitiesList" TextField="Name"
-                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                         Placeholder="Select Activity" ValueField="Id"
-                                         Value="@schedulerVM.ScheduleActivityId"
-                                         ValueExpression="@( () => schedulerVM.ScheduleActivityId )"
-                                         ValueChanged="@( (int? value) => OnActivityTypeValueChanged(value) )">
-                                </TelerikComboBox>
-
-                                <TelerikValidationMessage For="@(() => schedulerVM.ScheduleActivityId)"></TelerikValidationMessage>
-
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="e-textlabel d-flex align-items-start">Start Time</td>
-                            <td colspan="4">
-
-                                <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime"
-                                               Format="MM/dd/yyyy %h:mm tt" Id="startTime">
-
-                                    <DateTimePickerSteps Minute="30" />
-
-                                </TelerikDateTimePicker>
-
-                                <TelerikValidationMessage For="@(() => schedulerVM.StartTime)"></TelerikValidationMessage>
-
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="e-textlabel d-flex align-items-start">End Time</td>
-                            <td colspan="4">
-
-                                <TelerikDateTimePicker @bind-Value="@schedulerVM.EndTime"
-                                               Format="MM/dd/yyyy %h:mm tt" Id="endTime">
-
-                                    <DateTimePickerSteps Minute="30" />
-
-                                </TelerikDateTimePicker>
-
-                                <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
-
-                            </td>
-                        </tr>
-
-                @if (uiOptions.isDisplayAircraftDropDown)
-                {
-                            <tr>
-                                <td class="e-textlabel d-flex align-items-start">Aircraft</td>
-                                <td colspan="4">
-
-                                    <TelerikComboBox Id=aircraftId Data="@schedulerVM.AircraftsList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Aircraft" ValueField="Id"
-                                 @bind-Value="@(schedulerVM.AircraftId)">
-
-                                    </TelerikComboBox>
-
-                                    <TelerikValidationMessage For="@(() => schedulerVM.AircraftId)"></TelerikValidationMessage>
-
-                                </td>
-                            </tr>
-                }
-
-                @if (schedulerVM.ScheduleActivityId > 0)
-                {
-                @if (uiOptions.isDisplayRecurring)
-                {
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Recurring ?</td>
-                                    <td colspan="4">
-
-                                        <TelerikSwitch Id="isRecurring" @bind-Value=@schedulerVM.IsRecurring />
-
-                                    </td>
-                                </tr>
-                }
-
-                @if (uiOptions.isDisplayMember1Dropdown)
-                {
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Member 1</td>
-                                    <td colspan="4">
-
-                                        <TelerikComboBox Id=member1Id Data="@schedulerVM.Member1List" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Member 1" ValueField="Id"
-                                 @bind-Value="@(schedulerVM.Member1Id)">
-
-                                        </TelerikComboBox>
-
-                                    </td>
-                                </tr>
-                }
-
-                @if (uiOptions.isDisplayMember2Dropdown)
-                {
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Member 2</td>
-                                    <td colspan="4">
-
-                                        <TelerikComboBox Id=member2Id Data="@schedulerVM.Member2List" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Member 2" ValueField="Id"
-                                 @bind-Value="@(schedulerVM.Member2Id)">
-
-                                        </TelerikComboBox>
-
-                        @*TODO:
-                                    <RadzenCompareValidator Visible=@(!string.IsNullOrEmpty(schedulerVM.Member2Id.ToString())) Value=@schedulerVM.Member1Id
-                                    Component="Member2Id" Operator="CompareOperator.NotEqual" Text="Member 2 is not valid" Style="position: relative" />*@
-                                    </td>
-                                </tr>
-
-                }
-
-                @if (uiOptions.isDisplayFlightInfo)
-                {
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Flight Type</td>
-                                    <td colspan="4">
-
-                                        <TelerikRadioGroup Data="@flightTypes" ValueField="@nameof(RadioButtonItem.Text)"
-                                   TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerVM.FlightType"
-                                   Layout="@RadioGroupLayout.Horizontal"
-                                   LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Flight Rules</td>
-                                    <td colspan="4">
-
-                                        <TelerikRadioGroup Data="@flightRules" ValueField="@nameof(RadioButtonItem.Text)"
-                                   TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerVM.FlightRules"
-                                   Layout="@RadioGroupLayout.Horizontal"
-                                   LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Est Hours</td>
-                                    <td colspan="4">
-
-                                        <TelerikNumericTextBox Placeholder="Enter Hours" @bind-Value="@schedulerVM.EstHours"></TelerikNumericTextBox>
-
-                                    </td>
-                                </tr>
-
-                }
-                @if (uiOptions.isDisplayInstructor)
-                {
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Instructor</td>
-                                    <td colspan="4">
-                                        <TelerikComboBox Id=instructorId Data="@schedulerVM.InstructorsList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Instructor" ValueField="Id"
-                                 @bind-Value="@(schedulerVM.InstructorId)">
-
-                                        </TelerikComboBox>
-                                    </td>
-                                </tr>
-                }
-
-                @if (uiOptions.isDisplayFlightRoutes)
-                {
-                                <tr>
-                                    <td class="e-textlabel d-flex align-items-start">Flight Routes</td>
-                                    <td colspan="4">
-                                        <TelerikTextArea Class="w-100" PlaceHolder="Enter fligt routes" AutoSize="true"
-                                 @bind-Value="@schedulerVM.FlightRoutes"></TelerikTextArea>
-                                    </td>
-                                </tr>
-                }
-
-                            <tr>
-                                <td class="e-textlabel d-flex align-items-start">Comments</td>
-                                <td colspan="4">
-                                    <TelerikTextArea Class="w-100" PlaceHolder="Enter comments" AutoSize="true"
-                                 @bind-Value="@schedulerVM.Comments"></TelerikTextArea>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="e-textlabel d-flex align-items-start">Internal Comments</td>
-                                <td colspan="4">
-
-                                    <TelerikTextArea Class="w-100" PlaceHolder="Enter internal comments" AutoSize="true"
-                                 @bind-Value="@schedulerVM.InternalComments"></TelerikTextArea>
-                                </td>
-                            </tr>
-
-                }
-                @if (uiOptions.isDisplayStandBy)
-                {
-                            <tr>
-                                <td class="e-textlabel d-flex align-items-start">StandBy</td>
-                                <td colspan="4">
-                                    <TelerikCheckBox @bind-Value="@schedulerVM.IsStandBy" Id="isRecurring"></TelerikCheckBox>
-                                </td>
-                            </tr>
-                }
-
-                    </tbody>
-                </table>
-                        -->
-                <!--OLD CODE END-->
                 <hr />
                 <div class="row bg-gray d-flex justify-content-end">
                     <div class="d-flex justify-content-end">
                         <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary">
                             Continue
                         </TelerikButton>
-                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" Class="btn k-btn-secondary mr-1">
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline">
                             Cancel
                         </TelerikButton>
                     </div>
@@ -495,51 +278,20 @@
                     </div>
                 </div>
 
-                @* <div class="row justify-content-between align-items-center">
-        <div class="col-3 d-flex flex-column">
-        <h5 class="d-flex justify-content-center" >Activity</h5>
-        <div class="d-flex justify-content-center">@schedulerVM.ScheduleActivitiesList.FirstOrDefault(x => x.Id == schedulerVM.ScheduleActivityId).Name</div>
-        </div>
-        <div class="col-3 d-flex flex-column">
-        <h5 class="d-flex justify-content-center" >Aircraft</h5>
-        <div class="d-flex justify-content-center">@schedulerVM.AircraftsList.FirstOrDefault(x => x.Id == schedulerVM.AircraftId).Name</div>
-        </div>
-        <div class="col-3 d-flex flex-column">
-        <h5 class="d-flex justify-content-center" >Title</h5>
-        <div class="d-flex justify-content-center">@schedulerVM.DisplayTitle</div>
-        </div>
-        </div>
-
-        <div class="row justify-content-between align-items-center ">
-        <div class="col-12 d-flex flex-column">
-        <h4 class="d-flex justify-content-center popup-title">Reservation Id</h4>
-        <span class="d-flex justify-content-center">
-        @if (schedulerVM.ReservationId != Guid.Empty)
-        {
-        @schedulerVM.ReservationId
-        }
-        else
-        {
-        <span>-</span>
-        }
-        </span>
-        </div>
-        </div>*@
-
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center popup-title">
                             <FontLabel fontSize="16px" Class="font-weight-bold">Activity</FontLabel>
                         </div>
                         <span class="d-flex justify-content-center">
-                            <FontLabel >@(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</FontLabel>
-                            </span>
+                            <FontLabel>@(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</FontLabel>
+                        </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center popup-title"> <FontLabel fontSize="16px" Class="font-weight-bold">Aircraft</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             <FontLabel>@(@schedulerVM.AircraftsList.FirstOrDefault(p => p.Id == @schedulerVM.AircraftId)?.Name ?? "-")</FontLabel>
-                            </span>
+                        </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Title</FontLabel></div>
@@ -564,7 +316,7 @@
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Member 2</FontLabel></div>
                         <span class="d-flex justify-content-center">
-                            
+
                             @if (@schedulerVM.Member2Id != null)
                             {
                                 var member2 = @schedulerVM.Member2List.FirstOrDefault(p => p.Id == @schedulerVM.Member2Id);
@@ -574,7 +326,7 @@
                             {
                                 <FontLabel>-</FontLabel>
                             }
-                            
+
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
@@ -696,11 +448,11 @@
 
                         </TelerikButton>
 
-                        <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@EditFlightTime"
+                        <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenMainForm"
                            Class="btn k-btn-primary flex-fill mx-2"> Back </TelerikButton>
                     }
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()"
-                           ThemeColor="secondary" Class="btn k-btn-secondary flex-fill mx-2" Enabled="@(!isBusySubmitButton)">
+                           ThemeColor="secondary" FillMode="Outline" Class="mx-2 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
                         Cancel
                     </TelerikButton>
                 </div>
@@ -790,32 +542,14 @@
                 {
                     <div class="d-flex justify-content-center">
                         <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">Checked In</FontLabel>
-                </div>
+                    </div>
                     <div class="d-flex justify-content-center">
                         <FontLabel>@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>
-                 </div>
+                    </div>
                 }
             </div>
         </div>
-        @* <div class="alert alert-warning">
-            <div class="row justify-content-center align-items-center ">
-                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
-                {
-                    <div class="col-6 d-flex flex-column">
-                        <strong class="d-flex justify-content-center">Checked Out</strong>
-                        <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) @(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
-                    </div>
-                }
 
-                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
-                {
-                    <div class="col-6 d-flex flex-column">
-                        <strong class="d-flex justify-content-center">Checked In</strong>
-                        <span class="d-flex justify-content-center">@(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName) @(@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd %h:mm tt"))</span>
-                    </div>
-                }
-            </div>
-        </div>*@
     }
 }
 else if (uiOptions.isDisplayEditEndTimeForm)
@@ -849,53 +583,9 @@ else if (uiOptions.isDisplayEditEndTimeForm)
                     <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
                 </div>
             </div>
-            <!--
 
-            <div class="row mt-1 mb-2">
-                <div class="col-md-4 align-items-top d-flex">
-
-                    <label for="startTime" class="k-label k-form-label">Start Time</label>
-                </div>
-                <div class="col-md-8">
-                    <span class="ml-1 mr-1">
-            @schedulerVM.StartTime.ToString("dd/MM/yyyy %h:mm tt")
-
-                    </span>
-
-                    <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime"
-                                       Format="MM/dd/yyyy %h:mm tt" Id="startTime" Class="w-100">
-
-                        <DateTimePickerSteps Minute="30" />
-
-                    </TelerikDateTimePicker>
-
-                </div>
-            </div>
-
-            <div class="row mt-1 mb-2">
-                <div class="col-md-4 align-items-top d-flex">
-                    <label for="endTime" class="k-label k-form-label">End Time</label>
-                </div>
-                <div class="col-md-8">
-                    <span>
-                        <TelerikDateTimePicker @bind-Value="@schedulerVM.EndTime"
-                                           Format="MM/dd/yyyy %h:mm tt" Id="endTime" Class="w-100">
-
-                            <DateTimePickerSteps Minute="30" />
-
-                        </TelerikDateTimePicker>
-
-                        <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
-
-            @*TODO:*@
-            @*<RadzenCompareValidator Value=@schedulerVM.StartTime Component="EndTime"
-                        Style="position: relative" Text="End time is not valid" Operator=CompareOperator.GreaterThan />*@
-                    </span>
-
-                </div>
-            </div>
-            -->
             <hr class="hr-gray mt-3 mb-3" />
+
         </FormItems>
 
         <FormButtons>
@@ -909,7 +599,7 @@ else if (uiOptions.isDisplayEditEndTimeForm)
 
                 </TelerikButton>
 
-                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => HideEditEndTimeForm()" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => HideEditEndTimeForm()" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
                     Cancel
                 </TelerikButton>
 
@@ -921,10 +611,13 @@ else if (uiOptions.isDisplayEditEndTimeForm)
 }
 else
 {
-    <TelerikForm Model="@schedulerVM" OnValidSubmit="@CheckIn">
+    <TelerikForm Model="@schedulerVM" EditContext="checkInForm" OnValidSubmit="@CheckIn">
 
         <FormValidation>
-            <DataAnnotationsValidator></DataAnnotationsValidator>
+
+            <Web.UI.Shared.Components.Validation.ValidationSummary>
+            </Web.UI.Shared.Components.Validation.ValidationSummary>
+
         </FormValidation>
 
         <FormItems>
@@ -950,12 +643,12 @@ else
 
                         AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
                         <tr>
-                            <td>@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName</td>
+                            <td>@schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName</td>
                             <td>
 
-                                @*@schedulerVM.AircraftEquipmentsTimeList[index].Hours*@
+                                @*@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours*@
 
-                                <TelerikNumericTextBox Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
+                                <TelerikNumericTextBox Class="" Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
                                 @* <RadzenNumeric Visible="false" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours Class="w-100" />*@
 
                             </td>
@@ -968,6 +661,9 @@ else
                                                ValueExpression="@( () => @schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime )"
                                                ValueChanged="@( (decimal value) => TextBoxChangeEvent(value, indexValue) )">
                                     </TelerikNumericTextBox>
+
+                                    <TelerikValidationMessage For="@(() => schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime)"></TelerikValidationMessage>
+
                                 }
                                 else
                                 {
@@ -976,14 +672,18 @@ else
                                                ValueExpression="@(() => aircraftScheduleHobbsTime.InTime)"
                                                ValueChanged="@( (decimal value) => EditFlightTimeTextBoxChangeEvent(value, indexValue) )">
                                     </TelerikNumericTextBox>
+
+                                    <TelerikValidationMessage For="@(() => aircraftScheduleHobbsTime.InTime)"></TelerikValidationMessage>
                                 }
+
+
 
                                 @*//TODO*@
                                 @* <RadzenCompareValidator Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"
-                        Component="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
-                        Operator=CompareOperator.GreaterThan
-                        Style="position: relative;word-break: break-word;max-width:140px;margin-left:5px;"
-                        Text="Time in value must be greater than time out" />*@
+                                    Component="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
+                                    Operator=CompareOperator.GreaterThan
+                                    Style="position: relative;word-break: break-word;max-width:140px;margin-left:5px;"
+                                    Text="Time in value must be greater than time out" />*@
                             </td>
 
                             <td>
@@ -1006,7 +706,7 @@ else
                         </TelerikButton>
 
 
-                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" Class="btn k-btn-secondary" Enabled="@(!isBusySubmitButton)">
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
                             Cancel
                         </TelerikButton>
                     </div>

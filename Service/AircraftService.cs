@@ -22,11 +22,13 @@ namespace Service
         private readonly IAircraftEquipmentTimeRepository _aircraftEquipmentTimeRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IAircraftStatusRepository _aircraftStatusRepository;
+        private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
 
         public AircraftService(IAircraftRepository aircraftRepository, IAircraftCategoryRepository aircraftCategoryRepository,
                                IAircraftClassRepository aircraftClassRepository, IAircraftMakeRepository aircraftMakeRepository,
                                IAircraftModelRepository aircraftModelRepository, IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
-                                ICompanyRepository companyRepository, IAircraftStatusRepository aircraftStatusRepository)
+                               ICompanyRepository companyRepository, IAircraftStatusRepository aircraftStatusRepository,
+                               IAircraftEquipementTimeService aircraftEquipementTimeService)
         {
             _aircraftRepository = aircraftRepository;
             _aircraftCategoryRepository = aircraftCategoryRepository;
@@ -36,6 +38,7 @@ namespace Service
             _aircraftEquipmentTimeRepository = aircraftEquipmentTimeRepository;
             _companyRepository = companyRepository;
             _aircraftStatusRepository = aircraftStatusRepository;
+            _aircraftEquipementTimeService = aircraftEquipementTimeService;
         }
 
         public CurrentResponse Create(AircraftVM airCraftVM)
@@ -168,9 +171,11 @@ namespace Service
                 aircraftVM.AircraftClassList = _aircraftClassRepository.ListDropDownValues();
                 aircraftVM.AircraftMakeList = _aircraftMakeRepository.ListDropDownValues();
                 aircraftVM.AircraftModelList = _aircraftModelRepository.ListDropDownValues();
-                aircraftVM.AircraftEquipmentTimesList = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id);
                 aircraftVM.FlightSimulatorClassList = _aircraftRepository.ListFlightSimulatorClassDropDownValues();
                 aircraftVM.AircraftStatusList = _aircraftStatusRepository.ListDropDownValues();
+
+                var data  = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id);
+                aircraftVM.AircraftEquipmentTimesList = _aircraftEquipementTimeService.ToCreateBusinessObjectList(data);
 
                 if (companyId > 0)
                 {

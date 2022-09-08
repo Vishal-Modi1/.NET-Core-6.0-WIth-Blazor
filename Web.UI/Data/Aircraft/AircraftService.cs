@@ -25,8 +25,6 @@ namespace Web.UI.Data.Aircraft
         {
             try
             {
-                //TODO: remove static lenth
-                datatableParams.Length = 10;
                 dependecyParams.URL = "aircraft/list";
                 dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
                 CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);

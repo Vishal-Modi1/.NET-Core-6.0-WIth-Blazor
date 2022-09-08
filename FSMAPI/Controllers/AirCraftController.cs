@@ -177,7 +177,7 @@ namespace FSMAPI.Controllers
         #region Aircraft Equipment
         [HttpPost]
         [Route("createaircraftequipment")]
-        public IActionResult CreateAircraftEquipment(List<AircraftEquipmentTimeVM> aircraftEquipmentTimeVM)
+        public IActionResult CreateAircraftEquipment(List<AircraftEquipmentTimeCreateVM> aircraftEquipmentTimeVM)
         {
             long createdBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 

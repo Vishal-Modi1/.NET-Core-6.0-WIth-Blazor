@@ -8,6 +8,7 @@ using DataModels.Enums;
 using Utilities;
 using DataModels.Constants;
 using Web.UI.Models.Shared;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -42,6 +43,8 @@ namespace Web.UI.Pages.Scheduler
             new RadioButtonItem { Id = 2, Text = "IFR" },
         };
 
+        EditContext checkInForm;
+
         protected override async Task OnInitializedAsync()
         {
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
@@ -61,6 +64,8 @@ namespace Web.UI.Pages.Scheduler
                 isAllowToDelete = true;
                 isAllowToEdit = true;
             }
+
+            checkInForm = new EditContext(schedulerVM);
         }
 
         private async void OnValidSubmit()
@@ -205,6 +210,11 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task CheckIn()
         {
+            if (!checkInForm.Validate())
+            {
+                return;
+            }
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(dependecyParams, schedulerVM.AircraftEquipmentsTimeList);
 
@@ -232,7 +242,7 @@ namespace Web.UI.Pages.Scheduler
 
         private void ManageValues()
         {
-            if (!uiOptions.isDisplayMember2Dropdown)
+            if (!schedulerVM.IsDisplayMember2Dropdown)
             {
                 schedulerVM.Member2Id = null;
             }
@@ -265,20 +275,20 @@ namespace Web.UI.Pages.Scheduler
 
             if (value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
             {
-                uiOptions.isDisplayMember2Dropdown = true;
+                schedulerVM.IsDisplayMember2Dropdown = true;
                 uiOptions.isDisplayFlightRoutes = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
             {
-                uiOptions.isDisplayMember2Dropdown = true;
+                schedulerVM.IsDisplayMember2Dropdown = true;
                 uiOptions.isDisplayFlightRoutes = true;
                 uiOptions.isDisplayFlightInfo = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
             {
-                uiOptions.isDisplayMember2Dropdown = true;
+                schedulerVM.IsDisplayMember2Dropdown = true;
                 uiOptions.isDisplayFlightRoutes = true;
                 uiOptions.isDisplayFlightInfo = true;
             }
@@ -382,6 +392,7 @@ namespace Web.UI.Pages.Scheduler
 
             schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = value - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
             schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = value;
+            schedulerVM.AircraftEquipmentsTimeList[index].InTime = value;
 
             base.StateHasChanged();
         }
@@ -501,7 +512,7 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.isDisplayRecurring = true;
             uiOptions.isDisplayMember1Dropdown = true;
             uiOptions.isDisplayAircraftDropDown = true;
-            uiOptions.isDisplayMember2Dropdown = false;
+            schedulerVM.IsDisplayMember2Dropdown = false;
             uiOptions.isDisplayFlightRoutes = false;
             uiOptions.isDisplayInstructor = false;
             uiOptions.isDisplayFlightInfo = false;

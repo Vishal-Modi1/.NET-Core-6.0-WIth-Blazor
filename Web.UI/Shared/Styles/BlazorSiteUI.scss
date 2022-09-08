@@ -9,6 +9,8 @@ html, body, .selected-font {
 .k-drawer, .k-tabstrip-items {
     font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
+
+
 /*NEW COLOR PLATE*/
 $PRIMARY-COLOR: #042455;
 $SECONDARY-COLOR: #3066F8;
@@ -40,7 +42,8 @@ $BG-DARK-BLUE: #022254;
 $BG-LIGHT-BLUE: #3066F8;
 $BG-MENU-ITEM: #0062FE;
 $BG-MENU-ITEM-TEXT-COLOR: #121D2D;
-$BG-MENU-ITEM-SELECTED: #d4ecf3;
+/*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
+$BG-MENU-ITEM-SELECTED: #3066f81c;
 $BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
 $BG-MENU-TITLE-HEADER: #121D2D;
 $BG-MENU-ITEM-HOVER: #eee;
@@ -540,6 +543,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .invalid {
     background-color: #FFD1D178;
     border: 1px solid #FF0000;
+}
+
+.k-input-inner {
+    background-color: #3066f81c;
+}
+
+.k-input-button, .k-input-button:hover {
+    background-color: #3066f842;
 }
 
 .k-btn-grid-delete {

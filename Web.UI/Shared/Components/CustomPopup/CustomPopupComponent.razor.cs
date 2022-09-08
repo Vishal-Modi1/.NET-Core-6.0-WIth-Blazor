@@ -74,7 +74,7 @@ namespace Web.UI.Shared.Components.CustomPopup
                 case OperationType.Create: 
                     return "bg-primary-f text-white d-flex justify-content-center";
                 case OperationType.Edit:
-                    return "bg-success-f text-white d-flex justify-content-center";
+                    return "bg-primary-f text-white d-flex justify-content-center";
                 case OperationType.Delete:
                     return "bg-danger-f text-white d-flex justify-content-center";
                 default:

@@ -221,7 +221,7 @@ namespace Service
 
                 if (isEmailExist)
                 {
-                    CreateResponse(isEmailExist, HttpStatusCode.Found, "");
+                    CreateResponse(isEmailExist, HttpStatusCode.Found, "Email is already exist");
                 }
                 else
                 {

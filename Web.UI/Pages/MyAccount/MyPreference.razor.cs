@@ -2,7 +2,7 @@
 using DataModels.VM.Common;
 using DataModels.VM.UserPreference;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Components.Forms;
 using Web.UI.Utilities;
 
 namespace Web.UI.Pages.MyAccount
@@ -11,26 +11,22 @@ namespace Web.UI.Pages.MyAccount
     {
         [Parameter]
         public List<UserPreferenceVM> UserPreferencesList { get; set; }
-
         UserPreferenceVM userPreferenceVM = new UserPreferenceVM();
-        List<DropDownValues> preferenceTypesList = new List<DropDownValues>();
-        List<DropDownLargeValues> aircraftList = new List<DropDownLargeValues>();
-        List<DropDownValues> activityTypeList = new List<DropDownValues>();
 
-        [Required(ErrorMessage = "Preference type is required")]
-        int preferenceTypeId = 0;
-
-        //[Required(ErrorMessage = "Aircraft is required")]
-        List<long> multipleValues = new List<long>();
-        List<int> multipleActivites = new List<int>();
+        EditContext preferenceForm; 
 
         protected override async Task OnInitializedAsync()
         {
+            preferenceForm = new EditContext(userPreferenceVM);
+
             int i = 0;
+
+            userPreferenceVM.PreferenceTypesList = new List<DropDownValues>();
+
             foreach (var item in Enum.GetNames(typeof(PreferenceType)).ToList())
             {
                 i++;
-                preferenceTypesList.Add(new DropDownValues() { Id = i, Name = item });
+                userPreferenceVM.PreferenceTypesList.Add(new DropDownValues() { Id = i, Name = item });
             }
 
             base.OnInitialized();
@@ -40,32 +36,31 @@ namespace Web.UI.Pages.MyAccount
         {
             isDisplayLoader = true;
 
-            activityTypeList = new List<DropDownValues>();
-            aircraftList = new List<DropDownLargeValues>();
+            var data = preferenceForm.Validate();
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-            preferenceTypeId = values;
-            if (values == (int)PreferenceType.ScheduleActivityType)
-            {
-                activityTypeList = await AircraftSchedulerService.ListActivityTypeDropDownValues(dependecyParams);
+            userPreferenceVM.PreferenceTypeId = values;
+         //   if (values == (int)PreferenceType.ScheduleActivityType)
+        //    {
+                userPreferenceVM.ActivityTypeList = await AircraftSchedulerService.ListActivityTypeDropDownValues(dependecyParams);
                 var activityTypeData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.ScheduleActivityType).FirstOrDefault();
 
                 if (activityTypeData != null)
                 {
-                    multipleActivites = activityTypeList.Where(p => activityTypeData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => Convert.ToInt32(p.Id)).ToList();
+                    userPreferenceVM.ActivityIds = userPreferenceVM.ActivityTypeList.Where(p => activityTypeData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => Convert.ToInt32(p.Id)).ToList();
                 }
-            }
-            else if (values == (int)PreferenceType.Aircraft)
-            {
-                aircraftList = await AircraftService.ListDropdownValues(dependecyParams);
+       //     }
+        //    else if (values == (int)PreferenceType.Aircraft)
+       //     {
+                userPreferenceVM.AircraftList = await AircraftService.ListDropdownValues(dependecyParams);
                 var aircraftData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
 
                 if (aircraftData != null)
                 {
-                    multipleValues = aircraftList.Where(p => aircraftData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p=>p.Id).ToList();
+                    userPreferenceVM.AircraftIds = userPreferenceVM.AircraftList.Where(p => aircraftData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p=>p.Id).ToList();
                 }
-            }
+        //    }
 
             isDisplayLoader = false;
         }
@@ -75,14 +70,14 @@ namespace Web.UI.Pages.MyAccount
             isBusySubmitButton = true;
             base.StateHasChanged();
 
-            userPreferenceVM.PreferenceType = (PreferenceType)preferenceTypeId;
+            userPreferenceVM.PreferenceType = (PreferenceType)userPreferenceVM.PreferenceTypeId;
             userPreferenceVM.ListPreferencesIds = new List<string>();
 
-            if (preferenceTypeId == (int)PreferenceType.Aircraft)
+            if (userPreferenceVM.PreferenceTypeId == (int)PreferenceType.Aircraft)
             {
-                foreach (long value in multipleValues)
+                foreach (long value in userPreferenceVM.AircraftIds)
                 {
-                    var aircraft = aircraftList.Where(p=>p.Id == value).FirstOrDefault();
+                    var aircraft = userPreferenceVM.AircraftList.Where(p=>p.Id == value).FirstOrDefault();
 
                     if(aircraft == null)
                     {
@@ -94,10 +89,10 @@ namespace Web.UI.Pages.MyAccount
             }
             else
             {
-                foreach (long value in multipleActivites)
+                foreach (long value in userPreferenceVM.ActivityIds)
                 {
 
-                    var activityType = activityTypeList.Where(p => p.Id == value).FirstOrDefault();
+                    var activityType = userPreferenceVM.ActivityTypeList.Where(p => p.Id == value).FirstOrDefault();
 
                     if (activityType == null)
                     {

@@ -18,7 +18,7 @@ namespace Service
             _aircraftEquipementTimeRepository = aircraftEquipementTimeRepository;
         }
 
-        public CurrentResponse Create(AircraftEquipmentTimeVM aircraftEquipmentTimeVM)
+        public CurrentResponse Create(AircraftEquipmentTimeCreateVM aircraftEquipmentTimeVM)
         {
             AircraftEquipmentTime aircraftEquipmentTime = ToDataObject(aircraftEquipmentTimeVM);
             try
@@ -35,7 +35,7 @@ namespace Service
                 return _currentResponse;
             }
         }
-        
+
         public CurrentResponse Edit(AircraftEquipmentTimeVM aircraftEquipmentTimeVM)
         {
             AircraftEquipmentTime aircraftEquipmentTime = ToDataObject(aircraftEquipmentTimeVM);
@@ -73,7 +73,62 @@ namespace Service
             }
         }
 
-        public AircraftEquipmentTime ToDataObject(AircraftEquipmentTimeVM aircraftEquipmentTimeVM)
+        public AircraftEquipmentTime ToDataObject(AircraftEquipmentTimeVM aircraftEquipmentTime)
+        {
+            AircraftEquipmentTime aircraftEquipmentTimeVM = new AircraftEquipmentTime();
+
+            aircraftEquipmentTimeVM.Id = aircraftEquipmentTime.Id;
+            aircraftEquipmentTimeVM.EquipmentName = aircraftEquipmentTime.EquipmentName;
+            aircraftEquipmentTimeVM.Hours = aircraftEquipmentTime.Hours;
+            aircraftEquipmentTimeVM.AircraftId = aircraftEquipmentTime.AircraftId;
+
+            aircraftEquipmentTimeVM.CreatedBy = aircraftEquipmentTime.CreatedBy;
+            aircraftEquipmentTimeVM.CreatedOn = aircraftEquipmentTime.CreatedOn;
+            aircraftEquipmentTimeVM.UpdatedBy = aircraftEquipmentTime.UpdatedBy;
+            aircraftEquipmentTimeVM.UpdatedOn = aircraftEquipmentTime.UpdatedOn;
+
+            return aircraftEquipmentTimeVM;
+        }
+
+        //public List<AircraftEquipmentTimeVM> ToBusinessObjectList(List<AircraftEquipmentTime> aircraftEquipmentTimesList)
+        //{
+        //    List<AircraftEquipmentTimeVM> aircraftEquipmentTimeVMList = new List<AircraftEquipmentTimeVM>();
+
+        //    foreach (AircraftEquipmentTime item in aircraftEquipmentTimesList)
+        //    {
+        //        AircraftEquipmentTimeVM aircraftEquipmentTimeVM = new AircraftEquipmentTimeVM();
+
+
+        //    }
+
+        //    return aircraftEquipmentTimeVMList;
+        //}
+
+        public AircraftEquipmentTimeVM ToBusinessObject(AircraftEquipmentTime aircraftEquipmentTime)
+        {
+            AircraftEquipmentTimeVM aircraftEquipmentTimeVM = new AircraftEquipmentTimeVM();
+
+            aircraftEquipmentTimeVM.Id = aircraftEquipmentTimeVM.Id;
+            aircraftEquipmentTimeVM.EquipmentName = aircraftEquipmentTimeVM.EquipmentName;
+            aircraftEquipmentTimeVM.Hours = aircraftEquipmentTimeVM.Hours;
+            aircraftEquipmentTimeVM.AircraftId = aircraftEquipmentTimeVM.AircraftId;
+
+            aircraftEquipmentTimeVM.CreatedBy = aircraftEquipmentTimeVM.CreatedBy;
+
+            if (aircraftEquipmentTimeVM.Id == 0)
+            {
+                aircraftEquipmentTimeVM.CreatedOn = DateTime.UtcNow;
+            }
+            else
+            {
+                aircraftEquipmentTimeVM.UpdatedBy = aircraftEquipmentTimeVM.UpdatedBy;
+                aircraftEquipmentTimeVM.UpdatedOn = DateTime.UtcNow;
+            }
+
+            return aircraftEquipmentTimeVM;
+        }
+
+        public AircraftEquipmentTime ToDataObject(AircraftEquipmentTimeCreateVM aircraftEquipmentTimeVM)
         {
             AircraftEquipmentTime aircraftEquipmentTime = new AircraftEquipmentTime();
 
@@ -97,6 +152,36 @@ namespace Service
             return aircraftEquipmentTime;
         }
 
+        public AircraftEquipmentTimeCreateVM ToCreateBusinessObject(AircraftEquipmentTime aircraftEquipmentTime)
+        {
+            AircraftEquipmentTimeCreateVM aircraftEquipmentTimeVM = new AircraftEquipmentTimeCreateVM();
+
+            aircraftEquipmentTimeVM.Id = aircraftEquipmentTime.Id;
+            aircraftEquipmentTimeVM.EquipmentName = aircraftEquipmentTime.EquipmentName;
+            aircraftEquipmentTimeVM.Hours = aircraftEquipmentTime.Hours;
+            aircraftEquipmentTimeVM.AircraftId = aircraftEquipmentTime.AircraftId;
+
+            aircraftEquipmentTimeVM.CreatedBy = aircraftEquipmentTime.CreatedBy;
+            aircraftEquipmentTimeVM.CreatedOn = aircraftEquipmentTime.CreatedOn;
+            aircraftEquipmentTimeVM.UpdatedBy = aircraftEquipmentTimeVM.UpdatedBy;
+            aircraftEquipmentTimeVM.UpdatedOn = aircraftEquipmentTime.UpdatedOn;
+
+            return aircraftEquipmentTimeVM;
+        }
+
+        public List<AircraftEquipmentTimeCreateVM> ToCreateBusinessObjectList(List<AircraftEquipmentTime> aircraftEquipmentTimesList)
+        {
+            List<AircraftEquipmentTimeCreateVM> aircraftEquipmentTimeCreateVMList = new List<AircraftEquipmentTimeCreateVM>();
+
+            foreach (AircraftEquipmentTime aircraftEquipmentTimesVM in aircraftEquipmentTimesList)
+            {
+                AircraftEquipmentTimeCreateVM aircraftEquipmentTime = ToCreateBusinessObject(aircraftEquipmentTimesVM);
+                aircraftEquipmentTimeCreateVMList.Add(aircraftEquipmentTime);
+            }
+
+            return aircraftEquipmentTimeCreateVMList;
+        }
+
         public List<AircraftEquipmentTime> ToDataObjectList(List<AircraftEquipmentTimeVM> aircraftEquipmentTimesVMList)
         {
             List<AircraftEquipmentTime> aircraftEquipmentTimesList = new List<AircraftEquipmentTime>();
@@ -111,7 +196,7 @@ namespace Service
             return aircraftEquipmentTimesList;
         }
 
-        public bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId,long UpdatedBy)
+        public bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId, long UpdatedBy)
         {
             try
             {
@@ -120,7 +205,7 @@ namespace Service
             }
             catch (Exception exc)
             {
-                return false;   
+                return false;
             }
         }
     }

@@ -220,7 +220,6 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.isDisplayRecurring = true;
             uiOptions.isDisplayMember1Dropdown = true;
             uiOptions.isDisplayAircraftDropDown = true;
-            uiOptions.isDisplayMember2Dropdown = false;
             uiOptions.isDisplayFlightRoutes = false;
             uiOptions.isDisplayInstructor = false;
             uiOptions.isDisplayFlightInfo = false;
@@ -228,6 +227,11 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.isDisplayForm = true;
             uiOptions.isDisplayCheckOutOption = false;
             uiOptions.isDisplayMainForm = true;
+
+            if (schedulerVM != null)
+            {
+                schedulerVM.IsDisplayMember2Dropdown = false;
+            }
         }
 
         private void OnDoubleClickHandler(SchedulerItemDoubleClickEventArgs args)
@@ -456,7 +460,7 @@ namespace Web.UI.Pages.Scheduler
         public bool isDisplayFlightRoutes { get; set; }
         public bool isDisplayAircraftDropDown { get; set; }
         public bool isDisplayStandBy { get; set; }
-        public bool isDisplayMember2Dropdown { get; set; }
+        
         public bool isDisplayMember1Dropdown { get; set; }
     }
 }

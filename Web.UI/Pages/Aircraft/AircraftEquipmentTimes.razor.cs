@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Aircraft;
 using DataModels.Entities;
 using Microsoft.AspNetCore.Components;
+using DataModels.VM.AircraftEquipment;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -14,16 +15,16 @@ namespace Web.UI.Pages.Aircraft
         {
             if (aircraftData.Id == 0 || aircraftData.IsEquipmentTimesListChanged)
             {
-                aircraftData.AircraftEquipmentTimesList = new List<AircraftEquipmentTime>();
+                aircraftData.AircraftEquipmentTimesList = new List<AircraftEquipmentTimeCreateVM>();
 
-                aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                 {
                     EquipmentName = ("Air Frame")
                 });
 
                 for (int engineNo = 1; engineNo <= aircraftData.NoofEngines; engineNo++)
                 {
-                    aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                    aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                     {
                         EquipmentName = ("Engine " + engineNo)
                     });
@@ -33,7 +34,7 @@ namespace Web.UI.Pages.Aircraft
                 for (int proppellerNo = aircraftData.NoofEngines + 1; proppellerNo < (aircraftData.NoofPropellers + aircraftData.NoofEngines + 1); proppellerNo++)
                 {
                     propeller++;
-                    aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                    aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                     {
                         EquipmentName = ("Propeller " + propeller)
                     });

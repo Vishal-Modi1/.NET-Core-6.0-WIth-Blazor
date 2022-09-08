@@ -1,5 +1,6 @@
 ﻿using DataModels.CustomValidations;
 using DataModels.Entities;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
@@ -39,11 +40,11 @@ namespace DataModels.VM.Aircraft
         [Display(Name = "Category")]
         public int AircraftCategoryId { get; set; }
 
-        [Required(ErrorMessage = "Class is required")]
+        [RequiredRangeIf("AircraftCategoryId", (int)Enums.AircraftCategory.Airplane, 1, Double.MaxValue, "Class is required")]
         [Display(Name = "Class")]
         public Nullable<int> AircraftClassId { get; set; }
 
-        [RequiredIf("AircraftCategoryId", 4,ErrorMessage = "Flight Simulator is required")]
+        [RequiredRangeIf("AircraftCategoryId", (int)Enums.AircraftCategory.FlightSimulator, 1, Double.MaxValue, "Flight Simulator is required")]
         [Display(Name = "Flight Simulator")]
         public Nullable<int> FlightSimulatorClassId { get; set; }
 
@@ -88,7 +89,7 @@ namespace DataModels.VM.Aircraft
         public List<DropDownValues> FlightSimulatorClassList { get; set; }
         public List<DropDownValues> Companies { get; set; }
         public List<DropDownValues> AircraftStatusList { get; set; }
-        public List<AircraftEquipmentTime> AircraftEquipmentTimesList { get; set; }
+        public List<AircraftEquipmentTimeCreateVM> AircraftEquipmentTimesList { get; set; }
 
         public List<Entities.AircraftEquipment>  AirCraftEquipmentList { get; set; }
 

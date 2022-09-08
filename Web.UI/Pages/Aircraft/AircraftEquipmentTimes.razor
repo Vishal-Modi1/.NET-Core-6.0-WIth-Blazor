@@ -40,8 +40,7 @@
 
                     </div>
                     <div class="col-md-12 align-items-center d-flex">
-
-                        @*//TODO: Change Index number of value expression*@
+                        
                         <TelerikNumericTextBox Value=@aircraftData.AircraftEquipmentTimesList[engineNo].Hours
                                        ValueExpression="@(() => aircraftData.AircraftEquipmentTimesList[engineNo - 1].Hours)"
                                        Placeholder="Hours" ValueChanged=@((decimal value) => ManageHoursChange(engineIndexValue, value)) />
@@ -82,7 +81,6 @@
                 </div>
                 <div class="col-md-12 align-items-center d-flex">
 
-                    @*//TODO: Change Index number of value expression*@
                     <TelerikNumericTextBox Value=@aircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours
                                        ValueExpression="@(() => aircraftData.AircraftEquipmentTimesList[proppellerIndexValue - 1].Hours)"
                                        Placeholder="Hours" ValueChanged=@((decimal value) => ManageHoursChange(proppellerIndexValue, value)) />
@@ -93,106 +91,3 @@
     }
 
 </div>
-<!--
-
-<div class="row">
-
-    <div class="col-md-6 align-items-center d-flex">
-        <label for="hours" class="k-label k-form-label">Air Frame Hours</label>
-    </div>
-
-    <div class="col-md-6 align-items-center d-flex">
-    </div>
-
-    <div class="col-md-6">
-
-        <TelerikNumericTextBox Value=@aircraftData.AircraftEquipmentTimesList[0].Hours
-                               ValueExpression="@(() => aircraftData.AircraftEquipmentTimesList[0].Hours)"
-                               Placeholder="Hours" ValueChanged=@((decimal value) => ManageHoursChange(0, value)) />
-    </div>
-
-    <div class="col-md-6">
-    </div>
-
-</div>
-
-    @{
-    engineIndex = 0;
-}
-
-@if (aircraftData.NoofEngines > 0)
-{
-    <hr />
-}
-
-<div class="row">
-
-    
-    @for (int engineNo = 1; engineNo <= aircraftData.NoofEngines; engineNo++)
-    {
-        try
-        {
-            int engineIndexValue = engineNo;
-            engineIndex++;
-
-            <div class="col-md-6 align-items-center d-flex mb-3">
-                <div class="row">
-                <div class="col-md-12 align-items-center d-flex">
-
-                    <label for="hours" class="k-label k-form-label">@("Engine " + engineIndex + " Hours" + engineNo)</label>
-
-                </div>
-                <div class="col-md-12 align-items-center d-flex">
-
-                    @*//TODO: Change Index number of value expression*@
-                    <TelerikNumericTextBox Value=@aircraftData.AircraftEquipmentTimesList[engineNo].Hours
-                                       ValueExpression="@(() => aircraftData.AircraftEquipmentTimesList[engineNo - 1].Hours)"
-                                       Placeholder="Hours" ValueChanged=@((decimal value) => ManageHoursChange(engineIndexValue, value)) />
-                </div>
-            </div>
-            </div>
-        }
-        catch(Exception e)
-        {
-            
-        }
-    }
-
-</div>
-
-@{
-    propellerIndex = 0;
-}
-
-@if (aircraftData.NoofPropellers > 0)
-{
-    <hr />
-}
-
-<div class="row">
-
-    @for (int proppellerNo = aircraftData.NoofEngines + 1; proppellerNo < (aircraftData.NoofPropellers.GetValueOrDefault() + aircraftData.NoofEngines + 1); proppellerNo++)
-    {
-        int proppellerIndexValue = proppellerNo;
-        propellerIndex++;
-
-        <div class="col-md-6 align-items-center d-flex mb-3">
-            <div class="row">
-                <div class="col-md-12 align-items-center d-flex">
-                     <label for="hours" class="k-label k-form-label">@("Propeller " + propellerIndex + " Hours")</label>
-
-                </div>
-                <div class="col-md-12 align-items-center d-flex">
-
-                    @*//TODO: Change Index number of value expression*@
-                    <TelerikNumericTextBox Value=@aircraftData.AircraftEquipmentTimesList[proppellerIndexValue].Hours
-                                       ValueExpression="@(() => aircraftData.AircraftEquipmentTimesList[proppellerIndexValue - 1].Hours)"
-                                       Placeholder="Hours" ValueChanged=@((decimal value) => ManageHoursChange(proppellerIndexValue, value)) />
-
-                </div>
-            </div>
-        </div>
-    }
-
-</div>
--->

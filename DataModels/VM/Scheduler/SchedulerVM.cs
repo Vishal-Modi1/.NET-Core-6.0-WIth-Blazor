@@ -28,7 +28,7 @@ namespace DataModels.VM.Scheduler
         public DateTime StartTime { get; set; }
 
         [Required(ErrorMessage = "End time is required")]
-        [DateGreaterThan("StartTime", "End time must not exceed start time")]
+        [DateGreaterThan(nameof(StartTime), "End time must not exceed start time")]
         public DateTime EndTime { get; set; }
 
         public bool IsRecurring { get; set; }
@@ -40,8 +40,11 @@ namespace DataModels.VM.Scheduler
 
         public List<DropDownLargeValues> Member2List { get; set; }
 
+        [UnlikeIf(nameof(IsDisplayMember2Dropdown),true, nameof(Member1Id) )]
         public long? Member2Id { get; set; }
 
+        [NotMapped]
+        public bool IsDisplayMember2Dropdown { get; set; }
         public List<DropDownLargeValues> InstructorsList { get; set; }
 
         public long? InstructorId { get; set; }

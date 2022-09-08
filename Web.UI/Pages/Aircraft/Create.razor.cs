@@ -15,9 +15,7 @@ namespace Web.UI.Pages.Aircraft
         [Parameter] public AircraftVM aircraftData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        TelerikTabStrip telerikTabStrip;
-
-        public TelerikWizard steps;
+        public TelerikTabStrip steps;
         public List<DropDownValues> YearDropDown { get; set; }
         public List<DropDownValues> NoofEnginesDropDown { get; set; }
         public List<DropDownValues> NoofPropellersDropDown { get; set; }
@@ -107,7 +105,7 @@ namespace Web.UI.Pages.Aircraft
 
         async Task Submit()
         {
-            if (steps.Value == 0)
+            if (steps.ActiveTabIndex == 0)
             {
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.IsAircraftExistAsync(dependecyParams, aircraftData.Id, aircraftData.TailNo);
@@ -148,6 +146,7 @@ namespace Web.UI.Pages.Aircraft
 
                 if (!isAircraftImageChanged)
                 {
+                    response.Message = "Aircraft Added Successfully";
                     ManageResponse(response, "Aircraft Details", true);
                 }
                 else
@@ -204,7 +203,7 @@ namespace Web.UI.Pages.Aircraft
 
         void OnNoofPropellersDropDownValueChange(int? value)
         {
-            if (aircraftData.NoofEngines != value)
+            if (aircraftData.NoofPropellers != value)
             {
                 aircraftData.NoofPropellers = value.GetValueOrDefault();
                 aircraftData.IsEquipmentTimesListChanged = true;
@@ -298,23 +297,21 @@ namespace Web.UI.Pages.Aircraft
 
         void OpenNextTab()
         {
-            steps.Value = 1;
-            //telerikTabStrip.ActiveTabIndex = 1;
+            steps.ActiveTabIndex = 1;
         }
 
         void OpenPreviousTab()
         {
-            steps.Value = 0;
-            //telerikTabStrip.ActiveTabIndex = 0;
+            steps.ActiveTabIndex = 0;
         }
 
         private bool ManageIsAircraftExistResponse(CurrentResponse response, string summary)
         {
             bool isAircraftExist = false;
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
-
+            
             if ((bool)response.Data == true)
             {
+                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
                 isAircraftExist = true;
             }
 

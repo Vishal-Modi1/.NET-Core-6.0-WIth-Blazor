@@ -1,12 +1,16 @@
 ﻿@using DataModels.VM.Common
 @using DataModels.VM.UserPreference
+@using DataModels.Enums
 
-<h3>MyPreference</h3>
+<h3>My Preference</h3>
 
-<TelerikForm Model="@userPreferenceVM" OnValidSubmit="@Submit">
+<TelerikForm Model="@userPreferenceVM" EditContext="@preferenceForm" OnValidSubmit="@Submit">
 
     <FormValidation>
-        <DataAnnotationsValidator></DataAnnotationsValidator>
+
+        <Web.UI.Shared.Components.Validation.ValidationSummary>
+        </Web.UI.Shared.Components.Validation.ValidationSummary>
+
     </FormValidation>
 
     <FormItems>
@@ -19,20 +23,20 @@
             </div>
             <div class="col-md-4">
 
-                <TelerikComboBox Id=preferenceType Data="@preferenceTypesList" TextField="Name"
+                <TelerikComboBox Id=preferenceType Data="@userPreferenceVM.PreferenceTypesList" TextField="Name"
                                  Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                  Placeholder="Select Preference Type" ValueField="Id"
-                                 Value="@preferenceTypeId"
-                                 ValueExpression="@( () => preferenceTypeId)"
+                                 Value="@userPreferenceVM.PreferenceTypeId"
+                                 ValueExpression="@( () => userPreferenceVM.PreferenceTypeId)"
                                  ValueChanged="@( (int value) => GetPreferenceValues(value) )">
                 </TelerikComboBox>
 
                 @*TODO: Pending to add validations*@
-                <TelerikValidationMessage For="@(() => preferenceTypeId)"></TelerikValidationMessage>
+                <TelerikValidationMessage For="@(() => userPreferenceVM.PreferenceTypeId)"></TelerikValidationMessage>
             </div>
         </div>
 
-        @if (aircraftList.Count() > 0)
+        @if (userPreferenceVM.PreferenceTypeId == (int)PreferenceType.Aircraft)
         {
             <div class="row">
                 <div class="col-md-2 align-items-center d-flex">
@@ -41,17 +45,18 @@
                 <div class="col-md-4">
 
                     @*TODO: Pending to add validations*@
-                    <TelerikMultiSelect Data="@aircraftList"
-                                    @bind-Value="@multipleValues" AutoClose="false" Placeholder="Select aircrafts"
+                    <TelerikMultiSelect Data="@userPreferenceVM.AircraftList"
+                                    @bind-Value="@userPreferenceVM.AircraftIds" AutoClose="false" Placeholder="Select aircrafts"
                                     TextField="Name" ValueField="Id">
                     </TelerikMultiSelect>
 
+                    <TelerikValidationMessage For="@(() => userPreferenceVM.AircraftIds)"></TelerikValidationMessage>
 
                 </div>
             </div>
         }
 
-        @if (activityTypeList.Count() > 0)
+        else if (userPreferenceVM.PreferenceTypeId == (int)PreferenceType.ScheduleActivityType)
         {
             <div class="row">
                 <div class="col-md-2 align-items-center d-flex">
@@ -59,10 +64,13 @@
                 </div>
                 <div class="col-md-4">
 
-                    <TelerikMultiSelect Data="@activityTypeList"
-                                    @bind-Value="@multipleActivites" AutoClose="false" Placeholder="Select activities"
+                    <TelerikMultiSelect Data="@userPreferenceVM.ActivityTypeList" 
+                                    @bind-Value="@userPreferenceVM.ActivityIds" AutoClose="false" Placeholder="Select activities"
                                     TextField="Name" ValueField="Id">
                     </TelerikMultiSelect>
+
+                    <TelerikValidationMessage For="@(() => userPreferenceVM.ActivityIds)"></TelerikValidationMessage>
+
                 </div>
             </div>
         }

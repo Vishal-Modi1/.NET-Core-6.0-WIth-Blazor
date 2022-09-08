@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using System.Collections.ObjectModel;
 using Web.UI.Utilities;
 using DataModels.Constants;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Web.UI.Pages.Company
 {
@@ -22,7 +23,8 @@ namespace Web.UI.Pages.Company
         ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
         int? primaryServiceId;
 
-        //public TelerikForm<CompanyVM> compnayForm;
+
+        EditContext companyForm;
 
         protected override Task OnParametersSetAsync()
         {
@@ -35,6 +37,8 @@ namespace Web.UI.Pages.Company
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
             primaryServiceId = companyData.PrimaryServiceId;
+
+            companyForm = new EditContext(companyData);
 
             return base.OnInitializedAsync();
         }
@@ -64,11 +68,10 @@ namespace Web.UI.Pages.Company
 
         async void GotoNextStep()
         {
-            //TOD:
-            //if (!compnayForm.EditContext.Validate())
-            //{
-            //    return;
-            //}
+            if (!companyForm.Validate())
+            {
+               return;
+            }
 
             GoToNext.Invoke();
         }

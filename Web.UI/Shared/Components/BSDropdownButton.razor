@@ -1,10 +1,12 @@
 ﻿<div class="dropdown ">
-    <button class="btn btn-secondary @(StyleClass)" type="button" id="dropdownMenuButton"
+    <button class="btn btn-secondary @(styleClass)" type="button" id="dropdownMenuButton"
             aria-haspopup="true" aria-expanded="false" @onclick=@(() => ToggleShowMenu())>
         <div class="">
-            <img src="https://mir-s3-cdn-cf.behance.net/user/115/5a206b20984315.60746bc251979.jpg" 
-            style="height: 40px;width: 40px;border-radius:50px">
-            <span id="name" class="mx-2">Vishal Modi</span>
+             <img src='@userProfileImage'
+                         onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                          style="height: 40px;width: 40px;border-radius:50px" />
+
+            <span id="name" class="mx-2">@userName</span>
             <CustomIcons IconName="arrow-down" PrimaryColor="White"></CustomIcons>
         </div>
     </button>
@@ -21,6 +23,5 @@
             <div class="modal-backdrop fade show" @onclick=@(() => ToggleShowMenu())></div>
         }
     }
-
     
 </div> 

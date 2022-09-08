@@ -3,288 +3,307 @@
 @using DataModels.Enums;
 @using Web.UI.Pages.AircraftModel;
 
+<style>
+
+    .tabUI {
+        width: 50%
+    }
+
+</style>
+
 <TelerikForm Model="@aircraftData" OnValidSubmit="@Submit">
 
     <FormValidation>
-        <DataAnnotationsValidator></DataAnnotationsValidator>
+
+        <Web.UI.Shared.Components.Validation.ValidationSummary>
+        </Web.UI.Shared.Components.Validation.ValidationSummary>
+
     </FormValidation>
 
     <FormItems>
 
-        <TelerikWizard @ref="@steps" Class="p-0">
-            <WizardSteps>
+        <TelerikTabStrip @ref="@steps" Class="p-0">
+            <TabStripTab Class="tabUI">
 
-                <WizardStep Label="Basic Details">
-                    <Content>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label>Company</label>
-                                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-                                        {
-                                            <TelerikComboBox Id="companyId" Data="@aircraftData.Companies" TextField="Name"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Placeholder="Select Company" ValueField="Id"
-                                                         @bind-Value="@aircraftData.CompanyId">
-                                            </TelerikComboBox>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                      
+                        <span>1. Basic Details</span>
+                    </div>
+                </HeaderTemplate>
 
-                                            <TelerikValidationMessage For="@(() => aircraftData.CompanyId)"></TelerikValidationMessage>
-                                        }
-                                        else
-                                        {
-                                            <TelerikTextBox @bind-Value="@aircraftData.CompanyName" Enabled="false"></TelerikTextBox>
-                                            <input type="hidden" id="CompanyId" value="@aircraftData.CompanyId" />
-                                        }
-                                    </div>
-                                                                        <div class="col-6">
-                                        <label>Tail No</label>
-                                        <TelerikTextBox @bind-Value="@aircraftData.TailNo" PlaceHolder="Tail No"></TelerikTextBox>
-                                        <TelerikValidationMessage For="@(() => aircraftData.TailNo)"></TelerikValidationMessage>
-                                    </div>
-
-                                    
-                                    <div class="col-6">
-                                        <label>Year</label>
-                                        <TelerikComboBox Id="year" Data="@YearDropDown" TextField="Name"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Placeholder="Select Year" ValueField="Name"
-                                                         @bind-Value="@aircraftData.Year">
-                                        </TelerikComboBox>
-                                    </div>
-                                    <div class="col-6">
-                                        <label>Make</label>
-                                        <TelerikComboBox Id="makeId" Data="@aircraftData.AircraftMakeList" TextField="Name"
-                                                         ValueChanged="@((int value) => OnMakeValueChanged(value) )"
-                                                         ValueExpression="@(() => aircraftData.AircraftMakeId)"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Value="@aircraftData.AircraftMakeId"
-                                                         Placeholder="Select Make" ValueField="Id">
-                                        </TelerikComboBox>
-
-                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftMakeId)"></TelerikValidationMessage>
-                                    </div>
-                                   
-                                    <div class="col-6">
-                                        <label>Model</label>
-                                        <TelerikComboBox Id="modelId" Data="@aircraftData.AircraftModelList" TextField="Name"
-                                                         ValueChanged="@((int value) => OnModelValueChanged(value) )"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         ValueExpression="@(() => aircraftData.AircraftModelId)"
-                                                         Value="@aircraftData.AircraftModelId"
-                                                         Placeholder="Select Model" ValueField="Id">
-                                        </TelerikComboBox>
-
-                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftModelId)"></TelerikValidationMessage>
-                                    </div>
-                                     <div class="col-6">
-                                        <label>Category</label>
-
-                                        <TelerikComboBox Id="category" Data="@aircraftData.AircraftCategoryList" TextField="Name"
-                                                         ValueChanged="@((int value) => OnCategoryDropDownValueChange(value) )"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         ValueExpression="@(() => aircraftData.AircraftCategoryId)"
-                                                         Value="@aircraftData.AircraftCategoryId"
-                                                         Placeholder="Select Category" ValueField="Id">
-                                        </TelerikComboBox>
-                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftCategoryId)"></TelerikValidationMessage>
-                                    </div>
-                                    @if (isDisplayClassDropDown)
+                <Content>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>Company</label>
+                                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
                                     {
-                                        <div class="col-6">
-                                            <label>Class</label>
-                                            <TelerikComboBox Id="class" Data="@aircraftData.AircraftClassList" TextField="Name"
-                                                         ValueChanged="@((int? value) => OnClassDropDownValueChange(value) )"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         ValueExpression="@(() => aircraftData.AircraftClassId)"
-                                                         Value="@aircraftData.AircraftClassId"
-                                                         Placeholder="Select Class" ValueField="Id">
-                                            </TelerikComboBox>
-                                            <TelerikValidationMessage For="@(() => aircraftData.AircraftClassId)"></TelerikValidationMessage>
-                                        </div>
+                                        <TelerikComboBox Id="companyId" Data="@aircraftData.Companies" TextField="Name"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Company" ValueField="Id"
+                                                     @bind-Value="@aircraftData.CompanyId">
+                                        </TelerikComboBox>
+
+                                        <TelerikValidationMessage For="@(() => aircraftData.CompanyId)"></TelerikValidationMessage>
                                     }
-                                    @if (isDisplayFlightSimulatorDropDown)
+                                    else
                                     {
-                                        <div class="col-6">
-                                            <label>Flight Simulator</label>
-                                            <TelerikComboBox Id="flightSimulator" Data="@aircraftData.FlightSimulatorClassList" TextField="Name"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Placeholder="Select Simulator" ValueField="Id"
-                                                         @bind-Value="@aircraftData.FlightSimulatorClassId">
-                                            </TelerikComboBox>
-                                            <TelerikValidationMessage For="@(() => aircraftData.FlightSimulatorClassId)"></TelerikValidationMessage>
-                                        </div>
-                                    }
-                                     @if (isDisplayNoofEnginesDropDown)
-                                    {
-
-                                        <div class="col-6">
-                                            <label>Engine</label>
-                                            <TelerikComboBox Id="engines" Data="@NoofEnginesDropDown" TextField="Name"
-                                                         ValueChanged="@((int value) => OnNoOfEngineDropDownValueChange(value) )"
-                                                         ValueExpression="@(() => aircraftData.NoofEngines)"
-                                                         Value="@aircraftData.NoofEngines"
-                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                         Placeholder="Select Engines" ValueField="Id">
-                                            </TelerikComboBox>
-
-                                        </div>
+                                        <TelerikTextBox @bind-Value="@aircraftData.CompanyName" Enabled="false"></TelerikTextBox>
+                                        <input type="hidden" id="CompanyId" value="@aircraftData.CompanyId" />
                                     }
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="row">
-
+                                <div class="col-6">
+                                    <label>Tail No</label>
+                                    <TelerikTextBox @bind-Value="@aircraftData.TailNo" PlaceHolder="Tail No"></TelerikTextBox>
+                                    <TelerikValidationMessage For="@(() => aircraftData.TailNo)"></TelerikValidationMessage>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-3">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label>Track oil and Fuel</label>
-                                        <div>
-                                            <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.TrackOilandFuel"></TelerikSwitch>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <label>Is identity mismatch</label>
-                                        <div>
-                                            <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsIdentifyMeterMismatch"></TelerikSwitch>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @if (isDisplayEnginesareTurbines)
-                            {
-                                <div class="col-3">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label>Engines have Propellers</label>
-                                            <div>
-                                                <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEngineshavePropellers"></TelerikSwitch>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
 
-                            @if (isDisplayEnginesHavePropellers)
-                            {
-                                <div class="col-3">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label>Engines are Turbines</label>
-                                            <div>
-                                                <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEnginesareTurbines"></TelerikSwitch>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <label>Aircraft Image</label>
-                                <div image-container>
-                                    <style>
-                                        .drag-area {
-                                            width: 100%;
-                                            height: 106px;
-                                            background: #F8F8F8;
-                                            border: 0.5px dashed #606060;
-                                            border-radius: 8px;
-                                        }
-
-                                        .icon > svg {
-                                            width: 30;
-                                            height: 30;
-                                        }
-
-                                        .header {
-                                            font-style: normal;
-                                            font-weight: 300;
-                                            font-size: 12px;
-                                        }
-                                    </style>
-                                    <label class="drag-area d-flex align-items-center k-cursor-pointer" for="aircraftImage">
-                                        <div class="text-center mx-auto">
-                                            <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
-                                            <header class="header">Drag and drop or <br /> browse to choose images</header>
-                                        </div>
-                                    </label>
-
-                                     <InputFile id="aircraftImage" accept="@supportedImagesFormat" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
-                                </div>
-                            </div>
-                            @if (isDisplayNoofPropellersDropDown)
-                            {
 
                                 <div class="col-6">
-                                    <label>Propeller</label>
-                                    <TelerikComboBox Id="propellers" Data="@NoofPropellersDropDown" TextField="Name"
-                                                 ValueChanged="@((int? value) => OnNoofPropellersDropDownValueChange(value) )"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 ValueExpression="@(() => aircraftData.NoofPropellers)"
-                                                 Value="aircraftData.NoofPropellers"
-                                                 Placeholder="Select Propellers" ValueField="Id">
+                                    <label>Year</label>
+                                    <TelerikComboBox Id="year" Data="@YearDropDown" TextField="Name"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Year" ValueField="Name"
+                                                     @bind-Value="@aircraftData.Year">
                                     </TelerikComboBox>
                                 </div>
+                                <div class="col-6">
+                                    <label>Make</label>
+                                    <TelerikComboBox Id="makeId" Data="@aircraftData.AircraftMakeList" TextField="Name"
+                                                     ValueChanged="@((int value) => OnMakeValueChanged(value) )"
+                                                     ValueExpression="@(() => aircraftData.AircraftMakeId)"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Value="@aircraftData.AircraftMakeId"
+                                                     Placeholder="Select Make" ValueField="Id">
+                                    </TelerikComboBox>
+
+                                    <TelerikValidationMessage For="@(() => aircraftData.AircraftMakeId)"></TelerikValidationMessage>
+                                </div>
+
+                                <div class="col-6">
+                                    <label>Model</label>
+                                    <TelerikComboBox Id="modelId" Data="@aircraftData.AircraftModelList" TextField="Name"
+                                                     ValueChanged="@((int value) => OnModelValueChanged(value) )"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     ValueExpression="@(() => aircraftData.AircraftModelId)"
+                                                     Value="@aircraftData.AircraftModelId"
+                                                     Placeholder="Select Model" ValueField="Id">
+                                    </TelerikComboBox>
+
+                                    <TelerikValidationMessage For="@(() => aircraftData.AircraftModelId)"></TelerikValidationMessage>
+                                </div>
+                                <div class="col-6">
+                                    <label>Category</label>
+
+                                    <TelerikComboBox Id="category" Data="@aircraftData.AircraftCategoryList" TextField="Name"
+                                                     ValueChanged="@((int value) => OnCategoryDropDownValueChange(value) )"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     ValueExpression="@(() => aircraftData.AircraftCategoryId)"
+                                                     Value="@aircraftData.AircraftCategoryId"
+                                                     Placeholder="Select Category" ValueField="Id">
+                                    </TelerikComboBox>
+                                    <TelerikValidationMessage For="@(() => aircraftData.AircraftCategoryId)"></TelerikValidationMessage>
+                                </div>
+                                @if (isDisplayClassDropDown)
+                                {
+                                    <div class="col-6">
+                                        <label>Class</label>
+                                        <TelerikComboBox Id="class" Data="@aircraftData.AircraftClassList" TextField="Name"
+                                                     ValueChanged="@((int? value) => OnClassDropDownValueChange(value) )"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     ValueExpression="@(() => aircraftData.AircraftClassId)"
+                                                     Value="@aircraftData.AircraftClassId"
+                                                     Placeholder="Select Class" ValueField="Id">
+                                        </TelerikComboBox>
+                                        <TelerikValidationMessage For="@(() => aircraftData.AircraftClassId)"></TelerikValidationMessage>
+                                    </div>
+                                }
+                                @if (isDisplayFlightSimulatorDropDown)
+                                {
+                                    <div class="col-6">
+                                        <label>Flight Simulator</label>
+                                        <TelerikComboBox Id="flightSimulator" Data="@aircraftData.FlightSimulatorClassList" TextField="Name"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Simulator" ValueField="Id"
+                                                     @bind-Value="@aircraftData.FlightSimulatorClassId">
+                                        </TelerikComboBox>
+                                        <TelerikValidationMessage For="@(() => aircraftData.FlightSimulatorClassId)"></TelerikValidationMessage>
+                                    </div>
+                                }
+                                @if (isDisplayNoofEnginesDropDown)
+                                {
+
+                                    <div class="col-6">
+                                        <label>Engine</label>
+                                        <TelerikComboBox Id="engines" Data="@NoofEnginesDropDown" TextField="Name"
+                                                     ValueChanged="@((int value) => OnNoOfEngineDropDownValueChange(value) )"
+                                                     ValueExpression="@(() => aircraftData.NoofEngines)"
+                                                     Value="@aircraftData.NoofEngines"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Engines" ValueField="Id">
+                                        </TelerikComboBox>
+
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Track oil and Fuel</label>
+                                    <div>
+                                        <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.TrackOilandFuel"></TelerikSwitch>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Is identity mismatch</label>
+                                    <div>
+                                        <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsIdentifyMeterMismatch"></TelerikSwitch>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (isDisplayEnginesareTurbines)
+                        {
+                            <div class="col-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Engines have Propellers</label>
+                                        <div>
+                                            <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEngineshavePropellers"></TelerikSwitch>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (isDisplayEnginesHavePropellers)
+                        {
+                            <div class="col-3">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label>Engines are Turbines</label>
+                                        <div>
+                                            <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEnginesareTurbines"></TelerikSwitch>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Aircraft Image</label>
+                            <div image-container>
+                                <style>
+                                    .drag-area {
+                                        width: 100%;
+                                        height: 106px;
+                                        background: #F8F8F8;
+                                        border: 0.5px dashed #606060;
+                                        border-radius: 8px;
+                                    }
+
+                                    .icon > svg {
+                                        width: 30;
+                                        height: 30;
+                                    }
+
+                                    .header {
+                                        font-style: normal;
+                                        font-weight: 300;
+                                        font-size: 12px;
+                                    }
+                                </style>
+                                <label class="drag-area d-flex align-items-center k-cursor-pointer" for="aircraftImage">
+                                    <div class="text-center mx-auto">
+                                        <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
+                                        <header class="header">Drag and drop or <br /> browse to choose images</header>
+                                    </div>
+                                </label>
+
+                                <InputFile id="aircraftImage" accept="@supportedImagesFormat" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
+                            </div>
+                        </div>
+                        @if (isDisplayNoofPropellersDropDown)
+                        {
+
+                            <div class="col-6">
+                                <label>Propeller</label>
+                                <TelerikComboBox Id="propellers" Data="@NoofPropellersDropDown" TextField="Name"
+                                             ValueChanged="@((int? value) => OnNoofPropellersDropDownValueChange(value) )"
+                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                             ValueExpression="@(() => aircraftData.NoofPropellers)"
+                                             Value="aircraftData.NoofPropellers"
+                                             Placeholder="Select Propellers" ValueField="Id">
+                                </TelerikComboBox>
+                            </div>
+                        }
+                    </div>
+                    <hr />
+                    <div class="row bg-gray d-flex justify-content-end mb-0">
+                        <div class="d-flex justify-content-end">
+                            @if (aircraftData.Id == 0)
+                            {
+                                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+                                    Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
+                                </TelerikButton>
                             }
-                        </div>
-                        <hr />
-                        <div class="row bg-gray d-flex justify-content-end mb-0">
-                            <div class="d-flex justify-content-end">
-                                @if (aircraftData.Id == 0)
-                                {
-                                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
-                                        Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
-                                    </TelerikButton>
-                                }
-                                else
-                                {
-                                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
-                                        Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
-                                    </TelerikButton>
-                                }
-                                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
-                                    Cancel
+                            else
+                            {
+                                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
+                                    Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
                                 </TelerikButton>
-                            </div>
+                            }
+                            <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                                Cancel
+                            </TelerikButton>
                         </div>
+                    </div>
 
-                    </Content>
+                </Content>
 
-                </WizardStep>
+            </TabStripTab>
 
-                <WizardStep Label="Equipment Times" Disabled="true">
+            <TabStripTab Class="tabUI" Disabled="true">
 
-                    <Content>
-                        <AircraftEquipmentTimes AircraftData=@aircraftData />
-                        <hr />
-                        <div class="row bg-gray d-flex justify-content-end">
-                            <div class="d-flex justify-content-end">
-                                <TelerikButton ButtonType="ButtonType.Button" OnClick="@OpenPreviousTab">
-                                    Previous
-                                </TelerikButton>
-                                <FormFooterComponent id="@aircraftData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
-                                </FormFooterComponent>
-                            </div>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span>2. Equipment Times</span>
+                    </div>
+                </HeaderTemplate>
+
+
+                <Content>
+                    <AircraftEquipmentTimes AircraftData=@aircraftData />
+                    <hr />
+                    <div class="row bg-gray d-flex justify-content-end">
+                        <div class="d-flex justify-content-end">
+                            <TelerikButton ButtonType="ButtonType.Button" OnClick="@OpenPreviousTab">
+                                Previous
+                            </TelerikButton>
+                            <FormFooterComponent id="@aircraftData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                            </FormFooterComponent>
                         </div>
-                    </Content>
+                    </div>
+                </Content>
 
-                </WizardStep>
+            </TabStripTab>
 
-            </WizardSteps>
-
-             <WizardButtons>
-             </WizardButtons>
-        </TelerikWizard>
+        </TelerikTabStrip>
 
     </FormItems>
 

@@ -2,6 +2,15 @@
 
 @layout EmptyLayout
 
+<style>
+
+    .tabUI
+    {
+        width:50%
+    }
+
+</style>
+
 <PageTitle> Register | Fly Manager </PageTitle>
 
 <div class="row vh-100 align-items-center m-0">
@@ -14,12 +23,12 @@
                 <div class="m-1">
                     <div class="login-wrap">
                         <div class="d-flex justify-content-center"><h5>sign up to fly manager</h5></div>
-                        <TelerikTabStrip Class="k-tabstrip-list mt-2" ActiveTabIndex="@currentStep">
-                            <TabStripTab>
+                        <TelerikTabStrip Class="k-tabstrip-list mt-2" ActiveTabIndex="@currentStep" >
+                            <TabStripTab Class="tabUI">
                                 <HeaderTemplate>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <span class="mx-2">
-                                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+                                            <CustomIcons IconName="company" PrimaryColor="#3066f8"></CustomIcons>
                                         </span>
                                         <span>Company Details</span>
                                     </div>
@@ -32,7 +41,7 @@
 
                             </TabStripTab>
 
-                            <TabStripTab>
+                            <TabStripTab Disabled="true" Class="tabUI">
                                 <HeaderTemplate>
                                     <div class="d-flex justify-content-center align-items-center">
                                         <span class="mx-2">

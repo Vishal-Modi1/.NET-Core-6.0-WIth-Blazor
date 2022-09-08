@@ -5,7 +5,6 @@ namespace Web.UI.Extensions
 {
     public static class DataGridFilterCreator
     {
-        //TODO: Datatables
         public static DatatableParams Create(this DatatableParams datatableParam, GridReadEventArgs args, string defaultSearchOrderColumn)
         {
             DatatableParams datatableParams = new DatatableParams();

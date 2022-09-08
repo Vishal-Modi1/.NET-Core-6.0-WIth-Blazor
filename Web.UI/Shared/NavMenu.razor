@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using DataModels.Enums;
+
+@inherits LayoutComponentBase
 
 <TelerikNotification @ref="@UINotification.Instance"
                      HorizontalPosition="@NotificationHorizontalPosition.Right"
@@ -9,74 +11,77 @@
 
 @if (menuItems != null)
 {
-    <TelerikDrawer Data="@menuItems"
+        <TelerikDrawer Data="@menuItems"
                @bind-Expanded="@DrawerExpanded"
                MiniMode="true"
                Mode="@DrawerMode.Push"
                @ref="@DrawerRef"
                @bind-SelectedItem="@SelectedItem">
-        <Template>
-            <div class="d-flex align-items-center k-drawer-top-header @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
-                <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Class="drawer-hamburger">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Menu"
+            <Template>
+                <div class="d-flex align-items-center k-drawer-top-header @(DrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
+                    <TelerikButton OnClick="@( () => DrawerRef.ToggleAsync() )" Class="drawer-hamburger">
+                        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Menu"
                                                                  PrimaryColor="@("white")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </TelerikButton>
-            </div>
-            <hr class="hr-blue mt-0 mb-0" />
+                    </TelerikButton>
+                </div>
+                <hr class="hr-blue mt-0 mb-0" />
             @if (DrawerExpanded)
             {
-            <div class="d-flex align-items-center justify-content-evenly" style="height:95px;">
-                <label class="d-flex flex-row user-face">
-                    <img src='@profileImageURL'
+                <div class="d-flex align-items-center justify-content-evenly" style="height:95px;">
+                    <label class="d-flex flex-row user-face">
+                        <img src='@profileImageURL'
                      onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
                      style="height: 54px;width: 54px;border-radius:50px" />
-                    <a src="/myprofile"><div id="name" class="mx-2">@fullName</div></a>
-                </label>
-            </div>
+                        <a href="/myprofile" style="text-decoration: none;"><div id="name" class="mx-2">@fullName</div></a>
+                    </label>
+                </div>
             }
             else
             {
-            <div class="d-flex align-items-center justify-content-center" style="height:95px;margin-top:25px">
-                <div>
-                    <div class="d-flex justify-content-center">
-                        <img src='@profileImageURL'
+                <div class="d-flex align-items-center justify-content-center" style="height:95px;margin-top:25px">
+                    <div>
+                        <div class="d-flex justify-content-center">
+                            <img src='@profileImageURL'
                          onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
                          style="height: 54px;width: 54px;border-radius:50px" />
+                        </div>
                     </div>
                 </div>
-            </div>
             }
         <hr class="hr-blue mt-0 mb-0" />
         <div class="k-drawer-items my-2">
             <ul>
 
                 @foreach (var item in menuItems)
-                    {
-                        if (!item.IsAdministrationModule)
+                      {
+                        if (!item.IsAdministrationModule || (!isSuperAdmin && item.Controller.ToLower() == Module.Company.ToString().ToLower()))
                         {
                             if (item.DisplayName == "Log out")
                             {
-                            <hr class="hr-blue mt-0 mb-0" />
+                               <hr class="hr-blue mt-0 mb-0" />
                             }
 
-                        <li @onclick="@(() => NavigateToPage(item))" @onclick:stopPropagation
-                    class="k-drawer-item @(GetSelectedItemClass(item))  @(DrawerExpanded ? "":"d-flex justify-content-center")" style="white-space:nowrap">
-                            <div class="px-2">
-                                <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.DisplayName"
+                            <li @onclick="@(() => NavigateToPageAsync(item))" @onclick:stopPropagation
+                                class="k-drawer-item @(GetSelectedItemClass(item))  
+                                @(DrawerExpanded ? "":"d-flex justify-content-center")" 
+                                style="white-space:nowrap">
+
+                                    <div class="px-2">
+                                        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.Controller"
                                                                          PrimaryColor="#3066F8">
-                                </Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                            </div>
+                                        </Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                                    </div>
 
-                            @if (DrawerExpanded)
+                                @if (DrawerExpanded)
                                 {
-                                <div class="menu-item-text-color">@item.DisplayName</div>
+                                                <div class="menu-item-text-color">@item.DisplayName</div>
                                 }
-                            @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
+                                @if (SelectedItem != null && item.DisplayName == SelectedItem.DisplayName)
                                 {
-                                <div class="selected-arrow"></div>
+                                                <div class="selected-arrow"></div>
                                 }
 
-                        </li>
+                                </li>
 
                         }
                     }
@@ -89,9 +94,9 @@
 
             <div class="content">
                 <CascadingValue IsFixed="true" Value="@UINotification">
-                    <LeftHeader></LeftHeader>
+                    <LeftHeader userName="@fullName" userProfileImage="@profileImageURL"></LeftHeader>
                     <TelerikRootComponent>
-                            <div class="@(IsMainContainerTransparent ? "ms-3 me-3 my-3 p-3" : "card ms-3 me-3 my-3 p-3")">
+                        <div class="@(IsMainContainerTransparent ? "ms-3 me-3 my-3 p-3" : "card ms-3 me-3 my-3 p-3")">
                             @Body
                         </div>
                     </TelerikRootComponent>
