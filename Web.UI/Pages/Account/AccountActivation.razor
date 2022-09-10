@@ -1,0 +1,38 @@
+﻿@using System;
+@using System.ComponentModel.DataAnnotations;
+@using DataModels.VM.Account;
+
+@page "/AccountActivation"
+
+@layout EmptyLayout
+@namespace Web.UI.Pages.Account
+
+@inject IJSRuntime JSRunTime
+
+<PageTitle>Account Activation | Fly Manager </PageTitle>
+
+<div class="row vh-100 align-items-center m-0">
+    <div class="col-md-3 mx-auto">
+        <div class="card">
+            <div class="card-body mt-3 mb-5">
+                <div class="upfly-logo mt-5 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                </div>
+                <div class="m-5 pt-3">
+                    <div class="text-center my-5 pb-5">
+                        <div class="">
+                            <CustomIcons IconName="right-check" PrimaryColor="#34A853" />
+                        </div>
+                        <div class="mt-2">
+                            <span><FontLabel fontSize="25px">Your Account Activated</FontLabel></span>
+                        </div>
+                        <div class="mt-2 mb-5 pb-3">
+                            <a href="/login" style="color:#1151F3"> Go to Login </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

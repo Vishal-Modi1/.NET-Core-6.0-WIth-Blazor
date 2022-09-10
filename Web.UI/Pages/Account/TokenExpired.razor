@@ -1,0 +1,38 @@
+﻿@using System;
+@using System.ComponentModel.DataAnnotations;
+@using DataModels.VM.Account;
+
+@page "/TokenExpired"
+
+@layout EmptyLayout
+@namespace Web.UI.Pages.Account
+
+@inject IJSRuntime JSRunTime
+
+<PageTitle>Token Expired | Fly Manager </PageTitle>
+
+<div class="row vh-100 align-items-center m-0">
+    <div class="col-md-3 mx-auto">
+        <div class="card">
+            <div class="card-body mt-3 mb-5">
+                <div class="upfly-logo mt-5 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                </div>
+                <div class="m-5 pt-3">
+                    <div class="text-center my-5 pb-5">
+                        <div class="">
+                            <CustomIcons IconName="notify-icon" PrimaryColor="#FDA900" />
+                        </div>
+                        <div class="mt-3">
+                            <span><FontLabel fontSize="25px">Your Token is Expired</FontLabel></span>
+                        </div>
+                        <div class="mt-2 mb-5 pb-3">
+                            <a href="/login" style="color:#1151F3"> Go to Login </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
