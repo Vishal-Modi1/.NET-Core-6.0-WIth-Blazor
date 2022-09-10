@@ -19,7 +19,7 @@ namespace Web.UI.Pages.Account
         public string Link { get; set; }
 
         bool isValidToken;
-        bool isBusy = true;
+        bool isBusy = false;
 
         ResetPasswordVM resetPasswordVM = new ResetPasswordVM();
 
