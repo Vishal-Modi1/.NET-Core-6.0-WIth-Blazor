@@ -223,18 +223,43 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            <FontLabel>@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                            if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                <FontLabel>@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                            }
+                            else{
+                                <FontLabel fontSize="12px">@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                            }
                         </div>
                     </div>
                     <div class="col-3 d-flex flex-column">
                         <span class="d-flex justify-content-center">
                             <div class="row">
                                 <div class="col-12">
-                                    <CustomIcons IconName="start-end-plain-time" />
+                                    if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                                    {
+                                        <CustomIcons IconName="start-end-plain-time" />
+                                    }
+                                    else {
+                                        <style type="text/css">
+                                            .small-svg-start-end-plain-time{
+                                                width: 100%!important;
+                                                height:auto!important;
+                                            }
+                                        </style>
+                                        <span class="small-svg">
+                                            <CustomIcons class="small-svg-start-end-plain-time" IconName="start-end-plain-time" />
+                                        </span>
+                                    } 
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
-                                    <span><FontLabel>@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel> </span>
-                                    <span><FontLabel>@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
+                                    if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                        <span><FontLabel>@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel> </span>
+                                        <span><FontLabel>@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
+                                    }
+                                    else {
+                                    <span><FontLabel  fontSize="12px">@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel> </span>
+                                    <span><FontLabel  fontSize="12px">@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
+                                    } 
                                 </div>
                             </div>
                         </span>
@@ -243,13 +268,22 @@
                         <div class="d-flex justify-content-center">
                             <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
                         </div>
-                        <div class="d-flex justify-content-center">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</div>
+                         if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                         <FontLabel>@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel> }
+                         else{
+                        <FontLabel fontSize="12px">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                         }
                     </div>
                 </div>
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-3 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                            <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
+                                if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                    <FontLabel fontSize="12px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
+                                }
+                                else {
+                                    <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
+                                } 
                         </div>
                         <div class="d-flex justify-content-center">
                             <FontLabel>Dummy International Airport</FontLabel>
@@ -259,18 +293,44 @@
                         <span class="d-flex justify-content-center">
                             <div class="row">
                                 <div class="col-12">
-                                    <CustomIcons IconName="dummy-plain" />
+                                    
+                                    if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                                    {
+                                        <CustomIcons IconName="dummy-plain" />
+                                    }
+                                    else {
+                                        <style type="text/css">
+                                            .small-svg-dummy-plain{
+                                                width: 100%!important;
+                                                height:auto!important;
+                                            }
+                                        </style>
+                                        <span class="small-svg">
+                                            <CustomIcons class="small-svg-dummy-plain" IconName="dummy-plain" />
+                                        </span>
+                                    } 
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
+                                if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                                     <span><FontLabel>@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel></span>
                                     <span><FontLabel>@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
+                                }
+                                else {
+                                    <span><FontLabel fontSize="12px" >@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel></span>
+                                    <span><FontLabel fontSize="12px" >@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
+                                } 
                                 </div>
                             </div>
                         </span>
                     </div>
                     <div class="col-3 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                            <FontLabel fontSize="16px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                    <FontLabel fontSize="16px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                }
+                                else {
+                                    <FontLabel fontSize="12px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                } 
                         </div>
                         <div class="d-flex justify-content-center">
                             <FontLabel>Dummy International Airport</FontLabel>
@@ -720,58 +780,58 @@ else
 @{
     if (isDisplayChildPopup)
     {
-        <CustomPopupComponent Title="@childPopupTitle"
+    <CustomPopupComponent Title="@childPopupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false"
                       OnClose="@(()=> {isDisplayChildPopup = false;})">
 
-            <Body>
+                                    <Body>
 
-                @if (operationType == OperationType.UnCheckOut)
+                                        @if (operationType == OperationType.UnCheckOut)
                 {
-                    <div>
-                        <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
-                        <div class="row d-flex justify-content-end">
-                            <div class="col-4 d-flex justify-content-between">
+                                            <div>
+                                                <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
+                                                <div class="row d-flex justify-content-end">
+                                                    <div class="col-4 d-flex justify-content-between">
 
-                                <TelerikButton Class="mr-1 btn k-btn-primary flex-fill mx-2" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
-                                    Yes
-                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
-                                    </TelerikLoader>
-                                </TelerikButton>
+                                                        <TelerikButton Class="mr-1 btn k-btn-primary flex-fill mx-2" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
+                                                            Yes
+                                                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
+                                                            </TelerikLoader>
+                                                        </TelerikButton>
 
 
-                                <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
-                                    No
-                                </TelerikButton>
-                            </div>
-                        </div>
-                    </div>
+                                                        <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                                            No
+                                                        </TelerikButton>
+                                                    </div>
+                                                </div>
+                                            </div>
                 }
 
                 else if (operationType == OperationType.Delete)
                 {
-                    <div>
-                        <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
-                        <div class="row d-flex justify-content-end">
-                            <div class="col-4 d-flex justify-content-between">
+                                            <div>
+                                                <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
+                                                <div class="row d-flex justify-content-end">
+                                                    <div class="col-4 d-flex justify-content-between">
 
-                                <TelerikButton Class="btn k-btn-danger flex-fill mx-2" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
-                                    Yes
-                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
-                                    </TelerikLoader>
-                                </TelerikButton>
+                                                        <TelerikButton Class="btn k-btn-danger flex-fill mx-2" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
+                                                            Yes
+                                                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
+                                                            </TelerikLoader>
+                                                        </TelerikButton>
 
 
-                                <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
-                                    No
-                                </TelerikButton>
-                            </div>
-                        </div>
-                    </div>
+                                                        <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                                            No
+                                                        </TelerikButton>
+                                                    </div>
+                                                </div>
+                                            </div>
                 }
-            </Body>
+                                    </Body>
 
-        </CustomPopupComponent>
+    </CustomPopupComponent>
     }
 }
