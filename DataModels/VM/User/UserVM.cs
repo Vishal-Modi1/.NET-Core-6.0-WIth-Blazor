@@ -42,7 +42,10 @@ namespace DataModels.VM.User
 
         public string CompanyName { get; set; }
 
-        [Required(ErrorMessage = "Please select company")]
+        [NotMapped]
+        public bool IsAuthenticated { get; set; }
+
+        [RequiredIf(nameof(IsAuthenticated), true , ErrorMessage = "Please select company")]
         public int? CompanyId { get; set; }
         public string ExternalId { get; set; }
         public Nullable<System.DateTime> DateofBirth { get; set; }

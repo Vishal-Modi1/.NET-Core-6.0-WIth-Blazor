@@ -23,6 +23,12 @@ namespace Web.UI.Pages.Account
 
         ResetPasswordVM resetPasswordVM = new ResetPasswordVM();
 
+        protected override Task OnInitializedAsync()
+        {
+            isDisplayLoader = true;
+            return base.OnInitializedAsync();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -42,15 +48,17 @@ namespace Web.UI.Pages.Account
                 else
                 {
                     isBusy = true;
-
                     resetPasswordVM.Token = link[0];
-                    uiNotification.DisplayInfoNotification(uiNotification.Instance, "Validating Token...");
+                    //uiNotification.DisplayInfoNotification(uiNotification.Instance, "Validating Token...");
 
                     DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                     response = await AccountService.ValidateTokenAsync(dependecyParams, link[0]);
 
                     ManageResponse();
                 }
+
+                isDisplayLoader = false;
+                base.StateHasChanged();
             }
 
             base.OnAfterRenderAsync(firstRender);
@@ -58,32 +66,33 @@ namespace Web.UI.Pages.Account
 
         private void ManageResponse()
         {
-            if (response == null)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
+               // uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
 
                 isBusy = false; isValidToken = true;
                 StateHasChanged();
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                //uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                //isBusy = false; isValidToken = false;
+
+                NavigationManager.NavigateTo("/TokenExpired");
             }
         }
 
         public async Task Submit()
         {
             isBusy = true;
-            isValidToken = false;
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             response = await AccountService.ResetPasswordAsync(dependecyParams, resetPasswordVM);
             uiNotification.DisplayNotification(uiNotification.Instance, response);
+
+            resetPasswordVM.Password = "";
+            resetPasswordVM.ConfirmPassword = "";
 
             isBusy = false;
         }

@@ -7,18 +7,18 @@
 <TelerikForm Model="@userData" EditContext="@userForm" OnValidSubmit="@Submit">
 
     <FormValidation>
-        <DataAnnotationsValidator></DataAnnotationsValidator>
+       <CustomValidationSummary> </CustomValidationSummary>
     </FormValidation>
 
     <FormItems>
         <div class="popup-content my-3">
 
-            @if (!isAuthenticated)
+            @if (!userData.IsAuthenticated)
             {
-               if (!FromAuthoriseSection)
+                if (!FromAuthoriseSection)
                 {
                     <hr style="margin-bottom:35px" />
-            
+
                 }
             }
 
@@ -89,7 +89,7 @@
 
                     @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
                     {
-                        <TelerikComboBox Id=roleId Data="@userData.UserRoles" TextField="Name" Enabled=@(isAuthenticated)
+                        <TelerikComboBox Id=roleId Data="@userData.UserRoles" TextField="Name" Enabled=@(userData.IsAuthenticated)
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                      Placeholder="Select Role" ValueField="Id" @bind-Value="@userData.RoleId">
                         </TelerikComboBox>
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            @if (isAuthenticated)
+            @if (userData.IsAuthenticated)
             {
                 <div class="row">
                     <div class="col-md-6 align-items-center d-flex">
@@ -183,7 +183,7 @@
 
             <div class="row">
 
-                @if (isAuthenticated)
+                @if (userData.IsAuthenticated)
                 {
                     <div class="col-md-6 align-items-center d-flex mb-3">
                         <div class="row">
@@ -216,7 +216,7 @@
 
             </div>
 
-            @if (isAuthenticated)
+            @if (userData.IsAuthenticated)
             {
                 <div class="row">
                     <div class="col-md-6 align-items-center d-flex">
@@ -244,7 +244,7 @@
         <div class="row mb-0">
             <div class="col-md-12 text-right">
 
-                @if (isAuthenticated)
+                @if (userData.IsAuthenticated)
                 {
                     <FormFooterComponent id="@userData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
                     </FormFooterComponent>

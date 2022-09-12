@@ -95,7 +95,7 @@ namespace Service
                         return _currentResponse;
                     }
 
-                    CreateResponse(true, HttpStatusCode.OK, "Mail sent successfully");
+                    CreateResponse(true, HttpStatusCode.OK, "Reset Password mail sent successfully");
 
                     return _currentResponse;
                 }

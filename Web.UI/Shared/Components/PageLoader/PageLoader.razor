@@ -1,7 +1,10 @@
-﻿<div class="loader">
-    <TelerikLoader Class="loader-indicator" Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
-    </TelerikLoader>
-</div>
+﻿<TelerikLoaderContainer Visible="@isVisible">
+    <Template>
+        <TelerikLoader Class="loader-indicator" Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
+        </TelerikLoader>
+        <span>@loadingText</span>
+    </Template>
+</TelerikLoaderContainer>
 
 <style>
     .loader {
@@ -21,7 +24,17 @@
     }
 
     .k-loader-segment {
-        background-color: #022254 !important
+        background-color: @(loaderColor == null ? "#022254" : loaderColor) !important
     }
 
 </style>
+
+
+@code{
+
+    [Parameter] public bool isVisible {  get;  set; } 
+
+    [Parameter] public string loaderColor {  get;  set; } 
+
+    [Parameter] public string loadingText {  get;  set; }
+}

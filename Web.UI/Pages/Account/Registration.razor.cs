@@ -22,6 +22,12 @@ namespace Web.UI.Pages.Account
 
         string link;
 
+        protected override Task OnInitializedAsync()
+        {
+            isDisplayLoader = true;
+            return base.OnInitializedAsync();
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -37,7 +43,7 @@ namespace Web.UI.Pages.Account
                     {
                         this.link = url[0];
 
-                        uiNotification.DisplayInfoNotification(uiNotification.Instance, "Validating token ...");
+                        //uiNotification.DisplayInfoNotification(uiNotification.Instance, "Validating token ...");
 
                         DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                         CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, this.link);
@@ -67,38 +73,27 @@ namespace Web.UI.Pages.Account
                 {
 
                 }
+
+                isDisplayLoader = false;
+                base.StateHasChanged();
             }
         }
 
         private async Task ManageResponseAsync(CurrentResponse response)
         {
-            if (response == null)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "Token is not valid. Please try with valid token!");
-                isValidToken = false;
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                if (Convert.ToBoolean(response.Data))
-                {
-                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-                    userVM = await UserService.GetMasterDetailsAsync(dependecyParams, true, link);
-                    await GetCompanyDetails(dependecyParams);
+                userVM = await UserService.GetMasterDetailsAsync(dependecyParams, true, link);
+                await GetCompanyDetails(dependecyParams);
 
-                    isValidToken = true;
-                    uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
-                }
-                else
-                {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
-                    isValidToken = false;
-                }
+                isValidToken = true;
+               // uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
-                isValidToken = false;
+                NavigationManager.NavigateTo("/TokenExpired");
             }
         }
 
@@ -144,7 +139,7 @@ namespace Web.UI.Pages.Account
 
         async Task SaveData()
         {
-            isLoading = true;
+            isDisplayLoader = true;
             base.StateHasChanged();
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -192,17 +187,13 @@ namespace Web.UI.Pages.Account
                 await ManageUserCreateResponseAsync(response);
             }
 
-            isLoading = false;
+            isDisplayLoader = false;
             base.StateHasChanged();
         }
 
         private async Task ManageUserCreateResponseAsync(CurrentResponse response)
         {
-            if (response == null)
-            {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
-            }
-            else if (response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
                 await UpdateCreatedByAsync(userVM);
