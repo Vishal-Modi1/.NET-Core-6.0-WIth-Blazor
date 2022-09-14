@@ -21,7 +21,7 @@
 
             if (response.status == 200) {
 
-                location.replace("/");
+                location.replace(redirect);
             }
             else {
                 return dotnetReferenceObject.invokeMethodAsync("ManageLoginResponse", response.message);

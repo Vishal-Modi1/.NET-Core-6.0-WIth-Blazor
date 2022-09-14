@@ -141,8 +141,6 @@
                                    LabelPosition="@RadioGroupLabelPosition.After" />
                             </div>
 
-
-
                             <div class="col-6">
                                 <label>Est Hours</label>
                                 <TelerikNumericTextBox Placeholder="Enter Hours" @bind-Value="@schedulerVM.EstHours" />
@@ -180,9 +178,8 @@
                             <TelerikTextArea Class="w-100" PlaceHolder="Enter internal comments" AutoSize="true"
                                  @bind-Value="@schedulerVM.InternalComments" />
                         </div>
-
-
                     }
+
                     @if (uiOptions.isDisplayStandBy)
                     {
                         <div class="col-6">
@@ -207,7 +204,6 @@
             }
             else
             {
-
                 <div class="row my-1">
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
@@ -223,7 +219,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center">
-                            if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                            @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                                 <FontLabel>@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
                             }
                             else{
@@ -235,7 +231,7 @@
                         <span class="d-flex justify-content-center">
                             <div class="row">
                                 <div class="col-12">
-                                    if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                                    @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
                                     {
                                         <CustomIcons IconName="start-end-plain-time" />
                                     }
@@ -247,12 +243,12 @@
                                             }
                                         </style>
                                         <span class="small-svg">
-                                            <CustomIcons class="small-svg-start-end-plain-time" IconName="start-end-plain-time" />
+                                            <CustomIcons IconName="start-end-plain-time" />
                                         </span>
                                     } 
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
-                                    if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                    @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                                         <span><FontLabel>@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel> </span>
                                         <span><FontLabel>@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
                                     }
@@ -268,7 +264,7 @@
                         <div class="d-flex justify-content-center">
                             <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
                         </div>
-                         if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                         @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                          <FontLabel>@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel> }
                          else{
                         <FontLabel fontSize="12px">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
@@ -278,7 +274,7 @@
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-3 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                                if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                                     <FontLabel fontSize="12px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
                                 }
                                 else {
@@ -294,7 +290,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     
-                                    if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                                    @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
                                     {
                                         <CustomIcons IconName="dummy-plain" />
                                     }
@@ -306,12 +302,12 @@
                                             }
                                         </style>
                                         <span class="small-svg">
-                                            <CustomIcons class="small-svg-dummy-plain" IconName="dummy-plain" />
+                                            <CustomIcons  IconName="dummy-plain" />
                                         </span>
                                     } 
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
-                                if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                                     <span><FontLabel>@schedulerVM.StartTime.ToString("%h:mm tt")</FontLabel></span>
                                     <span><FontLabel>@schedulerVM.EndTime.ToString("%h:mm tt")</FontLabel></span>
                                 }
@@ -325,7 +321,7 @@
                     </div>
                     <div class="col-3 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                                if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
+                                @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
                                     <FontLabel fontSize="16px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
                                 }
                                 else {
@@ -675,8 +671,7 @@ else
 
         <FormValidation>
 
-            <Web.UI.Shared.Components.Validation.ValidationSummary>
-            </Web.UI.Shared.Components.Validation.ValidationSummary>
+            <CustomValidationSummary> </CustomValidationSummary>
 
         </FormValidation>
 

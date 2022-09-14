@@ -42,7 +42,7 @@ namespace Web.UI.Pages.Account
                 SetButtonState(true);
 
                 var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-                await authModule.InvokeVoidAsync("SignIn", loginVM.Email, loginVM.Password, "/");
+                await authModule.InvokeVoidAsync("SignIn", loginVM.Email, loginVM.Password, "/Dashboard");
 
                 objRef = DotNetObjectReference.Create(this);
                 result = await authModule.InvokeAsync<string>("SetDotNetObject", objRef, "");

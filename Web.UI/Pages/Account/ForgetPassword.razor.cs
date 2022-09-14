@@ -27,6 +27,8 @@ namespace Web.UI.Pages.Account
             CurrentResponse response = await AccountService.ForgetPasswordAsync(dependecyParams, forgotPasswordVM);
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 
+            forgotPasswordVM.Email = "";
+
             isBusy = false;
         }
     }

@@ -25,8 +25,9 @@ namespace Web.UI.Pages.User
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         EditContext userForm;
-        bool isInstructorTypeDropdownVisible = false, isAuthenticated = false;
+        bool isInstructorTypeDropdownVisible = false;
         int? roleId;
+
         List<RadioButtonItem> genderOptions { get; set; } = new List<RadioButtonItem>
         {
             new RadioButtonItem { Id = 0,Text = "Female" },
@@ -38,8 +39,6 @@ namespace Web.UI.Pages.User
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             userForm = new EditContext(userData);
 
-            isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
-
             if (userData != null)
             {
                 isInstructorTypeDropdownVisible = userData.IsInstructor;
@@ -49,7 +48,9 @@ namespace Web.UI.Pages.User
                 userData = new UserVM();
             }
 
-            if (!isAuthenticated && !userData.IsInvited)
+            userData.IsAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
+
+            if (!userData.IsAuthenticated && !userData.IsInvited)
             {
                 userData.RoleId = userData.UserRoles.Where(p => p.Name == UserRole.Owner.ToString()).First().Id;
             }

@@ -91,3 +91,7 @@
 /.vs/.NET-Core-6.0-WIth-Blazor/v17/.suo
 /.vs/Flight Schedule Management App/FileContentIndex/9826c109-3b5a-46f2-8c7a-f3038a8f9d89.vsidx
 /.vs
+*.png
+/Web.UI/Uploads/TempDocuments/cendien_infor_lawson_consultant_charlee (7).pdf
+/Web.UI/bin/Release/net6.0/ref
+/Web.UI/bin/Release/net6.0

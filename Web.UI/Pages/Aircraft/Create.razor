@@ -15,8 +15,7 @@
 
     <FormValidation>
 
-        <Web.UI.Shared.Components.Validation.ValidationSummary>
-        </Web.UI.Shared.Components.Validation.ValidationSummary>
+       <CustomValidationSummary> </CustomValidationSummary>
 
     </FormValidation>
 
@@ -264,7 +263,7 @@
                             }
                             else
                             {
-                                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="success" Class="btn k-btn-success" Enabled="@(!isBusySubmitButton)">
+                                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
                                     Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
                                 </TelerikButton>
                             }

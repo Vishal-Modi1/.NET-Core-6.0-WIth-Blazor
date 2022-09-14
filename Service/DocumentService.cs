@@ -35,7 +35,7 @@ namespace Service
             {
                 Document document = ToDataObject(documentVM);
 
-                if (document.IsShareable)
+                if (!document.IsShareable)
                 {
                     document.LastShareDate = null;
                 }
