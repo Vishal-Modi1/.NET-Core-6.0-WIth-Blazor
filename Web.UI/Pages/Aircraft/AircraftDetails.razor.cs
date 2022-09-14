@@ -29,60 +29,67 @@ namespace Web.UI.Pages.Aircraft
         DataModels.Enums.UserRole userRole;
         string modelWidth = "600px";
 
-        protected override async Task OnInitializedAsync()
+        protected override Task OnInitializedAsync()
         {
             isDisplayLoader = true;
-
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-            userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
-
-            StringValues link;
-            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-            QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
-
-            if (link.Count() == 0 || link[0] == "")
-            {
-                NavigationManager.NavigateTo("/Dashboard");
-            }
-
-            var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
-
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
-
-            try
-            {
-                if (!string.IsNullOrEmpty(aircraftData.ImagePath))
-                {
-                    var webClient = new WebClient();
-                    byte[] imageBytes = webClient.DownloadData(aircraftData.ImagePath);
-
-                    aircraftData.ImagePath = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
-                }
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
-            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-
-            bool isCreator = userId == aircraftData.CreatedBy;
-
-            if (isAdmin || isSuperAdmin || isCreator)
-            {
-                isAllowToEdit = true;
-            }
-
-            isDisplayLoader = false;
-
-            SetCompanyName();
+            return base.OnInitializedAsync();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+                userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
+
+                StringValues link;
+                var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+                QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
+
+                if (link.Count() == 0 || link[0] == "")
+                {
+                    NavigationManager.NavigateTo("/Dashboard");
+                }
+
+                var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
+                AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
+
+                try
+                {
+                    if (!string.IsNullOrEmpty(aircraftData.ImagePath))
+                    {
+                        var webClient = new WebClient();
+                        byte[] imageBytes = webClient.DownloadData(aircraftData.ImagePath);
+
+                        aircraftData.ImagePath = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+
+                bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
+                bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
+
+                long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+
+                bool isCreator = userId == aircraftData.CreatedBy;
+
+                if (isAdmin || isSuperAdmin || isCreator)
+                {
+                    isAllowToEdit = true;
+                }
+
+                SetCompanyName();
+
+                isDisplayLoader = false;
+                base.StateHasChanged();
+            }
+        }
 
         async Task AircraftEditDialog()
         {

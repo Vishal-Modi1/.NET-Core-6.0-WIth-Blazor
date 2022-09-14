@@ -51,11 +51,15 @@ namespace Web.UI.Pages.Aircraft
                 YearDropDown.Add(new DropDownValues() { Id = year, Name = year.ToString() });
             }
 
-            aircraftData.NoofEngines = 1;
-            aircraftData.TrackOilandFuel = true;
-            aircraftData.IsEnginesareTurbines = true;
-            aircraftData.IsEngineshavePropellers = true;
-            aircraftData.IsIdentifyMeterMismatch = true;
+            if (aircraftData.NoofEngines == 0)
+            {
+                aircraftData.NoofEngines = 1;
+            }
+
+            //aircraftData.TrackOilandFuel = true;
+            //aircraftData.IsEnginesareTurbines = true;
+            //aircraftData.IsEngineshavePropellers = true;
+            //aircraftData.IsIdentifyMeterMismatch = true;
 
             if (aircraftData.AircraftMakeList.Where(p => p.Id == int.MaxValue).Count() == 0)
             {

@@ -47,6 +47,7 @@ namespace Web.UI.Pages.Aircraft
         async void ManageHoursChange(int engineIndex, decimal value)
         {
             aircraftData.AircraftEquipmentTimesList[engineIndex].Hours = value;
+            aircraftData.IsEquipmentTimesListChanged = true;
         }
     }
 }

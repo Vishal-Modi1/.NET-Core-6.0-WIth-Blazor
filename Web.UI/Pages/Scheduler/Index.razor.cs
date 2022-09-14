@@ -37,10 +37,6 @@ namespace Web.UI.Pages.Scheduler
         SchedulerFilter schedulerFilter = new SchedulerFilter();
         private bool isDisplayScheduler { get; set; } = false;
         List<DE.Aircraft> allAircraftList = new List<DE.Aircraft>();
-        public DateTime dayStart { get; set; } = new DateTime(2000, 1, 1, 8, 0, 0);
-        public DateTime dayEnd { get; set; } = new DateTime(2000, 1, 1, 20, 0, 0);
-        public DateTime workDayStart { get; set; } = new DateTime(2000, 1, 1, 9, 0, 0);
-        public DateTime workDayEnd { get; set; } = new DateTime(2000, 1, 1, 17, 0, 0);
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
 
@@ -79,7 +75,7 @@ namespace Web.UI.Pages.Scheduler
             {
                 isDisplayScheduler = false;
 
-                await LoadDataAsync(currentDate);
+                await LoadDataAsync();
 
                 isDisplayScheduler = true;
             }
@@ -90,23 +86,15 @@ namespace Web.UI.Pages.Scheduler
             currentView = nextView;
         }
 
-        //public async Task OnActionCompletedAsync(ActionEventArgs<SchedulerVM> args)
-        //{
-        //    if (args.ActionType == ActionType.ViewNavigate || args.ActionType == ActionType.DateNavigate)
-        //    {
-        //        await LoadDataAsync();
-        //    }
-        //}
-
         async Task DateChangedHandler(DateTime currDate)
         {
             currentDate = currDate;
-            await LoadDataAsync(currDate);
+            await LoadDataAsync();
         }
 
-        public async Task LoadDataAsync(DateTime currDate)
+        public async Task LoadDataAsync()
         {
-            Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currDate, currentView, multiDayDaysCount);
+            Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currentDate, currentView, multiDayDaysCount);
 
             schedulerFilter.StartTime = dates.Item1;
             schedulerFilter.EndTime = dates.Item2;
@@ -119,9 +107,6 @@ namespace Web.UI.Pages.Scheduler
 
             dataSource.ForEach(x =>
             {
-                //x.StartTime = Convert.ToDateTime(DateConverter.ToLocal(x.StartTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
-                //x.EndTime = Convert.ToDateTime(DateConverter.ToLocal(x.EndTime, timezone).ToString("MM/dd/yyyy hh:mm:ss"));
-
                 x.StartTime = DateConverter.ToLocal(x.StartTime, timezone);
                 x.EndTime = DateConverter.ToLocal(x.EndTime, timezone);
 
@@ -263,14 +248,6 @@ namespace Web.UI.Pages.Scheduler
             await OpenCreateScheduleDialogAsync(args.Start, args.End, 1);
         }
 
-        public async Task OpenCreateAppointmentDialog(SchedulerCreateEventArgs args)
-        {
-            //var SelectedResource = ScheduleRef.GetResourceByIndex(args.);
-            //var groupData = JsonConvert.DeserializeObject<SchedulerVM>(JsonConvert.SerializeObject(SelectedResource.GroupData));
-
-            //await OpenCreateScheduleDialogAsync(args.StartTime, args.EndTime, groupData.AircraftId);
-        }
-
         private async Task OpenCreateScheduleDialogAsync(DateTime? startTime = null, DateTime? endTime = null, long? aircraftId = null)
         {
 
@@ -348,7 +325,7 @@ namespace Web.UI.Pages.Scheduler
         {
             if (scheduleOperations == ScheduleOperations.Schedule)
             {
-                await LoadDataAsync(currentDate);
+                await LoadDataAsync();
                 return;
             }
 
@@ -372,9 +349,7 @@ namespace Web.UI.Pages.Scheduler
                 dataSource.Where(p => p.Id == schedulerVM.Id).ToList().ForEach(p => { p.EndTime = schedulerVM.EndTime; });
             }
 
-            //TOD:
-            //await scheduleRef.RefreshEventsAsync();
-            base.StateHasChanged();
+            await LoadDataAsync();
         }
 
         void OnAircraftsListChange()
@@ -396,6 +371,7 @@ namespace Web.UI.Pages.Scheduler
 
                 observableAircraftsData = new ObservableCollection<ResourceData>(aircraftResourceList);
             }
+
             base.StateHasChanged();
         }
 
@@ -407,18 +383,6 @@ namespace Web.UI.Pages.Scheduler
         private void OpenDialog()
         {
             isDisplayPopup = true;
-        }
-
-        public async Task DeleteEventAsync()
-        {
-            //TODO:
-            // await scheduleRef.DeleteEventAsync(schedulerVM.Id, CurrentAction.Delete);
-            base.StateHasChanged();
-        }
-
-        void ReloadData()
-        {
-
         }
 
         public class ResourceData : INotifyPropertyChanged

@@ -18,9 +18,10 @@ namespace Web.UI.Pages.Company.DetailsView
         public CompanyVM companyData { get; set; }
         string moduleName = Module.Company.ToString();
         public bool isAllowToEdit;
-      
+
         protected override async Task OnInitializedAsync()
         {
+            isDisplayLoader = true;
             companyData = new CompanyVM();
             companyData.PrimaryServicesList = new List<DropDownValues>();
 
@@ -80,7 +81,7 @@ namespace Web.UI.Pages.Company.DetailsView
             }
 
             isDisplayLoader = false;
-            
+            base.StateHasChanged();
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
@@ -160,7 +161,7 @@ namespace Web.UI.Pages.Company.DetailsView
             isDisplayLoader = false;
         }
 
-        private void ManageFileUploadResponse(CurrentResponse response,  bool isCloseDialog, byte[] byteArray )
+        private void ManageFileUploadResponse(CurrentResponse response, bool isCloseDialog, byte[] byteArray)
         {
             uiNotification.DisplayNotification(uiNotification.Instance, response);
 

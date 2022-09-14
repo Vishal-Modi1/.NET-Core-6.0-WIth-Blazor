@@ -132,7 +132,7 @@ namespace Service
         {
             AircraftEquipmentTime aircraftEquipmentTime = new AircraftEquipmentTime();
 
-            aircraftEquipmentTime.Id = aircraftEquipmentTimeVM.Id;
+            aircraftEquipmentTime.Id = 0;
             aircraftEquipmentTime.EquipmentName = aircraftEquipmentTimeVM.EquipmentName;
             aircraftEquipmentTime.Hours = aircraftEquipmentTimeVM.Hours;
             aircraftEquipmentTime.AircraftId = aircraftEquipmentTimeVM.AircraftId;

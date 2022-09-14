@@ -9,6 +9,17 @@
 
 @page "/Scheduler"
 
+<style>
+    .k-scheduler .k-event{
+        padding: 0px;
+    } 
+    .custom-appointment{    
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+    }
+</style>
+
 <PageTitle>Scheduler | Fly Manager </PageTitle>
 <div class="row">
     <div class="col-12 d-flex justify-content-between">
@@ -28,7 +39,7 @@
     </div>
 </div>
 <div class="row my-2">
-   
+
     <div class="col-md-6 col-sm-6">
         <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleAircrafts" OnChange="@OnAircraftsListChange"
                             TextField="TailNo" ValueField="Id" Placeholder="Select Aircraft" />
@@ -50,15 +61,42 @@
                   IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
                   ViewChanged="@ViewChangedHandler">
 
+                   <ItemTemplate>
+        @{
+            var appt = context as SchedulerVM;
+
+            if(appt.AircraftSchedulerDetailsVM.IsCheckOut)
+            {
+                appt.Color = "#33ff81";
+            }
+            else
+            {
+                if (appt.AircraftSchedulerDetailsVM.CheckInTime != null)
+                {
+                    appt.Color = "#B8B8B8";
+                }
+                else
+                {
+                    appt.Color = "#007bff";
+                }
+            }
+
+            <div class="custom-appointment"
+                 style="background-color: @appt.Color">
+                @appt.DisplayTitle
+            </div>
+        }
+    </ItemTemplate>
+
     <SchedulerViews>
-        <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
-        <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
-        <SchedulerMultiDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" NumberOfDays="@multiDayDaysCount" />
+        <SchedulerDayView />
+        <SchedulerWeekView />
+        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
         <SchedulerMonthView></SchedulerMonthView>
-        <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerTimelineView />
     </SchedulerViews>
-@*
-    <SchedulerSettings>
+
+   @* <SchedulerSettings>
         <SchedulerGroupSettings Resources="@resources" Orientation="SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
     </SchedulerSettings>
 
@@ -79,9 +117,9 @@
             <Body>
                 <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
                 InitializeValuesParentEvent="@InitializeValues"
-                OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@DeleteEventAsync"
+                OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
                 RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@ReloadData"></Create>
+                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
 
             </Body>
 
@@ -93,80 +131,80 @@
 
 @*<TelerikScheduler Data="@Appointments" @bind-Date="@StartDate" Height="600px" @bind-View="@CurrView">
     <SchedulerViews>
-        <SchedulerDayView StartTime="@DayStart" />
-        <SchedulerWeekView StartTime="@DayStart" />
-        <SchedulerMultiDayView StartTime="@DayStart" NumberOfDays="10" />
+    <SchedulerDayView StartTime="@DayStart" />
+    <SchedulerWeekView StartTime="@DayStart" />
+    <SchedulerMultiDayView StartTime="@DayStart" NumberOfDays="10" />
     </SchedulerViews>
 
-   
 
-</TelerikScheduler>
 
-@code {
+    </TelerikScheduler>
+
+    @code {
     public SchedulerView CurrView { get; set; } = SchedulerView.Week;
     public DateTime StartDate { get; set; } = new DateTime(2019, 12, 2);
     public DateTime DayStart { get; set; } = new DateTime(2000, 1, 1, 8, 0, 0); //the time portion is important
 
     List<SchedulerAppointment> Appointments = new List<SchedulerAppointment>()
     {
-            new SchedulerAppointment
-            {
-                Title = "Board meeting",
-                Description = "Q4 is coming to a close, review the details.",
-                Start = new DateTime(2019, 12, 5, 10, 00, 0),
-                End = new DateTime(2019, 12, 5, 11, 30, 0)
-            },
+    new SchedulerAppointment
+    {
+    Title = "Board meeting",
+    Description = "Q4 is coming to a close, review the details.",
+    Start = new DateTime(2019, 12, 5, 10, 00, 0),
+    End = new DateTime(2019, 12, 5, 11, 30, 0)
+    },
 
-            new SchedulerAppointment
-            {
-                Title = "Vet visit",
-                Description = "The cat needs vaccinations and her teeth checked.",
-                Start = new DateTime(2019, 12, 2, 11, 30, 0),
-                End = new DateTime(2019, 12, 2, 12, 0, 0)
-            },
+    new SchedulerAppointment
+    {
+    Title = "Vet visit",
+    Description = "The cat needs vaccinations and her teeth checked.",
+    Start = new DateTime(2019, 12, 2, 11, 30, 0),
+    End = new DateTime(2019, 12, 2, 12, 0, 0)
+    },
 
-            new SchedulerAppointment
-            {
-                Title = "Planning meeting",
-                Description = "Kick off the new project.",
-                Start = new DateTime(2019, 12, 6, 9, 30, 0),
-                End = new DateTime(2019, 12, 6, 12, 45, 0)
-            },
+    new SchedulerAppointment
+    {
+    Title = "Planning meeting",
+    Description = "Kick off the new project.",
+    Start = new DateTime(2019, 12, 6, 9, 30, 0),
+    End = new DateTime(2019, 12, 6, 12, 45, 0)
+    },
 
-            new SchedulerAppointment
-            {
-                Title = "Trip to Hawaii",
-                Description = "An unforgettable holiday!",
-                IsAllDay = true,
-                Start = new DateTime(2019, 11, 27),
-                End = new DateTime(2019, 12, 05)
-            },
+    new SchedulerAppointment
+    {
+    Title = "Trip to Hawaii",
+    Description = "An unforgettable holiday!",
+    IsAllDay = true,
+    Start = new DateTime(2019, 11, 27),
+    End = new DateTime(2019, 12, 05)
+    },
 
-            new SchedulerAppointment
-            {
-                Title = "Morning run",
-                Description = "Some time to clear the head and exercise.",
-                Start = new DateTime(2019, 11, 27, 9, 0, 0),
-                End = new DateTime(2019, 11, 27, 9, 30, 0),
-                RecurrenceRule = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
-            }
+    new SchedulerAppointment
+    {
+    Title = "Morning run",
+    Description = "Some time to clear the head and exercise.",
+    Start = new DateTime(2019, 11, 27, 9, 0, 0),
+    End = new DateTime(2019, 11, 27, 9, 30, 0),
+    RecurrenceRule = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
+    }
     };
 
     public class SchedulerAppointment
     {
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
-        public bool IsAllDay { get; set; }
-        public string RecurrenceRule { get; set; }
-        public List<DateTime> RecurrenceExceptions { get; set; }
-        public Guid? RecurrenceId { get; set; }
+    public Guid Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
+    public bool IsAllDay { get; set; }
+    public string RecurrenceRule { get; set; }
+    public List<DateTime> RecurrenceExceptions { get; set; }
+    public Guid? RecurrenceId { get; set; }
 
-        public SchedulerAppointment()
-        {
-            Id = Guid.NewGuid();
-        }
+    public SchedulerAppointment()
+    {
+    Id = Guid.NewGuid();
     }
-}*@
+    }
+    }*@

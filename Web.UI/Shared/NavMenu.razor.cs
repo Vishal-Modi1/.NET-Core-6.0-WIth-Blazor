@@ -65,7 +65,6 @@ namespace Web.UI.Shared
 
                 isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
 
-
                 menuItems = new List<MenuItem>();
                 menuItems.Add(new MenuItem() { Controller = "Dashboard", DisplayName = "Dashboard", FavIconStyle = "group" });
 

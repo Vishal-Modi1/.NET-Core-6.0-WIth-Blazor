@@ -7,6 +7,9 @@ using Microsoft.JSInterop;
 using System.Net;
 using DataModels.Enums;
 using Telerik.Blazor.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
+using DataModels.Constants;
 
 namespace Web.UI.Pages.Document
 {
@@ -119,10 +122,14 @@ namespace Web.UI.Pages.Document
             {
                 documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
             }
-
-            if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            else if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
             {
                 documentData.CompniesList = await CompanyService.ListDropDownValues(dependecyParams);
+            }
+            else
+            {
+                var user = (await AuthStat).User;
+                documentData.UserId = Convert.ToInt64(user.Claims.Where(c => c.Type == CustomClaimTypes.UserId).First().Value);
             }
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName))
@@ -185,26 +192,32 @@ namespace Web.UI.Pages.Document
 
         async Task DownloadDocument(DocumentDataVM documentDataVM)
         {
-            documentDataVM.IsLoadingDownloadButton = true;
-
-            Stream fileStream = GetFileStream(documentDataVM.DocumentPath);
-            using var streamRef = new DotNetStreamReference(stream: fileStream);
-            var jsFile = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-
-            string fileName = documentDataVM.DisplayName;
-            bool hasExtension = Path.HasExtension(documentDataVM.DisplayName);
-
-            if (!hasExtension)
+            try
             {
-                fileName += "." + documentDataVM.Type;
+                documentDataVM.IsLoadingDownloadButton = true;
+
+                Stream fileStream = GetFileStream(documentDataVM.DocumentPath);
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+                var jsFile = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+
+                string fileName = documentDataVM.DisplayName;
+                bool hasExtension = Path.HasExtension(documentDataVM.DisplayName);
+
+                if (!hasExtension)
+                {
+                    fileName += "." + documentDataVM.Type;
+                }
+
+                await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef, documentDataVM.Id.ToString());
+
+                objRef = DotNetObjectReference.Create(this);
+                result = await jsFile.InvokeAsync<string>("ManageDocumentDownloadResponse", objRef, documentDataVM.Id.ToString());
+
+                documentDataVM.IsLoadingDownloadButton = false;
             }
-
-            await jsFile.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef, documentDataVM.Id.ToString());
-
-            objRef = DotNetObjectReference.Create(this);
-            result = await jsFile.InvokeAsync<string>("ManageDocumentDownloadResponse", objRef, documentDataVM.Id.ToString());
-            
-            documentDataVM.IsLoadingDownloadButton = false;
+            catch (Exception ex)
+            { 
+            }
         }
 
         private Stream GetFileStream(string documentPath)

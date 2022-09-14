@@ -5,6 +5,10 @@
 
 <PageTitle>Aircraft Details | Fly Manager </PageTitle>
 
+<Web.UI.Shared.Components.PageLoader.PageLoader 
+ isVisible="@isDisplayLoader" loaderColor="#121d2d" loadingText="Loading details...">
+
+ </Web.UI.Shared.Components.PageLoader.PageLoader>
 
 @if (aircraftData != null)
 {
@@ -12,13 +16,12 @@
         <div><h3>@aircraftData.TailNo</h3></div>
         <div>
             <TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
-                       Enabled="@(!isBusyAddButton)" Class="btn k-btn-primary" ThemeColor="primary">
+                       Enabled="@(!isBusy)" Class="btn k-btn-primary" ThemeColor="primary">
                 <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons> 
                 Edit
-                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusy">
                 </TelerikLoader>
             </TelerikButton>
-
 
 
             <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton)"
@@ -29,7 +32,7 @@
                 </TelerikLoader>
             </TelerikButton>
 
-            <TelerikButton Class="btn btn-outline-primary text-white" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))" >Back</TelerikButton>
+            <TelerikButton ThemeColor="secondary" FillMode="Outline"  Class="mx-1 k-btn-secondary-outline" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))" >Back</TelerikButton>
 
         </div>
     </div>

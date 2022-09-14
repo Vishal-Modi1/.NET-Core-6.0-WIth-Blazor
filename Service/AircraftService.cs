@@ -174,7 +174,7 @@ namespace Service
                 aircraftVM.FlightSimulatorClassList = _aircraftRepository.ListFlightSimulatorClassDropDownValues();
                 aircraftVM.AircraftStatusList = _aircraftStatusRepository.ListDropDownValues();
 
-                var data  = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id);
+                var data  = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id && p.IsDeleted == false);
                 aircraftVM.AircraftEquipmentTimesList = _aircraftEquipementTimeService.ToCreateBusinessObjectList(data);
 
                 if (companyId > 0)

@@ -22,7 +22,6 @@ namespace Web.UI.Pages.Document
         List<int> values { get; set; }
 
         string uploadedFilePath = "";
-        public long userId = long.MaxValue;
 
         IReadOnlyList<IBrowserFile> selectedFiles;
         public string SaveUrl => ToAbsoluteUrl("api/fileupload/save");
@@ -47,16 +46,9 @@ namespace Web.UI.Pages.Document
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
 
-            if (documentData.UserId > 0)
+            if (!string.IsNullOrWhiteSpace(documentData.Tags))
             {
-                userId = documentData.UserId;
-
-                if (!string.IsNullOrWhiteSpace(documentData.Tags))
-                {
-                    values =  documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p=> Convert.ToInt32(p)).ToList();
-                }
-
-               // OnChange(documentData.CompanyId);
+                values = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt32(p)).ToList();
             }
 
             editContext = new EditContext(documentData);
@@ -135,7 +127,12 @@ namespace Web.UI.Pages.Document
             multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
             multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
-            multiContent.Add(new StringContent(String.Join(",", values)), "Tags");
+
+            if (values != null)
+            {
+                multiContent.Add(new StringContent(String.Join(",", values)), "Tags");
+            }
+
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
