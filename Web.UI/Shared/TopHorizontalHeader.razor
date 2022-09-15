@@ -1,5 +1,8 @@
 ﻿@using Web.UI.Models.Shared
 <div class="d-flex me-2">
+
+
+
     <span class="d-flex align-items-center justify-content-center">
         <CustomIcons IconName="bell"></CustomIcons>
         @if (ShowNotificationDot)
@@ -8,24 +11,31 @@
         }
     </span>
     <span class="d-flex align-items-center justify-content-center">
-        <Web.UI.Shared.Components.BSDropdownButton 
-        BSDropdownItemList="@BSDropdownItemList" userName="@userName" userProfileImage="@userProfileImage" 
-        styleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
+        <Web.UI.Shared.Components.BSDropdownButton BSDropdownItemList="@BSDropdownItemList" userName="@userName" userProfileImage="@userProfileImage"
+                                                   styleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
         </Web.UI.Shared.Components.BSDropdownButton>
-
-    </span> 
+    </span>
 
 </div>
 
 @code {
     private bool ShowNotificationDot { get; set; } = true;
+
+    protected List<BSDropdownItem> companiesList = new List<BSDropdownItem>()
+    {
+        new BSDropdownItem{ DisplayValue = "Company 1",URL="/myprofile" },
+        new BSDropdownItem{ DisplayValue = "Company 2",URL="/myprofile" },
+        new BSDropdownItem{ DisplayValue = "Company 3",URL="/logout" },
+    };
+
     protected List<BSDropdownItem> BSDropdownItemList = new List<BSDropdownItem>()
     {
         new BSDropdownItem{ DisplayValue = "Update profile",URL="/myprofile" },
-        new BSDropdownItem{ DisplayValue = "Change Password",URL="/myprofile" },
+        new BSDropdownItem{ DisplayValue = "Change Password",URL="/changepassword" },
         new BSDropdownItem{ DisplayValue = "Log Out",URL="/logout" },
     };
 
     [Parameter] public string userName { get; set; }
+
     [Parameter] public string userProfileImage { get; set; }
 }

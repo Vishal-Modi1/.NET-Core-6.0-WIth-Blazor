@@ -27,7 +27,7 @@ namespace Repository
             }
         }
 
-        public bool IsValidOldPassword(string password, int userId)
+        public bool IsValidOldPassword(string password, long userId)
         {
             using(_myContext = new MyContext())
             {

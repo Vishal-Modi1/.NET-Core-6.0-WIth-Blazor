@@ -122,8 +122,11 @@ namespace Service
                         bool isSuperAdmin = roleId == (int)DataModels.Enums.UserRole.SuperAdmin;
                         User user = _userRepository.FindByCondition(p=>p.Email == userVM.Email);
 
+                        Company companyDetails = _companyRepository.FindByCondition(p => p.Id == inviteUser.CompanyId);
                         userVM = _userRepository.FindById(user.Id, isSuperAdmin, isInvited, userVM.CompanyId);
-                        
+
+                        userVM.CompanyId = companyDetails.Id;
+                        userVM.CompanyName = companyDetails.Name;
                     }
 
                     userVM.IsInvited = isInvited;

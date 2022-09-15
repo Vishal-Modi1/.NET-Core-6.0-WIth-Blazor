@@ -30,6 +30,9 @@ namespace Web.UI.Data.AircraftSchedule
                     // so adding 9 adds at least 6 to the longest possible for the case where most days are seen
                     endDate = startDateFromUI.AddMonths(1);
                     break;
+                case SchedulerView.Timeline:
+                    endDate = endDate.AddDays(1);
+                    break;
                 default:
                     throw new ArgumentException("the service does not know how to handle this scheduler view yet");
             }

@@ -5,8 +5,6 @@ using DataModels.VM.Scheduler;
 using DataModels.VM.UserPreference;
 using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using Utilities;
 using DE = DataModels.Entities;
 using Telerik.Blazor;
@@ -20,23 +18,16 @@ namespace Web.UI.Pages.Scheduler
         public TelerikScheduler<SchedulerVM> scheduleRef;
 
         SchedulerVM schedulerVM;
-        DE.AircraftEquipmentTime aircraftEquipmentTime = new DE.AircraftEquipmentTime();
-
         List<SchedulerVM> dataSource;
         public SchedulerView currentView { get; set; } = SchedulerView.Week;
-
-        public List<string> resources;
-        public ObservableCollection<ResourceData> observableAircraftsData { get; set; }
-
+        public List<string> resources = new List<string>() { "AircraftId" };
+        List<ResourceData> aircraftsResourceList = new List<ResourceData>();
         string moduleName = "Scheduler";
-
         public UIOptions uiOptions = new UIOptions();
-
         string timezone = "";
-
         SchedulerFilter schedulerFilter = new SchedulerFilter();
-        private bool isDisplayScheduler { get; set; } = false;
         List<DE.Aircraft> allAircraftList = new List<DE.Aircraft>();
+
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
 
@@ -45,8 +36,6 @@ namespace Web.UI.Pages.Scheduler
         protected override async Task OnInitializedAsync()
         {
             dataSource = new List<SchedulerVM>();
-            observableAircraftsData = new ObservableCollection<ResourceData>();
-            resources = new List<string>() { "Aircrafts" };
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
 
@@ -66,18 +55,14 @@ namespace Web.UI.Pages.Scheduler
             List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
             UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
 
-            observableAircraftsData = new ObservableCollection<ResourceData>(await GetAircraftData(aircraftPreference));
+            aircraftsResourceList = await GetAircraftData(aircraftPreference);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                isDisplayScheduler = false;
-
                 await LoadDataAsync();
-
-                isDisplayScheduler = true;
             }
         }
 
@@ -94,6 +79,8 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task LoadDataAsync()
         {
+            isDisplayLoader = true;
+
             Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currentDate, currentView, multiDayDaysCount);
 
             schedulerFilter.StartTime = dates.Item1;
@@ -155,6 +142,7 @@ namespace Web.UI.Pages.Scheduler
                 schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
             }
 
+            isDisplayLoader = false;
             base.StateHasChanged();
         }
 
@@ -186,26 +174,6 @@ namespace Web.UI.Pages.Scheduler
 
             return aircraftResourceList;
         }
-
-        //TOD:
-        //public void OnEventRendered(EventRenderedArgs<SchedulerVM> args)
-        //{
-        //    if (args.Data.AircraftSchedulerDetailsVM.IsCheckOut)
-        //    {
-        //        args.CssClasses = new List<string>() { "checkedout", "checkedouthorizontally" };
-        //    }
-        //    else
-        //    {
-        //        if (args.Data.AircraftSchedulerDetailsVM.CheckInTime != null)
-        //        {
-        //            args.CssClasses = new List<string>() { "checkedin", "checkedinhorizontally" };
-        //        }
-        //        else
-        //        {
-        //            args.CssClasses = new List<string>() { "scheduled", "scheduledhorizontally" };
-        //        }
-        //    }
-        //}
 
         public void InitializeValues()
         {
@@ -356,7 +324,7 @@ namespace Web.UI.Pages.Scheduler
         {
             if (multipleAircrafts == null)
             {
-                observableAircraftsData = new ObservableCollection<ResourceData>();
+                aircraftsResourceList = new List<ResourceData>();
             }
             else
             {
@@ -369,7 +337,7 @@ namespace Web.UI.Pages.Scheduler
                     aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.TailNo, Id = aircraft.Id });
                 }
 
-                observableAircraftsData = new ObservableCollection<ResourceData>(aircraftResourceList);
+                aircraftsResourceList = aircraftResourceList;
             }
 
             base.StateHasChanged();
@@ -385,35 +353,14 @@ namespace Web.UI.Pages.Scheduler
             isDisplayPopup = true;
         }
 
-        public class ResourceData : INotifyPropertyChanged
-        {
-            public long Id { get; set; }
-
-            private string aircraftTailNo { get; set; }
-
-            public string AircraftTailNo
-            {
-                get { return aircraftTailNo; }
-                set
-                {
-                    this.aircraftTailNo = value;
-                    NotifyPropertyChanged("AircraftTailNo");
-                }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-            private void NotifyPropertyChanged(string propertyName)
-            {
-                var handler = PropertyChanged;
-                if (handler != null)
-                {
-                    handler(this, new PropertyChangedEventArgs(propertyName));
-                }
-            }
-
-        }
     }
 
+    public class ResourceData
+    {
+        public long Id { get; set; }
+
+        public string AircraftTailNo { get; set; }
+    }
     public class UIOptions
     {
         public bool isDisplayRecurring { get; set; }
@@ -431,7 +378,7 @@ namespace Web.UI.Pages.Scheduler
         public bool isDisplayFlightRoutes { get; set; }
         public bool isDisplayAircraftDropDown { get; set; }
         public bool isDisplayStandBy { get; set; }
-
         public bool isDisplayMember1Dropdown { get; set; }
+
     }
 }

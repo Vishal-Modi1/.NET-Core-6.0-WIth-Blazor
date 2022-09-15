@@ -22,13 +22,30 @@ namespace Web.UI.Shared
 
         bool sidebarExpanded = true, bodyExpanded = false, isSuperAdmin;
 
-        string fullName = "", profileImageURL = "";
+        string fullName = "", profileImageURL = "", companyName;
 
         List<MenuItem> menuItems;
         TelerikDrawer<MenuItem> DrawerRef { get; set; }
         MenuItem SelectedItem { get; set; }
         bool isAdministrationTabAdded = false;
         bool DrawerExpanded { get; set; } = true;
+
+        string LastAction { get; set; }
+
+        void OnReply()
+        {
+            LastAction = "Reply";
+        }
+
+        void OnReplyAll()
+        {
+            LastAction = "Reply All";
+        }
+
+        void OnForward()
+        {
+            LastAction = "Forward";
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -59,6 +76,14 @@ namespace Web.UI.Shared
             {
                 fullName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
                           .Select(c => c.Value).SingleOrDefault();
+
+                companyName = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
+                         .Select(c => c.Value).SingleOrDefault();
+
+                if(string.IsNullOrWhiteSpace(companyName))
+                {
+                    companyName = "Flight Schedule Management";
+                }
 
                 profileImageURL = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
                            .Select(c => c.Value).SingleOrDefault();
