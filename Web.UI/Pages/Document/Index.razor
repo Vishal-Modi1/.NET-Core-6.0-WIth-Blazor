@@ -23,7 +23,7 @@
                     <div class="col-md-4">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
                             <CustomIcons IconName="upload" PrimaryColor="White"></CustomIcons>
-                            Upload <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            Upload <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                         </TelerikButton>
                     </div>
@@ -71,7 +71,7 @@
         {
             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
                 <CustomIcons IconName="upload" PrimaryColor="White"></CustomIcons> 
-               Upload <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+               Upload <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                 </TelerikLoader>
             </TelerikButton>
         }
@@ -196,7 +196,7 @@
                            OnClick="()=>DownloadDocument(value)" Enabled=!value.IsLoadingDownloadButton>
                         <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
                         @value.TotalDownloads.ToString()
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
                         </TelerikLoader>
                     </TelerikButton>
 
@@ -211,7 +211,7 @@
                            ThemeColor="success" Enabled=!value.IsLoadingEditButton>
 
                             <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="value.IsLoadingEditButton">
                             </TelerikLoader>
 

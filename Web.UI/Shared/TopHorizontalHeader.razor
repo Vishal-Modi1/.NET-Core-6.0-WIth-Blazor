@@ -1,17 +1,38 @@
-﻿@using Web.UI.Models.Shared
+﻿@using DataModels.Constants
+@using Web.UI.Models.Shared
+
+<style>
+
+    .company > .k-combobox {
+        height: 35px;
+        width: 188px;
+        margin-right: 25px;
+        margin-top: -1px;
+    }
+</style>
+
 <div class="d-flex me-2">
 
-
+    <span class="company d-flex align-items-center justify-content-center">
+        <TelerikRootComponent>
+            <TelerikComboBox Id=roleId Data="@navigationHeaderModel.CompanyList" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains" OnChange="Update"
+                             Placeholder="Change Company" ValueField="Id" @bind-Value="@navigationHeaderModel.Company.Id">
+            </TelerikComboBox>
+        </TelerikRootComponent>
+    </span>
 
     <span class="d-flex align-items-center justify-content-center">
-        <CustomIcons IconName="bell"></CustomIcons>
+        <CustomIcons IconName="notification" PrimaryColor="white"></CustomIcons>
         @if (ShowNotificationDot)
         {
             <span class="show-notification-dot"></span>
         }
     </span>
     <span class="d-flex align-items-center justify-content-center">
-        <Web.UI.Shared.Components.BSDropdownButton BSDropdownItemList="@BSDropdownItemList" userName="@userName" userProfileImage="@userProfileImage"
+        <Web.UI.Shared.Components.BSDropdownButton BSDropdownItemList="@BSDropdownItemList"
+                                                   userName="@(navigationHeaderModel.User.FirstName)"
+                                                   userProfileImage="@navigationHeaderModel.User.ImageName"
                                                    styleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
         </Web.UI.Shared.Components.BSDropdownButton>
     </span>
@@ -21,12 +42,16 @@
 @code {
     private bool ShowNotificationDot { get; set; } = true;
 
-    protected List<BSDropdownItem> companiesList = new List<BSDropdownItem>()
+    public async Task Update()
     {
-        new BSDropdownItem{ DisplayValue = "Company 1",URL="/myprofile" },
-        new BSDropdownItem{ DisplayValue = "Company 2",URL="/myprofile" },
-        new BSDropdownItem{ DisplayValue = "Company 3",URL="/logout" },
-    };
+        if (navigationHeaderModel.Company.Id > 0)
+        {
+            var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+            await authModule.InvokeVoidAsync("ChangeCompany", navigationHeaderModel.User.Id, navigationHeaderModel.Company.Id);
+
+            this.StateHasChanged();
+        }
+    }
 
     protected List<BSDropdownItem> BSDropdownItemList = new List<BSDropdownItem>()
     {
@@ -35,7 +60,5 @@
         new BSDropdownItem{ DisplayValue = "Log Out",URL="/logout" },
     };
 
-    [Parameter] public string userName { get; set; }
-
-    [Parameter] public string userProfileImage { get; set; }
+    [Parameter] public NavigationHeaderModel navigationHeaderModel { get; set; }
 }

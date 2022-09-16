@@ -1,6 +1,6 @@
 ﻿<TelerikLoaderContainer Visible="@isVisible">
     <Template>
-        <TelerikLoader Class="loader-indicator" Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
+        <TelerikLoader Class="loader-indicator"  Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
         </TelerikLoader>
         <span>@loadingText</span>
     </Template>
@@ -23,7 +23,7 @@
         padding-top: 10px;
     }
 
-    .k-loader-segment {
+    .loader-indicator > .k-loader-canvas > .k-loader-segment {
         background-color: @(loaderColor == null ? "#022254" : loaderColor) !important
     }
 

@@ -31,7 +31,7 @@ namespace Web.UI.Pages.Aircraft
 
         protected override Task OnInitializedAsync()
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
             return base.OnInitializedAsync();
         }
 
@@ -86,7 +86,7 @@ namespace Web.UI.Pages.Aircraft
 
                 SetCompanyName();
 
-                isDisplayLoader = false;
+                 ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
         }

@@ -12,7 +12,6 @@ namespace Web.UI.Pages.Aircraft
     public partial class Index
     {
         #region Params
-
         [CascadingParameter] public TelerikListView<AircraftDataVM> dataListView { get; set; }
         [CascadingParameter] public TelerikGrid<AircraftDataVM> dataGridView { get; set; }
         [Parameter] public int? ParentCompanyId { get; set; }
@@ -31,6 +30,8 @@ namespace Web.UI.Pages.Aircraft
 
         protected override async Task OnInitializedAsync()
         {
+            ChangeLoaderVisibilityAction(true);
+
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
             {
@@ -45,6 +46,8 @@ namespace Web.UI.Pages.Aircraft
             {
                 companyId = ParentCompanyId.Value;
             }
+
+            ChangeLoaderVisibilityAction(false);
         }
 
         private void OnCompanyValueChanges(int selectedValue)

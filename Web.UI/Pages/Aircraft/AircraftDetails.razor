@@ -5,11 +5,6 @@
 
 <PageTitle>Aircraft Details | Fly Manager </PageTitle>
 
-<Web.UI.Shared.Components.PageLoader.PageLoader 
- isVisible="@isDisplayLoader" loaderColor="#022254" loadingText="Loading details...">
-
- </Web.UI.Shared.Components.PageLoader.PageLoader>
-
 @if (aircraftData != null)
 {
     <div class="d-flex justify-content-between">
@@ -17,22 +12,22 @@
         <div>
             <TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
                        Enabled="@(!isBusy)" Class="btn k-btn-primary" ThemeColor="primary">
-                <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons> 
+                <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
                 Edit
-                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusy">
+                <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy">
                 </TelerikLoader>
             </TelerikButton>
 
 
             <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton)"
-                Class="btn k-btn-primary" ThemeColor="primary">
+                       Class="btn k-btn-primary" ThemeColor="primary">
                 <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
                 Update Status
-                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
                 </TelerikLoader>
             </TelerikButton>
 
-            <TelerikButton ThemeColor="secondary" FillMode="Outline"  Class="mx-1 k-btn-secondary-outline" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))" >Back</TelerikButton>
+            <TelerikButton ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">Back</TelerikButton>
 
         </div>
     </div>
@@ -44,6 +39,7 @@
                     <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
                         <TelerikCard Class="image-card-info">
                             <img src="@aircraftData.ImagePath" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" />
+
                         </TelerikCard>
                     </div>
                     <div class="col-12 col-md-12 col-lg-3 mb-3 px-3 p-0">
@@ -53,7 +49,8 @@
                                 <div><span class="card-fonts">Model :</span> @(aircraftData.AircraftModelList?.Where(p=>p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</div>
                                 <div><span class="card-fonts">Make :</span> @(aircraftData.AircraftMakeList?.Where(p=>p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</div>
                                 <div><span class="card-fonts">Category :</span> @(aircraftData.AircraftCategoryList?.Where(p=>p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</div>
-                                <div><span class="card-fonts">Turbines :</span>  @(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</div>
+                                <div><span class="card-fonts">Turbines :</span> @(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</div>
+                                <div><span class="card-fonts">Status :</span>  @aircraftData.AircraftStatus.Status </div>
                             </CardBody>
                         </TelerikCard>
                     </div>
@@ -79,7 +76,7 @@
     </div>
     <div class="card" style="margin-top:30px">
 
-      <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData>
+        <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData>
 
         </Web.UI.Pages.Aircraft.DetailsTabs.Index>
     </div>

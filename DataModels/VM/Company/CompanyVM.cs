@@ -18,7 +18,8 @@ namespace DataModels.VM.Company
         [Required(ErrorMessage = "Timezone is required")]
         public string TimeZone { get; set; }
 
-        [Url(ErrorMessage = "Please enter valid url")]
+        //[Url(ErrorMessage = "Please enter valid url")]
+        [RegularExpression(@"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)", ErrorMessage = "Please enter valid url")]
         public string Website { get; set; }
         public string PrimaryAirport { get; set; }
         public short? PrimaryServiceId { get; set; }

@@ -48,7 +48,7 @@
                            ThemeColor="success" Enabled=!aircraftModelDataVM.IsLoadingEditButton>
 
                     <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="aircraftModelDataVM.IsLoadingEditButton">
                     </TelerikLoader>
 
@@ -92,7 +92,7 @@
 
                             <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_aircraftModel.Id)" Enabled="@(!isBusyDeleteButton)">
                                 Yes
-                                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
                                 </TelerikLoader>
                             </TelerikButton>
 

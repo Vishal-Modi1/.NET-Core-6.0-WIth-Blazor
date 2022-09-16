@@ -251,7 +251,7 @@
 
                             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UpdatePermissionAsync(userRolePermissionDataVM.IsAllowed,userRolePermissionDataVM.Id, isForWebApp)"
                                    Enabled="@(!isBusySubmitButton)">
-                                Yes  <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusySubmitButton">
+                                Yes  <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusySubmitButton">
                                 </TelerikLoader>
                             </TelerikButton>
                             <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => RevokeUserPermissionStatusChange()" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
@@ -272,7 +272,7 @@
 
                             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UpdatePermissionsAsync(userRolePermissionDataVM.IsAllowed, isForWebApp)"
                                    Enabled="@(!isBusySubmitButton)">
-                                Yes <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusySubmitButton">
+                                Yes <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusySubmitButton">
                                 </TelerikLoader>
                             </TelerikButton>
                             <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => RevokeUserPermissionStatusChange()" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">

@@ -26,7 +26,7 @@
                     <div class="col-md-4">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => UserCreateDialog(new UserDataVM())" Enabled="@(!isBusyAddButton)">
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                             <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                         </TelerikButton>
                 </div>
@@ -120,7 +120,7 @@
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
                         <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="userData.IsLoadingEditButton">
                         </TelerikLoader>
 
@@ -187,7 +187,7 @@
                             {
                                 <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="info" OnClick="()=>UpdateIsUserActiveAsync(userData.IsActive,userData.Id)">
                                     Yes
-                                    <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyUpdateStatusButton">
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyUpdateStatusButton">
                                     </TelerikLoader>
                                 </TelerikButton>
                             }

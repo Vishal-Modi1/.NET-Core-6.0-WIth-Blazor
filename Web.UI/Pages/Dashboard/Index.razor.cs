@@ -29,7 +29,7 @@ namespace Web.UI.Pages.Dashboard
 
         async Task LoadData()
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
             NotificationModel message;
 
             var user = (await AuthStat).User;
@@ -45,7 +45,7 @@ namespace Web.UI.Pages.Dashboard
 
             userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
         }
     }
 }

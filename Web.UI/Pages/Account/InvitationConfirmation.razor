@@ -2,9 +2,6 @@
 
 @layout EmptyLayout
 
-<Web.UI.Shared.Components.PageLoader.PageLoader isVisible="@isDisplayLoader" loaderColor="#3066f8">
-</Web.UI.Shared.Components.PageLoader.PageLoader>
-
 <div class="row vh-100 align-items-center m-0">
     <div class="col-md-3 mx-auto">
         <div class="card">
@@ -28,7 +25,7 @@
                     <TelerikButton OnClick="AcceptInvitation" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
 
                         Accept
-                        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
                         </TelerikLoader>
 
                     </TelerikButton>

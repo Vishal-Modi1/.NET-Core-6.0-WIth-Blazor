@@ -34,7 +34,7 @@ namespace Web.UI.Pages.MyAccount
 
         public async Task GetPreferenceValues(int values)
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             var data = preferenceForm.Validate();
 
@@ -62,7 +62,7 @@ namespace Web.UI.Pages.MyAccount
                 }
         //    }
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
         }
 
         public async Task Submit()

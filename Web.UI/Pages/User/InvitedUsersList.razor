@@ -27,7 +27,7 @@
                 <div class="col-md-4">
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
                         <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Invite User
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
                     </TelerikButton>
                 </div>
             }
@@ -94,7 +94,7 @@
                            ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
 
                         <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="userData.IsLoadingEditButton">
                         </TelerikLoader>
 

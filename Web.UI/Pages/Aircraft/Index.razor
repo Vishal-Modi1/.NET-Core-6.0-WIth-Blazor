@@ -147,7 +147,7 @@
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
                                OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
                         <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                         </TelerikLoader>
                     </TelerikButton>
                 </div>
@@ -171,24 +171,6 @@
         <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
 </div>
-@*<hr class="hr-blue mt-1 mb-1" />*@
-@*<div class="row my-2 search-panel">
-    <div class="col-md-6"></div>
-    <div class="col-md-2 d-flex align-items-center justify-content-end">
-
-    <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
-    <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-    </div>
-    <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
-    <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-    </div>
-    </div>
-    <div class="col-md-4">
-    <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
-    </div>
-    </div>
-    <hr class="hr-blue mt-1 mb-1" />*@
-
 <TelerikTabStrip>
 
     <TabStripTab>
@@ -196,13 +178,6 @@
             <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
                 <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
             </div>
-
-            @*  <div class="d-flex justify-content-center align-items-center">
-            <span class="mx-2">
-            <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
-            </span>
-            <span>Grid View</span>
-            </div>*@
         </HeaderTemplate>
         <Content>
 
@@ -222,30 +197,14 @@
                             <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))" >
                                 <div class="k-card">
                                     <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-                                    <div class="k-card-body d-flex justify-content-center">
+                                  <div class='status-circle' style="background-color:@context.Indicator"> </div>
+                                  <div class="k-card-body d-flex justify-content-center">
                                         <h4 class="k-card-title">@context.TailNo</h4>
                                         <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
                                     </div>
                                 </div>
                             </div>
-        <!--PLEASE DO NOT DELETE START-->
-        <!--
-
-                    <a @onclick="@(() => OpenDetailPage(context.Id))" style="cursor:pointer" class="col-6 col-4 d-flex">
-                        <div class="custom-aircraft-item">
-                            @*<span class="active-airplane @( true ? "inactive-airplane" : "")">&nbsp;</span>*@
-                            <span class="expande-airplane"><CustomIcons IconName="arrow-expand" PrimaryColor="#FEFEFE" /></span>
-                            <div class="k-card">
-                                <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-                                <div class="k-card-body d-flex justify-content-center">
-                                    <h4 class="k-card-title">@context.TailNo</h4>
-                                    <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-        -->
-        <!--PLEASE DO NOT DELETE END-->
+    
                 </Template>
             </TelerikListView>
         </Content>
@@ -253,12 +212,7 @@
 
     <TabStripTab>
         <HeaderTemplate>
-            @* <div class="d-flex justify-content-center align-items-center">
-            <span class="mx-2">
-            <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
-            </span>
-            <span>List View</span>
-            </div>*@
+           
             <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
                 <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
             </div>
@@ -320,7 +274,7 @@
                                            ThemeColor="success" Enabled=!data.IsLoadingEditButton>
 
                                             <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                                Visible="data.IsLoadingEditButton">
                                             </TelerikLoader>
 
@@ -368,7 +322,7 @@
 
                             <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(aircraftData.Id)" Enabled="@(!isBusyDeleteButton)">
                                 Yes
-                                <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
                                 </TelerikLoader>
                             </TelerikButton>
 
@@ -385,24 +339,3 @@
     </CustomPopupComponent>
 }
 
-
-
-@*<div class="row">
-    <div class="col-12 col-md-2 col-lg-2 col-sm-4">
-
-    <TelerikCard Width="300px">
-    <CardHeader>
-    <CardTitle>N2015S</CardTitle>
-    </CardHeader>
-    <CardImage Src="https://fly-manager-dev-api.azurewebsites.net/Uploads//AircraftImages/28/20220816210808_22.jpeg" ></CardImage>
-    <CardActions Layout="@CardActionsLayout.Stretched">
-    <TelerikButton Class="k-flat" Icon="heart-outline">Like</TelerikButton>
-    <TelerikButton Class="k-flat" @onclick="@(() => OpenDetails())">Read More</TelerikButton>
-    </CardActions>
-    <CardFooter>
-    <span >Added by @@john</span>
-    <span >March 05, 2021</span>
-    </CardFooter>
-    </TelerikCard>
-    </div>
-    </div>*@

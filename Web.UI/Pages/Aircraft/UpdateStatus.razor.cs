@@ -32,6 +32,7 @@ namespace Web.UI.Pages.Aircraft
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
+                aircraftData.AircraftStatusId = Convert.ToByte(aircraftStatusId);
                 CloseDialog(true);
                 UpdateUI();
             }

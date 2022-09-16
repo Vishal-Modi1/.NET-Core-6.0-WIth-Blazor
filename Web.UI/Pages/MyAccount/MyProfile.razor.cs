@@ -39,7 +39,7 @@ namespace Web.UI.Pages.MyAccount
 
         async Task LoadData()
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             var user = (await AuthStat).User;
 
@@ -55,7 +55,7 @@ namespace Web.UI.Pages.MyAccount
                 userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
             }
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
         }
 
         public async Task OpenUpdateProfileDialog()
@@ -132,7 +132,7 @@ namespace Web.UI.Pages.MyAccount
                 return;
             }
 
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             //byte[] bytes = Convert.FromBase64String(userVM.ImageName.Substring(userVM.ImageName.IndexOf(",") + 1));
 
@@ -160,7 +160,7 @@ namespace Web.UI.Pages.MyAccount
 
             }
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
         }
     }
 }

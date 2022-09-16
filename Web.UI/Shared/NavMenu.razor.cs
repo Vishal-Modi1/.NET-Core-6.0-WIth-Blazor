@@ -9,6 +9,7 @@ using Telerik.Blazor.Components;
 using Web.UI.Utilities;
 using System.Text;
 using DataModels.VM.Company;
+using Web.UI.Models.Shared;
 
 namespace Web.UI.Shared
 {
@@ -16,53 +17,22 @@ namespace Web.UI.Shared
     {
         [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
         UINotification UINotification { get; set; } = new UINotification();
+        public bool isDisplayPageLoader { get; set; }
 
         [Parameter] public bool Expanded { get; set; }
         [Parameter] public bool IsMainContainerTransparent { get; set; } = true;
 
-        bool sidebarExpanded = true, bodyExpanded = false, isSuperAdmin;
-
-        string fullName = "", profileImageURL = "", companyName;
+        bool isSuperAdmin;
 
         List<MenuItem> menuItems;
-        TelerikDrawer<MenuItem> DrawerRef { get; set; }
-        MenuItem SelectedItem { get; set; }
+        TelerikDrawer<MenuItem> drawerRef { get; set; }
+        MenuItem selectedItem { get; set; }
         bool isAdministrationTabAdded = false;
-        bool DrawerExpanded { get; set; } = true;
-
-        string LastAction { get; set; }
-
-        void OnReply()
-        {
-            LastAction = "Reply";
-        }
-
-        void OnReplyAll()
-        {
-            LastAction = "Reply All";
-        }
-
-        void OnForward()
-        {
-            LastAction = "Forward";
-        }
+        bool isDrawerExpanded { get; set; } = true;
+        public NavigationHeaderModel navigationHeaderModel { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            if (httpContextAccessor != null && httpContextAccessor.HttpContext != null &&
-                 httpContextAccessor.HttpContext.Request != null && httpContextAccessor.HttpContext.Request.Headers.ContainsKey("User-Agent"))
-            {
-                var userAgent = httpContextAccessor.HttpContext.Request.Headers["User-Agent"].FirstOrDefault();
-                if (!string.IsNullOrEmpty(userAgent))
-                {
-                    if (userAgent.Contains("iPhone") || userAgent.Contains("Android") || userAgent.Contains("Googlebot"))
-                    {
-                        sidebarExpanded = false;
-                        bodyExpanded = true;
-                    }
-                }
-            }
-
             isAdministrationTabAdded = false;
 
             var user = (await AuthStat).User;
@@ -74,18 +44,32 @@ namespace Web.UI.Shared
 
             if (user.Identity.IsAuthenticated)
             {
-                fullName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                string loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
+                .Select(c => c.Value).SingleOrDefault();
+
+                navigationHeaderModel = new NavigationHeaderModel();
+                navigationHeaderModel.User = new DataModels.VM.User.UserVM();
+                navigationHeaderModel.Company = new CompanyVM();
+                navigationHeaderModel.CompanyList = new List<DropDownValues>();
+
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+                navigationHeaderModel.User.Id = Convert.ToInt64(loggedUserId);
+
+                navigationHeaderModel.CompanyList = await CompanyService.ListDropDownValuesByUserId(dependecyParams, Convert.ToInt64(loggedUserId));
+
+                navigationHeaderModel.User.FirstName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
                           .Select(c => c.Value).SingleOrDefault();
 
-                companyName = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
+                navigationHeaderModel.Company.Name = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
                          .Select(c => c.Value).SingleOrDefault();
 
-                if(string.IsNullOrWhiteSpace(companyName))
+                if(string.IsNullOrWhiteSpace(navigationHeaderModel.Company.Name))
                 {
-                    companyName = "Flight Schedule Management";
+                    navigationHeaderModel.Company.Name = "Flight Schedule Management";
                 }
 
-                profileImageURL = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
+                navigationHeaderModel.User.ImageName = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
                            .Select(c => c.Value).SingleOrDefault();
 
                 isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
@@ -106,16 +90,22 @@ namespace Web.UI.Shared
 
                 if (ActivePage != null)
                 {
-                    SelectedItem = ActivePage;
+                    selectedItem = ActivePage;
                 }
             }
+        }
+
+        public void ChangeLoaderVisibility(bool visible)
+        {
+            isDisplayPageLoader = visible;
+            StateHasChanged();
         }
 
         public async Task NavigateToPageAsync(MenuItem item)
         {
             try
             {
-                SelectedItem = item;
+                selectedItem = item;
 
                 if (item.Controller.ToLower() == Module.Company.ToString().ToLower())
                 {
@@ -123,7 +113,7 @@ namespace Web.UI.Shared
                 }
                 else
                 {
-                    NavigationManager.NavigateTo("/" + SelectedItem.Controller);
+                    NavigationManager.NavigateTo("/" + selectedItem.Controller);
                 }
             }
             catch (Exception ex)
@@ -134,11 +124,11 @@ namespace Web.UI.Shared
 
         public string GetSelectedItemClass(MenuItem item)
         {
-            if (SelectedItem == null)
+            if (selectedItem == null)
             {
                 return string.Empty;
             }
-            return SelectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "selected-nav-item" : "";
+            return selectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "selected-nav-item" : "";
         }
 
         async Task OpenCompanyDetailPage(int id)

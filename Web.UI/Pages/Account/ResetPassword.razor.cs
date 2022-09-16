@@ -25,7 +25,7 @@ namespace Web.UI.Pages.Account
 
         protected override Task OnInitializedAsync()
         {
-            isDisplayLoader = true;
+            ChangeLoaderVisibilityAction(true);
             return base.OnInitializedAsync();
         }
 
@@ -57,7 +57,7 @@ namespace Web.UI.Pages.Account
                     ManageResponse();
                 }
 
-                isDisplayLoader = false;
+                 ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
 

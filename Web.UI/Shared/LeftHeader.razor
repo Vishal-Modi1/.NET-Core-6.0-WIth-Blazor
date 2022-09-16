@@ -1,12 +1,10 @@
-﻿<div class="left-header d-flex align-items-center justify-content-between">
-    <div class="ms-2">@companyName</div>
-    <TopHorizontalHeader userName="@userName" userProfileImage="@userProfileImage" ></TopHorizontalHeader>
+﻿@using Web.UI.Models.Shared
+<div class="left-header d-flex align-items-center justify-content-between">
+    <div class="ms-2">@navigationHeaderModel.Company.Name</div>
+    <TopHorizontalHeader navigationHeaderModel="@navigationHeaderModel" ></TopHorizontalHeader>
 </div>
 
 @code {
 
-    [Parameter] public string userName { get; set; }
-    [Parameter] public string userProfileImage { get; set; }
-    [Parameter] public string companyName { get; set; }
-
+    [Parameter] public NavigationHeaderModel navigationHeaderModel { get; set; } 
 }

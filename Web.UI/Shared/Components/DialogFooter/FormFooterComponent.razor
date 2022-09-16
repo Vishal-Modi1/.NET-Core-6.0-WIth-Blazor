@@ -2,7 +2,7 @@
 {
     <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!IsSubmitButtonLoading)">
         Save
-        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
+        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
         </TelerikLoader>
 
     </TelerikButton>
@@ -11,7 +11,7 @@ else
 {
     <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!IsSubmitButtonLoading)">
         Update
-        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
+        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@IsSubmitButtonLoading">
         </TelerikLoader>
 
     </TelerikButton>

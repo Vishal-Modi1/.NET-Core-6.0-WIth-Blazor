@@ -24,7 +24,7 @@ namespace Web.UI.Pages.Account
 
         protected override Task OnInitializedAsync()
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
             return base.OnInitializedAsync();
         }
 
@@ -74,7 +74,7 @@ namespace Web.UI.Pages.Account
 
                 }
 
-                isDisplayLoader = false;
+                 ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
         }
@@ -139,7 +139,7 @@ namespace Web.UI.Pages.Account
 
         async Task SaveData()
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
             base.StateHasChanged();
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -187,7 +187,7 @@ namespace Web.UI.Pages.Account
                 await ManageUserCreateResponseAsync(response);
             }
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
         }
 

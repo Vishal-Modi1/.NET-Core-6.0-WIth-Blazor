@@ -21,7 +21,8 @@ namespace Web.UI.Pages.Company.DetailsView
 
         protected override async Task OnInitializedAsync()
         {
-            isDisplayLoader = true;
+            ChangeLoaderVisibilityAction(true);
+
             companyData = new CompanyVM();
             companyData.PrimaryServicesList = new List<DropDownValues>();
 
@@ -80,8 +81,7 @@ namespace Web.UI.Pages.Company.DetailsView
                 isAllowToEdit = true;
             }
 
-            isDisplayLoader = false;
-            base.StateHasChanged();
+            ChangeLoaderVisibilityAction(false);
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
@@ -132,7 +132,7 @@ namespace Web.UI.Pages.Company.DetailsView
                 return;
             }
 
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             //byte[] bytes = Convert.FromBase64String(companyData.LogoPath.Substring(companyData.LogoPath.IndexOf(",") + 1));
 
@@ -158,7 +158,7 @@ namespace Web.UI.Pages.Company.DetailsView
 
             }
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
         }
 
         private void ManageFileUploadResponse(CurrentResponse response, bool isCloseDialog, byte[] byteArray)

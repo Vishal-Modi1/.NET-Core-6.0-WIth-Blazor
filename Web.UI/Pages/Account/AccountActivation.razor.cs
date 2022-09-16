@@ -19,7 +19,7 @@ namespace Web.UI.Pages.Account
         {
             if (firstRender)
             {
-                isDisplayLoader = true;
+                ChangeLoaderVisibilityAction(true);
                 StringValues link;
 
                 var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
@@ -41,7 +41,7 @@ namespace Web.UI.Pages.Account
                     ShowError = false;
                 }
 
-                isDisplayLoader = false;
+                ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
         }

@@ -254,7 +254,7 @@
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="@GoBack" ThemeColor="info" Class="btn k-btn-primary"> Previous </TelerikButton>
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="@GotoSave" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
                         Save
-                        <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
                         </TelerikLoader>
                     </TelerikButton>
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="@RedirectToLogin" ThemeColor="secondary" Class="btn k-btn-secondary"> Cancel </TelerikButton>

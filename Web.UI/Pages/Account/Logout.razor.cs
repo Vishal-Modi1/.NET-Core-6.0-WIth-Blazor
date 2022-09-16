@@ -7,6 +7,8 @@ namespace Web.UI.Pages.Account
     {
         protected override async Task OnInitializedAsync()
         {
+            ChangeLoaderVisibilityAction(true);
+
             var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("SignOut", "/");
 

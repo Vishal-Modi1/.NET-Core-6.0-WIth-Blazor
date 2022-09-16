@@ -12,12 +12,12 @@ namespace Web.UI.Pages.Administration
         {
             if (firstRender)
             {
-                isDisplayLoader = true;
+                 ChangeLoaderVisibilityAction(true);
              
                 menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);
                 menuItems = menuItems.Where(p => p.IsAdministrationModule == true).ToList();
 
-                isDisplayLoader = false;
+                 ChangeLoaderVisibilityAction(false);
                 telerikTabStrip.ActiveTabIndex = 4;
                 
                 base.StateHasChanged();

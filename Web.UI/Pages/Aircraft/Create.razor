@@ -258,13 +258,13 @@
                             @if (aircraftData.Id == 0)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
-                                    Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
+                                    Next <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
                                 </TelerikButton>
                             }
                             else
                             {
                                 <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
-                                    Next <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
+                                    Next <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton" />
                                 </TelerikButton>
                             }
                             <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(true)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">

@@ -79,7 +79,7 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task LoadDataAsync()
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currentDate, currentView, multiDayDaysCount);
 
@@ -142,7 +142,7 @@ namespace Web.UI.Pages.Scheduler
                 schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
             }
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
         }
 
@@ -255,7 +255,7 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task OpenAppointmentDialog(SchedulerVM args)
         {
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, args.Id);
@@ -284,7 +284,7 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.isDisplayMainForm = true;
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
             isDisplayPopup = true;
             popupTitle = "Schedule Appointment";
         }

@@ -2,14 +2,10 @@
 using DataModels.Constants;
 using DataModels.VM.Common;
 using DataModels.VM.Document;
-using Web.UI.Extensions;
 using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Web;
 using Telerik.Blazor.Components;
-using DataModels.Enums;
 
 namespace Web.UI.Pages.Document
 {
@@ -62,12 +58,12 @@ namespace Web.UI.Pages.Document
         async void OnChange(int value)
         {
             documentData.CompanyId = value;
-            isDisplayLoader = true;
+             ChangeLoaderVisibilityAction(true);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
 
-            isDisplayLoader = false;
+             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
         }
 

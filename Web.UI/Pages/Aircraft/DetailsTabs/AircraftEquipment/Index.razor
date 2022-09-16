@@ -7,7 +7,7 @@
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
         {
              <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftEquipmentCreateDialog(new AircraftEquipmentDataVM())" Enabled="@(!isBusyAddButton)">
-                            <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
                         </TelerikButton>
@@ -40,7 +40,7 @@
                            ThemeColor="success" Enabled=!data.IsLoadingEditButton>
 
                         <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                        <TelerikLoader Class="loader-indicator" Size="sm" ThemeColor="light"
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="data.IsLoadingEditButton">
                         </TelerikLoader>
 
