@@ -231,21 +231,16 @@
                         <span class="d-flex justify-content-center">
                             <div class="row">
                                 <div class="col-12">
-                                    @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
-                                    {
-                                        <CustomIcons IconName="start-end-plain-time" />
-                                    }
-                                    else {
                                         <style type="text/css">
-                                            .small-svg-start-end-plain-time{
-                                                width: 100%!important;
+                                        .small-svg svg {
+                                                width: 210px !important;
                                                 height:auto!important;
                                             }
                                         </style>
                                         <span class="small-svg">
                                             <CustomIcons IconName="start-end-plain-time" />
                                         </span>
-                                    } 
+                                    
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
                                     @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
@@ -289,22 +284,15 @@
                         <span class="d-flex justify-content-center">
                             <div class="row">
                                 <div class="col-12">
-                                    
-                                    @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
-                                    {
-                                        <CustomIcons IconName="dummy-plain" />
-                                    }
-                                    else {
-                                        <style type="text/css">
-                                            .small-svg-dummy-plain{
-                                                width: 100%!important;
+                                      <style type="text/css">
+                                            .small-svg svg{
+                                            width: 210px !important;
                                                 height:auto!important;
                                             }
                                         </style>
                                         <span class="small-svg">
                                             <CustomIcons  IconName="dummy-plain" />
                                         </span>
-                                    } 
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
                                 @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){

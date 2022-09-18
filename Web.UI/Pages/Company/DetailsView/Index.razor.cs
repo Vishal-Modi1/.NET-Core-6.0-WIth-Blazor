@@ -89,9 +89,9 @@ namespace Web.UI.Pages.Company.DetailsView
             try
             {
                 string fileType = Path.GetExtension(e.File.Name);
-                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> supportedImagesFormatsList = supportedImagesFormat?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
-                if (!supportedImagesFormatsList.Contains(fileType))
+                if (supportedImagesFormatsList is not null && !supportedImagesFormatsList.Contains(fileType))
                 {
                     uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
                     return;

@@ -171,6 +171,7 @@ namespace Web.UI.Pages.Document
                     if (file.Size > maxFileSize)
                     {
                         errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
+                        
                         uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, errorMessage);
                         isFileUploadHasError = true;
                         return;
