@@ -696,7 +696,7 @@ else
 
                             </td>
 
-                            <td class="d-flex align-items-center">
+                            <td class="">
                                 @if (aircraftScheduleHobbsTime == null)
                                 {
                                     <TelerikNumericTextBox Placeholder="Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
@@ -738,8 +738,7 @@ else
                 </tbody>
             </table>
             <div>
-                <div class="row d-flex justify-content-end">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-end">
                         <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mr-1" Enabled="@(!isBusySubmitButton)">
                             Check In
                             <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
@@ -752,7 +751,6 @@ else
                             Cancel
                         </TelerikButton>
                     </div>
-                </div>
             </div>
 
         </FormItems>
