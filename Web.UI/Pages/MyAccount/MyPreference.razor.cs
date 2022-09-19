@@ -13,7 +13,7 @@ namespace Web.UI.Pages.MyAccount
         public List<UserPreferenceVM> UserPreferencesList { get; set; }
         UserPreferenceVM userPreferenceVM = new UserPreferenceVM();
 
-        EditContext preferenceForm; 
+        EditContext preferenceForm;
 
         protected override async Task OnInitializedAsync()
         {
@@ -34,35 +34,29 @@ namespace Web.UI.Pages.MyAccount
 
         public async Task GetPreferenceValues(int values)
         {
-             ChangeLoaderVisibilityAction(true);
-
-            var data = preferenceForm.Validate();
+            ChangeLoaderVisibilityAction(true);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             userPreferenceVM.PreferenceTypeId = values;
-         //   if (values == (int)PreferenceType.ScheduleActivityType)
-        //    {
-                userPreferenceVM.ActivityTypeList = await AircraftSchedulerService.ListActivityTypeDropDownValues(dependecyParams);
-                var activityTypeData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.ScheduleActivityType).FirstOrDefault();
+            userPreferenceVM.ActivityTypeList = await AircraftSchedulerService.ListActivityTypeDropDownValues(dependecyParams);
+            var activityTypeData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.ScheduleActivityType).FirstOrDefault();
 
-                if (activityTypeData != null)
-                {
-                    userPreferenceVM.ActivityIds = userPreferenceVM.ActivityTypeList.Where(p => activityTypeData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => Convert.ToInt32(p.Id)).ToList();
-                }
-       //     }
-        //    else if (values == (int)PreferenceType.Aircraft)
-       //     {
-                userPreferenceVM.AircraftList = await AircraftService.ListDropdownValues(dependecyParams);
-                var aircraftData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
+            if (activityTypeData != null)
+            {
+                userPreferenceVM.ActivityIds = userPreferenceVM.ActivityTypeList.Where(p => activityTypeData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => Convert.ToInt32(p.Id)).ToList();
+            }
 
-                if (aircraftData != null)
-                {
-                    userPreferenceVM.AircraftIds = userPreferenceVM.AircraftList.Where(p => aircraftData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p=>p.Id).ToList();
-                }
-        //    }
+            userPreferenceVM.AircraftList = await AircraftService.ListDropdownValues(dependecyParams);
+            var aircraftData = UserPreferencesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
 
-             ChangeLoaderVisibilityAction(false);
+            if (aircraftData != null)
+            {
+                userPreferenceVM.AircraftIds = userPreferenceVM.AircraftList.Where(p => aircraftData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => p.Id).ToList();
+            }
+
+            preferenceForm.Validate();
+            ChangeLoaderVisibilityAction(false);
         }
 
         public async Task Submit()
@@ -77,9 +71,9 @@ namespace Web.UI.Pages.MyAccount
             {
                 foreach (long value in userPreferenceVM.AircraftIds)
                 {
-                    var aircraft = userPreferenceVM.AircraftList.Where(p=>p.Id == value).FirstOrDefault();
+                    var aircraft = userPreferenceVM.AircraftList.Where(p => p.Id == value).FirstOrDefault();
 
-                    if(aircraft == null)
+                    if (aircraft == null)
                     {
                         continue;
                     }

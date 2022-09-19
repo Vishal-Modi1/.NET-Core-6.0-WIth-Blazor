@@ -1,10 +1,13 @@
 ﻿@using DataModels.VM.AircraftEquipment;
 @using DataModels.Enums;
 
-<div class="row mb-4">
-    <div class="col">
-        <h2 style="float:left">Manage Aircraft Equipment Details</h2>
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
+<div class="row">
+    <div class="col-12 d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Manage Aircraft Equipment Details" Type="AdministrationTitle" />
+        </div>
+        <div>
+           @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName) && isAllowToEdit)
         {
              <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftEquipmentCreateDialog(new AircraftEquipmentDataVM())" Enabled="@(!isBusyAddButton)">
                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
@@ -12,7 +15,14 @@
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
                         </TelerikButton>
         }
+        </div>
     </div>
+</div>
+
+<div class="row my-2">
+        <div class="col-md-4">
+            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftEquipmentDataVM>(value, grid) )" />
+        </div>
 </div>
 
 <TelerikGrid TItem="AircraftEquipmentDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -70,13 +80,11 @@
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                <Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Create AircraftEquipmentsVM=@aircraftEquipmentsVM CloseDialogCallBack="@CloseDialog">
+                <Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Create aircraftEquipmentsVM=@aircraftEquipmentsVM CloseDialogCallBack="@CloseDialog">
                 </Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Create>
-
             }
             else if(operationType == OperationType.Delete)
             {
-                //Delete popup
                 <div>
                     <p class="mb-4">Are you sure, You want to delete <b> @aircraftEquipmentsVM.Item </b>?</p>
                     <div class="row" style="text-align:right">

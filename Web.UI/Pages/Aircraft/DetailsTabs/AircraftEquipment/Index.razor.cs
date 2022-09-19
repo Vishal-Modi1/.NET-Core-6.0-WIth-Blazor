@@ -121,6 +121,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
             }
 
             isDisplayPopup = true;
+            base.StateHasChanged();
         }
 
         void CloseDialog(bool reloadGrid)

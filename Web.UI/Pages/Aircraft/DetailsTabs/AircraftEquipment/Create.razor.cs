@@ -13,9 +13,21 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
+        public int aircraftTTInstall, partTTInstall = 0;
+
+        protected override Task OnInitializedAsync()
+        {
+            aircraftTTInstall = aircraftEquipmentsVM.AircraftTTInstall.GetValueOrDefault();
+            partTTInstall = aircraftEquipmentsVM.PartTTInstall.GetValueOrDefault();
+            return base.OnInitializedAsync();
+        }
+
         public async Task Submit()
         {
             isBusySubmitButton = true;
+
+            aircraftEquipmentsVM.AircraftTTInstall = aircraftTTInstall;
+            aircraftEquipmentsVM.PartTTInstall = partTTInstall;
 
             string timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 

@@ -25,9 +25,9 @@ namespace Web.UI.Pages.Aircraft
         AircraftVM aircraftData;
 
         string moduleName = "Aircraft";
-        bool isDisplayGridView = false;
+        bool isDisplayGridView = true;
         int companyId; int listViewPageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
-
+        
         protected override async Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);
@@ -179,6 +179,7 @@ namespace Web.UI.Pages.Aircraft
         void ChangeView(bool isGridView)
         {
             isDisplayGridView = isGridView;
+
         }
 
         async Task OpenDeleteDialog(AircraftDataVM aircraftDetails)

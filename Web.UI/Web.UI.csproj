@@ -1,37 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Shared\Styles\EmptyLayout.scss" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="compilerconfig.json" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-	<PackageReference Include="Telerik.UI.for.Blazor.Trial">
-		  <Version>3.5.0</Version>
-	</PackageReference>
+    <PackageReference Include="Telerik.UI.for.Blazor">
+      <Version>3.5.0</Version>
+    </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\DataModels\DataModels.csproj" />
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Update="appsettings.Development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -171,22 +164,17 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
     <UpToDateCheckInput Remove="Shared\EmptyLayout.razor" />
   </ItemGroup>
-
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Shared\EmptyLayout.razor" />
     <_ContentIncludedByDefault Remove="Shared\Error.razor" />
   </ItemGroup>
-
   <ItemGroup>
     <UpToDateCheckInput Remove="Shared\Error.razor" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Shared\Styles\EmptyLayout.scss" />
   </ItemGroup>
-
 </Project>

@@ -30,7 +30,6 @@
                                  ValueChanged="@( (int value) => GetPreferenceValues(value) )">
                 </TelerikComboBox>
 
-                @*TODO: Pending to add validations*@
                 <TelerikValidationMessage For="@(() => userPreferenceVM.PreferenceTypeId)"></TelerikValidationMessage>
             </div>
         </div>
@@ -43,7 +42,6 @@
                 </div>
                 <div class="col-md-4">
 
-                    @*TODO: Pending to add validations*@
                     <TelerikMultiSelect Data="@userPreferenceVM.AircraftList"
                                     @bind-Value="@userPreferenceVM.AircraftIds" AutoClose="false" Placeholder="Select aircrafts"
                                     TextField="Name" ValueField="Id">
@@ -63,7 +61,7 @@
                 </div>
                 <div class="col-md-4">
 
-                    <TelerikMultiSelect Data="@userPreferenceVM.ActivityTypeList" 
+                    <TelerikMultiSelect Data="@userPreferenceVM.ActivityTypeList"
                                     @bind-Value="@userPreferenceVM.ActivityIds" AutoClose="false" Placeholder="Select activities"
                                     TextField="Name" ValueField="Id">
                     </TelerikMultiSelect>

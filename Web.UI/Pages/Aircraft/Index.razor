@@ -19,9 +19,9 @@
     }
 
     .k-listview-content {
-       /* display: grid;
-        grid-template-columns: repeat(auto-fill, 180px);
-        gap: 30px 20px;*/
+        /* display: grid;
+                    grid-template-columns: repeat(auto-fill, 180px);
+                    gap: 30px 20px;*/
     }
 
     .k-card {
@@ -55,8 +55,8 @@
     .custom-aircraft-item {
         box-sizing: border-box;
         /* width: 100%;
-                    height: 100%;
-                    padding: 30px;*/
+                                height: 100%;
+                                padding: 30px;*/
         background: #FEFEFE;
         box-shadow: 4.70946px 4.70946px 24.4892px rgb(0 0 0 / 18%);
         border-radius: 7.53514px;
@@ -70,7 +70,7 @@
         max-height: 135px;
         width: 100%;
         height: 135px;
-        padding:4px;
+        padding: 4px;
     }
 
     .active-airplane {
@@ -94,44 +94,64 @@
         z-index: 1;
         background-color: #b1b1b138;
     }
+
     .listview-item {
         display: inline-block;
         margin: 10px;
         padding: 10px;
         box-shadow: 4.70946px 4.70946px 24.4892px rgba(0, 0, 0, 0.1);
         border-radius: 7.53514px;
-        cursor:pointer !important;
+        cursor: pointer !important;
     }
-@@media (min-width:320px)  { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+
+    @@media (min-width:320px) { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
         .listview-item {
-        width: 100%;
+            width: 100%;
+        }
     }
-}
-@@media (min-width:480px)  { /* smartphones, Android phones, landscape iPhone */ 
-    .listview-item {
-        width: 100%; 
+
+    @@media (min-width:480px) { /* smartphones, Android phones, landscape iPhone */
+        .listview-item {
+            width: 100%;
+        }
     }
-}
-@@media (min-width:600px)  { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
-    .listview-item {
-        width: 40%; 
+
+    @@media (min-width:600px) { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+        .listview-item {
+            width: 40%;
+        }
     }
-}
-@@media (min-width:801px)  { /* tablet, landscape iPad, lo-res laptops ands desktops */
-    .listview-item {
-        width: 22%; 
+
+    @@media (min-width:801px) { /* tablet, landscape iPad, lo-res laptops ands desktops */
+        .listview-item {
+            width: 22%;
+        }
     }
-}
-@@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
-    .listview-item {
-        width: 22%; 
+
+    @@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
+        .listview-item {
+            width: 22%;
+        }
     }
-}
-@@media (min-width:1281px) { /* hi-res laptops and desktops */ 
-    .listview-item {
-        width: 22%; 
+
+    @@media (min-width:1281px) { /* hi-res laptops and desktops */
+        .listview-item {
+            width: 22%;
+        }
     }
-}
+
+    .buttonViews {
+        border: none;
+        background-color: none;
+        height: 10px;
+        width: 50px;
+        background: transparent;
+    }
+
+     .buttonViews:focus {
+       
+        background: transparent;
+    }
 </style>
 
 <PageTitle>Aircraft | Fly Manager </PageTitle>
@@ -171,134 +191,259 @@
         <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
 </div>
-<TelerikTabStrip>
+@*<TelerikTabStrip>
 
     <TabStripTab>
-        <HeaderTemplate>
-            <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
-                <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
+    <HeaderTemplate>
+    <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
+    <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
+    </div>
+    </HeaderTemplate>
+    <Content>
+
+
+    <TelerikListView @ref="dataListView" Pageable="true"
+    Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
+    OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
+
+    <ListViewSettings>
+    <GridPagerSettings InputType="PagerInputType.Input"
+    PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
+
+    </GridPagerSettings>
+    </ListViewSettings>
+
+    <Template>
+    <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))" >
+    <div class="k-card">
+    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+    <div class='status-circle' style="background-color:@context.Indicator"> </div>
+    <div class="k-card-body d-flex justify-content-center">
+    <h4 class="k-card-title">@context.TailNo</h4>
+    <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
+    </div>
+    </div>
+    </div>
+
+    </Template>
+    </TelerikListView>
+    </Content>
+    </TabStripTab>
+
+    <TabStripTab>
+    <HeaderTemplate>
+
+    <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
+    <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
+    </div>
+    </HeaderTemplate>
+    <Content>
+    <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
+    Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+
+    <GridSettings>
+    <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+    </GridSettings>
+
+    <GridColumns>
+
+    <GridColumn Context="dataItem" Title="Photo" Sortable="true">
+    <Template>
+    @{
+    var data = dataItem as AircraftDataVM;
+
+    <div class="icon-container" style="height: 80%;width: 100%;">
+    <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
+    src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+
+    <div class='status-circle' style="background-color:@data.Indicator"> </div>
+    </div>
+    }
+
+    </Template>
+    </GridColumn>
+
+    <GridColumn Context="dataItem" Title="Name" Sortable="true">
+    <Template>
+    @{
+    var data = dataItem as AircraftDataVM;
+
+    <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
+    }
+
+    </Template>
+    </GridColumn>
+
+    <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make" Sortable="true"></GridColumn>
+    <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model" Sortable="true"></GridColumn>
+    <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category" Sortable="true"></GridColumn>
+
+    <GridColumn Context="dataItem" Title="Actions" Sortable="true">
+    <Template>
+    @{
+    var data = dataItem as AircraftDataVM;
+
+    <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
+    ThemeColor="success">
+    <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
+    </TelerikButton>
+
+    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+    {
+    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
+    ThemeColor="success" Enabled=!data.IsLoadingEditButton>
+
+    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+    Visible="data.IsLoadingEditButton">
+    </TelerikLoader>
+
+    </TelerikButton>
+    }
+
+    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+    {
+    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
+    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+    </TelerikButton>
+    }
+    }
+
+    </Template>
+    </GridColumn>
+
+    </GridColumns>
+    </TelerikGrid>
+    </Content>
+    </TabStripTab>
+
+    </TelerikTabStrip>*@
+
+<hr style="border:#EBECF3" />
+<div class="w-100" style="text-align:right">
+   
+    <TelerikButton OnClick="@(()=> ChangeView(true))" Class="buttonViews">
+        <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == true ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == true ?  "#0064D4" : "white")"></CustomIcons>
+    </TelerikButton>
+
+    <TelerikButton OnClick="@(()=> ChangeView(false))" Class="buttonViews">
+        <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView == false ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == false ?  "#0064D4" : "white")"></CustomIcons>
+    </TelerikButton>
+
+     <div class="col-md-3" style="float:right;margin-top:-7px">
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
+    </div>
+</div>
+<hr style="border:#EBECF3" />
+
+@if (isDisplayGridView)
+{
+    <TelerikListView @ref="dataListView" Pageable="true"
+                 Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
+                 OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
+
+        <ListViewSettings>
+            <GridPagerSettings InputType="PagerInputType.Input"
+                           PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
+
+            </GridPagerSettings>
+        </ListViewSettings>
+
+        <Template>
+            <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))">
+                <div class="k-card">
+                    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+                    <div class='status-circle' style="background-color:@context.Indicator"> </div>
+                    <div class="k-card-body d-flex justify-content-center">
+                        <h4 class="k-card-title">@context.TailNo</h4>
+                        <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
+                    </div>
+                </div>
             </div>
-        </HeaderTemplate>
-        <Content>
 
+        </Template>
+    </TelerikListView>
+}
+else
+{
+    <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-            <TelerikListView @ref="dataListView" Pageable="true"
-                             Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
-                             OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
+        <GridSettings>
+            <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+        </GridSettings>
 
-                <ListViewSettings>
-                    <GridPagerSettings InputType="PagerInputType.Input"
-                                       PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
+        <GridColumns>
 
-                    </GridPagerSettings>
-                </ListViewSettings>
-
+            <GridColumn Context="dataItem" Title="Photo" Sortable="true">
                 <Template>
-                            <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))" >
-                                <div class="k-card">
-                                    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-                                  <div class='status-circle' style="background-color:@context.Indicator"> </div>
-                                  <div class="k-card-body d-flex justify-content-center">
-                                        <h4 class="k-card-title">@context.TailNo</h4>
-                                        <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
-                                    </div>
-                                </div>
-                            </div>
-    
+                    @{
+                        var data = dataItem as AircraftDataVM;
+
+                        <div class="icon-container" style="height: 80%;width: 100%;">
+                            <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
+                             src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+
+                            <div class='status-circle' style="background-color:@data.Indicator"> </div>
+                        </div>
+                    }
+
                 </Template>
-            </TelerikListView>
-        </Content>
-    </TabStripTab>
+            </GridColumn>
 
-    <TabStripTab>
-        <HeaderTemplate>
-           
-            <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
-                <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-            </div>
-        </HeaderTemplate>
-        <Content>
-            <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
-                         Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+            <GridColumn Context="dataItem" Title="Name" Sortable="true">
+                <Template>
+                    @{
+                        var data = dataItem as AircraftDataVM;
 
-                <GridSettings>
-                    <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-                </GridSettings>
+                        <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
+                    }
 
-                <GridColumns>
+                </Template>
+            </GridColumn>
 
-                    <GridColumn Context="dataItem" Title="Photo" Sortable="true">
-                        <Template>
-                            @{
-                                var data = dataItem as AircraftDataVM;
+            <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make" Sortable="true"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model" Sortable="true"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category" Sortable="true"></GridColumn>
 
-                                    <div class="icon-container" style="height: 80%;width: 100%;">
-                                        <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
-                                             src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+            <GridColumn Context="dataItem" Title="Actions" Sortable="true">
+                <Template>
+                    @{
+                        var data = dataItem as AircraftDataVM;
 
-                                        <div class='status-circle' style="background-color:@data.Indicator"> </div>
-                                    </div>
-                            }
+                        <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
+                               ThemeColor="success">
+                            <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
+                        </TelerikButton>
 
-                        </Template>
-                    </GridColumn>
+                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                        {
+                            <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
+                               ThemeColor="success" Enabled=!data.IsLoadingEditButton>
 
-                    <GridColumn Context="dataItem" Title="Name" Sortable="true">
-                        <Template>
-                            @{
-                                var data = dataItem as AircraftDataVM;
+                                <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                                   Visible="data.IsLoadingEditButton">
+                                </TelerikLoader>
 
-                                    <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
-                            }
+                            </TelerikButton>
+                        }
 
-                        </Template>
-                    </GridColumn>
+                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                        {
+                            <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
+                                <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                            </TelerikButton>
+                        }
+                    }
 
-                    <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make" Sortable="true"></GridColumn>
-                    <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model" Sortable="true"></GridColumn>
-                    <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category" Sortable="true"></GridColumn>
+                </Template>
+            </GridColumn>
 
-                    <GridColumn Context="dataItem" Title="Actions" Sortable="true">
-                        <Template>
-                            @{
-                                var data = dataItem as AircraftDataVM;
+        </GridColumns>
+    </TelerikGrid>
 
-                                    <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
-                                           ThemeColor="success">
-                                        <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
-                                    </TelerikButton>
-
-                                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
-                                {
-                                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
-                                           ThemeColor="success" Enabled=!data.IsLoadingEditButton>
-
-                                            <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
-                                               Visible="data.IsLoadingEditButton">
-                                            </TelerikLoader>
-
-                                        </TelerikButton>
-                                }
-
-                                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
-                                {
-                                        <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
-                                            <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                                        </TelerikButton>
-                                }
-                            }
-
-                        </Template>
-                    </GridColumn>
-
-                </GridColumns>
-            </TelerikGrid>
-        </Content>
-    </TabStripTab>
-
-</TelerikTabStrip>
-
+}
 
 @if (isDisplayPopup)
 {
