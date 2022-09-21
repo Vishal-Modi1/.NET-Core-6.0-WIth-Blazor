@@ -26,16 +26,22 @@ namespace Web.UI.Shared
         {
             instance.HideAll();
 
-            message = new NotificationModel().Build(Notification.ThemeColor.Info, messageText);
-            instance.Show(message);
+            if (!string.IsNullOrEmpty(messageText))
+            {
+                message = new NotificationModel().Build(Notification.ThemeColor.Info, messageText);
+                instance.Show(message);
+            }
         }
 
         public void DisplaySuccessNotification(TelerikNotification instance, string messageText)
         {
             instance.HideAll();
 
-            message = new NotificationModel().Build(Notification.ThemeColor.Success, messageText);
-            instance.Show(message);
+            if (!string.IsNullOrEmpty(messageText))
+            {
+                message = new NotificationModel().Build(Notification.ThemeColor.Success, messageText);
+                instance.Show(message);
+            }
         }
 
         public void DisplayErrorNotification(TelerikNotification instance)
@@ -50,8 +56,11 @@ namespace Web.UI.Shared
         {
             instance.HideAll();
 
-            message = new NotificationModel().Build(Notification.ThemeColor.Error, messageText);
-            instance.Show(message);
+            if(!string.IsNullOrEmpty(messageText))
+            {
+                message = new NotificationModel().Build(Notification.ThemeColor.Error, messageText);
+                instance.Show(message);
+            }
         }
     }
 }
