@@ -187,6 +187,9 @@ namespace FSM.Blazor.Pages.UserRolePermission
             isDisplayPopup = true;
             operationType = OperationType.ActivateDeActivateInBulk;
 
+            userRolePermissionDataVM = new UserRolePermissionDataVM();
+            userRolePermissionDataVM.IsAllowed = value;
+
             message = "Are you sure you want to grant the permissions for all selected modules and roles ?";
             popupTitle = "Grant Permissions";
 

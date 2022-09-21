@@ -1,0 +1,73 @@
+﻿@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Web.UI
+@using Web.UI.Shared
+@using Telerik.Blazor
+@using Telerik.Blazor.Components
+@using Microsoft.Extensions.Caching.Memory
+
+@*Data Services*@
+@using Web.UI.Data.User
+@using Web.UI.Data.Company
+@using Web.UI.Data.Common
+@using Web.UI.Data.Account
+@using Web.UI.Data.InviteUser
+@using Web.UI.Data.InstructorType
+@using Web.UI.Data.UserRolePermission
+@using Web.UI.Data.Location
+@using Web.UI.Data.AircraftMake
+@using Web.UI.Data.AircraftModel
+@using Web.UI.Data.Timezone
+@using Web.UI.Data.Document
+@using Web.UI.Data.AircraftSchedule
+@using Web.UI.Data.Reservation
+@using Web.UI.Data.Aircraft
+@using Web.UI.Data.AircraftStatus
+@using Web.UI.Data.Aircraft.AircraftEquipment
+@using Web.UI.Data.MyAccount
+
+@using Web.UI.Shared.Components.DialogFooter;
+@using Web.UI.Shared.Components.CustomPopup;
+@using Web.UI.Shared.Components.TelerikGridPager;
+@using Web.UI.Shared.Components.CustomIcon
+@using Web.UI.Shared.Components.FontLabel
+@using Web.UI.Shared.Components.Validation;
+@using Web.UI.Shared.Components;
+
+@using static Telerik.Blazor.ThemeConstants;
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@inject IHttpClientFactory HttpClient 
+@inject IMemoryCache MemoryCache 
+@inject IJSRuntime JSRuntime
+@inject IHttpContextAccessor httpContextAccessor
+
+@inject UserService UserService 
+@inject CompanyService CompanyService
+@inject MenuService MenuService
+@inject AccountService AccountService
+@inject InviteUserService InviteUserService
+@inject InstructorTypeService InstructorTypeService
+@inject UserRolePermissionService UserRolePermissionService
+@inject LocationService LocationService
+@inject AircraftMakeService AircraftMakeService
+@inject AircraftModelService AircraftModelService
+@inject TimezoneService TimezoneService
+@inject DocumentService DocumentService
+@inject AircraftSchedulerService AircraftSchedulerService
+@inject ReservationService ReservationService
+@inject AircraftService AircraftService
+@inject AircraftSchedulerDetailService AircraftSchedulerDetailService
+@inject AircraftStatusService AircraftStatusService
+@inject AircraftEquipmentService AircraftEquipmentService
+@inject MyAccountService MyAccountService
+
+@inherits BaseClass

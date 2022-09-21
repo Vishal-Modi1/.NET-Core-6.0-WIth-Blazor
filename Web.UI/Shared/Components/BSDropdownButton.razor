@@ -1,0 +1,27 @@
+﻿<div class="dropdown ">
+    <button class="btn btn-secondary @(styleClass)" type="button" id="dropdownMenuButton"
+            aria-haspopup="true" aria-expanded="false" @onclick=@(() => ToggleShowMenu())>
+        <div class="">
+             <img src='@userProfileImage'
+                         onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                          style="height: 40px;width: 40px;border-radius:50px" />
+
+            <span id="name" class="mx-2">@userName</span>
+            <CustomIcons IconName="arrow-down" PrimaryColor="White"></CustomIcons>
+        </div>
+    </button>
+ 
+    @if (BSDropdownItemList.Count > 0)
+    {
+        <div class="dropdown-menu ms-2 @(ShowMenuItem ? "d-block":"")" aria-labelledby="dropdownMenuButton">
+            @foreach (var item in BSDropdownItemList)
+            {
+                <a class="dropdown-item" href="@(item.URL)" @onclick=@(() => ToggleShowMenu())>@(item.DisplayValue)</a>
+            }
+        </div>
+        @if (ShowMenuItem) {
+            <div class="modal-backdrop fade show" @onclick=@(() => ToggleShowMenu())></div>
+        }
+    }
+    
+</div> 

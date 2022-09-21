@@ -73,3 +73,25 @@
 /Utilities/obj
 /Utilities/bin
 /FSM.Blazor/Uploads/TempDocuments
+/FSM.Blazor_Backup_2022.08.04_10.41.21/bin/Debug/net6.0
+/FSM.Blazor_Backup_2022.08.04_10.41.21
+/Web.UI/bin/Debug/net6.0
+/Web.UI/obj
+/FSMAPI/appsettings.Production.json
+/FSM.Blazor/appsettings.Production.json
+/Web.UI/appsettings.Development.json
+/FSMAPI/appsettings.Development.json
+/.vs/VSWorkspaceState.json
+/.vs/ProjectEvaluation/flight schedule management app.projects.v2
+/.vs/ProjectEvaluation/flight schedule management app.metadata.v2
+/.vs/Flight Schedule Management App/FileContentIndex/write.lock
+/.vs/Flight Schedule Management App/FileContentIndex/read.lock
+/.vs/Flight Schedule Management App/FileContentIndex/merges/76567ba6-7719-4725-abfa-e5d7aa90eaca.vsidx
+/.vs/Flight Schedule Management App/FileContentIndex/b9c54cee-e5d6-42e3-9727-a9f2f1792601.vsidx
+/.vs/.NET-Core-6.0-WIth-Blazor/v17/.suo
+/.vs/Flight Schedule Management App/FileContentIndex/9826c109-3b5a-46f2-8c7a-f3038a8f9d89.vsidx
+/.vs
+*.png
+/Web.UI/Uploads/TempDocuments/cendien_infor_lawson_consultant_charlee (7).pdf
+/Web.UI/bin/Release/net6.0/ref
+/Web.UI/bin/Release/net6.0

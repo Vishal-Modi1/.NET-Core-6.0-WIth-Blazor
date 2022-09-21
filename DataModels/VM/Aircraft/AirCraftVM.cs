@@ -1,4 +1,6 @@
-﻿using DataModels.Entities;
+﻿using DataModels.CustomValidations;
+using DataModels.Entities;
+using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ namespace DataModels.VM.Aircraft
     {
         public long Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tail no is required")]
         [Display(Name = "Tail No")]
         public string TailNo { get; set; }
 
@@ -23,21 +25,26 @@ namespace DataModels.VM.Aircraft
         [Display(Name = "year")]
         public string Year { get; set; }
 
-        [Required]
+        [Range(1, byte.MaxValue,ErrorMessage = "Aircraft status is required")]
+        public byte AircraftStatusId { get; set; }
+
+        [Range(1, byte.MaxValue, ErrorMessage = "Aircraft make is required")]
         [Display(Name = "Make")]
         public int AircraftMakeId { get; set; }
 
-        [Required]
+        [Range(1, byte.MaxValue, ErrorMessage = "Aircraft model is required")]
         [Display(Name = "Model")]
         public int AircraftModelId { get; set; }
 
-        [Required]
+        [Range(1, byte.MaxValue, ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
         public int AircraftCategoryId { get; set; }
 
+        [RequiredRangeIf("AircraftCategoryId", (int)Enums.AircraftCategory.Airplane, 1, Double.MaxValue, "Class is required")]
         [Display(Name = "Class")]
         public Nullable<int> AircraftClassId { get; set; }
 
+        [RequiredRangeIf("AircraftCategoryId", (int)Enums.AircraftCategory.FlightSimulator, 1, Double.MaxValue, "Flight Simulator is required")]
         [Display(Name = "Flight Simulator")]
         public Nullable<int> FlightSimulatorClassId { get; set; }
 
@@ -62,7 +69,7 @@ namespace DataModels.VM.Aircraft
         [Display(Name = "Company Name")]
         public string CompanyName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Company is required")]
         public int? CompanyId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -73,7 +80,6 @@ namespace DataModels.VM.Aircraft
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
 
-
         //Dropdowns list
 
         public List<DropDownValues> AircraftMakeList { get; set; }
@@ -82,13 +88,16 @@ namespace DataModels.VM.Aircraft
         public List<DropDownValues> AircraftClassList { get; set; }
         public List<DropDownValues> FlightSimulatorClassList { get; set; }
         public List<DropDownValues> Companies { get; set; }
-        public List<AircraftEquipmentTime> AircraftEquipmentTimesList { get; set; }
+        public List<DropDownValues> AircraftStatusList { get; set; }
+        public List<AircraftEquipmentTimeCreateVM> AircraftEquipmentTimesList { get; set; }
 
         public List<Entities.AircraftEquipment>  AirCraftEquipmentList { get; set; }
 
         public int TotalRecords { get; set; }
 
         public bool IsEquipmentTimesListChanged { get; set; }
+
+        public AircraftStatus AircraftStatus { get; set; }
 
     }
 }

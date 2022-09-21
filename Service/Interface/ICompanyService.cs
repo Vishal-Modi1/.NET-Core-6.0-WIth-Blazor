@@ -1,5 +1,8 @@
 ﻿using DataModels.VM.Company;
 using DataModels.VM.Common;
+using DataModels.Entities;
+using System.Linq.Expressions;
+using System;
 
 namespace Service.Interface
 {
@@ -10,11 +13,13 @@ namespace Service.Interface
         CurrentResponse ListDropDownValues();
         CurrentResponse ListAll();
         CurrentResponse Edit(CompanyVM companyVM);
-        CurrentResponse GetDetails(int id);
+        CurrentResponse FindById(int id);
         CurrentResponse Delete(int id, long deletedBy);
         CurrentResponse ListCompanyServiceDropDownValues();
         CurrentResponse UpdateImageName(int id, string logoName);
         CurrentResponse UpdateCreatedBy(int id, long createdBy);
         CurrentResponse IsCompanyExist(int id, string name);
+        CurrentResponse ListDropDownValuesByUserId(long userId);
+        Company FindByCondition(Expression<Func<Company, bool>> predicate);
     }
 }

@@ -1,0 +1,67 @@
+﻿@using DataModels.Constants
+@using Web.UI.Models.Shared
+
+<style>
+
+    .company > .k-combobox {
+        height: 35px;
+        width: 188px;
+        margin-right: 25px;
+        margin-top: -1px;
+    }
+</style>
+
+<div class="d-flex me-2">
+
+    @if (!navigationHeaderModel.IsSuperAdmin)
+    {
+        <span class="company d-flex align-items-center justify-content-center">
+            <TelerikRootComponent>
+                <TelerikComboBox Id=roleId Data="@navigationHeaderModel.CompanyList" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains" OnChange="Update"
+                             Placeholder="Change Company" ValueField="Id" @bind-Value="@navigationHeaderModel.Company.Id">
+                </TelerikComboBox>
+            </TelerikRootComponent>
+        </span>
+    }
+
+    <span class="d-flex align-items-center justify-content-center">
+        <CustomIcons IconName="notification" PrimaryColor="white"></CustomIcons>
+        @if (ShowNotificationDot)
+        {
+            <span class="show-notification-dot"></span>
+        }
+    </span>
+    <span class="d-flex align-items-center justify-content-center">
+        <Web.UI.Shared.Components.BSDropdownButton BSDropdownItemList="@BSDropdownItemList"
+                                                   userName="@(navigationHeaderModel.User.FirstName)"
+                                                   userProfileImage="@navigationHeaderModel.User.ImageName"
+                                                   styleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
+        </Web.UI.Shared.Components.BSDropdownButton>
+    </span>
+
+</div>
+
+@code {
+    private bool ShowNotificationDot { get; set; } = true;
+
+    public async Task Update()
+    {
+        if (navigationHeaderModel.Company.Id > 0)
+        {
+            var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+            await authModule.InvokeVoidAsync("ChangeCompany", navigationHeaderModel.User.Id, navigationHeaderModel.Company.Id);
+
+            this.StateHasChanged();
+        }
+    }
+
+    protected List<BSDropdownItem> BSDropdownItemList = new List<BSDropdownItem>()
+    {
+        new BSDropdownItem{ DisplayValue = "Update profile",URL="/myprofile" },
+        new BSDropdownItem{ DisplayValue = "Change Password",URL="/changepassword" },
+        new BSDropdownItem{ DisplayValue = "Log Out",URL="/logout" },
+    };
+
+    [Parameter] public NavigationHeaderModel navigationHeaderModel { get; set; }
+}

@@ -2,7 +2,7 @@
 
 namespace DataModels.Entities
 {
-    public class AircraftEquipment
+    public class AircraftEquipment : CommonField
     {
         public long Id { get; set; }
 
@@ -24,7 +24,7 @@ namespace DataModels.Entities
 
         public string SerialNumber { get; set; }
 
-        public Nullable<DateTime> ManufacturerDate { get; set; } 
+        public Nullable<DateTime> ManufacturerDate { get; set; }
 
         public Nullable<DateTime> LogEntryDate { get; set; }
 
@@ -33,21 +33,5 @@ namespace DataModels.Entities
         public Nullable<int> PartTTInstall { get; set; }
 
         public string Notes { get; set; }
-
-        public bool IsActive { get; set; } = true;
-        
-        public bool IsDeleted { get; set; }
-        
-        public Nullable<System.DateTime> CreatedOn { get; set; }
-        
-        public Nullable<long> CreatedBy { get; set; }
-        
-        public Nullable<long> DeletedBy { get; set; }
-        
-        public Nullable<System.DateTime> DeletedOn { get; set; }
-        
-        public Nullable<long> UpdatedBy { get; set; }
-        
-        public Nullable<System.DateTime> UpdatedOn { get; set; }
     }
 }

@@ -9,5 +9,10 @@
         ActivateDeActivateInBulk = 5,
         DocumentViewer = 6,
         DocumentShare = 7,
+        UpdateStatus = 8,
+        ChangePassword = 9,
+        ChangeCompany = 10,
+        InviteUser = 11,
+        UnCheckOut = 12
     }
 }

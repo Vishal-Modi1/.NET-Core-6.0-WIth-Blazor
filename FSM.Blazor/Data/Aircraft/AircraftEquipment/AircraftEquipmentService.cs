@@ -73,16 +73,16 @@ namespace FSM.Blazor.Data.Aircraft.AircraftEquipment
         {
             AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
             airCraftEquipmentsVM.Id = id;
-            airCraftEquipmentsVM.statusList = new List<StatusVM>();
-            airCraftEquipmentsVM.classificationList = new List<EquipmentClassificationVM>();
+            airCraftEquipmentsVM.StatusList = new List<StatusVM>();
+            airCraftEquipmentsVM.ClassificationList = new List<EquipmentClassificationVM>();
 
             if (id > 0)
             {
                 airCraftEquipmentsVM = await GetDetailsAsync(dependecyParams, id);
             }
 
-            airCraftEquipmentsVM.statusList = await GetStatusListAsync(dependecyParams);
-            airCraftEquipmentsVM.classificationList = await GetClassificationListAsync(dependecyParams);
+            airCraftEquipmentsVM.StatusList = await GetStatusListAsync(dependecyParams);
+            airCraftEquipmentsVM.ClassificationList = await GetClassificationListAsync(dependecyParams);
 
             return airCraftEquipmentsVM;
         }

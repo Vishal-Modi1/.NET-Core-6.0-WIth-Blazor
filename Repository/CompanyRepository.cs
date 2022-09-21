@@ -4,152 +4,146 @@ using Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using DataModels.VM.Company;
 using DataModels.VM.Common;
 
 namespace Repository
 {
-    public class CompanyRepository : ICompanyRepository
+    public class CompanyRepository : BaseRepository<Company>, ICompanyRepository
     {
-        private MyContext _myContext;
+        private readonly MyContext _myContext;
+
+        public CompanyRepository(MyContext dbContext)
+            : base(dbContext)
+        {
+            this._myContext = dbContext;
+        }
 
         public List<CompanyVM> ListAll()
         {
-            using (_myContext = new MyContext())
-            {
-                List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).
-                                                   Select(n => new CompanyVM
-                                                   { Id = n.Id, Name = n.Name }).ToList();
 
-                return companyDataList;
+            List<CompanyVM> companyDataList = _myContext.Companies.Where(p => p.IsDeleted == false).
+                                               Select(n => new CompanyVM
+                                               { Id = n.Id, Name = n.Name }).ToList();
 
-            }
+            return companyDataList;
+
         }
 
         public List<DropDownValues> ListDropDownValues()
         {
-            using (_myContext = new MyContext())
-            {
-                List<DropDownValues> companyList = (from company in _myContext.Companies
-                                                    where company.IsDeleted == false
-                                                    select new DropDownValues()
-                                                    {
-                                                        Id = company.Id,
-                                                        Name = company.Name
-                                                    }).ToList();
 
-                return companyList;
-            }
+            List<DropDownValues> companyList = (from company in _myContext.Companies
+                                                where company.IsDeleted == false
+                                                select new DropDownValues()
+                                                {
+                                                    Id = company.Id,
+                                                    Name = company.Name
+                                                }).ToList();
+
+            return companyList;
+        }
+
+        public List<DropDownValues> ListDropDownValuesByUserId(long userId)
+        {
+            List<DropDownValues> companyList = (from company in _myContext.Companies
+                                                join usercompany in _myContext.UsersVsCompanies
+                                                on company.Id equals usercompany.CompanyId
+                                                where company.IsDeleted == false &&
+                                                usercompany.IsActive == true &&
+                                                usercompany.IsDeleted == false 
+                                                && usercompany.UserId == userId
+                                                select new DropDownValues()
+                                                {
+                                                    Id = company.Id,
+                                                    Name = company.Name
+                                                }).ToList();
+
+            return companyList;
         }
 
         public List<DropDownValues> ListCompanyServicesDropDownValues()
         {
-            using (_myContext = new MyContext())
-            {
-                List<DropDownValues> companyServices = (from companyService in _myContext.CompanyServices
-                                                        select new DropDownValues()
-                                                        {
-                                                            Id = (int)companyService.Id,
-                                                            Name = companyService.Name
-                                                        }).ToList();
+            List<DropDownValues> companyServices = (from companyService in _myContext.CompanyServices
+                                                    select new DropDownValues()
+                                                    {
+                                                        Id = (int)companyService.Id,
+                                                        Name = companyService.Name
+                                                    }).ToList();
 
-                return companyServices;
-            }
+            return companyServices;
         }
 
-        public Company Create(Company company)
-        {
-            using (_myContext = new MyContext())
-            {
-                _myContext.Companies.Add(company);
-                _myContext.SaveChanges();
+        //public Company Create(Company company)
+        //{
+        //    {
+        //        _myContext.Companies.Add(company);
+        //        _myContext.SaveChanges();
 
-                return company;
-            }
-        }
+        //        return company;
+        //}
 
         public Company Edit(Company company)
         {
-            using (_myContext = new MyContext())
+            Company existingCompany = _myContext.Companies.Where(p => p.Id == company.Id).FirstOrDefault();
+
+            if (existingCompany != null)
             {
-                Company existingCompany = _myContext.Companies.Where(p => p.Id == company.Id).FirstOrDefault();
+                existingCompany.Name = company.Name;
+                existingCompany.Address = company.Address;
+                existingCompany.ContactNo = company.ContactNo;
+                existingCompany.TimeZone = company.TimeZone;
+                existingCompany.Website = company.Website;
+                existingCompany.PrimaryAirport = company.PrimaryAirport;
+                existingCompany.PrimaryServiceId = company.PrimaryServiceId;
 
-                if (existingCompany != null)
-                {
-                    existingCompany.Name = company.Name;
-                    existingCompany.Address = company.Address;
-                    existingCompany.ContactNo = company.ContactNo;
-                    existingCompany.TimeZone = company.TimeZone;
-                    existingCompany.Website = company.Website;
-                    existingCompany.PrimaryAirport = company.PrimaryAirport;
-                    existingCompany.PrimaryServiceId = company.PrimaryServiceId;
-
-                    existingCompany.UpdatedBy = company.UpdatedBy;
-                    existingCompany.UpdatedOn = company.UpdatedOn;
-                    _myContext.SaveChanges();
-                }
-
-                return company;
+                existingCompany.UpdatedBy = company.UpdatedBy;
+                existingCompany.UpdatedOn = company.UpdatedOn;
+                _myContext.SaveChanges();
             }
+
+            return company;
         }
 
         public void Delete(int id, long deletedBy)
         {
-            using (_myContext = new MyContext())
+            Company company = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+
+            if (company != null)
             {
-                Company company = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+                company.IsDeleted = true;
+                company.DeletedBy = deletedBy;
+                company.DeletedOn = DateTime.UtcNow;
 
-                if (company != null)
-                {
-                    company.IsDeleted = true;
-                    company.DeletedBy = deletedBy;
-                    company.DeletedOn = DateTime.UtcNow;
-
-                    _myContext.SaveChanges();
-                }
+                _myContext.SaveChanges();
             }
         }
 
         public List<CompanyVM> List(DatatableParams datatableParams)
         {
-            using (_myContext = new MyContext())
-            {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
-                List<CompanyVM> list;
+            //int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
+            List<CompanyVM> list;
 
-                string sql = $"EXEC dbo.GetCompanyList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
+            string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
 
-                list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
+            list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
 
-                return list;
-            }
-        }
-
-        public Company FindByCondition(Expression<Func<Company, bool>> predicate)
-        {
-            using (_myContext = new MyContext())
-            {
-                return _myContext.Companies.Where(predicate).FirstOrDefault();
-            }
+            return list;
         }
 
         public bool UpdateImageName(int id, string logoName)
         {
-            using (_myContext = new MyContext())
+            Company existingCompany = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+
+            if (existingCompany != null)
             {
-                Company existingCompany = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+                existingCompany.Logo = logoName;
+                _myContext.SaveChanges();
 
-                if (existingCompany != null)
-                {
-                    existingCompany.Logo = logoName;
-                    _myContext.SaveChanges();
-
-                    return true;
-                }
-
-                return false;
+                return true;
             }
+
+            return false;
         }
     }
 }

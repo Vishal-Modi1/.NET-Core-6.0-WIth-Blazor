@@ -1,0 +1,83 @@
+﻿@using DataModels.VM.User
+@using Data.InviteUser;
+@using Data.User;
+
+@inject InviteUserService InviteUserService
+@inject UserService UserService
+
+<PageTitle>Invite User | Fly Manager </PageTitle>
+
+<RadzenTemplateForm Data="@InviteUserVM" Submit="@((InviteUserVM args) => {  Invite(); })">
+    <div class="popup-content">
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <RadzenLabel Text="User Email" />
+            </div>
+            <div class="col-md-12">
+                <RadzenTextBox @bind-Value="@InviteUserVM.Email" Style="width:100%;"
+                               Placeholder="Enter User Email" Name="Email" Disabled=@(InviteUserVM.Id != 0)>
+
+                </RadzenTextBox>
+                <RadzenEmailValidator Component="Email" Text="Please enter valid email address" Style="position: relative"></RadzenEmailValidator>
+                <RadzenRequiredValidator Component="Email" Text="Email is required" Style="position: relative" />
+
+            </div>
+        </div>
+
+        @if (isSuperAdmin)
+        {
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <RadzenLabel Text="Company" />
+                </div>
+                <div class="col-md-12">
+                    <RadzenDropDown @bind-Value="@InviteUserVM.CompanyId" Style="width:100%;" TValue="int"
+                                TextProperty="Name" Placeholder="Select Company"
+                                Data="@InviteUserVM.ListCompanies"
+                                Name="CompanyId" ValueProperty="Id" AllowClear="true">
+
+                    </RadzenDropDown>
+                    <RadzenRequiredValidator DefaultValue="0" Component="CompanyId" Text="Company is required" Style="position: relative" />
+
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <RadzenLabel Text="Role" />
+            </div>
+            <div class="col-md-12">
+                <RadzenDropDown @bind-Value="@InviteUserVM.RoleId" Style="width:100%;" TValue="int"
+                                TextProperty="Name" Placeholder="Select Role"
+                                Data="@InviteUserVM.ListRoles"
+                                Name="RoleId" ValueProperty="Id" AllowClear="true">
+
+                </RadzenDropDown>
+                <RadzenRequiredValidator DefaultValue="0" Component="RoleId" Text="Role is required" Style="position: relative" />
+
+            </div>
+        </div>
+
+        <hr />
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+
+                @if (InviteUserVM.Id == 0)
+                {
+                    <RadzenButton ButtonType="ButtonType.Submit" BusyText="Inviting .." IsBusy="@isBusy" ButtonStyle="ButtonStyle.Primary" Text="Invite" Style="width: 125px" />
+                }
+                else
+                {
+                    <RadzenButton ButtonType="ButtonType.Submit" BusyText="Inviting .." IsBusy="@isBusy" ButtonStyle="ButtonStyle.Success" Text="Invite" Style="width: 125px" />
+                }
+
+                <RadzenButton Click="@((args) => CloseDialog(true))" ButtonStyle="ButtonStyle.Light" Text="Cancel" Style="width: 120px" Class="mr-1" />
+
+            </div>
+        </div>
+    </div>
+
+
+</RadzenTemplateForm>

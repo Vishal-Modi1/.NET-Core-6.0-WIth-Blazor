@@ -14,12 +14,15 @@ namespace Service
         private readonly IAccountRepository _accountRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IUserRoleRepository _userRoleRepository;
+        private readonly IUserVSCompanyRepository _userVSCompanyRepository;
 
-        public AccountService(IAccountRepository accountRepository, ICompanyRepository companyRepository, IUserRoleRepository userRoleRepository)
+        public AccountService(IAccountRepository accountRepository, ICompanyRepository companyRepository, 
+            IUserRoleRepository userRoleRepository, IUserVSCompanyRepository userVSCompanyRepository)
         {
             _accountRepository = accountRepository;
             _companyRepository = companyRepository; 
             _userRoleRepository = userRoleRepository;
+            _userVSCompanyRepository = userVSCompanyRepository;
         }
 
         public CurrentResponse GetValidUser(LoginVM loginVM)
@@ -30,20 +33,21 @@ namespace Service
 
                 if (user == null)
                 {
-                    CreateResponse(null, HttpStatusCode.NotFound, "Invalid Credentials");
+                    CreateResponse(null, HttpStatusCode.Unauthorized, "Invalid Credentials");
                     
                     return _currentResponse;
                 }
 
+                UserVSCompany userVSCompany = _userVSCompanyRepository.GetDefaultCompanyByUserId(user.Id);
                 string companyId = "0";
 
-                if(!string.IsNullOrWhiteSpace(user.CompanyId.ToString()))
+                if(userVSCompany != null)
                 {
-                    companyId = user.CompanyId.ToString();
+                    companyId = userVSCompany.CompanyId.ToString();
+                    user.CompanyId = userVSCompany.CompanyId;
                 }
 
-                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{user.ImageName}";
-
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{companyId}/{user.ImageName}";
                 Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
 
                 if(company != null)
@@ -78,7 +82,10 @@ namespace Service
                         user.CompanyName = company.Name;
                     }
 
-                    user.RoleName = _userRoleRepository.FindById(user.RoleId).Name;
+                    var userRoleDetails = _userRoleRepository.FindByUserIdAndCompanyId(user.Id, user.CompanyId);
+
+                    user.RoleName = userRoleDetails.Name;
+                    user.RoleId = userRoleDetails.Id;
 
                     CreateResponse(user, HttpStatusCode.OK, "User is valid");
                 }
@@ -90,22 +97,6 @@ namespace Service
                 CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
                 return _currentResponse;
             }
-        }
-
-        public CurrentResponse IsValidToken(string token)
-        {
-            bool isValidToken = _accountRepository.IsValidToken(token);
-
-            if (isValidToken)
-            {
-                CreateResponse(isValidToken, HttpStatusCode.OK, "Valid Token");
-            }
-            else
-            {
-                CreateResponse(isValidToken, HttpStatusCode.OK, "Token is expired");
-            }
-
-            return _currentResponse;
         }
 
         public CurrentResponse ActivateAccount(string token)

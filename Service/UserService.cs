@@ -19,23 +19,30 @@ namespace Service
         private readonly IInstructorTypeRepository _instructorTypeRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IUserVSCompanyRepository _userVSCompanyRepository;
+        private readonly IInviteUserRepository _inviteUserRepository;
+        private readonly IEmailTokenRepository _emailTokenRepository;
 
         public UserService(IUserRepository userRepository, IUserRoleRepository userRoleRepository
             , IInstructorTypeRepository instructorTypeRepository, ICountryRepository countryRepository,
-            ICompanyRepository companyRepository)
+            ICompanyRepository companyRepository, IUserVSCompanyRepository userVSCompanyRepository,
+            IInviteUserRepository inviteUserRepository, IEmailTokenRepository emailTokenRepository)
         {
             _userRepository = userRepository;
             _userRoleRepository = userRoleRepository;
             _instructorTypeRepository = instructorTypeRepository;
             _countryRepository = countryRepository;
             _companyRepository = companyRepository;
+            _userVSCompanyRepository = userVSCompanyRepository;
+            _inviteUserRepository = inviteUserRepository;
+            _emailTokenRepository = emailTokenRepository;
         }
 
-        public CurrentResponse ListDropDownValuesByCompanyId(int companyId)
+        public CurrentResponse ListDropdownValuesByCompanyId(int companyId)
         {
             try
             {
-                List<DropDownLargeValues> usersList = _userRepository.ListDropdownValuesbyCondition(p => p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false);
+                List<DropDownLargeValues> usersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
                 CreateResponse(usersList, HttpStatusCode.OK, "");
             }
             catch (Exception ex)
@@ -48,8 +55,6 @@ namespace Service
 
         public CurrentResponse GetDetails(long id, int companyId, int roleId)
         {
-            User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true);
-
             UserVM userVM = GetUserDetails(id, companyId, roleId);
 
             CreateResponse(userVM, HttpStatusCode.OK, "");
@@ -75,9 +80,14 @@ namespace Service
                 userVM.CompanyId = companyId;
                 userVM.CompanyName = _companyRepository.FindByCondition(p => p.Id == companyId).Name;
             }
-            else
+            
+            if (userVM.Id > 0)
             {
-                userVM.Companies = _companyRepository.ListDropDownValues();
+                var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && p.CompanyId == userVM.CompanyId);
+                var userRole = _userRoleRepository.FindById(userCompanyDetails.RoleId);
+
+                userVM.RoleId = userRole.Id;
+                userVM.Role = userRole.Name;
             }
 
             return userVM;
@@ -88,13 +98,42 @@ namespace Service
             userVM.Countries = _countryRepository.ListDropDownValues();
             userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
             userVM.UserRoles = _userRoleRepository.ListDropDownValues(roleId);
+            userVM.Companies = _companyRepository.ListDropDownValues();
         }
 
-        public CurrentResponse GetMasterDetails(int roleId)
+        public CurrentResponse GetMasterDetails(int roleId, bool isInvited, string token)
         {
             try
             {
                 UserVM userVM = new UserVM();
+
+                if (isInvited)
+                {
+                    EmailToken emailToken = _emailTokenRepository.FindByCondition(p => p.Token == token);
+                    InviteUser inviteUser = _inviteUserRepository.GetById(emailToken.InvitedUserId.GetValueOrDefault());
+
+                    userVM.CompanyId = inviteUser.CompanyId;
+                    userVM.Email = inviteUser.Email;
+
+                    bool isEmailExist = _userRepository.IsEmailExist(userVM.Email);
+
+                    if(isEmailExist)
+                    {
+                        bool isSuperAdmin = roleId == (int)DataModels.Enums.UserRole.SuperAdmin;
+                        User user = _userRepository.FindByCondition(p=>p.Email == userVM.Email);
+
+                        Company companyDetails = _companyRepository.FindByCondition(p => p.Id == inviteUser.CompanyId);
+                        userVM = _userRepository.FindById(user.Id, isSuperAdmin, isInvited, userVM.CompanyId);
+
+                        userVM.CompanyId = companyDetails.Id;
+                        userVM.CompanyName = companyDetails.Name;
+                    }
+
+                    userVM.IsInvited = isInvited;
+
+                    userVM.Role = _userRoleRepository.FindById(inviteUser.RoleId).Name;
+                    userVM.RoleId = inviteUser.RoleId;
+                }
 
                 GetMasterDetails(userVM , roleId);
 
@@ -111,13 +150,16 @@ namespace Service
         }
 
         public CurrentResponse Create(UserVM userVM)
-        {
+        {     
             try
             {
                 User user = ToDataObject(userVM);
                 user = _userRepository.Create(user);
 
-                CreateResponse(user, HttpStatusCode.OK, "User added successfully");
+                userVM.Id = user.Id;
+
+                SaveUserVSCompany(userVM);
+                CreateResponse(user, HttpStatusCode.OK, "User added          ");
 
                 return _currentResponse;
             }
@@ -129,12 +171,38 @@ namespace Service
             }
         }
 
+        private void SaveUserVSCompany(UserVM userVM)
+        {
+            UserVSCompany userVSCompany = new UserVSCompany();
+            userVSCompany.CompanyId = userVM.CompanyId;
+            userVSCompany.RoleId = userVM.RoleId;
+            userVSCompany.UserId = userVM.Id;
+            
+            userVSCompany.CreatedOn = DateTime.UtcNow;
+            userVSCompany.CreatedBy = userVM.Id;
+            userVSCompany.IsActive = true;
+            userVSCompany.IsDeleted = false;
+
+            _userVSCompanyRepository.Create(userVSCompany);
+        }
+
         public CurrentResponse Edit(UserVM userVM)
         {
             try
             {
                 User user = ToDataObject(userVM);
                 user = _userRepository.Edit(user);
+
+                var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && userVM.CompanyId == p.CompanyId); 
+
+                if(userCompanyDetails != null)
+                {
+                    userCompanyDetails.UpdatedBy = userVM.UpdatedBy;
+                    userCompanyDetails.CompanyId = userVM.CompanyId;
+                    userCompanyDetails.RoleId = userVM.RoleId;
+
+                    _userVSCompanyRepository.Edit(userCompanyDetails);
+                }
 
                 CreateResponse(user, HttpStatusCode.OK, "User updated successfully");
 
@@ -154,7 +222,14 @@ namespace Service
             {
                 bool isEmailExist = _userRepository.IsEmailExist(email);
 
-                CreateResponse(isEmailExist, HttpStatusCode.OK, "");
+                if (isEmailExist)
+                {
+                    CreateResponse(isEmailExist, HttpStatusCode.Found, "Email is already exist");
+                }
+                else
+                {
+                    CreateResponse(isEmailExist, HttpStatusCode.OK, "");
+                }
 
                 return _currentResponse;
             }
@@ -165,14 +240,24 @@ namespace Service
                 return _currentResponse;
             }
         }
+
         public CurrentResponse ResetPassword(ResetPasswordVM resetPasswordVM)
         {
             try
             {
+                bool isValidToken = _emailTokenRepository.IsValidToken(resetPasswordVM.Token);
+
+                if (!isValidToken)
+                {
+                    return CreateResponse(isValidToken, HttpStatusCode.NotFound, "Token is expired");
+                }
+
                 bool isUserPasswordReset = _userRepository.ResetUserPassword(resetPasswordVM);
 
                 if (isUserPasswordReset)
                 {
+                    _emailTokenRepository.UpdateStatus(resetPasswordVM.Token);
+
                     CreateResponse(isUserPasswordReset, HttpStatusCode.OK, "Password reset successfully");
                 }
                 else
@@ -189,6 +274,7 @@ namespace Service
                 return _currentResponse;
             }
         }
+
         public CurrentResponse List(UserDatatableParams datatableParams)
         {
             try
@@ -199,7 +285,7 @@ namespace Service
                 {
                     //if(!string.IsNullOrWhiteSpace(user.ProfileImage))
                    // {
-                        user.ProfileImage = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{user.CompanyId.GetValueOrDefault()}/{user.ProfileImage}";
+                        user.ProfileImage = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{user.CompanyId.GetValueOrDefault()}/{user.ProfileImage}";
                         
                    // }
                 }
@@ -284,20 +370,25 @@ namespace Service
             }
         }
 
-        public CurrentResponse FindById(long id)
+        public CurrentResponse FindById(long id, bool isSuperAdmin, int? companyId)
         {
             try
             {
-                UserVM userVM = _userRepository.FindById(id);
+                UserVM userVM = _userRepository.FindById(id, isSuperAdmin,false, companyId);
 
-                string companyId = "0";
+                string company = "0";
 
                 if (!string.IsNullOrWhiteSpace(userVM.CompanyId.ToString()))
                 {
-                    companyId = userVM.CompanyId.ToString();
+                    company = userVM.CompanyId.ToString();
                 }
 
-                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{companyId}/{userVM.ImageName}";
+                var userRole = _userRoleRepository.FindByUserIdAndCompanyId(userVM.Id, userVM.CompanyId);
+
+                userVM.Role = userRole.Name;
+                userVM.RoleId = userRole.Id;
+
+                userVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{company}/{userVM.ImageName}";
 
                 userVM.Countries = _countryRepository.ListDropDownValues();
                 userVM.InstructorTypes = _instructorTypeRepository.ListDropDownValues();
@@ -323,7 +414,7 @@ namespace Service
                 bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
 
                 User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
-                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.UserProfileImage}/{user}/{user.ImageName}";
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{user}/{user.ImageName}";
 
                 CreateResponse(user, HttpStatusCode.OK, "Profile picture updated successfully.");
 
@@ -357,6 +448,39 @@ namespace Service
             }
         }
 
+        public CurrentResponse GetById(long id, int companyId)
+        {
+            try
+            {
+                User user = _userRepository.FindByCondition(p => p.Id == id);
+
+                user.CompanyId = companyId;
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{companyId}/{user.ImageName}";
+                Company company = _companyRepository.FindByCondition(p => p.Id == user.CompanyId);
+
+                if (company != null)
+                {
+                    user.CompanyName = company.Name;
+                }
+
+                var userRole = _userRoleRepository.FindByUserIdAndCompanyId(user.Id, user.CompanyId);
+
+                user.RoleName = userRole.Name;
+                user.RoleId = userRole.Id;
+
+                CreateResponse(user, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new UserVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         #region Object Mapping
 
         public User ToDataObject(UserVM userVM)
@@ -376,6 +500,7 @@ namespace Service
             }
 
             user.Phone = userVM.Phone;
+
             user.RoleId = userVM.RoleId;
             user.IsInstructor = userVM.IsInstructor;
             user.InstructorTypeId = (bool)userVM.IsInstructor ? userVM.InstructorTypeId : null;

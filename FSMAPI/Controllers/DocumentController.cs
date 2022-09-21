@@ -103,7 +103,7 @@ namespace FSMAPI.Controllers
                     companyId = form["CompanyId"];
                 }
 
-                string filePath = UploadDirectory.Document + "\\" + companyId + "\\" + documentVM.UserId;
+                string filePath = UploadDirectories.Document + "\\" + companyId + "\\" + documentVM.UserId;
 
                 Directory.CreateDirectory(filePath);
 
@@ -128,7 +128,7 @@ namespace FSMAPI.Controllers
         //[Route("create")]
         private CurrentResponse Create(DocumentVM documentVM)
         {
-            documentVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            documentVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             if (documentVM.CompanyId == 0)
             {
@@ -137,7 +137,7 @@ namespace FSMAPI.Controllers
 
             if (documentVM.UserId == 0)
             {
-                documentVM.UserId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                documentVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             }
 
             CurrentResponse response = _documentService.Create(documentVM);
@@ -149,7 +149,7 @@ namespace FSMAPI.Controllers
         //[Route("edit")]
         private CurrentResponse Edit(DocumentVM documentVM)
         {
-            documentVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            documentVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             if (documentVM.CompanyId == 0)
             {
@@ -158,7 +158,7 @@ namespace FSMAPI.Controllers
 
             if (documentVM.UserId == 0)
             {
-                documentVM.UserId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                documentVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             }
 
             CurrentResponse response = _documentService.Edit(documentVM);
@@ -202,7 +202,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(Guid id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _documentService.Delete(id, deletedBy);
 

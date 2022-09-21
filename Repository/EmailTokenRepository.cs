@@ -35,5 +35,27 @@ namespace Repository
                 return emailToken;
             }
         }
+        
+        public bool IsValidToken(string token)
+        {
+            using (_myContext = new MyContext())
+            {
+                return _myContext.EmailTokens.Where(p => p.Token == token && p.ExpireOn >= DateTime.UtcNow && p.IsUsed == false).Count() > 0;
+            }
+        }
+
+        public void UpdateStatus(string token)
+        {
+            using (_myContext = new MyContext())
+            {
+                EmailToken emailToken = _myContext.EmailTokens.Where(p => p.Token == token).FirstOrDefault();
+
+                if(emailToken != null)
+                {
+                    emailToken.IsUsed = true;
+                    _myContext.SaveChanges();
+                }
+            }
+        }
     }
 }

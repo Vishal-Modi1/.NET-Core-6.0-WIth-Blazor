@@ -162,5 +162,23 @@ namespace Repository
                 return aircraftsList;
             }
         }
+
+        public bool UpdateStatus(long id, byte statusId)
+        {
+            using (_myContext = new MyContext())
+            {
+                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+
+                if (existingAirCraft != null)
+                {
+                    existingAirCraft.AircraftStatusId = statusId;
+                    _myContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
     }
 }

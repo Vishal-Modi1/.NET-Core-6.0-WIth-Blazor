@@ -37,10 +37,14 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IEmailTokenService, EmailTokenService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ITimezoneService, TimezoneService>();
+            services.AddScoped<IUserVSCompanyService, UserVSCompanyService>();
+            services.AddScoped<IAircraftStatusService, AircraftStatusService>();
+            services.AddScoped<IInviteUserService, InviteUserService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
         {
+           //services.AddTransient<IRepository,BaseRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
@@ -71,6 +75,11 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IBillingHistoryRepository, BillingHistoryRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ITimezoneRepository, TimezoneRepository>();
-            }
+            services.AddScoped<IUserVSCompanyRepository, UserVSCompanyRepository>();
+            services.AddScoped<IAircraftStatusRepository, AircraftStatusRepository>();
+            services.AddScoped<IInviteUserRepository, InviteUserRepository>();
+            //services.AddScoped(typeof(IRepository<>), typeof(ReadOnlyRepositoryBase<>));
+            //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        }
     }
 }

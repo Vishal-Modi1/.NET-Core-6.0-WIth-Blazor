@@ -1,0 +1,126 @@
+﻿@using DataModels.Enums;
+
+@inherits LayoutComponentBase
+
+<TelerikNotification @ref="@UINotification.Instance"
+                     HorizontalPosition="@NotificationHorizontalPosition.Right"
+                     VerticalPosition="@NotificationVerticalPosition.Top"
+                     Class="sm-notification">
+
+</TelerikNotification>
+
+@if (menuItems != null)
+{
+    <TelerikDrawer Data="@menuItems"
+               @bind-Expanded="@isDrawerExpanded"
+               MiniMode="true"
+               Mode="@DrawerMode.Push"
+               @ref="@drawerRef"
+               @bind-SelectedItem="@selectedItem">
+        <Template>
+            <div class="d-flex align-items-center k-drawer-top-header @(isDrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
+                <TelerikButton OnClick="@( () => drawerRef.ToggleAsync() )" Class="drawer-hamburger">
+                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Menu"
+                                                                 PrimaryColor="@("white")"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                </TelerikButton>
+            </div>
+            <hr class="hr-blue mt-0 mb-0" />
+            @if (isDrawerExpanded)
+            {
+            <div class="d-flex align-items-center justify-content-evenly" style="height:95px;">
+                <label class="d-flex flex-row user-face">
+                    <img src='@navigationHeaderModel.User.ImageName'
+                     onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                     style="height: 54px;width: 54px;border-radius:50px" />
+                    <a href="/myprofile" style="text-decoration: none;"><div id="name" class="mx-2">@navigationHeaderModel.User.FirstName</div></a>
+                </label>
+            </div>
+            }
+            else
+            {
+            <div class="d-flex align-items-center justify-content-center" style="height:95px;margin-top:25px">
+                <div>
+                    <div class="d-flex justify-content-center">
+                        <img src='@navigationHeaderModel.User.ImageName'
+                         onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                         style="height: 54px;width: 54px;border-radius:50px" />
+                    </div>
+                </div>
+            </div>
+            }
+        <hr class="hr-blue mt-0 mb-0" />
+        <div class="k-drawer-items my-2">
+            <ul>
+
+                @foreach (var item in menuItems)
+                    {
+                        if (!item.IsAdministrationModule || (!navigationHeaderModel.IsSuperAdmin && item.Controller.ToLower() == Module.Company.ToString().ToLower()))
+                        {
+                            if (item.DisplayName == "Log out")
+                            {
+                            <hr class="hr-blue mt-0 mb-0" />
+                            }
+
+                        <li @onclick="@(() => NavigateToPageAsync(item))" @onclick:stopPropagation
+                    class="k-drawer-item @(GetSelectedItemClass(item))
+                                @(isDrawerExpanded ? "":"d-flex justify-content-center")"
+                    style="white-space:nowrap">
+
+                            <div class="px-2">
+                                <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.Controller"
+                                                                         PrimaryColor="#3066F8">
+                                </Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                            </div>
+
+                            @if (isDrawerExpanded)
+                                {
+                                    if (item.Controller.ToLower() == Module.Company.ToString().ToLower())
+                                    {
+                                    <div class="menu-item-text-color">Company</div>
+                                    }
+                                    else
+                                    {
+                                    <div class="menu-item-text-color">@item.DisplayName</div>
+                                    }
+                                }
+                            @if (selectedItem != null && item.DisplayName == selectedItem.DisplayName)
+                                {
+                                <div class="selected-arrow"></div>
+                                }
+
+                        </li>
+
+                        }
+                    }
+            </ul>
+        </div>
+
+    </Template>
+    <DrawerContent>
+        <div class="main">
+
+
+            <div class="content">
+
+                <Web.UI.Shared.Components.PageLoader.PageLoader isVisible="@isDisplayPageLoader" loaderColor="#022254" loadingText="Loading details...">
+
+                </Web.UI.Shared.Components.PageLoader.PageLoader>
+
+                <CascadingValue IsFixed="true" Value="@UINotification">
+
+                    <CascadingValue Value="@ChangeLoaderVisibility" TValue="Action<bool>">
+
+                        <LeftHeader navigationHeaderModel="@navigationHeaderModel"></LeftHeader>
+                        <TelerikRootComponent>
+                            <div class="@(IsMainContainerTransparent ? "ms-3 me-3 my-3 p-3" : "card ms-3 me-3 my-3 p-3")">
+                                @Body
+                            </div>
+                        </TelerikRootComponent>
+                    </CascadingValue>
+                </CascadingValue>
+            </div>
+        </div>
+    </DrawerContent>
+</TelerikDrawer>
+
+}

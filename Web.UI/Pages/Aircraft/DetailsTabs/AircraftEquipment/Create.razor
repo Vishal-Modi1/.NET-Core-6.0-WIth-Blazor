@@ -1,0 +1,153 @@
+﻿@using Web.UI.Data.Aircraft.AircraftEquipment;
+
+<TelerikForm Model="@aircraftEquipmentsVM" OnValidSubmit="@Submit">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="popup-content">
+            <input type="hidden" value="@aircraftEquipmentsVM.Id" name="Id" />
+            <input type="hidden" value="@aircraftEquipmentsVM.AirCraftId" name="AirCraftId" />
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="status" class="k-label k-form-label">Status</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="item" class="k-label k-form-label">Item</label>
+                </div>
+                <div class="col-md-6">
+
+                     <TelerikComboBox Id=companyId Data="@aircraftEquipmentsVM.StatusList" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Status" ValueField="Id" @bind-Value="@aircraftEquipmentsVM.StatusId">
+                    </TelerikComboBox>
+                    <TelerikValidationMessage For="@(() => aircraftEquipmentsVM.StatusId)"></TelerikValidationMessage>
+
+                </div>
+                <div class="col-md-6">
+                     <TelerikTextBox PlaceHolder="Item" Id="item" @bind-Value="@aircraftEquipmentsVM.Item" />
+                      <TelerikValidationMessage For="@(() => aircraftEquipmentsVM.Item)"></TelerikValidationMessage>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="classification" class="k-label k-form-label">Classification</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="make" class="k-label k-form-label">Make</label>
+                </div>
+                <div class="col-md-6">
+
+                    <TelerikComboBox Id=companyId Data="@aircraftEquipmentsVM.ClassificationList" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Classification" ValueField="Id" @bind-Value="@aircraftEquipmentsVM.ClassificationId">
+                    </TelerikComboBox>
+                    <TelerikValidationMessage For="@(() => aircraftEquipmentsVM.ClassificationId)"></TelerikValidationMessage>
+
+                </div>
+                <div class="col-md-6">
+                    <TelerikTextBox PlaceHolder="Make" Id="make" @bind-Value="@aircraftEquipmentsVM.Make" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="model" class="k-label k-form-label">Model</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="manufacturer" class="k-label k-form-label">Manufacturer</label>
+                </div>
+                <div class="col-md-6">
+                    <TelerikTextBox PlaceHolder="Model" Id="model" @bind-Value="@aircraftEquipmentsVM.Model" />
+                </div>
+                <div class="col-md-6">
+                    <TelerikTextBox PlaceHolder="Manufacturer" Name="manufacturer" @bind-Value="@aircraftEquipmentsVM.Manufacturer" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="partNumber" class="k-label k-form-label">Part Number</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="serialNumber" class="k-label k-form-label">Serial Number</label>
+                </div>
+                <div class="col-md-6">
+                    <TelerikTextBox Id="partNumber" @bind-Value="@aircraftEquipmentsVM.PartNumber" PlaceHolder="Part Number" />
+                </div>
+                <div class="col-md-6">
+                    <TelerikTextBox Id="serialNumber" @bind-Value="@aircraftEquipmentsVM.SerialNumber" PlaceHolder="Serial Number" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="aircraftTTInstall" class="k-label k-form-label">Aircraft TT Install</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="partTTInstall" class="k-label k-form-label">Part TT Install</label>
+                </div>
+                <div class="col-md-6">
+                    <TelerikNumericTextBox Id="aircraftTTInstall" 
+                                           @bind-Value=@aircraftEquipmentsVM.AircraftTTInstall Placeholder="Hours" />
+
+                </div>
+                <div class="col-md-6">
+                    <TelerikNumericTextBox Id="partTTInstall" 
+                                           @bind-Value=@aircraftEquipmentsVM.PartTTInstall Placeholder="Hours" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="manufacturerDate" class="k-label k-form-label">Manufacturer Date</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="logEntryDate" class="k-label k-form-label">Log Entry Date</label>
+                </div>
+                <div class="col-md-6">
+
+                    <TelerikDatePicker @bind-Value="@aircraftEquipmentsVM.ManufacturerDate" Id="manufacturerDate" Class="w-100"></TelerikDatePicker>
+                    <TelerikValidationMessage For="@(() => aircraftEquipmentsVM.ManufacturerDate)"></TelerikValidationMessage>
+
+                </div>
+                <div class="col-md-6">
+                    <TelerikDatePicker @bind-Value="@aircraftEquipmentsVM.LogEntryDate" Id="logEntryDate" Class="w-100"></TelerikDatePicker>
+                    <TelerikValidationMessage For="@(() => aircraftEquipmentsVM.LogEntryDate)"></TelerikValidationMessage>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="notes" class="k-label k-form-label">Notes</label>
+                </div>
+
+                <div class="col-md-12">
+                    <TelerikTextArea Id="notes" @bind-Value=@aircraftEquipmentsVM.Notes Class="w-100" AutoSize="true" />
+                </div>
+
+            </div>
+
+        </div>
+
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@aircraftEquipmentsVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

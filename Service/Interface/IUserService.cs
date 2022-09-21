@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.User;
 using DataModels.VM.Account;
 using DataModels.VM.Common;
+using DataModels.Entities;
 
 namespace Service.Interface
 {
@@ -24,16 +25,18 @@ namespace Service.Interface
 
         CurrentResponse GetFiltersValue(int roleId);
 
-        CurrentResponse FindById(long id);
+        CurrentResponse FindById(long id,bool isSuperAdmin, int? companyId);
 
         CurrentResponse UpdateImageName(long id, string imageName);
 
-        CurrentResponse ListDropDownValuesByCompanyId(int companyId);
+        CurrentResponse ListDropdownValuesByCompanyId(int companyId);
 
         UserVM GetUserDetails(long id, int companyId, int roleId);
 
         CurrentResponse FindMyPreferencesById(long id);
 
-        CurrentResponse GetMasterDetails(int roleId);
+        CurrentResponse GetMasterDetails(int roleId, bool isInvited, string token);
+
+        CurrentResponse GetById(long id, int companyId);
     }
 }

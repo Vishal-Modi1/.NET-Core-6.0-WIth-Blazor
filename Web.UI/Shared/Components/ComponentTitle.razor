@@ -1,0 +1,13 @@
+﻿@switch (Type)
+{
+    case "AdministrationTitle":
+        <h4 class="selected-font">@Title</h4>
+        break;
+    default:
+        break;
+}
+@code {
+    [Parameter] public string Title { get; set; }
+
+    [Parameter] public string Type { get; set; }
+}

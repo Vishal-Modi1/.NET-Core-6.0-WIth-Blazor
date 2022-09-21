@@ -34,7 +34,7 @@ namespace Service
         {
             try
             {
-                string newUserAccountActivationMailBody = GetEmailTemplate(EmailTemplate.NewUserAccountActivationTemplate);
+                string newUserAccountActivationMailBody = GetEmailTemplate(EmailTemplates.NewUserAccountActivationTemplate);
                 newUserAccountActivationMailBody = newUserAccountActivationMailBody.Replace("{name}", userVM.FirstName + " " + userVM.LastName);
                 newUserAccountActivationMailBody = newUserAccountActivationMailBody.Replace("{username}", userVM.Email);
                 newUserAccountActivationMailBody = newUserAccountActivationMailBody.Replace("{password}", userVM.Password);
@@ -42,7 +42,7 @@ namespace Service
 
                 User user = _userRepository.FindByCondition(p => p.Email == userVM.Email);
 
-                EmailToken emailToken = SaveEmailToken(EmailType.AccountActivation, token, user.Id);
+                EmailToken emailToken = SaveEmailToken(EmailTypes.AccountActivation, token, user.Id);
 
                 if (emailToken.Id == 0)
                 {
@@ -75,13 +75,13 @@ namespace Service
                         return _currentResponse;
                     }
 
-                    string body = GetEmailTemplate(EmailTemplate.ForgotPasswordTemplate);
+                    string body = GetEmailTemplate(EmailTemplates.ForgotPasswordTemplate);
                     body = body.Replace("{Link}", url);
 
                     MailSettings mailSettings = GetMailSettings(email, "Password Reset", body, "");
                     bool isMailSent = _mailSender.SendMail(mailSettings);
 
-                    EmailToken emailToken = SaveEmailToken(EmailType.ForgotPassword, token, user.Id);
+                    EmailToken emailToken = SaveEmailToken(EmailTypes.ForgotPassword, token, user.Id);
 
                     if (emailToken.Id == 0)
                     {
@@ -95,7 +95,7 @@ namespace Service
                         return _currentResponse;
                     }
 
-                    CreateResponse(true, HttpStatusCode.OK, "Mail sent successfully");
+                    CreateResponse(true, HttpStatusCode.OK, "Reset Password mail sent successfully");
 
                     return _currentResponse;
                 }
@@ -107,6 +107,36 @@ namespace Service
             }
 
             return _currentResponse;
+        }
+
+        public bool InviteUser(UserVM userVM, string token, long invitedUserId)
+        {
+            try
+            {
+                string inviteUserTemplate = GetEmailTemplate(EmailTemplates.InviteUserTemplate);
+                inviteUserTemplate = inviteUserTemplate.Replace("{companyName}", userVM.CompanyName);
+                inviteUserTemplate = inviteUserTemplate.Replace("{roleName}", userVM.Role);
+                inviteUserTemplate = inviteUserTemplate.Replace("{link}", $"{userVM.ActivationLink}{token}");
+
+                User user = _userRepository.FindByCondition(p => p.Email == userVM.Email);
+
+                EmailToken emailToken = SaveEmailToken(EmailTypes.UserInvitation, token, null, invitedUserId);
+
+                if (emailToken.Id == 0)
+                {
+                    return false;
+                }
+
+                MailSettings mailSettings = GetMailSettings(userVM.Email, $"Invitation to join {userVM.CompanyName}", inviteUserTemplate, "");
+
+                bool isMailSent = _mailSender.SendMail(mailSettings);
+
+                return isMailSent;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public string GetEmailTemplate(string templateName)
@@ -141,7 +171,7 @@ namespace Service
             return mailSettings;
         }
 
-        private EmailToken SaveEmailToken(string emailType, string token, long userId)
+        private EmailToken SaveEmailToken(string emailType, string token, long? userId, long? invitedUserId = null)
         {
             EmailToken emailToken = new EmailToken();
 
@@ -150,10 +180,13 @@ namespace Service
             emailToken.CreatedOn = DateTime.UtcNow;
             emailToken.Token = token;
             emailToken.UserId = userId;
+            emailToken.InvitedUserId = invitedUserId;
 
             emailToken = _emailTokenRepository.Create(emailToken);
 
             return emailToken;
         }
+
+       
     }
 }

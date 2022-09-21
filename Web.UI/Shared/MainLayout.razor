@@ -1,0 +1,16 @@
+@using Web.UI.Extensions;
+@layout TelerikLayout
+@inherits LayoutComponentBase
+
+
+<TelerikNotification @ref="@UINotification.Instance"
+                     HorizontalPosition="@NotificationHorizontalPosition.Right"
+                     VerticalPosition="@NotificationVerticalPosition.Top"
+                     Class="big-notification">
+
+</TelerikNotification>
+
+    <CascadingValue IsFixed="true" Value="@UINotification">
+        <PageLoader></PageLoader>
+        <NavMenu></NavMenu>
+    </CascadingValue>

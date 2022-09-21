@@ -1,0 +1,155 @@
+﻿@namespace Web.UI.Pages.User
+@using DataModels.Enums
+@using Web.UI.Data.InviteUser
+@using DataModels.VM.User
+@using Configuration;
+@using Web.UI.Utilities;
+@using Web.UI.Shared.Components;
+
+@layout TelerikLayout
+
+@page "/InvtedUsersList"
+
+@if (string.IsNullOrWhiteSpace(ParentModuleName))
+{
+    <PageTitle>User | Fly Manager </PageTitle>
+}
+
+<div class="row">
+    <div class="col d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Invited Users" Type="AdministrationTitle" />
+        </div>
+        <div>
+
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InviteUserDialog(new InviteUserDataVM())" Enabled="!isBusyAddButton">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Invite User
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
+                    </TelerikButton>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<div class="row my-2">
+    <div class="col-md-4">
+        <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Role" ValueField="Id">
+        </TelerikComboBox>
+
+    </div>
+
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
+    {
+        <div class="col-md-4">
+
+            <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Company" ValueField="Id">
+            </TelerikComboBox>
+        </div>
+    }
+
+    <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search User" ValueChanged="@( (string value) => OnSearchValueChanges<InviteUserDataVM>(value, grid) )" />
+    </div>
+
+</div>
+
+ <div style="position: relative; width:100%; min-height: 400px;">
+                <TelerikLoaderContainer OverlayThemeColor="light"
+                                        Visible="@(isGridDataLoading)"
+                                        Text="@null" Class="initial-data-loader">
+                    <Template>
+                        <TelerikLoader Type="@LoaderType.InfiniteSpinner"
+                                       Size="@(ThemeConstants.Loader.Size.Large)">
+                        </TelerikLoader>
+                    </Template>
+                </TelerikLoaderContainer>
+<TelerikGrid TItem="InviteUserDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+
+    <GridSettings>
+        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+    </GridSettings>
+
+    <GridColumns>
+
+        <GridColumn Field="@nameof(InviteUserDataVM.Email)" Title="Email"></GridColumn>
+        <GridColumn Field="@nameof(InviteUserDataVM.Role)" Title="Role"></GridColumn>
+
+        <GridCommandColumn Context="dataItem" Title="Action">
+            @{
+                InviteUserDataVM userData = dataItem as InviteUserDataVM;
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>InviteUserDialog(userData)"
+                           ThemeColor="success" Enabled=!userData.IsLoadingEditButton>
+
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="userData.IsLoadingEditButton">
+                        </TelerikLoader>
+
+                    </TelerikButton>
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(userData)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    </TelerikButton>
+                }
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
+
+</div>
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+            @if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete <b> @(userData.Email) </b> Invitation?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                            {
+                                <TelerikButton Class="mr-1 btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>DeleteAsync(userData.Id)">
+                                    Yes
+                                </TelerikButton>
+                            }
+
+                            <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <Web.UI.Pages.User.InviteUser InviteUserVM="@userData" CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.User.InviteUser>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

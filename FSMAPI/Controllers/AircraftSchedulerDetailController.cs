@@ -39,7 +39,7 @@ namespace FSMAPI.Controllers
             AircraftSchedulerDetailsVM aircraftScheduleDetailVM = new AircraftSchedulerDetailsVM();
             aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
 
-            aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleDetailService.CheckOut(aircraftScheduleDetailVM);
 
             return Ok(response);

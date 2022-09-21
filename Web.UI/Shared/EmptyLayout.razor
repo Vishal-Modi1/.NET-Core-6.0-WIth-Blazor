@@ -1,0 +1,95 @@
+﻿@inherits LayoutComponentBase
+
+<link href="css/EmptyLayout.min.css" rel="stylesheet" />
+
+<TelerikNotification @ref="@UINotification.Instance"
+                     HorizontalPosition="@NotificationHorizontalPosition.Right"
+                     VerticalPosition="@NotificationVerticalPosition.Top"
+                     Class="small-notification">
+
+</TelerikNotification>
+
+<TelerikRootComponent>
+
+    <Web.UI.Extensions.CustomErrorBoundry @ref="@errorBoundary">
+
+        <Web.UI.Shared.Components.PageLoader.PageLoader isVisible="@isDisplayPageLoader" loaderColor="#3066f8">
+
+        </Web.UI.Shared.Components.PageLoader.PageLoader>
+
+        <CascadingValue IsFixed="true" Value="@UINotification">
+            <CascadingValue Value="@ChangeLoaderVisibility" TValue="Action<bool>">
+                <style>
+                    body {
+                        background-repeat: no-repeat !important;
+                        background-size: 100% 100% !important;
+                        background-image: url('img/bg-login.png') !important;
+                    }
+
+                    .card {
+                        background: #FFFFFF;
+                        box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.25);
+                        border-radius: 21px;
+                    }
+
+                    .horizon-line {
+                        width: 100%;
+                        text-align: center;
+                        border-bottom: 1px solid #000;
+                        line-height: 0.1em;
+                        margin: 10px 0 20px;
+                    }
+
+                        .horizon-line span {
+                            background: #fff;
+                            padding: 0 10px;
+                        }
+                </style>
+                <div class="main-block">
+                    @Body
+                </div>
+                @*            <div class="row vh-100 align-items-center m-0">
+                    <div class="col-md-3 mx-auto">
+                    <div class="card" >
+                    <div class="card-body">
+                    <div class="upfly-logo mt-2 mb-2 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                    </div>
+
+
+                    </div>
+                    </div>
+                    </div>
+                    </div>*@
+            </CascadingValue>
+        </CascadingValue>
+    </Web.UI.Extensions.CustomErrorBoundry>
+</TelerikRootComponent>
+
+@code {
+
+    public bool isDisplayPageLoader { get; set; }
+
+    UINotification UINotification { get; set; } = new UINotification();
+
+    public string EmptyLayoutTitle { get; set; } = "LOGIN TEXT MSG";
+
+    private ErrorBoundary errorBoundary;
+    protected override void OnParametersSet()
+    {
+        //if(errorBoundary.CurrentException.Message == "Unauthorized")
+        //{
+
+        //    NavigationManager.NavigateTo("/Login");
+        //}
+        errorBoundary?.Recover();
+    }
+
+    public void ChangeLoaderVisibility(bool visible)
+    {
+        isDisplayPageLoader = visible;
+        StateHasChanged();
+    }
+
+    public void SetEmptyLayoutTitle(string title) => EmptyLayoutTitle = title;
+}

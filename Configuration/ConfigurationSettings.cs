@@ -87,9 +87,19 @@ namespace Configuration
             get => configuration.GetValue<long>("MaxDocumentUploadSize");
         }
 
+        public long MaxProfileImageSize
+        {
+            get => configuration.GetValue<long>("MaxProfileImageSize");
+        }
+
         public string SupportedDocuments
         {
             get => configuration.GetValue<string>("SupportedDocuments");
+        }
+
+        public string SupportedImageTypes
+        {
+            get => configuration.GetValue<string>("SupportedImageTypes");
         }
 
         public MailSettingConfig MailSetting
@@ -98,6 +108,8 @@ namespace Configuration
         }
 
         public IEnumerable<int> BlazorGridPagesizeOptions = new int[] { 10, 20, 30, 50, 100 };
+
+        public IEnumerable<int?> GridPagesizeOptions = new int?[] { 10, 20, 30, 50, 100, null };
 
         public int BlazorGridDefaultPagesize = 10;
 

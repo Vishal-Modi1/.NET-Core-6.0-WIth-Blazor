@@ -1,0 +1,673 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+
+
+html, body, .selected-font {
+    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+
+
+.k-drawer, .k-tabstrip-items {
+    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}
+
+
+/*NEW COLOR PLATE*/
+$PRIMARY-COLOR: #042455;
+$SECONDARY-COLOR: #3066F8;
+$NEUTRAL-COLOR: #1F1F1F;
+/*$SOLID-COLOR: #9E27B0;*/
+$SOLID-COLOR: #438AFE;
+
+$STATE-INFO-COLOR: #2F80ED;
+$STATE-SUCCESS-COLOR: #27AE60;
+$STATE-WARNING-COLOR: #E2B93B;
+$STATE-ERROR-COLOR: #EB5757;
+/*Title Text Color*/
+$TITLE-TEXT-VWHITE: #020E22;
+$TITLE-TEXT-VDARK: #F7FAFF;
+/*Paragraph Text Color*/
+$PARAGRAPH-TEXT-VWHITE: #4D4D4D;
+$PARAGRAPH-TEXT-VDARK: #042455;
+/*Body Background Color*/
+$BODY-BACKGROUND-VWHITE: #042455;
+$BODY-BACKGROUND-VDARK: #042455;
+
+/*Button Text Color*/
+$BUTTON-TEXT-VWHITE: #042455;
+$BUTTON-TEXT-VDARK: #042455;
+/*Disabled Text Color*/
+$DISABLED-TEXT-VDARK: #042455;
+
+$BG-DARK-BLUE: #022254;
+$BG-LIGHT-BLUE: #3066F8;
+$BG-MENU-ITEM: #0062FE;
+$BG-MENU-ITEM-TEXT-COLOR: #121D2D;
+/*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
+$BG-MENU-ITEM-SELECTED: #3066f81c;
+$BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
+$BG-MENU-TITLE-HEADER: #022254;
+$BG-MENU-ITEM-HOVER: #eee;
+$BG-MAIN-MENU: WHITE;
+
+$BG-BTN-PRIMARY: $BG-LIGHT-BLUE;
+$BG-BTN-PRIMARY-HOVER: #022a6a;
+$BG-BTN-DANGER: #EE0808;
+$BG-BTN-DANGER-HOVER: #CA2323;
+$BG-BTN-INFO: #008EA4;
+$BG-BTN-INFO-HOVER: #17A2B8;
+$BG-SECONDARY: #979797;
+/*$BG-BTN-SECONDARY:#022A6A;
+$BG-BTN-SUCCESS: #022A6A;
+$BG-BTN-DANGER: #022A6A;
+$BG-BTN-WARNING: #022A6A;
+$BG-BTN-INFO: #022A6A;
+$BG-BTN-LIGHT: #022A6A;
+$BG-BTN-DARK: #022A6A;
+$BG-BTN-LINK: #022A6A;*/
+
+$BG-LIGHT-BLUE: #96B9EF;
+$BG-BLUE: #0062FE;
+$BG-COMMON-GRAY: #E1DEDE;
+
+$BG-PRIMARY-COLOR: #1151F3;
+$BG-SECONDARY-COLOR: rgba(17, 81, 243, 0.16);
+$BG-LIGHT-COLOR: #E9EAED;
+$BG-INFO-COLOR: #12A4F5;
+$BG-SUCCESS-COLOR: #009B51;
+$BG-WARNING-COLOR: #FFAE11;
+$BG-DANGER-COLOR: #EE0808;
+
+/*Card BACKGROUND COLOR */
+$BG-FLIGHT-CARD: #FFFFFF;
+$TEXT-TAB-STRIP: #CCCCCC;
+$BG-ACTIVE-TAB: #1E8A88;
+$WHITE-TEXT: #FFFFFF;
+
+/*Custom Colors*/
+$RED-COLOR : #c00;
+$GREEN-COLOR: #009B51;
+$PURPLE-COLOR: #673AB7;
+$BLUE-COLOR: #0d6efd;
+
+body {
+    background: $BG-COMMON-GRAY !important;
+}
+
+hr {
+    border: 1px solid #eee;
+}
+
+.bg-primary-f {
+    background-color: $BG-DARK-BLUE;
+}
+
+.bg-secondary-f {
+    background-color: $BG-SECONDARY-COLOR;
+}
+
+.bg-light-f {
+    background-color: $BG-LIGHT-COLOR;
+}
+
+.bg-info-f {
+    background-color: $BG-INFO-COLOR;
+}
+
+.bg-success-f {
+    background-color: $BG-SUCCESS-COLOR;
+}
+
+.bg-warning-f {
+    background-color: $BG-WARNING-COLOR;
+}
+
+.bg-danger-f {
+    background-color: $BG-DANGER-COLOR;
+}
+
+form .btn-primary {
+    margin-right: 4px
+}
+
+form .btn-success {
+    margin-right: 4px
+}
+
+form .btn-danger {
+    margin-right: 4px
+}
+
+/*.icon-container {
+    width: 50px;
+    height: 50px;
+    position: relative;
+}*/
+
+form .row {
+    margin-bottom: 16px;
+}
+.telerik-blazor.k-invalid {
+    input, button {
+        background: #ffd1d178;
+    }
+
+    button {
+        background: #ffd1d1;
+    }
+}
+/*img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}*/
+.status-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid white;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+}
+/*GLOBAL CLASSES*/
+.card, .k-card.telerik-blazor{
+    box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+.TelerikNotification .k-notification-container .k-notification-wrap {
+    width: 300px;
+    height: 50px;
+    font-size: 1.5em;
+    text-align: center;
+    align-items: center;
+}
+
+.big-notification .k-notification-container .k-notification-wrap {
+    width: 350px;
+    height: 100px;
+}
+
+.big-notification {
+    z-index: 1234;
+}
+
+html, body, app, .k-drawer-container, .k-drawer-content, .main {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+.main {
+    overflow-y: auto;
+    background-color: #F5F7FF;
+
+    .content {
+        padding: 0;
+
+        .left-header {
+            max-height: 54px;
+            min-height: 54px;
+            background-color: $BG-MENU-TITLE-HEADER;
+            color: white;
+        }
+    }
+}
+
+.k-drawer-content {
+    overflow-x: auto;
+    font-size: 16px
+}
+
+.top-row {
+    left: 0;
+}
+
+.drawer-hamburger {
+    position: absolute;
+    z-index: 2;
+}
+
+/*LEFT MENU NAV BAR*/
+.k-drawer-mini {
+    .k-drawer.k-drawer-start {
+        border-right-width: 0;
+    }
+}
+
+.k-drawer-expanded {
+    .k-drawer.k-drawer-start {
+        border-right-width: 0;
+    }
+}
+
+.k-drawer-left.k-drawer-mini {
+    .k-drawer {
+        border-right-width: 0;
+    }
+}
+
+.k-drawer-left.k-drawer-expanded {
+    .k-drawer {
+        border-right-width: 0;
+    }
+}
+
+
+
+.k-drawer-mini .k-drawer-wrapper {
+    width: 70px;
+}
+
+.k-drawer-container.k-drawer-left.k-drawer-push.k-drawer-mini {
+    &.k-drawer-expanded {
+        .k-drawer-wrapper {
+            width: 230px !important;
+        }
+    }
+}
+
+.k-drawer-top-header {
+    background-color: $BG-MENU-TITLE-HEADER
+}
+
+.user-face {
+    padding: 34px;
+    font-size: 14px;
+    color: black !important;
+}
+
+.k-button.drawer-hamburger {
+    background: transparent;
+    color: $BG-MENU-ITEM-TEXT-COLOR !important;
+    border: 0;
+    box-shadow: none;
+    padding: 34px;
+}
+
+.telerik-blazor {
+    &.k-drawer {
+        background-color: $BG-MAIN-MENU;
+        color: white;
+
+        .k-drawer-item {
+            border-left: 6px solid $BG-MAIN-MENU;
+            font-size: 14px;
+
+            .selected-arrow {
+                width: 0;
+                height: 0;
+                position: absolute;
+                right: 0;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+                border-right: 10px solid rgb(245 247 255);
+            }
+        }
+
+        .menu-item-text-color {
+            color: $BG-MENU-ITEM-TEXT-COLOR;
+        }
+
+        .selected-nav-item {
+            background-color: $BG-MENU-ITEM-SELECTED;
+            border-left: 6px solid $BG-MENU-ITEM-SELECTED-L-BORDER;
+            /*Update class according */
+            .menu-item-text-color {
+                color: #3066F8 !important;
+            }
+        }
+
+        .k-drawer-item:hover, .k-drawer-item.k-state-hover {
+            color: white !important;
+            background-color: $BG-MENU-ITEM-HOVER;
+
+            .menu-item-text-color {
+                color: #3066F8;
+            }
+        }
+    }
+}
+
+.btn {
+    &.edit-button {
+        background-color: $SOLID-COLOR !important;
+        color: $WHITE-TEXT !important;
+    }
+
+    &.k-btn-primary {
+        border: 1px solid $BG-BTN-PRIMARY !important;
+        background-color: $BG-BTN-PRIMARY !important;
+    }
+
+    &.k-btn-primary:hover {
+        color: white;
+        border: 1px solid $BG-BTN-PRIMARY-HOVER !important;
+        background-color: $BG-BTN-PRIMARY-HOVER !important;
+    }
+
+    &.k-btn-danger {
+        color: white;
+        border: 1px solid $BG-BTN-DANGER !important;
+        background-color: $BG-BTN-DANGER !important;
+    }
+
+    &.k-btn-danger:hover {
+        color: white;
+        border: 1px solid $BG-BTN-DANGER-HOVER !important;
+        background-color: $BG-BTN-DANGER-HOVER !important;
+    }
+
+    &.k-btn-info {
+        border: 1px solid $BG-BTN-INFO !important;
+        background-color: $BG-BTN-INFO !important;
+    }
+
+    &.k-btn-info:hover {
+        color: white;
+        border: 1px solid $BG-BTN-INFO-HOVER !important;
+        background-color: $BG-BTN-INFO-HOVER !important;
+    }
+
+    &.k-btn-secondary {
+        margin-left: 5px;
+    }
+
+    &.k-btn-secondary:hover {
+        color: white;
+    }
+
+    
+}
+.k-button {
+    &.k-button-Outline-secondary {
+        border-color: $BG-SECONDARY !important;
+        color: $BG-SECONDARY !important;
+    }
+
+    &.k-button-Outline-secondary:hover {
+        border-color: $BG-SECONDARY !important;
+        color: $BG-SECONDARY !important;
+    }
+}
+.login-button {
+    width: 100% !important;
+}
+
+/*TOP HORIZONTAL HEADER START*/
+
+.header-profile-dropdown {
+    &:hover {
+        background-color: $BG-MENU-TITLE-HEADER !important;
+    }
+
+    background-color: $BG-MENU-TITLE-HEADER !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.dropdown-menu {
+    box-shadow: 0 4px 8px 0 rgb(2 34 84 / 35%), 0 6px 20px 0 rgb(2 34 84 / 61%) !important;
+    z-index:1051;
+}
+
+.show-notification-dot {
+    position: relative !important;
+    top: -3px !important;
+    color: red;
+    content: '';
+    height: .60em;
+    width: .60em;
+    background: currentColor;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: -.65em;
+    transform: translateY(-50%);
+}
+/*TOP HORIZONTAL HEADER END*/
+
+/*TelerikTabStrip START*/
+.k-tabstrip-list {
+    .k-tabstrip-items-wrapper {
+        z-index: 0;
+    }
+}
+
+/* Popup buttons */
+
+.close-button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: #FFFF;
+}
+.hr-gray {
+    border: 1px solid #bfbfbf;
+}
+.hr-blue {
+    border: 1px solid #EBECF3;
+}
+.k-form-buttons {
+    margin-top: 0;
+}
+.k-form-buttons.k-actions-start {
+    justify-content: flex-end !important;
+    display: flex !important;
+}
+/*.k-actions-start {
+    justify-content: flex-end;
+}
+*/
+
+/*TelerikTabStrip END*/
+
+/*Telerik toastr notification*/
+.sm-notification {
+    z-index: 1;
+}
+
+/*Telerik Card Css*/
+.flight-info-card {
+    background: #EEF1F5;
+    border: 2px solid #E0E0E0;
+    border-radius: 8px;
+
+    .k-card.telerik-blazor {
+        height: 200px;
+        overflow-y: auto;
+    }
+}
+
+.card-fonts {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.image-card-info {
+    border-radius: 8px;
+}
+
+.flight-cards {
+    background: $BG-FLIGHT-CARD !important;
+    border-radius: 8px;
+    color: black !important;
+    box-shadow: 0px 2px 4px rgb(0 0 0 / 15%);
+    border: 0px solid;
+}
+
+.k-tabstrip-items-wrapper .k-item {
+    color: $TEXT-TAB-STRIP !important;
+}
+.k-tabstrip-top {
+    .k-tabstrip-items-wrapper {
+        margin-bottom: 0;
+
+        .k-tabstrip-item.k-item:hover {
+            background-color: $BG-MENU-ITEM-HOVER;
+            color: #3066F8 !important;
+        }
+    }
+} 
+.k-tabstrip-items {
+    /*padding: 15px;*/
+
+    .k-tabstrip-item.k-item {
+        .k-link {
+            font-size: 14px;
+            color: #111111 !important;
+            border-right: 2px solid rgba(17, 17, 17, 0.141);
+        }
+    }
+
+    .k-tabstrip-item.k-item:focus {
+        box-shadow: none !important;
+    }
+
+    .k-tabstrip-item.k-item.k-active {
+        &.k-tab-on-top {
+            border: 0 !important;
+        }
+
+        .k-link {
+            border-bottom: 4px solid #3066F8;
+            background: $BG-MENU-ITEM-SELECTED !important;
+            /*color: $WHITE-TEXT !important;*/
+        }
+    }
+}
+
+.k-input-solid {
+    background-color: #FCFCFC !important;
+}
+
+.invalid {
+    background-color: #FFD1D178;
+    border: 1px solid #FF0000;
+}
+
+.k-input-inner {
+    background-color: #3066f81c;
+}
+
+.k-input-button, .k-input-button:hover {
+    background-color: #3066f842;
+}
+
+.k-btn-grid-delete {
+    background-color: $RED-COLOR !important;
+    border-color: $RED-COLOR !important
+}
+
+.k-btn-grid-edit {
+    background-color: $GREEN-COLOR !important;
+    border-color: $GREEN-COLOR !important
+}
+
+.k-btn-grid-share {
+    background-color: $PURPLE-COLOR !important;
+    border-color: $PURPLE-COLOR !important;
+}
+
+.k-btn-grid-download {
+    background-color: $BLUE-COLOR !important;
+    border-color: $BLUE-COLOR !important;
+}
+
+.initial-data-loader .k-loader-container-overlay.k-overlay-light {
+    background-color: white;
+}
+
+.k-loader-container {
+    z-index: 100;
+}
+
+.component-title {
+    font-family: 'Outfit';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 23px;
+}
+.custom-elipse {
+    box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
+}
+/*Modal style*/
+.modal {
+    position: fixed;
+    z-index: 1055;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    display: block;
+
+    .close {
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .modal-dialog {
+        z-index: 1055;
+        background-color: #ffffff;
+        border-radius: 20px 20px 12px 12px !important;
+    }
+
+    .modal-header {
+        border-radius: 12px 12px 0 0 !important;
+        height: 50px;
+    }
+
+    .modal-content {
+        border-radius: 12px !important;
+        background-color: #fff0;
+        border: 0;
+    }
+
+    .modal-backdrop.show {
+        opacity: .8;
+    }
+}
+
+.k-wizard-buttons {
+    display: none !important;
+}
+
+.k-wizard {
+    .k-wizard-content {
+        overflow-x: hidden !important;
+    }
+}
+
+.custom-border-y {
+    border-bottom: 1px solid #E6E6E6;
+    border-top: 1px solid #E6E6E6;
+    width: 100%;
+    padding: 4px 0;
+}
+.row.compact-row > .col-6 {
+    padding: 10px;
+}
+label, a, 
+.text-14 {
+    font-size: 14px !important;
+}
+.text-16 {
+    font-size: 16px !important;
+}
+.cursor-pointer{
+    cursor:pointer !important;
+}
+
+/*TELERIK TEXTBOX INNER TEXT FONT SIZE & PLACEHOLDER SIZE*/
+.k-input-inner {
+    font-size:14px
+}
+/*TOASTR CLASS*/
+.k-notification-group {
+    z-index: 1060 !important;
+}

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.Entities
 {
-    public class Document
+    public class Document : CommonField
     {
         public Guid Id { get; set; }
 
@@ -32,21 +32,5 @@ namespace DataModels.Entities
         public int ModuleId { get; set; }
 
         public string TagIds { get; set; }
-
-        public bool IsActive { get; set; }
-        
-        public bool IsDeleted { get; set; }
-
-        public long CreatedBy { get; set; }
-
-        public DateTime CreatedOn { get; set; }
-
-        public long? UpdatedBy { get; set; }
-
-        public DateTime? UpdatedOn { get; set; }
-
-        public DateTime? DeletedOn { get; set; }
-
-        public long? DeletedBy { get; set; }
     }
 }

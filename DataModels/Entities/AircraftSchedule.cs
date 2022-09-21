@@ -2,7 +2,7 @@
 
 namespace DataModels.Entities
 {
-    public class AircraftSchedule
+    public class AircraftSchedule : CommonField
     {
         public long Id { get; set; }
 
@@ -40,20 +40,5 @@ namespace DataModels.Entities
         
         public bool StandBy { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public bool IsDeleted { get; set; }
-
-        public DateTime CreatedOn { get; set; }
-
-        public long CreatedBy { get; set; }
-
-        public Nullable<System.DateTime> UpdatedOn { get; set; }
-
-        public Nullable<long> UpdatedBy { get; set; }
-
-        public Nullable<System.DateTime> DeletedOn { get; set; }
-
-        public Nullable<long> DeletedBy { get; set; }
     }
 }

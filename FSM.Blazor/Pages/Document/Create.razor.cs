@@ -218,7 +218,7 @@ namespace FSM.Blazor.Pages.Document
                     }
 
                     Stream stream = file.OpenReadStream(maxFileSize);
-                    uploadedFilePath = Path.GetFullPath($"{UploadDirectory.RootDirectory}\\{UploadDirectory.TempDocument}\\") + file.Name;
+                    uploadedFilePath = Path.GetFullPath($"{UploadDirectories.RootDirectory}\\{UploadDirectories.TempDocument}\\") + file.Name;
 
                     FileStream fs = File.Create(uploadedFilePath);
 

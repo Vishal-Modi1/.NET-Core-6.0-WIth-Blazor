@@ -1,0 +1,44 @@
+﻿@using System;
+@using System.ComponentModel.DataAnnotations;
+@using DataModels.VM.Account;
+
+@page "/RegistrationSuccess"
+
+@layout EmptyLayout
+@namespace Web.UI.Pages.Account
+
+@inject IJSRuntime JSRunTime
+
+<PageTitle>Congratulations | Fly Manager </PageTitle>
+
+<div class="row vh-100 align-items-center m-0">
+    <div class="col-md-3 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="upfly-logo mt-2 mb-2 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                </div>
+                <div>
+                    <div class="text-center m-3">
+                        <div class="mt-3">
+                            <CustomIcons IconName="right-check" PrimaryColor="#34A853" />
+                        </div>
+                        <div class="mt-3">
+                            <span><FontLabel fontSize="26px"><strong>Congratulations</strong></FontLabel></span>
+                        </div>
+                        <div class="mt-2">
+                            <span><FontLabel>Your account has been created successfully.</FontLabel></span>
+                        </div>
+                        <div class="mt-2 text-wrap">
+                            <span><FontLabel>We have sent an account activation link in your mail, please activate your account.</FontLabel></span>
+                        </div>
+                        <div class="mt-3">
+                            <a href="/login" style="color:#1151F3"> Go to Login </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

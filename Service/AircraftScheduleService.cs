@@ -20,12 +20,13 @@ namespace Service
         private readonly IAircraftEquipmentTimeRepository _aircraftEquipmentTimeRepository;
         private readonly IAircraftScheduleHobbsTimeRepository _aircraftScheduleHobbsTimeRepository;
         private readonly IUserPreferenceRepository _userPreferenceRepository;
+        private readonly IUserVSCompanyRepository _userVSCompanyRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
             IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
-            IUserPreferenceRepository userPreferenceRepository)
+            IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
@@ -34,6 +35,7 @@ namespace Service
             _aircraftEquipmentTimeRepository = aircraftEquipmentTimeRepository;
             _aircraftScheduleHobbsTimeRepository = aircraftScheduleHobbsTimeRepository;
             _userPreferenceRepository = userPreferenceRepository;
+            _userVSCompanyRepository = userVSCompanyRepository;
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id, long userId)
@@ -65,7 +67,7 @@ namespace Service
             }
             catch (Exception ex)
             {
-                CreateResponse(schedulerVM, HttpStatusCode.InternalServerError, ex.Message);
+                CreateResponse(null, HttpStatusCode.InternalServerError, ex.Message);
             }
 
             return _currentResponse;
@@ -107,8 +109,15 @@ namespace Service
         private void ListDropDownValues(SchedulerVM schedulerVM, int companyId, int roleId)
         {
             schedulerVM.ScheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
-            schedulerVM.Member1List = schedulerVM.Member2List = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false && p.RoleId != (int)DataModels.Enums.UserRole.Instructors && p.CompanyId == companyId);
-            schedulerVM.InstructorsList = _userRepository.ListDropdownValuesbyCondition(p => p.IsActive == true && p.IsDeleted == false && p.RoleId == (int)DataModels.Enums.UserRole.Instructors && p.CompanyId == companyId);
+
+            var usersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
+            List<UserVSCompany> userVsRoleList = _userVSCompanyRepository.ListByCompanyId(companyId);
+
+            List<long> instructorsList = userVsRoleList.Where(p => p.RoleId == (int)DataModels.Enums.UserRole.Instructors).Select(p => p.UserId).ToList();
+
+            schedulerVM.Member1List = schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
+            schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
+            
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
         }
 
@@ -146,7 +155,7 @@ namespace Service
 
                 if (!isAircraftAvailable)
                 {
-                    CreateResponse(null, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+                    CreateResponse(null, HttpStatusCode.NotAcceptable, "Aircraft is not available for selected time duration");
 
                     return _currentResponse;
                 }
@@ -174,7 +183,7 @@ namespace Service
 
                 if (!isAircraftAvailable)
                 {
-                    CreateResponse(null, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+                    CreateResponse(null, HttpStatusCode.NotAcceptable, "Aircraft is not available for selected time duration");
 
                     return _currentResponse;
                 }

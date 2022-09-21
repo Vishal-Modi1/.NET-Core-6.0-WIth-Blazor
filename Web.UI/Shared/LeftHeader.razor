@@ -1,0 +1,10 @@
+﻿@using Web.UI.Models.Shared
+<div class="left-header d-flex align-items-center justify-content-between">
+    <div class="ms-2">@navigationHeaderModel.Company.Name</div>
+    <TopHorizontalHeader navigationHeaderModel="@navigationHeaderModel" ></TopHorizontalHeader>
+</div>
+
+@code {
+
+    [Parameter] public NavigationHeaderModel navigationHeaderModel { get; set; } 
+}

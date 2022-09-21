@@ -23,7 +23,7 @@ namespace FSMAPI.Controllers
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public UserController(IUserService userService, ISendMailService sendMailService, 
+        public UserController(IUserService userService, ISendMailService sendMailService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
@@ -36,26 +36,29 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("getDetails")]
-        public IActionResult GetDetails(long id)
+        public IActionResult GetDetails(long id, int companyId)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            if (companyId == 0)
+            {
+                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                companyId = company == "" ? 0 : Convert.ToInt32(company);
+            }
 
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
-            int roleIdValue = companyId == "" ? 0 : Convert.ToInt32(roleId);
+            int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
-            CurrentResponse response = _userService.GetDetails(id, companyIdValue, roleIdValue);
+            CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
             return Ok(response);
         }
 
         [AllowAnonymous]
         [HttpGet]
-        [Route("getMasterDetails")]
-        public IActionResult GetDetails()
+        [Route("getmasterdetails")]
+        public IActionResult GetMasterDetails(bool isInvited, string token)
         {
             int roleIdValue = (int)DataModels.Enums.UserRole.Admin;
+            CurrentResponse response = _userService.GetMasterDetails(roleIdValue, isInvited, token);
 
-            CurrentResponse response = _userService.GetMasterDetails(roleIdValue);
             return Ok(response);
         }
 
@@ -70,7 +73,8 @@ namespace FSMAPI.Controllers
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
-                userVM.CreatedBy = userVM.UpdatedBy = Convert.ToInt64(loggedInUser);
+                userVM.CreatedBy = Convert.ToInt64(loggedInUser);
+                userVM.UpdatedBy = Convert.ToInt64(loggedInUser);
             }
 
             userVM.Password = password.Encrypt();
@@ -93,7 +97,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(UserVM userVM)
         {
-            userVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            userVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _userService.Edit(userVM);
             return Ok(response);
@@ -113,7 +117,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _userService.Delete(id, deletedBy);
 
             return Ok(response);
@@ -132,7 +136,7 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(UserDatatableParams datatableParams)
         {
-            if(datatableParams.CompanyId == 0)
+            if (datatableParams.CompanyId == 0)
             {
                 string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
                 datatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
@@ -156,7 +160,15 @@ namespace FSMAPI.Controllers
         [Route("findbyid")]
         public IActionResult FindById(long id)
         {
-            CurrentResponse response = _userService.FindById(id);
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int? companyIdValue = companyId == "" ? null : Convert.ToInt32(companyId);
+
+            string role = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            int roleId = role == "" ? 0 : Convert.ToInt32(role);
+
+            bool isSuperAdmin = roleId == (int)DataModels.Enums.UserRole.SuperAdmin;
+
+            CurrentResponse response = _userService.FindById(id, isSuperAdmin, companyIdValue);
 
             return Ok(response);
         }
@@ -174,7 +186,7 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvaluesbycompanyid")]
         public IActionResult ListDropDownValuesByCompanyId(int companyId)
         {
-            CurrentResponse response = _userService.ListDropDownValuesByCompanyId(companyId);
+            CurrentResponse response = _userService.ListDropdownValuesByCompanyId(companyId);
 
             return Ok(response);
         }
@@ -198,14 +210,14 @@ namespace FSMAPI.Controllers
                 companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectory.UserProfileImage + "\\" + companyId , form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.UserProfileImage + "\\" + companyId, form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "";
 
             if (isFileUploaded)
             {
-                response = _userService.UpdateImageName(Convert.ToInt32(form["UserId"]), fileName);
+                response = _userService.UpdateImageName(Convert.ToInt64(form["UserId"]), fileName);
             }
 
             return Ok(response);

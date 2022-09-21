@@ -1,0 +1,35 @@
+﻿@layout TelerikLayout
+
+@page "/Users"
+
+<TelerikTabStrip>
+
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="mx-2">
+                    <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Users</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.User.UsersList ParentModuleName="Administration"></Web.UI.Pages.User.UsersList>
+        </Content>
+    </TabStripTab>
+
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="mx-2">
+                    <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Invited Users</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.User.InvitedUsersList ParentModuleName="Administration"></Web.UI.Pages.User.InvitedUsersList>
+        </Content>
+    </TabStripTab>
+
+</TelerikTabStrip>

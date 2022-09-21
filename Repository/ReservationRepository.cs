@@ -34,7 +34,7 @@ namespace Repository
                     endDate = datatableParams.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string sql = $"EXEC dbo.GetReservationList '{ datatableParams.SearchText }', { pageNo }, " +
+                string sql = $"EXEC dbo.GetReservationsList '{ datatableParams.SearchText }', { pageNo }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
                     $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}," +
                     $"{datatableParams.AircraftId.GetValueOrDefault()},'{reservationType}'";

@@ -1,0 +1,38 @@
+﻿@using DE = DataModels.Entities
+
+<TelerikForm Model="@aircraftMake" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@aircraftMake.Id" name="Id" />
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <label for="name" class="k-label k-form-label">Aircraft Make</label>
+            </div>
+            <div class="col-md-12">
+                <TelerikTextBox Id="name" @bind-Value="@aircraftMake.Name" PlaceHolder="Make" ></TelerikTextBox>
+                <TelerikValidationMessage For="@(() => aircraftMake.Name)"></TelerikValidationMessage>
+            </div>
+        </div>
+        <hr class="hr-gray mt-3 mb-3" />
+    </FormItems>
+    <FormButtons>
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@aircraftMake.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

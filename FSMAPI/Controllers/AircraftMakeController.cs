@@ -43,6 +43,15 @@ namespace FSMAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet]
+        [Route("listdropdownvalues")]
+        public IActionResult ListDropDownValues()
+        {
+            CurrentResponse response = _aircraftMakeService.ListDropDownValues();
+
+            return Ok(response);
+        }
+
         [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(int id)

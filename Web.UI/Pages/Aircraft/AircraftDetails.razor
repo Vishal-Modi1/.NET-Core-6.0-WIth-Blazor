@@ -1,0 +1,101 @@
+﻿@using DataModels.Enums;
+@page "/AircraftDetails"
+
+@inject NavigationManager NavigationManager
+
+<PageTitle>Aircraft Details | Fly Manager </PageTitle>
+
+@if (aircraftData != null)
+{
+    <div class="d-flex justify-content-between">
+        <div><h3>@aircraftData.TailNo</h3></div>
+        <div>
+            <TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
+                       Enabled="@(!isBusy)" Class="btn k-btn-primary" ThemeColor="primary">
+                <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                Edit
+                <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy">
+                </TelerikLoader>
+            </TelerikButton>
+
+
+            <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton)"
+                       Class="btn k-btn-primary" ThemeColor="primary">
+                <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                Update Status
+                <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                </TelerikLoader>
+            </TelerikButton>
+
+            <TelerikButton ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">Back</TelerikButton>
+
+        </div>
+    </div>
+
+    <div class="card mt-2 flight-info-card">
+        <div class="row p-3">
+            <div class="col-12 col-md-12 col-lg-3 my-1 my-sm-2 my-xs-2">
+                <TelerikCard Class="image-card-info">
+                    <img src="@aircraftData.ImagePath" style="width: auto;height: inherit;" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" />
+
+                </TelerikCard>
+            </div>
+            <div class="col-12 col-md-12 col-lg-3 my-1 my-sm-2 my-xs-2">
+                <TelerikCard Class="flight-cards">
+                    <CardBody>
+                        <div><span class="card-fonts">Tail No:</span> @aircraftData.TailNo</div>
+                        <div><span class="card-fonts">Model :</span> @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</div>
+                        <div><span class="card-fonts">Make :</span> @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</div>
+                        <div><span class="card-fonts">Category :</span> @(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</div>
+                        <div><span class="card-fonts">Turbines :</span> @(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</div>
+                        <div><span class="card-fonts">Status :</span>  @aircraftData.AircraftStatus.Status </div>
+                    </CardBody>
+                </TelerikCard>
+            </div>
+@*            <div class="col-12 col-md-12 col-lg-3 my-1 my-sm-2 my-xs-2">
+                <TelerikCard Class="flight-cards">
+                    <CardBody>
+                        <CardTitle>Maintenance</CardTitle>
+                        <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                    </CardBody>
+                </TelerikCard>
+            </div>
+            <div class="col-12 col-md-12 col-lg-3 my-1 my-sm-2 my-xs-2">
+                <TelerikCard Class="flight-cards">
+                    <CardBody>
+                        <CardTitle>Reservation</CardTitle>
+                        <p>Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.</p>
+                    </CardBody>
+                </TelerikCard>
+            </div>*@
+        </div>
+    </div>
+    <div class="card" style="margin-top:30px">
+
+        <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData>
+
+        </Web.UI.Pages.Aircraft.DetailsTabs.Index>
+
+    </div>
+}
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(OperationType.Edit)
+                      CloseOnOutsideClick="false" Width="@modelWidth"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Edit)
+            {
+                <Create aircraftData=@(aircraftData) CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else
+            {
+                <UpdateStatus aircraftData=@(aircraftData) UpdateStatusCallBack="@UpdateStatus" CloseDialogCallBack="@CloseDialog"></UpdateStatus>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

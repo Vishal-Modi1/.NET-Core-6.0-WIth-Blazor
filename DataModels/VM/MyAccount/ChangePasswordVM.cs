@@ -4,7 +4,7 @@ namespace DataModels.VM.MyAccount
 {
     public class ChangePasswordVM
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
 
         [Required(ErrorMessage = "The old password field is required.")]
         [Display(Name = "Old Password")]

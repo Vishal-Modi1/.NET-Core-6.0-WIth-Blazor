@@ -1,0 +1,268 @@
+﻿@using Models.Shared
+@using DataModels.VM.Common
+@using DataModels.VM.User
+@using DataModels.Enums
+@using Web.UI.Data.User
+
+<TelerikForm Model="@userData" EditContext="@userForm" OnValidSubmit="@Submit">
+
+    <FormValidation>
+       <CustomValidationSummary> </CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+        <div class="popup-content my-3">
+
+            @if (!userData.IsAuthenticated)
+            {
+                if (!FromAuthoriseSection)
+                {
+                    <hr style="margin-bottom:35px" />
+
+                }
+            }
+
+            <input type="hidden" value="@userData.Id" name="Id" />
+
+            <div class="row">
+
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="firstName" class="k-label k-form-label">First Name</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="lastName" class="k-label k-form-label">Last Name</label>
+                </div>
+
+                <div class="col-md-6">
+                    <TelerikTextBox Id="firstName" @bind-Value="@userData.FirstName" PlaceHolder="First Name"></TelerikTextBox>
+                    <TelerikValidationMessage For="@(() => userData.FirstName)"></TelerikValidationMessage>
+                </div>
+
+                <div class="col-md-6">
+                    <TelerikTextBox Id="lastName" @bind-Value="@userData.LastName" PlaceHolder="Last Name"></TelerikTextBox>
+                    <TelerikValidationMessage For="@(() => userData.LastName)"></TelerikValidationMessage>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="email" class="k-label k-form-label">Email</label>
+                </div>
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="mobileNo" class="k-label k-form-label">Mobile No</label>
+                </div>
+
+                <div class="col-md-6">
+
+                    <TelerikTextBox Id="email" @bind-Value="@userData.Email" PlaceHolder="Email"></TelerikTextBox>
+                    <TelerikValidationMessage For="@(() => userData.Email)"></TelerikValidationMessage>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <TelerikMaskedTextBox Mask="(000) 000-0000" Id="mobileNo" @bind-Value="@userData.Phone" PlaceHolder="(000) 000-0000"></TelerikMaskedTextBox>
+                    <TelerikValidationMessage For="@(() => userData.Phone)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6 align-items-center d-flex">
+
+                    @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
+                    {
+                        <label for="roleId" class="k-label k-form-label">User Role</label>
+                    }
+
+                </div>
+
+                <div class="col-md-6 align-items-center d-flex">
+                    @if (!userData.IsFromMyProfile)
+                    {
+                        <label for="companyId" class="k-label k-form-label">Company</label>
+                    }
+                </div>
+
+                <div class="col-md-6">
+
+                    @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
+                    {
+                        <TelerikComboBox Id=roleId Data="@userData.UserRoles" TextField="Name" Enabled=@(userData.IsAuthenticated)
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Role" ValueField="Id" @bind-Value="@userData.RoleId">
+                        </TelerikComboBox>
+                        <TelerikValidationMessage For="@(() => userData.RoleId)"></TelerikValidationMessage>
+                    }
+                    else
+                    {
+                        <TelerikTextBox Id="roleId" @bind-Value="@userData.Role" Enabled="false"></TelerikTextBox>
+                        <input type="hidden" id="RoleId" value="@userData.RoleId" />
+                    }
+                </div>
+
+                <div class="col-md-6">
+
+                    @if (!userData.IsFromMyProfile)
+                    {
+                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                        {
+                            <TelerikComboBox Id=companyId Data="@userData.Companies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Company" ValueField="Id" @bind-Value="@userData.CompanyId">
+                            </TelerikComboBox>
+                            <TelerikValidationMessage For="@(() => userData.CompanyId)"></TelerikValidationMessage>
+                        }
+                        else
+                        {
+                            <TelerikTextBox Id="companyId" @bind-Value="@userData.CompanyName" Enabled="false"></TelerikTextBox>
+                            <input type="hidden" id="CompanyId" value="@userData.CompanyId" />
+                        }
+                    }
+                </div>
+            </div>
+
+            @if (userData.IsAuthenticated)
+            {
+                <div class="row">
+                    <div class="col-md-6 align-items-center d-flex">
+                        <label for="isInstructor" class="k-label k-form-label">Is Instructor</label>
+                    </div>
+
+                    <div class="col-md-6 align-items-center d-flex">
+                        @if (isInstructorTypeDropdownVisible)
+                        {
+                            <label for="instructorTypeId" class="k-label k-form-label">Instructor Type</label>
+                        }
+                    </div>
+
+                    <div class="col-md-6">
+                        <TelerikSwitch Id="isInstructor" @bind-Value="@userData.IsInstructor" OnChange="() => OnIsInstructorValueChange()"></TelerikSwitch>
+                    </div>
+
+                    <div class="col-md-6">
+
+                        @if (isInstructorTypeDropdownVisible)
+                        {
+                            <TelerikComboBox Id=instructorTypeId Data="@userData.InstructorTypes" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Instructor Type" ValueField="Id" @bind-Value="@userData.InstructorTypeId">
+                            </TelerikComboBox>
+                            <TelerikValidationMessage For="@(() => userData.InstructorTypeId)"></TelerikValidationMessage>
+                        }
+
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="dateofBirth" class="k-label k-form-label">Date of Birth</label>
+                </div>
+
+                <div class="col-md-6 align-items-center d-flex">
+                    <label for="countryId" class="k-label k-form-label">Country</label>
+                </div>
+
+                <div class="col-md-6">
+                    <TelerikDatePicker @bind-Value="@userData.DateofBirth"
+                                       Id="dateofBirth">  </TelerikDatePicker>
+                </div>
+
+                <div class="col-md-6">
+
+                    <TelerikComboBox Id=countryId Data="@userData.Countries" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Country" ValueField="Id" @bind-Value="@userData.CountryId">
+                    </TelerikComboBox>
+                    <TelerikValidationMessage For="@(() => userData.CountryId)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+
+            <div class="row">
+
+                @if (userData.IsAuthenticated)
+                {
+                    <div class="col-md-6 align-items-center d-flex mb-3">
+                        <div class="row">
+                            <div class="col-md-12 align-items-center d-flex">
+                                <label for="externalId" class="k-label k-form-label">External Id</label>
+                            </div>
+                            <div class="col-md-12 align-items-center d-flex">
+                                <TelerikTextBox Id="externalId" @bind-Value="@userData.ExternalId" PlaceHolder="External Id"></TelerikTextBox>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-6 align-items-center d-flex mb-3">
+                    <div class="row">
+                        <div class="col-md-12 align-items-center d-flex">
+                            <label for="genderId" class="k-label k-form-label">Gender</label>
+
+                        </div>
+                        <div class="col-md-12 align-items-center d-flex">
+
+                            <TelerikRadioGroup Data="@genderOptions" ValueField="@nameof(RadioButtonItem.Id)"
+                                               TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@userData.GenderId"
+                                               Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnGenderValueChange()"
+                                               LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            @if (userData.IsAuthenticated)
+            {
+                <div class="row">
+                    <div class="col-md-6 align-items-center d-flex">
+                        <label for="isSendEmailInvite" class="k-label k-form-label">Send Email Invite</label>
+                    </div>
+                    <div class="col-md-6 align-items-center d-flex">
+                        <label for="isSendTextMessage" class="k-label k-form-label">Send Text Message</label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <TelerikSwitch Id="isSendEmailInvite" @bind-Value="@userData.IsSendEmailInvite"></TelerikSwitch>
+                    </div>
+
+                    <div class="col-md-6">
+                        <TelerikSwitch Id="isSendTextMessage" @bind-Value="@userData.IsSendTextMessage"></TelerikSwitch>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <hr class="hr-gray mt-3 mb-3" />
+    </FormItems>
+
+    <FormButtons>
+        <div class="row mb-0">
+            <div class="col-md-12 text-right">
+
+                @if (userData.IsAuthenticated)
+                {
+                    <FormFooterComponent id="@userData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
+                }
+                else
+                {
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@GoBack" ThemeColor="info" Class="btn k-btn-primary"> Previous </TelerikButton>
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@GotoSave" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+                        Save
+                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                        </TelerikLoader>
+                    </TelerikButton>
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@RedirectToLogin" ThemeColor="secondary" Class="btn k-btn-secondary"> Cancel </TelerikButton>
+                }
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

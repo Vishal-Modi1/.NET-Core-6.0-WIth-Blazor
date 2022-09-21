@@ -36,6 +36,21 @@ namespace Repository
             }
         }
 
+        public UserRole FindByUserIdAndCompanyId(long userId, int? companyId)
+        {
+            using (_myContext = new MyContext())
+            {
+                UserRole userRole =(from role in _myContext.UserRoles
+                                    join userCompany in _myContext.UsersVsCompanies
+                                    on role.Id equals userCompany.RoleId
+                                    where userCompany.UserId == userId 
+                                    && userCompany.CompanyId == companyId 
+                                    select role).FirstOrDefault();
+                    
+                return userRole;
+            }
+        }
+
         public List<DropDownValues> ListDropDownValues(int roleId)
         {
             using (_myContext = new MyContext())

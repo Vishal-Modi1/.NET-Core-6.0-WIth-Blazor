@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Aircraft;
 using DataModels.Entities;
 using Microsoft.AspNetCore.Components;
+using DataModels.VM.AircraftEquipment;
 
 namespace FSM.Blazor.Pages.Aircraft
 {
@@ -16,16 +17,16 @@ namespace FSM.Blazor.Pages.Aircraft
         {
             if (AircraftData.Id == 0 || AircraftData.IsEquipmentTimesListChanged)
             {
-                AircraftData.AircraftEquipmentTimesList = new List<AircraftEquipmentTime>();
+                AircraftData.AircraftEquipmentTimesList = new List<AircraftEquipmentTimeCreateVM>();
 
-                AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                 {
                     EquipmentName = ("Air Frame")
                 });
 
                 for (int engineNo = 1; engineNo <= AircraftData.NoofEngines; engineNo++)
                 {
-                    AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                    AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                     {
                         EquipmentName = ("Engine " + engineNo)
                     });
@@ -35,7 +36,7 @@ namespace FSM.Blazor.Pages.Aircraft
                 for (int proppellerNo = AircraftData.NoofEngines + 1; proppellerNo < (AircraftData.NoofPropellers + AircraftData.NoofEngines + 1); proppellerNo++)
                 {
                     propeller++;
-                    AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTime()
+                    AircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                     {
                         EquipmentName = ("Propeller " + propeller)
                     });

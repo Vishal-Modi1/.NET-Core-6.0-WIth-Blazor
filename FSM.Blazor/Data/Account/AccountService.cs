@@ -27,7 +27,7 @@ namespace FSM.Blazor.Data.Account
             return response;
         }
 
-        public async Task<CurrentResponse> ValidateResetPasswordTokenAsync(DependecyParams dependecyParams, string token)
+        public async Task<CurrentResponse> ValidateTokenAsync(DependecyParams dependecyParams, string token)
         {
             dependecyParams.URL = $"account/validatetoken?token={token}";
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);

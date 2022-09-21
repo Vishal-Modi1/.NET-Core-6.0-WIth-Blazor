@@ -55,7 +55,7 @@ namespace FSM.Blazor.Pages.Account
 
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-                CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, link[0]);
+                CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, link[0]);
 
                 ManageResponse(response);
             }
@@ -84,7 +84,7 @@ namespace FSM.Blazor.Pages.Account
                 }
                 else
                 {
-                    message = new NotificationMessage().Build(NotificationSeverity.Error, "", "Token is not exist! Please try with valid token link.");
+                    message = new NotificationMessage().Build(NotificationSeverity.Error, "", "Invalid token! Please try with valid token link.");
                     NotificationService.Notify(message);
 
                     StateHasChanged();
@@ -106,7 +106,7 @@ namespace FSM.Blazor.Pages.Account
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
-            CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, resetPasswordVM.Token);
+            CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, resetPasswordVM.Token);
 
             ManageResponse(response);
 

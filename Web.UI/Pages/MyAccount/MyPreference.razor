@@ -1,0 +1,94 @@
+﻿@using DataModels.VM.Common
+@using DataModels.VM.UserPreference
+@using DataModels.Enums
+
+<h3>My Preference</h3>
+
+<TelerikForm Model="@userPreferenceVM" EditContext="@preferenceForm" OnValidSubmit="@Submit">
+
+    <FormValidation>
+
+        <CustomValidationSummary> </CustomValidationSummary>
+
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@userPreferenceVM.Id" name="Id" />
+
+        <div class="row">
+            <div class="col-md-2 align-items-center d-flex">
+                <label for="preferenceType" class="k-label k-form-label">Preference Type</label>
+            </div>
+            <div class="col-md-4">
+
+                <TelerikComboBox Id=preferenceType Data="@userPreferenceVM.PreferenceTypesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Preference Type" ValueField="Id"
+                                 Value="@userPreferenceVM.PreferenceTypeId"
+                                 ValueExpression="@( () => userPreferenceVM.PreferenceTypeId)"
+                                 ValueChanged="@( (int value) => GetPreferenceValues(value) )">
+                </TelerikComboBox>
+
+                <TelerikValidationMessage For="@(() => userPreferenceVM.PreferenceTypeId)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        @if (userPreferenceVM.PreferenceTypeId == (int)PreferenceType.Aircraft)
+        {
+            <div class="row">
+                <div class="col-md-2 align-items-center d-flex">
+                    <label for="aircraft" class="k-label k-form-label">Aircraft</label>
+                </div>
+                <div class="col-md-4">
+
+                    <TelerikMultiSelect Data="@userPreferenceVM.AircraftList"
+                                    @bind-Value="@userPreferenceVM.AircraftIds" AutoClose="false" Placeholder="Select aircrafts"
+                                    TextField="Name" ValueField="Id">
+                    </TelerikMultiSelect>
+
+                    <TelerikValidationMessage For="@(() => userPreferenceVM.AircraftIds)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+        }
+
+        else if (userPreferenceVM.PreferenceTypeId == (int)PreferenceType.ScheduleActivityType)
+        {
+            <div class="row">
+                <div class="col-md-2 align-items-center d-flex">
+                    <label for="activityType" class="k-label k-form-label">Activity Type</label>
+                </div>
+                <div class="col-md-4">
+
+                    <TelerikMultiSelect Data="@userPreferenceVM.ActivityTypeList"
+                                    @bind-Value="@userPreferenceVM.ActivityIds" AutoClose="false" Placeholder="Select activities"
+                                    TextField="Name" ValueField="Id">
+                    </TelerikMultiSelect>
+
+                    <TelerikValidationMessage For="@(() => userPreferenceVM.ActivityIds)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+        }
+
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="row" style="margin-top:4%">
+            <div class="col-md-12 text-right">
+
+                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
+                    Save
+                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                    </TelerikLoader>
+
+                </TelerikButton>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

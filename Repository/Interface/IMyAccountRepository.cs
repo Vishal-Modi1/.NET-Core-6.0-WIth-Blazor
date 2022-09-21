@@ -6,6 +6,6 @@ namespace Repository.Interface
     {
         bool ChangePassword(ChangePasswordVM changePasswordVM);
 
-        bool IsValidOldPassword(string password, int userId);
+        bool IsValidOldPassword(string password, long userId);
     }
 }

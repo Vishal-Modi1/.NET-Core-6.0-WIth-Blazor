@@ -1,9 +1,11 @@
-﻿using DataModels.Entities;
+﻿using DataModels.CustomValidations;
+using DataModels.Entities;
 using DataModels.VM.AircraftEquipment;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.Scheduler
 {
@@ -26,6 +28,7 @@ namespace DataModels.VM.Scheduler
         public DateTime StartTime { get; set; }
 
         [Required(ErrorMessage = "End time is required")]
+        [DateGreaterThan(nameof(StartTime), "End time must not exceed start time")]
         public DateTime EndTime { get; set; }
 
         public bool IsRecurring { get; set; }
@@ -37,8 +40,11 @@ namespace DataModels.VM.Scheduler
 
         public List<DropDownLargeValues> Member2List { get; set; }
 
+        [UnlikeIf(nameof(IsDisplayMember2Dropdown),true, nameof(Member1Id) )]
         public long? Member2Id { get; set; }
 
+        [NotMapped]
+        public bool IsDisplayMember2Dropdown { get; set; }
         public List<DropDownLargeValues> InstructorsList { get; set; }
 
         public long? InstructorId { get; set; }
@@ -48,7 +54,7 @@ namespace DataModels.VM.Scheduler
         [Required]
         public long? AircraftId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Title is required")]
         public string DisplayTitle { get; set; }
 
         public string FlightRoutes { get; set; }
@@ -83,6 +89,8 @@ namespace DataModels.VM.Scheduler
 
         public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
+        [NotMapped]
+        public bool IsAllDay { get; set; }
         public string CssClass { get; set; } 
         public string Color { get; set; }
 

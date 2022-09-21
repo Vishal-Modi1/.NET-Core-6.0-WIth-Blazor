@@ -1,0 +1,40 @@
+﻿<TelerikLoaderContainer Visible="@isVisible">
+    <Template>
+        <TelerikLoader Class="loader-indicator"  Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
+        </TelerikLoader>
+        <span>@loadingText</span>
+    </Template>
+</TelerikLoaderContainer>
+
+<style>
+    .loader {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+    }
+
+    .loader-container {
+        text-align: center;
+        width: 550px;
+        display: inline-table;
+        padding-top: 10px;
+    }
+
+    .loader-indicator > .k-loader-canvas > .k-loader-segment {
+        background-color: @(loaderColor == null ? "#022254" : loaderColor) !important
+    }
+
+</style>
+
+
+@code{
+
+    [Parameter] public bool isVisible {  get;  set; } 
+
+    [Parameter] public string loaderColor {  get;  set; } 
+
+    [Parameter] public string loadingText {  get;  set; }
+}

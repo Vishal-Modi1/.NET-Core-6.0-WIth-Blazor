@@ -3,7 +3,6 @@ using FSM.Blazor.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
-using Radzen;
 
 namespace FSM.Blazor.Pages.Account
 {
@@ -16,33 +15,32 @@ namespace FSM.Blazor.Pages.Account
 
         public bool ShowError { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            base.OnInitialized();
-            
-            StringValues link;
-
-            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-
-            QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out link);
-
-
-            if (link.Count() == 0 || link[0] == "")
+            if (firstRender)
             {
-                message = "Token is not exist. Please try with valid token!";
-                ShowError = true;
-                IsValidToken = false;
-            }
-            else
-            {
-                Link = link[0];
-                message = "Validating token ...";
-                StateHasChanged();
+                StringValues link;
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                CurrentResponse response = await AccountService.ValidateResetPasswordTokenAsync(dependecyParams, Link);
-                ManageResponseAsync(response);
-                ShowError = false;
+                var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+                QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out link);
+
+                if (link.Count() == 0 || link[0] == "")
+                {
+                    message = "Token is not exist. Please try with valid token!";
+                    ShowError = true;
+                    IsValidToken = false;
+                }
+                else
+                {
+                    Link = link[0];
+                    message = "Validating token ...";
+                    StateHasChanged();
+
+                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                    CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, Link);
+                    await ManageResponseAsync(response);
+                    ShowError = false;
+                }
             }
         }
 

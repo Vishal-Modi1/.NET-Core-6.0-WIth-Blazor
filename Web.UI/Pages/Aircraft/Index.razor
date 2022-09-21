@@ -1,0 +1,359 @@
+﻿@namespace Web.UI.Pages.Aircraft
+@using Configuration;
+@using DataModels.VM.Aircraft
+@using DataModels.Enums;
+@using DataModels.VM.AircraftMake
+@using Web.UI.Shared.Components;
+
+@page "/Aircraft"
+
+<style>
+    .k-listview-header,
+    .k-listview-content {
+        padding: 20px;
+    }
+
+    .k-listview-footer {
+        border-width: 0;
+        padding: 10px 20px;
+    }
+
+    .k-listview-content {
+        /* display: grid;
+                    grid-template-columns: repeat(auto-fill, 180px);
+                    gap: 30px 20px;*/
+    }
+
+    .k-card {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .k-card-body {
+        padding: 10px 0;
+    }
+
+    .k-card .k-card-title {
+        padding: 0;
+        font-size: 1em;
+        font-weight: bold;
+        line-height: normal;
+    }
+
+    .k-card-subtitle {
+        font-size: 0.85em;
+    }
+
+    .footer-note {
+        text-align: right;
+        font-style: italic;
+        font-size: 0.85em;
+    }
+
+    .custom-aircraft-item {
+        box-sizing: border-box;
+        /* width: 100%;
+                                height: 100%;
+                                padding: 30px;*/
+        background: #FEFEFE;
+        box-shadow: 4.70946px 4.70946px 24.4892px rgb(0 0 0 / 18%);
+        border-radius: 7.53514px;
+        padding: 15px;
+    }
+
+    .custom-aircraft-img {
+        min-width: 100%;
+        min-height: 135px;
+        max-width: 100%;
+        max-height: 135px;
+        width: 100%;
+        height: 135px;
+        padding: 4px;
+    }
+
+    .active-airplane {
+        position: relative;
+        top: 10px;
+        left: 0;
+        z-index: 1;
+        border-radius: 100%;
+        height: 5px;
+        width: 5px;
+    }
+
+    .inactive-airplane {
+        background: red;
+    }
+
+    .expande-airplane {
+        position: relative;
+        top: 20px;
+        left: 120px;
+        z-index: 1;
+        background-color: #b1b1b138;
+    }
+
+    .listview-item {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px;
+        box-shadow: 4.70946px 4.70946px 24.4892px rgba(0, 0, 0, 0.1);
+        border-radius: 7.53514px;
+        cursor: pointer !important;
+    }
+
+    @@media (min-width:320px) { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+        .listview-item {
+            width: 100%;
+        }
+    }
+
+    @@media (min-width:480px) { /* smartphones, Android phones, landscape iPhone */
+        .listview-item {
+            width: 100%;
+        }
+    }
+
+    @@media (min-width:600px) { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+        .listview-item {
+            width: 40%;
+        }
+    }
+
+    @@media (min-width:801px) { /* tablet, landscape iPad, lo-res laptops ands desktops */
+        .listview-item {
+            width: 22%;
+        }
+    }
+
+    @@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
+        .listview-item {
+            width: 22%;
+        }
+    }
+
+    @@media (min-width:1281px) { /* hi-res laptops and desktops */
+        .listview-item {
+            width: 22%;
+        }
+    }
+
+    .buttonViews {
+        border: none;
+        background-color: none;
+        height: 10px;
+        width: 50px;
+        background: transparent;
+    }
+
+     .buttonViews:focus {
+       
+        background: transparent;
+    }
+</style>
+
+<PageTitle>Aircraft | Fly Manager </PageTitle>
+<div class="row">
+    <div class="col-12 d-flex justify-content-between">
+        <div>
+            <ComponentTitle Title="Aircrafts" Type="AdministrationTitle" />
+        </div>
+        <div>
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                               OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
+                    </TelerikButton>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*<hr class="hr-blue mt-1 mb-1" />*@
+<div class="row my-2">
+    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+    {
+        <div class="col-md-4">
+            <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
+                         ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Company" ValueField="Id">
+            </TelerikComboBox>
+        </div>
+    }
+    <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
+    </div>
+</div>
+
+<hr style="border:#EBECF3" />
+<div class="w-100" style="text-align:right">
+   
+    <TelerikButton OnClick="@(()=> ChangeView(true))" Class="buttonViews">
+        <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == true ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == true ?  "#0064D4" : "white")"></CustomIcons>
+    </TelerikButton>
+
+    <TelerikButton OnClick="@(()=> ChangeView(false))" Class="buttonViews">
+        <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView == false ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == false ?  "#0064D4" : "white")"></CustomIcons>
+    </TelerikButton>
+
+     <div class="col-md-3" style="float:right;margin-top:-7px">
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
+    </div>
+</div>
+<hr style="border:#EBECF3" />
+
+@if (isDisplayGridView)
+{
+    <TelerikListView @ref="dataListView" Pageable="true"
+                 Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
+                 OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
+
+        <ListViewSettings>
+            <GridPagerSettings InputType="PagerInputType.Input"
+                           PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
+
+            </GridPagerSettings>
+        </ListViewSettings>
+
+        <Template>
+            <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))">
+                <div class="k-card">
+                    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+                    <div class='status-circle' style="background-color:@context.Indicator"> </div>
+                    <div class="k-card-body d-flex justify-content-center">
+                        <h4 class="k-card-title">@context.TailNo</h4>
+                        <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
+                    </div>
+                </div>
+            </div>
+
+        </Template>
+    </TelerikListView>
+}
+else
+{
+    <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+
+        <GridSettings>
+            <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+        </GridSettings>
+
+        <GridColumns>
+
+            <GridColumn Context="dataItem" Title="Photo" Sortable="true">
+                <Template>
+                    @{
+                        var data = dataItem as AircraftDataVM;
+
+                        <div class="icon-container" style="height: 80%;width: 100%;">
+                            <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
+                             src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+
+                            <div class='status-circle' style="background-color:@data.Indicator"> </div>
+                        </div>
+                    }
+
+                </Template>
+            </GridColumn>
+
+            <GridColumn Field=@nameof(AircraftDataVM.TailNo) Context="dataItem" Title="Name">
+                <Template>
+                    @{
+                        var data = dataItem as AircraftDataVM;
+
+                        <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
+                    }
+
+                </Template>
+            </GridColumn>
+
+            <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category"></GridColumn>
+
+            <GridColumn Context="dataItem" Title="Actions" >
+                <Template>
+                    @{
+                        var data = dataItem as AircraftDataVM;
+
+                        <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
+                               ThemeColor="success">
+                            <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
+                        </TelerikButton>
+
+                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                        {
+                            <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
+                               ThemeColor="success" Enabled=!data.IsLoadingEditButton>
+
+                                <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                                   Visible="data.IsLoadingEditButton">
+                                </TelerikLoader>
+
+                            </TelerikButton>
+                        }
+
+                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                        {
+                            <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
+                                <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                            </TelerikButton>
+                        }
+                    }
+
+                </Template>
+            </GridColumn>
+
+        </GridColumns>
+    </TelerikGrid>
+
+}
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Create AircraftData="@aircraftData" CloseDialogCallBack="@CloseDialog"></Create>
+            }
+            else if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete <b> @aircraftData.TailNo </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(aircraftData.Id)" Enabled="@(!isBusyDeleteButton)">
+                                Yes
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+
+                            <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}
+

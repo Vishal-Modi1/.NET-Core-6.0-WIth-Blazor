@@ -15,7 +15,8 @@ namespace FSM.Blazor.Pages.Company
     public partial class Create
     {
 
-        [Parameter] public CompanyVM companyData { get; set; }
+        [Parameter] public CompanyVM CompanyData { get; set; }
+        [Parameter] public bool IsInvited { get; set; }
 
         [Parameter] public Action GoToNext { get; set; }
 
@@ -33,13 +34,19 @@ namespace FSM.Blazor.Pages.Company
 
         public RadzenTemplateForm<CompanyVM> compnayForm;
 
+
+        protected override Task OnParametersSetAsync()
+        {
+            primaryServiceId = CompanyData.PrimaryServiceId;
+            return base.OnParametersSetAsync();
+        }
         protected override Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
 
-            primaryServiceId = companyData.PrimaryServiceId;
+            primaryServiceId = CompanyData.PrimaryServiceId;
 
             return base.OnInitializedAsync();
         }

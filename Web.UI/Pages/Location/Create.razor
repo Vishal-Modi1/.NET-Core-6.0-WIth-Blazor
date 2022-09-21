@@ -1,0 +1,72 @@
+﻿@using DataModels.VM.Location
+
+<style>
+    form .row {
+        margin-bottom: 16px;
+    }
+</style>
+
+<TelerikForm Model="@locationData" OnValidSubmit="@Submit">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+        <div class="popup-content">
+            <input type="hidden" value="@locationData.Id" name="Id" />
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="airportCode" class="k-label k-form-label">Airport Code</label>
+                </div>
+                <div class="col-md-12">
+                    <TelerikTextBox Id="airportCode" @bind-Value="@locationData.AirportCode" PlaceHolder="Airport Code"></TelerikTextBox>
+                    <TelerikValidationMessage For="@(() => locationData.AirportCode)"></TelerikValidationMessage>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="address" class="k-label k-form-label">Physical Address</label>
+                </div>
+                <div class="col-md-12">
+                    <TelerikTextBox Id="address" @bind-Value="@locationData.PhysicalAddress" PlaceHolder="Physical Address"></TelerikTextBox>
+                    <TelerikValidationMessage For="@(() => locationData.AirportCode)"></TelerikValidationMessage>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 align-items-center d-flex">
+                    <label for="timezone" class="k-label k-form-label">Timezone</label>
+                </div>
+                <div class="col-md-12">
+
+                    <TelerikComboBox Id=timezone Data="@locationData.Timezones" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select timezone" ValueField="Id" @bind-Value="@timezoneId">
+                    </TelerikComboBox>
+                    <TelerikValidationMessage For="@(() => timezoneId)"></TelerikValidationMessage>
+                </div>
+
+            </div>
+
+        </div>
+        <hr class="hr-gray mt-3 mb-3" />
+    </FormItems>
+
+    <FormButtons>
+        <div class="row">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@locationData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+            </div>
+        </div>
+    </FormButtons>
+
+</TelerikForm>
+
+
+

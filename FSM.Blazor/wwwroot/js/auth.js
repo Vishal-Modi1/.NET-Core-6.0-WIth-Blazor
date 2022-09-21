@@ -29,9 +29,38 @@
     });
 }
 
+export function ChangeCompany(userId, companyId) {
+
+    var url = "/api/auth/changecompany?userId=" + userId + "&companyId=" + companyId + "&timezone=" + GetTimeZone();
+
+    // Data to send
+    var data = {
+        userId: userId,
+        companyId: companyId,
+        timezone: GetTimeZone()
+    };
+
+    $.ajax({
+
+        url: url,
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+
+            debugger
+            if (response.status == 200) {
+
+                location.replace("/");
+            }
+            else {
+                return dotnetReferenceObject.invokeMethodAsync("ManageLoginResponse", response.message);
+            }
+        }
+    });
+}
+
 export function RefreshToken(RefreshToken, UserId) {
 
-    debugger
     var url = "/api/auth/refreshtoken?refreshToken=" + RefreshToken + "&userId=" + UserId;
     
     $.ajax({

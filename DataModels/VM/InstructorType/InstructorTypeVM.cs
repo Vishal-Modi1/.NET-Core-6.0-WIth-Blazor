@@ -6,7 +6,7 @@ namespace DataModels.VM.InstructorType
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "The instructor type field is required")]
+        [Required(ErrorMessage = "Name is required")]
         [Display(Name = "Instructor Type")]
         public string Name { get; set; }
 

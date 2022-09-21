@@ -1,0 +1,41 @@
+﻿@page "/InvitationConfirmation"
+
+@layout EmptyLayout
+
+<div class="row vh-100 align-items-center m-0">
+    <div class="col-md-3 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <div class="upfly-logo mt-2 mb-2 d-flex justify-content-center">
+                    <CustomIcons IconName="system-logo"></CustomIcons>
+                </div>
+                <div class="m-4">
+                    <div class="text-center">
+
+                        <div class="mt-3">
+                            <h5 style="color:#042455">Welcome to @userVM.CompanyName </h5>
+
+                            <p style="color:#555555">Accept The invitation and join @userVM.CompanyName as @userVM.Role</p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center m-1">
+                    <TelerikButton OnClick="AcceptInvitation" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+
+                        Accept
+                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                        </TelerikLoader>
+
+                    </TelerikButton>
+
+                    <div class="mt-3">
+                        <a href="/login" style="color:#1151F3"> Go to Login </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

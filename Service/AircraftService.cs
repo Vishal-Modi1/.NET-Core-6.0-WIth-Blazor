@@ -8,31 +8,37 @@ using DataModels.VM.Common;
 using DataModels.VM.Aircraft;
 using DataModels.VM.User;
 using DataModels.Constants;
+using DataModels.Enums;
 
 namespace Service
 {
     public class AircraftService : BaseService, IAircraftService
     {
-        private readonly IAircraftRepository _airCraftRepository;
+        private readonly IAircraftRepository _aircraftRepository;
         private readonly IAircraftCategoryRepository _aircraftCategoryRepository;
         private readonly IAircraftClassRepository _aircraftClassRepository;
         private readonly IAircraftMakeRepository _aircraftMakeRepository;
         private readonly IAircraftModelRepository _aircraftModelRepository;
         private readonly IAircraftEquipmentTimeRepository _aircraftEquipmentTimeRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IAircraftStatusRepository _aircraftStatusRepository;
+        private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
 
-        public AircraftService(IAircraftRepository airCraftRepository, IAircraftCategoryRepository aircraftCategoryRepository,
+        public AircraftService(IAircraftRepository aircraftRepository, IAircraftCategoryRepository aircraftCategoryRepository,
                                IAircraftClassRepository aircraftClassRepository, IAircraftMakeRepository aircraftMakeRepository,
                                IAircraftModelRepository aircraftModelRepository, IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
-                                ICompanyRepository companyRepository)
+                               ICompanyRepository companyRepository, IAircraftStatusRepository aircraftStatusRepository,
+                               IAircraftEquipementTimeService aircraftEquipementTimeService)
         {
-            _airCraftRepository = airCraftRepository;
+            _aircraftRepository = aircraftRepository;
             _aircraftCategoryRepository = aircraftCategoryRepository;
             _aircraftClassRepository = aircraftClassRepository;
             _aircraftMakeRepository = aircraftMakeRepository;
             _aircraftModelRepository = aircraftModelRepository;
             _aircraftEquipmentTimeRepository = aircraftEquipmentTimeRepository;
-            _companyRepository = companyRepository; 
+            _companyRepository = companyRepository;
+            _aircraftStatusRepository = aircraftStatusRepository;
+            _aircraftEquipementTimeService = aircraftEquipementTimeService;
         }
 
         public CurrentResponse Create(AircraftVM airCraftVM)
@@ -49,8 +55,8 @@ namespace Service
                 //}
                 //else
                 //{
-                airCraft = _airCraftRepository.Create(airCraft);
-                CreateResponse(airCraft, HttpStatusCode.OK, "Aircraft added successfully");
+                airCraft = _aircraftRepository.Create(airCraft);
+                CreateResponse(airCraft, HttpStatusCode.OK, "Aircraft added successfully.");
                 //   }
 
                 return _currentResponse;
@@ -79,7 +85,7 @@ namespace Service
         {
             try
             {
-                Aircraft airCraft = _airCraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id);
+                Aircraft airCraft = _aircraftRepository.FindByCondition(p => p.TailNo == tailNo && p.Id != id && p.IsDeleted == false);
 
                 if (airCraft != null)
                 {
@@ -105,7 +111,7 @@ namespace Service
         {
             try
             {
-                _airCraftRepository.Delete(id, deletedBy);
+                _aircraftRepository.Delete(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Aircraft is deleted successfully.");
 
                 return _currentResponse;
@@ -134,8 +140,8 @@ namespace Service
 
                 //else
                 //{
-                airCraft = _airCraftRepository.Edit(airCraft);
-                CreateResponse(airCraft, HttpStatusCode.OK, "Aircraft updated successfully");
+                airCraft = _aircraftRepository.Edit(airCraft);
+                CreateResponse(airCraft, HttpStatusCode.OK, "Aircraft updated successfully.");
                 //}
 
                 return _currentResponse;
@@ -150,41 +156,54 @@ namespace Service
 
         public CurrentResponse GetDetails(long id, int companyId)
         {
-            Aircraft airCraft = _airCraftRepository.FindByCondition(p => p.Id == id && (companyId == 0 ? true : p.CompanyId == companyId));
-            AircraftVM airCraftVM = new AircraftVM();
-
-            if (airCraft != null)
+            try
             {
-                airCraftVM = ToBusinessObject(airCraft);
+                Aircraft airCraft = _aircraftRepository.FindByCondition(p => p.Id == id && (companyId == 0 ? true : p.CompanyId == companyId));
+                AircraftVM aircraftVM = new AircraftVM();
+
+                if (airCraft != null)
+                {
+                    aircraftVM = ToBusinessObject(airCraft);
+                    aircraftVM.AircraftStatus = _aircraftStatusRepository.FindByCondition(p=>p.Id == airCraft.AircraftStatusId);
+                }
+
+                aircraftVM.AircraftCategoryList = _aircraftCategoryRepository.ListDropDownValues();
+                aircraftVM.AircraftClassList = _aircraftClassRepository.ListDropDownValues();
+                aircraftVM.AircraftMakeList = _aircraftMakeRepository.ListDropDownValues();
+                aircraftVM.AircraftModelList = _aircraftModelRepository.ListDropDownValues();
+                aircraftVM.FlightSimulatorClassList = _aircraftRepository.ListFlightSimulatorClassDropDownValues();
+                aircraftVM.AircraftStatusList = _aircraftStatusRepository.ListDropDownValues();
+
+                var data  = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id && p.IsDeleted == false);
+                aircraftVM.AircraftEquipmentTimesList = _aircraftEquipementTimeService.ToCreateBusinessObjectList(data);
+
+                if (companyId > 0)
+                {
+                    aircraftVM.CompanyId = companyId;
+                    aircraftVM.CompanyName = _companyRepository.FindByCondition(p => p.Id == companyId).Name;
+                }
+                else
+                {
+                    aircraftVM.Companies = _companyRepository.ListDropDownValues();
+                }
+
+                CreateResponse(aircraftVM, HttpStatusCode.OK, "");
+
+                return _currentResponse;
             }
-
-            airCraftVM.AircraftCategoryList = _aircraftCategoryRepository.ListDropDownValues();
-            airCraftVM.AircraftClassList = _aircraftClassRepository.ListDropDownValues();
-            airCraftVM.AircraftMakeList = _aircraftMakeRepository.ListDropDownValues();
-            airCraftVM.AircraftModelList = _aircraftModelRepository.ListDropDownValues();
-            airCraftVM.AircraftEquipmentTimesList = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id);
-            airCraftVM.FlightSimulatorClassList = _airCraftRepository.ListFlightSimulatorClassDropDownValues();
-
-            if (companyId > 0)
+            catch(Exception ex)
             {
-                airCraftVM.CompanyId = companyId;
-                airCraftVM.CompanyName = _companyRepository.FindByCondition(p => p.Id == companyId).Name;
-            }
-            else
-            {
-                airCraftVM.Companies = _companyRepository.ListDropDownValues();
-            }
+                CreateResponse(null, HttpStatusCode.InternalServerError, ex.ToString());
 
-            CreateResponse(airCraftVM, HttpStatusCode.OK, "");
-
-            return _currentResponse;
+                return _currentResponse;
+            }
         }
 
         public CurrentResponse ListAircraftDropdownValues(int companyId)
         {
             try
             {
-                List<DropDownLargeValues> aircraftList = _airCraftRepository.ListDropDownValues(companyId);
+                List<DropDownLargeValues> aircraftList = _aircraftRepository.ListDropDownValues(companyId);
                 CreateResponse(aircraftList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -204,7 +223,7 @@ namespace Service
             airCraftVM.Id = airCraft.Id;
             airCraftVM.TailNo = airCraft.TailNo;
             airCraftVM.ImageName = airCraft.ImageName;
-            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
+            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
 
             airCraftVM.Year = airCraft.Year;
             airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;
@@ -219,6 +238,7 @@ namespace Service
             airCraftVM.TrackOilandFuel = airCraft.TrackOilandFuel;
             airCraftVM.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
             airCraftVM.CompanyId = airCraft.CompanyId;
+            airCraftVM.AircraftStatusId = airCraft.AircraftStatusId;
 
             airCraftVM.IsActive = airCraft.IsActive;
             airCraftVM.IsDeleted = airCraft.IsDeleted;
@@ -267,6 +287,12 @@ namespace Service
             airCraft.IsIdentifyMeterMismatch = airCraftVM.IsIdentifyMeterMismatch;
             airCraft.IsActive = true;
             airCraft.CompanyId = airCraftVM.CompanyId;
+            airCraft.AircraftStatusId = airCraftVM.AircraftStatusId;
+
+            if (airCraftVM.AircraftStatusId == 0)
+            {
+                airCraft.AircraftStatusId = (int)AircraftStatuses.ReadyForFlight;
+            }
 
             airCraft.CreatedBy = airCraftVM.CreatedBy;
             airCraft.UpdatedBy = airCraftVM.UpdatedBy;
@@ -318,11 +344,11 @@ namespace Service
         {
             try
             {
-                List<AircraftDataVM> airCraftList = _airCraftRepository.List(datatableParams);
+                List<AircraftDataVM> airCraftList = _aircraftRepository.List(datatableParams);
 
                 foreach (AircraftDataVM airCraftVM in airCraftList)
                 {
-                    airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
+                    airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
                 }
 
                 CreateResponse(airCraftList, HttpStatusCode.OK, "");
@@ -342,11 +368,11 @@ namespace Service
         {
             try
             {
-                List<Aircraft> airCraftList = _airCraftRepository.ListAllByCompanyId(companyId);
+                List<Aircraft> airCraftList = _aircraftRepository.ListAllByCompanyId(companyId);
 
                 foreach (Aircraft airCraftVM in airCraftList)
                 {
-                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectory.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
+                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
                 }
 
                 CreateResponse(airCraftList, HttpStatusCode.OK, "");
@@ -366,9 +392,28 @@ namespace Service
         {
             try
             {
-                bool isImageNameUpdated = _airCraftRepository.UpdateImageName(id, imageName);
+                bool isImageNameUpdated = _aircraftRepository.UpdateImageName(id, imageName);
 
                 CreateResponse(isImageNameUpdated, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse UpdateStatus(long id, byte statusId)
+        {
+            try
+            {
+                bool isStatusUpdated =  _aircraftRepository.UpdateStatus(id, statusId);
+
+                CreateResponse(isStatusUpdated, HttpStatusCode.OK, "Aircraft status updated successfully.");
 
                 return _currentResponse;
             }
