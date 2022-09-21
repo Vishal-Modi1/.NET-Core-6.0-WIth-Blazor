@@ -11,5 +11,7 @@ namespace Web.UI.Models.Shared
         public CompanyVM Company { get; set; }
 
         public List<DropDownValues> CompanyList { get; set; }
+
+        public bool IsSuperAdmin {get;set;}
     }
 }

@@ -76,6 +76,45 @@ namespace Web.UI.Pages.Reservation
             }
         }
 
+        private async Task OpenCreateScheduleDialogAsync(DateTime? startTime = null, DateTime? endTime = null, long? aircraftId = null)
+        {
+
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler"))
+            {
+                //await DialogService.OpenAsync<UnAuthorized>("UnAuthorized",
+                //  new Dictionary<string, object>() { { "UnAuthorizedMessage", "You are not authorized to create new reservation. Please contact to your administartor" } },
+                //  new DialogOptions() { Width = "410px", Height = "165px" });
+
+                return;
+            }
+
+            isBusyAddButton = true;
+            InitializeValues();
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, 0);
+
+            if (startTime != null)
+            {
+                schedulerVM.StartTime = startTime.Value;
+                schedulerVM.EndTime = endTime.Value;
+            }
+            else
+            {
+                schedulerVM.StartTime = DateTime.Now;
+                schedulerVM.EndTime = DateTime.Now.AddMinutes(30);
+            }
+
+            if (aircraftId != null)
+            {
+                schedulerVM.AircraftId = aircraftId;
+            }
+
+            isBusyAddButton = false;
+            isDisplayPopup = true;
+            popupTitle = "Schedule Appointment";
+        }
+
         private void GetReservationTypeFilter()
         {
             reservationTypeFilter = new List<DropDownValues>();

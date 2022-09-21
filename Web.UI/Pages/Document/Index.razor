@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-12 d-flex justify-content-between">
         <div>
-            <ComponentTitle Title="Manage Documents Details" Type="AdministrationTitle" />
+            <ComponentTitle Title="Documents" Type="AdministrationTitle" />
         </div>
         <div>
             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
@@ -22,8 +22,7 @@
                 {
                     <div class="col-md-4">
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
-                            <CustomIcons IconName="upload" PrimaryColor="White"></CustomIcons>
-                            Upload <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                              <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                         </TelerikButton>
                     </div>
@@ -59,56 +58,6 @@
         <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Document" ValueChanged="@( (string value) => OnSearchValueChanges<DocumentDataVM>(value, grid) )" />
     </div>
 </div>
-<!--OLD CODE-->
-<!--
-<div class="row">
-
-    <div class="col">
-
-        <h2 style="float:left">Manage Documents Details</h2>
-
-        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
-        {
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
-                <CustomIcons IconName="upload" PrimaryColor="White"></CustomIcons> 
-               Upload <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                </TelerikLoader>
-            </TelerikButton>
-        }
-
-    </div>
-</div>
-
-<div class="row" style="margin-bottom:22px;">
-
-    @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == Module.Company.ToString())
-    {
-        <div class="col-md-4">
-
-            <TelerikComboBox Id=moduleId Data="@documentFilterVM.ModulesList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Module" ValueField="Id">
-            </TelerikComboBox>
-
-        </div>
-    }
-
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
-    {
-        <div class="col-md-4">
-            <TelerikComboBox Id=companyId Data="@documentFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id">
-            </TelerikComboBox>
-        </div>
-    }
-
-    <div class="col-md-4">
-        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Document" ValueChanged="@( (string value) => OnSearchValueChanges<DocumentDataVM>(value, grid) )" />
-    </div>
-
-</div>
--->
 
 <TelerikGrid TItem="DocumentDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
@@ -119,114 +68,130 @@
 
     <GridColumns>
 
-        <GridCommandColumn Context="dataItem" Title="Name" Width="15%">
-            @{
-                DocumentDataVM value = dataItem as DocumentDataVM;
+        <GridColumn Field=@nameof(DocumentDataVM.DisplayName) Context="dataItem" Title="Name" Width="15%">
+
+            <Template>
+
+                @{
+                    DocumentDataVM value = dataItem as DocumentDataVM;
 
                     <a href="javascript:void(0)" @onclick="@((ui) => OpenDocumentPreviewPopupAsync(value.DocumentPath))">@value.DisplayName</a>
-            }
-        </GridCommandColumn>
+                }
+            </Template>
+        </GridColumn>
 
-        <GridCommandColumn Context="dataItem" Title="Document Type" Width="5%">
-            @{
-                DocumentDataVM data = dataItem as DocumentDataVM;
+        <GridColumn Field=@nameof(DocumentDataVM.Type) Context="dataItem" Title="Document Type" Width="5%">
+
+            <Template>
+                @{
+                    DocumentDataVM data = dataItem as DocumentDataVM;
 
                     @if (data.Type == "pdf")
-                {
+                    {
                         <img src="../img/pdficon.png" style="width: 20%;" />
-                }
-                else if (data.Type == "doc" || data.Type == "docx")
-                {
+                    }
+                    else if (data.Type == "doc" || data.Type == "docx")
+                    {
                         <img src="../img/word.png" style="width: 20%;" />
-                }
-                else if (data.Type == "csv" || data.Type == "xlsx")
-                {
+                    }
+                    else if (data.Type == "csv" || data.Type == "xlsx")
+                    {
                         <img src="../img/excelicon.png" style="width: 20%;" />
-                }
-                else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
-                data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
-                {
+                    }
+                    else if (data.Type == "png" || data.Type == "jpg" || data.Type == "jpeg" || data.Type == "svg" ||
+                    data.Type == "pjp" || data.Type == "pjpeg" || data.Type == "jfif")
+                    {
                         <img src="../img/photosicon.png" style="width: 20%;" />
-                }
-                else
-                {
+                    }
+                    else
+                    {
                         <img src="../img/defaultdocicon.png" style="width: 20%;" />
+                    }
                 }
-            }
-        </GridCommandColumn>
+            </Template>
+        </GridColumn>
 
-        <GridColumn Field="@nameof(DocumentDataVM.Size)" Title="Size" Sortable="true" Width="7%" />
+        <GridColumn Field="@nameof(DocumentDataVM.Size)" Title="Size"  Width="7%" />
 
         @if (string.IsNullOrWhiteSpace(ParentModuleName))
         {
-            <GridColumn Field="@nameof(DocumentDataVM.ModuleName)" Title="Module Name" Sortable="true" Width="10%"/>
+            <GridColumn Field="@nameof(DocumentDataVM.ModuleName)" Title="Module Name"  Width="10%" />
         }
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
-            <GridColumn Field="@nameof(DocumentDataVM.CompanyName)" Title="Company Name" Sortable="true" Width="10%" />
+            <GridColumn Field="@nameof(DocumentDataVM.CompanyName)" Title="Company Name"  Width="10%" />
         }
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
-            <GridColumn Field="@nameof(DocumentDataVM.UserName)" Title="User" Sortable="true" Width="15%"/>
+            <GridColumn Field="@nameof(DocumentDataVM.UserName)" Title="User"  Width="15%" />
         }
 
-        <GridCommandColumn Context="dataItem" Title="Expiration Date" Width="7%">
-            @{
-                DocumentDataVM value = dataItem as DocumentDataVM;
-                string date = "-";
+        <GridColumn Field=@nameof(DocumentDataVM.ExpirationDate) Context="dataItem" Title="Expiration Date" Width="7%">
 
-                if (value.ExpirationDate != null)
-                {
-                    date = value.ExpirationDate.Value.ToShortDateString();
-                }
+            <Template>
+
+                @{
+                    DocumentDataVM value = dataItem as DocumentDataVM;
+                    string date = "-";
+
+                    if (value.ExpirationDate != null)
+                    {
+                        date = value.ExpirationDate.Value.ToShortDateString();
+                    }
 
                     <label>@date</label>
-            }
-        </GridCommandColumn>
+                }
+            </Template>
+        </GridColumn>
 
-        <GridCommandColumn Context="dataItem" Title="Name" Width="20%">
-            <span class="d-flex">
-            @{
-                DocumentDataVM value = dataItem as DocumentDataVM;
-                bool isShareble = !value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date);
+        <GridColumn Context="dataItem" Title="Action" Width="20%">
 
-                    <TelerikButton Class="btn k-btn-grid-download mx-2 flex-fill" ThemeColor="error"
-                           OnClick="()=>DownloadDocument(value)" Enabled=!value.IsLoadingDownloadButton>
-                        <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
-                        @value.TotalDownloads.ToString()
-                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
-                        </TelerikLoader>
-                    </TelerikButton>
+            <Template>
 
-                    <TelerikButton Class="btn k-btn-grid-share mx-2 flex-fill" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
-                        <CustomIcons IconName="grid-share" PrimaryColor="white"></CustomIcons>
-                        @value.TotalShares.ToString()
-                    </TelerikButton>
+                <span class="d-flex">
+                    @{
+                        DocumentDataVM value = dataItem as DocumentDataVM;
+                        bool isShareble = !value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date);
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-                {
-                        <TelerikButton Class="btn k-btn-grid-edit mx-2 flex-fill" OnClick="()=>DocumentCreateDialog(value)"
-                           ThemeColor="success" Enabled=!value.IsLoadingEditButton>
-
-                            <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
-                               Visible="value.IsLoadingEditButton">
+                        <TelerikButton Class="btn k-btn-grid-download mx-2 flex-fill" ThemeColor="error"
+                                   OnClick="()=>DownloadDocument(value)" Enabled=!value.IsLoadingDownloadButton>
+                            <CustomIcons IconName="grid-download" PrimaryColor="white"></CustomIcons>
+                            @value.TotalDownloads.ToString()
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="value.IsLoadingDownloadButton">
                             </TelerikLoader>
-
                         </TelerikButton>
-                }
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                {
-                        <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
-                            <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                        <TelerikButton Class="btn k-btn-grid-share mx-2 flex-fill" Enabled="!isShareble" ThemeColor="info" OnClick="()=>OpenShareDocumentDialog(value.Id)">
+                            <CustomIcons IconName="grid-share" PrimaryColor="white"></CustomIcons>
+                            @value.TotalShares.ToString()
                         </TelerikButton>
-                }
-            }
-            </span>
-        </GridCommandColumn>
+
+                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                        {
+                            <TelerikButton Class="btn k-btn-grid-edit mx-2 flex-fill" OnClick="()=>DocumentCreateDialog(value)"
+                                   ThemeColor="success" Enabled=!value.IsLoadingEditButton>
+
+                                <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                                       Visible="value.IsLoadingEditButton">
+                                </TelerikLoader>
+
+                            </TelerikButton>
+                        }
+
+                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                        {
+                            <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(value)">
+                                <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                            </TelerikButton>
+                        }
+                    }
+                </span>
+
+            </Template>
+        </GridColumn>
 
     </GridColumns>
 
@@ -282,7 +247,7 @@
             }
             else if (operationType == OperationType.DocumentShare)
             {
-                <div class="row" >
+                <div class="row">
                     <div class="col-12 p-2 bg-light my-3" style="border-radius:12px;">
                         <div class="d-flex justify-content-end">
                             <span @onclick="(()=>CopyLinkToClipboard(documentDataVM.DocumentPath))">
@@ -295,10 +260,10 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-end">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="()=>CopyLinkToClipboard(documentDataVM.DocumentPath)">
-                            Copy to clipboard
-                        </TelerikButton>
-                 </div>
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="()=>CopyLinkToClipboard(documentDataVM.DocumentPath)">
+                        Copy to clipboard
+                    </TelerikButton>
+                </div>
             }
             else
             {

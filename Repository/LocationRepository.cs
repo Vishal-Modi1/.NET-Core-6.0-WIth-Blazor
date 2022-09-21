@@ -93,7 +93,6 @@ namespace Repository
                 list = _myContext.LocationsList.FromSqlRaw<LocationDataVM>(sql).ToList();
 
                 return list;
-
             }
         }
 

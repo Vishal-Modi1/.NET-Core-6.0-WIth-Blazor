@@ -230,6 +230,8 @@ namespace Web.UI.Pages.Scheduler
 
             InitializeValues();
 
+            isBusyAddButton = true;
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, 0);
 
@@ -249,6 +251,7 @@ namespace Web.UI.Pages.Scheduler
                 schedulerVM.AircraftId = aircraftId;
             }
 
+            isBusyAddButton = false;
             isDisplayPopup = true;
             popupTitle = "Schedule Appointment";
         }

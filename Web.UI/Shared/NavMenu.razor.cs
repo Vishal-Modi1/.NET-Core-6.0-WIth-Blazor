@@ -22,8 +22,6 @@ namespace Web.UI.Shared
         [Parameter] public bool Expanded { get; set; }
         [Parameter] public bool IsMainContainerTransparent { get; set; } = true;
 
-        bool isSuperAdmin;
-
         List<MenuItem> menuItems;
         TelerikDrawer<MenuItem> drawerRef { get; set; }
         MenuItem selectedItem { get; set; }
@@ -72,12 +70,12 @@ namespace Web.UI.Shared
                 navigationHeaderModel.User.ImageName = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
                            .Select(c => c.Value).SingleOrDefault();
 
-                isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
+                navigationHeaderModel.IsSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
 
                 menuItems = new List<MenuItem>();
                 menuItems.Add(new MenuItem() { Controller = "Dashboard", DisplayName = "Dashboard", FavIconStyle = "group" });
 
-                if (isSuperAdmin)
+                if (navigationHeaderModel.IsSuperAdmin)
                 {
                     menuItems.Add(new MenuItem() { Controller = "Administration", DisplayName = "Administration", });
                 }
