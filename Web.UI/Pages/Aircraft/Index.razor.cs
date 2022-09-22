@@ -27,7 +27,8 @@ namespace Web.UI.Pages.Aircraft
         string moduleName = "Aircraft";
         bool isDisplayGridView = true;
         int companyId; int listViewPageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
-        
+        bool isSuperAdmin;
+
         protected override async Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);
@@ -46,6 +47,8 @@ namespace Web.UI.Pages.Aircraft
             {
                 companyId = ParentCompanyId.Value;
             }
+
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
 
             ChangeLoaderVisibilityAction(false);
         }

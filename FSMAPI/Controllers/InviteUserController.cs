@@ -15,7 +15,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class InviteUserController : ControllerBase
+    public class InviteUserController : BaseAPIController
     {
         private readonly IInviteUserService _inviteUserService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
             int roleId = Convert.ToInt32(role);
 
             CurrentResponse response = _inviteUserService.GetDetails(roleId, id);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -49,7 +49,7 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(InviteUserVM inviteUserVM)
         {
             CurrentResponse response = _inviteUserService.Edit(inviteUserVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -68,7 +68,7 @@ namespace FSMAPI.Controllers
 
             if (!isValid)
             {
-                return Ok(response);
+                return APIResponse(response);
             }
 
             string loggedInUser = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
@@ -95,7 +95,7 @@ namespace FSMAPI.Controllers
                 _sendMailService.InviteUser(userVM, token, inviteUser.Id);
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -105,7 +105,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response  =  _inviteUserService.AcceptInvitation(token);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
 
@@ -122,7 +122,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _inviteUserService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -132,7 +132,7 @@ namespace FSMAPI.Controllers
             long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _inviteUserService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
     }

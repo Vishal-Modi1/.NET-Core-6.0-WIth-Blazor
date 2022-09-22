@@ -7,7 +7,7 @@ namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModuleDetailsController : ControllerBase
+    public class ModuleDetailsController : BaseAPIController
     {
         private readonly IModuleDetailsService _moduleDetailsService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -24,7 +24,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _moduleDetailsService.ListDropDownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

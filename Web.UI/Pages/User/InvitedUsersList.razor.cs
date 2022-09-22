@@ -7,6 +7,7 @@ using Web.UI.Utilities;
 using DataModels.VM.Reservation;
 using DataModels.Enums;
 using Telerik.Blazor.Components;
+using System.Security.Claims;
 
 namespace Web.UI.Pages.User
 {
@@ -21,6 +22,7 @@ namespace Web.UI.Pages.User
         InviteUserVM userData;
 
         string moduleName = "User";
+        bool isSuperAdmin { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -34,6 +36,9 @@ namespace Web.UI.Pages.User
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
+
+            var user = (await AuthStat).User;
+            isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
         }
 
         async Task LoadData(GridReadEventArgs args)

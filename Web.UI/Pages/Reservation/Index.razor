@@ -115,6 +115,8 @@
             <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
         }
 
+        <GridColumn Field="@nameof(ReservationDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
+
         <GridColumn Field="@nameof(ReservationDataVM.StartDateTime)" Context="dataItem" Title="From">
             <Template>
 

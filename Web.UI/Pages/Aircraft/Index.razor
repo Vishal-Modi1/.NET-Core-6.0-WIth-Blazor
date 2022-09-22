@@ -275,6 +275,7 @@ else
                 </Template>
             </GridColumn>
 
+            <GridColumn Field="@nameof(AircraftDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
             <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make"></GridColumn>
             <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model"></GridColumn>
             <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category"></GridColumn>

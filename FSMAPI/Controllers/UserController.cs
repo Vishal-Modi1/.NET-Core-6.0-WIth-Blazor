@@ -14,7 +14,7 @@ namespace FSMAPI.Controllers
     [ApiController]
     [Authorize]
 
-    public class UserController : ControllerBase
+    public class UserController : BaseAPIController
     {
         private readonly IUserService _userService;
         private readonly ISendMailService _sendMailService;
@@ -48,7 +48,7 @@ namespace FSMAPI.Controllers
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
             CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -59,7 +59,7 @@ namespace FSMAPI.Controllers
             int roleIdValue = (int)DataModels.Enums.UserRole.Admin;
             CurrentResponse response = _userService.GetMasterDetails(roleIdValue, isInvited, token);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -90,7 +90,7 @@ namespace FSMAPI.Controllers
                 _sendMailService.NewUserAccountActivation(userVM, token);
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -100,7 +100,7 @@ namespace FSMAPI.Controllers
             userVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _userService.Edit(userVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -110,7 +110,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userService.IsEmailExist(email);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -120,7 +120,7 @@ namespace FSMAPI.Controllers
             long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _userService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -129,7 +129,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userService.UpdateActiveStatus(id, isActive);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -144,7 +144,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -153,7 +153,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userService.GetFiltersValue(roleId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -170,7 +170,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userService.FindById(id, isSuperAdmin, companyIdValue);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -179,7 +179,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userService.FindMyPreferencesById(id);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -188,7 +188,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userService.ListDropdownValuesByCompanyId(companyId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -220,7 +220,7 @@ namespace FSMAPI.Controllers
                 response = _userService.UpdateImageName(Convert.ToInt64(form["UserId"]), fileName);
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

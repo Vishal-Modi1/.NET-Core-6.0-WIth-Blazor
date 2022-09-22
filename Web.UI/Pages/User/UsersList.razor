@@ -83,7 +83,7 @@
 
     <GridColumns>
 
-        <GridColumn Context="dataItem" Title="Photo" Sortable="true">
+        <GridColumn Context="dataItem" Title="Photo">
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
@@ -94,13 +94,13 @@
             </Template>
         </GridColumn>
 
-        <GridColumn Field="@nameof(UserDataVM.FirstName)" Title="First Name" Sortable="true"></GridColumn>
-        <GridColumn Field="@nameof(UserDataVM.LastName)" Title="Last Name" Sortable="true"></GridColumn>
-        <GridColumn Field="@nameof(UserDataVM.Email)" Title="Email" Sortable="true"></GridColumn>
-        <GridColumn Field="@nameof(UserDataVM.UserRole)" Title="User Role" Sortable="true"></GridColumn>
-        <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company Name" Sortable="true"></GridColumn>
+        <GridColumn Field="@nameof(UserDataVM.FirstName)" Title="First Name" ></GridColumn>
+        <GridColumn Field="@nameof(UserDataVM.LastName)" Title="Last Name" ></GridColumn>
+        <GridColumn Field="@nameof(UserDataVM.Email)" Title="Email" ></GridColumn>
+        <GridColumn Field="@nameof(UserDataVM.UserRole)" Title="User Role" ></GridColumn>
+        <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
 
-        <GridColumn Field="@nameof(UserDataVM.IsActive)" Context="dataItem" Title="Is Active" Sortable="true">
+        <GridColumn Field="@nameof(UserDataVM.IsActive)" Context="dataItem" Title="Is Active" >
             <Template>
                 @{
                     var data = dataItem as UserDataVM;

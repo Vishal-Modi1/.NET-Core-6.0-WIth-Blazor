@@ -23,6 +23,7 @@ $BG-BTN-INFO: #022A6A;
 $BG-BTN-LIGHT: #022A6A;
 $BG-BTN-DARK: #022A6A;
 $BG-BTN-LINK: #022A6A;*/
+/*$BG-LIGHT-BLUE: #96B9EF;*/
 /*Card BACKGROUND COLOR */
 /*Custom Colors*/
 body {
@@ -34,7 +35,7 @@ hr {
 }
 
 .bg-primary-f {
-  background-color: #022254;
+  background-color: #3066F8;
 }
 
 .bg-secondary-f {
@@ -372,6 +373,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .flight-info-card .k-card.telerik-blazor {
   height: 200px;
+  overflow-y: auto;
 }
 
 .card-fonts {
@@ -551,4 +553,9 @@ label, a,
 /*TELERIK TEXTBOX INNER TEXT FONT SIZE & PLACEHOLDER SIZE*/
 .k-input-inner {
   font-size: 14px;
+}
+
+/*TOASTR CLASS*/
+.k-notification-group {
+  z-index: 1060 !important;
 }

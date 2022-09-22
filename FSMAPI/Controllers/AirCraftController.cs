@@ -13,7 +13,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AircraftController : ControllerBase
+    public class AircraftController : BaseAPIController
     {
         private readonly IAircraftService _airCraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _airCraftService.GetFiltersValue(companyIdValue);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -56,7 +56,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _airCraftService.List(aircraftDatatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -66,7 +66,7 @@ namespace FSMAPI.Controllers
             airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Create(airCraftVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -76,7 +76,7 @@ namespace FSMAPI.Controllers
             airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftService.Edit(airCraftVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -87,7 +87,7 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
             CurrentResponse response = _airCraftService.GetDetails(id, companyIdValue);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -98,7 +98,7 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _airCraftService.ListAllByCompanyId(companyIdValue);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -109,7 +109,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _airCraftService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -142,7 +142,7 @@ namespace FSMAPI.Controllers
                 response = _airCraftService.UpdateImageName(Convert.ToInt32(form["AircraftId"]), fileName);
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -151,7 +151,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -162,7 +162,7 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _airCraftService.ListAircraftDropdownValues(companyIdValue);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -171,7 +171,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _airCraftService.UpdateStatus(id, statusId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         #region Aircraft Equipment
@@ -194,7 +194,7 @@ namespace FSMAPI.Controllers
                 response = _aircraftEquipementTimeService.Create(item);
             });
 
-            return Ok(response);
+            return APIResponse(response);
         }
         #endregion
     }

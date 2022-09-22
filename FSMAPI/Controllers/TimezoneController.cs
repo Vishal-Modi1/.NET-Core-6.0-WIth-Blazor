@@ -9,7 +9,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class TimezoneController : ControllerBase
+    public class TimezoneController : BaseAPIController
     {
         private readonly ITimezoneService _TimezoneService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -27,7 +27,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _TimezoneService.ListDropdownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LocationController : ControllerBase
+    public class LocationController : BaseAPIController
     {
         private readonly ILocationService _locationService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -28,7 +28,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _locationService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         //[HttpPost]
@@ -37,7 +37,7 @@ namespace FSMAPI.Controllers
         //{
         //    CurrentResponse response = _locationService.ListAll();
 
-        //    return Ok(response);
+        //    return APIResponse(response);
         //}
 
         [HttpGet]
@@ -46,7 +46,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _locationService.ListDropDownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace FSMAPI.Controllers
             }
 
             CurrentResponse response = _locationService.Create(locationVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -71,7 +71,7 @@ namespace FSMAPI.Controllers
             locationVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _locationService.Edit(locationVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -79,7 +79,7 @@ namespace FSMAPI.Controllers
         public IActionResult GetDetails(int id)
         {
             CurrentResponse response = _locationService.GetDetails(id);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -90,7 +90,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _locationService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

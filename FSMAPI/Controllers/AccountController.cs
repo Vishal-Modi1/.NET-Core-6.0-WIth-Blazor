@@ -16,7 +16,7 @@ namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : Controller
+    public class AccountController : BaseAPIController
     {
 
         private readonly IAccountService _accountService;
@@ -58,10 +58,10 @@ namespace FSMAPI.Controllers
             {
                 response = GetDetails(response, user, loginVM.TimeZone);
 
-                return Ok(response);
+                return APIResponse(response);
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -73,7 +73,7 @@ namespace FSMAPI.Controllers
             User user = (User)(response.Data);
             response = GetDetails(response, user, timezone);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         private CurrentResponse GetDetails(CurrentResponse response, User user, string userTimeZone)
@@ -144,11 +144,11 @@ namespace FSMAPI.Controllers
                 {
                     var url = forgotPasswordVM.ResetURL + token;
                     response = _sendMailService.PasswordReset(forgotPasswordVM.Email, url, token);
-                    return Ok(response);
+                    return APIResponse(response);
                 }
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -165,11 +165,11 @@ namespace FSMAPI.Controllers
                 if (!string.IsNullOrEmpty(model.Token))
                 {
                     response = _userService.ResetPassword(model);//try now 
-                    return Ok(response);
+                    return APIResponse(response);
                 }
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -181,7 +181,7 @@ namespace FSMAPI.Controllers
 
             response = _emailTokenService.IsValidToken(token);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -191,7 +191,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _accountService.ActivateAccount(token);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -203,7 +203,7 @@ namespace FSMAPI.Controllers
 
             if (Convert.ToBoolean(response.Data) == false)
             {
-                return Ok(response);
+                return APIResponse(response);
             }
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
@@ -233,7 +233,7 @@ namespace FSMAPI.Controllers
             response.Message = "New token granted";
             response.Status = System.Net.HttpStatusCode.OK;
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

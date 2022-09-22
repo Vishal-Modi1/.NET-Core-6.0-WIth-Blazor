@@ -9,7 +9,7 @@ namespace FSMAPI.Controllers
     [ApiController]
     [Authorize]
 
-    public class EquipmentStatusController : Controller
+    public class EquipmentStatusController : BaseAPIController
     {
         private readonly IEquipmentStatusService _equipmentStatusService;
 
@@ -24,7 +24,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _equipmentStatusService.List();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
     }

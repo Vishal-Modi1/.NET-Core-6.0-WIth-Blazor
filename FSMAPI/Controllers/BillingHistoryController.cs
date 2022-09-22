@@ -12,7 +12,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class BillingHistoryController : ControllerBase
+    public class BillingHistoryController : BaseAPIController
     {
         private readonly IBillingHistoryService _billingHistoryService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _billingHistoryService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

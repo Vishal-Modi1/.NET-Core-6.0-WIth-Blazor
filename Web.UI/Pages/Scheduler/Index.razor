@@ -31,9 +31,12 @@
             <div class="col-md-4">
                 <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
                                Enabled="@(!isBusyAddButton)">
+
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+
                     <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                     </TelerikLoader>
-                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+
                 </TelerikButton>
             </div>
         </div>
@@ -110,9 +113,9 @@
     @if (isDisplayPopup)
     {
         <CustomPopupComponent Title="@popupTitle"
-                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
-                      CloseOnOutsideClick="false"
-                      OnClose="@(()=> {isDisplayPopup = false;})">
+                          HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                          CloseOnOutsideClick="false"
+                          OnClose="@(()=> {isDisplayPopup = false;})">
 
             <Body>
                 <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
