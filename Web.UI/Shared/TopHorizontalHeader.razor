@@ -13,14 +13,17 @@
 
 <div class="d-flex me-2">
 
-    <span class="company d-flex align-items-center justify-content-center">
-        <TelerikRootComponent>
-            <TelerikComboBox Id=roleId Data="@navigationHeaderModel.CompanyList" TextField="Name"
+    @if (!navigationHeaderModel.IsSuperAdmin)
+    {
+        <span class="company d-flex align-items-center justify-content-center">
+            <TelerikRootComponent>
+                <TelerikComboBox Id=roleId Data="@navigationHeaderModel.CompanyList" TextField="Name"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains" OnChange="Update"
                              Placeholder="Change Company" ValueField="Id" @bind-Value="@navigationHeaderModel.Company.Id">
-            </TelerikComboBox>
-        </TelerikRootComponent>
-    </span>
+                </TelerikComboBox>
+            </TelerikRootComponent>
+        </span>
+    }
 
     <span class="d-flex align-items-center justify-content-center">
         <CustomIcons IconName="notification" PrimaryColor="white"></CustomIcons>

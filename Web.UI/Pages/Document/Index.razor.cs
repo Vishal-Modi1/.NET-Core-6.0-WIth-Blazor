@@ -213,10 +213,15 @@ namespace Web.UI.Pages.Document
                 objRef = DotNetObjectReference.Create(this);
                 result = await jsFile.InvokeAsync<string>("ManageDocumentDownloadResponse", objRef, documentDataVM.Id.ToString());
 
-                documentDataVM.IsLoadingDownloadButton = false;
+                
             }
             catch (Exception ex)
             { 
+                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+            }
+            finally
+            {
+                documentDataVM.IsLoadingDownloadButton = false;
             }
         }
 

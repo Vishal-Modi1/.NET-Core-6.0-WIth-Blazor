@@ -155,7 +155,7 @@ namespace Service
 
                 if (!isAircraftAvailable)
                 {
-                    CreateResponse(null, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+                    CreateResponse(null, HttpStatusCode.NotAcceptable, "Aircraft is not available for selected time duration");
 
                     return _currentResponse;
                 }
@@ -183,7 +183,7 @@ namespace Service
 
                 if (!isAircraftAvailable)
                 {
-                    CreateResponse(null, HttpStatusCode.OK, "Aircraft is not available for selected time duration");
+                    CreateResponse(null, HttpStatusCode.NotAcceptable, "Aircraft is not available for selected time duration");
 
                     return _currentResponse;
                 }

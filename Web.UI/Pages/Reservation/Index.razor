@@ -18,10 +18,20 @@
             <ComponentTitle Title="Reservations" Type="AdministrationTitle" />
         </div>
         <div>
-             
+            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+            {
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()" Enabled="@(!isBusyAddButton)">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
+                    </TelerikButton>
+                </div>
+            }
         </div>
     </div>
 </div>
+
 <div class="row my-2">
     <div class="col-md-3 my-1">
         <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange"
@@ -88,7 +98,7 @@
 
     </div>
 </div>
- 
+
 <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
@@ -105,51 +115,62 @@
             <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
         }
 
-        <GridCommandColumn Context="dataItem" Title="From">
-            @{
-                ReservationDataVM value = dataItem as ReservationDataVM;
-                <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
-            }
+        <GridColumn Field="@nameof(ReservationDataVM.StartDateTime)" Context="dataItem" Title="From">
+            <Template>
 
-        </GridCommandColumn>
+                @{
+                    ReservationDataVM value = dataItem as ReservationDataVM;
+                    <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+                }
 
-        <GridCommandColumn Context="dataItem" Title="To">
-            @{
-                ReservationDataVM value = dataItem as ReservationDataVM;
-                <GridColumn Field="@nameof(ReservationDataVM.ScheduleTitle)" Title="Title" Sortable="true" />
+            </Template>
+        </GridColumn>
 
-                <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
-            }
+        <GridColumn Field="@nameof(ReservationDataVM.EndDateTime)" Context="dataItem" Title="To">
 
-        </GridCommandColumn>
+            <Template>
 
-        <GridCommandColumn Context="dataItem" Title="Flight Hours">
-            @{
-                ReservationDataVM value = dataItem as ReservationDataVM;
-                <label>  @value.AirFrameTime.GetValueOrDefault() </label>
-            }
+                @{
+                    ReservationDataVM value = dataItem as ReservationDataVM;
 
-        </GridCommandColumn>
+                    <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+                }
 
-        <GridCommandColumn Context="dataItem" Title="Flight Status">
-            @{
-                ReservationDataVM value = dataItem as ReservationDataVM;
-            }
+            </Template>
 
-            @if (string.IsNullOrWhiteSpace(value.FlightStatus))
-            {
-                <label>Scheduled</label>
-            }
-            else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
-            {
-                <label>Checked Out</label>
-            }
-            else
-            {
-                <label>Checked In</label>
-            }
+        </GridColumn>
 
-        </GridCommandColumn>
+        <GridColumn Field="@nameof(ReservationDataVM.AirFrameTime)" Context="dataItem" Title="Flight Hours">
+            <Template>
+                @{
+                    ReservationDataVM value = dataItem as ReservationDataVM;
+                    <label>  @value.AirFrameTime.GetValueOrDefault() </label>
+                }
+            </Template>
+
+        </GridColumn>
+
+        <GridColumn Field="@nameof(ReservationDataVM.FlightStatus)" Context="dataItem" Title="Flight Status">
+            <Template>
+                @{
+                    ReservationDataVM value = dataItem as ReservationDataVM;
+                }
+
+                @if (string.IsNullOrWhiteSpace(value.FlightStatus))
+                {
+                    <label>Scheduled</label>
+                }
+                else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
+                {
+                    <label>Checked Out</label>
+                }
+                else
+                {
+                    <label>Checked In</label>
+                }
+
+            </Template>
+        </GridColumn>
 
 
         <GridCommandColumn Context="dataItem" Title="Action">
@@ -157,8 +178,8 @@
                 ReservationDataVM value = dataItem as ReservationDataVM;
 
                 <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!value.IsButtonLoading)">
-                  <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons> 
-                    <TelerikLoader Class="button-loader-indicator"  ThemeColor="light" Visible="@value.IsButtonLoading">
+                    <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons>
+                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@value.IsButtonLoading">
                     </TelerikLoader>
 
                 </TelerikButton>

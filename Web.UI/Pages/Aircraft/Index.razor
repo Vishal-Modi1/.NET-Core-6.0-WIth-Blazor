@@ -158,7 +158,7 @@
 <div class="row">
     <div class="col-12 d-flex justify-content-between">
         <div>
-            <ComponentTitle Title="Manage Aircrafts Details" Type="AdministrationTitle" />
+            <ComponentTitle Title="Aircrafts" Type="AdministrationTitle" />
         </div>
         <div>
             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
@@ -191,133 +191,6 @@
         <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
     </div>
 </div>
-@*<TelerikTabStrip>
-
-    <TabStripTab>
-    <HeaderTemplate>
-    <div style="background: @(isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(true))">
-    <CustomIcons IconName="dashboard" PrimaryColor="@(isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-    </div>
-    </HeaderTemplate>
-    <Content>
-
-
-    <TelerikListView @ref="dataListView" Pageable="true"
-    Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
-    OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
-
-    <ListViewSettings>
-    <GridPagerSettings InputType="PagerInputType.Input"
-    PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
-
-    </GridPagerSettings>
-    </ListViewSettings>
-
-    <Template>
-    <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))" >
-    <div class="k-card">
-    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-    <div class='status-circle' style="background-color:@context.Indicator"> </div>
-    <div class="k-card-body d-flex justify-content-center">
-    <h4 class="k-card-title">@context.TailNo</h4>
-    <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
-    </div>
-    </div>
-    </div>
-
-    </Template>
-    </TelerikListView>
-    </Content>
-    </TabStripTab>
-
-    <TabStripTab>
-    <HeaderTemplate>
-
-    <div style="background: @(!isDisplayGridView ? "#0064D4" : "white");" class="d-flex justify-content-center align-items-center custom-elipse mx-2 k-cursor-pointer" @onclick="@(() => ChangeView(false))">
-    <CustomIcons IconName="menu-1" PrimaryColor="@(!isDisplayGridView ? "#FEFEFE" : "#5B5D6A")"></CustomIcons>
-    </div>
-    </HeaderTemplate>
-    <Content>
-    <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
-    Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
-
-    <GridSettings>
-    <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-    </GridSettings>
-
-    <GridColumns>
-
-    <GridColumn Context="dataItem" Title="Photo" Sortable="true">
-    <Template>
-    @{
-    var data = dataItem as AircraftDataVM;
-
-    <div class="icon-container" style="height: 80%;width: 100%;">
-    <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
-    src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
-
-    <div class='status-circle' style="background-color:@data.Indicator"> </div>
-    </div>
-    }
-
-    </Template>
-    </GridColumn>
-
-    <GridColumn Context="dataItem" Title="Name" Sortable="true">
-    <Template>
-    @{
-    var data = dataItem as AircraftDataVM;
-
-    <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
-    }
-
-    </Template>
-    </GridColumn>
-
-    <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make" Sortable="true"></GridColumn>
-    <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model" Sortable="true"></GridColumn>
-    <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category" Sortable="true"></GridColumn>
-
-    <GridColumn Context="dataItem" Title="Actions" Sortable="true">
-    <Template>
-    @{
-    var data = dataItem as AircraftDataVM;
-
-    <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
-    ThemeColor="success">
-    <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
-    </TelerikButton>
-
-    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
-    {
-    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
-    ThemeColor="success" Enabled=!data.IsLoadingEditButton>
-
-    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
-    Visible="data.IsLoadingEditButton">
-    </TelerikLoader>
-
-    </TelerikButton>
-    }
-
-    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
-    {
-    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
-    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-    </TelerikButton>
-    }
-    }
-
-    </Template>
-    </GridColumn>
-
-    </GridColumns>
-    </TelerikGrid>
-    </Content>
-    </TabStripTab>
-
-    </TelerikTabStrip>*@
 
 <hr style="border:#EBECF3" />
 <div class="w-100" style="text-align:right">
@@ -391,7 +264,7 @@ else
                 </Template>
             </GridColumn>
 
-            <GridColumn Context="dataItem" Title="Name" Sortable="true">
+            <GridColumn Field=@nameof(AircraftDataVM.TailNo) Context="dataItem" Title="Name">
                 <Template>
                     @{
                         var data = dataItem as AircraftDataVM;
@@ -402,11 +275,11 @@ else
                 </Template>
             </GridColumn>
 
-            <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make" Sortable="true"></GridColumn>
-            <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model" Sortable="true"></GridColumn>
-            <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category" Sortable="true"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model"></GridColumn>
+            <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category"></GridColumn>
 
-            <GridColumn Context="dataItem" Title="Actions" Sortable="true">
+            <GridColumn Context="dataItem" Title="Actions" >
                 <Template>
                     @{
                         var data = dataItem as AircraftDataVM;

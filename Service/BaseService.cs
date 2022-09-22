@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Net;
-using DataModels.VM;
+﻿using System.Net;
 using DataModels.VM.Common;
 
 namespace Service

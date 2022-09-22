@@ -100,7 +100,7 @@
                                     <div class="col-12">
                                         <label for="inputFirstName" class="col-form-label custom-label">Primary Service :</label>
                                         <label for="inputFirstName" class="">
-                                            @if (companyData.PrimaryServicesList.Count() > 0)
+                                            @if (companyData.PrimaryServicesList.Count() > 0 && companyData.PrimaryServiceId != null)
                                             {
                                                 @companyData.PrimaryServicesList.Where(p=>p.Id == companyData.PrimaryServiceId).First().Name
                                             }
@@ -112,7 +112,7 @@
                                 <div class="row g-3 align-items-center mx-2">
                                     <div class="col-12">
                                         <label for="inputFirstName" class="col-form-label custom-label">Website :</label>
-                                        <label for="inputFirstName" class=""><a href=@(companyData.Website == null ? "-" : companyData.Website)>@(companyData.Website == null ? "-" : companyData.Website)</a></label>
+                                        <label for="inputFirstName" class=""><a href=@(companyData.Website == null ? "" : companyData.Website)>@(companyData.Website == null ? "" : companyData.Website)</a></label>
                                     </div>
                                 </div>
                             </div>

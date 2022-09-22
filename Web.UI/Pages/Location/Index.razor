@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-12 d-flex justify-content-between">
         <div>
-            <ComponentTitle Title="Manage Locations Details" Type="AdministrationTitle" />
+            <ComponentTitle Title="Locations" Type="AdministrationTitle" />
         </div>
         <div>
             <div class="col-md-4">
@@ -41,10 +41,10 @@
 
     <GridColumns>
 
-        <GridColumn Field="@nameof(LocationDataVM.AirportCode)" Sortable="true" />
-        <GridColumn Field="@nameof(LocationDataVM.PhysicalAddress)" Title="Airport Code" />
-        <GridColumn Field="@nameof(LocationDataVM.Timezone)" Title="Physical Address" />
-        <GridColumn Field="@nameof(LocationDataVM.Offset)" Title="Timezone" />
+        <GridColumn Field="@nameof(LocationDataVM.AirportCode)" Title="Airport Code" />
+        <GridColumn Field="@nameof(LocationDataVM.PhysicalAddress)" Title="Physical Address" />
+        <GridColumn Field="@nameof(LocationDataVM.Timezone)" Title="Timezone" />
+        <GridColumn Field="@nameof(LocationDataVM.Offset)" Title="Offset" />
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{

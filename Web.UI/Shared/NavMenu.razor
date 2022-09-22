@@ -54,7 +54,7 @@
 
                 @foreach (var item in menuItems)
                     {
-                        if (!item.IsAdministrationModule || (!isSuperAdmin && item.Controller.ToLower() == Module.Company.ToString().ToLower()))
+                        if (!item.IsAdministrationModule || (!navigationHeaderModel.IsSuperAdmin && item.Controller.ToLower() == Module.Company.ToString().ToLower()))
                         {
                             if (item.DisplayName == "Log out")
                             {
@@ -76,11 +76,11 @@
                                 {
                                     if (item.Controller.ToLower() == Module.Company.ToString().ToLower())
                                     {
-                                        <div class="menu-item-text-color">Company</div>
+                                    <div class="menu-item-text-color">Company</div>
                                     }
                                     else
                                     {
-                                        <div class="menu-item-text-color">@item.DisplayName</div>
+                                    <div class="menu-item-text-color">@item.DisplayName</div>
                                     }
                                 }
                             @if (selectedItem != null && item.DisplayName == selectedItem.DisplayName)

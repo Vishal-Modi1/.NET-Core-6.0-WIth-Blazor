@@ -33,7 +33,7 @@ namespace Service
 
                 if (user == null)
                 {
-                    CreateResponse(null, HttpStatusCode.NotFound, "Invalid Credentials");
+                    CreateResponse(null, HttpStatusCode.Unauthorized, "Invalid Credentials");
                     
                     return _currentResponse;
                 }
