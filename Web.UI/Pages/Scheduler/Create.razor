@@ -571,9 +571,18 @@
             <div class="col-3 d-flex flex-column">
                 <span class="d-flex justify-content-center">
                     <div class="row">
-                        <div class="col-12">
-                            <CustomIcons IconName="start-end-plain-time" />
-                        </div>
+                         <div class="col-12">
+                                        <style type="text/css">
+                                        .small-svg svg {
+                                            width: 250px !important;
+                                                height:auto!important;
+                                            }
+                                        </style>
+                                        <span class="small-svg">
+                                            <CustomIcons IconName="start-end-plain-time" />
+                                        </span>
+                                    
+                                </div>
                         <div class="col-12 d-flex justify-content-between">
                             @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                             {
