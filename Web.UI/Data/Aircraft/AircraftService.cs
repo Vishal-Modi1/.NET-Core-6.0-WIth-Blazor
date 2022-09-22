@@ -39,11 +39,11 @@ namespace Web.UI.Data.Aircraft
             }
         }
 
-        public async Task<List<DE.Aircraft>> ListAllAsync(DependecyParams dependecyParams)
+        public async Task<List<DE.Aircraft>> ListAllAsync(DependecyParams dependecyParams, int companyId)
         {
             try
             {
-                dependecyParams.URL = "aircraft/listall";
+                dependecyParams.URL = $"aircraft/listall?companyId={companyId}";
 
                 CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
                 List<DE.Aircraft> aircraftList = JsonConvert.DeserializeObject<List<DE.Aircraft>>(response.Data.ToString());

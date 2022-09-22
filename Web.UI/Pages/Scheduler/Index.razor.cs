@@ -27,42 +27,59 @@ namespace Web.UI.Pages.Scheduler
         string timezone = "";
         SchedulerFilter schedulerFilter = new SchedulerFilter();
         List<DE.Aircraft> allAircraftList = new List<DE.Aircraft>();
+        DependecyParams dependecyParams;
 
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
 
+        bool isSuperAdmin;
         List<long> multipleAircrafts { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            dataSource = new List<SchedulerVM>();
-            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
-            currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
-
-            InitializeValues();
+            ChangeLoaderVisibilityAction(true);
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
+            dataSource = new List<SchedulerVM>();
+            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
+            currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+
+            InitializeValues();
+
+
             schedulerVM = new SchedulerVM();
             schedulerVM.ScheduleActivitiesList = new List<DropDownValues>();
-
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
-            UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
-
-            aircraftsResourceList = await GetAircraftData(aircraftPreference);
+            aircraftsResourceList = new List<ResourceData>();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                 dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+               
+                if (!isSuperAdmin)
+                {
+                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
+                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
+
+                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
+                }
+                else
+                {
+                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
+                }
+
                 await LoadDataAsync();
+
+                ChangeLoaderVisibilityAction(false);
+                base.StateHasChanged();
             }
         }
 
@@ -89,7 +106,6 @@ namespace Web.UI.Pages.Scheduler
             schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, timezone);
             schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             dataSource = await AircraftSchedulerService.ListAsync(dependecyParams, schedulerFilter);
 
             dataSource.ForEach(x =>
@@ -148,8 +164,7 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            allAircraftList = await AircraftService.ListAllAsync(dependecyParams);
+            allAircraftList = await AircraftService.ListAllAsync(dependecyParams,0);
 
             List<DE.Aircraft> aircraftList = new List<DE.Aircraft>();
 
@@ -213,7 +228,7 @@ namespace Web.UI.Pages.Scheduler
         async Task EditHandler(SchedulerEditEventArgs args)
         {
             args.IsCancelled = true;
-            await OpenCreateScheduleDialogAsync(args.Start, args.End, 1);
+            await OpenCreateScheduleDialogAsync(args.Start, args.End);
         }
 
         private async Task OpenCreateScheduleDialogAsync(DateTime? startTime = null, DateTime? endTime = null, long? aircraftId = null)
@@ -232,7 +247,6 @@ namespace Web.UI.Pages.Scheduler
 
             isBusyAddButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, 0);
 
             if (startTime != null)
@@ -260,7 +274,6 @@ namespace Web.UI.Pages.Scheduler
         {
              ChangeLoaderVisibilityAction(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, args.Id);
 
             schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
@@ -344,6 +357,18 @@ namespace Web.UI.Pages.Scheduler
             }
 
             base.StateHasChanged();
+        }
+
+        async void GetAircraftsList(int value)
+        {
+            ChangeLoaderVisibilityAction(true);
+            schedulerFilter.CompanyId = value;
+
+            allAircraftList = await AircraftService.ListAllAsync(dependecyParams, value);
+            
+            await LoadDataAsync();
+            ChangeLoaderVisibilityAction(false);
+
         }
 
         private void CloseDialog()

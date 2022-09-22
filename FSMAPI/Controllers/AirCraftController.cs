@@ -92,12 +92,15 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("listAll")]
-        public IActionResult ListAll()
+        public IActionResult ListAll(int companyId)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            if (companyId == 0)
+            {
+                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                companyId = company == "" ? 0 : Convert.ToInt32(company);
+            }
 
-            CurrentResponse response = _airCraftService.ListAllByCompanyId(companyIdValue);
+            CurrentResponse response = _airCraftService.ListAllByCompanyId(companyId);
             return APIResponse(response);
         }
 

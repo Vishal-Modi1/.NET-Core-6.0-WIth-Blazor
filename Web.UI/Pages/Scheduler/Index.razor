@@ -1,4 +1,5 @@
-﻿@using DataModels.VM.AircraftEquipment
+﻿@using DataModels.Enums
+@using DataModels.VM.AircraftEquipment
 @using DataModels.VM.Common
 @using System.Collections.ObjectModel
 @using System.ComponentModel
@@ -22,93 +23,120 @@
 </style>
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
-<div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
-        </div>
-        <div>
-            <div class="col-md-4">
-                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
-                               Enabled="@(!isBusyAddButton)">
+<div class="card p-3">
 
-                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
+                </div>
+                <div>
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+                    {
+                        <div class="col-md-4">
+                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                                       Enabled="@(!isBusyAddButton)">
 
-                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                    </TelerikLoader>
+                                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
 
-                </TelerikButton>
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                </TelerikLoader>
+
+                            </TelerikButton>
+                        </div>
+                    }
+                </div>
             </div>
+            <hr class="mt-2 my-1" />
         </div>
     </div>
-</div>
-<div class="row my-2">
 
-    <div class="col-md-6 col-sm-6">
-        <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleAircrafts" OnChange="@OnAircraftsListChange"
-                            TextField="TailNo" ValueField="Id" Placeholder="Select Aircraft" />
+    <div class="row my-2">
+
+        @if (isSuperAdmin)
+        {
+            <div class="col-md-6 col-sm-6">
+
+                <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Company" ValueField="Id"
+                             Value="@schedulerFilter.CompanyId"
+                             ValueExpression="@( () => schedulerFilter.CompanyId )"
+                             ValueChanged="@( (int value) => GetAircraftsList(value) )">
+                </TelerikComboBox>
+
+            </div>
+
+        }
+
+        <div class="col-md-6 col-sm-6">
+            <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleAircrafts" OnChange="@OnAircraftsListChange"
+                                TextField="TailNo" ValueField="Id" Placeholder="Select Aircraft" />
+        </div>
+
     </div>
-</div>
 
-<TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
-                  @ref="@scheduleRef"
-                  OnItemClick="@OnClickHandlerAsync"
-                  OnItemDoubleClick="@OnDoubleClickHandler"
-                  AllowCreate="true" AllowDelete="true" AllowUpdate="true"
-                  OnEdit="@EditHandler"
-                  DateChanged="@DateChangedHandler"
-                  IdField="@(nameof(SchedulerVM.Id))"
-                  StartField="@(nameof(SchedulerVM.StartTime))"
-                  EndField="@(nameof(SchedulerVM.EndTime))"
-                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
-                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
-                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
-                  ViewChanged="@ViewChangedHandler">
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+                      @ref="@scheduleRef"
+                      OnItemClick="@OnClickHandlerAsync"
+                      OnItemDoubleClick="@OnDoubleClickHandler"
+                      AllowCreate="true" AllowDelete="true" AllowUpdate="true"
+                      OnEdit="@EditHandler"
+                      DateChanged="@DateChangedHandler"
+                      IdField="@(nameof(SchedulerVM.Id))"
+                      StartField="@(nameof(SchedulerVM.StartTime))"
+                      EndField="@(nameof(SchedulerVM.EndTime))"
+                      DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                      TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                      IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
+                      ViewChanged="@ViewChangedHandler">
 
-    <ItemTemplate>
-        @{
-            var appt = context as SchedulerVM;
+        <ItemTemplate>
+            @{
+                var appt = context as SchedulerVM;
 
-            if (appt.AircraftSchedulerDetailsVM.IsCheckOut)
-            {
-                appt.Color = "#33ff81";
-            }
-            else
-            {
-                if (appt.AircraftSchedulerDetailsVM.CheckInTime != null)
+                if (appt.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
-                    appt.Color = "#B8B8B8";
+                    appt.Color = "#33ff81";
                 }
                 else
                 {
-                    appt.Color = "#007bff";
+                    if (appt.AircraftSchedulerDetailsVM.CheckInTime != null)
+                    {
+                        appt.Color = "#B8B8B8";
+                    }
+                    else
+                    {
+                        appt.Color = "#007bff";
+                    }
                 }
+
+                <div class="custom-appointment"
+                     style="background-color: @appt.Color">
+                    @appt.DisplayTitle
+                </div>
             }
+        </ItemTemplate>
 
-            <div class="custom-appointment"
-                 style="background-color: @appt.Color">
-                @appt.DisplayTitle
-            </div>
-        }
-    </ItemTemplate>
+        <SchedulerViews>
+            <SchedulerDayView />
+            <SchedulerWeekView />
+            <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
+            <SchedulerMonthView></SchedulerMonthView>
+            <SchedulerTimelineView />
+        </SchedulerViews>
 
-    <SchedulerViews>
-        <SchedulerDayView />
-        <SchedulerWeekView />
-        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
-        <SchedulerMonthView></SchedulerMonthView>
-        <SchedulerTimelineView />
-    </SchedulerViews>
+        <SchedulerResources>
+            <SchedulerResource Field="AircraftId" TextField="AircraftTailNo" ValueField="Id" Data="@aircraftsResourceList"></SchedulerResource>
+        </SchedulerResources>
+        <SchedulerSettings>
+            <SchedulerGroupSettings Resources="@resources" Orientation="@SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
+        </SchedulerSettings>
 
-    <SchedulerResources>
-        <SchedulerResource Field="AircraftId" TextField="AircraftTailNo" ValueField="Id" Data="@aircraftsResourceList"></SchedulerResource>
-    </SchedulerResources>
-    <SchedulerSettings>
-        <SchedulerGroupSettings Resources="@resources" Orientation="@SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
-    </SchedulerSettings>
+    </TelerikScheduler>
 
-</TelerikScheduler>
-
+</div>
 @{
     @if (isDisplayPopup)
     {
@@ -119,10 +147,10 @@
 
             <Body>
                 <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-                InitializeValuesParentEvent="@InitializeValues"
-                OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
-                RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+                    InitializeValuesParentEvent="@InitializeValues"
+                    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
+                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
 
             </Body>
 

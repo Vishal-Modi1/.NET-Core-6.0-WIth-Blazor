@@ -10,27 +10,30 @@
 {
     <PageTitle>Documents | Fly Manager </PageTitle>
 }
-<div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Documents" Type="AdministrationTitle" />
-        </div>
-        <div>
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-            {
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
-                {
-                    <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
+<div class="card p-3">
+     <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <ComponentTitle Title="Documents" Type="AdministrationTitle" />
+                </div>
+                <div>
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+                    {
+                        <div class="col-md-4">
+                              <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
                               <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                         </TelerikButton>
-                    </div>
-                }
-            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <hr class="mt-2 my-1" />
         </div>
     </div>
-</div>
+
+  
 <div class="row my-2">
     @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == Module.Company.ToString())
     {
@@ -193,6 +196,8 @@
     </GridColumns>
 
 </TelerikGrid>
+
+</div>
 
 @if (isDisplayPopup)
 {

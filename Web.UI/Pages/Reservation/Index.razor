@@ -12,185 +12,194 @@
     <PageTitle>Reservation | Fly Manager </PageTitle>
 }
 
-<div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Reservations" Type="AdministrationTitle" />
-        </div>
-        <div>
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-            {
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()" Enabled="@(!isBusyAddButton)">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                        </TelerikLoader>
-                    </TelerikButton>
+<div class="card p-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <ComponentTitle Title="Reservations" Type="AdministrationTitle" />
                 </div>
-            }
+                <div>
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                    {
+                        <div class="col-md-4">
+                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()" Enabled="@(!isBusyAddButton)">
+                                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+                        </div>
+                    }
+                </div>
+            </div>
+            <hr class="mt-2 my-1" />
         </div>
     </div>
-</div>
 
-<div class="row my-2">
-    <div class="col-md-3 my-1">
-        <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange"
-                           Format="MM/dd/yyyy %h:mm tt" Placeholder="Select Start Date" Id="startDate">
-        </TelerikDatePicker>
-    </div>
-    <div class="col-md-3 my-1">
-        <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange"
-                           Format="MM/dd/yyyy %h:mm tt" Id="endDate" Placeholder="Select End Date">
-        </TelerikDatePicker>
-    </div>
-    @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
-    {
+    <div class="row my-2">
         <div class="col-md-3 my-1">
-
-            <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id"
-                         Value="@reservationFilterVM.CompanyId"
-                         ValueExpression="@( () => reservationFilterVM.CompanyId )"
-                         ValueChanged="@( (int value) => GetUsersList(value) )">
-            </TelerikComboBox>
-
+            <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange"
+                               Format="MM/dd/yyyy %h:mm tt" Placeholder="Select Start Date" Id="startDate">
+            </TelerikDatePicker>
         </div>
-
         <div class="col-md-3 my-1">
-            <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select User" ValueField="Id"
-                         @bind-Value="@reservationFilterVM.UserId"
-                         OnChange="() => grid.Rebind()">
-            </TelerikComboBox>
+            <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange"
+                               Format="MM/dd/yyyy %h:mm tt" Id="endDate" Placeholder="Select End Date">
+            </TelerikDatePicker>
         </div>
-    }
-
-    @if (AircraftId == null)
-    {
-        <div class="col-md-3 my-1">
-
-            <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Aircraft" ValueField="Id"
-                         @bind-Value="@reservationFilterVM.AircraftId"
-                         OnChange="() => grid.Rebind()">
-            </TelerikComboBox>
-
-        </div>
-    }
-    <div class="col-md-3 my-1">
-
-        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation"
-                        ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
-
-    </div>
-
-    <div class="col-md-3 my-1">
-
-        <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Reservation Type" ValueField="Id"
-                         @bind-Value="@reservationFilterTypeId"
-                         OnChange="() => grid.Rebind()">
-        </TelerikComboBox>
-
-    </div>
-</div>
-
-<TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
-             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
-
-    <GridSettings>
-        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-    </GridSettings>
-
-    <GridColumns>
-
-        <GridColumn Field="@nameof(ReservationDataVM.ScheduleTitle)" Title="Title" Sortable="true" />
-
-        @if (AircraftId.GetValueOrDefault() == 0)
+        @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
         {
-            <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
+            <div class="col-md-3 my-1">
+
+                <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Company" ValueField="Id"
+                             Value="@reservationFilterVM.CompanyId"
+                             ValueExpression="@( () => reservationFilterVM.CompanyId )"
+                             ValueChanged="@( (int value) => GetUsersList(value) )">
+                </TelerikComboBox>
+
+            </div>
+
+            <div class="col-md-3 my-1">
+                <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select User" ValueField="Id"
+                             @bind-Value="@reservationFilterVM.UserId"
+                             OnChange="() => grid.Rebind()">
+                </TelerikComboBox>
+            </div>
         }
 
-        <GridColumn Field="@nameof(ReservationDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
+        @if (AircraftId == null)
+        {
+            <div class="col-md-3 my-1">
 
-        <GridColumn Field="@nameof(ReservationDataVM.StartDateTime)" Context="dataItem" Title="From">
-            <Template>
+                <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Aircraft" ValueField="Id"
+                             @bind-Value="@reservationFilterVM.AircraftId"
+                             OnChange="() => grid.Rebind()">
+                </TelerikComboBox>
 
-                @{
-                    ReservationDataVM value = dataItem as ReservationDataVM;
-                    <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
-                }
+            </div>
+        }
+        <div class="col-md-3 my-1">
 
-            </Template>
-        </GridColumn>
+            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation"
+                            ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
 
-        <GridColumn Field="@nameof(ReservationDataVM.EndDateTime)" Context="dataItem" Title="To">
+        </div>
 
-            <Template>
+        <div class="col-md-3 my-1">
 
-                @{
-                    ReservationDataVM value = dataItem as ReservationDataVM;
+            <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Reservation Type" ValueField="Id"
+                             @bind-Value="@reservationFilterTypeId"
+                             OnChange="() => grid.Rebind()">
+            </TelerikComboBox>
 
-                    <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
-                }
+        </div>
+    </div>
 
-            </Template>
+    <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+                 Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-        </GridColumn>
+        <GridSettings>
+            <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+        </GridSettings>
 
-        <GridColumn Field="@nameof(ReservationDataVM.AirFrameTime)" Context="dataItem" Title="Flight Hours">
-            <Template>
-                @{
-                    ReservationDataVM value = dataItem as ReservationDataVM;
-                    <label>  @value.AirFrameTime.GetValueOrDefault() </label>
-                }
-            </Template>
+        <GridColumns>
 
-        </GridColumn>
+            <GridColumn Field="@nameof(ReservationDataVM.ScheduleTitle)" Title="Title" Sortable="true" />
 
-        <GridColumn Field="@nameof(ReservationDataVM.FlightStatus)" Context="dataItem" Title="Flight Status">
-            <Template>
-                @{
-                    ReservationDataVM value = dataItem as ReservationDataVM;
-                }
-
-                @if (string.IsNullOrWhiteSpace(value.FlightStatus))
-                {
-                    <label>Scheduled</label>
-                }
-                else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
-                {
-                    <label>Checked Out</label>
-                }
-                else
-                {
-                    <label>Checked In</label>
-                }
-
-            </Template>
-        </GridColumn>
-
-
-        <GridCommandColumn Context="dataItem" Title="Action">
-            @{
-                ReservationDataVM value = dataItem as ReservationDataVM;
-
-                <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!value.IsButtonLoading)">
-                    <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons>
-                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@value.IsButtonLoading">
-                    </TelerikLoader>
-
-                </TelerikButton>
+            @if (AircraftId.GetValueOrDefault() == 0)
+            {
+                <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
             }
-        </GridCommandColumn>
 
-    </GridColumns>
+            <GridColumn Field="@nameof(ReservationDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
 
-</TelerikGrid>
+            <GridColumn Field="@nameof(ReservationDataVM.StartDateTime)" Context="dataItem" Title="From">
+                <Template>
+
+                    @{
+                        ReservationDataVM value = dataItem as ReservationDataVM;
+                        <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+                    }
+
+                </Template>
+            </GridColumn>
+
+            <GridColumn Field="@nameof(ReservationDataVM.EndDateTime)" Context="dataItem" Title="To">
+
+                <Template>
+
+                    @{
+                        ReservationDataVM value = dataItem as ReservationDataVM;
+
+                        <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+                    }
+
+                </Template>
+
+            </GridColumn>
+
+            <GridColumn Field="@nameof(ReservationDataVM.AirFrameTime)" Context="dataItem" Title="Flight Hours">
+                <Template>
+
+                    @{
+                        ReservationDataVM value = dataItem as ReservationDataVM;
+                        <label>  @value.AirFrameTime.GetValueOrDefault() </label>
+                    }
+
+                </Template>
+
+            </GridColumn>
+
+            <GridColumn Field="@nameof(ReservationDataVM.FlightStatus)" Context="dataItem" Title="Flight Status">
+                <Template>
+                    @{
+                        ReservationDataVM value = dataItem as ReservationDataVM;
+                    }
+
+                    @if (string.IsNullOrWhiteSpace(value.FlightStatus))
+                    {
+                        <label>Scheduled</label>
+                    }
+                    else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
+                    {
+                        <label>Checked Out</label>
+                    }
+                    else
+                    {
+                        <label>Checked In</label>
+                    }
+
+                </Template>
+            </GridColumn>
+
+
+            <GridCommandColumn Context="dataItem" Title="Action">
+                @{
+                    ReservationDataVM value = dataItem as ReservationDataVM;
+
+                    <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!value.IsButtonLoading)">
+                        <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons>
+                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@value.IsButtonLoading">
+                        </TelerikLoader>
+
+                    </TelerikButton>
+                }
+            </GridCommandColumn>
+
+        </GridColumns>
+
+    </TelerikGrid>
+</div>
+
+
 
 @if (isDisplayPopup)
 {
