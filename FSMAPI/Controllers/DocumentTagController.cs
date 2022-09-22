@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DocumentTagController : ControllerBase
+    public class DocumentTagController : BaseAPIController
     {
         private readonly IDocumentTagService _documentTagService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -29,7 +29,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _documentTagService.List();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -39,7 +39,7 @@ namespace FSMAPI.Controllers
             documentTagVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _documentTagService.Create(documentTagVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AircraftModelController : ControllerBase
+    public class AircraftModelController : BaseAPIController
     {
         private readonly IAircraftModelService _aircraftModelService;
 
@@ -22,7 +22,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftModelService.Create(aircraftModel);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -31,7 +31,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftModelService.List();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftModelService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -50,7 +50,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftModelService.ListDropDownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -59,7 +59,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftModelService.Delete(id);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(AircraftModel aircraftModel)
         {
             CurrentResponse response = _aircraftModelService.Edit(aircraftModel);
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

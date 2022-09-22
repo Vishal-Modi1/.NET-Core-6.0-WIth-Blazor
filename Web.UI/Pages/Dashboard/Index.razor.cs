@@ -21,17 +21,13 @@ namespace Web.UI.Pages.Dashboard
 
         protected override async Task OnInitializedAsync()
         {
+            ChangeLoaderVisibilityAction(true);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-
-            base.StateHasChanged();
             await LoadData();
         }
 
         async Task LoadData()
         {
-             ChangeLoaderVisibilityAction(true);
-            NotificationModel message;
-
             var user = (await AuthStat).User;
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -39,13 +35,13 @@ namespace Web.UI.Pages.Dashboard
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                message = new NotificationModel().Build(Notification.ThemeColor.Error, "Something went Wrong!, Please try again later.");
-                uiNotification.Instance.Show(message);
+                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                return;
             }
 
             userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
 
-             ChangeLoaderVisibilityAction(false);
+            ChangeLoaderVisibilityAction(false);
         }
     }
 }

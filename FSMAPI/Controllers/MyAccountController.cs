@@ -13,7 +13,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class MyAccountController : ControllerBase
+    public class MyAccountController : BaseAPIController
     {
         private readonly IMyAccountService _myAccountService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -34,7 +34,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _myAccountService.ChangePassword(changePasswordVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _myAccountService.GetMyProfileDetails(companyId, roleId, id);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

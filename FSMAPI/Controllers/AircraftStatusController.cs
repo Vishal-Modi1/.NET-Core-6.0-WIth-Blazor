@@ -8,7 +8,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AircraftStatusController : ControllerBase
+    public class AircraftStatusController : BaseAPIController
     {
         private readonly IAircraftStatusService _aircraftStatusService;
 
@@ -23,7 +23,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftStatusService.ListAll();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -32,7 +32,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftStatusService.ListDropDownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftStatusService.GetById(id);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

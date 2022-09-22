@@ -13,7 +13,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AircraftSchedulerController : ControllerBase
+    public class AircraftSchedulerController : BaseAPIController
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly IAircraftScheduleService _aircraftScheduleService;
@@ -38,7 +38,7 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _aircraftScheduleService.GetDetails(roleIdValue, companyIdValue, id, userIdValue);
-            return Ok(response);
+            return APIResponse(response);
         }
 
 
@@ -49,7 +49,7 @@ namespace FSMAPI.Controllers
             schedulerVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.Create(schedulerVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -64,7 +64,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _aircraftScheduleService.List(schedulerFilter);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -73,7 +73,7 @@ namespace FSMAPI.Controllers
         {
             schedulerVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.Edit(schedulerVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -84,7 +84,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _aircraftScheduleService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -93,7 +93,7 @@ namespace FSMAPI.Controllers
         {
             schedulerEndTimeDetailsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.EditEndTime(schedulerEndTimeDetailsVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -104,7 +104,7 @@ namespace FSMAPI.Controllers
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
             CurrentResponse response = _aircraftScheduleService.ListActivityTypeDropDownValues(roleIdValue);
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

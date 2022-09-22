@@ -35,6 +35,7 @@ namespace Web.UI.Pages.Document
         string[] previewSupportedFormats = new string[] { ".pdf", ".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
         DocumentVM documentData;
         DocumentDataVM documentDataVM;
+        bool isSuperAdmin;
 
         protected override async Task OnInitializedAsync()
         {
@@ -49,6 +50,8 @@ namespace Web.UI.Pages.Document
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
+
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
         }
 
         async Task LoadData(GridReadEventArgs args)

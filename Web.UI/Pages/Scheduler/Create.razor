@@ -259,11 +259,17 @@
                         <div class="d-flex justify-content-center">
                             <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
                         </div>
-                         @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
-                         <FontLabel>@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel> }
-                         else{
-                        <FontLabel fontSize="12px">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
-                         }
+                         <div class="d-flex justify-content-center">
+                            @if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                            {
+                                <FontLabel>@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                            }
+                            else
+                            {
+                                <FontLabel fontSize="12px">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                            }
+                        </div>
+                        
                     </div>
                 </div>
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
@@ -565,9 +571,18 @@
             <div class="col-3 d-flex flex-column">
                 <span class="d-flex justify-content-center">
                     <div class="row">
-                        <div class="col-12">
-                            <CustomIcons IconName="start-end-plain-time" />
-                        </div>
+                         <div class="col-12">
+                                        <style type="text/css">
+                                        .small-svg svg {
+                                            width: 250px !important;
+                                                height:auto!important;
+                                            }
+                                        </style>
+                                        <span class="small-svg">
+                                            <CustomIcons IconName="start-end-plain-time" />
+                                        </span>
+                                    
+                                </div>
                         <div class="col-12 d-flex justify-content-between">
                             @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                             {

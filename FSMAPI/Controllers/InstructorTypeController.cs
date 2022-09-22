@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class InstructorTypeController : ControllerBase
+    public class InstructorTypeController : BaseAPIController
     {
         private readonly IInstructorTypeService _instructorTypeService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -28,7 +28,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _instructorTypeService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -36,7 +36,7 @@ namespace FSMAPI.Controllers
         public IActionResult Create(InstructorTypeVM instructorTypeVM)
         {
             CurrentResponse response = _instructorTypeService.Create(instructorTypeVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -44,7 +44,7 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(InstructorTypeVM instructorTypeVM)
         {
             CurrentResponse response = _instructorTypeService.Edit(instructorTypeVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -52,7 +52,7 @@ namespace FSMAPI.Controllers
         public IActionResult GetDetails(int id)
         {
             CurrentResponse response = _instructorTypeService.GetDetails(id);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -63,7 +63,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _instructorTypeService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

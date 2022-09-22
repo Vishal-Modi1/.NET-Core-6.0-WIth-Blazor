@@ -13,7 +13,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserRolePermissionController : ControllerBase
+    public class UserRolePermissionController : BaseAPIController
     {
         private readonly IUserRolePermissionService _userRolePermissionService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -37,7 +37,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userRolePermissionService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -52,7 +52,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userRolePermissionService.GetByRoleId(roleId, companyId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -64,7 +64,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userRolePermissionService.GetFiltersValue(roleId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -73,7 +73,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userRolePermissionService.UpdatePermission(id, isAllow);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
 
@@ -89,7 +89,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userRolePermissionService.UpdatePermissions(userRolePermissionFilterVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -98,7 +98,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermission(id, isAllow);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
 
@@ -114,7 +114,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermissions(userRolePermissionFilterVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

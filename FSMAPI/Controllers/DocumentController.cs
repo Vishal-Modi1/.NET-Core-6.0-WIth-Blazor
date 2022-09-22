@@ -12,7 +12,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class DocumentController : ControllerBase
+    public class DocumentController : BaseAPIController
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
@@ -33,7 +33,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _documentService.GetFiltersValue();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -89,7 +89,7 @@ namespace FSMAPI.Controllers
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                return Ok(response);
+                return APIResponse(response);
             }
 
             Document document = (Document)response.Data;
@@ -121,7 +121,7 @@ namespace FSMAPI.Controllers
             response = _documentService.FindByCondition(p => p.Id == document.Id);
             response.Message = "Document updated successfully.";
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         //[HttpPost]
@@ -174,7 +174,7 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _documentService.GetDetails(id, companyIdValue);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -195,7 +195,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _documentService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -206,7 +206,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _documentService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPut]
@@ -215,7 +215,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _documentService.UpdateTotalDownloads(id);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPut]
@@ -224,7 +224,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _documentService.UpdateTotalShares(id);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

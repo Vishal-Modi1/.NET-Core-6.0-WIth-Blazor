@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CompanyController : ControllerBase
+    public class CompanyController : BaseAPIController
     {
         private readonly ICompanyService _companyService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -38,7 +38,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _companyService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _companyService.ListAll();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -56,7 +56,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _companyService.ListDropDownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -66,7 +66,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _companyService.ListCompanyServiceDropDownValues();
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -82,7 +82,7 @@ namespace FSMAPI.Controllers
             }
 
             CurrentResponse response = _companyService.Create(companyVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -92,7 +92,7 @@ namespace FSMAPI.Controllers
             companyVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _companyService.Edit(companyVM);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -101,7 +101,7 @@ namespace FSMAPI.Controllers
         public IActionResult GetDetails(int id)
         {
             CurrentResponse response = _companyService.FindById(id);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -112,7 +112,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _companyService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -144,7 +144,7 @@ namespace FSMAPI.Controllers
                 response = _companyService.UpdateImageName(Convert.ToInt32(form["CompanyId"]), fileName);
             }
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -154,7 +154,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _companyService.UpdateCreatedBy(id, createdBy);
             
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -164,7 +164,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _companyService.IsCompanyExist(id, name);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -173,7 +173,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _companyService.ListDropDownValuesByUserId(userId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

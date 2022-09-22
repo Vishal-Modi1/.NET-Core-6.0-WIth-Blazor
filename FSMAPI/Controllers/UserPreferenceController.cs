@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class UserPreferenceController : ControllerBase
+    public class UserPreferenceController : BaseAPIController
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly IUserPreferenceService _userPreferenceService;
@@ -30,7 +30,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _userPreferenceService.Create(userPreferenceVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

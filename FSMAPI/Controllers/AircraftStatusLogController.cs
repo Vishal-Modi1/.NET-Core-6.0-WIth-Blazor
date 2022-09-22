@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AircraftStatusLogController : ControllerBase
+    public class AircraftStatusLogController : BaseAPIController
     {
         private readonly IAircraftStatusLogService _aircraftStatusLogService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -29,7 +29,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _aircraftStatusLogService.List(datatableParam);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [AllowAnonymous]
@@ -46,7 +46,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _aircraftStatusLogService.Create(aircraftStatusLog);
            
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -56,7 +56,7 @@ namespace FSMAPI.Controllers
             aircraftStatusLog.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftStatusLogService.Edit(aircraftStatusLog);
 
-            return Ok(response);
+            return APIResponse(response);
         } 
 
         //[HttpGet]
@@ -64,7 +64,7 @@ namespace FSMAPI.Controllers
         //public IActionResult GetDetails(int id)
         //{
         //    CurrentResponse response = _aircraftStatusLogService.FindById(id);
-        //    return Ok(response);
+        //    return APIResponse(response);
         //}
 
         [HttpDelete]
@@ -74,7 +74,7 @@ namespace FSMAPI.Controllers
             long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftStatusLogService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

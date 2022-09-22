@@ -13,7 +13,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AircraftEquipmentController : Controller
+    public class AircraftEquipmentController : BaseAPIController
     {
         private readonly IAirCraftEquipmentService _airCraftEquipmentService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -31,7 +31,7 @@ namespace FSMAPI.Controllers
             airCraftEquipmentsVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftEquipmentService.Create(airCraftEquipmentsVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
             airCraftEquipmentsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftEquipmentService.Edit(airCraftEquipmentsVM);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -52,7 +52,7 @@ namespace FSMAPI.Controllers
             
             CurrentResponse response = _airCraftEquipmentService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
 
@@ -62,7 +62,7 @@ namespace FSMAPI.Controllers
         public IActionResult List(AircraftEquipmentDatatableParams datatableParams)
         {
             CurrentResponse response = _airCraftEquipmentService.List(datatableParams);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         //[HttpGet]
@@ -70,7 +70,7 @@ namespace FSMAPI.Controllers
         //public IActionResult List(int aircraftId)
         //{
         //    CurrentResponse response = _airCraftEquipmentService.List(aircraftId);
-        //    return Ok(response);
+        //    return APIResponse(response);
         //}
 
         [HttpGet]
@@ -78,7 +78,7 @@ namespace FSMAPI.Controllers
         public IActionResult fetchbyid(int id)
         {
             CurrentResponse response = _airCraftEquipmentService.Get(id);
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

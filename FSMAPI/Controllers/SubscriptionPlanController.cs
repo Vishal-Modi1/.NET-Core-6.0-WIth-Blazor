@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class SubscriptionPlanController : ControllerBase
+    public class SubscriptionPlanController : BaseAPIController
     {
         private readonly ISubscriptionPlanService _subscriptionPlanService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -29,7 +29,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _subscriptionPlanService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -40,7 +40,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _subscriptionPlanService.Create(subscriptionPlanVM);
            
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpPost]
@@ -51,7 +51,7 @@ namespace FSMAPI.Controllers
          
             CurrentResponse response = _subscriptionPlanService.Edit(subscriptionPlanVM);
            
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -59,7 +59,7 @@ namespace FSMAPI.Controllers
         public IActionResult GetDetails(int id)
         {
             CurrentResponse response = _subscriptionPlanService.GetDetails(id);
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpDelete]
@@ -70,7 +70,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _subscriptionPlanService.Delete(id, deletedBy);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -79,7 +79,7 @@ namespace FSMAPI.Controllers
         {
             CurrentResponse response = _subscriptionPlanService.UpdateActiveStatus(id, isActive);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -89,7 +89,7 @@ namespace FSMAPI.Controllers
             long userId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _subscriptionPlanService.BuyPlan(id, userId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }

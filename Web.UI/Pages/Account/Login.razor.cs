@@ -58,7 +58,7 @@ namespace Web.UI.Pages.Account
         [JSInvokable]
         public void ManageLoginResponse(string responseMessage)
         {
-            uiNotification.DisplayErrorNotification(uiNotification.Instance);
+            uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, responseMessage);
             SetButtonState(false);
         }
 

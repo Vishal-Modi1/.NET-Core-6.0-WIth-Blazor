@@ -11,7 +11,7 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ReservationController : ControllerBase
+    public class ReservationController : BaseAPIController
     {
         private readonly IReservationService _reservationService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
@@ -34,7 +34,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _reservationService.List(datatableParams);
 
-            return Ok(response);
+            return APIResponse(response);
         }
 
         [HttpGet]
@@ -46,7 +46,7 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _reservationService.GetFiltersValue(roleId, CompanyId);
 
-            return Ok(response);
+            return APIResponse(response);
         }
     }
 }
