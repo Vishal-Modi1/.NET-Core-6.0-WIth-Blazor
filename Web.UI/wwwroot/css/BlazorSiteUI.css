@@ -31,7 +31,7 @@ body {
 }
 
 hr {
-  border: 1px solid #eee;
+  border: 1px solid #ffffff8c;
 }
 
 .bg-primary-f {
@@ -548,6 +548,10 @@ label, a,
 
 .cursor-pointer {
   cursor: pointer !important;
+}
+
+td, span, p {
+  font-size: 14px !important;
 }
 
 /*TELERIK TEXTBOX INNER TEXT FONT SIZE & PLACEHOLDER SIZE*/

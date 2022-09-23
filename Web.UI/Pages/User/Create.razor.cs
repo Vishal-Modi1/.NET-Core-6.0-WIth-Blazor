@@ -25,13 +25,14 @@ namespace Web.UI.Pages.User
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         EditContext userForm;
-        bool isInstructorTypeDropdownVisible = false;
+        bool isInstructorTypeDropdownVisible = false, isLoggedIn;
         int? roleId;
+        bool isSuperAdmin, isAdmin;
 
         List<RadioButtonItem> genderOptions { get; set; } = new List<RadioButtonItem>
         {
-            new RadioButtonItem { Id = 0,Text = "Female" },
-            new RadioButtonItem { Id = 1, Text = "Male" },
+            new RadioButtonItem { Id = 0,Text = "Male" },
+            new RadioButtonItem { Id = 1, Text = "Female" },
         };
 
         protected override async Task OnInitializedAsync()
@@ -39,18 +40,23 @@ namespace Web.UI.Pages.User
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             userForm = new EditContext(userData);
 
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+            isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
+
             if (userData != null)
             {
                 isInstructorTypeDropdownVisible = userData.IsInstructor;
+                OnGenderValueChange();
             }
             else
             {
                 userData = new UserVM();
             }
 
-            userData.IsAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
+            isLoggedIn = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result) ;
+            userData.IsAuthenticated = (!string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result) && userData.RoleId != (int)UserRole.SuperAdmin);
 
-            if (!userData.IsAuthenticated && !userData.IsInvited)
+            if (!isLoggedIn && !userData.IsInvited)
             {
                 userData.RoleId = userData.UserRoles.Where(p => p.Name == UserRole.Owner.ToString()).First().Id;
             }
@@ -59,6 +65,7 @@ namespace Web.UI.Pages.User
             {
                 userData.IsSendEmailInvite = userData.IsSendTextMessage = true;
             }
+
         }
 
         public async Task Submit()
@@ -95,7 +102,7 @@ namespace Web.UI.Pages.User
             }
         }
 
-        async void OnGenderValueChange()
+        void OnGenderValueChange()
         {
             if (userData.GenderId == 0)
             {

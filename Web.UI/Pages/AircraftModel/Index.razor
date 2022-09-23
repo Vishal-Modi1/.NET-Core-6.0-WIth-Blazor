@@ -7,20 +7,23 @@
 @page "/AircraftModel"
 
 <div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Aircraft Models" Type="AdministrationTitle" />
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <ComponentTitle Title="Aircraft Models" Type="AdministrationTitle" />
+            </div>
+            <div>
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                {
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftModelCreateDialog(new AircraftModelDataVM())">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                    </div>
+                }
+            </div>
         </div>
-        <div>
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-            {
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftModelCreateDialog(new AircraftModelDataVM())">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                    </TelerikButton>
-                </div>
-            }
-        </div>
+        <hr class="mt-2 my-1" />
     </div>
 </div>
 <div class="row my-2">

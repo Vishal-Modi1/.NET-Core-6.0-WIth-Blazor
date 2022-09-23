@@ -8,26 +8,31 @@
 @page "/InstructorType"
 
 <div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Instructor Types" Type="AdministrationTitle" />
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <ComponentTitle Title="Instructor Types" Type="AdministrationTitle" />
+            </div>
+            <div>
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                {
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InstructorTypeCreateDialog(new InstructorTypeVM())">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                    </div>
+                }
+            </div>
         </div>
-        <div>
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-            {
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => InstructorTypeCreateDialog(new InstructorTypeVM())">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                    </TelerikButton>
-                </div>
-            }
-        </div>
+        <hr class="mt-2 my-1" />
     </div>
 </div>
+
 <div class="row my-2">
-        <div class="col-md-4">
-            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<InstructorTypeVM>(value, grid) )" />
-        </div>
+    <div class="col-md-4">
+        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<InstructorTypeVM>(value, grid) )" />
+    </div>
 </div>
 
 <TelerikGrid TItem="InstructorTypeVM" OnRead="@LoadData" Pageable="true" @ref="@grid"

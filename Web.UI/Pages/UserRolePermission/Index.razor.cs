@@ -295,7 +295,7 @@ namespace Web.UI.Pages.UserRolePermission
             isDisplayPopup = false;
             RefreshGrid();
 
-            data.Where(p => p.Id == userRolePermissionDataVM.Id).First().IsAllowed = !userRolePermissionDataVM.IsAllowed;
+            //data.Where(p => p.Id == userRolePermissionDataVM.Id).First().IsAllowed = !userRolePermissionDataVM.IsAllowed;
             //base.StateHasChanged();
         }
 

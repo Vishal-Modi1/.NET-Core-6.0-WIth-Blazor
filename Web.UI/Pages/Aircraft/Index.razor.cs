@@ -33,22 +33,22 @@ namespace Web.UI.Pages.Aircraft
         {
             ChangeLoaderVisibilityAction(true);
 
+            if (ParentCompanyId != null)
+            {
+                companyId = ParentCompanyId.Value;
+            }
+
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
+            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+
             aircraftFilterVM = new AircraftFilterVM();
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftFilterVM = await AircraftService.GetFiltersAsync(dependecyParams);
-
-            if (ParentCompanyId != null)
-            {
-                companyId = ParentCompanyId.Value;
-            }
-
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
 
             ChangeLoaderVisibilityAction(false);
         }

@@ -207,7 +207,7 @@
                 <div class="row my-1">
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
-                            <FontLabel fontSize="16px" Class="font-weight-bold">STATUS</FontLabel>
+                            <FontLabel fontSize="14px" Class="font-weight-bold">STATUS</FontLabel>
                             <FontLabel>@GetSchedulerStatusText()</FontLabel>
                         </div>
                     </div>
@@ -215,7 +215,7 @@
                 <div class="row justify-content-between align-items-center m-0 custom-border-y my-1">
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                            <FontLabel fontSize="16px" fontColor="#00AFA5" Class="font-weight-bold">Start</FontLabel>
+                            <FontLabel fontSize="14px" fontColor="#00AFA5" Class="font-weight-bold">Start</FontLabel>
                         </div>
 
                         <div class="d-flex justify-content-center">
@@ -257,7 +257,7 @@
                     </div>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                            <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
+                            <FontLabel fontSize="14px" fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
                         </div>
                          <div class="d-flex justify-content-center">
                             @if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
@@ -279,7 +279,7 @@
                                     <FontLabel fontSize="12px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
                                 }
                                 else {
-                                    <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
+                                    <FontLabel fontSize="14px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
                                 } 
                         </div>
                         <div class="d-flex justify-content-center">
@@ -316,7 +316,7 @@
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
                                 @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
-                                    <FontLabel fontSize="16px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                    <FontLabel fontSize="14px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
                                 }
                                 else {
                                     <FontLabel fontSize="12px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
@@ -331,26 +331,26 @@
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center popup-title">
-                            <FontLabel fontSize="16px" Class="font-weight-bold">Activity</FontLabel>
+                            <FontLabel fontSize="14px" Class="font-weight-bold">Activity</FontLabel>
                         </div>
                         <span class="d-flex justify-content-center">
                             <FontLabel>@(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</FontLabel>
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"> <FontLabel fontSize="16px" Class="font-weight-bold">Aircraft</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"> <FontLabel fontSize="14px" Class="font-weight-bold">Aircraft</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             <FontLabel>@(@schedulerVM.AircraftsList.FirstOrDefault(p => p.Id == @schedulerVM.AircraftId)?.Name ?? "-")</FontLabel>
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Title</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Title</FontLabel></div>
                         <span class="d-flex justify-content-center"> <FontLabel>@(schedulerVM.DisplayTitle)</FontLabel></span>
                     </div>
                 </div>
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Member 1</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Member 1</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             @if (@schedulerVM.Member1Id != null)
                             {
@@ -364,7 +364,7 @@
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Member 2</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Member 2</FontLabel></div>
                         <span class="d-flex justify-content-center">
 
                             @if (@schedulerVM.Member2Id != null)
@@ -380,7 +380,7 @@
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Instructor</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Instructor</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p => p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
                             {
@@ -396,7 +396,7 @@
                 <div class="row justify-content-start align-items-center m-0 custom-border-y  my-1" style="background:#2e66ff1f">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="mx-3">
-                            <div class="d-flex justify-content-start popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Comments</FontLabel></div>
+                            <div class="d-flex justify-content-start popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Comments</FontLabel></div>
                             <FontLabel Class="d-flex justify-content-start">
                                 @(schedulerVM.Comments ?? "-")
                             </FontLabel>
@@ -407,7 +407,7 @@
                 <div class="row justify-content-start align-items-center m-0 custom-border-y  my-1" style="background:#2f66ff1f">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="mx-3">
-                            <div class="d-flex justify-content-start popup-title"><FontLabel fontSize="16px" Class="font-weight-bold">Internal Comments</FontLabel></div>
+                            <div class="d-flex justify-content-start popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Internal Comments</FontLabel></div>
                             <FontLabel Class="d-flex justify-content-start">
                                 @(schedulerVM.InternalComments ?? "-")
                             </FontLabel>
@@ -563,7 +563,7 @@
                 @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                 {
                     <div class="d-flex justify-content-center">
-                        <FontLabel fontSize="16px" fontColor="#00AFA5" Class="font-weight-bold">Checked Out</FontLabel>
+                        <FontLabel fontSize="14px" fontColor="#00AFA5" Class="font-weight-bold">Checked Out</FontLabel>
                     </div>
                     <FontLabel Class="d-flex justify-content-center">@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>
                 }
@@ -600,7 +600,7 @@
                 @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
                 {
                     <div class="d-flex justify-content-center">
-                        <FontLabel fontSize="16px" fontColor="#FE5722" Class="font-weight-bold">Checked In</FontLabel>
+                        <FontLabel fontSize="14px" fontColor="#FE5722" Class="font-weight-bold">Checked In</FontLabel>
                     </div>
                     <div class="d-flex justify-content-center">
                         <FontLabel>@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>

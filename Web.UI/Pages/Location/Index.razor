@@ -11,25 +11,28 @@
 
 @page "/Location"
 <div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Locations" Type="AdministrationTitle" />
-        </div>
-        <div>
-            <div class="col-md-4">
-                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => LocationCreateDialog(new LocationDataVM())" Enabled="@(!isBusyAddButton)">
-                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                    </TelerikLoader>
-                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                </TelerikButton>
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <ComponentTitle Title="Locations" Type="AdministrationTitle" />
+            </div>
+            <div>
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => LocationCreateDialog(new LocationDataVM())" Enabled="@(!isBusyAddButton)">
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    </TelerikButton>
+                </div>
             </div>
         </div>
+        <hr class="mt-2 my-1" />
     </div>
 </div>
 <div class="row my-2">
-        <div class="col-md-4">
+    <div class="col-md-4">
         <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Location" ValueChanged="@( (string value) => OnSearchValueChanges<LocationDataVM>(value, grid) )" />
-        </div>
+    </div>
 </div>
 
 <TelerikGrid TItem="LocationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -50,21 +53,21 @@
             @{
                 LocationDataVM locationDataVM = dataItem as LocationDataVM;
 
-             //   @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-             //   {
-                      <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>LocationCreateDialog(locationDataVM)"
-                           ThemeColor="success" >
+                //   @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                //   {
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>LocationCreateDialog(locationDataVM)"
+                           ThemeColor="success">
 
-                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                    </TelerikButton>
-             //   }
+                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                </TelerikButton>
+                //   }
 
-               // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-              //  {
-                    <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(locationDataVM)">
-                           <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                    </TelerikButton>
-              //  }
+                // @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                //  {
+                <TelerikButton Class="btn k-btn-grid-delete" ThemeColor="error" OnClick="()=>OpenDeleteDialog(locationDataVM)">
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                </TelerikButton>
+                //  }
             }
         </GridCommandColumn>
 
