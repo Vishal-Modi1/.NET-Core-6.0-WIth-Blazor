@@ -1,10 +1,10 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Readex+Pro&display=swap");
 html, body, .selected-font {
-  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-family: "Readex Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 .k-drawer, .k-tabstrip-items {
-  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-family: "Readex Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
 /*NEW COLOR PLATE*/
@@ -100,8 +100,7 @@ form .row {
   height: 15px;
   border-radius: 50%;
   border: 2px solid white;
-  bottom: 0;
-  right: 0;
+  top: 0;
   position: absolute;
 }
 
@@ -471,7 +470,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .component-title {
-  font-family: "Outfit";
+  font-family: "Readex Pro";
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -485,6 +484,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   height: 40px;
 }
 
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 1000px;
+    margin: 1.75rem auto;
+  }
+}
 /*Modal style*/
 .modal {
   position: fixed;
@@ -504,6 +509,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   z-index: 1055;
   background-color: #ffffff;
   border-radius: 20px 20px 12px 12px !important;
+}
+.modal .modal-dialog.modal-md-new {
+  width: 730px;
+}
+.modal .modal-dialog.modal-md-new .modal-content {
+  width: 730px;
 }
 .modal .modal-header {
   border-radius: 12px 12px 0 0 !important;

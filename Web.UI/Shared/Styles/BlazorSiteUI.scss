@@ -166,8 +166,7 @@ form .row {
     height: 15px;
     border-radius: 50%;
     border: 2px solid white;
-    bottom: 0;
-    right: 0;
+    top: 0;
     position: absolute;
 }
 /*GLOBAL CLASSES*/
@@ -596,6 +595,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     width: 40px;
     height: 40px;
 }
+@media (min-width: 576px) 
+{
+    .modal-dialog {
+        max-width: 1000px;
+        margin: 1.75rem auto;
+    }
+}
 /*Modal style*/
 .modal {
     position: fixed;
@@ -616,6 +622,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         z-index: 1055;
         background-color: #ffffff;
         border-radius: 20px 20px 12px 12px !important;
+
+        &.modal-md-new {
+            width: 730px;
+
+            .modal-content {
+                width: 730px;
+            }
+        }
     }
 
     .modal-header {

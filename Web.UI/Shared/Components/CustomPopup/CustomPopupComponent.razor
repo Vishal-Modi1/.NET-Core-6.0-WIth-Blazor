@@ -1,5 +1,5 @@
 ﻿<div class="modal fadeIn show" id="myModal" aria-modal="true" role="dialog">
-    <div class="modal-dialog @(IsModalLg ? "modal-lg" :"")" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
+    <div class="modal-dialog @(IsModalLg ? "modal-lg" :"modal-md-new")" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
         <div class="modal-content" style="@(!string.IsNullOrEmpty(Width)?$"max-width:{Width}":"")">
             <div class="modal-header @(HeaderCssClass) @(ShowHeaderCloseButton ? "d-flex justify-content-between" : "")">
                 <FontLabel fontSize="16px" Class="modal-title text-white" fontColor="white">@Title</FontLabel>

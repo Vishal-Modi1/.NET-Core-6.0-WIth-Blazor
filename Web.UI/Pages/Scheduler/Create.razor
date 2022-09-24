@@ -193,10 +193,10 @@
                 <hr />
                 <div class="row bg-gray d-flex justify-content-end">
                     <div class="d-flex justify-content-end">
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary">
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1">
                             Continue
                         </TelerikButton>
-                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline">
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline">
                             Cancel
                         </TelerikButton>
                     </div>
@@ -204,10 +204,10 @@
             }
             else
             {
-                <div class="row my-1">
+                <div class="row mb-1">
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
-                            <FontLabel fontSize="14px" Class="font-weight-bold">STATUS</FontLabel>
+                            <FontLabel Class="font-weight-bold">STATUS</FontLabel>
                             <FontLabel>@GetSchedulerStatusText()</FontLabel>
                         </div>
                     </div>
@@ -215,7 +215,7 @@
                 <div class="row justify-content-between align-items-center m-0 custom-border-y my-1">
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                            <FontLabel fontSize="14px" fontColor="#00AFA5" Class="font-weight-bold">Start</FontLabel>
+                            <FontLabel fontColor="#00AFA5" Class="font-weight-bold">Start</FontLabel>
                         </div>
 
                         <div class="d-flex justify-content-center">
@@ -223,13 +223,13 @@
                                 <FontLabel>@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
                             }
                             else{
-                                <FontLabel fontSize="12px">@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                                <FontLabel>@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
                             }
                         </div>
                     </div>
                     <div class="col-4 d-flex flex-column">
                         <span class="d-flex justify-content-center">
-                            <div class="row">
+                            <div class="row m-0">
                                 <div class="col-12">
                                         <style type="text/css">
                                         .small-svg svg {
@@ -257,7 +257,7 @@
                     </div>
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
-                            <FontLabel fontSize="14px" fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
+                            <FontLabel fontColor="#FE5722" Class="font-weight-bold">End</FontLabel>
                         </div>
                          <div class="d-flex justify-content-center">
                             @if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
@@ -266,7 +266,7 @@
                             }
                             else
                             {
-                                <FontLabel fontSize="12px">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+                                <FontLabel>@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
                             }
                         </div>
                         
@@ -279,7 +279,7 @@
                                     <FontLabel fontSize="12px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
                                 }
                                 else {
-                                    <FontLabel fontSize="14px" fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
+                                    <FontLabel fontColor="#FE5722" Class="font-weight-bold">Departure Airport</FontLabel>
                                 } 
                         </div>
                         <div class="d-flex justify-content-center">
@@ -288,7 +288,7 @@
                     </div>
                     <div class="col-4 d-flex flex-column">
                         <span class="d-flex justify-content-center">
-                            <div class="row">
+                            <div class="row m-0">
                                 <div class="col-12">
                                       <style type="text/css">
                                             .small-svg svg{
@@ -316,7 +316,7 @@
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
                                 @if(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null){
-                                    <FontLabel fontSize="14px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                    <FontLabel fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
                                 }
                                 else {
                                     <FontLabel fontSize="12px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
@@ -331,26 +331,26 @@
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center popup-title">
-                            <FontLabel fontSize="14px" Class="font-weight-bold">Activity</FontLabel>
+                            <FontLabel Class="font-weight-bold">Activity</FontLabel>
                         </div>
                         <span class="d-flex justify-content-center">
                             <FontLabel>@(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</FontLabel>
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"> <FontLabel fontSize="14px" Class="font-weight-bold">Aircraft</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"> <FontLabel Class="font-weight-bold">Aircraft</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             <FontLabel>@(@schedulerVM.AircraftsList.FirstOrDefault(p => p.Id == @schedulerVM.AircraftId)?.Name ?? "-")</FontLabel>
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Title</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel Class="font-weight-bold">Title</FontLabel></div>
                         <span class="d-flex justify-content-center"> <FontLabel>@(schedulerVM.DisplayTitle)</FontLabel></span>
                     </div>
                 </div>
                 <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Member 1</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel Class="font-weight-bold">Member 1</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             @if (@schedulerVM.Member1Id != null)
                             {
@@ -364,7 +364,7 @@
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Member 2</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel Class="font-weight-bold">Member 2</FontLabel></div>
                         <span class="d-flex justify-content-center">
 
                             @if (@schedulerVM.Member2Id != null)
@@ -380,7 +380,7 @@
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
-                        <div class="d-flex justify-content-center popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Instructor</FontLabel></div>
+                        <div class="d-flex justify-content-center popup-title"><FontLabel Class="font-weight-bold">Instructor</FontLabel></div>
                         <span class="d-flex justify-content-center">
                             @if (@schedulerVM.InstructorId != null && @schedulerVM.InstructorsList.Where(p => p.Id == @schedulerVM.InstructorId).FirstOrDefault() != null)
                             {
@@ -396,7 +396,7 @@
                 <div class="row justify-content-start align-items-center m-0 custom-border-y  my-1" style="background:#2e66ff1f">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="mx-3">
-                            <div class="d-flex justify-content-start popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Comments</FontLabel></div>
+                            <div class="d-flex justify-content-start popup-title"><FontLabel Class="font-weight-bold">Comments</FontLabel></div>
                             <FontLabel Class="d-flex justify-content-start">
                                 @(schedulerVM.Comments ?? "-")
                             </FontLabel>
@@ -407,7 +407,7 @@
                 <div class="row justify-content-start align-items-center m-0 custom-border-y  my-1" style="background:#2f66ff1f">
                     <div class="col-12 d-flex justify-content-between">
                         <div class="mx-3">
-                            <div class="d-flex justify-content-start popup-title"><FontLabel fontSize="14px" Class="font-weight-bold">Internal Comments</FontLabel></div>
+                            <div class="d-flex justify-content-start popup-title"><FontLabel Class="font-weight-bold">Internal Comments</FontLabel></div>
                             <FontLabel Class="d-flex justify-content-start">
                                 @(schedulerVM.InternalComments ?? "-")
                             </FontLabel>
@@ -423,7 +423,7 @@
                             if (uiOptions.isDisplayCheckInButton)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckInAircraft"
-                           Class="btn k-btn-primary flex-fill mx-2" Enabled="@(!uiOptions.isBusyCheckOutButton)">
+                           Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!uiOptions.isBusyCheckOutButton)">
                                     Check In
                                     <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
                                     </TelerikLoader>
@@ -432,7 +432,7 @@
                             else
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckOutAircraft"
-                           Class="btn k-btn-primary flex-fill mx-2" Enabled="@(!uiOptions.isBusyCheckOutButton)">
+                           Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!uiOptions.isBusyCheckOutButton)">
                                     Check Out
                                     <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
                                     </TelerikLoader>
@@ -445,13 +445,13 @@
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@ShowEditEndTimeForm"
-                           Class="btn k-btn-primary flex-fill mx-2">
+                           Class="btn k-btn-primary flex-fill mx-1">
                                     <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                                     Edit End Time
                                 </TelerikButton>
 
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenUnCheckOutDialog"
-                           Class="btn k-btn-primary flex-fill mx-2"> Un-Check Out </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-1"> Un-Check Out </TelerikButton>
                             }
                         }
                         else
@@ -459,7 +459,7 @@
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenForm"
-                           Class="btn k-btn-primary flex-fill mx-2">
+                           Class="btn k-btn-primary flex-fill">
                                     <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                                     Edit
                                 </TelerikButton>
@@ -468,7 +468,7 @@
                             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, "Scheduler") && isAllowToDelete)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="@OpenDeleteDialog"
-                           Class="btn k-btn-error flex-fill mx-2"> Delete </TelerikButton>
+                           Class="btn k-btn-error flex-fill mx-1"> Delete </TelerikButton>
                             }
                         }
                     }
@@ -477,13 +477,13 @@
                         if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                         {
                             <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@ShowEditEndTimeForm"
-                           Class="btn k-btn-primary flex-fill mx-2">
+                           Class="btn k-btn-primary flex-fill mx-1">
                                 <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                                 Edit End Time
                             </TelerikButton>
 
                             <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@EditFlightTime"
-                           Class="btn k-btn-primary flex-fill mx-2">
+                           Class="btn k-btn-primary flex-fill mx-1">
                                 <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                                 Edit Flight Time
                             </TelerikButton>
@@ -491,7 +491,7 @@
                     }
                     else
                     {
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary flex-fill mx-2" Enabled="@(!isBusySubmitButton)">
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!isBusySubmitButton)">
                             Save
                             <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
                             </TelerikLoader>
@@ -499,10 +499,10 @@
                         </TelerikButton>
 
                         <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@OpenMainForm"
-                           Class="btn k-btn-primary flex-fill mx-2"> Back </TelerikButton>
+                           Class="btn k-btn-primary flex-fill mx-1"> Back </TelerikButton>
                     }
                     <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()"
-                           ThemeColor="secondary" FillMode="Outline" Class="mx-2 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                           ThemeColor="secondary" FillMode="Outline" Class="k-btn-secondary-outline flex-fill ms-1" Enabled="@(!isBusySubmitButton)">
                         Cancel
                     </TelerikButton>
                 </div>
@@ -511,7 +511,7 @@
             @if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut || schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
                 <div class="my-1">
-                    <table style="width:100%;" class="table table-striped table-hover">
+                    <table style="width:100%;" class="table table-striped table-hover my-1">
                         <thead>
                             <tr>
                                 <th>Meter</th>
@@ -563,14 +563,14 @@
                 @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                 {
                     <div class="d-flex justify-content-center">
-                        <FontLabel fontSize="14px" fontColor="#00AFA5" Class="font-weight-bold">Checked Out</FontLabel>
+                        <FontLabel fontColor="#00AFA5" Class="font-weight-bold">Checked Out</FontLabel>
                     </div>
                     <FontLabel Class="d-flex justify-content-center">@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>
                 }
             </div>
             <div class="col-3 d-flex flex-column">
                 <span class="d-flex justify-content-center">
-                    <div class="row">
+                    <div class="row m-0">
                          <div class="col-12">
                                         <style type="text/css">
                                         .small-svg svg {
@@ -586,11 +586,11 @@
                         <div class="col-12 d-flex justify-content-between">
                             @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
                             {
-                                <FontLabel>@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("%h:mm tt")</FontLabel>
+                                <FontLabel fontSize="12px">@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("%h:mm tt")</FontLabel>
                             }
                             @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
                             {
-                                <FontLabel>@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("%h:mm tt")</FontLabel>
+                                <FontLabel fontSize="12px">@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("%h:mm tt")</FontLabel>
                             }
                         </div>
                     </div>
@@ -600,7 +600,7 @@
                 @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
                 {
                     <div class="d-flex justify-content-center">
-                        <FontLabel fontSize="14px" fontColor="#FE5722" Class="font-weight-bold">Checked In</FontLabel>
+                        <FontLabel fontColor="#FE5722" Class="font-weight-bold">Checked In</FontLabel>
                     </div>
                     <div class="d-flex justify-content-center">
                         <FontLabel>@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>
@@ -651,14 +651,14 @@ else if (uiOptions.isDisplayEditEndTimeForm)
 
             <div class="d-flex btn-grp  justify-content-evenly ">
 
-                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary" Enabled="@(!isBusySubmitButton)">
+                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
                     Update
                     <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
                     </TelerikLoader>
 
                 </TelerikButton>
 
-                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => HideEditEndTimeForm()" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => HideEditEndTimeForm()" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
                     Cancel
                 </TelerikButton>
 
@@ -680,7 +680,7 @@ else
 
         <FormItems>
 
-            <table style="width:100%;" class="custom-event-editor table table-striped table-hover" cellpadding="5">
+            <table style="width:100%;" class="custom-event-editor table table-striped table-hover my-1" cellpadding="5">
 
                 <thead>
 
@@ -754,7 +754,7 @@ else
             </table>
             <div>
                     <div class="d-flex justify-content-end">
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mr-1" Enabled="@(!isBusySubmitButton)">
+                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
                             Check In
                             <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
                             </TelerikLoader>
@@ -762,7 +762,7 @@ else
                         </TelerikButton>
 
 
-                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
                             Cancel
                         </TelerikButton>
                     </div>
@@ -789,14 +789,14 @@ else
                                                 <div class="row d-flex justify-content-end">
                                                     <div class="col-4 d-flex justify-content-between">
 
-                                                        <TelerikButton Class="mr-1 btn k-btn-primary flex-fill mx-2" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
+                                                        <TelerikButton Class="mx-1 btn k-btn-primary flex-fill" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
                                                             Yes
                                                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
                                                             </TelerikLoader>
                                                         </TelerikButton>
 
 
-                                                        <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                                        <TelerikButton Class="mx-1 btn k-btn-secondary flex-fill" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
                                                             No
                                                         </TelerikButton>
                                                     </div>
@@ -811,14 +811,14 @@ else
                                                 <div class="row d-flex justify-content-end">
                                                     <div class="col-4 d-flex justify-content-between">
 
-                                                        <TelerikButton Class="btn k-btn-danger flex-fill mx-2" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
+                                <TelerikButton Class="btn k-btn-danger flex-fill mx-1" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
                                                             Yes
                                                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
                                                             </TelerikLoader>
                                                         </TelerikButton>
 
 
-                                                        <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-2" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
+                                                        <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-1" ThemeColor="secondary" OnClick="()=>CloseChildDialog()">
                                                             No
                                                         </TelerikButton>
                                                     </div>
