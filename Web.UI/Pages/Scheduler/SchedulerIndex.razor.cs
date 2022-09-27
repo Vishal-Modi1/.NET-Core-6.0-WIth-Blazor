@@ -13,9 +13,9 @@ using Web.UI.Data.AircraftSchedule;
 
 namespace Web.UI.Pages.Scheduler
 {
-    partial class Index
+    partial class SchedulerIndex
     {
-        public TelerikScheduler<SchedulerVM> scheduleRef;
+        public TelerikScheduler<SchedulerVM> scheduleRef { get; set; }
 
         SchedulerVM schedulerVM;
         List<SchedulerVM> dataSource;
@@ -96,7 +96,7 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task LoadDataAsync()
         {
-             ChangeLoaderVisibilityAction(true);
+            ChangeLoaderVisibilityAction(true);
 
             Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currentDate, currentView, multiDayDaysCount);
 
@@ -158,7 +158,7 @@ namespace Web.UI.Pages.Scheduler
                 schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
             }
 
-             ChangeLoaderVisibilityAction(false);
+            ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
         }
 
@@ -364,11 +364,14 @@ namespace Web.UI.Pages.Scheduler
             ChangeLoaderVisibilityAction(true);
             schedulerFilter.CompanyId = value;
 
+            aircraftsResourceList = new List<ResourceData>();
+
+            multipleAircrafts = new List<long>();
             allAircraftList = await AircraftService.ListAllAsync(dependecyParams, value);
-            
+
+            //scheduleRef.Rebind();
             await LoadDataAsync();
             ChangeLoaderVisibilityAction(false);
-
         }
 
         private void CloseDialog()
@@ -380,7 +383,6 @@ namespace Web.UI.Pages.Scheduler
         {
             isDisplayPopup = true;
         }
-
     }
 
     public class ResourceData

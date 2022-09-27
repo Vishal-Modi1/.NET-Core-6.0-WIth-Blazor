@@ -21,6 +21,8 @@ namespace Web.UI.Pages.Dashboard
 
         protected override async Task OnInitializedAsync()
         {
+            SetSelectedMenuItem("Dashboard");
+
             ChangeLoaderVisibilityAction(true);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             await LoadData();
@@ -35,7 +37,7 @@ namespace Web.UI.Pages.Dashboard
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
                 return;
             }
 

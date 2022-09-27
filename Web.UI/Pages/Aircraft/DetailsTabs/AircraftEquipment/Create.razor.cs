@@ -44,7 +44,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

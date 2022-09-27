@@ -20,7 +20,7 @@ namespace Web.UI.Pages.InstructorType
 
             isBusySubmitButton = false;
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

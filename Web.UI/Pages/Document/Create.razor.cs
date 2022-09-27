@@ -141,7 +141,7 @@ namespace Web.UI.Pages.Document
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -172,7 +172,7 @@ namespace Web.UI.Pages.Document
                     {
                         errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
                         
-                        uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, errorMessage);
+                        globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, errorMessage);
                         isFileUploadHasError = true;
                         return;
                     }

@@ -128,7 +128,7 @@ namespace Web.UI.Pages.User
 
         private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -140,7 +140,7 @@ namespace Web.UI.Pages.User
         private bool ManageIsEmailExistResponse(CurrentResponse response)
         {
             bool isEmailExist = false;
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {

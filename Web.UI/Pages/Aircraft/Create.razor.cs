@@ -85,13 +85,13 @@ namespace Web.UI.Pages.Aircraft
 
                 if (!supportedImagesFormatsList.Contains(fileType))
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
                     return;
                 }
 
                 if (e.File.Size > maxProfileImageUploadSize)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
                     return;
                 }
 
@@ -103,7 +103,7 @@ namespace Web.UI.Pages.Aircraft
             }
             catch (Exception ex)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
         }
 
@@ -315,7 +315,7 @@ namespace Web.UI.Pages.Aircraft
             
             if ((bool)response.Data == true)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 isAircraftExist = true;
             }
 
@@ -324,7 +324,7 @@ namespace Web.UI.Pages.Aircraft
 
         private async void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -334,7 +334,7 @@ namespace Web.UI.Pages.Aircraft
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

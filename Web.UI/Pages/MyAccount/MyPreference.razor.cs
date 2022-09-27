@@ -102,7 +102,7 @@ namespace Web.UI.Pages.MyAccount
 
             isBusySubmitButton = false;
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
         }
     }
 }

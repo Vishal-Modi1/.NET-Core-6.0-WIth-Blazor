@@ -48,7 +48,7 @@ namespace Web.UI.Pages.MyAccount
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
             }
             else
             {
@@ -68,7 +68,7 @@ namespace Web.UI.Pages.MyAccount
 
         private void ManageFileUploadResponse(CurrentResponse response, byte[] byteArray)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -93,13 +93,13 @@ namespace Web.UI.Pages.MyAccount
 
                 if (!supportedImagesFormatsList.Contains(fileType))
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
                     return;
                 }
 
                 if (e.File.Size > maxProfileImageUploadSize)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
                     return;
                 }
 
@@ -111,7 +111,7 @@ namespace Web.UI.Pages.MyAccount
             }
             catch (Exception ex)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
         }
 

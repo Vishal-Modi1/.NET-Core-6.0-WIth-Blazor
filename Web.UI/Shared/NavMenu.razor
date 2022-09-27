@@ -9,14 +9,14 @@
 
 </TelerikNotification>
 
-@if (menuItems != null)
+@if (globalMembers.MenuItems != null)
 {
-    <TelerikDrawer Data="@menuItems"
+    <TelerikDrawer Data="@globalMembers.MenuItems"
                @bind-Expanded="@isDrawerExpanded"
                MiniMode="true"
                Mode="@DrawerMode.Push"
                @ref="@drawerRef"
-               @bind-SelectedItem="@selectedItem">
+               @bind-SelectedItem="@globalMembers.SelectedItem">
         <Template>
             <div class="d-flex align-items-center k-drawer-top-header @(isDrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
                 <TelerikButton OnClick="@( () => drawerRef.ToggleAsync() )" Class="drawer-hamburger">
@@ -52,13 +52,18 @@
         <div class="k-drawer-items my-2">
             <ul>
 
-                @foreach (var item in menuItems)
+                @foreach (var item in globalMembers.MenuItems)
                     {
+                        if (item.DisplayName.ToLower() == "reservations")
+                        {
+                            continue;
+                        }
+
                         if (!item.IsAdministrationModule || (!navigationHeaderModel.IsSuperAdmin && item.Controller.ToLower() == Module.Company.ToString().ToLower()))
                         {
                             if (item.DisplayName == "Log out")
                             {
-                                <hr class="hr-blue mt-0 mb-0" />
+                            <hr class="hr-blue mt-0 mb-0" />
                             }
 
                         <li @onclick="@(() => NavigateToPageAsync(item))" @onclick:stopPropagation
@@ -83,7 +88,7 @@
                                     <div class="menu-item-text-color">@item.DisplayName</div>
                                     }
                                 }
-                            @if (selectedItem != null && item.DisplayName == selectedItem.DisplayName)
+                            @if (globalMembers.SelectedItem != null && item.DisplayName == globalMembers.SelectedItem.DisplayName)
                                 {
                                 <div class="selected-arrow"></div>
                                 }
@@ -106,7 +111,8 @@
 
                 </Web.UI.Shared.Components.PageLoader.PageLoader>
 
-                <CascadingValue IsFixed="true" Value="@UINotification">
+
+                <CascadingValue IsFixed="true" Value="@globalMembers">
 
                     <CascadingValue Value="@ChangeLoaderVisibility" TValue="Action<bool>">
 
@@ -116,6 +122,7 @@
                                 @Body
                             </div>
                         </TelerikRootComponent>
+                    
                     </CascadingValue>
                 </CascadingValue>
             </div>

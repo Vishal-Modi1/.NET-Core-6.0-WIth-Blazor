@@ -27,7 +27,7 @@ namespace Web.UI.Pages.Account
 
                 if (link.Count() == 0 || link[0] == "")
                 {
-                    uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                    globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
                 }
                 else
                 {
