@@ -29,8 +29,6 @@ namespace Web.UI.Pages.Reservation
         SchedulerVM schedulerVM;
 
         string timezone = "";
-        bool isSuperAdmin, isAdmin;
-
         #endregion
 
         #region Filters
@@ -60,9 +58,6 @@ namespace Web.UI.Pages.Reservation
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
-
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
-            isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
 
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
@@ -187,12 +182,7 @@ namespace Web.UI.Pages.Reservation
                 datatableParams.AircraftId = AircraftId;
             }
 
-            //if (!isSuperAdmin && !isAdmin)
-            //{
-            //    datatableParams.UserId = UserId;
-            //}
-
-            await LoadDataAsync(args);
+           await LoadDataAsync(args);
         }
 
         public async Task LoadDataAsync(GridReadEventArgs args)

@@ -44,11 +44,11 @@
                 <TelerikCard Class="flight-cards">
                     <CardBody>
                         <div><span class="card-fonts">Tail No:</span> <span> @aircraftData.TailNo</span></div>
-                        <div><span class="card-fonts">Model :</span><span> @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</span></div>
-                        <div><span class="card-fonts">Make :</span><span> @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</span></div>
-                        <div><span class="card-fonts">Category :</span><span> @(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</span></div>
-                        <div><span class="card-fonts">Turbines :</span> <span>@(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</span></div>
-                        <div><span class="card-fonts">Status :</span> <span> @aircraftData.AircraftStatus.Status </span></div>
+                        <div><span class="card-fonts">Model:</span> <span> @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</span></div>
+                        <div><span class="card-fonts">Make:</span> <span> @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</span></div>
+                        <div><span class="card-fonts">Category:</span> <span> @(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</span></div>
+                        <div><span class="card-fonts">Turbines:</span> <span>@(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</span></div>
+                        <div><span class="card-fonts">Status:</span> <span> @aircraftData.AircraftStatus.Status </span></div>
                     </CardBody>
                 </TelerikCard>
             </div>

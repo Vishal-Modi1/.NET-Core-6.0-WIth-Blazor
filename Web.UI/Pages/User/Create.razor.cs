@@ -27,8 +27,7 @@ namespace Web.UI.Pages.User
         EditContext userForm;
         bool isInstructorTypeDropdownVisible = false, isLoggedIn;
         int? roleId;
-        bool isSuperAdmin, isAdmin;
-
+       
         List<RadioButtonItem> genderOptions { get; set; } = new List<RadioButtonItem>
         {
             new RadioButtonItem { Id = 0,Text = "Male" },
@@ -39,9 +38,6 @@ namespace Web.UI.Pages.User
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             userForm = new EditContext(userData);
-
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
-            isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
 
             if (userData != null)
             {
@@ -65,7 +61,6 @@ namespace Web.UI.Pages.User
             {
                 userData.IsSendEmailInvite = userData.IsSendTextMessage = true;
             }
-
         }
 
         public async Task Submit()

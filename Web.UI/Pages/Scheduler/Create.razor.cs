@@ -52,14 +52,11 @@ namespace Web.UI.Pages.Scheduler
 
             // user should be superadmin, admin or owner of reservation to update or delete it
 
-            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
             long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
 
             bool isCreator = userId == schedulerVM.CreatedBy;
 
-            if (isAdmin || isSuperAdmin || isCreator)
+            if (globalMembers.IsSuperAdmin || globalMembers.IsSuperAdmin || isCreator)
             {
                 isAllowToDelete = true;
                 isAllowToEdit = true;

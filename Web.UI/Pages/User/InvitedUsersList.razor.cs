@@ -22,8 +22,6 @@ namespace Web.UI.Pages.User
         InviteUserVM userData;
 
         string moduleName = "User";
-        bool isSuperAdmin { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             userFilterVM = new UserFilterVM();
@@ -38,8 +36,7 @@ namespace Web.UI.Pages.User
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
 
             var user = (await AuthStat).User;
-            isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
-        }
+         }
 
         async Task LoadData(GridReadEventArgs args)
         {

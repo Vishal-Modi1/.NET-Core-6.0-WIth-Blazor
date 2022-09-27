@@ -87,7 +87,7 @@
 
                 <div class="col-md-6">
 
-                    @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (isSuperAdmin || isAdmin)))
+                    @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)))
                     {
                         <TelerikComboBox Id=roleId Data="@userData.UserRoles" TextField="Name" Enabled=@(userData.IsAuthenticated)
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"

@@ -32,7 +32,6 @@ namespace Web.UI.Pages.Scheduler
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
 
-        bool isSuperAdmin;
         List<long> multipleAircrafts { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -48,10 +47,8 @@ namespace Web.UI.Pages.Scheduler
             dataSource = new List<SchedulerVM>();
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
-
+            
             InitializeValues();
-
 
             schedulerVM = new SchedulerVM();
             schedulerVM.ScheduleActivitiesList = new List<DropDownValues>();
@@ -64,7 +61,7 @@ namespace Web.UI.Pages.Scheduler
             {
                  dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                
-                if (!isSuperAdmin)
+                if (!globalMembers.IsSuperAdmin)
                 {
                     List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
                     UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();

@@ -21,6 +21,8 @@ namespace Web.UI.Pages.Company.DetailsView
 
         protected override async Task OnInitializedAsync()
         {
+            SetSelectedMenuItem(moduleName);
+
             ChangeLoaderVisibilityAction(true);
 
             companyData = new CompanyVM();
@@ -69,14 +71,10 @@ namespace Web.UI.Pages.Company.DetailsView
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
             long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-
             bool isCreator = userId == companyData.CreatedBy;
 
-            if (isAdmin || isSuperAdmin || isCreator)
+            if (globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isCreator)
             {
                 isAllowToEdit = true;
             }

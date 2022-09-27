@@ -39,7 +39,7 @@ namespace Web.UI.Shared
 
             if (user.Identity.IsAuthenticated)
             {
-                InitializeGlobalMembers();
+                InitializeGlobalMembers(user);
 
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 await SetNavigationHeaderValues(user, dependecyParams);
@@ -63,16 +63,14 @@ namespace Web.UI.Shared
 
             string currPage = NavigationManager.Uri;
             MenuItem ActivePage = globalMembers.MenuItems.FirstOrDefault();
-
-            //if (ActivePage != null)
-            //{
-            //    globalMembers.SelectedItem = ActivePage;
-            //}
         }
 
-        private void InitializeGlobalMembers()
+        private void InitializeGlobalMembers(ClaimsPrincipal user)
         {
             globalMembers.UINotification = UINotification;
+            globalMembers.UserRole = (UserRole)(Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value));
+            globalMembers.IsSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
+            globalMembers.IsAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.Admin;
         }
 
         private async Task SetNavigationHeaderValues(ClaimsPrincipal user, DependecyParams dependecyParams)
@@ -163,5 +161,11 @@ namespace Web.UI.Shared
         public List<MenuItem> MenuItems { get; set; }
 
         public MenuItem SelectedItem { get; set; }
+
+        public UserRole UserRole { get; set; }
+
+        public bool IsSuperAdmin { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

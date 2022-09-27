@@ -31,7 +31,8 @@ namespace Web.UI.Pages.Aircraft
 
         protected override Task OnInitializedAsync()
         {
-             ChangeLoaderVisibilityAction(true);
+            ChangeLoaderVisibilityAction(true);
+            SetSelectedMenuItem(moduleName);
             return base.OnInitializedAsync();
         }
 
@@ -72,14 +73,10 @@ namespace Web.UI.Pages.Aircraft
 
                 }
 
-                bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-                bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
                 long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-
                 bool isCreator = userId == aircraftData.CreatedBy;
 
-                if (isAdmin || isSuperAdmin || isCreator)
+                if (globalMembers.IsAdmin ||  globalMembers.IsSuperAdmin || isCreator)
                 {
                     isAllowToEdit = true;
                 }

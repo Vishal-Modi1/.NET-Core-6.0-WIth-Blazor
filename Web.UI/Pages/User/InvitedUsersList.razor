@@ -86,7 +86,7 @@
 
         <GridColumn Field="@nameof(InviteUserDataVM.Email)" Title="Email"></GridColumn>
         <GridColumn Field="@nameof(InviteUserDataVM.Role)" Title="Role"></GridColumn>
-        <GridColumn Field="@nameof(InviteUserDataVM.CompanyName)" Title="Company" Visible="@isSuperAdmin"></GridColumn>
+        <GridColumn Field="@nameof(InviteUserDataVM.CompanyName)" Title="Company" Visible="@globalMembers.IsSuperAdmin"></GridColumn>
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{

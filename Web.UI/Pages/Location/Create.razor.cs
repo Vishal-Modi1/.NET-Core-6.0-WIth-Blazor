@@ -1,9 +1,7 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.Location;
 using Microsoft.AspNetCore.Components;
-using Web.UI.Extensions;
 using Web.UI.Utilities;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Web.UI.Pages.Location
 {
@@ -16,12 +14,7 @@ namespace Web.UI.Pages.Location
 
         protected override Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-
             timezoneId = locationData.TimezoneId;
-
-         //   isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
-
             return base.OnInitializedAsync();
         }
 

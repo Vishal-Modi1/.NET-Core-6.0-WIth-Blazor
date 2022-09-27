@@ -27,7 +27,6 @@ namespace Web.UI.Pages.Aircraft
         string moduleName = "Aircraft";
         bool isDisplayGridView = true;
         int companyId; int listViewPageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
-        bool isSuperAdmin;
 
         protected override async Task OnInitializedAsync()
         {
@@ -44,9 +43,7 @@ namespace Web.UI.Pages.Aircraft
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            SetSelectedMenuItem("Aircraft");
-
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+            SetSelectedMenuItem(moduleName);
 
             aircraftFilterVM = new AircraftFilterVM();
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);

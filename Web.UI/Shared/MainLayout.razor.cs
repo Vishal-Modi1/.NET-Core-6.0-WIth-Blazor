@@ -22,7 +22,7 @@ namespace Web.UI.Shared
         OperationType operationType;
         List<DropDownValues> companyList = new List<DropDownValues>();
         public int companyId;
-        string companyName; bool isSuperAdmin;
+        string companyName;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -52,9 +52,6 @@ namespace Web.UI.Shared
                 {
                     companyName = "Flight Schedule Management";
                 }
-
-                isSuperAdmin = Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role)
-                                   .Select(c => c.Value).SingleOrDefault()) == (int)UserRole.SuperAdmin;
 
                 base.StateHasChanged();
             }

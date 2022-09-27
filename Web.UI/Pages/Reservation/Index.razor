@@ -47,7 +47,7 @@
                                Format="MM/dd/yyyy %h:mm tt" Id="endDate" Placeholder="Select End Date">
             </TelerikDatePicker>
         </div>
-        @if (isSuperAdmin && ParentModuleName != Module.Company.ToString())
+        @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
         {
             <div class="col-md-3 my-1">
 
@@ -119,7 +119,7 @@
                 <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
             }
 
-            <GridColumn Field="@nameof(ReservationDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
+            <GridColumn Field="@nameof(ReservationDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")"></GridColumn>
 
             <GridColumn Field="@nameof(ReservationDataVM.StartDateTime)" Context="dataItem" Title="From">
                 <Template>

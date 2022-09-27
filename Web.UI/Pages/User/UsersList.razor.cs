@@ -22,8 +22,7 @@ namespace Web.UI.Pages.User
         string message = "", moduleName = "User";
         bool isBusyUpdateStatusButton;
         List<UserDataVM> data;
-        bool isSuperAdmin { get; set; }
-
+    
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -38,9 +37,7 @@ namespace Web.UI.Pages.User
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
 
-            var user = (await AuthStat).User;
-            isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
-        }
+          }
 
         private void OnCompanyValueChanges(int selectedValue)
         {

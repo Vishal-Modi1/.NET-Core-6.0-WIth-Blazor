@@ -121,7 +121,7 @@
             <GridColumn Field="@nameof(DocumentDataVM.ModuleName)" Title="Module Name"  Width="10%" />
         }
 
-        <GridColumn Field="@nameof(DocumentDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")" Width="10%"></GridColumn>
+        <GridColumn Field="@nameof(DocumentDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")" Width="10%"></GridColumn>
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {

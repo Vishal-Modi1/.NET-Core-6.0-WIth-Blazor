@@ -101,7 +101,7 @@
             <GridColumn Field="@nameof(UserDataVM.LastName)" Title="Last Name"></GridColumn>
             <GridColumn Field="@nameof(UserDataVM.Email)" Title="Email"></GridColumn>
             <GridColumn Field="@nameof(UserDataVM.UserRole)" Title="User Role"></GridColumn>
-            <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
+            <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")"></GridColumn>
 
             <GridColumn Field="@nameof(UserDataVM.IsActive)" Context="dataItem" Title="Is Active">
                 <Template>
