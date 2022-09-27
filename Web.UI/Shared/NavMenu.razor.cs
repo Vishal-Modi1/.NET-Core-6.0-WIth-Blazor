@@ -22,17 +22,14 @@ namespace Web.UI.Shared
         [Parameter] public bool Expanded { get; set; }
         [Parameter] public bool IsMainContainerTransparent { get; set; } = true;
 
-        List<MenuItem> menuItems;
+        public GlobalMembers globalMembers = new GlobalMembers();
         TelerikDrawer<MenuItem> drawerRef { get; set; }
-        MenuItem selectedItem { get; set; }
-        bool isAdministrationTabAdded = false;
+        
         bool isDrawerExpanded { get; set; } = true;
         public NavigationHeaderModel navigationHeaderModel { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            isAdministrationTabAdded = false;
-
             var user = (await AuthStat).User;
 
             if (!user.Identity.IsAuthenticated)
@@ -42,55 +39,72 @@ namespace Web.UI.Shared
 
             if (user.Identity.IsAuthenticated)
             {
-                string loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
-                .Select(c => c.Value).SingleOrDefault();
-
-                navigationHeaderModel = new NavigationHeaderModel();
-                navigationHeaderModel.User = new DataModels.VM.User.UserVM();
-                navigationHeaderModel.Company = new CompanyVM();
-                navigationHeaderModel.CompanyList = new List<DropDownValues>();
+                InitializeGlobalMembers();
 
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                await SetNavigationHeaderValues(user, dependecyParams);
 
-                navigationHeaderModel.User.Id = Convert.ToInt64(loggedUserId);
-
-                navigationHeaderModel.CompanyList = await CompanyService.ListDropDownValuesByUserId(dependecyParams, Convert.ToInt64(loggedUserId));
-
-                navigationHeaderModel.User.FirstName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
-                          .Select(c => c.Value).SingleOrDefault();
-
-                navigationHeaderModel.Company.Name = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
-                         .Select(c => c.Value).SingleOrDefault();
-
-                if(string.IsNullOrWhiteSpace(navigationHeaderModel.Company.Name))
-                {
-                    navigationHeaderModel.Company.Name = "Flight Schedule Management";
-                }
-
-                navigationHeaderModel.User.ImageName = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
-                           .Select(c => c.Value).SingleOrDefault();
-
-                navigationHeaderModel.IsSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
-
-                menuItems = new List<MenuItem>();
-                menuItems.Add(new MenuItem() { Controller = "Dashboard", DisplayName = "Dashboard", FavIconStyle = "group" });
-
-                if (navigationHeaderModel.IsSuperAdmin)
-                {
-                    menuItems.Add(new MenuItem() { Controller = "Administration", DisplayName = "Administration", });
-                }
-
-                menuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
-                menuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out", FavIconStyle = "group" });
-
-                string currPage = NavigationManager.Uri;
-                MenuItem ActivePage = menuItems.FirstOrDefault();
-
-                if (ActivePage != null)
-                {
-                    selectedItem = ActivePage;
-                }
+                await SetMenuItems();
             }
+        }
+
+        private async Task SetMenuItems()
+        {
+            globalMembers.MenuItems = new List<MenuItem>();
+            globalMembers.MenuItems.Add(new MenuItem() { Controller = "Dashboard", Name = "Dashboard", DisplayName = "Dashboard", FavIconStyle = "group" });
+
+            if (navigationHeaderModel.IsSuperAdmin)
+            {
+                globalMembers.MenuItems.Add(new MenuItem() { Controller = "Administration", Name = "Administration", DisplayName = "Administration", });
+            }
+
+            globalMembers.MenuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
+            globalMembers.MenuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out", FavIconStyle = "group" });
+
+            string currPage = NavigationManager.Uri;
+            MenuItem ActivePage = globalMembers.MenuItems.FirstOrDefault();
+
+            //if (ActivePage != null)
+            //{
+            //    globalMembers.SelectedItem = ActivePage;
+            //}
+        }
+
+        private void InitializeGlobalMembers()
+        {
+            globalMembers.UINotification = UINotification;
+        }
+
+        private async Task SetNavigationHeaderValues(ClaimsPrincipal user, DependecyParams dependecyParams)
+        {
+            string loggedUserId = user.Claims.Where(c => c.Type == CustomClaimTypes.UserId)
+               .Select(c => c.Value).SingleOrDefault();
+
+            navigationHeaderModel = new NavigationHeaderModel();
+            navigationHeaderModel.User = new DataModels.VM.User.UserVM();
+            navigationHeaderModel.Company = new CompanyVM();
+            navigationHeaderModel.CompanyList = new List<DropDownValues>();
+
+            navigationHeaderModel.User.Id = Convert.ToInt64(loggedUserId);
+
+            navigationHeaderModel.CompanyList = await CompanyService.ListDropDownValuesByUserId(dependecyParams, Convert.ToInt64(loggedUserId));
+
+            navigationHeaderModel.User.FirstName = user.Claims.Where(c => c.Type == CustomClaimTypes.FullName)
+                      .Select(c => c.Value).SingleOrDefault();
+
+            navigationHeaderModel.Company.Name = user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyName)
+                     .Select(c => c.Value).SingleOrDefault();
+
+            if (string.IsNullOrWhiteSpace(navigationHeaderModel.Company.Name))
+            {
+                navigationHeaderModel.Company.Name = "Flight Schedule Management";
+            }
+
+            navigationHeaderModel.User.ImageName = user.Claims.Where(c => c.Type == CustomClaimTypes.ProfileImageURL)
+                       .Select(c => c.Value).SingleOrDefault();
+
+            navigationHeaderModel.IsSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
+
         }
 
         public void ChangeLoaderVisibility(bool visible)
@@ -103,7 +117,7 @@ namespace Web.UI.Shared
         {
             try
             {
-                selectedItem = item;
+                globalMembers.SelectedItem = item;
 
                 if (item.Controller.ToLower() == Module.Company.ToString().ToLower())
                 {
@@ -111,7 +125,7 @@ namespace Web.UI.Shared
                 }
                 else
                 {
-                    NavigationManager.NavigateTo("/" + selectedItem.Controller);
+                    NavigationManager.NavigateTo("/" + globalMembers.SelectedItem.Controller);
                 }
             }
             catch (Exception ex)
@@ -122,11 +136,11 @@ namespace Web.UI.Shared
 
         public string GetSelectedItemClass(MenuItem item)
         {
-            if (selectedItem == null)
+            if (globalMembers.SelectedItem == null)
             {
                 return string.Empty;
             }
-            return selectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "selected-nav-item" : "";
+            return globalMembers.SelectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "selected-nav-item" : "";
         }
 
         async Task OpenCompanyDetailPage(int id)
@@ -140,5 +154,14 @@ namespace Web.UI.Shared
             var data = Encoding.Default.GetBytes(id.ToString());
             NavigationManager.NavigateTo("CompanyDetails?CompanyId=" + System.Convert.ToBase64String(encodedBytes));
         }
+    }
+
+    public class GlobalMembers
+    {
+        public UINotification UINotification { get; set; }
+
+        public List<MenuItem> MenuItems { get; set; }
+
+        public MenuItem SelectedItem { get; set; }
     }
 }

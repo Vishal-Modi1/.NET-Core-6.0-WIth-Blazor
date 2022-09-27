@@ -1,4 +1,5 @@
 ﻿using DataModels.Enums;
+using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Telerik.Blazor.Components;
@@ -32,7 +33,8 @@ namespace Web.UI.Shared
         public bool isGridDataLoading { get; set; }
 
         [CascadingParameter] public Task<AuthenticationState> AuthStat { get; set; }
-        [CascadingParameter] public UINotification uiNotification { get; set; }
+        [CascadingParameter] public GlobalMembers globalMembers { get; set; }
+    
         public CurrentUserPermissionManager _currentUserPermissionManager;
 
         public void OnSearchValueChanges<TypeOfValue>(string selectedValue, TelerikGrid<TypeOfValue> grid) where TypeOfValue : class
@@ -47,6 +49,14 @@ namespace Web.UI.Shared
         public void PageSizeChangedHandler(int newPageSize)
         {
             pageSize = newPageSize;
+        }
+
+        public void SetSelectedMenuItem(string moduleName)
+        {
+            if (globalMembers.MenuItems != null)
+            {
+                globalMembers.SelectedItem = globalMembers.MenuItems.Where(x => x.Name == moduleName).FirstOrDefault();
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Web.UI.Pages.MyAccount
             isBusySubmitButton = false;
             StateHasChanged();
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             changePasswordVM = new ChangePasswordVM();
             changePasswordVM.UserId = Convert.ToInt64(id);

@@ -11,6 +11,7 @@ namespace Web.UI.Pages.Administration
         {
             if (firstRender)
             {
+                SetSelectedMenuItem("Administration");
                 ChangeLoaderVisibilityAction(true);
              
                 menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);

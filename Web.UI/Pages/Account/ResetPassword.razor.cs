@@ -43,13 +43,13 @@ namespace Web.UI.Pages.Account
 
                 if (link.Count() == 0 || string.IsNullOrWhiteSpace(link[0]))
                 {
-                    uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                    globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
                 }
                 else
                 {
                     isBusy = true;
                     resetPasswordVM.Token = link[0];
-                    //uiNotification.DisplayInfoNotification(uiNotification.Instance, "Validating Token...");
+                    //globalMembers.UINotification.DisplayInfoNotification(globalMembers.UINotification.Instance, "Validating Token...");
 
                     DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                     response = await AccountService.ValidateTokenAsync(dependecyParams, link[0]);
@@ -68,14 +68,14 @@ namespace Web.UI.Pages.Account
         {
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-               // uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
+               // globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
 
                 isBusy = false; isValidToken = true;
                 StateHasChanged();
             }
             else
             {
-                //uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                //globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 //isBusy = false; isValidToken = false;
 
                 NavigationManager.NavigateTo("/TokenExpired");
@@ -89,7 +89,7 @@ namespace Web.UI.Pages.Account
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             response = await AccountService.ResetPasswordAsync(dependecyParams, resetPasswordVM);
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             resetPasswordVM.Password = "";
             resetPasswordVM.ConfirmPassword = "";

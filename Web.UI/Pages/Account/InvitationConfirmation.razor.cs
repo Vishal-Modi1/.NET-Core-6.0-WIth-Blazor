@@ -29,7 +29,7 @@ namespace Web.UI.Pages.Account
 
                 if (url.Count() == 0 || url[0] == "")
                 {
-                    uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                    globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
                 }
                 else
                 {
@@ -59,7 +59,7 @@ namespace Web.UI.Pages.Account
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
         }
 

@@ -25,7 +25,7 @@ namespace Web.UI.Pages.Account
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AccountService.ForgetPasswordAsync(dependecyParams, forgotPasswordVM);
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             forgotPasswordVM.Email = "";
 

@@ -48,6 +48,8 @@ namespace Web.UI.Pages.Document
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
+            SetSelectedMenuItem("Document");
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
 
@@ -179,7 +181,7 @@ namespace Web.UI.Pages.Document
             var jsFile = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await jsFile.InvokeVoidAsync("copyTextToClipboard", link);
 
-            uiNotification.DisplaySuccessNotification(uiNotification.Instance, "Link copied to the clipboard");
+            globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "Link copied to the clipboard");
             await CloseDialog(false);
         }
 
@@ -220,7 +222,7 @@ namespace Web.UI.Pages.Document
             }
             catch (Exception ex)
             { 
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
             finally
             {

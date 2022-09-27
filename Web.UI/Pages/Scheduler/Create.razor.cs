@@ -93,17 +93,17 @@ namespace Web.UI.Pages.Scheduler
             {
                 if (response.Data == null)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 }
                 else
                 {
                     CloseDialog();
-                    uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
+                    globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
                 }
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
             isBusySubmitButton = false;
@@ -174,18 +174,18 @@ namespace Web.UI.Pages.Scheduler
                 {
                     uiOptions.isDisplayEditEndTimeForm = false;
                     uiOptions.isDisplayMainForm = true;
-                    uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
+                    globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
                     RefreshSchedulerDataSource(ScheduleOperations.UpdateEndTime);
                     base.StateHasChanged();
                 }
                 else
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 }
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
             isBusySubmitButton = false;
@@ -218,7 +218,7 @@ namespace Web.UI.Pages.Scheduler
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(dependecyParams, schedulerVM.AircraftEquipmentsTimeList);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -342,7 +342,7 @@ namespace Web.UI.Pages.Scheduler
             {
                 if ((bool)response.Data == true)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 }
                 else
                 {
@@ -351,7 +351,7 @@ namespace Web.UI.Pages.Scheduler
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
         }
@@ -361,7 +361,7 @@ namespace Web.UI.Pages.Scheduler
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.CheckOut(dependecyParams, schedulerVM.Id);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -455,7 +455,7 @@ namespace Web.UI.Pages.Scheduler
 
             uiOptions.isBusyUnCheckOutButton = false;
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -491,7 +491,7 @@ namespace Web.UI.Pages.Scheduler
 
             await SetDeleteButtonState(false);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

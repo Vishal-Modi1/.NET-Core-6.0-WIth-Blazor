@@ -23,6 +23,8 @@ namespace Web.UI.Pages.Company
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
+
+            SetSelectedMenuItem("Company");
         }
 
         async Task LoadData(GridReadEventArgs args)
@@ -102,7 +104,7 @@ namespace Web.UI.Pages.Company
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.DeleteAsync(dependecyParams, id);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

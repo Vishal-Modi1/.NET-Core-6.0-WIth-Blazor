@@ -1,10 +1,14 @@
 ﻿@import url("https://fonts.googleapis.com/css2?family=Readex+Pro&display=swap");
-html, body, .selected-font {
-  font-family: "Readex Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+/*html, body, .selected-font {
+    font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
+
 .k-drawer, .k-tabstrip-items {
-  font-family: "Readex Pro", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}*/
+* {
+  font-family: "Readex Pro";
 }
 
 /*NEW COLOR PLATE*/
