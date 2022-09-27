@@ -574,3 +574,7 @@ td, span, p {
 .k-notification-group {
   z-index: 1060 !important;
 }
+
+.k-notification {
+  max-width: 400px;
+}
