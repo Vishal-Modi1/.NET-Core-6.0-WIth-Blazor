@@ -168,6 +168,21 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+
+        [HttpGet]
+        [Route("listDropdownValuesByCompanyId")]
+        public IActionResult ListAircraftDropdownValuesByCompanyId(int companyId)
+        {
+            if (companyId == 0)
+            {
+                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                companyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);
+            }
+
+            CurrentResponse response = _airCraftService.ListAircraftDropdownValues(companyId);
+            return APIResponse(response);
+        }
+
         [HttpGet]
         [Route("updatestatus")]
         public IActionResult UpdateStatus(long id, byte statusId)

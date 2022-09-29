@@ -38,6 +38,23 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _aircraftScheduleService.GetDetails(roleIdValue, companyIdValue, id, userIdValue);
+
+            return APIResponse(response);
+        }
+
+
+        //For Super Admin
+        [HttpGet]
+        [Route("getDetailsByCompanyId")]
+        public IActionResult GetDetailsByCompanyId(long id, int companyId)
+        {
+            string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
+
+            string userId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            long userIdValue = userId == "" ? 0 : Convert.ToInt64(userId);
+
+            CurrentResponse response = _aircraftScheduleService.GetDetails(roleIdValue, companyId, id, userIdValue);
             return APIResponse(response);
         }
 
@@ -46,6 +63,16 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(SchedulerVM schedulerVM)
         {
+            //if (schedulerVM.CompanyId == 0)
+            //{
+            //    schedulerVM.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
+            //}
+
+            //if (schedulerVM.UserId == 0)
+            //{
+            //    schedulerVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            //}
+
             schedulerVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.Create(schedulerVM);
 
@@ -88,7 +115,7 @@ namespace FSMAPI.Controllers
         }
 
         [HttpPost]
-        [Route("editendtime")]
+        [Route("editEndTime")]
         public IActionResult EditEndTime(SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM)
         {
             schedulerEndTimeDetailsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
@@ -97,7 +124,7 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listactivitytypedropdownvalues")]
+        [Route("listActivitytypeDropdownValues")]
         public IActionResult ListActivityTypeDropDownValues()
         {
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
@@ -106,5 +133,6 @@ namespace FSMAPI.Controllers
             CurrentResponse response = _aircraftScheduleService.ListActivityTypeDropDownValues(roleIdValue);
             return APIResponse(response);
         }
+
     }
 }

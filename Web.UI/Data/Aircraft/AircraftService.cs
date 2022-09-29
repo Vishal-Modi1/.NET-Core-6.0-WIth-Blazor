@@ -136,6 +136,21 @@ namespace Web.UI.Data.Aircraft
             return airCraftList;
         }
 
+        public async Task<List<DropDownLargeValues>> ListDropdownValuesByCompanyId(DependecyParams dependecyParams, int companyId)
+        {
+            dependecyParams.URL = $"aircraft/listdropdownvaluesbycompanyid?companyId={companyId}"; 
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            List<DropDownLargeValues> airCraftList = new List<DropDownLargeValues>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                airCraftList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return airCraftList;
+        }
+
         public async Task<CurrentResponse> IsAircraftExistAsync(DependecyParams dependecyParams, long id, string tailNo)
         {
             dependecyParams.URL = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";

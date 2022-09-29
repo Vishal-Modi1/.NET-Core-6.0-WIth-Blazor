@@ -1,0 +1,22 @@
+﻿@using DataModels.VM.Common;
+
+<TelerikMultiSelect Data="@Data" @bind-Value="@SelectedData"
+                    TextField="Name" ValueField="Id" OnChange="@OnChange"
+                    AutoClose="false" Placeholder="@PlaceHolderText">
+
+    <HeaderTemplate>
+        <label style="padding: 4px 8px;">
+            <TelerikCheckBox TValue="bool" Value="@IsAllSelected()" ValueChanged="@( (bool v) => ToggleSelectAll(v) )"></TelerikCheckBox>
+            &nbsp;Select All
+        </label>
+    </HeaderTemplate>
+
+    <ItemTemplate>
+        @{
+            var appt = context as DropDownLargeValues;
+            <input type="checkbox" id="@( "cb" + appt.Name.Replace(" ", "") )" class="k-checkbox k-checkbox-md" checked="@GetChecked(appt.Id)">
+            <label class="k-checkbox-label" for="@( "cb" + appt.Name.Replace(" ", "") )">@appt.Name</label>
+        }
+    </ItemTemplate>
+
+</TelerikMultiSelect>

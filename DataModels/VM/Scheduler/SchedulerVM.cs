@@ -19,10 +19,10 @@ namespace DataModels.VM.Scheduler
         }
 
         public long Id { get; set; }
-        public List<DropDownValues> ScheduleActivitiesList { get; set; }
+        public List<DropDownLargeValues> ScheduleActivitiesList { get; set; }
 
         [Required(ErrorMessage = "Activity type is required")]
-        public int? ScheduleActivityId { get; set; }
+        public long? ScheduleActivityId { get; set; }
 
         [Required(ErrorMessage = "Start time is required")]
         public DateTime StartTime { get; set; }
@@ -34,24 +34,24 @@ namespace DataModels.VM.Scheduler
         public bool IsRecurring { get; set; }
         public bool IsStandBy { get; set; }
 
-        public List<DropDownLargeValues> Member1List { get; set; }
+        [RequiredRangeIf(nameof(RoleId), (int)Enums.UserRole.SuperAdmin,1, int.MaxValue, "Company is required")]
+        public int CompanyId { get; set; }
+
+        public long UserId { get; set; }
 
         public long? Member1Id { get; set; }
 
-        public List<DropDownLargeValues> Member2List { get; set; }
-
+        public int RoleId { get; set; }
+        
         [UnlikeIf(nameof(IsDisplayMember2Dropdown),true, nameof(Member1Id) )]
         public long? Member2Id { get; set; }
 
         [NotMapped]
         public bool IsDisplayMember2Dropdown { get; set; }
-        public List<DropDownLargeValues> InstructorsList { get; set; }
 
         public long? InstructorId { get; set; }
 
-        public List<DropDownLargeValues> AircraftsList { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Aircraft is required")]
         public long? AircraftId { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
@@ -87,12 +87,19 @@ namespace DataModels.VM.Scheduler
 
         public Nullable<long> DeletedBy { get; set; }
 
-        public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
-
         [NotMapped]
         public bool IsAllDay { get; set; }
-        public string CssClass { get; set; } 
+        public string CssClass { get; set; }
         public string Color { get; set; }
+
+        public List<DropDownLargeValues> InstructorsList { get; set; }
+        public List<DropDownLargeValues> AircraftsList { get; set; }
+        public List<DropDownValues> CompaniesList { get; set; }
+        public List<DropDownLargeValues> UsersList { get; set; }
+        public List<DropDownLargeValues> Member1List { get; set; }
+        public List<DropDownLargeValues> Member2List { get; set; }
+
+        public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
         public List<AircraftEquipmentTimeVM> AircraftEquipmentsTimeList { get; set;}
 

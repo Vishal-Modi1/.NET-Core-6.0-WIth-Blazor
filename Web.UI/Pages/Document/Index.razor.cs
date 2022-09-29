@@ -19,6 +19,8 @@ namespace Web.UI.Pages.Document
 
         [Parameter] public string ParentModuleName { get; set; }
         [Parameter] public int? CompanyIdParam { get; set; }
+        [Parameter] public long? AircraftIdParam { get; set; }
+        [Parameter] public bool? IsPersonalDocument { get; set; }
         [CascadingParameter] public TelerikGrid<DocumentDataVM> grid { get; set; }
        
         private DotNetObjectReference<Index>? objRef;
@@ -56,9 +58,13 @@ namespace Web.UI.Pages.Document
 
         async Task LoadData(GridReadEventArgs args)
         {
+            isGridDataLoading = true;
+
             DocumentDatatableParams datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
 
             datatableParams.ModuleId = documentFilterVM.ModuleId;
+            datatableParams.AircraftId = AircraftIdParam;
+            datatableParams.IsPersonalDocument = IsPersonalDocument.GetValueOrDefault();
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
@@ -82,6 +88,8 @@ namespace Web.UI.Pages.Document
             data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
+
+            isGridDataLoading = false;
         }
 
         private void OnCompanyValueChanges(int selectedValue)
@@ -119,7 +127,7 @@ namespace Web.UI.Pages.Document
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData = await DocumentService.GetDetailsAsync(dependecyParams, documentDataVM.Id == Guid.Empty ? Guid.Empty : documentDataVM.Id);
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+            documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {
@@ -149,6 +157,10 @@ namespace Web.UI.Pages.Document
             {
                 documentDataVM.IsLoadingEditButton = false;
             }
+
+            documentData.AircraftId = AircraftIdParam;
+            documentData.IsPersonalDocument = IsPersonalDocument.GetValueOrDefault();
+
 
             isDisplayPopup = true;
         }

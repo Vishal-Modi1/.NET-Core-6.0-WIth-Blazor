@@ -4,9 +4,8 @@
 @using DataModels.Constants;
 
 <style>
-    .addTag
-    {
-        margin:5px 0px 8px 0px
+    .addTag {
+        margin: 5px 0px 8px 0px
     }
 </style>
 <TelerikForm Model="@documentData" EditContext="@editContext" OnValidSubmit="@UploadFilesAsync">
@@ -69,12 +68,17 @@
 
                     <div class="col-6">
                         <label>Document Tag</label>
-                        <TelerikMultiSelect @ref="@autoComplete" Data="@documentData.DocumentTagsList"
-                                            @bind-Value="@values" AutoClose="false" Placeholder="Search a tag..." TextField="TagName" ValueField="Id" />
+
+                        <MultiSelectWithAllCheckbox Data="@documentData.DocumentTagsList" SelectedData="@selectedTags"
+                                                    PlaceHolderText="Select Tags"
+                                                    UpdateParentListCallback="@UpdateSelectedDocumentTagData">
+                        </MultiSelectWithAllCheckbox>
+
                         <TelerikButton ButtonType="@ButtonType.Button" OnClick=@(args => OpenCreateTagDialogAsync())
                                        Class="btn k-btn-primary addTag" ThemeColor="primary">
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons>
                         </TelerikButton>
+
                     </div>
 
                     @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)

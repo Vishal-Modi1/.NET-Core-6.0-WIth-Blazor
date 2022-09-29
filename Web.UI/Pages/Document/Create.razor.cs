@@ -14,8 +14,7 @@ namespace Web.UI.Pages.Document
         [Parameter] public DocumentVM documentData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        TelerikMultiSelect<DocumentTagVM, int> autoComplete { get; set; }
-        List<int> values { get; set; }
+        List<long> selectedTags = new List<long>();
 
         string uploadedFilePath = "";
 
@@ -44,7 +43,7 @@ namespace Web.UI.Pages.Document
 
             if (!string.IsNullOrWhiteSpace(documentData.Tags))
             {
-                values = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt32(p)).ToList();
+                selectedTags = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt64(p)).ToList();
             }
 
             editContext = new EditContext(documentData);
@@ -53,6 +52,11 @@ namespace Web.UI.Pages.Document
             errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
 
             base.OnInitialized();
+        }
+
+        void UpdateSelectedDocumentTagData(List<long> selectedData)
+        {
+            selectedTags = selectedData;
         }
 
         async void OnChange(int value)
@@ -120,13 +124,15 @@ namespace Web.UI.Pages.Document
             multiContent.Add(new StringContent(documentData.ModuleId.ToString()), "ModuleId");
             multiContent.Add(new StringContent(documentData.UserId.ToString()), "UserId");
             multiContent.Add(new StringContent(documentData.Type), "Type");
+            multiContent.Add(new StringContent(documentData.AircraftId.GetValueOrDefault().ToString()), "AircraftId");
+            multiContent.Add(new StringContent(documentData.IsPersonalDocument.ToString()), "IsPersonalDocument");
             multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
             multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
 
-            if (values != null)
+            if (selectedTags != null)
             {
-                multiContent.Add(new StringContent(String.Join(",", values)), "Tags");
+                multiContent.Add(new StringContent(String.Join(",", selectedTags)), "Tags");
             }
 
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
@@ -221,7 +227,7 @@ namespace Web.UI.Pages.Document
             if (reloaList)
             {
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+                documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
             }
         }
     }

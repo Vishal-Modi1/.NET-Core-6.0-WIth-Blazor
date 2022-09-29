@@ -60,6 +60,13 @@ namespace FSMAPI.Controllers
             documentVM.ModuleId = Convert.ToInt32(form["ModuleId"].ToString());
             documentVM.CompanyId = Convert.ToInt32(form["CompanyId"].ToString());
             documentVM.Tags = form["Tags"].ToString();
+            documentVM.AircraftId = Convert.ToInt64(form["AircraftId"].ToString());
+            documentVM.IsPersonalDocument = Convert.ToBoolean(form["IsPersonalDocument"]);
+
+            if(documentVM.AircraftId == 0)
+            {
+                documentVM.AircraftId = null;
+            }
 
             if (!string.IsNullOrWhiteSpace(form["ExpirationDate"].ToString()))
             {
@@ -188,7 +195,7 @@ namespace FSMAPI.Controllers
             }
 
             if (datatableParams.UserId == 0 && datatableParams.UserRole != DataModels.Enums.UserRole.SuperAdmin &&
-                datatableParams.UserRole != DataModels.Enums.UserRole.Admin)
+                datatableParams.UserRole != DataModels.Enums.UserRole.Admin && datatableParams.AircraftId.GetValueOrDefault() == 0 )
             {
                 datatableParams.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             }

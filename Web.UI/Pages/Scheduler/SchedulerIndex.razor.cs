@@ -26,13 +26,15 @@ namespace Web.UI.Pages.Scheduler
         public UIOptions uiOptions = new UIOptions();
         string timezone = "";
         SchedulerFilter schedulerFilter = new SchedulerFilter();
-        List<DE.Aircraft> allAircraftList = new List<DE.Aircraft>();
+
+        List<long> selectedAircraftList = new List<long>();
+        List<DropDownLargeValues> multiSelectData = new List<DropDownLargeValues>();
+
         DependecyParams dependecyParams;
 
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
 
-        List<long> multipleAircrafts { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -47,11 +49,11 @@ namespace Web.UI.Pages.Scheduler
             dataSource = new List<SchedulerVM>();
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
-            
+
             InitializeValues();
 
             schedulerVM = new SchedulerVM();
-            schedulerVM.ScheduleActivitiesList = new List<DropDownValues>();
+            schedulerVM.ScheduleActivitiesList = new List<DropDownLargeValues>();
             aircraftsResourceList = new List<ResourceData>();
         }
 
@@ -59,8 +61,8 @@ namespace Web.UI.Pages.Scheduler
         {
             if (firstRender)
             {
-                 dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-               
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
                 if (!globalMembers.IsSuperAdmin)
                 {
                     List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
@@ -159,29 +161,33 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
+        private async Task GetAircraftData(int value = 0)
+        {
+            multiSelectData = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, value);
+        }
+
         private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
         {
-            allAircraftList = await AircraftService.ListAllAsync(dependecyParams,0);
-
-            List<DE.Aircraft> aircraftList = new List<DE.Aircraft>();
+            await GetAircraftData(0);
+            List<DropDownLargeValues> aircraftList = new List<DropDownLargeValues>();
 
             if (aircraftPreference != null)
             {
                 List<long> aircraftIds = aircraftPreference.ListPreferencesIds.Select(long.Parse).ToList();
-                aircraftList = allAircraftList.Where(p => aircraftIds.Contains(p.Id)).ToList();
+                aircraftList = multiSelectData.Where(p => aircraftIds.Contains(p.Id)).ToList();
             }
             else
             {
-                aircraftList = allAircraftList;
+                aircraftList = multiSelectData;
             }
 
-            multipleAircrafts = aircraftList.Select(p => p.Id).ToList();
+            selectedAircraftList = aircraftList.Select(p => p.Id).ToList();
 
             List<ResourceData> aircraftResourceList = new List<ResourceData>();
 
-            foreach (DE.Aircraft aircraft in aircraftList)
+            foreach (DropDownLargeValues aircraft in aircraftList)
             {
-                aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.TailNo, Id = aircraft.Id });
+                aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.Name, Id = aircraft.Id });
             }
 
             return aircraftResourceList;
@@ -269,7 +275,7 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task OpenAppointmentDialog(SchedulerVM args)
         {
-             ChangeLoaderVisibilityAction(true);
+            ChangeLoaderVisibilityAction(true);
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, args.Id);
 
@@ -297,7 +303,7 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.isDisplayMainForm = true;
             uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
 
-             ChangeLoaderVisibilityAction(false);
+            ChangeLoaderVisibilityAction(false);
             isDisplayPopup = true;
             popupTitle = "Schedule Appointment";
         }
@@ -333,21 +339,32 @@ namespace Web.UI.Pages.Scheduler
             await LoadDataAsync();
         }
 
-        void OnAircraftsListChange()
+        void UpdateSelectedAircraftData(List<long> selectedData)
         {
-            if (multipleAircrafts == null)
+            selectedAircraftList = selectedData;
+            base.StateHasChanged();
+        }
+
+        void OnAircraftsListChange(List<long> selectedData)
+        {
+            selectedAircraftList = selectedData;
+            if (selectedAircraftList == null || selectedAircraftList.Count() == 0)
             {
+                resources = new List<string>();
                 aircraftsResourceList = new List<ResourceData>();
             }
             else
             {
-                var aircraftList = allAircraftList.Where(p => multipleAircrafts.Contains(p.Id)).ToList();
+                resources = new List<string>() { "AircraftId" };
+                List<DropDownLargeValues> aircraftList = new List<DropDownLargeValues>();
+
+                aircraftList = multiSelectData.Where(p => selectedAircraftList.Contains(p.Id)).ToList();
 
                 List<ResourceData> aircraftResourceList = new List<ResourceData>();
 
-                foreach (DE.Aircraft aircraft in aircraftList)
+                foreach (DropDownLargeValues aircraft in aircraftList)
                 {
-                    aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.TailNo, Id = aircraft.Id });
+                    aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.Name, Id = aircraft.Id });
                 }
 
                 aircraftsResourceList = aircraftResourceList;
@@ -361,13 +378,14 @@ namespace Web.UI.Pages.Scheduler
             ChangeLoaderVisibilityAction(true);
             schedulerFilter.CompanyId = value;
 
+            resources = new List<string>();
             aircraftsResourceList = new List<ResourceData>();
 
-            multipleAircrafts = new List<long>();
-            allAircraftList = await AircraftService.ListAllAsync(dependecyParams, value);
+            selectedAircraftList = new List<long>();
+            await GetAircraftData(value);
 
-            //scheduleRef.Rebind();
             await LoadDataAsync();
+
             ChangeLoaderVisibilityAction(false);
         }
 

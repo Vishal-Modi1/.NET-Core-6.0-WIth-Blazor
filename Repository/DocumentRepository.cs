@@ -88,12 +88,19 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<DocumentDataVM> list;
 
-                string sql = $"EXEC dbo.GetDocumentList '{ datatableParams.SearchText }', { pageNo }, " +
+                string aircraftId = "";
+
+                if(datatableParams.AircraftId != null)
+                {
+                    aircraftId = $",{datatableParams.AircraftId.ToString()}";
+                }
+
+                string sql = $"EXEC dbo.GetDocumentList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                    $"{datatableParams.CompanyId},{datatableParams.ModuleId},{datatableParams.UserId}";
+                    $"{datatableParams.IsPersonalDocument},{datatableParams.CompanyId},{datatableParams.ModuleId}," +
+                    $"{datatableParams.UserId}{aircraftId}";
 
                 list = _myContext.DocumentDataVM.FromSqlRaw<DocumentDataVM>(sql).ToList();
 

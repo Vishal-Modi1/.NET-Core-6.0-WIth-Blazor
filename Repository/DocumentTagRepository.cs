@@ -1,4 +1,5 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.Common;
 using DataModels.VM.Document;
 using Repository.Interface;
 using System;
@@ -75,6 +76,20 @@ namespace Repository
             }
         }
 
+        public List<DropDownLargeValues> ListDropDownValues()
+        {
+            using (_myContext = new MyContext())
+            {
+                List<DropDownLargeValues> documentTagsList = (from documentTag in _myContext.DocumentTags
+                                                           select new DropDownLargeValues()
+                                                           {
+                                                               Id = documentTag.Id,
+                                                               Name = documentTag.TagName
+                                                           }).ToList();
+
+                return documentTagsList;
+            }
+        }
         public List<DocumentTag> Create(List<DocumentTag> documentTagsList)
         {
             using (_myContext = new MyContext())

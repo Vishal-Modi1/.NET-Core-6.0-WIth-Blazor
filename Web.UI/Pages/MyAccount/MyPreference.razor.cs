@@ -32,6 +32,16 @@ namespace Web.UI.Pages.MyAccount
             base.OnInitialized();
         }
 
+        void UpdateSelectedAircraftData(List<long> selectedData)
+        {
+            userPreferenceVM.AircraftIds = selectedData;
+        }
+
+        void UpdateSelectedActivityTypeData(List<long> selectedData)
+        {
+            userPreferenceVM.ActivityIds = selectedData;
+        }
+
         public async Task GetPreferenceValues(int values)
         {
             ChangeLoaderVisibilityAction(true);
@@ -44,7 +54,7 @@ namespace Web.UI.Pages.MyAccount
 
             if (activityTypeData != null)
             {
-                userPreferenceVM.ActivityIds = userPreferenceVM.ActivityTypeList.Where(p => activityTypeData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => Convert.ToInt32(p.Id)).ToList();
+                userPreferenceVM.ActivityIds = userPreferenceVM.ActivityTypeList.Where(p => activityTypeData.ListPreferencesIds.Contains(p.Id.ToString())).Select(p => Convert.ToInt64(p.Id)).ToList();
             }
 
             userPreferenceVM.AircraftList = await AircraftService.ListDropdownValues(dependecyParams);

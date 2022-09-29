@@ -80,6 +80,22 @@ namespace Web.UI.Data.Document
             return documentTagsVM;
         }
 
+        public async Task<List<DropDownLargeValues>> ListDropdownValues(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"documenttag/listdropdownvalues";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            List<DropDownLargeValues> documentTagsVM = new List<DropDownLargeValues>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                documentTagsVM = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return documentTagsVM;
+        }
+
         public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DocumentVM documentVM)
         {
             dependecyParams.JsonData = JsonConvert.SerializeObject(documentVM);

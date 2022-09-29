@@ -360,6 +360,8 @@ namespace Service
             document.IsActive = true;
             document.LastShareDate = documentVM.LastShareDate;
             document.IsShareable = documentVM.IsShareable;
+            document.AircraftId = documentVM.AircraftId;
+            document.IsPersonalDocument = documentVM.IsPersonalDocument;
 
             document.CreatedBy = documentVM.CreatedBy;
            

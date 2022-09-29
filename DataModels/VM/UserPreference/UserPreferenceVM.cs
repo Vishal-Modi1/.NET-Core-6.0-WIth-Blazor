@@ -19,13 +19,13 @@ namespace DataModels.VM.UserPreference
 
         public List<DropDownValues> PreferenceTypesList { get; set; }
         public List<DropDownLargeValues> AircraftList { get; set; }
-        public List<DropDownValues> ActivityTypeList { get; set; }
+        public List<DropDownLargeValues> ActivityTypeList { get; set; }
 
         [Required, MinLength(1, ErrorMessage = "At least one aircraft required")]
         public List<long> AircraftIds { get; set; }
 
         [Required, MinLength(1, ErrorMessage = "At least one activity required")]
-        public List<int> ActivityIds { get; set; }
+        public List<long> ActivityIds { get; set; }
         public long UserId { get; set; }
     }
 }

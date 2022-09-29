@@ -21,10 +21,11 @@ namespace Service
         private readonly IAircraftScheduleHobbsTimeRepository _aircraftScheduleHobbsTimeRepository;
         private readonly IUserPreferenceRepository _userPreferenceRepository;
         private readonly IUserVSCompanyRepository _userVSCompanyRepository;
+        private readonly ICompanyRepository _companyRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
-            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
+            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository, ICompanyRepository companyRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
             IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository)
         {
@@ -36,6 +37,7 @@ namespace Service
             _aircraftScheduleHobbsTimeRepository = aircraftScheduleHobbsTimeRepository;
             _userPreferenceRepository = userPreferenceRepository;
             _userVSCompanyRepository = userVSCompanyRepository;
+            _companyRepository = companyRepository;
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id, long userId)
@@ -59,9 +61,25 @@ namespace Service
                     SetAircraftEquipmentHobbsTime(schedulerVM);
                 }
 
-                ListDropDownValues(schedulerVM, companyId, roleId);
+                if (roleId == (int)DataModels.Enums.UserRole.SuperAdmin)
+                {
+                    schedulerVM.CompaniesList = _companyRepository.ListDropDownValues();
+                    
+                    if (schedulerVM.AircraftId != null)
+                    {
+                        schedulerVM.CompanyId = companyId = _aircraftRepository.FindByCondition(p => p.Id == schedulerVM.AircraftId).CompanyId.GetValueOrDefault();
+                    }
+                }
 
+                if(companyId != 0)
+                {
+                    schedulerVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
+                }
+
+                ListDropDownValues(schedulerVM, companyId, roleId);
                 FilterValuesByUserPreferences(schedulerVM, userId);
+
+                schedulerVM.RoleId = roleId;
 
                 CreateResponse(schedulerVM, HttpStatusCode.OK, "");
             }
@@ -100,7 +118,7 @@ namespace Service
                         continue;
                     }
 
-                    List<int> activityTypeIds = activityType.PreferencesIds.Split(new char[] { ',' }).Select(p => Convert.ToInt32(p)).ToList();
+                    List<long> activityTypeIds = activityType.PreferencesIds.Split(new char[] { ',' }).Select(p => Convert.ToInt64(p)).ToList();
                     schedulerVM.ScheduleActivitiesList = schedulerVM.ScheduleActivitiesList.Where(p => activityTypeIds.Contains(p.Id)).ToList();
                 }
             }
@@ -125,7 +143,7 @@ namespace Service
         {
             try
             {
-                List<DropDownValues> scheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
+                List<DropDownLargeValues> scheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
                 CreateResponse(scheduleActivitiesList, HttpStatusCode.OK, "");
 
                 return _currentResponse;

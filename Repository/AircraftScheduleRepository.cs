@@ -155,11 +155,11 @@ namespace Repository
 
       
         #region ActivityType
-        public List<DropDownValues> ListActivityTypeDropDownValues(int roleId)
+        public List<DropDownLargeValues> ListActivityTypeDropDownValues(int roleId)
         {
             using (_myContext = new MyContext())
             {
-                List<DropDownValues> dropDownValues = new List<DropDownValues>();
+                List<DropDownLargeValues> dropDownValues = new List<DropDownLargeValues>();
 
                 UserRoleVsScheduleActivityType userRoleVsScheduleActivityType = (from userRoleActivitiy in _myContext.UserRoleVsScheduleActivityType
                                                                                  where userRoleActivitiy.UserRoleId == roleId
@@ -171,7 +171,7 @@ namespace Repository
 
                     dropDownValues = (from scheduleActivity in _myContext.ScheduleActivityTypes
                                       where scheduleActivityIds.Contains(scheduleActivity.Id)
-                                      select new DropDownValues()
+                                      select new DropDownLargeValues()
                                       {
                                           Id = scheduleActivity.Id,
                                           Name = scheduleActivity.Name,

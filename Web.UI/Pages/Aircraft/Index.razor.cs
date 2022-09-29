@@ -54,10 +54,10 @@ namespace Web.UI.Pages.Aircraft
 
         private void OnCompanyValueChanges(int selectedValue)
         {
-            if (aircraftFilterVM.CompanyId != selectedValue)
+            if (companyId != selectedValue)
             {
+                companyId  = selectedValue;
                 RefreshGrid();
-                aircraftFilterVM.CompanyId = selectedValue;
             }
         }
 

@@ -8,6 +8,9 @@ namespace DataModels.VM.Document
 
         public long UserId { get; set; }
 
+        public long? AircraftId { get; set; }
+
+        public bool IsPersonalDocument { get; set; }
         public Enums.UserRole UserRole { get; set; }
     }
 }

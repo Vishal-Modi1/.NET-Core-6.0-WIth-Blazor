@@ -27,6 +27,7 @@ namespace Web.UI.Pages.Scheduler
 
         #endregion
 
+        DependecyParams dependecyParams;
         string timezone = "";
 
         public bool isAllowToEdit;
@@ -49,6 +50,7 @@ namespace Web.UI.Pages.Scheduler
         {
             timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             // user should be superadmin, admin or owner of reservation to update or delete it
 
@@ -83,7 +85,6 @@ namespace Web.UI.Pages.Scheduler
             //schedulerVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             //schedulerVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(dependecyParams, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
 
             if (response.Status == System.Net.HttpStatusCode.OK)
@@ -162,7 +163,6 @@ namespace Web.UI.Pages.Scheduler
             schedulerEndTimeDetailsVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(dependecyParams, schedulerEndTimeDetailsVM);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
@@ -212,7 +212,6 @@ namespace Web.UI.Pages.Scheduler
                 return;
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(dependecyParams, schedulerVM.AircraftEquipmentsTimeList);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
@@ -261,7 +260,7 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        public void OnActivityTypeValueChanged(int? value)
+        public void OnActivityTypeValueChanged(long? value)
         {
             InitializeValues();
 
@@ -324,13 +323,31 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
+        public async Task OnCompanyValueChanged(int value)
+        {
+            schedulerVM.CompanyId = value;
+
+            if (value != 0)
+            {
+                ChangeLoaderVisibilityAction(true);
+
+                SchedulerVM schedulerVMData = await AircraftSchedulerService.GetDetailsByCompanyIdAsync(dependecyParams, schedulerVM.Id, value);
+
+                ChangeLoaderVisibilityAction(false);
+
+                schedulerVM.Member1List = schedulerVMData.Member1List;
+                schedulerVM.Member2List = schedulerVMData.Member2List;
+                schedulerVM.InstructorsList = schedulerVMData.InstructorsList;
+                schedulerVM.AircraftsList = schedulerVMData.AircraftsList;
+            }
+        }
+
         private async Task CheckOutAircraft()
         {
             await SetCheckOutButtonState(true);
 
             // check if someone else already checked out it 
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(dependecyParams, schedulerVM.AircraftId.GetValueOrDefault());
 
             await SetCheckOutButtonState(false);
@@ -355,7 +372,6 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task CheckOut()
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.CheckOut(dependecyParams, schedulerVM.Id);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
@@ -447,7 +463,6 @@ namespace Web.UI.Pages.Scheduler
         {
             uiOptions.isBusyUnCheckOutButton = true; 
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(dependecyParams, schedulerVM.AircraftSchedulerDetailsVM.Id);
 
             uiOptions.isBusyUnCheckOutButton = false;
@@ -483,7 +498,6 @@ namespace Web.UI.Pages.Scheduler
         {
             await SetDeleteButtonState(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftSchedulerService.DeleteAsync(dependecyParams, schedulerVM.Id);
 
             await SetDeleteButtonState(false);

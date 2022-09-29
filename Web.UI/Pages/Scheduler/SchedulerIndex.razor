@@ -70,8 +70,12 @@
     }
 
     <div class="col-md-6 col-sm-6">
-        <TelerikMultiSelect Data="@allAircraftList" @bind-Value="@multipleAircrafts" OnChange="@OnAircraftsListChange"
-                            TextField="TailNo" ValueField="Id" Placeholder="Select Aircraft" />
+
+        <MultiSelectWithAllCheckbox Data="@multiSelectData" SelectedData="@selectedAircraftList"
+                                    OnChangeEventCallback="@OnAircraftsListChange" PlaceHolderText="Select Aircrafts"
+                                    UpdateParentListCallback="@UpdateSelectedAircraftData">
+        </MultiSelectWithAllCheckbox>
+
     </div>
 
 </div>
@@ -139,16 +143,16 @@
     @if (isDisplayPopup)
     {
         <CustomPopupComponent Title="@popupTitle"
-                          HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
-                          CloseOnOutsideClick="false"
-                          OnClose="@(()=> {isDisplayPopup = false;})">
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
 
             <Body>
                 <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
-                    InitializeValuesParentEvent="@InitializeValues"
-                    OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
-                    RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-                    CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+                InitializeValuesParentEvent="@InitializeValues"
+                OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
+                RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
 
             </Body>
 
