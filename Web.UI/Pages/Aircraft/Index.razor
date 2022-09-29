@@ -193,15 +193,15 @@
             <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
         </div>
 
-        <div class="col-md-4" style="text-align:right">
+        <div class="col-md-4 px-2" style="text-align:right">
       
             <button @onclick="@(e => ChangeView(true))" class="buttonViews">
 
-                <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == true ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == true ?  "#0064D4" : "white")"></CustomIcons>
+                <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView ?  "white" : "black")" SecondaryColor="@(isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
             </button>
 
             <button @onclick="@(e => ChangeView(false))" class="buttonViews">
-                <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView == false ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == false ?  "#0064D4" : "white")"></CustomIcons>
+                <CustomIcons IconName="gridview" PrimaryColor="@(!isDisplayGridView ?  "white" : "black")" SecondaryColor="@(!isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
             </button>
         </div>
 
