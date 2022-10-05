@@ -7,6 +7,8 @@
 @using DataModels.Entities;
 @using DataModels.VM;
 @using Web.UI.Shared.Components;
+@using Web.UI.Models.Shared;
+@using Web.UI.Models.Scheduler;
 
 @page "/SchedulerIndex"
 
@@ -18,8 +20,15 @@
     .custom-appointment {
         width: 100%;
         height: 100%;
-        padding: 5px;
+        
     }
+
+    .schedule-popup div:hover {
+        color: #fff;
+        background-color: #000;
+        text-decoration: underline;
+    }
+
 </style>
 
 <PageTitle>Scheduler | Fly Manager </PageTitle>
@@ -115,9 +124,14 @@
                 }
             }
 
-            <div class="custom-appointment"
-                 style="background-color: @appt.Color">
-                @appt.DisplayTitle
+            <div class="custom-appointment schedule-popup" 
+            title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
+            data-member1="@appt.Member1"
+                 style="height:100%;background-color: @appt.Color" 
+                 data-aircraft="@appt.TailNo"
+                 @oncontextmenu:preventDefault="true"
+                 @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
+                <div style="font-size:12px;background-color: @appt.Color" class="k-event-template" >@appt.DisplayTitle</div>
             </div>
         }
     </ItemTemplate>
@@ -139,6 +153,29 @@
 
 </TelerikScheduler>
 
+<TelerikContextMenu Data="@menuItems" @ref="@contextMenu"
+                    TextField="Text" IconField="Icon" DisabledField="Disabled"
+                    OnClick="@( async (ContextMenuItem itm) => await OnContextMenuClickItem(itm) )">
+</TelerikContextMenu>
+
+<TelerikTooltip TargetSelector=".schedule-popup" ShowOn="@TooltipShowEvent.Hover" Position="TooltipPosition.Bottom">
+    <Template>
+        
+        @{
+            var dataAttributes = context.DataAttributes;
+            var title = context.Title;
+        }
+       
+            <ul>
+                <li>Title: @title</li>
+                <li>Start Time: @(dataAttributes["start"])</li>
+                <li>End Time: @(dataAttributes["end"])</li>
+                <li>Aircraft: @(dataAttributes["aircraft"])</li>
+                <li>Member: @(dataAttributes["member1"])</li>
+            </ul>
+    </Template>
+</TelerikTooltip>
+
 @{
     @if (isDisplayPopup)
     {
@@ -148,11 +185,60 @@
                       OnClose="@(()=> {isDisplayPopup = false;})">
 
             <Body>
-                <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions"
+
+                @if (operationType == OperationType.Create)
+                {
+                    <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions" @ref="createScheduleRef"
                 InitializeValuesParentEvent="@InitializeValues"
                 OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
                 RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
-                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"></Create>
+                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
+                IsOpenFromContextMenu="@IsOpenFromContextMenu"></Create>
+
+                }
+                else if (operationType == OperationType.UnCheckOut)
+                {
+                    <div>
+                        <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
+                        <div class="row d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-between">
+
+                                <TelerikButton Class="mx-1 btn k-btn-primary flex-fill" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.IsBusyUnCheckOutButton)">
+                                    Yes
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.IsBusyUnCheckOutButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+
+
+                                <TelerikButton Class="mx-1 btn k-btn-secondary flex-fill" ThemeColor="secondary" OnClick="()=>CloseDialog()">
+                                    No
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                else if (operationType == OperationType.Delete)
+                {
+                    <div>
+                        <p class="m-4"> Are you sure, You want to delete appointment ? </p>
+                        <div class="row d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-between">
+
+                                <TelerikButton Class="btn k-btn-danger flex-fill mx-1" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.IsBusyDeleteButton)">
+                                    Yes
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.IsBusyDeleteButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+
+
+                                <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-1" ThemeColor="secondary" OnClick="()=>CloseDialog()">
+                                    No
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                }
 
             </Body>
 

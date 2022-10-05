@@ -10,6 +10,7 @@ using DataModels.Constants;
 using Telerik.Blazor.Components;
 using Utilities;
 using Web.UI.Pages.Scheduler;
+using Web.UI.Models.Scheduler;
 
 namespace Web.UI.Pages.Reservation
 {
@@ -242,16 +243,16 @@ namespace Web.UI.Pages.Reservation
                 schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
             }
 
-            uiOptions.isDisplayForm = false;
-            uiOptions.isDisplayCheckOutOption = false;
+            uiOptions.IsDisplayForm = false;
+            uiOptions.IsDisplayCheckOutOption = false;
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime == null)
             {
-                uiOptions.isDisplayCheckOutOption = true;
+                uiOptions.IsDisplayCheckOutOption = true;
             }
 
-            uiOptions.isDisplayMainForm = true;
-            uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
+            uiOptions.IsDisplayMainForm = true;
+            uiOptions.IsDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
 
             popupTitle = "Schedule Appointment";
             isDisplayPopup = true;
@@ -285,21 +286,21 @@ namespace Web.UI.Pages.Reservation
 
         public void InitializeValues()
         {
-            uiOptions.isDisplayRecurring = true;
-            uiOptions.isDisplayMember1Dropdown = true;
-            uiOptions.isDisplayAircraftDropDown = true;
+            uiOptions.IsDisplayRecurring = true;
+            uiOptions.IsDisplayMember1Dropdown = true;
+            uiOptions.IsDisplayAircraftDropDown = true;
             if (schedulerVM == null)
             {
                 schedulerVM = new SchedulerVM();
                 schedulerVM.IsDisplayMember2Dropdown = false;
             }
-            uiOptions.isDisplayFlightRoutes = false;
-            uiOptions.isDisplayInstructor = false;
-            uiOptions.isDisplayFlightInfo = false;
-            uiOptions.isDisplayStandBy = true;
-            uiOptions.isDisplayForm = true;
-            uiOptions.isDisplayCheckOutOption = false;
-            uiOptions.isDisplayMainForm = true;
+            uiOptions.IsDisplayFlightRoutes = false;
+            uiOptions.IsDisplayInstructor = false;
+            uiOptions.IsDisplayFlightInfo = false;
+            uiOptions.IsDisplayStandBy = true;
+            uiOptions.IsDisplayForm = true;
+            uiOptions.IsDisplayCheckOutOption = false;
+            uiOptions.IsDisplayMainForm = true;
         }
     }
 }

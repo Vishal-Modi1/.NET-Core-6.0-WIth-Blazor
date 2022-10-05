@@ -14,7 +14,7 @@
     }
 </style>
 
-@if (uiOptions.isDisplayMainForm)
+@if (uiOptions.IsDisplayMainForm)
 {
     <TelerikForm Model="@schedulerVM" OnValidSubmit="@OnValidSubmit">
 
@@ -23,7 +23,7 @@
         </FormValidation>
 
         <FormItems>
-            @if (uiOptions.isDisplayForm)
+            @if (uiOptions.IsDisplayForm)
             {
                 <div class="row compact-row">
 
@@ -85,7 +85,7 @@
 
                             <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
                         </div>
-                        @if (uiOptions.isDisplayAircraftDropDown)
+                        @if (uiOptions.IsDisplayAircraftDropDown)
                         {
                             <div class="col-6">
                                 <label>Aircraft</label>
@@ -110,7 +110,7 @@
                                 </div>
                                 }*@
 
-                            @if (uiOptions.isDisplayMember1Dropdown)
+                            @if (uiOptions.IsDisplayMember1Dropdown)
                             {
 
                                 <div class="col-6">
@@ -141,7 +141,7 @@
 
                             }
 
-                            @if (uiOptions.isDisplayFlightInfo)
+                            @if (uiOptions.IsDisplayFlightInfo)
                             {
                                 <div class="col-6">
                                     <label>Flight Type</label>
@@ -167,7 +167,7 @@
 
                                 </div>
                             }
-                            @if (uiOptions.isDisplayInstructor)
+                            @if (uiOptions.IsDisplayInstructor)
                             {
                                 <div class="col-6">
                                     <label>Instructor</label>
@@ -178,7 +178,7 @@
                                 </div>
                             }
 
-                            @if (uiOptions.isDisplayFlightRoutes)
+                            @if (uiOptions.IsDisplayFlightRoutes)
                             {
                                 <div class="col-6">
                                     <label>Flight Routes</label>
@@ -200,7 +200,7 @@
                             </div>
                         }
 
-                        @if (uiOptions.isDisplayStandBy)
+                        @if (uiOptions.IsDisplayStandBy)
                         {
                             <div class="col-6">
                                 <label>StandBy</label>
@@ -366,7 +366,9 @@
                             <FontLabel Class="font-weight-bold">Activity</FontLabel>
                         </div>
                         <span class="d-flex justify-content-center">
-                            <FontLabel>@(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</FontLabel>
+                            <FontLabel>
+                                
+                                @(@schedulerVM.ScheduleActivitiesList.FirstOrDefault(p => p.Id == @schedulerVM.ScheduleActivityId)?.Name )</FontLabel>
                         </span>
                     </div>
                     <div class="col-4 d-flex flex-column">
@@ -448,25 +450,25 @@
                 </div>
 
                 <div class="d-flex justify-content-between">
-                    @if (uiOptions.isDisplayCheckOutOption)
+                    @if (uiOptions.IsDisplayCheckOutOption)
                     {
                         if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, "Scheduler") && isAllowToEdit)
                         {
-                            if (uiOptions.isDisplayCheckInButton)
+                            if (uiOptions.IsDisplayCheckInButton)
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckInAircraft"
-                           Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!uiOptions.isBusyCheckOutButton)">
+                           Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!uiOptions.IsBusyCheckOutButton)">
                                     Check In
-                                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
+                                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@uiOptions.IsBusyCheckOutButton">
                                     </TelerikLoader>
                                 </TelerikButton>
                             }
                             else
                             {
                                 <TelerikButton ButtonType="@ButtonType.Button" ThemeColor="info" OnClick="@CheckOutAircraft"
-                           Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!uiOptions.isBusyCheckOutButton)">
+                           Class="btn k-btn-primary flex-fill mx-1" Enabled="@(!uiOptions.IsBusyCheckOutButton)">
                                     Check Out
-                                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@uiOptions.isBusyCheckOutButton">
+                                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@uiOptions.IsBusyCheckOutButton">
                                     </TelerikLoader>
                                 </TelerikButton>
                             }
@@ -643,7 +645,7 @@
 
     }
 }
-else if (uiOptions.isDisplayEditEndTimeForm)
+else if (uiOptions.IsDisplayEditEndTimeForm)
 {
     <TelerikForm Model="@schedulerVM" OnValidSubmit="@UpdateEndTime">
 
@@ -655,7 +657,7 @@ else if (uiOptions.isDisplayEditEndTimeForm)
             <div class="row compact-row">
                 <div class="col-6">
                     <label>Start Time</label>
-                    <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime"
+                    <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime" Enabled="false" 
                                        Format="MM/dd/yyyy %h:mm tt" Id="startTime" Class="w-100">
 
                         <DateTimePickerSteps Minute="30" />
@@ -757,6 +759,7 @@ else
                                 }
                                 else
                                 {
+                                    schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime = aircraftScheduleHobbsTime.InTime;
                                     <TelerikNumericTextBox Placeholder="Hours"
                                                Value="@aircraftScheduleHobbsTime.InTime"
                                                ValueExpression="@(() => aircraftScheduleHobbsTime.InTime)"
@@ -766,14 +769,6 @@ else
                                     <TelerikValidationMessage For="@(() => aircraftScheduleHobbsTime.InTime)"></TelerikValidationMessage>
                                 }
 
-
-
-                                @*//TODO*@
-                                @* <RadzenCompareValidator Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"
-                                    Component="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
-                                    Operator=CompareOperator.GreaterThan
-                                    Style="position: relative;word-break: break-word;max-width:140px;margin-left:5px;"
-                                    Text="Time in value must be greater than time out" />*@
                             </td>
 
                             <td>
@@ -821,9 +816,9 @@ else
                         <div class="row d-flex justify-content-end">
                             <div class="col-4 d-flex justify-content-between">
 
-                                <TelerikButton Class="mx-1 btn k-btn-primary flex-fill" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.isBusyUnCheckOutButton)">
+                                <TelerikButton Class="mx-1 btn k-btn-primary flex-fill" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.IsBusyUnCheckOutButton)">
                                     Yes
-                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyUnCheckOutButton">
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.IsBusyUnCheckOutButton">
                                     </TelerikLoader>
                                 </TelerikButton>
 
@@ -843,9 +838,9 @@ else
                         <div class="row d-flex justify-content-end">
                             <div class="col-4 d-flex justify-content-between">
 
-                                <TelerikButton Class="btn k-btn-danger flex-fill mx-1" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.isBusyDeleteButton)">
+                                <TelerikButton Class="btn k-btn-danger flex-fill mx-1" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.IsBusyDeleteButton)">
                                     Yes
-                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.isBusyDeleteButton">
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.IsBusyDeleteButton">
                                     </TelerikLoader>
                                 </TelerikButton>
 

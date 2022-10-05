@@ -23,6 +23,9 @@ namespace Repository
                                                      join aircraftScheduleDetail in _myContext.AircraftScheduleDetails 
                                                      on aircraftSchedules.Id equals aircraftScheduleDetail.AircraftScheduleId into asd
                                                      from details in asd.DefaultIfEmpty()
+                                                     join user in _myContext.Users
+                                                     on aircraftSchedules.Member1Id equals user.Id into u
+                                                     from userDetails in u.DefaultIfEmpty()
                                                      where aircraft.CompanyId == schedulerFilter.CompanyId && aircraftSchedules.IsActive == true
                                                      && aircraftSchedules.StartDateTime.Date >= schedulerFilter.StartTime.Date
                                                      && aircraftSchedules.EndDateTime.Date <= schedulerFilter.EndTime.Date
@@ -35,6 +38,8 @@ namespace Repository
                                                          EndTime = aircraftSchedules.EndDateTime,
                                                          Comments = aircraftSchedules.Comments,
                                                          AircraftId = aircraftSchedules.AircraftId,
+                                                         TailNo = aircraft.TailNo,
+                                                         Member1 = userDetails == null ? "" : (userDetails.FirstName + " " + userDetails.LastName),
                                                          AircraftSchedulerDetailsVM = details == null ? 
                                                          new AircraftSchedulerDetailsVM() : 
                                                          new AircraftSchedulerDetailsVM()

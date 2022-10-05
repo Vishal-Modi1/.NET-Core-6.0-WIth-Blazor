@@ -172,7 +172,7 @@ namespace Web.UI.Utilities
                     _response.Status = httpResponseMessage.StatusCode;
                     APIErrorResponse aPIErrorResponse = JsonConvert.DeserializeObject<APIErrorResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result); 
 
-                    _response.Message = aPIErrorResponse.Error;
+                    _response.Message = aPIErrorResponse.Message;
                 }
             }
             catch(Exception exc)

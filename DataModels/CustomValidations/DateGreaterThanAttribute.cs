@@ -78,7 +78,6 @@ namespace DataModels.CustomValidations
                 {
                     object obj = validationContext.ObjectInstance;
                     var thing = obj.GetType().GetProperty(OtherProperty);
-                    var displayName = (DisplayAttribute)Attribute.GetCustomAttribute(thing, typeof(DisplayAttribute));
 
                     return new ValidationResult(ErrorMessage, new[] { validationContext.MemberName });
                 }

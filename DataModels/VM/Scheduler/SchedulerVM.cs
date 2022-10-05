@@ -40,6 +40,7 @@ namespace DataModels.VM.Scheduler
         public long UserId { get; set; }
 
         public long? Member1Id { get; set; }
+        public string Member1 { get; set; }
 
         public int RoleId { get; set; }
         
@@ -53,6 +54,7 @@ namespace DataModels.VM.Scheduler
 
         [Required(ErrorMessage = "Aircraft is required")]
         public long? AircraftId { get; set; }
+        public string TailNo { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
         public string DisplayTitle { get; set; }
@@ -102,7 +104,7 @@ namespace DataModels.VM.Scheduler
         public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 
         public List<AircraftEquipmentTimeVM> AircraftEquipmentsTimeList { get; set;}
-
+        
         public List<AircraftScheduleHobbsTime> AircraftEquipmentHobbsTimeList { get; set; }
     }
 }

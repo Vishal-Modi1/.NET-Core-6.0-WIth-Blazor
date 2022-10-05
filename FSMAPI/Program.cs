@@ -1,13 +1,17 @@
 using AspNetCoreRateLimit;
 using Configuration;
 using DataModels.Constants;
+using FSMAPI.Controllers;
 using FSMAPI.CustomServicesExtensions;
+using FSMAPI.Filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repository;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -127,6 +131,28 @@ builder.Services.AddAuthorization(cfg =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<MyContext>();
 
+// if want to ignore model validations on form post
+//builder.Services.Configure<ApiBehaviorOptions>(options =>
+//{
+//    options.SuppressModelStateInvalidFilter = true;
+//});
+
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+{
+    
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var result = new ValidationFailedResult(context.ModelState);
+        // TODO: add `using System.Net.Mime;` to resolve MediaTypeNames
+        result.ContentTypes.Add(MediaTypeNames.Application.Json);
+        return result;
+    };
+});
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ValidateFilterAttribute));
+});
 
 //Services
 builder.Services.AddCustomServices();

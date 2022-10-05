@@ -9,6 +9,7 @@ using Utilities;
 using DataModels.Constants;
 using Web.UI.Models.Shared;
 using Microsoft.AspNetCore.Components.Forms;
+using Web.UI.Models.Scheduler;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -21,6 +22,7 @@ namespace Web.UI.Pages.Scheduler
         [Parameter] public EventCallback InitializeValuesParentEvent { get; set; }
         [Parameter] public EventCallback DeleteParentEvent { get; set; }
         [Parameter] public EventCallback<ScheduleOperations> RefreshSchedulerDataSourceParentEvent { get; set; }
+        [Parameter] public bool IsOpenFromContextMenu { get; set; }
         [Parameter] public EventCallback CloseDialogParentEvent { get; set; }
         [Parameter] public EventCallback OpenDialogParentEvent { get; set; }
         [Parameter] public EventCallback LoadDataParentEvent { get; set; }
@@ -58,7 +60,7 @@ namespace Web.UI.Pages.Scheduler
 
             bool isCreator = userId == schedulerVM.CreatedBy;
 
-            if (globalMembers.IsSuperAdmin || globalMembers.IsSuperAdmin || isCreator)
+            if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin || isCreator)
             {
                 isAllowToDelete = true;
                 isAllowToEdit = true;
@@ -69,12 +71,12 @@ namespace Web.UI.Pages.Scheduler
 
         private async void OnValidSubmit()
         {
-            uiOptions.isDisplayCheckOutOption = false;
+            uiOptions.IsDisplayCheckOutOption = false;
 
-            if (uiOptions.isDisplayForm)
+            if (uiOptions.IsDisplayForm)
             {
                 ManageValues();
-                uiOptions.isDisplayForm = false;
+                uiOptions.IsDisplayForm = false;
                 base.StateHasChanged();
 
                 return;
@@ -85,6 +87,7 @@ namespace Web.UI.Pages.Scheduler
             //schedulerVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
             //schedulerVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
 
+            schedulerVM.AircraftEquipmentsTimeList.Clear();
             CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(dependecyParams, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
 
             if (response.Status == System.Net.HttpStatusCode.OK)
@@ -110,18 +113,20 @@ namespace Web.UI.Pages.Scheduler
             await LoadDataAsync();
         }
 
-        void OpenUnCheckOutDialog()
+        public void OpenUnCheckOutDialog()
         {
             childPopupTitle = "Un-Check out appointment";
             isDisplayChildPopup = true;
             operationType = OperationType.UnCheckOut;
         }
 
-        void OpenDeleteDialog()
+        public void OpenDeleteDialog()
         {
             childPopupTitle = "Delete Appointment";
             isDisplayChildPopup = true;
             operationType = OperationType.Delete;
+
+            base.StateHasChanged();
         }
 
 
@@ -135,21 +140,26 @@ namespace Web.UI.Pages.Scheduler
             OpenDialogParentEvent.InvokeAsync();
         }
 
-        private async Task CheckInAircraft()
+        public async Task CheckInAircraft()
         {
-            uiOptions.isDisplayMainForm = false;
+            uiOptions.IsDisplayMainForm = false;
         }
 
         private async Task HideEditEndTimeForm()
         {
-            uiOptions.isDisplayEditEndTimeForm = false;
-            uiOptions.isDisplayMainForm = true;
+            uiOptions.IsDisplayEditEndTimeForm = false;
+            uiOptions.IsDisplayMainForm = true;
+
+            if(IsOpenFromContextMenu)
+            {
+                CloseDialog();
+            }
         }
 
-        private async Task ShowEditEndTimeForm()
+        public async Task ShowEditEndTimeForm()
         {
-            uiOptions.isDisplayMainForm = false;
-            uiOptions.isDisplayEditEndTimeForm = true;
+            uiOptions.IsDisplayMainForm = false;
+            uiOptions.IsDisplayEditEndTimeForm = true;
         }
 
         private async Task UpdateEndTime()
@@ -169,10 +179,16 @@ namespace Web.UI.Pages.Scheduler
             {
                 if (Convert.ToBoolean(response.Data) == true)
                 {
-                    uiOptions.isDisplayEditEndTimeForm = false;
-                    uiOptions.isDisplayMainForm = true;
+                    uiOptions.IsDisplayEditEndTimeForm = false;
+                    uiOptions.IsDisplayMainForm = true;
                     globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
                     RefreshSchedulerDataSource(ScheduleOperations.UpdateEndTime);
+
+                    if(IsOpenFromContextMenu)
+                    {
+                        CloseDialog();
+                    }
+
                     base.StateHasChanged();
                 }
                 else
@@ -189,9 +205,9 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        private async Task EditFlightTime()
+        public async Task EditFlightTime()
         {
-            uiOptions.isDisplayMainForm = false;
+            uiOptions.IsDisplayMainForm = false;
 
             foreach (AircraftEquipmentTimeVM aircraftEquipmentTimeVM in schedulerVM.AircraftEquipmentsTimeList)
             {
@@ -212,6 +228,8 @@ namespace Web.UI.Pages.Scheduler
                 return;
             }
 
+            isBusySubmitButton = true;
+
             CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(dependecyParams, schedulerVM.AircraftEquipmentsTimeList);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
@@ -223,16 +241,18 @@ namespace Web.UI.Pages.Scheduler
 
                 RefreshSchedulerDataSource(ScheduleOperations.CheckIn);
             }
+
+            isBusySubmitButton = false;
         }
 
-        private void OpenForm()
+        public void OpenForm()
         {
             if (schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
             {
                 OnActivityTypeValueChanged(schedulerVM.ScheduleActivityId);
             }
 
-            uiOptions.isDisplayForm = true;
+            uiOptions.IsDisplayForm = true;
             base.StateHasChanged();
         }
 
@@ -243,18 +263,18 @@ namespace Web.UI.Pages.Scheduler
                 schedulerVM.Member2Id = null;
             }
 
-            if (!uiOptions.isDisplayFlightInfo)
+            if (!uiOptions.IsDisplayFlightInfo)
             {
                 schedulerVM.FlightRules = "";
                 schedulerVM.FlightType = "";
             }
 
-            if (!uiOptions.isDisplayFlightRoutes)
+            if (!uiOptions.IsDisplayFlightRoutes)
             {
                 schedulerVM.FlightRoutes = "";
             }
 
-            if (!uiOptions.isDisplayInstructor)
+            if (!uiOptions.IsDisplayInstructor)
             {
                 schedulerVM.InstructorId = null;
             }
@@ -272,51 +292,51 @@ namespace Web.UI.Pages.Scheduler
             if (value == (int)DataModels.Enums.ScheduleActivityType.CharterFlight)
             {
                 schedulerVM.IsDisplayMember2Dropdown = true;
-                uiOptions.isDisplayFlightRoutes = true;
+                uiOptions.IsDisplayFlightRoutes = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.RenterFlight)
             {
                 schedulerVM.IsDisplayMember2Dropdown = true;
-                uiOptions.isDisplayFlightRoutes = true;
-                uiOptions.isDisplayFlightInfo = true;
+                uiOptions.IsDisplayFlightRoutes = true;
+                uiOptions.IsDisplayFlightInfo = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.TourFlight)
             {
                 schedulerVM.IsDisplayMember2Dropdown = true;
-                uiOptions.isDisplayFlightRoutes = true;
-                uiOptions.isDisplayFlightInfo = true;
+                uiOptions.IsDisplayFlightRoutes = true;
+                uiOptions.IsDisplayFlightInfo = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.StudentSolo)
             {
-                uiOptions.isDisplayFlightRoutes = true;
-                uiOptions.isDisplayFlightInfo = true;
+                uiOptions.IsDisplayFlightRoutes = true;
+                uiOptions.IsDisplayFlightInfo = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
             {
-                uiOptions.isDisplayRecurring = false;
-                uiOptions.isDisplayMember1Dropdown = false;
+                uiOptions.IsDisplayRecurring = false;
+                uiOptions.IsDisplayMember1Dropdown = false;
                 schedulerVM.Member1Id = 0;
-                uiOptions.isDisplayStandBy = false;
+                uiOptions.IsDisplayStandBy = false;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.DiscoveryFlight)
             {
-                uiOptions.isDisplayInstructor = true;
+                uiOptions.IsDisplayInstructor = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.DualFlightTraining)
             {
-                uiOptions.isDisplayInstructor = true;
+                uiOptions.IsDisplayInstructor = true;
             }
 
             else if (value == (int)DataModels.Enums.ScheduleActivityType.GroundTraining)
             {
                 //IsDisplayAircraftDropDown = false;
-                uiOptions.isDisplayInstructor = true;
+                uiOptions.IsDisplayInstructor = true;
             }
 
             schedulerVM.ScheduleActivityId = value;
@@ -342,7 +362,7 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        private async Task CheckOutAircraft()
+        public async Task CheckOutAircraft()
         {
             await SetCheckOutButtonState(true);
 
@@ -357,6 +377,11 @@ namespace Web.UI.Pages.Scheduler
                 if ((bool)response.Data == true)
                 {
                     globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
+
+                    if(IsOpenFromContextMenu)
+                    {
+                        CloseDialog();
+                    }
                 }
                 else
                 {
@@ -386,7 +411,7 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task SetCheckOutButtonState(bool isBusy)
         {
-            uiOptions.isBusyCheckOutButton = isBusy;
+            uiOptions.IsBusyCheckOutButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
         }
 
@@ -461,11 +486,11 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task UnCheckOutAppointment()
         {
-            uiOptions.isBusyUnCheckOutButton = true; 
+            uiOptions.IsBusyUnCheckOutButton = true; 
 
             CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(dependecyParams, schedulerVM.AircraftSchedulerDetailsVM.Id);
 
-            uiOptions.isBusyUnCheckOutButton = false;
+            uiOptions.IsBusyUnCheckOutButton = false;
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
@@ -494,7 +519,7 @@ namespace Web.UI.Pages.Scheduler
             OpenDialog();
         }
 
-        async Task DeleteAsync()
+        public async Task DeleteAsync()
         {
             await SetDeleteButtonState(true);
 
@@ -514,29 +539,35 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task SetDeleteButtonState(bool isBusy)
         {
-            uiOptions.isBusyDeleteButton = isBusy;
+            uiOptions.IsBusyDeleteButton = isBusy;
             await InvokeAsync(() => StateHasChanged());
         }
 
         public void InitializeValues()
         {
-            uiOptions.isDisplayRecurring = true;
-            uiOptions.isDisplayMember1Dropdown = true;
-            uiOptions.isDisplayAircraftDropDown = true;
+            uiOptions.IsDisplayRecurring = true;
+            uiOptions.IsDisplayMember1Dropdown = true;
+            uiOptions.IsDisplayAircraftDropDown = true;
             schedulerVM.IsDisplayMember2Dropdown = false;
-            uiOptions.isDisplayFlightRoutes = false;
-            uiOptions.isDisplayInstructor = false;
-            uiOptions.isDisplayFlightInfo = false;
-            uiOptions.isDisplayStandBy = true;
+            uiOptions.IsDisplayFlightRoutes = false;
+            uiOptions.IsDisplayInstructor = false;
+            uiOptions.IsDisplayFlightInfo = false;
+            uiOptions.IsDisplayStandBy = true;
 
             base.StateHasChanged();
         }
 
         public void OpenMainForm()
         {
-            uiOptions.isDisplayForm = true;
-            uiOptions.isDisplayCheckOutOption = false;
-            uiOptions.isDisplayMainForm = true;
+
+            uiOptions.IsDisplayForm = true;
+            uiOptions.IsDisplayCheckOutOption = false;
+            uiOptions.IsDisplayMainForm = true;
+
+            if (IsOpenFromContextMenu)
+            {
+                CloseDialog();
+            }
 
             base.StateHasChanged();
         }

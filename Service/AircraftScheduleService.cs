@@ -70,6 +70,10 @@ namespace Service
                         schedulerVM.CompanyId = companyId = _aircraftRepository.FindByCondition(p => p.Id == schedulerVM.AircraftId).CompanyId.GetValueOrDefault();
                     }
                 }
+                else
+                {
+                    schedulerVM.CompanyId = companyId;
+                }
 
                 if(companyId != 0)
                 {
@@ -335,7 +339,7 @@ namespace Service
 
             Random rnd = new Random();
 
-            aircraftSchedule.SchedulActivityTypeId = schedulerVM.ScheduleActivityId.GetValueOrDefault();
+            aircraftSchedule.SchedulActivityTypeId = Convert.ToInt32(schedulerVM.ScheduleActivityId.GetValueOrDefault());
             aircraftSchedule.Id = schedulerVM.Id;
 
             if (schedulerVM.Id == 0)

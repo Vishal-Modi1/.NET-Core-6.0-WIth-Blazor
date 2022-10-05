@@ -6,6 +6,10 @@
         CheckOut = 2,
         CheckIn = 3,
         UnCheckOut = 4,
-        UpdateEndTime = 5
+        UpdateEndTime = 5,
+        Delete = 6,
+        ViewDetails = 7,
+        UpdateFlightTime = 8,
+        Edit = 9,
     }
 }

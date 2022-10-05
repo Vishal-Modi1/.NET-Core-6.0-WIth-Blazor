@@ -21,7 +21,7 @@ namespace FSMAPI.Controllers
         {
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                _aPIError.Error = response.Message;
+                _aPIError.Message = response.Message;
                 return StatusCode((int)response.Status, JsonConvert.SerializeObject(_aPIError));
             }
 
