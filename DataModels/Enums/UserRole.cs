@@ -1,6 +1,6 @@
 ﻿namespace DataModels.Enums
 {
-    public  enum UserRole : short
+    public enum UserRole : short
     {
         SuperAdmin = 1,
         Admin = 2,

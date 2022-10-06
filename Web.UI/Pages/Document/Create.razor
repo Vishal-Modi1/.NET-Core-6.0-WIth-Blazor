@@ -81,7 +81,7 @@
 
                     </div>
 
-                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                    @if (globalMembers.IsSuperAdmin && ParentModuleName != "Company")
                     {
                         <div class="col-6">
                             <label>Company</label>

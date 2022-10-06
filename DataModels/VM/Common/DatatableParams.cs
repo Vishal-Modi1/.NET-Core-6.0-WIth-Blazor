@@ -14,5 +14,8 @@
 
         public int CompanyId { get; set; }
 
+        public Enums.UserRole UserRole { get; set; }
+
+        public bool IsFromMyProfile { get; set; }
     }
 }

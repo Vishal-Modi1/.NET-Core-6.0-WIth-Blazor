@@ -7,8 +7,6 @@ using Microsoft.JSInterop;
 using System.Net;
 using DataModels.Enums;
 using Telerik.Blazor.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
 using DataModels.Constants;
 
 namespace Web.UI.Pages.Document
@@ -64,7 +62,7 @@ namespace Web.UI.Pages.Document
 
             datatableParams.ModuleId = documentFilterVM.ModuleId;
             datatableParams.AircraftId = AircraftIdParam;
-            datatableParams.IsPersonalDocument = IsPersonalDocument.GetValueOrDefault();
+            datatableParams.IsFromMyProfile = IsPersonalDocument.GetValueOrDefault();
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
@@ -127,6 +125,13 @@ namespace Web.UI.Pages.Document
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData = await DocumentService.GetDetailsAsync(dependecyParams, documentDataVM.Id == Guid.Empty ? Guid.Empty : documentDataVM.Id);
+
+            if(documentData != null && CompanyIdParam != null)
+            {
+                documentData.CompanyId = CompanyIdParam.Value;
+                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams,CompanyIdParam.Value);
+            }
+
             documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)

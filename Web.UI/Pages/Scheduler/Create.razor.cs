@@ -58,7 +58,7 @@ namespace Web.UI.Pages.Scheduler
 
             long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
 
-            bool isCreator = userId == schedulerVM.CreatedBy;
+            bool isCreator = (userId == schedulerVM.CreatedBy || userId == schedulerVM.Member1Id);
 
             if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin || isCreator)
             {
@@ -128,7 +128,6 @@ namespace Web.UI.Pages.Scheduler
 
             base.StateHasChanged();
         }
-
 
         private void CloseDialog()
         {
@@ -318,8 +317,6 @@ namespace Web.UI.Pages.Scheduler
             else if (value == (int)DataModels.Enums.ScheduleActivityType.Maintenance)
             {
                 uiOptions.IsDisplayRecurring = false;
-                uiOptions.IsDisplayMember1Dropdown = false;
-                schedulerVM.Member1Id = 0;
                 uiOptions.IsDisplayStandBy = false;
             }
 

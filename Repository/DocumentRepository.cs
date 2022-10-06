@@ -97,9 +97,9 @@ namespace Repository
                     aircraftId = $",{datatableParams.AircraftId.ToString()}";
                 }
 
-                string sql = $"EXEC dbo.GetDocumentList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
+                string sql = $"EXEC dbo.GetDocumentsList {(short)datatableParams.UserRole},'{datatableParams.SearchText }', { datatableParams.Start }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                    $"{datatableParams.IsPersonalDocument},{datatableParams.CompanyId},{datatableParams.ModuleId}," +
+                    $"{datatableParams.IsFromMyProfile},{datatableParams.CompanyId},{datatableParams.ModuleId}," +
                     $"{datatableParams.UserId}{aircraftId}";
 
                 list = _myContext.DocumentDataVM.FromSqlRaw<DocumentDataVM>(sql).ToList();

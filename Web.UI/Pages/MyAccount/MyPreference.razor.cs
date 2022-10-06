@@ -22,6 +22,8 @@ namespace Web.UI.Pages.MyAccount
             int i = 0;
 
             userPreferenceVM.PreferenceTypesList = new List<DropDownValues>();
+            userPreferenceVM.ActivityIds = new List<long>();
+            userPreferenceVM.AircraftIds = new List<long>();
 
             foreach (var item in Enum.GetNames(typeof(PreferenceType)).ToList())
             {

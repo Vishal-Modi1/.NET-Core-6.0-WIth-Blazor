@@ -112,7 +112,6 @@
 
                             @if (uiOptions.IsDisplayMember1Dropdown)
                             {
-
                                 <div class="col-6">
                                     <label>Member 1</label>
                                     <TelerikComboBox Id=member1Id Data="@schedulerVM.Member1List" TextField="Name"
@@ -120,9 +119,10 @@
                                  Placeholder="Select Member 1" ValueField="Id"
                                  @bind-Value="@(schedulerVM.Member1Id)">
 
-                                  <TelerikValidationMessage For="@(() => schedulerVM.Member1Id)"></TelerikValidationMessage>
-
                                     </TelerikComboBox>
+
+                                    <TelerikValidationMessage For="@(() => schedulerVM.Member1Id)"></TelerikValidationMessage>
+
                                 </div>
                             }
 
@@ -152,8 +152,6 @@
                                    Layout="@RadioGroupLayout.Horizontal"
                                    LabelPosition="@RadioGroupLabelPosition.After" />
                                 </div>
-
-
 
                                 <div class="col-6">
                                     <label>Flight Rules</label>

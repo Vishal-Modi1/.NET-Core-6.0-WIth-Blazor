@@ -9,7 +9,6 @@ using DataModels.Enums;
 using DataModels.Constants;
 using Telerik.Blazor.Components;
 using Utilities;
-using Web.UI.Pages.Scheduler;
 using Web.UI.Models.Scheduler;
 
 namespace Web.UI.Pages.Reservation
@@ -173,7 +172,11 @@ namespace Web.UI.Pages.Reservation
             {
                 datatableParams.UserId = reservationFilterVM.UserId;
             }
-
+            else if(ParentModuleName == "MyProfile" && !globalMembers.IsSuperAdmin && !globalMembers.IsAdmin)
+            {
+                datatableParams.UserId = UserId;
+            }
+            
             if (AircraftId == null)
             {
                 datatableParams.AircraftId = reservationFilterVM.AircraftId;

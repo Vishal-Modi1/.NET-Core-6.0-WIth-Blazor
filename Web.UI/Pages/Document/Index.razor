@@ -213,7 +213,7 @@
 
 @if (isDisplayPopup)
 {
-    <CustomPopupComponent Title="@popupTitle"
+    <CustomPopupComponent Title="@popupTitle" 
                       ShowHeaderCloseButton="operationType == OperationType.DocumentShare || operationType == OperationType.DocumentViewer"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" Width="600px"
@@ -222,7 +222,7 @@
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                <Create DocumentData="@documentData" CloseDialogCallBack="@CloseDialog"></Create>
+                <Create DocumentData="@documentData" CloseDialogCallBack="@CloseDialog" ParentModuleName = "@ParentModuleName"></Create>
             }
             else if (operationType == OperationType.Delete)
             {

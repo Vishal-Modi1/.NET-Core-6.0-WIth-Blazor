@@ -13,6 +13,7 @@ namespace Web.UI.Pages.Document
     {
         [Parameter] public DocumentVM documentData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+        [Parameter] public string ParentModuleName { get; set; }
 
         List<long> selectedTags = new List<long>();
 
