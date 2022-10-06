@@ -28,6 +28,9 @@ namespace DataModels.VM.Aircraft
         [Range(1, byte.MaxValue,ErrorMessage = "Aircraft status is required")]
         public byte AircraftStatusId { get; set; }
 
+        [Range(1, long.MaxValue, ErrorMessage = "Owner is required")]
+        public long OwnerId { get; set; }
+
         [Range(1, byte.MaxValue, ErrorMessage = "Aircraft make is required")]
         [Display(Name = "Make")]
         public int AircraftMakeId { get; set; }
@@ -71,6 +74,8 @@ namespace DataModels.VM.Aircraft
 
         [Required(ErrorMessage = "Company is required")]
         public int? CompanyId { get; set; }
+
+        public bool IsLock { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public Nullable<long> DeletedBy { get; set; }
@@ -82,6 +87,7 @@ namespace DataModels.VM.Aircraft
 
         //Dropdowns list
 
+        public List<DropDownLargeValues> OwnersList { get; set; }
         public List<DropDownValues> AircraftMakeList { get; set; }
         public List<DropDownValues> AircraftModelList { get; set; }
         public List<DropDownValues> AircraftCategoryList { get; set; }

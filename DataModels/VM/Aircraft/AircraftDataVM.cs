@@ -23,6 +23,8 @@ namespace DataModels.VM.Aircraft
         public string MakeName { get; set; }
         public string ModelName { get; set; }
         public string Category { get; set; }
+        public long OwnerId { get; set; }
+        public bool IsLockedForUpdate { get; set; }
         public int TotalRecords { get; set; }
 
     }

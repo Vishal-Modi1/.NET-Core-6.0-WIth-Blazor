@@ -175,5 +175,13 @@ namespace Web.UI.Data.Aircraft
 
             return response;
         }
+
+        public async Task<CurrentResponse> LockAircraft(DependecyParams dependecyParams, long id, bool isLock)
+        {
+            dependecyParams.URL = $"aircraft/updatestatus?id={id}&isLock={isLock}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
     }
 }

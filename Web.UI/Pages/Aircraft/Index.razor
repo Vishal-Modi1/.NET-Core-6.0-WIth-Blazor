@@ -307,8 +307,11 @@
 
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
                             {
+                                bool isOwner = userId == data.OwnerId;
+                                bool isUnlocked = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || !data.IsLockedForUpdate;
+
                                 <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
-                                   ThemeColor="success" Enabled=!data.IsLoadingEditButton>
+                                   ThemeColor="success" Enabled=@(!data.IsLoadingEditButton && isUnlocked)>
 
                                     <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
                                     <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"

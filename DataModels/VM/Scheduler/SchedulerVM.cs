@@ -39,7 +39,9 @@ namespace DataModels.VM.Scheduler
 
         public long UserId { get; set; }
 
-        public long? Member1Id { get; set; }
+        [Range(1, long.MaxValue, ErrorMessage = "Member is required")]
+        public long Member1Id { get; set; }
+
         public string Member1 { get; set; }
 
         public int RoleId { get; set; }

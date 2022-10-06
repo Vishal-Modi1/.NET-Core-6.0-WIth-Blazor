@@ -64,6 +64,12 @@ namespace FSMAPI.Controllers
         public IActionResult Create(AircraftVM airCraftVM)
         {
             airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+
+            if (airCraftVM.OwnerId == 0)
+            {
+                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            }
+
             CurrentResponse response = _airCraftService.Create(airCraftVM);
 
             return APIResponse(response);
@@ -74,6 +80,12 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(AircraftVM airCraftVM)
         {
             airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+           
+            if(airCraftVM.OwnerId == 0)
+            {
+                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            }
+
             CurrentResponse response = _airCraftService.Edit(airCraftVM);
 
             return APIResponse(response);
@@ -188,6 +200,15 @@ namespace FSMAPI.Controllers
         public IActionResult UpdateStatus(long id, byte statusId)
         {
             CurrentResponse response = _airCraftService.UpdateStatus(id, statusId);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("lockAircraft")]
+        public IActionResult LockAircraft(long id, bool isLock)
+        {
+            CurrentResponse response = _airCraftService.LockAircraft(id, isLock);
 
             return APIResponse(response);
         }

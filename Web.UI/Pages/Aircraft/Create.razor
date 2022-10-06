@@ -15,18 +15,18 @@
 
     <FormValidation>
 
-       <CustomValidationSummary> </CustomValidationSummary>
+        <CustomValidationSummary> </CustomValidationSummary>
 
     </FormValidation>
 
     <FormItems>
 
-        <TelerikTabStrip  @ref="@steps" Class="p-0 k-tabstrip-list">
+        <TelerikTabStrip @ref="@steps" Class="p-0 k-tabstrip-list">
             <TabStripTab Class="tabUI">
 
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
-                      
+
                         <span>1. Basic Details</span>
                     </div>
                 </HeaderTemplate>
@@ -59,6 +59,20 @@
                                     <TelerikValidationMessage For="@(() => aircraftData.TailNo)"></TelerikValidationMessage>
                                 </div>
 
+                                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+                                {
+                                    <div class="col-6">
+                                        <label>Owner</label>
+                                        <TelerikComboBox Id="ownerId" Data="@aircraftData.OwnersList" TextField="Name"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Owner" ValueField="Id"
+                                                     @bind-Value="@aircraftData.OwnerId">
+                                        </TelerikComboBox>
+
+                                        <TelerikValidationMessage For="@(() => aircraftData.OwnerId)"></TelerikValidationMessage>
+
+                                    </div>
+                                }
 
                                 <div class="col-6">
                                     <label>Year</label>
@@ -160,7 +174,7 @@
                                     <label for="@nameof(aircraftData.TrackOilandFuel)">Track oil and Fuel</label>
                                 </div>
                                 <div class="col-3">
-                                        <TelerikSwitch Class="float-right" Id="@nameof(aircraftData.TrackOilandFuel)" @bind-Value="@aircraftData.TrackOilandFuel"></TelerikSwitch>
+                                    <TelerikSwitch Class="float-right" Id="@nameof(aircraftData.TrackOilandFuel)" @bind-Value="@aircraftData.TrackOilandFuel"></TelerikSwitch>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +184,7 @@
                                     <label for="@nameof(aircraftData.IsIdentifyMeterMismatch)">Is identity mismatch</label>
                                 </div>
                                 <div class="col-3">
-                                        <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsIdentifyMeterMismatch"></TelerikSwitch>
+                                    <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsIdentifyMeterMismatch"></TelerikSwitch>
                                 </div>
                             </div>
                         </div>
@@ -182,7 +196,7 @@
                                         <label for="@nameof(aircraftData.IsEngineshavePropellers)">Engines have Propellers</label>
                                     </div>
                                     <div class="col-3">
-                                            <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEngineshavePropellers"></TelerikSwitch>
+                                        <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEngineshavePropellers"></TelerikSwitch>
                                     </div>
                                 </div>
                             </div>
@@ -196,7 +210,7 @@
                                         <label for="@nameof(aircraftData.IsEnginesareTurbines)">Engines are Turbines</label>
                                     </div>
                                     <div class="col-3">
-                                            <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEnginesareTurbines"></TelerikSwitch>
+                                        <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsEnginesareTurbines"></TelerikSwitch>
                                     </div>
                                 </div>
                             </div>
@@ -249,6 +263,20 @@
                                              Value="aircraftData.NoofPropellers"
                                              Placeholder="Select Propellers" ValueField="Id">
                                 </TelerikComboBox>
+                            </div>
+                        }
+
+                        @if (isAllowToLock)
+                        {
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <label for="@nameof(aircraftData.IsEnginesareTurbines)">Is Locked For Update Details</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <TelerikSwitch Class="float-right" @bind-Value="@aircraftData.IsLock"></TelerikSwitch>
+                                    </div>
+                                </div>
                             </div>
                         }
                     </div>

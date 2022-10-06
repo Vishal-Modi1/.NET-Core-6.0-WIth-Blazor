@@ -7,6 +7,7 @@ using Web.UI.Data.AircraftMake;
 using Web.UI.Utilities;
 using Telerik.Blazor.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using DataModels.Constants;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -25,16 +26,30 @@ namespace Web.UI.Pages.Aircraft
 
         bool isAircraftImageChanged, isDisplayMakePopup, isDisplayModelPopup;
         byte[] aircraftImageBytes;
-
+        public bool isAllowToLock;
         protected override Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            
+            isAircraftImageChanged = false;
+            aircraftData.IsEquipmentTimesListChanged = false;
+
+            SetDropdownValues();
+
+            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+            bool isOwner = userId == aircraftData.OwnerId;
+
+            isAllowToLock = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || aircraftData.Id == 0;
+
+            OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
+            return base.OnInitializedAsync();
+        }
+
+        private void SetDropdownValues()
+        {
             YearDropDown = new List<DropDownValues>();
             NoofEnginesDropDown = new List<DropDownValues>();
             NoofPropellersDropDown = new List<DropDownValues>();
-
-            isAircraftImageChanged = false;
-            aircraftData.IsEquipmentTimesListChanged = false;
 
             for (int year = 1; year <= 5; year++)
             {
@@ -56,11 +71,6 @@ namespace Web.UI.Pages.Aircraft
                 aircraftData.NoofEngines = 1;
             }
 
-            //aircraftData.TrackOilandFuel = true;
-            //aircraftData.IsEnginesareTurbines = true;
-            //aircraftData.IsEngineshavePropellers = true;
-            //aircraftData.IsIdentifyMeterMismatch = true;
-
             if (aircraftData.AircraftMakeList.Where(p => p.Id == int.MaxValue).Count() == 0)
             {
                 aircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
@@ -71,9 +81,6 @@ namespace Web.UI.Pages.Aircraft
             {
                 aircraftData.AircraftStatusId = 1;
             }
-
-            OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
-            return base.OnInitializedAsync();
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)

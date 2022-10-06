@@ -16,10 +16,12 @@ namespace DataModels.Entities
         public Nullable<int> FlightSimulatorClassId { get; set; }
         public int NoofEngines { get; set; }
         public int? NoofPropellers { get; set; }
+        public bool IsLockedForUpdate { get; set; }
         public bool IsEngineshavePropellers { get; set; }
         public bool IsEnginesareTurbines { get; set; }
         public bool TrackOilandFuel { get; set; }
         public bool IsIdentifyMeterMismatch { get; set; }
         public Nullable<int> CompanyId { get; set; }
+        public long OwnerId { get; set; }
     }
 }

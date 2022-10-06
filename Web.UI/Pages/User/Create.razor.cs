@@ -61,6 +61,8 @@ namespace Web.UI.Pages.User
             {
                 userData.IsSendEmailInvite = userData.IsSendTextMessage = true;
             }
+
+            userData.ExistingCompanyId = userData.CompanyId;
         }
 
         public async Task Submit()
@@ -69,6 +71,11 @@ namespace Web.UI.Pages.User
 
             CurrentResponse response;
             bool isEmailExist = false;
+
+            if (userData.UserPreferences != null)
+            {
+                userData.UserPreferences.Clear();
+            }
 
             if (userData.Id == 0)
             {
@@ -129,7 +136,6 @@ namespace Web.UI.Pages.User
             {
                 CloseDialog(true);
             }
-            
         }
 
         private bool ManageIsEmailExistResponse(CurrentResponse response)

@@ -17,5 +17,6 @@ namespace Service.Interface
         CurrentResponse GetFiltersValue(int companyId);
         CurrentResponse ListAircraftDropdownValues(int companyId);
         CurrentResponse UpdateStatus(long id, byte statusId);
+        CurrentResponse LockAircraft(long id, bool isLock);
     }
 }

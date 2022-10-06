@@ -193,13 +193,14 @@ namespace Service
                 User user = ToDataObject(userVM);
                 user = _userRepository.Edit(user);
 
-                var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && userVM.CompanyId == p.CompanyId); 
+                var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && userVM.ExistingCompanyId == p.CompanyId); 
 
                 if(userCompanyDetails != null)
                 {
                     userCompanyDetails.UpdatedBy = userVM.UpdatedBy;
                     userCompanyDetails.CompanyId = userVM.CompanyId;
                     userCompanyDetails.RoleId = userVM.RoleId;
+                    userCompanyDetails.ExistingCompanyId = userVM.ExistingCompanyId;
 
                     _userVSCompanyRepository.Edit(userCompanyDetails);
                 }

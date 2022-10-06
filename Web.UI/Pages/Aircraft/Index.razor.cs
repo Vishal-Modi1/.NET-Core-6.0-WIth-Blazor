@@ -1,4 +1,5 @@
-﻿using DataModels.Enums;
+﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Aircraft;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
@@ -23,9 +24,10 @@ namespace Web.UI.Pages.Aircraft
         AircraftFilterVM aircraftFilterVM;
         List<AircraftDataVM> airCraftsVM;
         AircraftVM aircraftData;
+        long userId;
 
         string moduleName = "Aircraft";
-        bool isDisplayGridView = true;
+        public bool isDisplayGridView = true, isAllowEdit;
         int companyId; int listViewPageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
 
         protected override async Task OnInitializedAsync()
@@ -44,6 +46,8 @@ namespace Web.UI.Pages.Aircraft
             }
 
             SetSelectedMenuItem(moduleName);
+
+            userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
 
             aircraftFilterVM = new AircraftFilterVM();
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);

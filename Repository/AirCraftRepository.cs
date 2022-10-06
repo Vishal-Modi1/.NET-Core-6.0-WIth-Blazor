@@ -64,6 +64,8 @@ namespace Repository
                     existingAirCraft.IsEnginesareTurbines = airCraft.IsEnginesareTurbines;
                     existingAirCraft.TrackOilandFuel = airCraft.TrackOilandFuel;
                     existingAirCraft.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
+                    existingAirCraft.OwnerId = airCraft.OwnerId;
+                    existingAirCraft.IsLockedForUpdate = airCraft.IsLockedForUpdate;
 
                     existingAirCraft.UpdatedBy = airCraft.UpdatedBy;
                     existingAirCraft.UpdatedOn = airCraft.UpdatedOn;
@@ -172,6 +174,24 @@ namespace Repository
                 if (existingAirCraft != null)
                 {
                     existingAirCraft.AircraftStatusId = statusId;
+                    _myContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool UpdateIsLockedForUpdate(long id, bool isLock)
+        {
+            using (_myContext = new MyContext())
+            {
+                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+
+                if (existingAirCraft != null)
+                {
+                    existingAirCraft.IsLockedForUpdate = isLock;
                     _myContext.SaveChanges();
 
                     return true;

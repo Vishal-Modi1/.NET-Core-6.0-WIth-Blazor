@@ -31,5 +31,7 @@ namespace Repository.Interface
         List<DropDownLargeValues> ListDropDownValues(int companyId);
 
         bool UpdateStatus(long id, byte statusId);
+
+        bool UpdateIsLockedForUpdate(long id, bool isLock);
     }
 }

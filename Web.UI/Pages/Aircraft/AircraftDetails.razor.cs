@@ -25,7 +25,7 @@ namespace Web.UI.Pages.Aircraft
 
         public bool isDataLoaded = false, isBusy = false, isUpdateButtonBusy = false, isDisplayLoader;
         string moduleName = "Aircraft";
-        public bool isAllowToEdit;
+        public bool isAllowToEdit, isUnLocked;
         DataModels.Enums.UserRole userRole;
         string modelWidth = "600px";
 
@@ -76,14 +76,18 @@ namespace Web.UI.Pages.Aircraft
                 long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
                 bool isCreator = userId == aircraftData.CreatedBy;
 
-                if (globalMembers.IsAdmin ||  globalMembers.IsSuperAdmin || isCreator)
+                bool isOwner = userId == aircraftData.OwnerId;
+
+                if (globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isCreator)
                 {
                     isAllowToEdit = true;
                 }
 
+                isUnLocked = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || !aircraftData.IsLock;
+
                 SetCompanyName();
 
-                 ChangeLoaderVisibilityAction(false);
+                ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
         }

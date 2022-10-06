@@ -23,12 +23,13 @@ namespace Service
         private readonly ICompanyRepository _companyRepository;
         private readonly IAircraftStatusRepository _aircraftStatusRepository;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
+        private readonly IUserRepository _userRepository;
 
         public AircraftService(IAircraftRepository aircraftRepository, IAircraftCategoryRepository aircraftCategoryRepository,
                                IAircraftClassRepository aircraftClassRepository, IAircraftMakeRepository aircraftMakeRepository,
                                IAircraftModelRepository aircraftModelRepository, IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
                                ICompanyRepository companyRepository, IAircraftStatusRepository aircraftStatusRepository,
-                               IAircraftEquipementTimeService aircraftEquipementTimeService)
+                               IAircraftEquipementTimeService aircraftEquipementTimeService, IUserRepository userRepository)
         {
             _aircraftRepository = aircraftRepository;
             _aircraftCategoryRepository = aircraftCategoryRepository;
@@ -39,6 +40,7 @@ namespace Service
             _companyRepository = companyRepository;
             _aircraftStatusRepository = aircraftStatusRepository;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
+            _userRepository = userRepository;
         }
 
         public CurrentResponse Create(AircraftVM airCraftVM)
@@ -173,6 +175,7 @@ namespace Service
                 aircraftVM.AircraftModelList = _aircraftModelRepository.ListDropDownValues();
                 aircraftVM.FlightSimulatorClassList = _aircraftRepository.ListFlightSimulatorClassDropDownValues();
                 aircraftVM.AircraftStatusList = _aircraftStatusRepository.ListDropDownValues();
+                aircraftVM.OwnersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
 
                 var data  = _aircraftEquipmentTimeRepository.FindListByCondition(p => p.AircraftId == id && p.IsDeleted == false);
                 aircraftVM.AircraftEquipmentTimesList = _aircraftEquipementTimeService.ToCreateBusinessObjectList(data);
@@ -216,100 +219,7 @@ namespace Service
             }
         }
 
-        private AircraftVM ToBusinessObject(Aircraft airCraft)
-        {
-            AircraftVM airCraftVM = new AircraftVM();
-
-            airCraftVM.Id = airCraft.Id;
-            airCraftVM.TailNo = airCraft.TailNo;
-            airCraftVM.ImageName = airCraft.ImageName;
-            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
-
-            airCraftVM.Year = airCraft.Year;
-            airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;
-            airCraftVM.AircraftModelId = airCraft.AircraftModelId;
-            airCraftVM.AircraftCategoryId = airCraft.AircraftCategoryId;
-            airCraftVM.AircraftClassId = airCraft.AircraftClassId;
-            airCraftVM.FlightSimulatorClassId = airCraft.FlightSimulatorClassId;
-            airCraftVM.NoofEngines = airCraft.NoofEngines;
-            airCraftVM.NoofPropellers = airCraft.NoofPropellers;
-            airCraftVM.IsEngineshavePropellers = airCraft.IsEngineshavePropellers;
-            airCraftVM.IsEnginesareTurbines = airCraft.IsEnginesareTurbines;
-            airCraftVM.TrackOilandFuel = airCraft.TrackOilandFuel;
-            airCraftVM.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
-            airCraftVM.CompanyId = airCraft.CompanyId;
-            airCraftVM.AircraftStatusId = airCraft.AircraftStatusId;
-
-            airCraftVM.IsActive = airCraft.IsActive;
-            airCraftVM.IsDeleted = airCraft.IsDeleted;
-            airCraftVM.CreatedBy = airCraft.CreatedBy;
-            airCraftVM.UpdatedBy = airCraft.UpdatedBy;
-            airCraftVM.DeletedBy = airCraft.DeletedBy;
-            airCraftVM.CreatedOn = airCraft.CreatedOn;
-            airCraftVM.UpdatedOn = airCraft.UpdatedOn;
-            airCraftVM.DeletedOn = airCraft.DeletedOn;
-
-            return airCraftVM;
-        }
-
-        public List<AircraftVM> ToBusinessObjectList(List<Aircraft> aircraftList)
-        {
-            List<AircraftVM> airCraftVMList = new List<AircraftVM>();
-
-            foreach (Aircraft aircraft in aircraftList)
-            {
-                AircraftVM airCraftVM = ToBusinessObject(aircraft);
-
-                airCraftVMList.Add(airCraftVM);
-            }
-
-            return airCraftVMList;
-        }
-
-        public Aircraft ToDataObject(AircraftVM airCraftVM)
-        {
-            Aircraft airCraft = new Aircraft();
-
-            airCraft.Id = airCraftVM.Id;
-            airCraft.TailNo = airCraftVM.TailNo;
-
-            airCraft.Year = airCraftVM.Year;
-            airCraft.AircraftMakeId = airCraftVM.AircraftMakeId;
-            airCraft.AircraftModelId = airCraftVM.AircraftModelId;
-            airCraft.AircraftCategoryId = airCraftVM.AircraftCategoryId;
-            airCraft.AircraftClassId = airCraftVM.AircraftClassId == 0 ? null : airCraftVM.AircraftClassId;
-            airCraft.FlightSimulatorClassId = airCraftVM.FlightSimulatorClassId == 0 ? null : airCraftVM.FlightSimulatorClassId;
-            airCraft.NoofEngines = airCraftVM.NoofEngines;
-            airCraft.NoofPropellers = airCraftVM.NoofPropellers;
-            airCraft.IsEngineshavePropellers = airCraftVM.IsEngineshavePropellers;
-            airCraft.IsEnginesareTurbines = airCraftVM.IsEnginesareTurbines;
-            airCraft.TrackOilandFuel = airCraftVM.TrackOilandFuel;
-            airCraft.IsIdentifyMeterMismatch = airCraftVM.IsIdentifyMeterMismatch;
-            airCraft.IsActive = true;
-            airCraft.CompanyId = airCraftVM.CompanyId;
-            airCraft.AircraftStatusId = airCraftVM.AircraftStatusId;
-
-            if (airCraftVM.AircraftStatusId == 0)
-            {
-                airCraft.AircraftStatusId = (int)AircraftStatuses.ReadyForFlight;
-            }
-
-            airCraft.CreatedBy = airCraftVM.CreatedBy;
-            airCraft.UpdatedBy = airCraftVM.UpdatedBy;
-
-            if (airCraftVM.Id == 0)
-            {
-                airCraft.CreatedOn = DateTime.UtcNow;
-            }
-            else
-            {
-                airCraft.UpdatedOn = DateTime.UtcNow;
-            }
-
-            return airCraft;
-        }
-
-        public CurrentResponse GetFiltersValue(int companyId)
+       public CurrentResponse GetFiltersValue(int companyId)
         {
             try
             {
@@ -425,5 +335,131 @@ namespace Service
                 return _currentResponse;
             }
         }
+
+        public CurrentResponse LockAircraft(long id, bool isLock)
+        {
+            try
+            {
+                bool isLockedForUpdate = _aircraftRepository.UpdateIsLockedForUpdate(id, isLock);
+
+                if (isLockedForUpdate)
+                {
+                    CreateResponse(isLockedForUpdate, HttpStatusCode.OK, "Aircraft has been locked.");
+                }
+                else
+                {
+                    CreateResponse(isLockedForUpdate, HttpStatusCode.OK, "Aircraft has been unlocked");
+                }
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+
+        private AircraftVM ToBusinessObject(Aircraft airCraft)
+        {
+            AircraftVM airCraftVM = new AircraftVM();
+
+            airCraftVM.Id = airCraft.Id;
+            airCraftVM.TailNo = airCraft.TailNo;
+            airCraftVM.ImageName = airCraft.ImageName;
+            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
+
+            airCraftVM.Year = airCraft.Year;
+            airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;
+            airCraftVM.AircraftModelId = airCraft.AircraftModelId;
+            airCraftVM.AircraftCategoryId = airCraft.AircraftCategoryId;
+            airCraftVM.AircraftClassId = airCraft.AircraftClassId;
+            airCraftVM.FlightSimulatorClassId = airCraft.FlightSimulatorClassId;
+            airCraftVM.NoofEngines = airCraft.NoofEngines;
+            airCraftVM.NoofPropellers = airCraft.NoofPropellers;
+            airCraftVM.IsEngineshavePropellers = airCraft.IsEngineshavePropellers;
+            airCraftVM.IsEnginesareTurbines = airCraft.IsEnginesareTurbines;
+            airCraftVM.TrackOilandFuel = airCraft.TrackOilandFuel;
+            airCraftVM.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
+            airCraftVM.CompanyId = airCraft.CompanyId;
+            airCraftVM.AircraftStatusId = airCraft.AircraftStatusId;
+            airCraftVM.OwnerId = airCraft.OwnerId;
+            airCraftVM.IsLock = airCraft.IsLockedForUpdate;
+
+            airCraftVM.IsActive = airCraft.IsActive;
+            airCraftVM.IsDeleted = airCraft.IsDeleted;
+            airCraftVM.CreatedBy = airCraft.CreatedBy;
+            airCraftVM.UpdatedBy = airCraft.UpdatedBy;
+            airCraftVM.DeletedBy = airCraft.DeletedBy;
+            airCraftVM.CreatedOn = airCraft.CreatedOn;
+            airCraftVM.UpdatedOn = airCraft.UpdatedOn;
+            airCraftVM.DeletedOn = airCraft.DeletedOn;
+
+            return airCraftVM;
+        }
+
+        public List<AircraftVM> ToBusinessObjectList(List<Aircraft> aircraftList)
+        {
+            List<AircraftVM> airCraftVMList = new List<AircraftVM>();
+
+            foreach (Aircraft aircraft in aircraftList)
+            {
+                AircraftVM airCraftVM = ToBusinessObject(aircraft);
+
+                airCraftVMList.Add(airCraftVM);
+            }
+
+            return airCraftVMList;
+        }
+
+        public Aircraft ToDataObject(AircraftVM airCraftVM)
+        {
+            Aircraft airCraft = new Aircraft();
+
+            airCraft.Id = airCraftVM.Id;
+            airCraft.TailNo = airCraftVM.TailNo;
+
+            airCraft.Year = airCraftVM.Year;
+            airCraft.AircraftMakeId = airCraftVM.AircraftMakeId;
+            airCraft.AircraftModelId = airCraftVM.AircraftModelId;
+            airCraft.AircraftCategoryId = airCraftVM.AircraftCategoryId;
+            airCraft.AircraftClassId = airCraftVM.AircraftClassId == 0 ? null : airCraftVM.AircraftClassId;
+            airCraft.FlightSimulatorClassId = airCraftVM.FlightSimulatorClassId == 0 ? null : airCraftVM.FlightSimulatorClassId;
+            airCraft.NoofEngines = airCraftVM.NoofEngines;
+            airCraft.NoofPropellers = airCraftVM.NoofPropellers;
+            airCraft.IsEngineshavePropellers = airCraftVM.IsEngineshavePropellers;
+            airCraft.IsEnginesareTurbines = airCraftVM.IsEnginesareTurbines;
+            airCraft.TrackOilandFuel = airCraftVM.TrackOilandFuel;
+            airCraft.IsIdentifyMeterMismatch = airCraftVM.IsIdentifyMeterMismatch;
+            airCraft.IsActive = true;
+            airCraft.CompanyId = airCraftVM.CompanyId;
+            airCraft.AircraftStatusId = airCraftVM.AircraftStatusId;
+            airCraft.OwnerId = airCraftVM.OwnerId;
+            airCraft.IsLockedForUpdate = airCraftVM.IsLock;
+
+            if (airCraftVM.AircraftStatusId == 0)
+            {
+                airCraft.AircraftStatusId = (int)AircraftStatuses.ReadyForFlight;
+            }
+
+            airCraft.CreatedBy = airCraftVM.CreatedBy;
+            airCraft.UpdatedBy = airCraftVM.UpdatedBy;
+
+            if (airCraftVM.Id == 0)
+            {
+                airCraft.CreatedOn = DateTime.UtcNow;
+            }
+            else
+            {
+                airCraft.UpdatedOn = DateTime.UtcNow;
+            }
+
+            return airCraft;
+        }
+
+
     }
 }
