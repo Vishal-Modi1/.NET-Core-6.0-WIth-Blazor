@@ -69,10 +69,8 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<InstructorTypeVM> list;
-
-                string sql = $"EXEC dbo.GetInstructorTypeList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
+                string sql = $"EXEC dbo.GetInstructorTypeList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 list = _myContext.InstructorType.FromSqlRaw<InstructorTypeVM>(sql).ToList();
 

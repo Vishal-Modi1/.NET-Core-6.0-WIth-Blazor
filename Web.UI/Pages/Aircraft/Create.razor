@@ -37,12 +37,14 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label>Company</label>
-                                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                                    @if (globalMembers.IsSuperAdmin)
                                     {
                                         <TelerikComboBox Id="companyId" Data="@aircraftData.Companies" TextField="Name"
                                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                                      Placeholder="Select Company" ValueField="Id"
-                                                     @bind-Value="@aircraftData.CompanyId">
+                                                     Value="@(aircraftData.CompanyId)"
+                                                     ValueChanged="@((int? value) => OnCompanyValueChange(value) )"
+                                                     ValueExpression="@(() => aircraftData.CompanyId)">
                                         </TelerikComboBox>
 
                                         <TelerikValidationMessage For="@(() => aircraftData.CompanyId)"></TelerikValidationMessage>
@@ -59,7 +61,7 @@
                                     <TelerikValidationMessage For="@(() => aircraftData.TailNo)"></TelerikValidationMessage>
                                 </div>
 
-                                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+                                @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
                                 {
                                     <div class="col-6">
                                         <label>Owner</label>
@@ -82,6 +84,7 @@
                                                      @bind-Value="@aircraftData.Year">
                                     </TelerikComboBox>
                                 </div>
+
                                 <div class="col-6">
                                     <label>Make</label>
                                     <TelerikComboBox Id="makeId" Data="@aircraftData.AircraftMakeList" TextField="Name"

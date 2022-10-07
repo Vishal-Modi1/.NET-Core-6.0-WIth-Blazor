@@ -42,7 +42,24 @@ namespace Web.UI.Pages.Aircraft
             isAllowToLock = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || aircraftData.Id == 0;
 
             OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
+            OnCompanyValueChange(aircraftData.CompanyId);
+
             return base.OnInitializedAsync();
+        }
+
+        private async Task OnCompanyValueChange(int? value)
+        {
+            if (value != null)
+            {
+                ChangeLoaderVisibilityAction(true);
+
+                aircraftData.CompanyId = value;
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                aircraftData.OwnersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, aircraftData.CompanyId.Value);
+
+                ChangeLoaderVisibilityAction(false);
+                base.StateHasChanged();
+            }
         }
 
         private void SetDropdownValues()

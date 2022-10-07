@@ -104,9 +104,9 @@ namespace Repository
 
         public List<UserDataVM> List(UserDatatableParams datatableParams)
         {
-            int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
             List<UserDataVM> list;
-            string sql = $"EXEC dbo.GetUsersList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+
+            string sql = $"EXEC dbo.GetUsersList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                 $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{datatableParams.RoleId}";
 
             list = _myContext.UserSearchList.FromSqlRaw<UserDataVM>(sql).ToList();

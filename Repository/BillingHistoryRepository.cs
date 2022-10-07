@@ -16,10 +16,9 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<BillingHistoryDataVM> list;
 
-                string sql = $"EXEC dbo.GetBillingHistoryList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                string sql = $"EXEC dbo.GetBillingHistoryList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 if(datatableParams.CompanyId != 0)

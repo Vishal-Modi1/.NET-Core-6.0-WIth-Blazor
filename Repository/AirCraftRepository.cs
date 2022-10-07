@@ -89,9 +89,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
-
-                string sql = $"EXEC dbo.GetAircraftsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{(datatableParams.IsActive == true ? 1 : 0)}";
+                string sql = $"EXEC dbo.GetAircraftsList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{(datatableParams.IsActive == true ? 1 : 0)}";
                 List<AircraftDataVM> airCraftList = _myContext.AircraftDataVMs.FromSqlRaw<AircraftDataVM>(sql).ToList();
 
                 return airCraftList;
