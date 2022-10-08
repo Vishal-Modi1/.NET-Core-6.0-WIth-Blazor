@@ -139,7 +139,11 @@
             width: 22%;
         }
     }
-
+     @@media (min-width:1380px) { /* hi-res laptops and desktops */
+        .listview-item {
+            width: 12%;
+        }
+    }
     .buttonViews {
         border: none;
         background-color: none;
@@ -177,11 +181,11 @@
         <hr class="mt-2 my-1" />
     </div>
 
-    <div class="row my-2">
+    <div class="row my-0">
 
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
-            <div class="col-md-4">
+            <div class="col-md-4 my-auto  py-0">
                 <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
                              ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -189,20 +193,17 @@
                 </TelerikComboBox>
             </div>
         }
-        <div class="col-md-4">
+        <div class="col-md-4 my-auto  py-0">
             <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
         </div>
 
-        <div class="col-md-4 px-2" style="text-align:right">
-      
-            <button @onclick="@(e => ChangeView(true))" class="buttonViews">
-
-                <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView ?  "white" : "black")" SecondaryColor="@(isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
-            </button>
-
-            <button @onclick="@(e => ChangeView(false))" class="buttonViews">
-                <CustomIcons IconName="gridview" PrimaryColor="@(!isDisplayGridView ?  "white" : "black")" SecondaryColor="@(!isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
-            </button>
+        <div class="col-md-4 my-auto py-0" style="text-align:right">
+            <span @onclick="@(e => ChangeView(false))" class="buttonViews cursor-pointer">
+                <CustomIcons IconName="listview" PrimaryColor="@(!isDisplayGridView ?  "white" : "black")" SecondaryColor="@(!isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
+            </span>
+            <span @onclick="@(e => ChangeView(true))" class="buttonViews cursor-pointer">
+                <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ?  "white" : "black")" SecondaryColor="@(isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
+            </span>
         </div>
 
     </div>
