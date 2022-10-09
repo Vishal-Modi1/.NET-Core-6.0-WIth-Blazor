@@ -154,7 +154,7 @@ namespace FSMAPI.Controllers
 
             if (isFileUploaded)
             {
-                response = _airCraftService.UpdateImageName(Convert.ToInt32(form["AircraftId"]), fileName);
+                response = _airCraftService.UpdateImageName(Convert.ToInt64(form["AircraftId"]), fileName);
             }
 
             return APIResponse(response);

@@ -14,7 +14,6 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<ReservationDataVM> list;
                 string startDate = "", endDate = "";
                 string reservationType = "";
@@ -34,7 +33,7 @@ namespace Repository
                     endDate = datatableParams.EndDate.Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
 
-                string sql = $"EXEC dbo.GetReservationsList '{ datatableParams.SearchText }', { pageNo }, " +
+                string sql = $"EXEC dbo.GetReservationsList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
                     $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}," +
                     $"{datatableParams.AircraftId.GetValueOrDefault()},'{reservationType}'";

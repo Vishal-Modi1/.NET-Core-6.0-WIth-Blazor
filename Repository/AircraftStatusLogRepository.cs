@@ -51,11 +51,11 @@ namespace Repository
 
         public List<AircraftStatusLogDataVM> List(AircraftStatusLogDatatableParams datatableParams)
         {
-            //int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
+
             //List<AircraftStatusLogDataVM> list;
 
             //string sql = $"EXEC dbo.GetAircraftStatusLogsList '{ datatableParams.SearchText }'" +
-            //    $", { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}'" +
+            //    $", { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}'" +
             //    $",'{datatableParams.OrderType}', {datatableParams.AircraftId}";
 
             //list = _myContext.AircraftStatusLogsDataVM.FromSqlRaw<AircraftStatusLogDataVM>(sql).ToList();

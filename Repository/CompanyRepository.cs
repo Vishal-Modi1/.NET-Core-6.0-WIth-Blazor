@@ -121,7 +121,6 @@ namespace Repository
 
         public List<CompanyVM> List(DatatableParams datatableParams)
         {
-            //int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
             List<CompanyVM> list;
 
             string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
