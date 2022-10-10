@@ -144,17 +144,7 @@
             width: 12%;
         }
     }
-    .buttonViews {
-        border: none;
-        background-color: none;
-        height: 10px;
-        width: 50px;
-        background: transparent;
-    }
-
-        .buttonViews:focus {
-            background: transparent;
-        }
+    
 </style>
 
 <PageTitle>Aircraft | Fly Manager </PageTitle>
@@ -198,10 +188,10 @@
         </div>
 
         <div class="col-md-4 my-auto py-0" style="text-align:right">
-            <span @onclick="@(e => ChangeView(false))" class="buttonViews cursor-pointer">
+            <span @onclick="@(e => ChangeView(false))" class="cursor-pointer">
                 <CustomIcons IconName="listview" PrimaryColor="@(!isDisplayGridView ?  "white" : "black")" SecondaryColor="@(!isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
             </span>
-            <span @onclick="@(e => ChangeView(true))" class="buttonViews cursor-pointer">
+            <span @onclick="@(e => ChangeView(true))" class="cursor-pointer">
                 <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ?  "white" : "black")" SecondaryColor="@(isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
             </span>
         </div>
@@ -244,7 +234,7 @@
                         <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
                         <div class='status-circle' style="background-color:@context.Indicator"> </div>
                         <div class="k-card-body d-flex justify-content-center">
-                            <h4 class="k-card-title">@context.TailNo</h4>
+                            <h4 class="k-card-title" style="font-weight:normal">@context.TailNo</h4>
                             <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
                         </div>
                     </div>
