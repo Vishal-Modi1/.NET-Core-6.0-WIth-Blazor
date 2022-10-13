@@ -33,10 +33,15 @@
         }
     </span>
     <span class="d-flex align-items-center justify-content-center">
+        <style>
+            .max-width-prof-dropdown{
+                width:180px!important;
+            }
+        </style>
         <Web.UI.Shared.Components.BSDropdownButton BSDropdownItemList="@BSDropdownItemList"
                                                    userName="@(navigationHeaderModel.User.FirstName)"
                                                    userProfileImage="@navigationHeaderModel.User.ImageName"
-                                                   styleClass="header-profile-dropdown mx-2 d-flex justify-content-start">
+                                                   styleClass="header-profile-dropdown mx-2 d-flex justify-content-start max-width-prof-dropdown">
         </Web.UI.Shared.Components.BSDropdownButton>
     </span>
 

@@ -281,11 +281,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-button.drawer-hamburger {
-    background: transparent;
+    background: transparent !important;
     color: $BG-MENU-ITEM-TEXT-COLOR !important;
     border: 0;
     box-shadow: none;
-    padding: 34px;
+    padding: 0 34px 0 34px;
 }
 
 .telerik-blazor {

@@ -106,42 +106,42 @@
 
     @@media (min-width:320px) { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
         .listview-item {
-            width: 100%;
+            width: 195px;
         }
     }
 
     @@media (min-width:480px) { /* smartphones, Android phones, landscape iPhone */
         .listview-item {
-            width: 100%;
+            width: 195px;
         }
     }
 
     @@media (min-width:600px) { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
         .listview-item {
-            width: 40%;
+            width: 195px;
         }
     }
 
     @@media (min-width:801px) { /* tablet, landscape iPad, lo-res laptops ands desktops */
         .listview-item {
-            width: 22%;
+            width: 195px;
         }
     }
 
     @@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
         .listview-item {
-            width: 22%;
+            width: 195px;
         }
     }
 
     @@media (min-width:1281px) { /* hi-res laptops and desktops */
         .listview-item {
-            width: 22%;
+            width: 195px;
         }
     }
      @@media (min-width:1380px) { /* hi-res laptops and desktops */
         .listview-item {
-            width: 12%;
+            width: 195px;
         }
     }
     
@@ -187,18 +187,18 @@
             <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
         </div>
 
-        <div class="col-md-4 my-auto py-0" style="text-align:right">
+        <div class="col-md-4 my-auto py-0 px-3" style="text-align:right">
             <span @onclick="@(e => ChangeView(false))" class="cursor-pointer">
-                <CustomIcons IconName="listview" PrimaryColor="@(!isDisplayGridView ?  "white" : "black")" SecondaryColor="@(!isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
+                <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == false ?   "#0064D4": "#ededed"  )" SecondaryColor="@(isDisplayGridView == false ? "white" : "black")"></CustomIcons>
             </span>
             <span @onclick="@(e => ChangeView(true))" class="cursor-pointer">
-                <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ?  "white" : "black")" SecondaryColor="@(isDisplayGridView ?  "#0064D4" : "white")"></CustomIcons>
+                <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#0064D4" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
             </span>
         </div>
 
     </div>
 
-    <hr style="border:#EBECF3" />
+    <hr class="my-1" />
     @*  <div class="w-100" style="text-align:right">
 
         <TelerikButton OnClick="@(()=> ChangeView(true))" Class="buttonViews">
@@ -239,7 +239,6 @@
                         </div>
                     </div>
                 </div>
-
             </Template>
         </TelerikListView>
     }
