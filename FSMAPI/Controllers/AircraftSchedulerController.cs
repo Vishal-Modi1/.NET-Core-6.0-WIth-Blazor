@@ -1,9 +1,12 @@
-﻿using DataModels.Constants;
+﻿using Configuration;
+using DataModels.Constants;
 using DataModels.VM.Common;
+using DataModels.VM.ExternalAPI.Airport;
 using DataModels.VM.Scheduler;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Service.Interface;
 using System.Security.Claims;
 
@@ -16,16 +19,18 @@ namespace FSMAPI.Controllers
     {
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly IAircraftScheduleService _aircraftScheduleService;
+        private ExternalAPICaller _externalAPICaller { get; set; }
 
         public AircraftSchedulerController(IAircraftScheduleService aircraftScheduleService, IHttpContextAccessor httpContextAccessor)
         {
             _aircraftScheduleService = aircraftScheduleService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _externalAPICaller = new ExternalAPICaller();
         }
 
         [HttpGet]
         [Route("getDetails")]
-        public IActionResult GetDetails(long id)
+        public async Task<IActionResult> GetDetailsAsync(long id)
         {
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
@@ -37,6 +42,13 @@ namespace FSMAPI.Controllers
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _aircraftScheduleService.GetDetails(roleIdValue, companyIdValue, id, userIdValue);
+
+            if (response != null && response.Data != null)
+            {
+                var data = (SchedulerVM)response.Data;
+                await SetAirportValues(data);
+                response.Data = data;
+            }
 
             return APIResponse(response);
         }
@@ -133,5 +145,46 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        private async Task SetAirportValues(SchedulerVM schedulerVM)
+        {
+            if (schedulerVM == null || schedulerVM.DepartureAirportId == null || schedulerVM.ArrivalAirportId == null)
+            {
+                return;
+            }
+
+            // Departure Airport
+            string url = $"{ConfigurationSettings.Instance.AirportAPIURL}&id={schedulerVM.DepartureAirportId}";
+            HttpResponseMessage responseObject = await _externalAPICaller.Get(url);
+
+            if (!responseObject.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            string responseJson = await responseObject.Content.ReadAsStringAsync();
+            AirportViewModel airportViewModel = JsonConvert.DeserializeObject<AirportViewModel>(responseJson);
+
+            if (airportViewModel.Value.Count() > 0)
+            {
+                schedulerVM.DepartureAirport = airportViewModel.Value.FirstOrDefault().Name;
+            }
+
+            // Arrival Airport
+            url = $"{ConfigurationSettings.Instance.AirportAPIURL}&id={schedulerVM.ArrivalAirportId}";
+            responseObject = await _externalAPICaller.Get(url);
+
+            if (!responseObject.IsSuccessStatusCode)
+            {
+                return;
+            }
+
+            responseJson = await responseObject.Content.ReadAsStringAsync();
+            airportViewModel = JsonConvert.DeserializeObject<AirportViewModel>(responseJson);
+
+            if (airportViewModel.Value.Count() > 0)
+            {
+                schedulerVM.ArrivalAirport = airportViewModel.Value.FirstOrDefault().Name;
+            }
+        }
     }
 }

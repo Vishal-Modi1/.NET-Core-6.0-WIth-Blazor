@@ -21,7 +21,7 @@ namespace Web.UI.Pages.Scheduler
 
         SchedulerVM schedulerVM;
         List<SchedulerVM> dataSource;
-        public SchedulerView currentView { get; set; } = SchedulerView.Week;
+        public SchedulerView currentView { get; set; } = SchedulerView.Timeline;
         public List<string> resources = new List<string>() { "AircraftId" };
         List<ResourceData> aircraftsResourceList = new List<ResourceData>();
         string moduleName = "Scheduler";

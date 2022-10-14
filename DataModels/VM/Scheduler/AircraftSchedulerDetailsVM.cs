@@ -12,6 +12,8 @@ namespace DataModels.VM.Scheduler
 
         public DateTime? CheckInTime { get; set; }
 
+        public Guid AirportReferenceId { get; set; }
+
         public DateTime? CheckOutTime { get; set; }
 
         public long? CheckInBy { get; set; }

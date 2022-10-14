@@ -6,7 +6,8 @@
 @using DE = DataModels.Entities
 @using DataModels.Entities;
 @using DataModels.VM;
-@using Models.Shared
+@using Models.Shared;
+@using Newtonsoft.Json;
 
 <style>
     .hide {
@@ -19,7 +20,7 @@
     <TelerikForm Model="@schedulerVM" OnValidSubmit="@OnValidSubmit">
 
         <FormValidation>
-            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <CustomValidationSummary> </CustomValidationSummary>
         </FormValidation>
 
         <FormItems>
@@ -84,6 +85,56 @@
                             </TelerikDateTimePicker>
 
                             <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
+                        </div>
+
+                        <div class="col-6">
+                            <label>Departure Airport</label>
+
+                            <TelerikAutoComplete TItem="DropDownGuidValues"
+                                     ScrollMode="@DropDownScrollMode.Scrollable"
+                                     ItemHeight="30" ValueField="@(nameof(DropDownGuidValues.Name))"
+                                     PageSize="200" MinLength="5"
+                                     OnRead="@GetDepartureAirportsList"
+                                     Placeholder="Type 5 characters to load the airports"
+                                     @bind-Value="@schedulerVM.DepartureAirport"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains">
+                                <AutoCompleteSettings>
+                                    <AutoCompletePopupSettings Height="300px" />
+                                </AutoCompleteSettings>
+                            </TelerikAutoComplete>
+
+                            <TelerikValidationMessage For="@(() => schedulerVM.DepartureAirport)"></TelerikValidationMessage>
+                            @if (!string.IsNullOrWhiteSpace(schedulerVM.DepartureAirport))
+                            {
+                                <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenAirportDetailsPopup(schedulerVM.DepartureAirport))">
+                                    <FontLabel fontSize="12px">View details</FontLabel>
+                                </a>
+                            }
+
+                        </div>
+
+                        <div class="col-6">
+                            <label>Arrival Airport</label>
+
+                            <TelerikAutoComplete TItem="DropDownGuidValues" Data="@schedulerVM.ArrivalAirportsList"
+                                     ScrollMode="@DropDownScrollMode.Scrollable"
+                                     ItemHeight="30" ValueField="@(nameof(DropDownGuidValues.Name))"
+                                     PageSize="20" MinLength="5" Placeholder="Type 5 characters to load the airports"
+                                     OnRead="@GetArrivalAirportsList" @bind-Value="@schedulerVM.ArrivalAirport"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains">
+                                <AutoCompleteSettings>
+                                    <AutoCompletePopupSettings Height="300px" />
+                                </AutoCompleteSettings>
+                            </TelerikAutoComplete>
+
+                            @if (!string.IsNullOrWhiteSpace(schedulerVM.ArrivalAirport))
+                            {
+                                <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenAirportDetailsPopup(schedulerVM.ArrivalAirport))">
+                                    <FontLabel fontSize="12px">View details</FontLabel>
+                                </a>
+                            }
+
+                            <TelerikValidationMessage For="@(() => schedulerVM.ArrivalAirport)"></TelerikValidationMessage>
                         </div>
                         @if (uiOptions.IsDisplayAircraftDropDown)
                         {
@@ -215,10 +266,16 @@
                 <hr />
                 <div class="row bg-gray d-flex justify-content-end">
                     <div class="d-flex justify-content-end">
-                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1">
+
+                        <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info"
+                               Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
                             Continue
+                            <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                            </TelerikLoader>
                         </TelerikButton>
-                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline">
+
+                        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog()" Enabled="@(!isBusySubmitButton)"
+                               ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline">
                             Cancel
                         </TelerikButton>
                     </div>
@@ -298,7 +355,7 @@
 
                     </div>
                 </div>
-                <div class="row justify-content-between align-items-center m-0 custom-border-y  my-1">
+                <div class="row justify-content-between align-items-center m-0 custom-border-y my-1">
                     <div class="col-4 d-flex flex-column">
                         <div class="d-flex justify-content-center">
                             @if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
@@ -311,7 +368,11 @@
                             }
                         </div>
                         <div class="d-flex justify-content-center">
-                            <FontLabel>Dummy International Airport</FontLabel>
+
+                            <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenAirportDetailsPopup(schedulerVM.DepartureAirport))">
+                                <FontLabel fontSize="12px">@schedulerVM.DepartureAirport</FontLabel>
+                            </a>
+
                         </div>
                     </div>
                     <div class="col-4 d-flex flex-column">
@@ -347,15 +408,19 @@
                         <div class="d-flex justify-content-center">
                             @if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
                             {
-                                <FontLabel fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                <FontLabel fontSize="12px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airport</FontLabel>
+
                             }
                             else
                             {
-                                <FontLabel fontSize="12px" fontColor="#00AFA5" Class="font-weight-bold">Arrival Airpot</FontLabel>
+                                <FontLabel fontColor="#00AFA5" Class="font-weight-bold">Arrival Airport</FontLabel>
                             }
                         </div>
                         <div class="d-flex justify-content-center">
-                            <FontLabel>Dummy International Airport</FontLabel>
+
+                            <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenAirportDetailsPopup(schedulerVM.ArrivalAirport))">
+                                <FontLabel fontSize="12px">@schedulerVM.ArrivalAirport</FontLabel>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -588,7 +653,6 @@
     @if (schedulerVM.AircraftSchedulerDetailsVM != null
 && (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) || !string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName)))
     {
-
         <div class="row justify-content-between align-items-center m-0 custom-border-y my-2 mt-0">
             <div class="col-3 d-flex flex-column">
                 @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
@@ -849,8 +913,23 @@ else
                         </div>
                     </div>
                 }
-            </Body>
+                else if (operationType == OperationType.DocumentViewer)
+                {
+                    <div>
+                        <pre>@jsonData</pre>
+                        <div class="row d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-between">
 
+                                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseChildDialog()"
+                                   ThemeColor="secondary" FillMode="Outline" Class="mr-1 btn k-btn-secondary flex-fill mx-1">
+                                    Cancel
+                                </TelerikButton>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </Body>
         </CustomPopupComponent>
     }
 }
