@@ -87,7 +87,7 @@ form .row {
   margin-bottom: 16px;
 }
 
-.telerik-blazor.k-invalid input, .telerik-blazor.k-invalid button {
+.telerik-blazor.k-invalid input, .telerik-blazor.k-invalid button, .telerik-blazor.k-invalid k-autocomplete {
   background: #ffd1d178;
 }
 .telerik-blazor.k-invalid button {

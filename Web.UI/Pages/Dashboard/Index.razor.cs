@@ -22,8 +22,6 @@ namespace Web.UI.Pages.Dashboard
         protected override async Task OnInitializedAsync()
         {
             SetSelectedMenuItem("Dashboard");
-
-            ChangeLoaderVisibilityAction(true);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             await LoadData();
         }
@@ -32,8 +30,12 @@ namespace Web.UI.Pages.Dashboard
         {
             var user = (await AuthStat).User;
 
+            ChangeLoaderVisibilityAction(true);
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserService.FindById(dependecyParams);
+
+            ChangeLoaderVisibilityAction(false);
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
@@ -42,8 +44,6 @@ namespace Web.UI.Pages.Dashboard
             }
 
             userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
-
-            ChangeLoaderVisibilityAction(false);
         }
     }
 }

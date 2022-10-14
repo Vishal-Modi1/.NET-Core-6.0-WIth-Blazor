@@ -250,7 +250,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse List(AircraftDatatableParams datatableParams)
+       public CurrentResponse List(AircraftDatatableParams datatableParams)
         {
             try
             {
@@ -459,7 +459,5 @@ namespace Service
 
             return airCraft;
         }
-
-
     }
 }

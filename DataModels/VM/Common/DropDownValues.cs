@@ -1,4 +1,6 @@
-﻿namespace DataModels.VM.Common
+﻿using System;
+
+namespace DataModels.VM.Common
 {
     public class DropDownValues 
     {
@@ -10,6 +12,13 @@
     public class DropDownLargeValues
     {
         public long Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class DropDownGuidValues
+    {
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
     }

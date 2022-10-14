@@ -10,6 +10,9 @@ using DataModels.Constants;
 using Web.UI.Models.Shared;
 using Microsoft.AspNetCore.Components.Forms;
 using Web.UI.Models.Scheduler;
+using DataModels.VM.ExternalAPI.Airport;
+using Telerik.Blazor.Components;
+using Newtonsoft.Json;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -34,6 +37,11 @@ namespace Web.UI.Pages.Scheduler
 
         public bool isAllowToEdit;
         public bool isAllowToDelete;
+        AirportAPIFilter airportAPIFilter = new AirportAPIFilter();
+        private TelerikAutoComplete<string> arrivalAirportAutoComplete { get; set; }
+        bool isValidAirportsSelected = false;
+        string jsonData = "";
+
         List<RadioButtonItem> flightTypes { get; set; } = new List<RadioButtonItem>
         {
             new RadioButtonItem { Id = 1, Text = "Local" },
@@ -73,6 +81,16 @@ namespace Web.UI.Pages.Scheduler
         {
             uiOptions.IsDisplayCheckOutOption = false;
 
+            if (!isValidAirportsSelected)
+            {
+                isValidAirportsSelected = await IsValidAirportsSelectedAsync();
+            }
+
+            if (!isValidAirportsSelected)
+            {
+                return;
+            }
+
             if (uiOptions.IsDisplayForm)
             {
                 ManageValues();
@@ -83,9 +101,6 @@ namespace Web.UI.Pages.Scheduler
             }
 
             isBusySubmitButton = true;
-
-            //schedulerVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
-            //schedulerVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
 
             schedulerVM.AircraftEquipmentsTimeList.Clear();
             CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(dependecyParams, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
@@ -111,6 +126,39 @@ namespace Web.UI.Pages.Scheduler
 
             CloseDialog();
             await LoadDataAsync();
+        }
+
+        private async Task<bool> IsValidAirportsSelectedAsync()
+        {
+            bool isValid = true;
+            isBusySubmitButton = true;
+
+            CurrentResponse response = await AirportService.IsValid(dependecyParams,schedulerVM.DepartureAirport);
+
+            if(response == null || response.Status != System.Net.HttpStatusCode.OK)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Departure airport is not valid");
+                isValid = false;
+            }
+            else 
+            {
+                AirportDetailsViewModel airportDetailsViewModel = JsonConvert.DeserializeObject<AirportDetailsViewModel>(response.Data.ToString());
+                schedulerVM.DepartureAirportId = airportDetailsViewModel.id;
+                
+                response = await AirportService.IsValid(dependecyParams, schedulerVM.ArrivalAirport);
+
+                if (response == null || response.Status != System.Net.HttpStatusCode.OK)
+                {
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Arrival airport is not valid");
+                    isValid = false;
+                }
+
+                airportDetailsViewModel = JsonConvert.DeserializeObject<AirportDetailsViewModel>(response.Data.ToString());
+                schedulerVM.ArrivalAirportId = airportDetailsViewModel.id;
+            }
+
+            isBusySubmitButton = false;
+            return isValid;
         }
 
         public void OpenUnCheckOutDialog()
@@ -149,7 +197,7 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.IsDisplayEditEndTimeForm = false;
             uiOptions.IsDisplayMainForm = true;
 
-            if(IsOpenFromContextMenu)
+            if (IsOpenFromContextMenu)
             {
                 CloseDialog();
             }
@@ -183,7 +231,7 @@ namespace Web.UI.Pages.Scheduler
                     globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
                     RefreshSchedulerDataSource(ScheduleOperations.UpdateEndTime);
 
-                    if(IsOpenFromContextMenu)
+                    if (IsOpenFromContextMenu)
                     {
                         CloseDialog();
                     }
@@ -369,13 +417,13 @@ namespace Web.UI.Pages.Scheduler
 
             await SetCheckOutButtonState(false);
 
-           if (response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 if ((bool)response.Data == true)
                 {
                     globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
 
-                    if(IsOpenFromContextMenu)
+                    if (IsOpenFromContextMenu)
                     {
                         CloseDialog();
                     }
@@ -483,7 +531,7 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task UnCheckOutAppointment()
         {
-            uiOptions.IsBusyUnCheckOutButton = true; 
+            uiOptions.IsBusyUnCheckOutButton = true;
 
             CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(dependecyParams, schedulerVM.AircraftSchedulerDetailsVM.Id);
 
@@ -540,6 +588,29 @@ namespace Web.UI.Pages.Scheduler
             await InvokeAsync(() => StateHasChanged());
         }
 
+        async Task GetDepartureAirportsList(AutoCompleteReadEventArgs args)
+        {
+            args.Data = await GetAirportsList(schedulerVM.DepartureAirport);
+        }
+
+        async Task GetArrivalAirportsList(AutoCompleteReadEventArgs args)
+        {
+            args.Data = await GetAirportsList(schedulerVM.ArrivalAirport);
+        }
+
+        private async Task<List<DropDownGuidValues>> GetAirportsList(string airportName)
+        {
+            if(airportName == null)
+            {
+                return new List<DropDownGuidValues>();
+            }
+
+            airportAPIFilter.Name = airportName.ToUpper();
+            var data = await AirportService.ListDropDownValues(dependecyParams, airportAPIFilter);
+
+            return data;
+        }
+
         public void InitializeValues()
         {
             uiOptions.IsDisplayRecurring = true;
@@ -572,6 +643,29 @@ namespace Web.UI.Pages.Scheduler
         public async Task LoadDataAsync()
         {
             await LoadDataParentEvent.InvokeAsync();
+        }
+
+        public async Task OpenAirportDetailsPopup(string airportName)
+        {
+            ChangeLoaderVisibilityAction(true);
+
+            CurrentResponse response = await AirportService.FindByName(dependecyParams ,airportName);
+
+            if(response.Status == System.Net.HttpStatusCode.OK)
+            {
+               jsonData = response.Data.ToString();
+            }
+            else
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
+                return;
+            }
+
+            childPopupTitle = "Airport Details";
+
+            operationType = OperationType.DocumentViewer;
+            ChangeLoaderVisibilityAction(false);
+            isDisplayChildPopup = true;
         }
     }
 }

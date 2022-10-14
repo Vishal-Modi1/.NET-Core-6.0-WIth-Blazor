@@ -14,6 +14,10 @@ namespace DataModels.Entities
 
         public DateTime EndDateTime { get; set; }
 
+        public Guid? DepartureAirportId { get; set; }
+
+        public Guid? ArrivalAirportId { get; set; }
+
         public bool IsRecurring { get; set; }
 
         public long Member1Id { get; set; }

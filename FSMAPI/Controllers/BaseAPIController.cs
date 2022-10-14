@@ -17,7 +17,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("response")]
-        public IActionResult APIResponse(CurrentResponse response)
+        protected IActionResult APIResponse(CurrentResponse response)
         {
             if (response.Status != System.Net.HttpStatusCode.OK)
             {

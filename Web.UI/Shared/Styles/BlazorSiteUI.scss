@@ -152,7 +152,7 @@ form .row {
     margin-bottom: 16px;
 }
 .telerik-blazor.k-invalid {
-    input, button {
+    input, button, k-autocomplete {
         background: #ffd1d178;
     }
 

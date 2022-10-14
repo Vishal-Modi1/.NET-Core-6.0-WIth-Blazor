@@ -1,6 +1,5 @@
 ﻿using FSMAPI.Utilities;
 using DataModels.Constants;
-using DataModels.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
@@ -17,16 +16,14 @@ namespace FSMAPI.Controllers
     {
         private readonly IAircraftService _airCraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
-        private readonly IAircraftModelService _aircraftModelService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
         public AircraftController(IAircraftService airCraftService, 
-            IAircraftModelService aircraftModelService, IAircraftEquipementTimeService aircraftEquipementTimeService,
+             IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _airCraftService = airCraftService;
-            _aircraftModelService = aircraftModelService;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);

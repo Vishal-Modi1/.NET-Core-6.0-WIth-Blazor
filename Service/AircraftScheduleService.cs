@@ -185,7 +185,7 @@ namespace Service
                 AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
 
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
-                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Aircraft Appointment created successfully");
+                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment created successfully");
 
                 return _currentResponse;
             }
@@ -337,8 +337,6 @@ namespace Service
         {
             AircraftSchedule aircraftSchedule = new AircraftSchedule();
 
-            Random rnd = new Random();
-
             aircraftSchedule.SchedulActivityTypeId = Convert.ToInt32(schedulerVM.ScheduleActivityId.GetValueOrDefault());
             aircraftSchedule.Id = schedulerVM.Id;
 
@@ -349,6 +347,8 @@ namespace Service
 
             aircraftSchedule.StartDateTime = schedulerVM.StartTime;
             aircraftSchedule.EndDateTime = schedulerVM.EndTime;
+            aircraftSchedule.DepartureAirportId = schedulerVM.DepartureAirportId;
+            aircraftSchedule.ArrivalAirportId = schedulerVM.ArrivalAirportId;
             aircraftSchedule.IsRecurring = schedulerVM.IsRecurring;
             aircraftSchedule.Member1Id = schedulerVM.Member1Id;
             aircraftSchedule.Member2Id = schedulerVM.Member2Id;
@@ -389,6 +389,8 @@ namespace Service
 
             schedulerVM.StartTime = aircraftSchedule.StartDateTime;
             schedulerVM.EndTime = aircraftSchedule.EndDateTime;
+            schedulerVM.DepartureAirportId = aircraftSchedule.DepartureAirportId;
+            schedulerVM.ArrivalAirportId = aircraftSchedule.ArrivalAirportId;
             schedulerVM.IsRecurring = aircraftSchedule.IsRecurring;
             schedulerVM.Member1Id = aircraftSchedule.Member1Id;
             schedulerVM.Member2Id = aircraftSchedule.Member2Id;
