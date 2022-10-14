@@ -915,9 +915,10 @@ else
                 }
                 else if (operationType == OperationType.DocumentViewer)
                 {
-                    <div>
+                    <div class="my-2"  style="overflow-y: scroll;max-height: 60vh;">
                         <pre>@jsonData</pre>
-                        <div class="row d-flex justify-content-end">
+                    </div>
+                        <div class="row d-flex justify-content-end mt-2">
                             <div class="col-4 d-flex justify-content-between">
 
                                 <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseChildDialog()"
@@ -927,7 +928,6 @@ else
 
                             </div>
                         </div>
-                    </div>
                 }
             </Body>
         </CustomPopupComponent>
