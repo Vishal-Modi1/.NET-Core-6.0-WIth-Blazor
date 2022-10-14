@@ -201,11 +201,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-button.drawer-hamburger {
-  background: transparent;
+  background: transparent !important;
   color: #121D2D !important;
   border: 0;
   box-shadow: none;
-  padding: 34px;
+  padding: 0 34px 0 34px;
 }
 
 .telerik-blazor.k-drawer {
@@ -375,7 +375,6 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .flight-info-card .k-card.telerik-blazor {
   height: 200px;
-  overflow-y: auto;
 }
 
 .card-fonts {
