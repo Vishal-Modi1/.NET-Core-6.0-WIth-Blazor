@@ -40,7 +40,7 @@ namespace Service
             _userPreferenceRepository = userPreferenceRepository;
             _userVSCompanyRepository = userVSCompanyRepository;
             _companyRepository = companyRepository;
-            _sendMailService = new SendMailService(); 
+            _sendMailService = new SendMailService();
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id, long userId)
@@ -67,7 +67,7 @@ namespace Service
                 if (roleId == (int)DataModels.Enums.UserRole.SuperAdmin)
                 {
                     schedulerVM.CompaniesList = _companyRepository.ListDropDownValues();
-                    
+
                     if (schedulerVM.AircraftId != null)
                     {
                         schedulerVM.CompanyId = companyId = _aircraftRepository.FindByCondition(p => p.Id == schedulerVM.AircraftId).CompanyId.GetValueOrDefault();
@@ -78,7 +78,7 @@ namespace Service
                     schedulerVM.CompanyId = companyId;
                 }
 
-                if(companyId != 0)
+                if (companyId != 0)
                 {
                     schedulerVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
                 }
@@ -142,7 +142,7 @@ namespace Service
 
             schedulerVM.Member1List = schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
             schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
-            
+
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
         }
 
@@ -189,7 +189,7 @@ namespace Service
 
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
 
-                SendScheduleMail(schedulerVM);
+                SendScheduleMail(schedulerVM, "You appointment has been scheduled.");
 
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment created successfully");
 
@@ -216,11 +216,16 @@ namespace Service
                     return _currentResponse;
                 }
 
+                AircraftSchedule existingAircraftSchedule = _aircraftScheduleRepository.FindByCondition(p => p.Id == schedulerVM.Id);
                 AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
-
                 aircraftSchedule = _aircraftScheduleRepository.Edit(aircraftSchedule);
 
-                SendScheduleMail(schedulerVM);
+                bool isScheduleChanged = IsScheduleChanged(existingAircraftSchedule, schedulerVM);
+
+                if (isScheduleChanged)
+                {
+                    SendScheduleMail(schedulerVM, "You appointment has been updated.");
+                }
 
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment updated successfully");
 
@@ -232,6 +237,20 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        private bool IsScheduleChanged(AircraftSchedule existingAircraftSchedule, SchedulerVM schedulerVM)
+        {
+            if (existingAircraftSchedule.InstructorId != schedulerVM.InstructorId || existingAircraftSchedule.Member1Id != schedulerVM.Member1Id
+                || existingAircraftSchedule.Member2Id != schedulerVM.Member2Id || existingAircraftSchedule.StartDateTime != schedulerVM.StartTime
+                || existingAircraftSchedule.EndDateTime != schedulerVM.EndTime || existingAircraftSchedule.AircraftId != schedulerVM.AircraftId
+                || existingAircraftSchedule.DepartureAirportName != schedulerVM.DepartureAirport || existingAircraftSchedule.ArrivalAirportName
+                != schedulerVM.ArrivalAirport || existingAircraftSchedule.ScheduleTitle != schedulerVM.DisplayTitle)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private bool IsAircraftAvailable(SchedulerVM schedulerVM)
@@ -341,11 +360,11 @@ namespace Service
             }
         }
 
-        private void SendScheduleMail(SchedulerVM schedulerVM)
+        private void SendScheduleMail(SchedulerVM schedulerVM, string message)
         {
             try
             {
-                AppointmentCreatedSendEmailViewModel viewModel = new ();
+                AppointmentCreatedSendEmailViewModel viewModel = new();
 
                 viewModel.StartTime = schedulerVM.StartTime;
                 viewModel.EndTime = schedulerVM.EndTime;
@@ -369,11 +388,12 @@ namespace Service
                     viewModel.Member2 = user.FirstName + " " + user.LastName;
                 }
 
-                viewModel.Aircraft = schedulerVM.AircraftsList.Where(p=>p.Id == schedulerVM.AircraftId).First().Name;   
-                viewModel.ActivityType = schedulerVM.ScheduleActivitiesList.Where(p=>p.Id == schedulerVM.ScheduleActivityId).First().Name;
+                viewModel.Aircraft = schedulerVM.AircraftsList.Where(p => p.Id == schedulerVM.AircraftId).First().Name;
+                viewModel.ActivityType = schedulerVM.ScheduleActivitiesList.Where(p => p.Id == schedulerVM.ScheduleActivityId).First().Name;
 
                 // Sending mail to first member
-                viewModel.Message = "You appointment has been scheduled.";
+                viewModel.Message = message;
+
                 user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member1Id);
                 viewModel.Email = user.Email;
                 viewModel.Member1 = viewModel.UserName = user.FirstName + " " + user.LastName;
@@ -384,7 +404,7 @@ namespace Service
 
                 if (schedulerVM.Member2Id != null)
                 {
-                    viewModel.Message = "You appointment has been scheduled.";
+                    viewModel.Message = message;
                     user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member2Id);
                     viewModel.Email = user.Email;
                     viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
