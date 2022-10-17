@@ -153,9 +153,9 @@ namespace Web.UI.Pages.Aircraft
         {
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
             {
-                byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
+                byte[] encodedBytes = Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
                 var data = Encoding.Default.GetBytes(aircraftId.ToString());
-                NavigationManager.NavigateTo("AircraftDetails?AircraftId=" + System.Convert.ToBase64String(encodedBytes));
+                NavigationManager.NavigateTo("AircraftDetails?AircraftId=" + Convert.ToBase64String(encodedBytes));
             }
         }
 

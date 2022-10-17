@@ -42,6 +42,11 @@ namespace Configuration
             get => configuration.GetValue<string>("APIURL");
         }
 
+        public string WebURL
+        {
+            get => configuration.GetValue<string>("WebURL");
+        }
+
         public string UploadDirectoryPath
         {
             get => configuration.GetValue<string>("UploadDirectoryPath");

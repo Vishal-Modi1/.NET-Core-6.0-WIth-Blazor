@@ -19,7 +19,7 @@ namespace DataModels.VM.Scheduler
         }
 
         public long Id { get; set; }
-        public List<DropDownLargeValues> ScheduleActivitiesList { get; set; }
+        public List<DropDownLargeValues> ScheduleActivitiesList { get; set; } = new List<DropDownLargeValues>();
 
         [Required(ErrorMessage = "Activity type is required")]
         public long? ScheduleActivityId { get; set; }

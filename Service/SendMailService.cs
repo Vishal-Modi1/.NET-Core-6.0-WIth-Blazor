@@ -10,6 +10,7 @@ using System.Net;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.Models;
+using DataModels.VM.Scheduler;
 
 namespace Service
 {
@@ -21,7 +22,7 @@ namespace Service
         private readonly ConfigurationSettings _configurationSettings;
         private readonly MailSender _mailSender;
 
-        public SendMailService(IUserRepository userRepository, IEmailTokenRepository emailTokenRepository)
+        public SendMailService(IUserRepository userRepository = null, IEmailTokenRepository emailTokenRepository = null)
         {
             _userRepository = userRepository;
             _emailTokenRepository = emailTokenRepository;
@@ -138,6 +139,54 @@ namespace Service
                 return false;
             }
         }
+       
+        private EmailToken SaveEmailToken(string emailType, string token, long? userId, long? invitedUserId = null)
+        {
+            EmailToken emailToken = new EmailToken();
+
+            emailToken.EmailType = emailType;
+            emailToken.ExpireOn = DateTime.UtcNow.AddDays(_configurationSettings.EmailTokenExpirationDays);
+            emailToken.CreatedOn = DateTime.UtcNow;
+            emailToken.Token = token;
+            emailToken.UserId = userId;
+            emailToken.InvitedUserId = invitedUserId;
+
+            emailToken = _emailTokenRepository.Create(emailToken);
+
+            return emailToken;
+        }
+        
+        public bool AppointmentCreated(AppointmentCreatedSendEmailViewModel viewModel)
+        {
+            try
+            {
+                string emailTemplateBody = GetEmailTemplate(EmailTemplates.AppointmentCreated);
+                emailTemplateBody = emailTemplateBody.Replace("{userName}", viewModel.UserName);
+                emailTemplateBody = emailTemplateBody.Replace("{message}", viewModel.Message);
+                emailTemplateBody = emailTemplateBody.Replace("{member1}", viewModel.Member1);
+                emailTemplateBody = emailTemplateBody.Replace("{member2}", viewModel.Member2);
+                emailTemplateBody = emailTemplateBody.Replace("{aircraft}", viewModel.Aircraft);
+                emailTemplateBody = emailTemplateBody.Replace("{activityType}", viewModel.ActivityType);
+                emailTemplateBody = emailTemplateBody.Replace("{startTime}", viewModel.StartTime.ToString());
+                emailTemplateBody = emailTemplateBody.Replace("{endTime}", viewModel.EndTime.ToString());
+                emailTemplateBody = emailTemplateBody.Replace("{departureAirport}", viewModel.DepartureAirport);
+                emailTemplateBody = emailTemplateBody.Replace("{arrivalAirport}", viewModel.ArrivalAirport);
+
+                emailTemplateBody = emailTemplateBody.Replace("{link}", viewModel.Link);
+
+                MailSettings mailSettings = GetMailSettings(viewModel.Email, "Upflyte Appointment", emailTemplateBody, "");
+
+                bool isMailSent = _mailSender.SendMail(mailSettings);
+
+                return isMailSent;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return false;
+        }
 
         public string GetEmailTemplate(string templateName)
         {
@@ -171,22 +220,5 @@ namespace Service
             return mailSettings;
         }
 
-        private EmailToken SaveEmailToken(string emailType, string token, long? userId, long? invitedUserId = null)
-        {
-            EmailToken emailToken = new EmailToken();
-
-            emailToken.EmailType = emailType;
-            emailToken.ExpireOn = DateTime.UtcNow.AddDays(_configurationSettings.EmailTokenExpirationDays);
-            emailToken.CreatedOn = DateTime.UtcNow;
-            emailToken.Token = token;
-            emailToken.UserId = userId;
-            emailToken.InvitedUserId = invitedUserId;
-
-            emailToken = _emailTokenRepository.Create(emailToken);
-
-            return emailToken;
-        }
-
-       
     }
 }

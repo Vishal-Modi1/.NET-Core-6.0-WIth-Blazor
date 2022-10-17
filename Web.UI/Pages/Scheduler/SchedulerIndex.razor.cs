@@ -12,6 +12,8 @@ using Web.UI.Data.AircraftSchedule;
 using Web.UI.Models.Shared;
 using Microsoft.AspNetCore.Components.Web;
 using Web.UI.Models.Scheduler;
+using Microsoft.Extensions.Primitives;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -42,6 +44,76 @@ namespace Web.UI.Pages.Scheduler
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
 
+        protected override async Task OnInitializedAsync()
+        {
+            ChangeLoaderVisibilityAction(true);
+
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
+            {
+                NavigationManager.NavigateTo("/Dashboard");
+            }
+
+            dataSource = new List<SchedulerVM>();
+            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
+            currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
+
+            InitializeValues();
+
+            schedulerVM = new SchedulerVM();
+            aircraftsResourceList = new List<ResourceData>();
+        }
+
+        private async Task OpenDetailPopup()
+        {
+            StringValues link;
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("ScheduleId", out link);
+
+            if (link.Count() == 0 || link[0] == "")
+            {
+                return;
+            }
+
+            var base64EncodedBytes = Convert.FromBase64String(link[0]);
+            string scheduleId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+            ChangeLoaderVisibilityAction(true);
+
+            SchedulerVM schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, Convert.ToInt64(scheduleId));
+
+            ChangeLoaderVisibilityAction(false);
+
+            await OpenAppointmentDialog(schedulerVM); 
+
+            StateHasChanged();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                
+                if (!globalMembers.IsSuperAdmin)
+                {
+                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
+                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
+
+                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
+                }
+                else
+                {
+                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
+                }
+
+                await LoadDataAsync();
+                ChangeLoaderVisibilityAction(false);
+
+                await OpenDetailPopup();
+            }
+        }
+
         async Task ShowContextMenu(MouseEventArgs e, SchedulerVM clickedItem)
         {
             menuItems = new List<ContextMenuItem>();
@@ -71,52 +143,6 @@ namespace Web.UI.Pages.Scheduler
 
             contextMenu.Data = menuItems;
             await contextMenu.ShowAsync(e.ClientX, e.ClientY);
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            ChangeLoaderVisibilityAction(true);
-
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
-            {
-                NavigationManager.NavigateTo("/Dashboard");
-            }
-
-            dataSource = new List<SchedulerVM>();
-            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
-            currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
-
-            InitializeValues();
-
-            schedulerVM = new SchedulerVM();
-            schedulerVM.ScheduleActivitiesList = new List<DropDownLargeValues>();
-            aircraftsResourceList = new List<ResourceData>();
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
-                if (!globalMembers.IsSuperAdmin)
-                {
-                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
-                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
-
-                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
-                }
-                else
-                {
-                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
-                }
-
-                await LoadDataAsync();
-
-                ChangeLoaderVisibilityAction(false);
-                base.StateHasChanged();
-            }
         }
 
         async Task ViewChangedHandler(SchedulerView nextView)

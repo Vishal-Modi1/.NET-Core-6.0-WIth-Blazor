@@ -16,7 +16,11 @@ namespace DataModels.Entities
 
         public Guid? DepartureAirportId { get; set; }
 
+        public string DepartureAirportName { get; set; }
+
         public Guid? ArrivalAirportId { get; set; }
+
+        public string ArrivalAirportName { get; set; }
 
         public bool IsRecurring { get; set; }
 

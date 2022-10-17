@@ -43,20 +43,7 @@ namespace Web.UI.Pages.Aircraft
                 _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
                 userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
 
-                StringValues link;
-                var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-                QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
-
-                if (link.Count() == 0 || link[0] == "")
-                {
-                    NavigationManager.NavigateTo("/Dashboard");
-                }
-
-                var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-                AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
-
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
+                await SetAircraftData();
 
                 try
                 {
@@ -90,6 +77,24 @@ namespace Web.UI.Pages.Aircraft
                 ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
+        }
+
+        private async Task SetAircraftData()
+        {
+            StringValues link;
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
+
+            if (link.Count() == 0 || link[0] == "")
+            {
+                NavigationManager.NavigateTo("/Dashboard");
+            }
+
+            var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
         }
 
         async Task AircraftEditDialog()
