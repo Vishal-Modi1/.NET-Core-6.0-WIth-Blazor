@@ -7,11 +7,11 @@ namespace Service.Interface
     {
         CurrentResponse GetDetails(int roleId, int companyId, long id, long userId);
 
-        CurrentResponse Create(SchedulerVM schedulerVM);
+        CurrentResponse Create(SchedulerVM schedulerVM, string timezone);
 
         CurrentResponse List(SchedulerFilter schedulerFilter);
 
-        CurrentResponse Edit(SchedulerVM schedulerVM);
+        CurrentResponse Edit(SchedulerVM schedulerVM, string timezone);
 
         CurrentResponse Delete(long id, long deletedBy);
 

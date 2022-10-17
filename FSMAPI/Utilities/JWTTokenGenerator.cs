@@ -23,7 +23,7 @@ namespace FSMAPI.Utilities
             _randomTextGenerator = new RandomTextGenerator();
         }
 
-        public string Generate(User user)
+        public string Generate(User user, string timezone)
         {
             List<Claim> claims = new List<Claim>
             {
@@ -33,6 +33,7 @@ namespace FSMAPI.Utilities
                 new Claim(CustomClaimTypes.UserId, user.Id.ToString()),
                 new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                 new Claim(CustomClaimTypes.RoleName, user.RoleName.ToString()),
+                new Claim(CustomClaimTypes.TimeZone, timezone),
             };
 
             //roles.ForEach(role =>

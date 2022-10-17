@@ -74,8 +74,10 @@ namespace FSMAPI.Controllers
             //    schedulerVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             //}
 
+            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+
             schedulerVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _aircraftScheduleService.Create(schedulerVM);
+            CurrentResponse response = _aircraftScheduleService.Create(schedulerVM, timezone);
 
             return APIResponse(response);
         }
@@ -100,7 +102,9 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(SchedulerVM schedulerVM)
         {
             schedulerVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _aircraftScheduleService.Edit(schedulerVM);
+            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+
+            CurrentResponse response = _aircraftScheduleService.Edit(schedulerVM, timezone);
             return APIResponse(response);
         }
 

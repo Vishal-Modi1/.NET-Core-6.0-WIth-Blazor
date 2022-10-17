@@ -22,7 +22,7 @@
 
                     @if (isSessionTimeout)
                     {
-                        <div style="color: red;">Session Timeout!</div>
+                            <div style="color: red;">Session Timeout!</div>
                     }
 
                     <div class="login-wrap">
@@ -31,8 +31,10 @@
                         <TelerikForm Model="@loginVM" OnValidSubmit="@Submit">
 
                             <FormValidation>
-                                <DataAnnotationsValidator />
-                            </FormValidation>
+
+        <CustomValidationSummary> </CustomValidationSummary>
+
+    </FormValidation>
 
                             <FormItems>
                                 <FormItem Field="@nameof(LoginVM.Email)">
@@ -78,20 +80,20 @@
                                 Don't have an account? <a href="/Registration" style="color:#1151F3"> Register</a>
                             </div>
                         </div>
-                       @* <div class="row my-3 text-14">
+                        @* <div class="row my-3 text-14">
                             <div class="text-center">
-                                <h4 class="horizon-line"><span class="text-14">Or continue with</span></h4>
+                            <h4 class="horizon-line"><span class="text-14">Or continue with</span></h4>
                             </div>
-                        </div>*@
-                    @*    <div class="row my-3 text-14">
+                            </div>*@
+                        @*    <div class="row my-3 text-14">
                             <div class="text-center">
-                                <div>
-                                    <span class="mx-2 cursor-pointer"><CustomIcons IconName="google-login"/></span>
-                                    <span class="mx-2 cursor-pointer"><CustomIcons IconName="apple-login"/></span>
-                                    <span class="mx-2 cursor-pointer"><CustomIcons IconName="facebook-login"/></span>
-                                </div>
+                            <div>
+                            <span class="mx-2 cursor-pointer"><CustomIcons IconName="google-login"/></span>
+                            <span class="mx-2 cursor-pointer"><CustomIcons IconName="apple-login"/></span>
+                            <span class="mx-2 cursor-pointer"><CustomIcons IconName="facebook-login"/></span>
                             </div>
-                        </div>*@
+                            </div>
+                            </div>*@
                     </div>
                 </div>
             </div>

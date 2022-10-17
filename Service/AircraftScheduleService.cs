@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using Utilities;
 
 namespace Service
 {
@@ -172,7 +173,7 @@ namespace Service
             schedulerVM.AircraftEquipmentHobbsTimeList = _aircraftScheduleHobbsTimeRepository.ListByCondition(p => equipmentIdsList.Contains(p.AircraftEquipmentTimeId) && p.AircraftScheduleId == schedulerVM.Id);
         }
 
-        public CurrentResponse Create(SchedulerVM schedulerVM)
+        public CurrentResponse Create(SchedulerVM schedulerVM, string timezone)
         {
             try
             {
@@ -189,7 +190,7 @@ namespace Service
 
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
 
-                SendScheduleMail(schedulerVM, "You appointment has been scheduled.");
+                SendScheduleMail(schedulerVM, "You appointment has been scheduled.", timezone);
 
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment created successfully");
 
@@ -203,7 +204,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse Edit(SchedulerVM schedulerVM)
+        public CurrentResponse Edit(SchedulerVM schedulerVM, string timezone)
         {
             try
             {
@@ -224,7 +225,7 @@ namespace Service
 
                 if (isScheduleChanged)
                 {
-                    SendScheduleMail(schedulerVM, "You appointment has been updated.");
+                    SendScheduleMail(schedulerVM, "You appointment has been updated.", timezone);
                 }
 
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment updated successfully");
@@ -360,14 +361,14 @@ namespace Service
             }
         }
 
-        private void SendScheduleMail(SchedulerVM schedulerVM, string message)
+        private void SendScheduleMail(SchedulerVM schedulerVM, string message, string timezone)
         {
             try
             {
                 AppointmentCreatedSendEmailViewModel viewModel = new();
 
-                viewModel.StartTime = schedulerVM.StartTime;
-                viewModel.EndTime = schedulerVM.EndTime;
+                viewModel.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
+                viewModel.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
                 viewModel.DepartureAirport = schedulerVM.DepartureAirport;
                 viewModel.ArrivalAirport = schedulerVM.ArrivalAirport;
 

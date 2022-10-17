@@ -81,7 +81,7 @@ namespace FSMAPI.Controllers
             response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
             List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
-            string accessToken = _jWTTokenGenerator.Generate(user);
+            string accessToken = _jWTTokenGenerator.Generate(user, userTimeZone == null ? "": userTimeZone);
             string refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);
@@ -219,7 +219,7 @@ namespace FSMAPI.Controllers
             user.RoleId = userVM.RoleId;
             user.RoleName = userVM.Role;
 
-            string accessToken = _jWTTokenGenerator.Generate(user);
+            string accessToken = _jWTTokenGenerator.Generate(user, "");
             refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);
