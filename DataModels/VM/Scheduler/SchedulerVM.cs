@@ -57,7 +57,7 @@ namespace DataModels.VM.Scheduler
         public Guid? DepartureAirportId { get; set; }
 
         [Required(ErrorMessage = "Arrival airport is required")]
-        [Unlike(nameof(DepartureAirport), "Arrival airport can not be the same")]
+        //[Unlike(nameof(DepartureAirport), "Arrival airport can not be the same")]
         public string ArrivalAirport { get; set; }
         public Guid? ArrivalAirportId { get; set; }
 

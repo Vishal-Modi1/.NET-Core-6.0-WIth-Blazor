@@ -70,6 +70,7 @@ namespace Web.UI.Shared
         {
             globalMembers.UINotification = UINotification;
             globalMembers.UserRole = (UserRole)(Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value));
+            globalMembers.CompanyId = Convert.ToInt32(user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyId).First().Value);
             globalMembers.IsSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
             globalMembers.IsAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.Admin;
         }
@@ -164,6 +165,8 @@ namespace Web.UI.Shared
         public MenuItem SelectedItem { get; set; }
 
         public UserRole UserRole { get; set; }
+
+        public int CompanyId { get; set; }
 
         public bool IsSuperAdmin { get; set; }
 

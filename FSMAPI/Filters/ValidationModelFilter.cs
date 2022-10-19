@@ -36,7 +36,7 @@ namespace FSMAPI.Filters
         public List<FormValidationError> Errors { get; }
         public ValidationResultModel(ModelStateDictionary modelState)
         {
-            Message = "Validation Failed";
+            Message = "One or more validation errors occurred";
             Errors = modelState.Keys
                     .SelectMany(key => modelState[key].Errors.Select(x => new FormValidationError(key, x.ErrorMessage)))
                     .ToList();

@@ -35,7 +35,7 @@ namespace Web.UI.Pages.User
 
             ManageInviteUserResponse(response);
 
-            isBusySubmitButton = true;
+            isBusySubmitButton = false;
         }
 
         private bool ManageIsEmailExistResponse(CurrentResponse response)

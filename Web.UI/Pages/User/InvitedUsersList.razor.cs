@@ -27,15 +27,13 @@ namespace Web.UI.Pages.User
             userFilterVM = new UserFilterVM();
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
          
-            if(!_currentUserPermissionManager.IsAllowed(AuthStat,DataModels.Enums.PermissionType.View,moduleName))
+            if(!_currentUserPermissionManager.IsAllowed(AuthStat,PermissionType.View,moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
-
-            var user = (await AuthStat).User;
          }
 
         async Task LoadData(GridReadEventArgs args)
@@ -82,6 +80,10 @@ namespace Web.UI.Pages.User
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userData = await InviteUserService.GetDetailsAsync(dependecyParams, inviteUserDataVM.Id);
 
+            if(globalMembers.UserRole != UserRole.SuperAdmin)
+            {
+                userData.CompanyId = globalMembers.CompanyId;
+            }
 
             if (inviteUserDataVM.Id == 0)
             {
