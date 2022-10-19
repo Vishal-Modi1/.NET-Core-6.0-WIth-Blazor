@@ -349,6 +349,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         background-color: $BG-BTN-PRIMARY-HOVER !important;
     }
 
+    &.k-btn-primary:focus {
+        outline: none !important;
+        box-shadow: 0 0 0px 2px rgb(62 128 237 / 30%);
+    }
+
     &.k-btn-danger {
         color: white;
         border: 1px solid $BG-BTN-DANGER !important;
@@ -379,8 +384,6 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     &.k-btn-secondary:hover {
         color: white;
     }
-
-    
 }
 .k-button {
     &.k-button-Outline-secondary {
@@ -700,3 +703,4 @@ td,span,p
 .k-notification{
     max-width: 400px;
 }
+
