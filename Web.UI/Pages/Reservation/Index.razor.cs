@@ -48,10 +48,6 @@ namespace Web.UI.Pages.Reservation
         {
             GetReservationTypeFilter();
 
-            reservationFilterVM.Aircrafts = new List<DropDownLargeValues>();
-            reservationFilterVM.Companies = new List<DropDownValues>();
-            reservationFilterVM.Users = new List<DropDownLargeValues>();
-
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
@@ -153,6 +149,8 @@ namespace Web.UI.Pages.Reservation
             datatableParams.SearchText = searchText;
             datatableParams.StartDate = startDate;
             datatableParams.EndDate = endDate;
+            datatableParams.ArrivalAirportId = reservationFilterVM.ArrivalAirportId;
+            datatableParams.DepartureAirportId = reservationFilterVM.DepartureAirportId;
 
             if (reservationFilterTypeId != 0)
             {

@@ -4,6 +4,7 @@ using DataModels.VM.AircraftEquipment;
 using DataModels.VM.AircraftMake;
 using DataModels.VM.AircraftModel;
 using DataModels.VM.BillingHistory;
+using DataModels.VM.Common;
 using DataModels.VM.Company;
 using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
@@ -145,6 +146,7 @@ namespace Repository
 
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
+        public DbSet<DropDownGuidValues> AirportsList { get; set; }
     }
 
 }

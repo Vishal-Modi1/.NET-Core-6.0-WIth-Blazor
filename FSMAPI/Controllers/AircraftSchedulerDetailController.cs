@@ -47,9 +47,9 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("uncheckout")]
-        public IActionResult UnCheckout(long scheduleId)
+        public IActionResult UnCheckout(long id)
         {
-            CurrentResponse response = _aircraftScheduleDetailService.UnCheckOut(scheduleId);
+            CurrentResponse response = _aircraftScheduleDetailService.UnCheckOut(id);
 
             return APIResponse(response);
         }

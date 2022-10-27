@@ -36,7 +36,8 @@ namespace Repository
                 string sql = $"EXEC dbo.GetReservationsList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
                     $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
                     $"{datatableParams.CompanyId},'{startDate}','{endDate}',{datatableParams.UserId.GetValueOrDefault()}," +
-                    $"{datatableParams.AircraftId.GetValueOrDefault()},'{reservationType}'";
+                    $"{datatableParams.AircraftId.GetValueOrDefault()},'{reservationType}','{datatableParams.ArrivalAirportId}'" +
+                    $",'{datatableParams.DepartureAirportId}'";
 
                 list = _myContext.ReservationDataVM.FromSqlRaw<ReservationDataVM>(sql).ToList();
 

@@ -6,7 +6,10 @@ namespace FSMAPI.Utilities
     {
         public async Task<HttpResponseMessage> Get(string url)
         {
-            using (var httpClient = new HttpClient())
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            using (var httpClient = new HttpClient(clientHandler))
             {
                 httpClient.BaseAddress = new Uri(url);
                 httpClient.DefaultRequestHeaders.Accept.Clear();

@@ -34,6 +34,8 @@ namespace DataModels.VM.ExternalAPI.Airport
         public string SiteId { get; set; }
 
         [JsonProperty("ICAO Id")]
-        private string ICAOId { get; set; }
+        public string ICAOId { get; set; }
+       
+        public string AirportCode { get; set; }
     }
 }

@@ -508,21 +508,21 @@ namespace Web.UI.Pages.Scheduler
                 await SetSchedulerDetails(schedulerVM.Id);
                 isDisplayPopup = true;
                 base.StateHasChanged();
-                await createScheduleRef.CheckInAircraft();
+                createScheduleRef.CheckInAircraft();
             }
             else if (clickedItem.Type == ScheduleOperations.UpdateFlightTime)
             {
                 await SetSchedulerDetails(schedulerVM.Id);
                 isDisplayPopup = true;
                 base.StateHasChanged();
-                await createScheduleRef.EditFlightTime();
+                createScheduleRef.EditFlightTime();
             }
             else if (clickedItem.Type == ScheduleOperations.UpdateEndTime)
             {
                 await SetSchedulerDetails(schedulerVM.Id);
                 isDisplayPopup = true;
                 base.StateHasChanged();
-                await createScheduleRef.ShowEditEndTimeForm();
+                createScheduleRef.ShowEditEndTimeForm();
             }
 
             else if (clickedItem.Type == ScheduleOperations.CheckOut)

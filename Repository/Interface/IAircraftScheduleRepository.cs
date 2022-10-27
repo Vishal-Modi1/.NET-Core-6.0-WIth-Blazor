@@ -15,6 +15,11 @@ namespace Repository.Interface
 
         #endregion
 
+        #region Airport
+        List<DropDownGuidValues> ListAirportDropDownValues();
+
+        #endregion
+
         List<SchedulerVM> List(SchedulerFilter schedulerFilter);
 
         AircraftSchedule Create(AircraftSchedule aircraftSchedule);

@@ -21,7 +21,7 @@ namespace Repository
                                           where aircraftSchedule.AircraftId == aircraftId
                                           && aircraftScheduleDetails.IsCheckOut == true
                                           && aircraftSchedule.IsDeleted == false
-                                          select new { Id = aircraftSchedule.Id }).Count() > 0;
+                                          select new { Id = aircraftSchedule.Id }).Any();
 
                 return isAlreadyCheckOut;
             }

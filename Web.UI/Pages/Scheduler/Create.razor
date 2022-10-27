@@ -93,9 +93,8 @@
                             <TelerikAutoComplete TItem="DropDownGuidValues"
                                      ScrollMode="@DropDownScrollMode.Scrollable"
                                      ItemHeight="30" ValueField="@(nameof(DropDownGuidValues.Name))"
-                                     PageSize="200" MinLength="5"
                                      OnRead="@GetDepartureAirportsList"
-                                     Placeholder="Type 5 characters to load the airports"
+                                     PageSize="20" Placeholder="Type 2 characters to load the airports"
                                      @bind-Value="@schedulerVM.DepartureAirport"
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains">
                                 <AutoCompleteSettings>
@@ -119,7 +118,7 @@
                             <TelerikAutoComplete TItem="DropDownGuidValues" Data="@schedulerVM.ArrivalAirportsList"
                                      ScrollMode="@DropDownScrollMode.Scrollable"
                                      ItemHeight="30" ValueField="@(nameof(DropDownGuidValues.Name))"
-                                     PageSize="20" MinLength="5" Placeholder="Type 5 characters to load the airports"
+                                     PageSize="20" Placeholder="Type 2 characters to load the airports"
                                      OnRead="@GetArrivalAirportsList" @bind-Value="@schedulerVM.ArrivalAirport"
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains">
                                 <AutoCompleteSettings>

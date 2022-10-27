@@ -12,13 +12,16 @@ namespace Service
         private readonly IReservationRepository _reservationRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IAircraftRepository _aircraftRepository;
+        private readonly IAircraftScheduleRepository _aircraftScheduleRepository; 
 
         public ReservationService(IReservationRepository reservationRepository, 
-            ICompanyRepository companyRepository, IAircraftRepository aircraftRepository)
+            ICompanyRepository companyRepository, IAircraftRepository aircraftRepository,
+            IAircraftScheduleRepository aircraftScheduleRepository)
         {
             _reservationRepository = reservationRepository;
             _companyRepository = companyRepository;
             _aircraftRepository = aircraftRepository;
+            _aircraftScheduleRepository = aircraftScheduleRepository;
         }
 
         public CurrentResponse List(ReservationDataTableParams datatableParams)
@@ -48,6 +51,9 @@ namespace Service
 
                 reservationFilterVM.Companies = _companyRepository.ListDropDownValues();
                 reservationFilterVM.Aircrafts = _aircraftRepository.ListDropDownValues(companyId);
+
+                reservationFilterVM.DepartureAirportsList = _aircraftScheduleRepository.ListAirportDropDownValues();
+                reservationFilterVM.ArrivalAirportsList = _aircraftScheduleRepository.ListAirportDropDownValues();
 
                 CreateResponse(reservationFilterVM, HttpStatusCode.OK, "");
 

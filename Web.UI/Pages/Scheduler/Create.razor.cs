@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Components.Forms;
 using Web.UI.Models.Scheduler;
 using DataModels.VM.ExternalAPI.Airport;
 using Telerik.Blazor.Components;
-using Newtonsoft.Json;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -38,9 +37,9 @@ namespace Web.UI.Pages.Scheduler
         public bool isAllowToEdit;
         public bool isAllowToDelete;
         AirportAPIFilter airportAPIFilter = new AirportAPIFilter();
-        private TelerikAutoComplete<string> arrivalAirportAutoComplete { get; set; }
         bool isValidAirportsSelected = false;
         string jsonData = "";
+        List<DropDownGuidValues> departureAirportList, arrivalAirpotList;
 
         List<RadioButtonItem> flightTypes { get; set; } = new List<RadioButtonItem>
         {
@@ -83,7 +82,7 @@ namespace Web.UI.Pages.Scheduler
 
             if (!isValidAirportsSelected)
             {
-                isValidAirportsSelected = await IsValidAirportsSelectedAsync();
+                isValidAirportsSelected = IsValidAirportsSelectedAsync();
             }
 
             if (!isValidAirportsSelected)
@@ -128,33 +127,33 @@ namespace Web.UI.Pages.Scheduler
             await LoadDataAsync();
         }
 
-        private async Task<bool> IsValidAirportsSelectedAsync()
+        private bool IsValidAirportsSelectedAsync()
         {
             bool isValid = true;
             isBusySubmitButton = true;
 
-            CurrentResponse response = await AirportService.IsValid(dependecyParams,schedulerVM.DepartureAirport);
+            var departureAirport = departureAirportList.Where(p => p.Name.ToLower() == schedulerVM.DepartureAirport.ToLower()).FirstOrDefault();
 
-            if(response == null || response.Status != System.Net.HttpStatusCode.OK)
+            if (departureAirport == null)
             {
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Departure airport is not valid");
                 isValid = false;
             }
-            else 
+            else
             {
-                AirportDetailsViewModel airportDetailsViewModel = JsonConvert.DeserializeObject<AirportDetailsViewModel>(response.Data.ToString());
-                schedulerVM.DepartureAirportId = airportDetailsViewModel.id;
-                
-                response = await AirportService.IsValid(dependecyParams, schedulerVM.ArrivalAirport);
+                schedulerVM.DepartureAirportId = departureAirport.Id;
 
-                if (response == null || response.Status != System.Net.HttpStatusCode.OK)
+                var arrivalAirport = arrivalAirpotList.Where(p => p.Name.ToLower() == schedulerVM.ArrivalAirport.ToLower()).FirstOrDefault();
+
+                if (arrivalAirport == null)
                 {
                     globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Arrival airport is not valid");
                     isValid = false;
                 }
-
-                airportDetailsViewModel = JsonConvert.DeserializeObject<AirportDetailsViewModel>(response.Data.ToString());
-                schedulerVM.ArrivalAirportId = airportDetailsViewModel.id;
+                else
+                {
+                    schedulerVM.ArrivalAirportId = arrivalAirport.Id;
+                }
             }
 
             isBusySubmitButton = false;
@@ -187,12 +186,12 @@ namespace Web.UI.Pages.Scheduler
             OpenDialogParentEvent.InvokeAsync();
         }
 
-        public async Task CheckInAircraft()
+        public void CheckInAircraft()
         {
             uiOptions.IsDisplayMainForm = false;
         }
 
-        private async Task HideEditEndTimeForm()
+        private void HideEditEndTimeForm()
         {
             uiOptions.IsDisplayEditEndTimeForm = false;
             uiOptions.IsDisplayMainForm = true;
@@ -203,7 +202,7 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        public async Task ShowEditEndTimeForm()
+        public void ShowEditEndTimeForm()
         {
             uiOptions.IsDisplayMainForm = false;
             uiOptions.IsDisplayEditEndTimeForm = true;
@@ -252,7 +251,7 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        public async Task EditFlightTime()
+        public void EditFlightTime()
         {
             uiOptions.IsDisplayMainForm = false;
 
@@ -480,39 +479,6 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        //private BadgeStyle GetSchedulerStatusClass()
-        //{
-        //    if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
-        //    {
-        //        return BadgeStyle.Success;
-        //    }
-        //    else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
-        //    {
-        //        return BadgeStyle.Light;
-        //    }
-        //    else
-        //    {
-        //        return BadgeStyle.Primary;
-        //    }
-        //    //    int SchedulerStatus = 1;
-        //    //switch (SchedulerStatus)
-        //    //{
-        //    //    case 1:
-        //    //        //success
-        //    //        return "badge-primary";
-        //    //    default:
-        //    //        return string.Empty;
-        //    //}
-        //    //<span class="badge badge-primary">Primary</span>
-        //    //<span class="badge badge-secondary">Secondary</span>
-        //    //<span class="badge badge-success">Success</span>
-        //    //<span class="badge badge-danger">Danger</span>
-        //    //<span class="badge badge-warning">Warning</span>
-        //    //<span class="badge badge-info">Info</span>
-        //    //<span class="badge badge-light">Light</span>
-        //    //<span class="badge badge-dark">Dark</span>
-        //}
-
         private string GetSchedulerStatusText()
         {
             if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
@@ -590,22 +556,42 @@ namespace Web.UI.Pages.Scheduler
 
         async Task GetDepartureAirportsList(AutoCompleteReadEventArgs args)
         {
-            args.Data = await GetAirportsList(schedulerVM.DepartureAirport);
+            if (schedulerVM.DepartureAirport == null)
+            {
+                return;
+            }
+
+            schedulerVM.DepartureAirport = schedulerVM.DepartureAirport.ToUpper();
+
+            if (schedulerVM.DepartureAirport.Length > 1)
+            {
+                args.Data = departureAirportList = await GetAirportsList(schedulerVM.DepartureAirport);
+            }
         }
 
         async Task GetArrivalAirportsList(AutoCompleteReadEventArgs args)
         {
-            args.Data = await GetAirportsList(schedulerVM.ArrivalAirport);
+            if (schedulerVM.ArrivalAirport == null)
+            {
+                return;
+            }
+
+            schedulerVM.ArrivalAirport = schedulerVM.ArrivalAirport.ToUpper();
+
+            if (schedulerVM.ArrivalAirport.Length > 1)
+            {
+                args.Data = arrivalAirpotList = await GetAirportsList(schedulerVM.ArrivalAirport);
+            }
         }
 
         private async Task<List<DropDownGuidValues>> GetAirportsList(string airportName)
         {
-            if(airportName == null)
+            if (airportName == null)
             {
                 return new List<DropDownGuidValues>();
             }
 
-            airportAPIFilter.Name = airportName.ToUpper();
+            airportAPIFilter.AirportCode = airportName.ToUpper();
             var data = await AirportService.ListDropDownValues(dependecyParams, airportAPIFilter);
 
             return data;
@@ -649,23 +635,21 @@ namespace Web.UI.Pages.Scheduler
         {
             ChangeLoaderVisibilityAction(true);
 
-            CurrentResponse response = await AirportService.FindByName(dependecyParams ,airportName);
+            CurrentResponse response = await AirportService.FindByName(dependecyParams, airportName);
 
-            if(response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == System.Net.HttpStatusCode.OK)
             {
-               jsonData = response.Data.ToString();
+                jsonData = response.Data.ToString();
+                childPopupTitle = "Airport Details";
+                operationType = OperationType.DocumentViewer;
+                isDisplayChildPopup = true;
             }
             else
             {
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
-                return;
             }
 
-            childPopupTitle = "Airport Details";
-
-            operationType = OperationType.DocumentViewer;
             ChangeLoaderVisibilityAction(false);
-            isDisplayChildPopup = true;
         }
     }
 }

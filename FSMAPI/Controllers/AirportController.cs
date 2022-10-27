@@ -36,6 +36,7 @@ namespace FSMAPI.Controllers
                 string url = ConfigurationSettings.Instance.AirportAPIURL;
 
                 PropertyInfo[] properties = typeof(AirportAPIFilter).GetProperties();
+                airportAPIFilter.ICAOId = airportAPIFilter.AirportCode;
 
                 foreach (PropertyInfo property in properties)
                 {
@@ -43,9 +44,15 @@ namespace FSMAPI.Controllers
                     string value = Convert.ToString(property.GetValue(airportAPIFilter));
 
                     if ((key == nameof(AirportAPIFilter.LocId) || key == nameof(AirportAPIFilter.StateId) || key == nameof(AirportAPIFilter.FacilityType)
-                        || key == nameof(AirportAPIFilter.SiteId) || key == nameof(AirportAPIFilter.Name)) && !string.IsNullOrWhiteSpace(value))
+                        || key == nameof(AirportAPIFilter.SiteId) || key == nameof(AirportAPIFilter.Name) || key == nameof(AirportAPIFilter.ICAOId))
+                        && !string.IsNullOrWhiteSpace(value))
                     {
-                        url += $"&{nameof(property.Name)}={value}";
+                        foreach (object attr in property.GetCustomAttributes(true))
+                        {
+                            key = (attr as JsonPropertyAttribute).PropertyName;
+                        }
+
+                        url += $"&{key}={value}";
                     }
                 }
 
@@ -64,11 +71,10 @@ namespace FSMAPI.Controllers
 
                 foreach (AirportDetailsViewModel item in airportDetailsViewModel.Value)
                 {
-                    dropDownGuidValues.Add(new DropDownGuidValues() { Id = item.id, Name = item.Name });
+                    dropDownGuidValues.Add(new DropDownGuidValues() { Id = item.id, Name = item.ICAOId });
                 }
 
                 response.Data = dropDownGuidValues;
-
             }
             catch (Exception ex)
             {
@@ -141,7 +147,7 @@ namespace FSMAPI.Controllers
                 response.Status = System.Net.HttpStatusCode.NotFound;
                 response.Message = "Invalid airport";
 
-                string url = $"{ConfigurationSettings.Instance.AirportAPIURL}&Name={airportName}";
+                string url = $"{ConfigurationSettings.Instance.AirportAPIURL}&ICAO Id={airportName}";
 
                 HttpResponseMessage responseObject = await _externalAPICaller.Get(url);
 
@@ -161,7 +167,7 @@ namespace FSMAPI.Controllers
                     return APIResponse(response);
                 }
 
-                var airportDetails = airportDetailsViewModel.Value.Where(p => p.Name.ToLower() == airportName.ToLower()).FirstOrDefault();
+                var airportDetails = airportDetailsViewModel.Value.Where(p => p.ICAOId.ToLower() == airportName.ToLower()).FirstOrDefault();
 
                 if (airportDetails != null)
                 {

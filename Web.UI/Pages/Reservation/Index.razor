@@ -14,8 +14,8 @@
 
 <div class="@(string.IsNullOrWhiteSpace(ParentModuleName) ? "" : "")">
     <div class="row">
-         <div class="col-12">
-        <div class="d-flex justify-content-between">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
                 <div>
                     <ComponentTitle Title="Reservations" Type="AdministrationTitle" />
                 </div>
@@ -31,7 +31,7 @@
                         </div>
                     }
                 </div>
-                </div>
+            </div>
             <hr class="mt-2 my-1" />
         </div>
     </div>
@@ -91,7 +91,7 @@
 
         </div>
 
-        <div class="col-md-3 my-1">
+          <div class="col-md-3 my-1">
 
             <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -101,6 +101,29 @@
             </TelerikComboBox>
 
         </div>
+
+        <div class="col-md-3 my-1">
+
+            <TelerikComboBox Id=departureAirport Data="@reservationFilterVM.DepartureAirportsList" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Departure Airport" ValueField="Id"
+                             @bind-Value="@reservationFilterVM.DepartureAirportId"
+                             OnChange="() => grid.Rebind()">
+            </TelerikComboBox>
+
+        </div>
+
+           <div class="col-md-3 my-1">
+
+            <TelerikComboBox Id=arrivalAirport Data="@reservationFilterVM.ArrivalAirportsList" TextField="Name"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             Placeholder="Select Arrival Airport" ValueField="Id"
+                             @bind-Value="@reservationFilterVM.ArrivalAirportId"
+                             OnChange="() => grid.Rebind()">
+            </TelerikComboBox>
+
+        </div>
+         
     </div>
 
     <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -160,21 +183,30 @@
 
             <GridColumn Field="@nameof(ReservationDataVM.FlightStatus)" Context="dataItem" Title="Flight Status">
                 <Template>
+
+                    <style>
+                        .customBadge {
+                            height: 29px;
+                            border-radius: 5px;
+                            font-size: 12px !important;
+                     
+                        }
+                    </style>
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
                     }
 
                     @if (string.IsNullOrWhiteSpace(value.FlightStatus))
                     {
-                        <label>Scheduled</label>
+                        <span class="btn btn-primary customBadge" style="background-color: #0d6efd;">Scheduled</span>
                     }
                     else if (value.FlightStatus == "CheckedOut" && value.IsCheckOut.GetValueOrDefault() == true)
                     {
-                        <label>Checked Out</label>
+                        <span class="btn btn-success customBadge" style="background-color: #198754;">Checked Out</span>
                     }
                     else
                     {
-                        <label>Checked In</label>
+                        <span class="btn btn-secondary customBadge">Checked In</span>
                     }
 
                 </Template>
