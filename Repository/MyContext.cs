@@ -6,6 +6,7 @@ using DataModels.VM.AircraftModel;
 using DataModels.VM.BillingHistory;
 using DataModels.VM.Common;
 using DataModels.VM.Company;
+using DataModels.VM.Discrepancy;
 using DataModels.VM.Document;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Location;
@@ -118,7 +119,13 @@ namespace Repository
 
         public DbSet<AircraftStatus> AircraftStatuses { get; set; }
 
+        public DbSet<DiscrepancyStatus> DiscrepancyStatuses { get; set; }
+
         public DbSet<UserVSCompany> UsersVsCompanies { get; set; }
+
+        public DbSet<Discrepancy> Discrepancies { get; set; }
+
+        public DbSet<DiscrepancyHistory> DiscrepanciesHistory { get; set; }
 
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
@@ -135,6 +142,7 @@ namespace Repository
         public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
+        public DbSet<DiscrepancyDataVM> DiscrepancyDataVM { get; internal set; }
 
         public DbSet<UserVM> UserDetails { get; set; }
 

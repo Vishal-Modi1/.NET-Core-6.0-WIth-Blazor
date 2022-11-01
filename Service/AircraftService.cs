@@ -445,16 +445,16 @@ namespace Service
                 airCraft.AircraftStatusId = (int)AircraftStatuses.ReadyForFlight;
             }
 
-            airCraft.CreatedBy = airCraftVM.CreatedBy;
-            airCraft.UpdatedBy = airCraftVM.UpdatedBy;
-
+           
             if (airCraftVM.Id == 0)
             {
                 airCraft.CreatedOn = DateTime.UtcNow;
+                airCraft.CreatedBy = airCraftVM.CreatedBy;
             }
             else
             {
                 airCraft.UpdatedOn = DateTime.UtcNow;
+                airCraft.UpdatedBy = airCraftVM.UpdatedBy;
             }
 
             return airCraft;

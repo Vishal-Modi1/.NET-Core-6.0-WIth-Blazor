@@ -40,6 +40,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserVSCompanyService, UserVSCompanyService>();
             services.AddScoped<IAircraftStatusService, AircraftStatusService>();
             services.AddScoped<IInviteUserService, InviteUserService>();
+            services.AddScoped<IDiscrepancyService, DiscrepancyService>();
+            services.AddScoped<IDiscrepancyStatusService, DiscrepancyStatusService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -78,8 +80,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserVSCompanyRepository, UserVSCompanyRepository>();
             services.AddScoped<IAircraftStatusRepository, AircraftStatusRepository>();
             services.AddScoped<IInviteUserRepository, InviteUserRepository>();
-            //services.AddScoped(typeof(IRepository<>), typeof(ReadOnlyRepositoryBase<>));
-            //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IDiscrepancyRepository, DiscrepancyRepository>();
+            services.AddScoped<IDiscrepancyStatusRepository, DiscrepancyStatusRepository>();
         }
     }
 }

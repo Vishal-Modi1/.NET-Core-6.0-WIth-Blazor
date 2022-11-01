@@ -12,7 +12,7 @@ namespace Web.UI.Extensions
             datatableParams.Length = args.Request.PageSize;
             datatableParams.Start = args.Request.Page;
             datatableParams.SortOrderColumn = defaultSearchOrderColumn;
-            datatableParams.OrderType = "asc";
+            datatableParams.OrderType = "desc";
 
             if (args.Request.Sorts.Count > 0)
             {

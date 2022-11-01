@@ -21,7 +21,7 @@
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
                     {
                         <div class="col-md-4">
-                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => DocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
+                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenDocumentCreateDialog(new DocumentDataVM())" Enabled="@(!isBusyAddButton)">
                                 <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                                 </TelerikLoader>
                             </TelerikButton>
@@ -180,7 +180,7 @@
 
                                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                                 {
-                                    <TelerikButton Class="btn k-btn-grid-edit mx-2 flex-fill" OnClick="()=>DocumentCreateDialog(value)"
+                                    <TelerikButton Class="btn k-btn-grid-edit mx-2 flex-fill" OnClick="()=>OpenDocumentCreateDialog(value)"
                                            ThemeColor="success" Enabled=!value.IsLoadingEditButton>
 
                                         <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>

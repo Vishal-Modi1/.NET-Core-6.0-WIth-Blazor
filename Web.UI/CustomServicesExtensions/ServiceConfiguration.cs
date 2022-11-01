@@ -21,6 +21,7 @@ using Web.UI.Data.Timezone;
 using Web.UI.Data.AircraftStatus;
 using Web.UI.Data.InviteUser;
 using Web.UI.Data.Airport;
+using Web.UI.Data.Discrepancy;
 
 namespace Web.UI.CustomServicesExtensions
 {
@@ -52,6 +53,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<AircraftStatusService>();
             builder.Services.AddScoped<InviteUserService>();
             builder.Services.AddScoped<AirportService>();
+            builder.Services.AddScoped<DiscrepancyService>();
         }
     }
 }

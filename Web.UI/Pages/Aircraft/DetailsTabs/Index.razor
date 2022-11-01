@@ -58,6 +58,22 @@
                 </Web.UI.Pages.Document.Index>
             </Content>
         </TabStripTab>
+
+               <TabStripTab>
+            <HeaderTemplate>
+                <span class="mx-2">
+                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Flightdocument" IsTransparent="@(IsTabSelectedFlag(3))"
+                                                                     PrimaryColor="#3066F8" SecondaryColor="#3066F8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                </span>
+                <span>Discrepancies</span>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.Discrepancy.Index AircraftIdParam="@aircraftData.Id">
+
+                </Web.UI.Pages.Discrepancy.Index>
+            </Content>
+        </TabStripTab>
+
 @*        <TabStripTab>
             <HeaderTemplate>
                 <span class="mx-2">

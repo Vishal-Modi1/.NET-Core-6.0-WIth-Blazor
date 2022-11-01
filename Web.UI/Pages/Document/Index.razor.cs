@@ -108,7 +108,7 @@ namespace Web.UI.Pages.Document
             }
         }
 
-        async Task DocumentCreateDialog(DocumentDataVM documentDataVM)
+        async Task OpenDocumentCreateDialog(DocumentDataVM documentDataVM)
         {
             if (documentDataVM.Id == Guid.Empty)
             {

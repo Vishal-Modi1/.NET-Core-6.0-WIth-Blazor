@@ -158,7 +158,7 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("isaircraftexist")]
+        [Route("isAircraftExist")]
         public IActionResult IsAirCraftExist(long id, string tailNo)
         {
             CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
@@ -167,7 +167,7 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listdropdownvalues")]
+        [Route("listDropdownValues")]
         public IActionResult ListAircraftDropdownValues()
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);

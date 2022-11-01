@@ -2,7 +2,7 @@
 
 namespace DataModels.VM.Aircraft
 {
-    public  class AircraftDataVM
+    public class AircraftDataVM
     {
         public long Id { get; set; }
         public string TailNo { get; set; }

@@ -4,6 +4,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;8600;8603;8604</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;8600;8603;8604</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
@@ -19,6 +25,7 @@
     <PackageReference Include="Telerik.UI.for.Blazor">
       <Version>3.6.1</Version>
     </PackageReference>
+    <PackageReference Include="Twilio" Version="5.81.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Configuration\Configuration.csproj" />
