@@ -914,8 +914,289 @@ else
                 }
                 else if (operationType == OperationType.DocumentViewer)
                 {
-                    <div class="my-2"  style="overflow-y: scroll;max-height: 60vh;">
-                        <pre>@jsonData</pre>
+                    <div class="my-0" style="overflow-y: scroll;max-height: 60vh;">
+                        @*<pre>@jsonData</pre>*@
+                        <TelerikTabStrip @bind-ActiveTabIndex="@activeAirportTabIndex" Class="k-tabstrip-list">
+                            <TabStripTab>
+                                <HeaderTemplate>
+                                    <FontLabel fontColor="#042455">Info</FontLabel>
+                                </HeaderTemplate>
+                                <Content>
+                                    <div class="ad-text ap-title d-flex align-items-center">
+                                        <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                    </div>
+                                    <div class="ad-text ap-value d-flex align-items-center justify-content-between">
+                                        <span><FontLabel fontColor="#042455">ASOS</FontLabel></span>
+                                        <span><FontLabel fontColor="#042455">920-420-2344</FontLabel></span>
+                                    </div>
+                                    <div class="ad-text ap-value d-flex align-items-center justify-content-between">
+                                        <span><FontLabel fontColor="#042455">ATIS</FontLabel></span>
+                                        <span><FontLabel fontColor="#042455">125.9</FontLabel></span>
+                                    </div>
+                                    <div class="ad-text ap-title d-flex align-items-center">
+                                        <FontLabel fontColor="#042455">Ground</FontLabel>
+                                    </div>
+                                    <div class="ad-text ap-value d-flex align-items-center justify-content-between">
+                                        <span><FontLabel fontColor="#042455">Oshkosh Ground</FontLabel></span>
+                                        <span><FontLabel fontColor="#042455">132.3</FontLabel></span>
+                                    </div>
+                                    <div class="ad-text ap-title d-flex align-items-center">
+                                        <FontLabel fontColor="#042455">Tower</FontLabel>
+                                    </div>
+                                    <div class="ad-text ap-value d-flex align-items-center justify-content-between">
+                                        <span><FontLabel fontColor="#042455">Oshkosh Tower</FontLabel><span class="px-3 text-muted">0600-2200</span></span>
+                                        <span><FontLabel fontColor="#042455">132.3</FontLabel></span>
+                                    </div>
+                                </Content>
+                            </TabStripTab>
+                            <TabStripTab>
+                                <HeaderTemplate>
+                                    <FontLabel fontColor="#042455">Weather</FontLabel>
+                                </HeaderTemplate>
+                                <Content>
+                                    <TelerikTabStrip @bind-ActiveTabIndex="@activeAirportWeatherTabIndex" Class="k-tabstrip-list">
+                                        <TabStripTab>
+                                            <HeaderTemplate>
+                                                <FontLabel fontColor="#042455">Metar</FontLabel>
+                                            </HeaderTemplate>
+                                            <Content>
+                                                <div class="ad-text ap-value d-flex align-items-center justify-content-between">
+                                                    <span><TelerikIcon Icon="kpi-status-open" Class="text-success" /><FontLabel fontColor="#34A853">VFR</FontLabel></span>
+                                                    <span><FontLabel fontColor="#3066F8">12m ago</FontLabel></span>
+                                                </div>
+                                                <div class="ad-text ap-value d-flex align-items-center">
+                                                    <span><FontLabel fontColor="#34A853">KOSH 301453Z 19005KT 7SM CLR 12/06 A3006 RMK A02 SLP181 T01170061 58006</FontLabel></span>
+                                                </div>
+                                                <div class="">
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Time</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Wind</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Visibility</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Clouds</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Temperatue</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Dewpoint</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Altimeter</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Humidity</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Density Altitude</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1453Z</FontLabel></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ad-text ap-title d-flex align-items-center">
+                                                    <FontLabel fontColor="#042455">Nearby Weather</FontLabel>
+                                                </div>
+                                                <div class="nearby-weather-container">
+                                                <div class="nearby-weather-1">
+                                                    <div class="ad-text ap-value d-flex align-items-center justify-content-between border-0">
+                                                        <span><TelerikIcon Icon="kpi-status-open" Class="text-success" /><FontLabel fontColor="#042455">KFLD: Fond Du Lac County</FontLabel></span>
+                                                        <span><FontLabel fontColor="#3066F8">19m</FontLabel></span>
+                                                    </div>
+                                                    <div class="ad-text ap-value mx-3 border-0">
+                                                        <div class="text-muted">808’ MSL, CTAF 123.05</div>
+                                                        <div class="text-muted">150° at 3 kts, 14km, sky clear</div>
+                                                        <div class="text-muted">30.05 inHg (1018 hPa), 16°C (6°C dewpoint)</div>
+                                                        <div class="text-muted">13.1nm S, course 170°M</div>
+                                                    </div>
+                                                </div>
+                                                <div class="nearby-weather-1">
+                                                    <div class="ad-text ap-value d-flex align-items-center justify-content-between border-0">
+                                                        <span><TelerikIcon Icon="kpi-status-open" Class="text-success" /><FontLabel fontColor="#042455">KFLD: Fond Du Lac County</FontLabel></span>
+                                                        <span><FontLabel fontColor="#3066F8">19m</FontLabel></span>
+                                                    </div>
+                                                    <div class="ad-text ap-value mx-3 border-0">
+                                                        <div class="text-muted">808’ MSL, CTAF 123.05</div>
+                                                        <div class="text-muted">150° at 3 kts, 14km, sky clear</div>
+                                                        <div class="text-muted">30.05 inHg (1018 hPa), 16°C (6°C dewpoint)</div>
+                                                        <div class="text-muted">13.1nm S, course 170°M</div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                                
+                                            </Content>
+                                        </TabStripTab>
+                                        <TabStripTab>
+                                            <HeaderTemplate>
+                                                <FontLabel fontColor="#042455">Taf</FontLabel>
+                                            </HeaderTemplate>
+                                            <Content>
+                                                <div class="ad-text ap-title d-flex align-items-center justify-content-between border-0">
+                                                    <span><FontLabel fontColor="#042455">KATW TAF</FontLabel></span>
+                                                    <span><FontLabel fontColor="#FE5722">6h 11m ago</FontLabel></span>
+                                                </div>
+                                                <div class="ad-text ap-value border-0">
+                                                    <div class="d-flex justify-content-start w-100"><FontLabel fontColor="#23A757">301120Z 3012/3112 17005KT P6SM BKN150</FontLabel></div>
+                                                    <div class="d-flex justify-content-start w-100"><FontLabel fontColor="#3066F8">TEMPO 3109/3111 4SM BR</FontLabel></div>
+                                                    <div class="d-flex justify-content-start w-100"><FontLabel fontColor="#23A757">FM311100 VRB03KT P6SM SCT200</FontLabel></div>
+                                                </div>
+                                                <div class="ad-text ap-title border-0">
+                                                    <span>&nbsp;</span>
+                                                </div>
+                                                <div class="ad-text ap-value border-0">
+                                                    <div class="d-flex justify-content-center w-100">
+                                                        <CustomIcons IconName="document" PrimaryColor="#042455"></CustomIcons>
+                                                        <span class="mx-2"><FontLabel fontColor="#042455">Forecast Discussion</FontLabel></span>
+                                                    </div>
+                                                </div>
+                                                <div class="ad-text ap-title d-flex align-items-center">
+                                                    <FontLabel fontColor="#042455">0600Z</FontLabel>
+                                                </div>
+                                                <div class="">
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Time</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">VFR</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Wind</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">Winds calm</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Visibility</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">10+ km</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Clouds (AGL)</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">Broken 12,000’</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Expires</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1300Z</FontLabel></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ad-text ap-title d-flex align-items-center">
+                                                    <FontLabel fontColor="#042455">0600Z</FontLabel>
+                                                </div>
+                                                <div class="">
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Time</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">VFR</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Wind</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">Winds calm</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Visibility</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">10+ km</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Clouds (AGL)</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">Broken 12,000’</FontLabel></div>
+                                                    </div>
+                                                    <div class="row p-0 m-0 w-100 ad-text ap-value d-flex align-items-center">
+                                                        <div class="col-5 d-flex justify-content-end"><FontLabel fontColor="#042455">Expires</FontLabel></div>
+                                                        <div class="col-7 d-flex justify-content-start"><FontLabel fontColor="#3066F8">1300Z</FontLabel></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ad-text ap-title d-flex align-items-center justify-content-center border-0">
+                                                    <FontLabel fontColor="#042455">This nearest forecast is provided for convenience only and may not be representative of the forecast at KOSH</FontLabel>
+                                                </div>
+                                            </Content>
+                                        </TabStripTab>
+                                        <TabStripTab>
+                                            <HeaderTemplate>
+                                                <FontLabel fontColor="#042455">Mos</FontLabel>
+                                            </HeaderTemplate>
+                                            <Content>
+                                                <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                                <div>
+                                                    <span>ASOS</span>
+                                                    <span>920-420-2344</span>
+                                                </div>
+
+                                            </Content>
+                                        </TabStripTab>
+                                        <TabStripTab>
+                                            <HeaderTemplate>
+                                                <FontLabel fontColor="#042455">Daily</FontLabel>
+                                            </HeaderTemplate>
+                                            <Content>
+                                                <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                                <div>
+                                                    <span>ASOS</span>
+                                                    <span>920-420-2344</span>
+                                                </div>
+
+                                            </Content>
+                                        </TabStripTab>
+                                        <TabStripTab>
+                                            <HeaderTemplate>
+                                                <FontLabel fontColor="#042455">Winds</FontLabel>
+                                            </HeaderTemplate>
+                                            <Content>
+                                                <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                                <div>
+                                                    <span>ASOS</span>
+                                                    <span>920-420-2344</span>
+                                                </div>
+                                            </Content>
+                                        </TabStripTab>
+                                    </TelerikTabStrip>
+                                    
+                                    
+                                </Content>
+                            </TabStripTab>
+                            <TabStripTab>
+                                <HeaderTemplate>
+                                    <FontLabel fontColor="#042455">Runway</FontLabel>
+                                </HeaderTemplate>
+                                <Content>
+                                    <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                    <div>
+                                        <span>ASOS</span>
+                                        <span>920-420-2344</span>
+                                    </div>
+                                    
+                                </Content>
+                            </TabStripTab>
+                            <TabStripTab>
+                                <HeaderTemplate>
+                            <FontLabel fontColor="#042455">Procedure</FontLabel>
+                                </HeaderTemplate>
+                                <Content>
+                                    <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                    <div>
+                                        <span>ASOS</span>
+                                        <span>920-420-2344</span>
+                                    </div>
+                                    
+                                </Content>
+                            </TabStripTab>
+                            <TabStripTab>
+                                <HeaderTemplate>
+                                    <FontLabel fontColor="#042455">Notam</FontLabel>
+                                </HeaderTemplate>
+                                <Content>
+                                    <FontLabel fontColor="#042455">Weather and Advisory</FontLabel>
+                                    <div>
+                                        <span>ASOS</span>
+                                        <span>920-420-2344</span>
+                                    </div>
+                                </Content>
+                            </TabStripTab>
+                        </TelerikTabStrip>
                     </div>
                         <div class="row d-flex justify-content-end mt-2">
                             <div class="col-4 d-flex justify-content-between">

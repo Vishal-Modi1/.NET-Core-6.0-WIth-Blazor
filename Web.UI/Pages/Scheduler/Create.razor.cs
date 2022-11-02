@@ -36,9 +36,12 @@ namespace Web.UI.Pages.Scheduler
 
         public bool isAllowToEdit;
         public bool isAllowToDelete;
+        public int activeAirportTabIndex { get; set; }
+        public int activeAirportWeatherTabIndex { get; set; }
         AirportAPIFilter airportAPIFilter = new AirportAPIFilter();
         bool isValidAirportsSelected = false;
         string jsonData = "";
+
         List<DropDownGuidValues> departureAirportList, arrivalAirpotList;
 
         List<RadioButtonItem> flightTypes { get; set; } = new List<RadioButtonItem>

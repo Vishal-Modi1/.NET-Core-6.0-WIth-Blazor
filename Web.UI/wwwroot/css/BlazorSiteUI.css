@@ -257,6 +257,10 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border: 1px solid #022a6a !important;
   background-color: #022a6a !important;
 }
+.btn.k-btn-primary:focus {
+  outline: none !important;
+  box-shadow: 0 0 0px 2px rgba(62, 128, 237, 0.3);
+}
 .btn.k-btn-danger {
   color: white;
   border: 1px solid #EE0808 !important;
@@ -583,4 +587,23 @@ td, span, p {
 
 .k-notification {
   max-width: 400px;
+}
+
+.ap-title {
+  color: #042455;
+  background: #E3E3E3;
+}
+
+.ap-value {
+  color: #042455;
+  /*background: #F8F8F8;*/
+  border-bottom: 2px solid #E3E3E3;
+}
+
+.ad-text {
+  padding: 3px !important;
+}
+
+.nearby-weather-1 {
+  border-bottom: 2px solid #E3E3E3;
 }

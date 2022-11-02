@@ -703,4 +703,18 @@ td,span,p
 .k-notification{
     max-width: 400px;
 }
-
+.ap-title {
+    color: $PRIMARY-COLOR;
+    background: #E3E3E3;
+}
+.ap-value {
+    color: $PRIMARY-COLOR;
+    /*background: #F8F8F8;*/
+    border-bottom: 2px solid #E3E3E3;
+}
+.ad-text {
+    padding: 3px !important;
+}
+.nearby-weather-1 {
+    border-bottom: 2px solid #E3E3E3;
+}
