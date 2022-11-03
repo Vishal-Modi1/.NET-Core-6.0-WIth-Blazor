@@ -12,10 +12,8 @@ namespace DataModels.VM.Discrepancy
         [Range(1, long.MaxValue, ErrorMessage = "Please select user")]
         public long ReportedByUserId { get; set; }
 
-
         [Range(1, long.MaxValue, ErrorMessage = "Please select aircraft")]
         public long AircraftId { get; set; }
-
 
         [Range(1, byte.MaxValue, ErrorMessage = "Please select status")]
         public int DiscrepancyStatusId { get; set; }
@@ -30,14 +28,15 @@ namespace DataModels.VM.Discrepancy
         [Range(1, int.MaxValue, ErrorMessage = "Please select company")]
         public int CompanyId { get; set; }
 
-        public Nullable<System.DateTime> CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
         public long CreatedBy { get; set; }
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
 
         // Dropdown List
-        public List<DropDownValues> CompaniesList { get; set; } = new();
         public List<DropDownValues> StatusList { get; set; } = new();
         public List<DropDownLargeValues> UsersList { get; set; } = new();
+
+        public List<DiscrepancyHistoryVM> DiscrepancyHistoryVM { get; set; } = new();
     }
 }

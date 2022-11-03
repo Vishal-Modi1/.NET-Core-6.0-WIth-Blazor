@@ -28,7 +28,6 @@ namespace Web.UI.Pages.Reservation
         ReservationFilterVM reservationFilterVM = new ReservationFilterVM();
         SchedulerVM schedulerVM;
 
-        string timezone = "";
         #endregion
 
         #region Filters
@@ -54,8 +53,6 @@ namespace Web.UI.Pages.Reservation
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
-
-            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             reservationFilterVM = await ReservationService.GetFiltersAsync(dependecyParams);
@@ -191,12 +188,12 @@ namespace Web.UI.Pages.Reservation
         {
             if (datatableParams.StartDate != null)
             {
-                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value.Date, timezone);
+                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value.Date, globalMembers.Timezone);
             }
 
             if (datatableParams.EndDate != null)
             {
-                datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), timezone);
+                datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), globalMembers.Timezone);
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -206,18 +203,18 @@ namespace Web.UI.Pages.Reservation
 
             data.ToList().ForEach(p =>
             {
-                p.StartDateTime = DateConverter.ToLocal(p.StartDateTime, timezone);
-                p.EndDateTime = DateConverter.ToLocal(p.EndDateTime, timezone);
+                p.StartDateTime = DateConverter.ToLocal(p.StartDateTime, globalMembers.Timezone);
+                p.EndDateTime = DateConverter.ToLocal(p.EndDateTime, globalMembers.Timezone);
             });
 
             if (datatableParams.StartDate != null)
             {
-                datatableParams.StartDate = DateConverter.ToLocal(datatableParams.StartDate.Value, timezone);
+                datatableParams.StartDate = DateConverter.ToLocal(datatableParams.StartDate.Value, globalMembers.Timezone);
             }
 
             if (datatableParams.EndDate != null)
             {
-                datatableParams.EndDate = DateConverter.ToLocal(datatableParams.EndDate.Value, timezone);
+                datatableParams.EndDate = DateConverter.ToLocal(datatableParams.EndDate.Value, globalMembers.Timezone);
             }
         }
 
@@ -231,17 +228,17 @@ namespace Web.UI.Pages.Reservation
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, reservationDataVM.Id);
 
-            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
-            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
+            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, globalMembers.Timezone);
+            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, globalMembers.Timezone);
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, globalMembers.Timezone);
             }
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, globalMembers.Timezone);
             }
 
             uiOptions.IsDisplayForm = false;

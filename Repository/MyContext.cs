@@ -142,7 +142,10 @@ namespace Repository
         public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
+
         public DbSet<DiscrepancyDataVM> DiscrepancyDataVM { get; internal set; }
+
+        public DbSet<DiscrepancyHistoryVM> DiscrepancyHistoryVM { get; internal set; }
 
         public DbSet<UserVM> UserDetails { get; set; }
 

@@ -42,6 +42,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IInviteUserService, InviteUserService>();
             services.AddScoped<IDiscrepancyService, DiscrepancyService>();
             services.AddScoped<IDiscrepancyStatusService, DiscrepancyStatusService>();
+            services.AddScoped<IDiscrepancyHistoryService, DiscrepancyHistoryService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -82,6 +83,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IInviteUserRepository, InviteUserRepository>();
             services.AddScoped<IDiscrepancyRepository, DiscrepancyRepository>();
             services.AddScoped<IDiscrepancyStatusRepository, DiscrepancyStatusRepository>();
+            services.AddScoped<IDiscrepancyHistoryRepository, DiscrepancyHistoryRepository>();
         }
     }
 }

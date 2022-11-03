@@ -1,13 +1,20 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.Entities;
+using DataModels.VM.Common;
 using Repository.Interface;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Repository
 {
-    public class DiscrepancyStatusRepository : IDiscrepancyStatusRepository
+    public class DiscrepancyStatusRepository : BaseRepository<DiscrepancyStatus>, IDiscrepancyStatusRepository
     {
         private MyContext _myContext;
+
+        public DiscrepancyStatusRepository(MyContext dbContext)
+           : base(dbContext)
+        {
+            this._myContext = dbContext;
+        }
 
         public List<DropDownValues> ListDropDownValues()
         {

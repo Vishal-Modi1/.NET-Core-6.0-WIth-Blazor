@@ -31,16 +31,15 @@ namespace Repository
                 existingDiscrepancy.ReportedByUserId = discrepancy.ReportedByUserId;
                 existingDiscrepancy.CompanyId = discrepancy.CompanyId;
 
+                existingDiscrepancy.IsActive = discrepancy.IsActive;
+
                 existingDiscrepancy.UpdatedBy = discrepancy.UpdatedBy;
                 existingDiscrepancy.UpdatedOn = discrepancy.UpdatedOn;
-                
-                existingDiscrepancy.IsActive = discrepancy.IsActive;
-                existingDiscrepancy.IsDeleted = discrepancy.IsDeleted;
 
                 _myContext.SaveChanges();
             }
 
-            return discrepancy;
+            return existingDiscrepancy;
         }
 
         public List<DiscrepancyDataVM> List(DiscrepancyDatatableParams datatableParams)
@@ -49,7 +48,7 @@ namespace Repository
 
             string sql = $"EXEC dbo.GetDiscrepanciesList '{datatableParams.SearchText }', { datatableParams.Start }, " +
                 $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                $"{datatableParams.CompanyId}, {datatableParams.AircraftId}";
+                $"{datatableParams.CompanyId}, {datatableParams.AircraftId}, {datatableParams.IsOpen}";
 
             list = _myContext.DiscrepancyDataVM.FromSqlRaw<DiscrepancyDataVM>(sql).ToList();
 

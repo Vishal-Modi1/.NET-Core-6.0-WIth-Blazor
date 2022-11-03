@@ -38,7 +38,7 @@
                 <span>Reservation</span>
             </HeaderTemplate>
             <Content>
-                <Web.UI.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@aircraftData.Id">
+                <Web.UI.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@aircraftData.Id" >
 
                 </Web.UI.Pages.Reservation.Index>
 
@@ -68,7 +68,7 @@
                 <span>Discrepancies</span>
             </HeaderTemplate>
             <Content>
-                <Web.UI.Pages.Discrepancy.Index AircraftIdParam="@aircraftData.Id">
+                <Web.UI.Pages.Discrepancy.Index AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId.GetValueOrDefault()">
 
                 </Web.UI.Pages.Discrepancy.Index>
             </Content>
