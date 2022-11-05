@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Net;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -144,7 +145,7 @@ namespace Web.UI.Pages.Aircraft
                 aircraftData.AircraftStatus = JsonConvert.DeserializeObject<AircraftStatus>(response.Data.ToString());
             }
         }
-
+         
         private void SetCompanyName()
         {
             CompanyName = aircraftData.CompanyName;

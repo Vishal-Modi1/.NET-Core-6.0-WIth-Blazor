@@ -7,7 +7,130 @@
 
 @if (aircraftData != null)
 {
-    <div class="card p-3">
+    <div class="row my-2">
+        <div class="col-md-12 col-lg-3 col-12 my-2">
+            <div class="card p-0" style="height: 100%;">
+                <div class="card-body p-0">
+                    <div>
+                        <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
+                            <span class="d-flex justify-content-end mt-3 k-cursor-pointer invisible">
+                                <label for="filePicker" class="k-cursor-pointer">
+                                    <CustomIcons IconName="edit-square" PrimaryColor="white" />
+                                </label>
+                            </span>
+
+                            <img src="@aircraftData.ImagePath" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
+                             style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
+                        </div>
+                        <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 120px;border-radius: 0 0 7px 7px;">
+                            <div class="col-12 text-center">
+                                <h5><b>@aircraftData.TailNo - @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name) @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</b></h5>
+                                <h5>
+                                    <span style="font-size:16px" Class="text-muted">
+                                        California, USA
+                                    </span>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                    <div class="row" style="padding: 1rem 1rem;">
+                        <div class="col-12">
+                            <span class="mx-2">
+                                <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            Aircraft information
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                    <div>
+                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Tail No</FontLabel></div>
+                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@aircraftData.TailNo</FontLabel></div>
+                        </div>
+                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Model</FontLabel></div>
+                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</FontLabel></div>
+                            </div>
+                            <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Make</FontLabel></div>
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</FontLabel></div>
+                            </div>
+                            <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Category</FontLabel></div>
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#3066F8">@(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</FontLabel></div>
+                            </div>
+                            <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Turbines</FontLabel></div>
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</FontLabel></div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                    <div class="row" style="padding: 1rem 1rem;">
+                        <div class="col-12">
+                            <span class="mx-2">
+                                <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            Maintenance
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                    <div class="row" style="padding: 1rem 1rem;">
+                        <div class="col-12">
+                            Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie. Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                    <div class="row" style="padding: 1rem 1rem;">
+                        <div class="col-12">
+                            <span class="mx-2">
+                                <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            Reservation
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                    <div class="row" style="padding: 1rem 1rem;">
+                        <div class="col-12">
+                            Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie. Lorem ipsum dolor sit amet, dolor sit consectetur adipiscing elit. Etiam eu turpis molestie.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-9 col-12 my-2">
+                <div class="card p-0">
+                    <div class="card-body p-0">
+                        <div class="card m-3">
+                            <div class="row m-2">
+                                <div class="d-flex justify-content-end">
+                                    <TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
+                                           Enabled="@(!isBusy && isUnLocked)" Class="btn k-btn-primary mx-2" ThemeColor="primary">
+                                        <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                                        Edit
+                                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy">
+                                        </TelerikLoader>
+                                    </TelerikButton>
+
+
+                                    <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton && isUnLocked)"
+                                           Class="btn k-btn-primary mx-2" ThemeColor="primary">
+                                        <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                                        Update Status
+                                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                                        </TelerikLoader>
+                                    </TelerikButton>
+
+                                    <TelerikButton ThemeColor="secondary" FillMode="Outline" Class="mx-2 k-btn-secondary-outline" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">Back</TelerikButton>
+                                </div>
+                            </div>
+                            <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @*<div class="card p-3">
         <div class="d-flex justify-content-between">
             <div><h3>@aircraftData.TailNo</h3></div>
             <div>
@@ -63,7 +186,7 @@
             </Web.UI.Pages.Aircraft.DetailsTabs.Index>
 
         </div>
-    </div>
+    </div>*@
 }
 
 @if (isDisplayPopup)
