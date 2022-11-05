@@ -28,125 +28,97 @@
         color: #8A8C9B;
     }
 </style>
-
 <div class="row my-2">
-    <div class="col-md-12 col-lg-4 col-12 my-2">
-        <div class="card p-0"
-             style="height: 350px !important;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
+    <div class="col-md-12 col-lg-3 col-12 my-2">
+        <div class="card p-0">
             <div class="card-body p-0">
-                <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;background-color:transparent;">
-                    <span class="d-flex justify-content-end mt-3 k-cursor-pointer">
-                        <label for="filePicker" class="k-cursor-pointer">
-                            <CustomIcons IconName="edit-square" PrimaryColor="white" />
-                            <InputFile id="filePicker" accept="@supportedImagesFormat" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
-                        </label>
-                    </span>
+                <div>
+                    <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
+                        <span class="d-flex justify-content-end mt-3 k-cursor-pointer">
+                            <label for="filePicker" class="k-cursor-pointer">
+                                <CustomIcons IconName="edit-square" PrimaryColor="white" />
+                                <InputFile id="filePicker" accept="@supportedImagesFormat" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
+                            </label>
+                        </span>
 
-                    <img src="@companyData.Logo" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
-                         style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
+                        <img src="@companyData.Logo" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
+                             style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
+                    </div>
+                    <div class="row bg-white d-flex align-items-center w-100 m-0" style="height: 160px;border-radius: 0 0 7px 7px;">
+                        <div class="col-12 text-center">
+                            <h3><b>@companyData.Name</b></h3>
+                            <h5>
+                                <span style="font-size:16px" Class="text-muted">
+                                    California, USA
+                                </span>
+                            </h5>
+                        </div>
+                    </div>
                 </div>
-                <div class="row bg-white d-flex align-items-center w-100 m-0" style="height: 200px;border-radius: 0 0 7px 7px;">
-                    <div class="col-12 text-center">
-                        <h3><b>@companyData.Name</b></h3>
+                <hr class="m-0" />
+                <div class="row" style="padding: 1rem 1rem;">
+                    <div class="col-12">
+                        <span class="mx-2">
+                            <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                        Company Information
+                    </div>
+                </div>
+                <hr class="m-0" />
+                <div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Company Name</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@companyData.Name</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Primary Service</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start">
+                            <FontLabel fontColor="#042455">
+                                @if (companyData.PrimaryServicesList.Count() > 0 && companyData.PrimaryServiceId != null)
+                                {
+                                    @companyData.PrimaryServicesList.Where(p=>p.Id == companyData.PrimaryServiceId).First().Name
+                                }
+                            </FontLabel>
+                        </div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Timezone</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(companyData.TimeZone)</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Address</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@companyData.Address</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Website</FontLabel></div>
+                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#3066F8"><a href=@(companyData.Website == null ? "" : companyData.Website)>@(companyData.Website == null ? "" : companyData.Website)</a></FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Primary Airport</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(companyData.PrimaryAirport == null ? "-" : companyData.PrimaryAirport)</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Contact No</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(companyData.ContactNo == null ? "-" : companyData.ContactNo)</FontLabel></div>
+                    </div>
+                    <div class="row p-4 m-0 w-100 ap-value d-flex align-items-center border-0">
+                        <div class="col-12 d-flex justify-content-center">
+                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" Enabled="@(!isBusyAddButton)">
+                                Update Details
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-12 col-lg-8 col-12 my-2">
-        <div class="card" style="height: 350px !important;">
-            <div class="card-body">
-                <ul class="nav nav-pills mb-3 d-flex" id="pills-tab" role="tablist">
-
-                    <li class="nav-item flex-fill d-flex" role="presentation">
-                        <button class="nav-link flex-fill active" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                            <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons></span>
-                            Company Information
-                        </button>
-                    </li>
-
-                </ul>
-                <div class="tab-content" id="pills-tabContent" style="max-height: 205px;">
-                    <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <div class="row my-3">
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Company Name :</label>
-                                        <label for="inputFirstName" class="">@companyData.Name</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputLastName" class="col-form-label custom-label">Address :</label>
-                                        <label for="inputLastName" class="">@companyData.Address</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Primary Airport :</label>
-                                        <label class="description">  @(companyData.PrimaryAirport == null ? "-" : companyData.PrimaryAirport)</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Primary Service :</label>
-                                        <label for="inputFirstName" class="">
-                                            @if (companyData.PrimaryServicesList.Count() > 0 && companyData.PrimaryServiceId != null)
-                                            {
-                                                @companyData.PrimaryServicesList.Where(p=>p.Id == companyData.PrimaryServiceId).First().Name
-                                            }
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Website :</label>
-                                        <label for="inputFirstName" class=""><a href=@(companyData.Website == null ? "" : companyData.Website)>@(companyData.Website == null ? "" : companyData.Website)</a></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Contact No :</label>
-                                        <label for="inputFirstName" class="">@(companyData.ContactNo == null ? "-" : companyData.ContactNo)</label>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Timezone :</label>
-                                        <label for="inputFirstName" class="">@(companyData.TimeZone)</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+    <div class="col-md-12 col-lg-9 col-12 my-2">
+        <div class="card p-0">
+            <div class="card-body p-0">
+            <Web.UI.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData />
             </div>
         </div>
     </div>
-</div>
-
- <div class="card" style="margin-top:30px">
-<Web.UI.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData>
-
-</Web.UI.Pages.Company.DetailsView.DetailTabs.Index>
 </div>
