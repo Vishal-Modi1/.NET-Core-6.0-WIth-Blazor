@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.Discrepancy
 {
@@ -16,6 +17,8 @@ namespace DataModels.VM.Discrepancy
         public int CompanyId { get; set; }
         public byte DiscrepancyStatusId { get; set; }
         public string Status { get; set; }
+
+        public DateTime CreatedOn { get; set; }
 
         [NotMapped]
         public bool IsLoadingEditButton { get; set; }

@@ -25,7 +25,7 @@ namespace Web.UI.Shared
         public GlobalMembers globalMembers = new GlobalMembers();
 
         TelerikDrawer<MenuItem> drawerRef { get; set; }
-        
+
         bool isDrawerExpanded { get; set; } = true;
         public NavigationHeaderModel navigationHeaderModel { get; set; }
 
@@ -73,6 +73,7 @@ namespace Web.UI.Shared
             globalMembers.CompanyId = Convert.ToInt32(user.Claims.Where(c => c.Type == CustomClaimTypes.CompanyId).First().Value);
             globalMembers.IsSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
             globalMembers.IsAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.Admin;
+            globalMembers.Timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
         }
 
         private async Task SetNavigationHeaderValues(ClaimsPrincipal user, DependecyParams dependecyParams)
@@ -171,5 +172,7 @@ namespace Web.UI.Shared
         public bool IsSuperAdmin { get; set; }
 
         public bool IsAdmin { get; set; }
+
+        public string Timezone { get; set; }
     }
 }

@@ -6,16 +6,23 @@ using Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using DataModels.Enums;
 
 namespace Service
 {
     public class DiscrepancyService : BaseService, IDiscrepancyService
     {
         private readonly IDiscrepancyRepository _discrepancyRepository;
+        private readonly IDiscrepancyHistoryService _discrepancyHistoryService;
+        private readonly IDiscrepancyHistoryRepository _discrepancyHistoryRepository;
 
-        public DiscrepancyService(IDiscrepancyRepository discrepancyRepository)
+        public DiscrepancyService(IDiscrepancyRepository discrepancyRepository,
+            IDiscrepancyHistoryService discrepancyHistoryService,
+            IDiscrepancyHistoryRepository discrepancyHistoryRepository)
         {
             _discrepancyRepository = discrepancyRepository;
+            _discrepancyHistoryService = discrepancyHistoryService;
+            _discrepancyHistoryRepository = discrepancyHistoryRepository;
         }
 
         public CurrentResponse Create(DiscrepancyVM discrepancyVM)
@@ -24,8 +31,16 @@ namespace Service
 
             try
             {
-                discrepancy.IsActive = true;
+                if (discrepancy.DiscrepancyStatusId == (int)DataModels.Enums.DiscrepancyStatus.Verified_PedingtoRepair ||
+                    discrepancy.DiscrepancyStatusId == (int)DataModels.Enums.DiscrepancyStatus.New_Pending ||
+                    discrepancy.DiscrepancyStatusId == (int)DataModels.Enums.DiscrepancyStatus.Unable_To_Verify)
+                {
+                    discrepancy.IsActive = true;
+                }
+
                 discrepancy = _discrepancyRepository.Create(discrepancy);
+                ManageHistory(new Discrepancy(), discrepancy);
+
                 discrepancyVM = ToBusinessObject(discrepancy);
 
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "Discrepancy added successfully");
@@ -46,7 +61,18 @@ namespace Service
 
             try
             {
+                if (discrepancy.DiscrepancyStatusId == (int)DataModels.Enums.DiscrepancyStatus.Verified_PedingtoRepair ||
+                   discrepancy.DiscrepancyStatusId == (int)DataModels.Enums.DiscrepancyStatus.New_Pending ||
+                   discrepancy.DiscrepancyStatusId == (int)DataModels.Enums.DiscrepancyStatus.Unable_To_Verify)
+                {
+                    discrepancy.IsActive = true;
+                }
+
+                Discrepancy oldDiscrepancy = _discrepancyRepository.FindByCondition(p => p.Id == discrepancyVM.Id);
                 discrepancy = _discrepancyRepository.Edit(discrepancy);
+                
+                ManageHistory(oldDiscrepancy, discrepancy);
+
                 discrepancyVM = ToBusinessObject(discrepancy);
 
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "Discrepancy updated successfully");
@@ -71,6 +97,7 @@ namespace Service
                 if (discrepancy != null)
                 {
                     discrepancyVM = ToBusinessObject(discrepancy);
+                    discrepancyVM.DiscrepancyHistoryVM = _discrepancyHistoryRepository.List(discrepancyVM.Id);
                 }
 
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "");
@@ -103,6 +130,13 @@ namespace Service
                 return _currentResponse;
             }
         }
+
+        private void ManageHistory(Discrepancy oldData, Discrepancy newData)
+        {
+            _discrepancyHistoryService.Create(oldData, newData);
+        }
+
+        #region object mapper
 
         private DiscrepancyVM ToBusinessObject(Discrepancy discrepancy)
         {
@@ -148,5 +182,7 @@ namespace Service
 
             return discrepancy;
         }
+
+        #endregion
     }
 }

@@ -11,25 +11,6 @@ namespace Web.UI.Pages.Discrepancy
 
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        private async Task OnCompanyValueChange(int value)
-        {
-            if (value == 0)
-            {
-                return;
-            }
-
-            ChangeLoaderVisibilityAction(true);
-
-            discrepancyData.CompanyId = value;
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
-         //   discrepancyData.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, discrepancyData.CompanyId);
-            discrepancyData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, discrepancyData.CompanyId);
-
-            ChangeLoaderVisibilityAction(false);
-            base.StateHasChanged();
-        }
-
         public async Task Submit()
         {
             isBusySubmitButton = true;

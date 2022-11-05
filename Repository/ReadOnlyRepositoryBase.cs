@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.Common;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -18,32 +19,57 @@ namespace Repository
 
 		public List<TEntity> SearchFor(Expression<Func<TEntity, bool>> predicate)
 		{
-			return _dbContext.Set<TEntity>().Where(predicate).ToList();
+			return _dbContext.Set<TEntity>().Where(predicate).ToList(); ;
 		}
 
 		public List<TEntity> ListAll()
 		{
-			return _dbContext.Set<TEntity>().ToList();
+			return _dbContext.Set<TEntity>().ToList(); 
 		}
 
 		public TEntity GetById(long id)
 		{
-			return _dbContext.Set<TEntity>().Find(id);
+			TEntity entity = _dbContext.Set<TEntity>().Find(id);
+			if (entity != null)
+			{
+				_dbContext.Entry(entity).State = EntityState.Detached;
+			}
+
+			return entity;
 		}
 
 		public TEntity GetById(int id)
 		{
-			return _dbContext.Set<TEntity>().Find(id);
+			TEntity entity = _dbContext.Set<TEntity>().Find(id);
+			if (entity != null)
+			{
+				_dbContext.Entry(entity).State = EntityState.Detached;
+			}
+
+			return entity;
 		}
 
 		public TEntity GetById(byte id)
 		{
-			return _dbContext.Set<TEntity>().Find(id);
+			TEntity entity = _dbContext.Set<TEntity>().Find(id);
+			if (entity != null)
+			{
+				_dbContext.Entry(entity).State = EntityState.Detached;
+			}
+
+			return entity;
 		}
 
 		public TEntity FindByCondition(Expression<Func<TEntity, bool>> predicate)
         {
-			return _dbContext.Set<TEntity>().Where(predicate).FirstOrDefault();
+			TEntity entity = _dbContext.Set<TEntity>().Where(predicate).FirstOrDefault();
+
+			if (entity != null)
+			{
+				_dbContext.Entry(entity).State = EntityState.Detached;
+			}
+
+			return entity;
 		}
     }
 }
