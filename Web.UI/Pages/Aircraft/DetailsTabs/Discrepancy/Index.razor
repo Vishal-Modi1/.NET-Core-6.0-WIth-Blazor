@@ -1,4 +1,4 @@
-﻿@namespace Web.UI.Pages.Discrepancy
+﻿@namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
 @using DataModels.Enums
 @using DataModels.VM.Discrepancy
 @using Telerik.Blazor
@@ -34,7 +34,7 @@
         <TelerikComboBox Id=statusId Data="@Statuses" TextField="Name" Value="@statusId"
                          ValueChanged="@( (int value) => OnStatusValueChange(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Status" ValueField="Id" ClearButton="false" >
+                         Placeholder="Select Status" ValueField="Id" ClearButton="false">
         </TelerikComboBox>
     </div>
     <div class="col-md-3 my-1">
@@ -53,9 +53,9 @@
         </Template>
     </TelerikLoaderContainer>
 
-    <TelerikGrid TItem="DiscrepancyDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid" 
+    <TelerikGrid TItem="DiscrepancyDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
                  Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
-                 SelectionMode="@GridSelectionMode.Single" 
+                 SelectionMode="@GridSelectionMode.Single"
                  SelectedItemsChanged="@((IEnumerable<DiscrepancyDataVM> discrepanciesList) => OnSelect(discrepanciesList))">
 
         <GridSettings>
@@ -111,7 +111,7 @@
                         </TelerikLoader>
 
                     </TelerikButton>
-                    
+
                 }
             </GridCommandColumn>
 
@@ -124,6 +124,7 @@
 @if (isDisplayPopup)
 {
     <CustomPopupComponent Title="@popupTitle"
+                      
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>

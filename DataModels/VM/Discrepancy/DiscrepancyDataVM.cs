@@ -10,7 +10,6 @@ namespace DataModels.VM.Discrepancy
 
         public string ReportedByUser { get; set; }
         public long AircraftId { get; set; }
-        public string FileName { get; set; }
         public string TailNo { get; set; }
         public string Description { get; set; }
         public string ActionTaken { get; set; }

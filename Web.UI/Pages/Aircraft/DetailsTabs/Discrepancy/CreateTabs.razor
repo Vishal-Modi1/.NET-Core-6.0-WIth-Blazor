@@ -1,0 +1,50 @@
+﻿
+<TelerikTabStrip Class="k-tabstrip-list">
+
+    <TabStripTab>
+
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+
+                <span>General</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.Create discrepancyData="@discrepancyData" CloseDialogCallBack="@CloseDialog">
+            </Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.Create>
+        </Content>
+    </TabStripTab>
+
+    @if (discrepancyData.DiscrepancyHistoryVM.Count() > 0)
+    {
+        <TabStripTab>
+
+            <HeaderTemplate>
+                <div class="d-flex justify-content-center align-items-center">
+
+                    <span>History</span>
+                </div>
+            </HeaderTemplate>
+            <Content>
+                <DiscrepancyHistory discrepancyHistoryData="@discrepancyData.DiscrepancyHistoryVM" CloseDialogCallBack="@CloseDialog"></DiscrepancyHistory>
+            </Content>
+        </TabStripTab>
+    }
+
+    <TabStripTab>
+
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+
+                <span>Files</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Index
+            DiscrepancyIdParam="@discrepancyData.Id">
+
+            </Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Index>
+        </Content>
+    </TabStripTab>
+
+</TelerikTabStrip>

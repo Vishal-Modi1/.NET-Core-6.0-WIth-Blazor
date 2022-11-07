@@ -120,6 +120,7 @@ namespace Repository
         public DbSet<AircraftStatus> AircraftStatuses { get; set; }
 
         public DbSet<DiscrepancyStatus> DiscrepancyStatuses { get; set; }
+        public DbSet<DiscrepancyFile> DiscrepancyFiles { get; set; }
 
         public DbSet<UserVSCompany> UsersVsCompanies { get; set; }
 

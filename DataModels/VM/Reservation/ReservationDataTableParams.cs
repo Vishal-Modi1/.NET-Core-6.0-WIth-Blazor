@@ -11,7 +11,6 @@ namespace DataModels.VM.Reservation
         public long? UserId { get; set; }
         public long? AircraftId { get; set; }
         public Guid DepartureAirportId { get; set; }
-
         public Guid ArrivalAirportId { get; set; }
         public ReservationType ReservationType { get; set; }
     }

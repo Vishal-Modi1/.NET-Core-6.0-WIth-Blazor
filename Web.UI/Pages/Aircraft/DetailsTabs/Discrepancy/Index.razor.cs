@@ -7,7 +7,7 @@ using Utilities;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.Discrepancy
+namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
 {
     partial class Index
     {
@@ -46,7 +46,7 @@ namespace Web.UI.Pages.Discrepancy
             isGridDataLoading = true;
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            var data = await DiscperancyService.ListAsync(dependecyParams, datatableParams);
+            var data = await DiscrepancyService.ListAsync(dependecyParams, datatableParams);
 
             data.ToList().ForEach(p =>
             {
@@ -96,7 +96,7 @@ namespace Web.UI.Pages.Discrepancy
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            discrepancy = await DiscperancyService.GetDetailsAsync(dependecyParams, discrepancyDataVM.Id);
+            discrepancy = await DiscrepancyService.GetDetailsAsync(dependecyParams, discrepancyDataVM.Id);
 
             discrepancy.AircraftId = AircraftIdParam;
 
@@ -111,7 +111,7 @@ namespace Web.UI.Pages.Discrepancy
                 discrepancy.CompanyId = CompanyIdParam;
             }
 
-            discrepancy.StatusList = await DiscperancyService.ListStatusDropdownValues(dependecyParams);
+            discrepancy.StatusList = await DiscrepancyService.ListStatusDropdownValues(dependecyParams);
 
             if (discrepancyDataVM.Id == 0)
             {

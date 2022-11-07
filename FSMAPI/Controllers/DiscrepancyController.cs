@@ -2,6 +2,7 @@
 using DataModels.VM.Common;
 using DataModels.VM.Discrepancy;
 using FSMAPI.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 
@@ -9,6 +10,7 @@ namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DiscrepancyController : BaseAPIController
     {
         private readonly IDiscrepancyService _discrepancyService;
@@ -63,7 +65,6 @@ namespace FSMAPI.Controllers
 
             return APIResponse(response);
         }
-
 
         [HttpGet]
         [Route("listStatusDropdownValues")]

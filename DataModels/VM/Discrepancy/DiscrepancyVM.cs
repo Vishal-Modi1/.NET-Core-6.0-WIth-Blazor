@@ -17,8 +17,6 @@ namespace DataModels.VM.Discrepancy
 
         [Range(1, byte.MaxValue, ErrorMessage = "Please select status")]
         public int DiscrepancyStatusId { get; set; }
-        public string FileName { get; set; }
-        public string FileDisplayName { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         public string Description { get; set; }

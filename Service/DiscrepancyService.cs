@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using DataModels.Enums;
+using System.Linq.Expressions;
 
 namespace Service
 {
@@ -87,6 +88,11 @@ namespace Service
             }
         }
 
+        public Discrepancy FindByCondition(Expression<Func<Discrepancy, bool>> predicate)
+        {
+            return _discrepancyRepository.FindByCondition(predicate);
+        }
+
         public CurrentResponse GetDetails(long id)
         {
             try
@@ -145,8 +151,6 @@ namespace Service
             discrepancyVM.Id = discrepancy.Id;
             discrepancyVM.ReportedByUserId = discrepancy.ReportedByUserId;
             discrepancyVM.AircraftId = discrepancy.AircraftId;
-            discrepancyVM.FileDisplayName = discrepancy.FileDisplayName;
-            discrepancyVM.FileName = discrepancy.FileName;
             discrepancyVM.ActionTaken = discrepancy.ActionTaken;
             discrepancyVM.Description = discrepancy.Description;
             discrepancyVM.CompanyId = discrepancy.CompanyId;
@@ -162,8 +166,6 @@ namespace Service
             discrepancy.Id = discrepancyVM.Id;
             discrepancy.ReportedByUserId = discrepancyVM.ReportedByUserId;
             discrepancy.AircraftId = discrepancyVM.AircraftId;
-            discrepancy.FileDisplayName = discrepancyVM.FileDisplayName;
-            discrepancy.FileName = discrepancyVM.FileName;
             discrepancy.ActionTaken = discrepancyVM.ActionTaken;
             discrepancy.Description = discrepancyVM.Description;
             discrepancy.CompanyId = discrepancyVM.CompanyId;

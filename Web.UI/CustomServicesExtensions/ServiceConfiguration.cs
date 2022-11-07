@@ -1,5 +1,4 @@
-﻿using Web.UI.Data;
-using Web.UI.Data.Account;
+﻿using Web.UI.Data.Account;
 using Web.UI.Data.Aircraft;
 using Web.UI.Data.Aircraft.AircraftEquipment;
 using Web.UI.Data.Common;
@@ -54,6 +53,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<InviteUserService>();
             builder.Services.AddScoped<AirportService>();
             builder.Services.AddScoped<DiscrepancyService>();
+            builder.Services.AddScoped<DiscrepancyFileService>();
         }
     }
 }

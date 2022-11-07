@@ -16,7 +16,7 @@ namespace Web.UI.Pages.Reservation
     partial class Index
     {
         #region Params
-
+        
         [Parameter] public long UserId { get; set; }
         [Parameter] public long? AircraftId { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
@@ -49,7 +49,7 @@ namespace Web.UI.Pages.Reservation
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }

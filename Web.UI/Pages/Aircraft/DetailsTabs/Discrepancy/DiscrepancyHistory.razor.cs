@@ -1,11 +1,11 @@
 ﻿using DataModels.VM.Discrepancy;
 using Microsoft.AspNetCore.Components;
 
-namespace Web.UI.Pages.Discrepancy
+namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
 {
-    partial class CreateTabs
+    partial class DiscrepancyHistory
     {
-        [Parameter] public DiscrepancyVM discrepancyData { get; set; }
+        [Parameter] public List<DiscrepancyHistoryVM> discrepancyHistoryData { get; set; }
 
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
