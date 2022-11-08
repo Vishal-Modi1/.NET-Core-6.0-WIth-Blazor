@@ -107,7 +107,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
                 }
                 catch (Exception exc)
                 {
-
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, exc.ToString());
                 }
             }
 

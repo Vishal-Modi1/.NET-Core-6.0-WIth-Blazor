@@ -68,17 +68,15 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
             }
         }
 
-
         void CloseDialog(bool reloadGrid)
         {
-            isDisplayPopup = false;
-
             if (reloadGrid)
             {
                 grid.Rebind();
             }
-        }
 
+            isDisplayPopup = false;
+        }
 
         async Task OpenCreateDialog(DiscrepancyDataVM discrepancyDataVM)
         {
@@ -129,8 +127,8 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
         protected async void OnSelect(IEnumerable<DiscrepancyDataVM> data)
         {
             var selectedData = data.FirstOrDefault();
-            
-            if(selectedData != null)
+
+            if (selectedData != null)
             {
                 ChangeLoaderVisibilityAction(true);
                 await OpenCreateDialog(selectedData);

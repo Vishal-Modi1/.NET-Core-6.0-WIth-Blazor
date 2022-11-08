@@ -13,5 +13,11 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
         {
             CloseDialogCallBack.InvokeAsync(reloadGrid);
         }
+
+        public void UpdateTab(DiscrepancyVM discrepancy)
+        {
+            discrepancyData = discrepancy;
+            StateHasChanged();
+        }
     }
 }

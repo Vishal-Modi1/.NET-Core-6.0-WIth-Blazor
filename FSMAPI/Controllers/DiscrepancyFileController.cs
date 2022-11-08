@@ -118,9 +118,9 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("list")]
-        public IActionResult List(long id)
+        public IActionResult List(long discrepancyId)
         {
-            CurrentResponse response = _discrepancyFileService.List(id);
+            CurrentResponse response = _discrepancyFileService.List(discrepancyId);
 
             return APIResponse(response);
         }

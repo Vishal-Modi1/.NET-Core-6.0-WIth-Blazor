@@ -16,12 +16,19 @@ namespace Service
     {
         private readonly IDiscrepancyFileRepository _discrepancyFileRepository;
         private readonly IDiscrepancyRepository _discrepancyRepository;
+        private readonly IDiscrepancyHistoryRepository _discrepancyHistoryRepository;
+        private readonly IDiscrepancyStatusRepository _discrepancyStatusRepository;
+        private readonly IUserRepository _userRepository;
 
         public DiscrepancyFileService(IDiscrepancyFileRepository discrepancyFileRepository, 
-            IDiscrepancyRepository discrepancyRepository)
+            IDiscrepancyRepository discrepancyRepository,IUserRepository userRepository,
+            IDiscrepancyHistoryRepository discrepancyHistoryRepository,
+            IDiscrepancyStatusRepository discrepancyStatusRepository)
         {
             _discrepancyFileRepository = discrepancyFileRepository;
-            _discrepancyRepository = discrepancyRepository;
+            _discrepancyRepository = discrepancyRepository; _discrepancyHistoryRepository = discrepancyHistoryRepository;
+            _discrepancyStatusRepository = discrepancyStatusRepository;
+            _userRepository = userRepository;
         }
 
         public CurrentResponse Create(DiscrepancyFileVM discrepancyFileVM)
@@ -30,6 +37,8 @@ namespace Service
             {
                 DiscrepancyFile discrepancyFile = ToDataObject(discrepancyFileVM);
                 discrepancyFile = _discrepancyFileRepository.Create(discrepancyFile);
+                ManageHistory(new DiscrepancyFile(), discrepancyFile);
+
                 CreateResponse(discrepancyFile, HttpStatusCode.OK, "File added successfully.");
 
                 return _currentResponse;
@@ -64,7 +73,13 @@ namespace Service
             try
             {
                 DiscrepancyFile discrepancyFile = ToDataObject(discrepancyFileVM);
+                
+                DiscrepancyFile oldDiscrepancyFile = _discrepancyFileRepository.FindByCondition(p => p.Id == discrepancyFileVM.Id);
+
                 discrepancyFile = _discrepancyFileRepository.Edit(discrepancyFile);
+
+                ManageHistory(oldDiscrepancyFile, discrepancyFile);
+
                 CreateResponse(discrepancyFile, HttpStatusCode.OK, "File updated successfully.");
 
                 return _currentResponse;
@@ -115,11 +130,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse List(long id)
+        public CurrentResponse List(long discrepancyId)
         {
             try
             {
-                List<DiscrepancyFileVM> disperancyFilesList = _discrepancyFileRepository.List(id);
+                List<DiscrepancyFileVM> disperancyFilesList = _discrepancyFileRepository.List(discrepancyId);
 
                 if (disperancyFilesList.Count > 0)
                 {
@@ -171,10 +186,43 @@ namespace Service
             }
         }
 
+        private void ManageHistory(DiscrepancyFile oldData, DiscrepancyFile newData)
+        {
+            DiscrepancyHistory discrepancyHistory = new DiscrepancyHistory();
+
+            discrepancyHistory.DiscrepancyId = newData.DiscrepancyId;
+            discrepancyHistory.CreatedBy = newData.CreatedBy;
+            discrepancyHistory.CreatedOn = DateTime.UtcNow;
+
+            User userDetails = _userRepository.FindByCondition(p => p.Id == discrepancyHistory.CreatedBy);
+
+            string message = "";
+
+            if (oldData.Id == 0)
+            {
+                message = $"New file added by {userDetails.FirstName} {userDetails.LastName}.";
+            }
+            else
+            {
+                if (oldData.DisplayName != newData.DisplayName)
+                {
+                    message += $"File name was changed from {oldData.DisplayName} to {newData.DisplayName}. ";
+                }
+            }
+
+            discrepancyHistory.Message = message;
+
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                _discrepancyHistoryRepository.Create(discrepancyHistory);
+            }
+        }
+
         private DiscrepancyFileVM ToBusinessObject(DiscrepancyFile discrepancyFile)
         {
             DiscrepancyFileVM discrepancyFileVM = new DiscrepancyFileVM();
 
+            discrepancyFileVM.Id = discrepancyFile.Id;
             discrepancyFileVM.DiscrepancyId = discrepancyFile.DiscrepancyId;
             discrepancyFileVM.DisplayName = discrepancyFile.DisplayName;
             discrepancyFileVM.Name = discrepancyFile.Name;
@@ -188,6 +236,7 @@ namespace Service
         {
             DiscrepancyFile discrepancyFile = new DiscrepancyFile();
 
+            discrepancyFile.Id = discrepancyFileVM.Id;
             discrepancyFile.DiscrepancyId = discrepancyFileVM.DiscrepancyId;
             discrepancyFile.DisplayName = discrepancyFileVM.DisplayName;
             discrepancyFile.Name = discrepancyFileVM.Name;

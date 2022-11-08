@@ -43,11 +43,12 @@ namespace Repository
             return discrepancyFile;
         }
 
-        public List<DiscrepancyFileVM> List(long id)
+        public List<DiscrepancyFileVM> List(long discrepancyId)
         {
             List<DiscrepancyFileVM> listData = (from fileData in _myContext.DiscrepancyFiles
                                                 join user in _myContext.Users
                                                 on fileData.CreatedBy equals user.Id
+                                                where fileData.DiscrepancyId == discrepancyId
                                                 select new DiscrepancyFileVM()
                                                 {
                                                     Id = fileData.Id,

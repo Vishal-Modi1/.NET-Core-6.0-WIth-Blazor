@@ -17,7 +17,7 @@ namespace Web.UI.Data.Discrepancy
 
         public async Task<DiscrepancyFileVM> GetDetailsAsync(DependecyParams dependecyParams, long id)
         {
-            dependecyParams.URL = $"discrepancy/getDetails?id={id}";
+            dependecyParams.URL = $"discrepancyFile/getDetails?id={id}";
             var response = await _httpCaller.GetAsync(dependecyParams);
 
             DiscrepancyFileVM discrepancyFileVM = new DiscrepancyFileVM();
@@ -65,7 +65,7 @@ namespace Web.UI.Data.Discrepancy
         {
             try
             {
-                dependecyParams.URL = $"discrepancyFile/list?id={id}";
+                dependecyParams.URL = $"discrepancyFile/list?discrepancyId={id}";
                 CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
                 List<DiscrepancyFileVM> discrepancyFilesList = JsonConvert.DeserializeObject<List<DiscrepancyFileVM>>(response.Data.ToString());

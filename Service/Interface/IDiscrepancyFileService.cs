@@ -14,7 +14,7 @@ namespace Service.Interface
 
         CurrentResponse Delete(long id);
 
-        CurrentResponse List(long id);
+        CurrentResponse List(long discrepancyId);
 
         CurrentResponse GetDetails(long id);
 

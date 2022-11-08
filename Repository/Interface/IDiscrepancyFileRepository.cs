@@ -10,7 +10,7 @@ namespace Repository.Interface
 
         void Delete(long id);
 
-        List<DiscrepancyFileVM> List(long id);
+        List<DiscrepancyFileVM> List(long discrepancyId);
 
         bool UpdateDocumentName(long id, string name);
     }

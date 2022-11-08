@@ -6,7 +6,6 @@ using Service.Interface;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using DataModels.Enums;
 using System.Linq.Expressions;
 
 namespace Service
@@ -14,16 +13,19 @@ namespace Service
     public class DiscrepancyService : BaseService, IDiscrepancyService
     {
         private readonly IDiscrepancyRepository _discrepancyRepository;
-        private readonly IDiscrepancyHistoryService _discrepancyHistoryService;
         private readonly IDiscrepancyHistoryRepository _discrepancyHistoryRepository;
+        private readonly IDiscrepancyStatusRepository _discrepancyStatusRepository;
+        private readonly IUserRepository _userRepository;
 
         public DiscrepancyService(IDiscrepancyRepository discrepancyRepository,
-            IDiscrepancyHistoryService discrepancyHistoryService,
-            IDiscrepancyHistoryRepository discrepancyHistoryRepository)
+            IUserRepository userRepository,
+            IDiscrepancyHistoryRepository discrepancyHistoryRepository,
+            IDiscrepancyStatusRepository discrepancyStatusRepository)
         {
             _discrepancyRepository = discrepancyRepository;
-            _discrepancyHistoryService = discrepancyHistoryService;
             _discrepancyHistoryRepository = discrepancyHistoryRepository;
+            _discrepancyStatusRepository = discrepancyStatusRepository;
+            _userRepository = userRepository;
         }
 
         public CurrentResponse Create(DiscrepancyVM discrepancyVM)
@@ -43,6 +45,7 @@ namespace Service
                 ManageHistory(new Discrepancy(), discrepancy);
 
                 discrepancyVM = ToBusinessObject(discrepancy);
+                discrepancyVM.DiscrepancyHistoryVM = _discrepancyHistoryRepository.List(discrepancyVM.Id);
 
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "Discrepancy added successfully");
 
@@ -75,6 +78,7 @@ namespace Service
                 ManageHistory(oldDiscrepancy, discrepancy);
 
                 discrepancyVM = ToBusinessObject(discrepancy);
+                discrepancyVM.DiscrepancyHistoryVM = _discrepancyHistoryRepository.List(discrepancyVM.Id);
 
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "Discrepancy updated successfully");
 
@@ -139,7 +143,49 @@ namespace Service
 
         private void ManageHistory(Discrepancy oldData, Discrepancy newData)
         {
-            _discrepancyHistoryService.Create(oldData, newData);
+            DiscrepancyHistory discrepancyHistory = new DiscrepancyHistory();
+
+            discrepancyHistory.DiscrepancyId = newData.Id;
+            discrepancyHistory.CreatedBy = newData.CreatedBy;
+            discrepancyHistory.CreatedOn = DateTime.UtcNow;
+
+            User userDetails = _userRepository.FindByCondition(p => p.Id == discrepancyHistory.CreatedBy);
+
+            string message = "";
+
+            if (oldData.Id == 0)
+            {
+                message = $"New discrepancy reported by {userDetails.FirstName} {userDetails.LastName}.";
+            }
+            else
+            {
+                if (oldData.DiscrepancyStatusId != newData.DiscrepancyStatusId)
+                {
+                    List<DataModels.Entities.DiscrepancyStatus> listDiscrepancies = _discrepancyStatusRepository.ListAll();
+
+                    string oldStatus = listDiscrepancies.Find(p => p.Id == oldData.DiscrepancyStatusId).Status;
+                    string newStatus = listDiscrepancies.Find(p => p.Id == newData.DiscrepancyStatusId).Status;
+
+                    message = $"Status was changed from {oldStatus} to {newStatus}. ";
+                }
+
+                if (oldData.Description != newData.Description)
+                {
+                    message += $"Description was changed to {newData.Description}. ";
+                }
+
+                if (oldData.ActionTaken != newData.ActionTaken)
+                {
+                    message += $"Action taken was changed to {newData.ActionTaken}. ";
+                }
+            }
+
+            discrepancyHistory.Message = message;
+
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                _discrepancyHistoryRepository.Create(discrepancyHistory);
+            }
         }
 
         #region object mapper
