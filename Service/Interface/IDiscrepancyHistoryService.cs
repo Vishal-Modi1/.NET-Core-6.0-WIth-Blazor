@@ -1,9 +1,9 @@
-﻿using DataModels.Entities;
+﻿using DataModels.VM.Common;
 
 namespace Service.Interface
 {
     public interface IDiscrepancyHistoryService
     {
-        //void Create(Discrepancy oldData, Discrepancy newData);
+        CurrentResponse List(long discrepancyId);
     }
 }

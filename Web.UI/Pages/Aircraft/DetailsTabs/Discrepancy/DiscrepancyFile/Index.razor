@@ -49,6 +49,11 @@
                     </TelerikLoader>
 
                 </TelerikButton>
+
+                <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(discrepancyFileVM)">
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                </TelerikButton>
+
             }
         </GridCommandColumn>
 
@@ -59,41 +64,41 @@
 @if (isDisplayChildPopup)
 {
     <CustomPopupComponent Title="@childPopupTitle"
-    ShowHeaderCloseButton="operationType == OperationType.DocumentViewer"
+                      ShowHeaderCloseButton="operationType == OperationType.DocumentViewer"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayChildPopup = false;})">
         <Body>
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create discrepancyFileVM="@_discrepancy" 
-                CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create>
+                <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create discrepancyFileVM="@_discrepancyFile"
+                                                                              CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create>
             }
             else if (operationType == OperationType.DocumentViewer)
             {
-                <img src="@_discrepancy.FilePath" style="max-width:100%;max-height:100%;" />
+                <img src="@_discrepancyFile.FilePath" style="max-width:100%;max-height:100%;" />
             }
             else
             {
-                    //Delete popup
-                @* <div>
-                    <p class="mb-4">Are you sure, You want to remove <b> @_companyData.Name </b>?</p>
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to remove <b> @_discrepancyFile.DisplayName </b>?</p>
                     <div class="row" style="text-align:right">
-                    <div class="col">
+                        <div class="col">
 
-                    <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_companyData.Id)" Enabled="@(!isBusyDeleteButton)">
-                    Yes
-                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
-                    </TelerikLoader>
-                    </TelerikButton>
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_discrepancyFile.Id)" Enabled="@(!isBusyDeleteButton)">
+                                Yes
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                            </TelerikButton>
 
-                    <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
-                    No
-                    </TelerikButton>
+                            <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
+                                No
+                            </TelerikButton>
 
+                        </div>
                     </div>
-                    </div>
-                    </div>*@
+                </div>
             }
         </Body>
     </CustomPopupComponent>

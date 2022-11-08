@@ -12,7 +12,7 @@ namespace Service.Interface
 
         CurrentResponse Edit(DiscrepancyFileVM discrepancyFileVM);
 
-        CurrentResponse Delete(long id);
+        CurrentResponse Delete(long id, long deletedBy);
 
         CurrentResponse List(long discrepancyId);
 

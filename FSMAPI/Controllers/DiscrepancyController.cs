@@ -14,18 +14,18 @@ namespace FSMAPI.Controllers
     public class DiscrepancyController : BaseAPIController
     {
         private readonly IDiscrepancyService _discrepancyService;
+        private readonly IDiscrepancyHistoryService _discrepancyHistoryService;
         private readonly IDiscrepancyStatusService _discrepancyStatusService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
-        private readonly FileUploader _fileUploader;
 
         public DiscrepancyController(IDiscrepancyService discrepancyService,
             IDiscrepancyStatusService discrepancyStatusService,
-           IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+           IHttpContextAccessor httpContextAccessor, IDiscrepancyHistoryService discrepancyHistoryService)
         {
             _discrepancyService = discrepancyService;
             _discrepancyStatusService = discrepancyStatusService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
+            _discrepancyHistoryService = discrepancyHistoryService;
         }
 
         [HttpGet]
@@ -71,6 +71,15 @@ namespace FSMAPI.Controllers
         public IActionResult ListStatusDropdownValues()
         {
             CurrentResponse response = _discrepancyStatusService.ListDropDownValues();
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listDiscrepancyHistory")]
+        public IActionResult ListDiscrepancyHistory(long discrepancyId)
+        {
+            CurrentResponse response = _discrepancyHistoryService.List(discrepancyId);
 
             return APIResponse(response);
         }

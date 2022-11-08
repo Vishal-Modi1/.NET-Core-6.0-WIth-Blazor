@@ -53,6 +53,14 @@ namespace Web.UI.Data.Discrepancy
             return response;
         }
 
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, Guid id)
+        {
+            dependecyParams.URL = $"discrepancyFile/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
+
+            return response;
+        }
+
         public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, long id)
         {
             dependecyParams.URL = $"discrepancyFile/delete?id={id}";

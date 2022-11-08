@@ -210,7 +210,6 @@ namespace FSMAPI.Controllers
         public IActionResult Delete(Guid id)
         {
             long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-
             CurrentResponse response = _documentService.Delete(id, deletedBy);
 
             return APIResponse(response);

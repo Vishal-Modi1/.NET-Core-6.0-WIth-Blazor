@@ -1,28 +1,40 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.Common;
+using DataModels.VM.Discrepancy;
 using Repository.Interface;
 using Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Service
 {
     public class DiscrepancyHistoryService : BaseService, IDiscrepancyHistoryService
     {
         private readonly IDiscrepancyHistoryRepository _discrepancyHistoryRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IDiscrepancyStatusRepository _discrepancyStatusRepository;
 
-        public DiscrepancyHistoryService(IDiscrepancyHistoryRepository discrepancyHistoryRepository,
-          IUserRepository userRepository, IDiscrepancyStatusRepository discrepancyStatusRepository)
+        public DiscrepancyHistoryService(IDiscrepancyHistoryRepository discrepancyHistoryRepository)
         {
             _discrepancyHistoryRepository = discrepancyHistoryRepository;
-            _userRepository = userRepository;
-            _discrepancyStatusRepository = discrepancyStatusRepository;
         }
 
-        //public void Create(Discrepancy oldData, Discrepancy newData)
-        //{
-            
-        //}
+        public CurrentResponse List(long discrepancyId)
+        {
+            try
+            {
+                List<DiscrepancyHistoryVM> discrepancyHistories = _discrepancyHistoryRepository.List(discrepancyId);
+
+                CreateResponse(discrepancyHistories, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
     }
 }

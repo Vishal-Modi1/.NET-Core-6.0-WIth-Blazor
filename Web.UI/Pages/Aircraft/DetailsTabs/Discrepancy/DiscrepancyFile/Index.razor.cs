@@ -1,4 +1,5 @@
 ﻿using DataModels.Enums;
+using DataModels.VM.Common;
 using DataModels.VM.Discrepancy;
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
@@ -10,13 +11,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
     {
         [CascadingParameter] public TelerikGrid<DiscrepancyFileVM> grid { get; set; }
         [Parameter] public long DiscrepancyIdParam { get; set; }
-        DiscrepancyFileVM _discrepancy;
-
-        protected override async Task OnInitializedAsync()
-        {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-        }
+        DiscrepancyFileVM _discrepancyFile;
 
         async Task LoadData(GridReadEventArgs args)
         {
@@ -40,7 +35,36 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
                 grid.Rebind();
             }
         }
-        
+
+        async Task OpenDeleteDialog(DiscrepancyFileVM discrepancyFileVM)
+        {
+            isDisplayChildPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete File";
+
+            _discrepancyFile = discrepancyFileVM;
+        }
+
+        async Task DeleteAsync(long id)
+        {
+            isBusyDeleteButton = true;
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await DiscrepancyFileService.DeleteAsync(dependecyParams, id);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+
+            isBusyDeleteButton = false;
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                CloseDialog(true);
+            }
+            else
+            {
+                CloseDialog(false);
+            }
+        }
+
         async Task OpenCreateDialog(DiscrepancyFileVM discrepancyFileVM)
         {
             if (discrepancyFileVM.Id == 0)
@@ -57,8 +81,8 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            _discrepancy = await DiscrepancyFileService.GetDetailsAsync(dependecyParams, discrepancyFileVM.Id);
-            _discrepancy.DiscrepancyId = DiscrepancyIdParam;
+            _discrepancyFile = await DiscrepancyFileService.GetDetailsAsync(dependecyParams, discrepancyFileVM.Id);
+            _discrepancyFile.DiscrepancyId = DiscrepancyIdParam;
 
             if (discrepancyFileVM.Id == 0)
             {
@@ -75,7 +99,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
 
         protected async void OnSelect(IEnumerable<DiscrepancyFileVM> data)
         {
-            _discrepancy = data.First();
+            _discrepancyFile = data.First();
             operationType = OperationType.DocumentViewer;
             isDisplayChildPopup = true;
             childPopupTitle = "File";

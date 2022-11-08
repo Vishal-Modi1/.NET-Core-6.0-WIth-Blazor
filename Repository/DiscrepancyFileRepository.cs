@@ -1,6 +1,7 @@
 ﻿using DataModels.Entities;
 using DataModels.VM.Discrepancy;
 using Repository.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,17 +15,6 @@ namespace Repository
             : base(dbContext)
         {
             this._myContext = dbContext;
-        }
-
-        public void Delete(long id)
-        {
-            DiscrepancyFile discrepancyFile = _myContext.DiscrepancyFiles.Where(p => p.Id == id).FirstOrDefault();
-
-            if (discrepancyFile != null)
-            {
-                discrepancyFile.IsDeleted = true;
-                _myContext.SaveChanges();
-            }
         }
 
         public DiscrepancyFile Edit(DiscrepancyFile discrepancyFile)
@@ -49,6 +39,7 @@ namespace Repository
                                                 join user in _myContext.Users
                                                 on fileData.CreatedBy equals user.Id
                                                 where fileData.DiscrepancyId == discrepancyId
+                                                && fileData.IsActive == true && fileData.IsDeleted == false
                                                 select new DiscrepancyFileVM()
                                                 {
                                                     Id = fileData.Id,
@@ -75,6 +66,20 @@ namespace Repository
             }
 
             return false;
+        }
+
+        public void Delete(long id, long deletedBy)
+        {
+            DiscrepancyFile discrepancyFile = _myContext.DiscrepancyFiles.Where(p => p.Id == id).FirstOrDefault();
+
+            if (discrepancyFile != null)
+            {
+                discrepancyFile.IsDeleted = true;
+                discrepancyFile.DeletedBy = deletedBy;
+                discrepancyFile.DeletedOn = DateTime.UtcNow;
+
+                _myContext.SaveChanges();
+            }
         }
     }
 }

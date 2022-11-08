@@ -51,31 +51,12 @@ namespace Service
             }
         }
 
-        public CurrentResponse Delete(long id)
-        {
-            try
-            {
-                _discrepancyFileRepository.Delete(id);
-                CreateResponse(true, HttpStatusCode.OK, "File deleted successfully.");
-
-                return _currentResponse;
-            }
-            catch (Exception exc)
-            {
-                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
-
-                return _currentResponse;
-            }
-        }
-
         public CurrentResponse Edit(DiscrepancyFileVM discrepancyFileVM)
         {
             try
             {
                 DiscrepancyFile discrepancyFile = ToDataObject(discrepancyFileVM);
-                
                 DiscrepancyFile oldDiscrepancyFile = _discrepancyFileRepository.FindByCondition(p => p.Id == discrepancyFileVM.Id);
-
                 discrepancyFile = _discrepancyFileRepository.Edit(discrepancyFile);
 
                 ManageHistory(oldDiscrepancyFile, discrepancyFile);
@@ -186,15 +167,33 @@ namespace Service
             }
         }
 
+        public CurrentResponse Delete(long id, long deletedBy)
+        {
+            try
+            {
+                _discrepancyFileRepository.Delete(id, deletedBy);
+                var data = _discrepancyFileRepository.FindByCondition(p=>p.Id == id);
+                User userDetails = _userRepository.FindByCondition(p => p.Id == deletedBy);
+                string message = $"File has been deleted by {userDetails.FirstName} {userDetails.LastName}.";
+
+                CreateHistory(message, deletedBy, data.DiscrepancyId);
+
+                CreateResponse(true, HttpStatusCode.OK, "File deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         private void ManageHistory(DiscrepancyFile oldData, DiscrepancyFile newData)
         {
-            DiscrepancyHistory discrepancyHistory = new DiscrepancyHistory();
-
-            discrepancyHistory.DiscrepancyId = newData.DiscrepancyId;
-            discrepancyHistory.CreatedBy = newData.CreatedBy;
-            discrepancyHistory.CreatedOn = DateTime.UtcNow;
-
-            User userDetails = _userRepository.FindByCondition(p => p.Id == discrepancyHistory.CreatedBy);
+            User userDetails = _userRepository.FindByCondition(p => p.Id == newData.CreatedBy);
 
             string message = "";
 
@@ -210,9 +209,19 @@ namespace Service
                 }
             }
 
+            CreateHistory(message, newData.CreatedBy, newData.DiscrepancyId);
+        }
+
+        private void CreateHistory(string message, long createdBy, long discrepancyId)
+        {
+            DiscrepancyHistory discrepancyHistory = new DiscrepancyHistory();
+
+            discrepancyHistory.DiscrepancyId = discrepancyId;
+            discrepancyHistory.CreatedBy = createdBy;
+            discrepancyHistory.CreatedOn = DateTime.UtcNow;
             discrepancyHistory.Message = message;
 
-            if (!string.IsNullOrWhiteSpace(message))
+            if (!string.IsNullOrWhiteSpace(discrepancyHistory.Message))
             {
                 _discrepancyHistoryRepository.Create(discrepancyHistory);
             }

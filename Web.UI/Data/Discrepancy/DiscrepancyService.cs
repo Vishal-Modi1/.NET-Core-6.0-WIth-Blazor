@@ -33,6 +33,23 @@ namespace Web.UI.Data.Discrepancy
             }
         }
 
+        public async Task<List<DiscrepancyHistoryVM>> ListDiscrepancyHistoryAsync(DependecyParams dependecyParams, long id)
+        {
+            try
+            {
+                dependecyParams.URL = $"discrepancy/listDiscrepancyHistory?discrepancyId={id}";
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+                List<DiscrepancyHistoryVM> discrepanciesList = JsonConvert.DeserializeObject<List<DiscrepancyHistoryVM>>(response.Data.ToString());
+
+                return discrepanciesList;
+            }
+            catch (Exception exc)
+            {
+                return new List<DiscrepancyHistoryVM>();
+            }
+        }
+
         public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DiscrepancyVM discrepancyVM)
         {
             dependecyParams.JsonData = JsonConvert.SerializeObject(discrepancyVM);

@@ -108,11 +108,13 @@ namespace FSMAPI.Controllers
             return response;
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            CurrentResponse response = _discrepancyFileService.Delete(id);
+            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            CurrentResponse response = _discrepancyFileService.Delete(id, deletedBy);
+
             return APIResponse(response);
         }
 
