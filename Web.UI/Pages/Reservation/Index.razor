@@ -38,12 +38,12 @@
 
     <div class="row my-2">
         <div class="col-md-3 my-1">
-            <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange"
+            <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange" Class="common-bg"
                                Format="MM/dd/yyyy %h:mm tt" Placeholder="Select Start Date" Id="startDate">
             </TelerikDatePicker>
         </div>
         <div class="col-md-3 my-1">
-            <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange"
+            <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange" Class="common-bg"
                                Format="MM/dd/yyyy %h:mm tt" Id="endDate" Placeholder="Select End Date">
             </TelerikDatePicker>
         </div>
@@ -51,7 +51,7 @@
         {
             <div class="col-md-3 my-1">
 
-                <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name"
+                <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                              Placeholder="Select Company" ValueField="Id"
                              Value="@reservationFilterVM.CompanyId"
@@ -62,7 +62,7 @@
             </div>
 
             <div class="col-md-3 my-1">
-                <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name"
+                <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                              Placeholder="Select User" ValueField="Id"
                              @bind-Value="@reservationFilterVM.UserId"
@@ -75,7 +75,7 @@
         {
             <div class="col-md-3 my-1">
 
-                <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name"
+                <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                              Placeholder="Select Aircraft" ValueField="Id"
                              @bind-Value="@reservationFilterVM.AircraftId"
@@ -86,14 +86,14 @@
         }
         <div class="col-md-3 my-1">
 
-            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation"
+            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation" Class="common-bg"
                             ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
 
         </div>
 
           <div class="col-md-3 my-1">
 
-            <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name"
+            <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                              Placeholder="Select Reservation Type" ValueField="Id"
                              @bind-Value="@reservationFilterTypeId"
@@ -104,7 +104,7 @@
 
         <div class="col-md-3 my-1">
 
-            <TelerikComboBox Id=departureAirport Data="@reservationFilterVM.DepartureAirportsList" TextField="Name"
+            <TelerikComboBox Id=departureAirport Data="@reservationFilterVM.DepartureAirportsList" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                              Placeholder="Select Departure Airport" ValueField="Id"
                              @bind-Value="@reservationFilterVM.DepartureAirportId"
@@ -115,7 +115,7 @@
 
            <div class="col-md-3 my-1">
 
-            <TelerikComboBox Id=arrivalAirport Data="@reservationFilterVM.ArrivalAirportsList" TextField="Name"
+            <TelerikComboBox Id=arrivalAirport Data="@reservationFilterVM.ArrivalAirportsList" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                              Placeholder="Select Arrival Airport" ValueField="Id"
                              @bind-Value="@reservationFilterVM.ArrivalAirportId"
