@@ -3,7 +3,6 @@
 
 @if (CompanyData != null && CompanyData.Id != 0)
 {
-    <div class="card m-3">
         <TelerikTabStrip Class="k-tabstrip-list">
 
             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
@@ -83,5 +82,4 @@
                 </Content>
             </TabStripTab>
         </TelerikTabStrip>
-    </div>
 }

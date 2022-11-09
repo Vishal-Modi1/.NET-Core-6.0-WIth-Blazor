@@ -40,6 +40,8 @@ namespace DataModels.VM.Document
 
         public string Size { get; set; }
 
+        public DateTime CreatedOn { get; set; }
+
         public long TotalDownloads { get; set; }
         public long TotalShares { get; set; }
         public int TotalRecords { get; set; }

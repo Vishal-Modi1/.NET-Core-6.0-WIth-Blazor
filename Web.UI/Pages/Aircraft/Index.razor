@@ -200,12 +200,13 @@
         @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
         {
             <div class="col-md-4 my-auto mt-1 py-0 px-3" style="text-align:right">
+                 <span @onclick="@(e => ChangeView(true))" class="cursor-pointer">
+                    <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#0064D4" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
+                </span>
                 <span @onclick="@(e => ChangeView(false))" class="cursor-pointer">
                     <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == false ?   "#0064D4": "#ededed"  )" SecondaryColor="@(isDisplayGridView == false ? "white" : "black")"></CustomIcons>
                 </span>
-                <span @onclick="@(e => ChangeView(true))" class="cursor-pointer">
-                    <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#0064D4" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
-                </span>
+               
             </div>
         }
         else{

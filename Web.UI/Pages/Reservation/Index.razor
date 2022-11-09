@@ -91,7 +91,7 @@
 
         </div>
 
-          <div class="col-md-3 my-1">
+        <div class="col-md-3 my-1">
 
             <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -113,7 +113,7 @@
 
         </div>
 
-           <div class="col-md-3 my-1">
+        <div class="col-md-3 my-1">
 
             <TelerikComboBox Id=arrivalAirport Data="@reservationFilterVM.ArrivalAirportsList" TextField="Name" Class="common-bg"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -123,7 +123,7 @@
             </TelerikComboBox>
 
         </div>
-         
+
     </div>
 
     <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -142,6 +142,7 @@
                 <GridColumn Field="@nameof(ReservationDataVM.TailNo)" Title="Aircraft" />
             }
 
+            <GridColumn Field="@nameof(ReservationDataVM.Member1)" Title="Booked By" />
             <GridColumn Field="@nameof(ReservationDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")"></GridColumn>
 
             <GridColumn Field="@nameof(ReservationDataVM.StartDateTime)" Context="dataItem" Title="From">
@@ -169,7 +170,7 @@
 
             </GridColumn>
 
-            <GridColumn Field="@nameof(ReservationDataVM.AirFrameTime)" Context="dataItem" Title="Flight Hours">
+            <GridColumn Field="@nameof(ReservationDataVM.AirFrameTime)" Context="dataItem" Title="Flight Hours" TextAlign="@ColumnTextAlign.Center">
                 <Template>
 
                     @{
@@ -181,17 +182,10 @@
 
             </GridColumn>
 
-            <GridColumn Field="@nameof(ReservationDataVM.FlightStatus)" Context="dataItem" Title="Flight Status">
+            <GridColumn Field="@nameof(ReservationDataVM.FlightStatus)" Context="dataItem" Title="Flight Status" TextAlign="@ColumnTextAlign.Center">
                 <Template>
 
-                    <style>
-                        .customBadge {
-                            height: 29px;
-                            border-radius: 5px;
-                            font-size: 12px !important;
-                     
-                        }
-                    </style>
+
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
                     }
@@ -251,3 +245,12 @@
 
     </CustomPopupComponent>
 }
+
+<style>
+    .customBadge {
+        height: 29px;
+        border-radius: 5px;
+        font-size: 12px !important;
+        padding-top: 5px !important;
+    }
+</style>

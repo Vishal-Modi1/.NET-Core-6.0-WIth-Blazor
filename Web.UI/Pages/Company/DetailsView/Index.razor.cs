@@ -115,6 +115,7 @@ namespace Web.UI.Pages.Company.DetailsView
 
         void CompanyEditDialog()
         {
+            popupTitle = "Edit Details";
             isDisplayPopup = true;
         }
 

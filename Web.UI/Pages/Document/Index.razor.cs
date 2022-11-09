@@ -8,6 +8,7 @@ using System.Net;
 using DataModels.Enums;
 using Telerik.Blazor.Components;
 using DataModels.Constants;
+using Utilities;
 
 namespace Web.UI.Pages.Document
 {
@@ -86,6 +87,11 @@ namespace Web.UI.Pages.Document
             data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
+
+            data.ToList().ForEach(p =>
+            {
+                p.CreatedOn = DateConverter.ToLocal(p.CreatedOn, globalMembers.Timezone);
+            });
 
             isGridDataLoading = false;
         }

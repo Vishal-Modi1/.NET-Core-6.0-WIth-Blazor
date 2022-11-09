@@ -482,22 +482,7 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
-        private string GetSchedulerStatusText()
-        {
-            if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
-            {
-                return "Checked Out";
-            }
-            else if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
-            {
-                return "Checked In";
-            }
-            else
-            {
-                return "Scheduled";
-            }
-        }
-
+        
         private async Task UnCheckOutAppointment()
         {
             uiOptions.IsBusyUnCheckOutButton = true;
@@ -616,7 +601,6 @@ namespace Web.UI.Pages.Scheduler
 
         public void OpenMainForm()
         {
-
             uiOptions.IsDisplayForm = true;
             uiOptions.IsDisplayCheckOutOption = false;
             uiOptions.IsDisplayMainForm = true;

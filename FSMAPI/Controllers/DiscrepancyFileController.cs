@@ -92,7 +92,7 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
-        public CurrentResponse Create(DiscrepancyFileVM discrepancyFileVM)
+        private CurrentResponse Create(DiscrepancyFileVM discrepancyFileVM)
         {
             discrepancyFileVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _discrepancyFileService.Create(discrepancyFileVM);
@@ -100,7 +100,7 @@ namespace FSMAPI.Controllers
             return response;
         }
 
-        public CurrentResponse Edit(DiscrepancyFileVM discrepancyFileVM)
+        private CurrentResponse Edit(DiscrepancyFileVM discrepancyFileVM)
         {
             discrepancyFileVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _discrepancyFileService.Edit(discrepancyFileVM);

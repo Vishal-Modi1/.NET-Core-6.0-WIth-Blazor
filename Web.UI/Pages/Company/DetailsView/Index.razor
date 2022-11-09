@@ -44,32 +44,25 @@
                         <img src="@companyData.Logo" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
                              style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
                     </div>
-                    <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 120px;border-radius: 0 0 7px 7px;">
+                    <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 100px;border-radius: 0 0 7px 7px;">
                         <div class="col-12 text-center">
-                            <h3><b>@companyData.Name</b></h3>
-                            <h5>
-                                <span style="font-size:16px" Class="text-muted">
-                                    California, USA
-                                </span>
-                            </h5>
+                            <h5><b>@companyData.Name</b></h5>
                         </div>
                     </div>
                 </div>
-                <hr class="m-0" />
-                <div class="row" style="padding: 1rem 1rem;">
-                    <div class="col-12">
-                        <span class="mx-2">
-                            <CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+                 <hr class="m-0" />
+                    <div class="row" style="padding: 1rem 1rem;">
+                        <div class="col-12">
+                            <span class="mx-2">
+                                <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
                             </span>
-                        Company Information
+                            Company information
+                        </div>
                     </div>
-                </div>
-                <hr class="m-0" />
+                    <hr class="m-0" />
+               
                 <div>
-                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Company Name</FontLabel></div>
-                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@companyData.Name</FontLabel></div>
-                    </div>
+                   
                     <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
                         <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Primary Service</FontLabel></div>
                         <div class="col-6 d-flex justify-content-start">
@@ -103,7 +96,7 @@
                     </div>
                     <div class="row p-4 m-0 w-100 ap-value d-flex align-items-center border-0">
                         <div class="col-12 d-flex justify-content-center">
-                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" Enabled="@(!isBusyAddButton)">
+                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="@CompanyEditDialog" Enabled="@(!isBusyAddButton)">
                                 Update Details
                                 <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                                 </TelerikLoader>
@@ -122,3 +115,16 @@
         </div>
     </div>
 </div>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+                <Create companyData=@(companyData) CloseDialogCallBack="@CloseDialog"></Create>
+            
+        </Body>
+    </CustomPopupComponent>
+}

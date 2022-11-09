@@ -139,6 +139,19 @@
                     <GridColumn Field="@nameof(DocumentDataVM.UserName)" Title="User" Width="15%" />
                 }
 
+                <GridColumn Field=@nameof(DocumentDataVM.CreatedOn) Context="dataItem" Title="Created On" Width="7%">
+
+                    <Template>
+                        @{
+                            DocumentDataVM value = dataItem as DocumentDataVM;
+                            string date = value.CreatedOn.ToShortDateString();
+
+                            <label>@date</label>
+                        }
+                    </Template>
+                </GridColumn>
+
+
                 <GridColumn Field=@nameof(DocumentDataVM.ExpirationDate) Context="dataItem" Title="Expiration Date" Width="7%">
 
                     <Template>
@@ -214,7 +227,7 @@
 
 @if (isDisplayPopup)
 {
-    <CustomPopupComponent Title="@popupTitle" 
+    <CustomPopupComponent Title="@popupTitle"
                       ShowHeaderCloseButton="operationType == OperationType.DocumentShare || operationType == OperationType.DocumentViewer"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" Width="600px"
@@ -223,7 +236,7 @@
 
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
-                <Create DocumentData="@documentData" CloseDialogCallBack="@CloseDialog" ParentModuleName = "@ParentModuleName"></Create>
+                <Create DocumentData="@documentData" CloseDialogCallBack="@CloseDialog" ParentModuleName="@ParentModuleName"></Create>
             }
             else if (operationType == OperationType.Delete)
             {
