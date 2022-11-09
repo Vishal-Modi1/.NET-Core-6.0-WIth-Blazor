@@ -42,7 +42,7 @@
 
                 <TelerikComboBox Id=moduleId Data="@documentFilterVM.ModulesList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                             Placeholder="Select Module" ValueField="Id">
+                             Placeholder="Select Module" ValueField="Id" Class="common-bg">
                 </TelerikComboBox>
 
             </div>
@@ -53,13 +53,13 @@
             <div class="col-md-3 col-sm-12 my-1">
                 <TelerikComboBox Id=companyId Data="@documentFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                             Placeholder="Select Company" ValueField="Id">
+                             Placeholder="Select Company" ValueField="Id" Class="common-bg">
                 </TelerikComboBox>
             </div>
         }
 
         <div class="col-md-3 col-sm-12 my-1">
-            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Document" ValueChanged="@( (string value) => OnSearchValueChanges<DocumentDataVM>(value, grid) )" />
+            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" Class="common-bg" PlaceHolder="Search Document" ValueChanged="@( (string value) => OnSearchValueChanges<DocumentDataVM>(value, grid) )" />
         </div>
     </div>
 

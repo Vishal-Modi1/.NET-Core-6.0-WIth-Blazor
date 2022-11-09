@@ -43,7 +43,7 @@
     <div class="col-md-4">
         <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Role" ValueField="Id">
+                         Placeholder="Select Role" ValueField="Id" Class="common-bg">
         </TelerikComboBox>
 
     </div>
@@ -55,14 +55,14 @@
             <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name"
                          ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id">
+                         Placeholder="Select Company" ValueField="Id" Class="common-bg">
             </TelerikComboBox>
 
         </div>
     }
 
     <div class="col-md-4">
-        <TelerikTextBox Name="SearchText" PlaceHolder="Search User" ValueChanged="@( (string value) => OnSearchValueChanges<UserDataVM>(value, grid) )" />
+        <TelerikTextBox Name="SearchText" PlaceHolder="Search User" Class="common-bg" ValueChanged="@( (string value) => OnSearchValueChanges<UserDataVM>(value, grid) )" />
     </div>
 
 </div>
