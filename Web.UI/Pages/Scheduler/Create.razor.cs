@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Web.UI.Models.Scheduler;
 using DataModels.VM.ExternalAPI.Airport;
 using Telerik.Blazor.Components;
+using Newtonsoft.Json;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -36,11 +37,9 @@ namespace Web.UI.Pages.Scheduler
 
         public bool isAllowToEdit;
         public bool isAllowToDelete;
-        public int activeAirportTabIndex { get; set; }
-        public int activeAirportWeatherTabIndex { get; set; }
         AirportAPIFilter airportAPIFilter = new AirportAPIFilter();
         bool isValidAirportsSelected = false;
-        string jsonData = "";
+        AirportDetailsViewModel airportDetails = new ();
 
         List<DropDownGuidValues> departureAirportList, arrivalAirpotList;
 
@@ -626,7 +625,10 @@ namespace Web.UI.Pages.Scheduler
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                jsonData = response.Data.ToString();
+                AirportViewModel airports = JsonConvert.DeserializeObject<AirportViewModel>(response.Data.ToString());
+
+                airportDetails = airports.Value.FirstOrDefault();
+
                 childPopupTitle = "Airport Details";
                 operationType = OperationType.DocumentViewer;
                 isDisplayChildPopup = true;
