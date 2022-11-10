@@ -128,7 +128,7 @@ namespace Web.UI.Pages.Aircraft
             popupTitle = "Update Status";
         }
 
-        async Task CloseDialog()
+        void CloseDialog()
         {
             isDisplayPopup = false;
         }
@@ -145,7 +145,86 @@ namespace Web.UI.Pages.Aircraft
                 aircraftData.AircraftStatus = JsonConvert.DeserializeObject<AircraftStatus>(response.Data.ToString());
             }
         }
-         
+
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                string fileType = Path.GetExtension(e.File.Name);
+                List<string> supportedImagesFormatsList = supportedImagesFormat?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                if (supportedImagesFormatsList is not null && !supportedImagesFormatsList.Contains(fileType))
+                {
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
+                    return;
+                }
+
+                if (e.File.Size > maxProfileImageUploadSize)
+                {
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    return;
+                }
+
+                MemoryStream ms = new MemoryStream();
+                await e.File.OpenReadStream(maxProfileImageUploadSize).CopyToAsync(ms);
+                byte[] bytes = ms.ToArray();
+
+                await OnChangeAsync(bytes);
+            }
+            catch (Exception ex)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
+            }
+        }
+
+        async Task OnChangeAsync(byte[] bytes)
+        {
+            if (string.IsNullOrWhiteSpace(aircraftData.ImagePath))
+            {
+                return;
+            }
+
+            ChangeLoaderVisibilityAction(true);
+
+            //byte[] bytes = Convert.FromBase64String(companyData.LogoPath.Substring(companyData.LogoPath.IndexOf(",") + 1));
+
+            ByteArrayContent data = new ByteArrayContent(bytes);
+
+            try
+            {
+                MultipartFormDataContent multiContent = new MultipartFormDataContent
+                {
+                   { data, "0","0" }
+                };
+
+                multiContent.Add(new StringContent(aircraftData.Id.ToString()), "AircraftId");
+                multiContent.Add(new StringContent(aircraftData.CompanyId.ToString()), "CompanyId");
+
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                CurrentResponse response = await AircraftService.UploadAircraftImageAsync(dependecyParams, multiContent);
+
+                ManageFileUploadResponse(response, true, bytes);
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            ChangeLoaderVisibilityAction(false);
+        }
+
+        private void ManageFileUploadResponse(CurrentResponse response, bool isCloseDialog, byte[] byteArray)
+        {
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+
+            if (response.Status == HttpStatusCode.OK && isCloseDialog)
+            {
+                var b64String = Convert.ToBase64String(byteArray);
+                aircraftData.ImagePath = "data:image/png;base64," + b64String;
+                CloseDialog();
+            }
+        }
+
         private void SetCompanyName()
         {
             CompanyName = aircraftData.CompanyName;
