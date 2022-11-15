@@ -187,11 +187,8 @@ namespace Service
                 }
 
                 AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
-
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
-
                 SendScheduleMail(schedulerVM, "You appointment has been scheduled.", timezone);
-
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment created successfully");
 
                 return _currentResponse;
@@ -396,7 +393,7 @@ namespace Service
                 viewModel.Message = message;
 
                 user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member1Id);
-                viewModel.Email = user.Email;
+                viewModel.ToEmail = user.Email;
                 viewModel.Member1 = viewModel.UserName = user.FirstName + " " + user.LastName;
 
                 _sendMailService.AppointmentCreated(viewModel);
@@ -407,7 +404,7 @@ namespace Service
                 {
                     viewModel.Message = message;
                     user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member2Id);
-                    viewModel.Email = user.Email;
+                    viewModel.ToEmail = user.Email;
                     viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
 
                     _sendMailService.AppointmentCreated(viewModel);
@@ -416,7 +413,7 @@ namespace Service
                 {
                     viewModel.Message = $"{viewModel.Member1} has scheduled an appointment. you are the part of an appointment.";
                     user = _userRepository.FindByCondition(p => p.Id == schedulerVM.InstructorId);
-                    viewModel.Email = user.Email;
+                    viewModel.ToEmail = user.Email;
                     viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
 
                     _sendMailService.AppointmentCreated(viewModel);

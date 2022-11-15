@@ -44,7 +44,7 @@ namespace FSMAPI.Controllers
         [HttpGet]
         [Route("myprofiledetails")]
         
-        public IActionResult MyProfileDetilas()
+        public IActionResult MyProfileDetails()
         {
             string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);

@@ -13,7 +13,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
         [Parameter] public DiscrepancyFileVM discrepancyFileVM { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
-        bool isFileUploadHasError;
+        bool isFileUploadHasError, isFileAdded;
         string errorMessage;
         IReadOnlyList<IBrowserFile> selectedFiles;
         public string SaveUrl => ToAbsoluteUrl("api/fileupload/save");
@@ -65,7 +65,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
             isFileUploadHasError = false;
             discrepancyFileVM.DisplayName = "";
             selectedFiles = e.GetMultipleFiles();
-
+            isFileAdded = false;
             ChangeLoaderVisibilityAction(true);
 
             foreach (IBrowserFile file in selectedFiles)
@@ -78,6 +78,8 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
 
                         globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, errorMessage);
                         isFileUploadHasError = true;
+                        ChangeLoaderVisibilityAction(true);
+                        this.StateHasChanged();
                         return;
                     }
 
@@ -87,6 +89,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
 
                         globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, errorMessage);
                         isFileUploadHasError = true;
+                        ChangeLoaderVisibilityAction(false);
                         return;
                     }
                     
@@ -104,6 +107,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
                     byte[] fileData = File.ReadAllBytes(uploadedFilePath);
                     discrepancyFileVM.DisplayName = Path.GetFileNameWithoutExtension(uploadedFilePath);
                     discrepancyFileVM.Name = Path.GetFileName(uploadedFilePath);
+                    isFileAdded = true;
                 }
                 catch (Exception exc)
                 {

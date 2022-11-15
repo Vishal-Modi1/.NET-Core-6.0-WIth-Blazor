@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Linq.Expressions;
+using Utilities;
+using System.Linq;
+using DataModels.Enums;
 
 namespace Service
 {
@@ -16,19 +19,24 @@ namespace Service
         private readonly IDiscrepancyHistoryRepository _discrepancyHistoryRepository;
         private readonly IDiscrepancyStatusRepository _discrepancyStatusRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ISendMailService _sendMailService;
+        private readonly IAircraftRepository _aircraftRepository;
 
         public DiscrepancyService(IDiscrepancyRepository discrepancyRepository,
-            IUserRepository userRepository,
+            IUserRepository userRepository, ISendMailService sendMailService,
             IDiscrepancyHistoryRepository discrepancyHistoryRepository,
-            IDiscrepancyStatusRepository discrepancyStatusRepository)
+            IDiscrepancyStatusRepository discrepancyStatusRepository,
+            IAircraftRepository aircraftRepository)
         {
             _discrepancyRepository = discrepancyRepository;
             _discrepancyHistoryRepository = discrepancyHistoryRepository;
             _discrepancyStatusRepository = discrepancyStatusRepository;
             _userRepository = userRepository;
+            _sendMailService = sendMailService;
+            _aircraftRepository = aircraftRepository;
         }
 
-        public CurrentResponse Create(DiscrepancyVM discrepancyVM)
+        public CurrentResponse Create(DiscrepancyVM discrepancyVM, string timezone)
         {
             Discrepancy discrepancy = ToDataObject(discrepancyVM);
 
@@ -47,6 +55,8 @@ namespace Service
                 discrepancyVM = ToBusinessObject(discrepancy);
                 discrepancyVM.DiscrepancyHistoryVM = _discrepancyHistoryRepository.List(discrepancyVM.Id);
 
+                SendScheduleMail(discrepancyVM, true, timezone);
+
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "Discrepancy added successfully");
 
                 return _currentResponse;
@@ -59,7 +69,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse Edit(DiscrepancyVM discrepancyVM)
+        public CurrentResponse Edit(DiscrepancyVM discrepancyVM, string timezone)
         {
             Discrepancy discrepancy = ToDataObject(discrepancyVM);
 
@@ -79,6 +89,8 @@ namespace Service
 
                 discrepancyVM = ToBusinessObject(discrepancy);
                 discrepancyVM.DiscrepancyHistoryVM = _discrepancyHistoryRepository.List(discrepancyVM.Id);
+
+                SendScheduleMail(discrepancyVM, false, timezone);
 
                 CreateResponse(discrepancyVM, HttpStatusCode.OK, "Discrepancy updated successfully");
 
@@ -201,6 +213,8 @@ namespace Service
             discrepancyVM.Description = discrepancy.Description;
             discrepancyVM.CompanyId = discrepancy.CompanyId;
             discrepancyVM.DiscrepancyStatusId = discrepancy.DiscrepancyStatusId;
+            discrepancyVM.CreatedBy = discrepancy.CreatedBy;
+            discrepancyVM.CreatedOn = discrepancy.CreatedOn;
 
             return discrepancyVM;
         }
@@ -229,6 +243,55 @@ namespace Service
             }
 
             return discrepancy;
+        }
+
+        private void SendScheduleMail(DiscrepancyVM discrepancyVM, bool isNew, string timezone)
+        {
+            try
+            {
+                if(!isNew && discrepancyVM.DiscrepancyStatusId != (byte)DataModels.Enums.DiscrepancyStatus.Verified_And_Repaired)
+                {
+                    return;
+                }
+
+                Aircraft aircraft = _aircraftRepository.FindByCondition(p => p.Id == discrepancyVM.AircraftId);
+                List<User> usersList = _userRepository.ListAllbyCompanyId(discrepancyVM.CompanyId).ToList();
+                User reportedBy = _userRepository.FindByCondition(p => p.Id == discrepancyVM.ReportedByUserId);
+
+                DiscrepancyCreatedSendEmailViewModel viewModel = new();
+                viewModel.CreatedOn = DateConverter.ToLocal(discrepancyVM.CreatedOn, timezone);
+                viewModel.Aircraft = aircraft.TailNo;
+                viewModel.ReportedBy = reportedBy.FirstName + " " + reportedBy.LastName;
+                
+                viewModel.Description = discrepancyVM.Description;
+                viewModel.ActionTaken = discrepancyVM.ActionTaken;
+
+                viewModel.Status = _discrepancyStatusRepository.FindByCondition(p => p.Id == discrepancyVM.DiscrepancyStatusId).Status;
+
+                if (isNew)
+                {
+                    viewModel.Subject = $"{viewModel.Aircraft} - New Discrepancy Added";
+                }
+                else
+                {
+                    viewModel.Subject = $"{viewModel.Aircraft} - Discrepancy Closed";
+                }
+
+                viewModel.ToEmails.AddRange(usersList.Select(p => p.Email));
+                _sendMailService.DiscrepancyCreated(viewModel);
+
+                //foreach (User user in usersList)
+                //{
+                //    viewModel.UserName = user.FirstName + " " + user.LastName;
+                //    viewModel.ToEmails = new List<string> { user.Email };
+                //    _sendMailService.DiscrepancyCreated(viewModel);
+                //}
+
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         #endregion

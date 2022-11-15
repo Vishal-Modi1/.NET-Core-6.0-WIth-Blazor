@@ -22,7 +22,7 @@ namespace Web.UI.Pages.Company
 
         ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
         int? primaryServiceId;
-
+        int zipcode;
 
         EditContext companyForm;
 

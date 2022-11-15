@@ -82,7 +82,29 @@ namespace Service
             }
         }
 
-        public CurrentResponse List(DatatableParams datatableParams)
+        public CurrentResponse GetFiltersValue()
+        {
+            try
+            {
+                CompanyFilter companyFilter = new CompanyFilter();
+
+                companyFilter.Cities = _companyRepository.ListCityDropDownValues();
+                companyFilter.States = _companyRepository.ListStateDropDownValues();
+
+                CreateResponse(companyFilter, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new CompanyFilter(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse List(CompanyDatatableParams datatableParams)
         {
             try
             {
@@ -322,6 +344,9 @@ namespace Service
             companyVM.Id = company.Id;
             companyVM.Name = company.Name;
             companyVM.Address = company.Address;
+            companyVM.City = company.City;
+            companyVM.State = company.State;
+            companyVM.Zipcode = company.Zipcode;
             companyVM.ContactNo = company.ContactNo;
             companyVM.TimeZone = company.TimeZone;
             companyVM.Website = company.Website;
@@ -341,6 +366,9 @@ namespace Service
             company.Id = companyVM.Id;
             company.Name = companyVM.Name;
             company.Address = companyVM.Address;
+            company.City = companyVM.City;
+            company.State = companyVM.State;
+            company.Zipcode = companyVM.Zipcode;
             company.ContactNo = companyVM.ContactNo;
             company.TimeZone = companyVM.TimeZone;
             company.Website = companyVM.Website;
@@ -360,9 +388,9 @@ namespace Service
                 company.UpdatedOn = DateTime.UtcNow;
             }
 
-
             return company;
         }
+
         #endregion
     }
 }

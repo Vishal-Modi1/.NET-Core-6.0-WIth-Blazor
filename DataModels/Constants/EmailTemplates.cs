@@ -2,10 +2,10 @@
 {
     public class EmailTemplates
     {
-        public const string ForgotPasswordTemplate = "ForgotPasswordTemplate.html";
-        public const string NewUserAccountActivationTemplate = "NewUserAccountActivationTemplate.html";
-        public const string InviteUserTemplate = "InviteUserTemplate.html";
-        public const string AppointmentCreated = "AppointmentCreated.html";
-
+        public const string ForgotPasswordTemplate = "ForgotPasswordEmailTemplate.html";
+        public const string NewUserAccountActivationTemplate = "NewUserAccountActivationEmailTemplate.html";
+        public const string InviteUserTemplate = "InviteUserEmailTemplate.html";
+        public const string AppointmentCreatedTemplate = "AppointmentCreatedEmailTemplate.html";
+        public const string DiscrepancyCreatedTemplate = "DiscrepancyCreatedEmailTemplate.html";
     }
 }

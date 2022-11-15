@@ -11,6 +11,8 @@ using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.Models;
 using DataModels.VM.Scheduler;
+using DataModels.VM.Discrepancy;
+using System.Collections.Generic;
 
 namespace Service
 {
@@ -50,7 +52,8 @@ namespace Service
                     return false;
                 }
 
-                MailSettings mailSettings = GetMailSettings(userVM.Email, "Account Activation", newUserAccountActivationMailBody, "");
+                List<string> emails = new List<string>() { userVM.Email };
+                MailSettings mailSettings = GetMailSettings(emails, "Account Activation", newUserAccountActivationMailBody, "");
 
                 bool isMailSent = _mailSender.SendMail(mailSettings);
 
@@ -79,7 +82,8 @@ namespace Service
                     string body = GetEmailTemplate(EmailTemplates.ForgotPasswordTemplate);
                     body = body.Replace("{Link}", url);
 
-                    MailSettings mailSettings = GetMailSettings(email, "Password Reset", body, "");
+                    List<string> emails = new List<string>() { email };
+                    MailSettings mailSettings = GetMailSettings(emails, "Password Reset", body, "");
                     bool isMailSent = _mailSender.SendMail(mailSettings);
 
                     EmailToken emailToken = SaveEmailToken(EmailTypes.ForgotPassword, token, user.Id);
@@ -128,7 +132,8 @@ namespace Service
                     return false;
                 }
 
-                MailSettings mailSettings = GetMailSettings(userVM.Email, $"Invitation to join {userVM.CompanyName}", inviteUserTemplate, "");
+                List<string> emails = new List<string>() { userVM.Email };
+                MailSettings mailSettings = GetMailSettings(emails, $"Invitation to join {userVM.CompanyName}", inviteUserTemplate, "");
 
                 bool isMailSent = _mailSender.SendMail(mailSettings);
 
@@ -160,7 +165,7 @@ namespace Service
         {
             try
             {
-                string emailTemplateBody = GetEmailTemplate(EmailTemplates.AppointmentCreated);
+                string emailTemplateBody = GetEmailTemplate(EmailTemplates.AppointmentCreatedTemplate);
                 emailTemplateBody = emailTemplateBody.Replace("{userName}", viewModel.UserName);
                 emailTemplateBody = emailTemplateBody.Replace("{message}", viewModel.Message);
                 emailTemplateBody = emailTemplateBody.Replace("{member1}", viewModel.Member1);
@@ -174,7 +179,35 @@ namespace Service
 
                 emailTemplateBody = emailTemplateBody.Replace("{link}", viewModel.Link);
 
-                MailSettings mailSettings = GetMailSettings(viewModel.Email, "Upflyte Appointment", emailTemplateBody, "");
+                List<string> emails = new List<string>() { viewModel.ToEmail };
+                MailSettings mailSettings = GetMailSettings(emails, "Upflyte Appointment", emailTemplateBody, "");
+
+                bool isMailSent = _mailSender.SendMail(mailSettings);
+
+                return isMailSent;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        public bool DiscrepancyCreated(DiscrepancyCreatedSendEmailViewModel viewModel)
+        {
+            try
+            {
+                string emailTemplateBody = GetEmailTemplate(EmailTemplates.DiscrepancyCreatedTemplate);
+                emailTemplateBody = emailTemplateBody.Replace("{userName}", viewModel.UserName);
+                emailTemplateBody = emailTemplateBody.Replace("{createdOn}", viewModel.CreatedOn.ToString());
+                emailTemplateBody = emailTemplateBody.Replace("{reportedBy}", viewModel.ReportedBy);
+                emailTemplateBody = emailTemplateBody.Replace("{status}", viewModel.Status);
+                emailTemplateBody = emailTemplateBody.Replace("{aircraft}", viewModel.Aircraft);
+                emailTemplateBody = emailTemplateBody.Replace("{description}", viewModel.Description);
+                emailTemplateBody = emailTemplateBody.Replace("{actionTaken}", viewModel.ActionTaken);
+
+                MailSettings mailSettings = GetMailSettings(viewModel.ToEmails, viewModel.Subject, emailTemplateBody, "");
 
                 bool isMailSent = _mailSender.SendMail(mailSettings);
 
@@ -202,7 +235,7 @@ namespace Service
             }
         }
 
-        private MailSettings GetMailSettings(string email, string subject, string body, string cc)
+        private MailSettings GetMailSettings(List<string> email, string subject, string body, string cc)
         {
             MailSettings mailSettings = new MailSettings();
 

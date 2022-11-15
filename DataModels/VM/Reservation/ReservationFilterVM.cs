@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DataModels.VM.Reservation
 {
-    public class ReservationFilterVM : CompanyFilterVM
+    public class ReservationFilterVM : CommonFilterVM
     {
         public List<DropDownLargeValues> Users { get; set; } = new List<DropDownLargeValues>();
         public List<DropDownLargeValues> Aircrafts { get; set; } = new List<DropDownLargeValues>();

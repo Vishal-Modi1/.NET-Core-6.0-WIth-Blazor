@@ -14,9 +14,13 @@ namespace Web.UI.Pages.Company
         [CascadingParameter] public TelerikGrid<CompanyVM> grid { get; set; }
         string moduleName = Module.Company.ToString();
         CompanyVM _companyData { get; set; }
+        string state, city;
+        CompanyFilter companyFilter = new CompanyFilter();
+        DependecyParams dependecyParams;
 
         protected override async Task OnInitializedAsync()
         {
+            ChangeLoaderVisibilityAction(true);
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
@@ -24,18 +28,25 @@ namespace Web.UI.Pages.Company
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            companyFilter = await CompanyService.GetFiltersAsync(dependecyParams);
+
             SetSelectedMenuItem("Company");
+
+            ChangeLoaderVisibilityAction(false);
         }
 
         async Task LoadData(GridReadEventArgs args)
         {
             isGridDataLoading = true;
-            DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
+            CompanyDatatableParams datatableParams = new DatatableParams().Create(args, "Name").Cast<CompanyDatatableParams>();
 
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            datatableParams.City = city;
+            datatableParams.State = state;
+
             var data = await CompanyService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;

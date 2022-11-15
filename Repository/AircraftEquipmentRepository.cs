@@ -9,7 +9,7 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Repository
 {
-    public class AirCraftEquipmentRepository : IAircraftEquipmentRepository
+    public class AircraftEquipmentRepository : IAircraftEquipmentRepository
     {
         private MyContext _myContext;
 

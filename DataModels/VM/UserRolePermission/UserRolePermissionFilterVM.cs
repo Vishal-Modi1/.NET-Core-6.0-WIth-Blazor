@@ -5,7 +5,7 @@ using DataModels.VM.Common;
 
 namespace DataModels.VM.UserRolePermission
 {
-    public class UserRolePermissionFilterVM : CompanyFilterVM
+    public class UserRolePermissionFilterVM : CommonFilterVM
     {
         public List<DropDownValues> ModuleList { get; set; }
         public int ModuleId { get; set; }

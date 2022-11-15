@@ -18,7 +18,11 @@ namespace Service.Utilities
 
                 MailMessage myMessage = new MailMessage();
 
-                myMessage.To.Add(new MailAddress(mailSettings.To));
+                foreach (string email in mailSettings.To)
+                {
+                    myMessage.To.Add(new MailAddress(email));
+                }
+                
                 myMessage.From = new MailAddress(mailSettings.From);
                 myMessage.Body = mailSettings.Body;
                 myMessage.IsBodyHtml = mailSettings.IsBodyHTML;

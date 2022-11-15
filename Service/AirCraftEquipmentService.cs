@@ -10,7 +10,7 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Service
 {
-    public class AircraftEquipmentService : BaseService, IAirCraftEquipmentService
+    public class AircraftEquipmentService : BaseService, IAircraftEquipmentService
     {
         private readonly IAircraftEquipmentRepository _aircraftEquipementRepository;
 
@@ -92,7 +92,7 @@ namespace Service
         {
             try
             {
-                List<AircraftEquipment> airCraft = _aircraftEquipementRepository.FindListByCondition(p => p.AirCraftId == airCraftId  && p.IsDeleted != true);
+                List<AircraftEquipment> airCraft = _aircraftEquipementRepository.FindListByCondition(p => p.AircraftId == airCraftId  && p.IsDeleted != true);
                 List<AircraftEquipmentsVM> airCraftVM = new List<AircraftEquipmentsVM>();
 
                 if (airCraft != null && airCraft.Count() > 0)
@@ -107,8 +107,8 @@ namespace Service
 
                 return _currentResponse;
 
-                //List<AirCraftEquipment> airCraftEquipment = _aircraftEquipementRepository.List();
-                //CreateResponse(airCraftEquipment, HttpStatusCode.OK, "");
+                //List<AircraftEquipment> airCraftEquipment = _aircraftEquipementRepository.List();
+                //CreateResponse(aircraftEquipment, HttpStatusCode.OK, "");
 
                 //return _currentResponse;
             }
@@ -144,7 +144,7 @@ namespace Service
             AircraftEquipment aircraftEquipment = new AircraftEquipment();
 
             aircraftEquipment.Id = airCraftEquipmentsVM.Id;
-            aircraftEquipment.AirCraftId = airCraftEquipmentsVM.AirCraftId;
+            aircraftEquipment.AircraftId = airCraftEquipmentsVM.AircraftId;
             aircraftEquipment.StatusId = airCraftEquipmentsVM.StatusId;
             aircraftEquipment.ClassificationId = airCraftEquipmentsVM.ClassificationId;
             aircraftEquipment.AircraftTTInstall = airCraftEquipmentsVM.AircraftTTInstall;
@@ -178,7 +178,7 @@ namespace Service
         {
             AircraftEquipmentsVM airCraftEquipmentsVM = new AircraftEquipmentsVM();
             airCraftEquipmentsVM.Id = airCraftEquipment.Id;
-            airCraftEquipmentsVM.AirCraftId = airCraftEquipment.AirCraftId;
+            airCraftEquipmentsVM.AircraftId = airCraftEquipment.AircraftId;
             airCraftEquipmentsVM.StatusId = airCraftEquipment.StatusId;
             airCraftEquipmentsVM.ClassificationId = airCraftEquipment.ClassificationId;
             airCraftEquipmentsVM.AircraftTTInstall = airCraftEquipment.AircraftTTInstall;

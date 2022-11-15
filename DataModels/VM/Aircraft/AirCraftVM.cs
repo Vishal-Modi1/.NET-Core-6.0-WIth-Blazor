@@ -97,7 +97,7 @@ namespace DataModels.VM.Aircraft
         public List<DropDownValues> AircraftStatusList { get; set; }
         public List<AircraftEquipmentTimeCreateVM> AircraftEquipmentTimesList { get; set; }
 
-        public List<Entities.AircraftEquipment>  AirCraftEquipmentList { get; set; }
+        public List<AircraftEquipmentDataVM>  AircraftEquipmentList { get; set; }
 
         public int TotalRecords { get; set; }
 

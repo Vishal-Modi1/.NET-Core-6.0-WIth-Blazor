@@ -150,6 +150,8 @@ namespace Web.UI.Pages.Aircraft
         {
             try
             {
+                ChangeLoaderVisibilityAction(true);
+                 
                 string fileType = Path.GetExtension(e.File.Name);
                 List<string> supportedImagesFormatsList = supportedImagesFormat?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -175,6 +177,8 @@ namespace Web.UI.Pages.Aircraft
             {
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
+
+            ChangeLoaderVisibilityAction(false);
         }
 
         async Task OnChangeAsync(byte[] bytes)
@@ -183,8 +187,6 @@ namespace Web.UI.Pages.Aircraft
             {
                 return;
             }
-
-            ChangeLoaderVisibilityAction(true);
 
             //byte[] bytes = Convert.FromBase64String(companyData.LogoPath.Substring(companyData.LogoPath.IndexOf(",") + 1));
 
@@ -209,8 +211,6 @@ namespace Web.UI.Pages.Aircraft
             {
 
             }
-
-            ChangeLoaderVisibilityAction(false);
         }
 
         private void ManageFileUploadResponse(CurrentResponse response, bool isCloseDialog, byte[] byteArray)

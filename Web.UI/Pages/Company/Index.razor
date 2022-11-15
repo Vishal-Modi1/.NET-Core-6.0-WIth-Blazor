@@ -25,12 +25,24 @@
         <hr class="mt-2 my-1" />
     </div>
 </div>
-<div class="row">
-    <div class="col d-flex justify-content-between my-2">
+<div class="row my-2">
         <div class="col-md-4">
             <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )" />
         </div>
-    </div>
+
+         <div class="col-md-4">
+             <TelerikComboBox Id=city Data="@companyFilter.Cities" TextField="Name" @bind-Value="@city"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains" 
+                            OnChange="() => grid.Rebind()" Placeholder="Select City" ValueField="Name">
+                </TelerikComboBox>
+        </div>
+
+         <div class="col-md-4">
+            <TelerikComboBox Id=city Data="@companyFilter.States" TextField="Name" @bind-Value="@state"
+                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                             OnChange="() => grid.Rebind()" Placeholder="Select State" ValueField="Name">
+                </TelerikComboBox>
+        </div>
 </div>
 
 <div style="position: relative; width:100%; min-height: 400px;">
@@ -53,7 +65,7 @@
 
         <GridColumns>
 
-            <GridColumn Context="dataItem" Title="Logo" Width="80px">
+            <GridColumn Context="dataItem" Title="Logo" Width="10%">
                 <Template>
                     @{
                         var data = dataItem as CompanyVM;
@@ -64,7 +76,7 @@
                 </Template>
             </GridColumn>
 
-            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company">
+            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company" Width="20%">
                 <Template>
                     @{
                         var data = context as CompanyVM;
@@ -72,10 +84,11 @@
                     }
                 </Template>
             </GridColumn>
-            <GridColumn Field="@nameof(CompanyVM.Address)" />
-            <GridColumn Field="@nameof(CompanyVM.TimeZone)" />
-            <GridColumn Field="@nameof(CompanyVM.ContactNo)" Sortable="false" />
-            <GridColumn Field="@nameof(CompanyVM.Website)" Sortable="false" />
+            <GridColumn Field="@nameof(CompanyVM.City)" Width="12%"/>
+            <GridColumn Field="@nameof(CompanyVM.State)" Width="12%"/>
+            <GridColumn Field="@nameof(CompanyVM.TimeZone)" Width="12%"/>
+            <GridColumn Field="@nameof(CompanyVM.TotalAircrafts)" Title="Aicrafts" TextAlign="@ColumnTextAlign.Center" Width="8%"/>
+            <GridColumn Field="@nameof(CompanyVM.TotalUsers)" Title="Users" TextAlign="@ColumnTextAlign.Center" Width="8%"/>
 
             <GridCommandColumn Context="dataItem" Title="Action">
                 @{

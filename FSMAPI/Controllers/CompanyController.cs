@@ -25,9 +25,21 @@ namespace FSMAPI.Controllers
             _fileUploader = new FileUploader(webHostEnvironment);
         }
 
+        [HttpGet]
+        [Route("getfilters")]
+        public IActionResult GetFilters()
+        {
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
+            CurrentResponse response = _companyService.GetFiltersValue();
+
+            return APIResponse(response);
+        }
+
         [HttpPost]
         [Route("list")]
-        public IActionResult List(DatatableParams datatableParams)
+        public IActionResult List(CompanyDatatableParams datatableParams)
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
 

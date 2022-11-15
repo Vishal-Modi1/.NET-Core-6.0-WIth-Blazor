@@ -15,35 +15,8 @@
                     <div class="col-6">
                         <label>Upload</label>
 
-                        <div image-container>
-                            <style>
-                                .drag-area {
-                                    width: 100%;
-                                    height: 106px;
-                                    background: #F8F8F8;
-                                    border: 0.5px dashed #606060;
-                                    border-radius: 8px;
-                                }
-
-                                .icon > svg {
-                                    width: 30;
-                                    height: 30;
-                                }
-
-                                .header {
-                                    font-style: normal;
-                                    font-weight: 300;
-                                    font-size: 12px;
-                                }
-                            </style>
-                            <label class="drag-area d-flex align-items-center k-cursor-pointer" for="documentImage">
-                                <div class="text-center mx-auto">
-                                    <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
-                                    <header class="header">Drag and drop or <br /> browse to choose images</header>
-                                </div>
-                            </label>
-                            <InputFile Id="documentImage" style="display:none" OnChange="OnInputFileChangeAsync" Value="@discrepancyFileVM.DisplayName" accept="@supportedDocumentsFormat" />
-                        </div>
+                        <CustomFileUpload DisplayName="@discrepancyFileVM.DisplayName" IsFileAdded="@isFileAdded" 
+                        OnInputFileChangeCallback="OnInputFileChangeAsync" IsFileUploadHasError="@isFileUploadHasError"></CustomFileUpload>
 
                         @if (isFileUploadHasError)
                         {

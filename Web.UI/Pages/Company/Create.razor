@@ -29,11 +29,32 @@
                     </div>
                     <div class="col-6">
                         <label>Company Address</label>
-                        <TelerikTextBox Id="address" @bind-Value="@companyData.Address" PlaceHolder="Company Address" Enabled=@(!IsInvited)></TelerikTextBox>
+                        <TelerikTextArea  AutoSize="true" Id="address" @bind-Value="@companyData.Address" PlaceHolder="Company Address" Enabled=@(!IsInvited)></TelerikTextArea>
                         <TelerikValidationMessage For="@(() => companyData.Address)"></TelerikValidationMessage>
                     </div>
                 </div>
+                   <div class="row">
+                    <div class="col-6">
+                        <label>Company City</label>
+                        <TelerikTextBox Id="city" @bind-Value="@companyData.City" PlaceHolder="Company City" Enabled=@(!IsInvited) AriaLabelledBy=""></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => companyData.City)"></TelerikValidationMessage>
+
+                    </div>
+                    <div class="col-6">
+                        <label>Company State</label>
+                        <TelerikTextBox Id="state" @bind-Value="@companyData.State" PlaceHolder="Company State" Enabled=@(!IsInvited)></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => companyData.State)"></TelerikValidationMessage>
+                    </div>
+                </div>
                 <div class="row">
+
+                    <div class="col-6">
+                        <label>Company Zipcode</label>
+                        <TelerikTextBox Id="zipcode" PlaceHolder="Company zip" MaxLength="5" @bind-Value="@companyData.Zipcode" Enabled=@(!IsInvited)>
+
+                        </TelerikTextBox >
+                        <TelerikValidationMessage For="@(() => companyData.Zipcode)"></TelerikValidationMessage>
+                    </div>
 
                     <div class="col-6">
                         <label>Company Timezone</label>
@@ -44,25 +65,27 @@
 
                         <TelerikValidationMessage For="@(() => companyData.TimeZone)"></TelerikValidationMessage>
                     </div>
-                    <div class="col-6">
+                  
+                </div>
+                <div class="row">
+                      <div class="col-6">
                         <label>Company Contact No</label>
                         <TelerikMaskedTextBox Id="contactNo" @bind-Value="@companyData.ContactNo" Mask="(000) 000-0000" Enabled=@(!IsInvited)></TelerikMaskedTextBox>
                         <TelerikValidationMessage For="@(() => companyData.ContactNo)"></TelerikValidationMessage>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-6">
                         <label>Company Website</label>
                         <TelerikTextBox Id="website" @bind-Value="@companyData.Website" PlaceHolder="Company Website" Enabled=@(!IsInvited)></TelerikTextBox>
                         <TelerikValidationMessage For="@(() => companyData.Website)"></TelerikValidationMessage>
                     </div>
-                    <div class="col-6">
+                   
+                </div>
+                <div class="row">
+                     <div class="col-6">
                         <label>Primary Airport</label>
 
                         <TelerikTextBox Id="primaryAirport" @bind-Value="@companyData.PrimaryAirport" PlaceHolder="Primary Airport" Enabled=@(!IsInvited)></TelerikTextBox>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-6">
                         <label>Primary Service</label>
                         <TelerikComboBox Id=primaryServiceId Data="@companyData.PrimaryServicesList" TextField="Name"

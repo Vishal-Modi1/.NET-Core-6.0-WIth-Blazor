@@ -13,7 +13,7 @@ namespace DataModels.VM.AircraftEquipment
         [Display(Name = "Status")]
         public int StatusId { get; set; }
 
-        public long AirCraftId { get; set; }
+        public long AircraftId { get; set; }
         
         [Range(1, int.MaxValue, ErrorMessage = "Classification is required")]
         [Display(Name = "Classification")]

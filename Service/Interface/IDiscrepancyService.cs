@@ -8,8 +8,8 @@ namespace Service.Interface
 {
     public interface IDiscrepancyService
     {
-        CurrentResponse Create(DiscrepancyVM discrepancyVM);
-        CurrentResponse Edit(DiscrepancyVM discrepancyVM);
+        CurrentResponse Create(DiscrepancyVM discrepancyVM, string timezone);
+        CurrentResponse Edit(DiscrepancyVM discrepancyVM, string timezone);
         CurrentResponse List(DiscrepancyDatatableParams datatableParams);
         CurrentResponse GetDetails(long id);
         Discrepancy FindByCondition(Expression<Func<Discrepancy, bool>> predicate);

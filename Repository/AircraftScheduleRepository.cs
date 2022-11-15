@@ -18,7 +18,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<SchedulerVM> companyDataList = (from aircraft in _myContext.AirCrafts
+                List<SchedulerVM> companyDataList = (from aircraft in _myContext.Aircrafts
                                                      join aircraftSchedules in _myContext.AircraftSchedules
                                                      on aircraft.Id equals aircraftSchedules.AircraftId
                                                      join aircraftScheduleDetail in _myContext.AircraftScheduleDetails

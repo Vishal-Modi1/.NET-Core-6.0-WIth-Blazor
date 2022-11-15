@@ -8,7 +8,7 @@ namespace DataModels.VM.Scheduler
         public string Member1 { get; set; }
         public string Member2 { get; set; }
         public string UserName { get; set; }
-        public string Email { get; set; }
+        public string ToEmail { get; set; }
         public string Link { get; set; }
         public string Aircraft { get; set; }
         public string DepartureAirport { get; set; }

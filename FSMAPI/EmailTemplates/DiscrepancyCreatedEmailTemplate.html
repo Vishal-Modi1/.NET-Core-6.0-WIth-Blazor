@@ -1,0 +1,94 @@
+﻿<html>
+<head>
+</head>
+
+<body style="margin: 0; font-family: 'Readex Pro'">
+    <div class="logo-header" style="background: #fff; color: #555555; text-align: center;">
+        <div>
+            <img width="70%" src="https://flymanagerdevresourb704.blob.core.windows.net/images/Common-EmailTemplate-Cover-Image.png" />
+        </div>
+    </div>
+    <div class="info-container" style="padding-top: 20px; padding-bottom: 20px; background: #F8F8F8; border-radius: 8px; text-align: center; ">
+        <div style="font-family: 'Readex Pro'; font-style: normal; font-weight: 400; font-size: 18px; line-height: 110%;">
+           
+        </div>
+        <div style="font-style: normal; font-weight: 400; font-size: 16px;">This message is to notify you about a discrepancy</div>
+        <div style="margin-top: 15px; margin-bottom: 15px; background: #EBEBEB; font-size: 16px; font-weight: 700;">Discrepancy Details</div>
+
+        <div>
+
+            <center>
+
+                <table style="width:100%;color: #5F6265;margin-bottom:28px; font-style: normal; font-weight: 400; font-size: 14px;">
+
+                    <tbody style="text-align: center;">
+
+                        <tr style="text-align: center;"><td style="text-align: right;width:50%;">Aircraft :</td><td style="text-align: left;">{aircraft}</td></tr>
+                        <tr style="text-align: center;"><td style="text-align: right;width:50%;">Reported By :</td><td style="text-align: left;">{reportedBy}</td></tr>
+                        <tr style="text-align: center;"><td style="text-align: right;width:50%;">Created On :</td><td style="text-align: left;">{createdOn}</td></tr>
+                        <tr style="text-align: center;"><td style="text-align: right;width:50%;">Status :</td><td style="text-align: left;">{status}</td></tr>
+                        <tr style="text-align: center;"><td style="text-align: right;width:50%;">Description :</td><td style="text-align: left;">{description}</td></tr>
+                        <tr style="text-align: center;"><td style="text-align: right;width:50%;">Action Taken :</td><td style="text-align: left;">{actionTaken}</td></tr>
+
+                    </tbody>
+
+                </table>
+
+            </center>
+
+        </div>
+
+        <!--<div style="text-align: center; margin: 15px;">
+            <button style="width: 169px; height: 52px; left: 315px; top: 950px; background: #3066F8; border-radius: 8px; border-color: #3066F8; ">
+                <span style="font-family: 'Readex Pro'; font-style: normal; font-weight: 500; font-size: 18px; line-height: 120%; /* identical to box height, or 22px */ text-align: center; color: #FFFFFF;">
+                    View Details
+                </span>
+            </button>
+        </div>-->
+    </div>
+    <div class="support" style="background: #fff; color: #555555; text-align: center;">
+        <div style="padding-top: 35px;font-family: 'Readex Pro'; font-style: normal; font-weight: 500; font-size: 16px; line-height: 100%; /* identical to box height, or 20px */ text-align: center; color: #555555;">
+            Need Help?
+        </div>
+        <div style="padding: 2px 0 30px 0; font-size: 16px;">Please reach out to us at <a href="mailto:notifications@upflyte.com" style="color: #3066F8;">support@upflyte.com</a></div>
+    </div>
+    <hr />
+    <div class="social-media" style="background: #fff; color: #555555; text-align: center;">
+        <div style="padding: 7px; padding-bottom: 12px;">
+            Want more email advice? <span style="color: #3066F8; ">Follow us on social:  </span>
+        </div>
+        <div style="padding: 10px">
+            <img width="5%" src="https://flymanagerdevresourb704.blob.core.windows.net/images/twitter_icon.jpg" />
+            <img width="5%" src="https://flymanagerdevresourb704.blob.core.windows.net/images/facebook_icon.jpg" />
+            <img width="5%" src="https://flymanagerdevresourb704.blob.core.windows.net/images/instagram.jpg" onclick="openPage('https://www.instagram.com/upflyte/')" />
+        </div>
+    </div>
+    <div class="address-footer" style="background: #042455; color: #fff; text-align: center;">
+        <div style="padding: 7px; padding-bottom: 15px;">
+            <a href="#" style="color: #fff; padding: 10px 10px;">Unsubscribe</a>
+            |   <a href="#" style="color: #fff; padding: 10px 10px; ">Privacy Policy</a>
+            |   <a href="#" style="color: #fff; padding: 10px 10px; ">Contact Support</a>
+        </div>
+        <div style="padding: 7px">
+            PO BOX 117077, Carrollton, TX 75011
+        </div>
+        <div style="padding: 7px;padding-bottom:15px;">
+            &copy; 2022 <a href="upflyte.com" style="background: #042455;color:#fff">upflyte.com</a>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    function myFunction() {
+        var copyTextBtn = document.getElementById("copyTextBtn");
+        navigator.clipboard.writeText(copyTextBtn.dataset.link);
+    }
+
+    function openPage(link) {
+        window.location.href = link;
+    }
+
+</script>

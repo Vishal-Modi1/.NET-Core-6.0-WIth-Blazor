@@ -42,7 +42,9 @@ namespace FSMAPI.Controllers
         public IActionResult Create(DiscrepancyVM discrepancyVM)
         {
             discrepancyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _discrepancyService.Create(discrepancyVM);
+
+            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            CurrentResponse response = _discrepancyService.Create(discrepancyVM, timezone);
 
             return APIResponse(response);
         }
@@ -52,7 +54,9 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(DiscrepancyVM discrepancyVM)
         {
             discrepancyVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _discrepancyService.Edit(discrepancyVM);
+
+            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            CurrentResponse response = _discrepancyService.Edit(discrepancyVM, timezone);
 
             return APIResponse(response);
         }

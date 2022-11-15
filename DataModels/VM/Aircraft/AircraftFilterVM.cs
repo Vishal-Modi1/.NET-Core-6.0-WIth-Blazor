@@ -1,8 +1,8 @@
-﻿using DataModels.VM.Company;
+﻿using DataModels.VM.Common;
 
 namespace DataModels.VM.Aircraft
 {
-    public class AircraftFilterVM : CompanyFilterVM
+    public class AircraftFilterVM : CommonFilterVM
     {
         public string TailNo { get; set; }
         public bool IsActive { get; set; }

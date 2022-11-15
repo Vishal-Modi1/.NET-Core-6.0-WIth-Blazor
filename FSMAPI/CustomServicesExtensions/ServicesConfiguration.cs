@@ -22,7 +22,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAircraftService, AircraftService>();
             services.AddScoped<IEquipmentStatusService, StatusService>();
             services.AddScoped<IEquipmentClassificationService, EquipmentClassificationService>();
-            services.AddScoped<IAirCraftEquipmentService, AircraftEquipmentService>();
+            services.AddScoped<IAircraftEquipmentService, AircraftEquipmentService>();
             services.AddScoped<IUserRolePermissionService, UserRolePermissionService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IAircraftScheduleService, AircraftScheduleService>();
@@ -64,7 +64,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAircraftRepository, AircraftRepository>();
             services.AddScoped<IEquipmentStatusRepository, StatusRepository>();
             services.AddScoped<IEquipmentClassificationRepository, EquipmentClassificationRepository>();
-            services.AddScoped<IAircraftEquipmentRepository, AirCraftEquipmentRepository>();
+            services.AddScoped<IAircraftEquipmentRepository, AircraftEquipmentRepository>();
             services.AddScoped<IUserRolePermissionRepository, UserRolePermissionRepository>();
             services.AddScoped<IModuleDetailsRepository, ModuleDetailsRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();

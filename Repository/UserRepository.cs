@@ -102,6 +102,24 @@ namespace Repository
             return usersList;
         }
 
+        public List<User> ListAllbyCompanyId(int companyId)
+        {
+            List<User> usersList = (from user in _myContext.Users
+                                                   join userVSCompany in _myContext.UsersVsCompanies
+                                                   on user.Id equals userVSCompany.UserId
+                                                   where userVSCompany.CompanyId == companyId
+                                                   && user.IsActive == true && user.IsDeleted == false
+                                                   select new User()
+                                                   {
+                                                       Id = user.Id,
+                                                       FirstName = user.FirstName,
+                                                       LastName = user.LastName,
+                                                       Email = user.Email
+                                                   }).ToList();
+
+            return usersList;
+        }
+
         public List<UserDataVM> List(UserDatatableParams datatableParams)
         {
             List<UserDataVM> list;

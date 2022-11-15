@@ -249,6 +249,7 @@ namespace Service
             discrepancyFile.DiscrepancyId = discrepancyFileVM.DiscrepancyId;
             discrepancyFile.DisplayName = discrepancyFileVM.DisplayName;
             discrepancyFile.Name = discrepancyFileVM.Name;
+            discrepancyFile.IsActive = true;
 
             if (discrepancyFileVM.Id == 0)
             {

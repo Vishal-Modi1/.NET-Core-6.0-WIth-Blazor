@@ -11,7 +11,7 @@ namespace DataModels.VM.AircraftEquipment
 
         public string Status { get; set; }
 
-        public long AirCraftId { get; set; }
+        public long AircraftId { get; set; }
 
         public int ClassificationId { get; set; }
 

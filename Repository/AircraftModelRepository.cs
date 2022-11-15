@@ -91,7 +91,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                return _myContext.AirCrafts.Where(p => p.AircraftModelId == id).Any();
+                return _myContext.Aircrafts.Where(p => p.AircraftModelId == id).Any();
             }
         }
 

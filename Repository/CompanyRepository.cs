@@ -44,6 +44,36 @@ namespace Repository
             return companyList;
         }
 
+        public List<DropDownValues> ListCityDropDownValues()
+        {
+            var data = (from company in _myContext.Companies
+                        group company by company.City into c
+                        select new DropDownValues()
+                        {
+                            Id = 1,
+                            Name = c.First().City
+                        }).ToList();
+
+            data = data.Where(p => p.Name != "").ToList();
+
+            return data;
+        }
+
+        public List<DropDownValues> ListStateDropDownValues()
+        {
+            List<DropDownValues> data = (from company in _myContext.Companies
+                        group company by company.State into c
+                        select new DropDownValues()
+                        {
+                            Id = 1,
+                            Name = c.First().State
+                        }).ToList();
+
+            data = data.Where(p => p.Name != "").ToList();
+
+            return data;
+        }
+
         public List<DropDownValues> ListDropDownValuesByUserId(long userId)
         {
             List<DropDownValues> companyList = (from company in _myContext.Companies
@@ -96,9 +126,13 @@ namespace Repository
                 existingCompany.Website = company.Website;
                 existingCompany.PrimaryAirport = company.PrimaryAirport;
                 existingCompany.PrimaryServiceId = company.PrimaryServiceId;
+                existingCompany.State = company.State;
+                existingCompany.City = company.City;
+                existingCompany.Zipcode = company.Zipcode;
 
                 existingCompany.UpdatedBy = company.UpdatedBy;
                 existingCompany.UpdatedOn = company.UpdatedOn;
+
                 _myContext.SaveChanges();
             }
 
@@ -119,11 +153,13 @@ namespace Repository
             }
         }
 
-        public List<CompanyVM> List(DatatableParams datatableParams)
+        public List<CompanyVM> List(CompanyDatatableParams datatableParams)
         {
             List<CompanyVM> list;
 
-            string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
+            string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
+                $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
+                $" '{datatableParams.City}','{datatableParams.State}',{datatableParams.CompanyId}";
 
             list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
 

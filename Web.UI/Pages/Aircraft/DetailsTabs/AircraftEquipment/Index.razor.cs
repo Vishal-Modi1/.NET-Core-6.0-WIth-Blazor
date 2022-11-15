@@ -106,7 +106,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(aircraftEquipmentsVM.ManufacturerDate.Value, timeZone);
             }
 
-            aircraftEquipmentsVM.AirCraftId = AircraftId;
+            aircraftEquipmentsVM.AircraftId = AircraftId;
 
             if (aircraftEquipmentDataVM.Id == 0)
             {

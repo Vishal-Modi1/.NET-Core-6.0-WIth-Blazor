@@ -9,6 +9,7 @@ using DataModels.VM.Aircraft;
 using DataModels.VM.User;
 using DataModels.Constants;
 using DataModels.Enums;
+using DataModels.VM.AircraftEquipment;
 
 namespace Service
 {
@@ -24,12 +25,14 @@ namespace Service
         private readonly IAircraftStatusRepository _aircraftStatusRepository;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
         private readonly IUserRepository _userRepository;
+        private readonly IAircraftEquipmentRepository _aircraftEquipmentRepository;
 
         public AircraftService(IAircraftRepository aircraftRepository, IAircraftCategoryRepository aircraftCategoryRepository,
                                IAircraftClassRepository aircraftClassRepository, IAircraftMakeRepository aircraftMakeRepository,
                                IAircraftModelRepository aircraftModelRepository, IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
                                ICompanyRepository companyRepository, IAircraftStatusRepository aircraftStatusRepository,
-                               IAircraftEquipementTimeService aircraftEquipementTimeService, IUserRepository userRepository)
+                               IAircraftEquipementTimeService aircraftEquipementTimeService, IUserRepository userRepository,
+                               IAircraftEquipmentRepository aircraftEquipmentRepository)
         {
             _aircraftRepository = aircraftRepository;
             _aircraftCategoryRepository = aircraftCategoryRepository;
@@ -41,6 +44,7 @@ namespace Service
             _aircraftStatusRepository = aircraftStatusRepository;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
             _userRepository = userRepository;
+            _aircraftEquipmentRepository = aircraftEquipmentRepository;
         }
 
         public CurrentResponse Create(AircraftVM airCraftVM)
@@ -49,11 +53,11 @@ namespace Service
 
             try
             {
-                //bool isAirCraftExist = IsAirCraftExist(airCraftVM);
+                //bool isAircraftExist = IsAircraftExist(airCraftVM);
 
-                //if (isAirCraftExist)
+                //if (isAircraftExist)
                 //{
-                //    CreateResponse(airCraft, HttpStatusCode.Ambiguous, "Aircraft is already exist");
+                //    CreateResponse(aircraft, HttpStatusCode.Ambiguous, "Aircraft is already exist");
                 //}
                 //else
                 //{
@@ -71,11 +75,11 @@ namespace Service
             }
         }
 
-        //private bool IsAirCraftExist(AirCraftVM airCraftVM)
+        //private bool IsAircraftExist(AircraftVM aircraftVM)
         //{
-        //    AirCraft airCraft = _airCraftRepository.FindByCondition(p => p.TailNo == airCraftVM.TailNo && p.Id != airCraftVM.Id);
+        //    Aircraft aircraft = _aircraftRepository.FindByCondition(p => p.TailNo == airCraftVM.TailNo && p.Id != airCraftVM.Id);
 
-        //    if (airCraft == null)
+        //    if (aircraft == null)
         //    {
         //        return false;
         //    }
@@ -83,7 +87,7 @@ namespace Service
         //    return true;
         //}
 
-        public CurrentResponse IsAirCraftExist(long id, string tailNo)
+        public CurrentResponse IsAircraftExist(long id, string tailNo)
         {
             try
             {
@@ -190,6 +194,8 @@ namespace Service
                     aircraftVM.Companies = _companyRepository.ListDropDownValues();
                 }
 
+                aircraftVM.AircraftEquipmentList = GetAircraftEquipmentLists(aircraftVM.Id);
+
                 CreateResponse(aircraftVM, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -282,7 +288,7 @@ namespace Service
 
                 foreach (Aircraft airCraftVM in airCraftList)
                 {
-                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
+                    airCraftVM.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}{UploadDirectories.AircraftImage}/{airCraftVM.CompanyId}/{airCraftVM.ImageName}";
                 }
 
                 CreateResponse(airCraftList, HttpStatusCode.OK, "");
@@ -336,6 +342,22 @@ namespace Service
             }
         }
 
+        private List<AircraftEquipmentDataVM> GetAircraftEquipmentLists(long aircraftId)
+        {
+            AircraftEquipmentDatatableParams datatableParams = new ();
+
+            datatableParams.Start = 1;
+            datatableParams.Length = 10;
+            datatableParams.SortOrderColumn = "Item";
+            datatableParams.OrderType = "ASC";
+
+            datatableParams.AircraftId = aircraftId;
+
+            List<AircraftEquipmentDataVM> aircraftEquipmentDataVMs =  _aircraftEquipmentRepository.List(datatableParams);
+
+            return aircraftEquipmentDataVMs;
+        }
+
         public CurrentResponse LockAircraft(long id, bool isLock)
         {
             try
@@ -370,7 +392,7 @@ namespace Service
             airCraftVM.Id = airCraft.Id;
             airCraftVM.TailNo = airCraft.TailNo;
             airCraftVM.ImageName = airCraft.ImageName;
-            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
+            airCraftVM.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}{UploadDirectories.AircraftImage}/{airCraft.CompanyId}/{airCraftVM.ImageName}";
 
             airCraftVM.Year = airCraft.Year;
             airCraftVM.AircraftMakeId = airCraft.AircraftMakeId;

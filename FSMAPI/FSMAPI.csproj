@@ -39,16 +39,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="EmailTemplates\ForgotPasswordTemplate.html">
+    <None Update="EmailTemplates\DiscrepancyCreatedEmailTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="EmailTemplates\InviteUserTemplate.html">
+    <None Update="EmailTemplates\ForgotPasswordEmailTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="EmailTemplates\AppointmentCreated.html">
+    <None Update="EmailTemplates\InviteUserEmailTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="EmailTemplates\NewUserAccountActivationTemplate.html">
+    <None Update="EmailTemplates\AppointmentCreatedEmailTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="EmailTemplates\NewUserAccountActivationEmailTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

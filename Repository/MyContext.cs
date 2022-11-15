@@ -63,7 +63,7 @@ namespace Repository
 
         public DbSet<InstructorTypeVM> InstructorType { get; set; }
 
-        public DbSet<Aircraft> AirCrafts { get; set; }
+        public DbSet<Aircraft> Aircrafts { get; set; }
 
         public DbSet<AircraftMake> AircraftMakes { get; set; }
 
