@@ -1,7 +1,9 @@
 ﻿using DataModels.Enums;
 using DataModels.VM.Common;
+using DataModels.VM.ExternalAPI.Airport;
 using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
 using Web.UI.Models.Scheduler;
 using Web.UI.Utilities;
 
@@ -28,7 +30,7 @@ namespace Web.UI.Pages.Scheduler
 
         #endregion
 
-        string jsonData = "";
+        AirportDetailsViewModel airportDetails = new();
         DependecyParams dependecyParams;
 
         protected override async Task OnInitializedAsync()
@@ -60,7 +62,9 @@ namespace Web.UI.Pages.Scheduler
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                jsonData = response.Data.ToString();
+                AirportViewModel airports = JsonConvert.DeserializeObject<AirportViewModel>(response.Data.ToString());
+                airportDetails = airports.Value.FirstOrDefault();
+
                 childPopupTitle = "Airport Details";
                 operationType = OperationType.DocumentViewer;
                 isDisplayChildPopup = true;
@@ -73,6 +77,7 @@ namespace Web.UI.Pages.Scheduler
             ChangeLoaderVisibilityAction(false);
         }
 
+        #region Parent Methods
         public async Task CloseDialog()
         {
            await CloseDialogParentEvent.InvokeAsync();
@@ -117,5 +122,8 @@ namespace Web.UI.Pages.Scheduler
         {
             await CheckInAircraftParentEvent.InvokeAsync();
         }
+
+        #endregion
+
     }
 }

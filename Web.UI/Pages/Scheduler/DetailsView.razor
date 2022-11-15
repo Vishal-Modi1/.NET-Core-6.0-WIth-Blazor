@@ -290,3 +290,19 @@
         Cancel
     </TelerikButton>
 </div>
+
+@{
+    if (isDisplayChildPopup)
+    {
+        <CustomPopupComponent Title="@childPopupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayChildPopup = false;})">
+
+            <Body>
+
+                    <AirportDetails AirportDetailInfo="@airportDetails"></AirportDetails>
+            </Body>
+        </CustomPopupComponent>
+    }
+}
