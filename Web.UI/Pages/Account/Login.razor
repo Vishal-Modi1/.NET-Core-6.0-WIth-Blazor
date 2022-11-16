@@ -11,6 +11,10 @@
 
 <PageTitle>Login | Upflyte </PageTitle>
 
+<Web.UI.Shared.Components.PageLoader.PageLoader isVisible="@isDisplayLoader" loaderColor="#3066f8">
+</Web.UI.Shared.Components.PageLoader.PageLoader>
+
+
 <div class="row vh-100 align-items-center m-0">
     <div class="col-md-3 mx-auto">
         <div class="card">
@@ -22,7 +26,7 @@
 
                     @if (isSessionTimeout)
                     {
-                            <div style="color: red;">Session Timeout!</div>
+                        <div style="color: red;">Session Timeout!</div>
                     }
 
                     <div class="login-wrap">
@@ -32,9 +36,9 @@
 
                             <FormValidation>
 
-        <CustomValidationSummary> </CustomValidationSummary>
+                                <CustomValidationSummary> </CustomValidationSummary>
 
-    </FormValidation>
+                            </FormValidation>
 
                             <FormItems>
                                 <FormItem Field="@nameof(LoginVM.Email)">
@@ -59,6 +63,7 @@
                                         </div>
                                     </Template>
                                 </FormItem>
+
                                 <FormItem Field="@nameof(LoginVM.RememberMe)">
                                     <Template>
                                         <div class="d-flex">
@@ -70,7 +75,7 @@
                             </FormItems>
                             <FormButtons>
                                 <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="login-button btn k-btn-primary" Enabled="@(!isBusy)">
-                                   <span class="text-14">Login</span>  <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy" />
+                                    <span class="text-14">Login</span>  <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy" />
                                 </TelerikButton>
                             </FormButtons>
                         </TelerikForm>
@@ -100,4 +105,5 @@
         </div>
     </div>
 </div>
+
 
