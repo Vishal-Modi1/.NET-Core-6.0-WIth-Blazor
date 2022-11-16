@@ -2,6 +2,7 @@
 @using Web.UI.Utilities;
 @using DataModels.Enums;
 @using Web.UI.Pages.AircraftModel;
+@using Web.UI.Shared.Components.FileUploader;
 
 <style>
 
@@ -226,7 +227,7 @@
                             <label>Aircraft Image</label>
 
                             <CustomFileUpload DisplayName="@fileName" IsFileAdded="@isFileAdded" supportedFormats="@supportedImagesFormats"
-                                              OnInputFileChangeCallback="OnInputFileChangeAsync"
+                                              OnInputFileChangeCallback="@OnInputFileChangeAsync"
                                               IsFileUploadHasError="@isFileUploadHasError"></CustomFileUpload>
 
                         </div>
