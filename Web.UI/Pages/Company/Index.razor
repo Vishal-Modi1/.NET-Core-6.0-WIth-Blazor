@@ -76,7 +76,7 @@
                 </Template>
             </GridColumn>
 
-            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company" Width="20%">
+            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company" Width="25%">
                 <Template>
                     @{
                         var data = context as CompanyVM;
@@ -84,11 +84,11 @@
                     }
                 </Template>
             </GridColumn>
-            <GridColumn Field="@nameof(CompanyVM.City)" Width="12%"/>
-            <GridColumn Field="@nameof(CompanyVM.State)" Width="12%"/>
-            <GridColumn Field="@nameof(CompanyVM.TimeZone)" Width="12%"/>
-            <GridColumn Field="@nameof(CompanyVM.TotalAircrafts)" Title="Aicrafts" TextAlign="@ColumnTextAlign.Center" Width="8%"/>
-            <GridColumn Field="@nameof(CompanyVM.TotalUsers)" Title="Users" TextAlign="@ColumnTextAlign.Center" Width="8%"/>
+            <GridColumn Field="@nameof(CompanyVM.City)" Width="15%"/>
+            <GridColumn Field="@nameof(CompanyVM.State)" Width="15%"/>
+            @*<GridColumn Field="@nameof(CompanyVM.TimeZone)" Width="12%"/>*@
+            <GridColumn Field="@nameof(CompanyVM.TotalAircrafts)" Title="Aicrafts" TextAlign="@ColumnTextAlign.Center" Width="10%"/>
+            <GridColumn Field="@nameof(CompanyVM.TotalUsers)" Title="Users" TextAlign="@ColumnTextAlign.Center" Width="10%"/>
 
             <GridCommandColumn Context="dataItem" Title="Action">
                 @{

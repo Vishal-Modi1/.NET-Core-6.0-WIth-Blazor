@@ -63,9 +63,9 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
         async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             isFileUploadHasError = false;
+            isFileAdded = false;
             discrepancyFileVM.DisplayName = "";
             selectedFiles = e.GetMultipleFiles();
-            isFileAdded = false;
             ChangeLoaderVisibilityAction(true);
 
             foreach (IBrowserFile file in selectedFiles)
@@ -83,7 +83,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
                         return;
                     }
 
-                    if(!supportedImagesFormat.Contains(Path.GetExtension(file.Name)))
+                    if(!supportedImagesFormats.Contains(Path.GetExtension(file.Name)))
                     {
                         errorMessage = $"Invalid file type.";
 

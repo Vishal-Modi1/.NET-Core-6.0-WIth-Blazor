@@ -26,7 +26,9 @@ namespace Web.UI.Pages.Aircraft
 
         bool isAircraftImageChanged, isDisplayMakePopup, isDisplayModelPopup;
         byte[] aircraftImageBytes;
-        public bool isAllowToLock;
+        public bool isAllowToLock, isFileUploadHasError,isFileAdded;
+
+        string fileName = "";
         protected override Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -104,18 +106,23 @@ namespace Web.UI.Pages.Aircraft
         {
             try
             {
+                isFileUploadHasError = false;
+                isFileAdded = false;
+
                 string fileType = Path.GetExtension(e.File.Name);
-                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> supportedImagesFormatsList = supportedImagesFormats.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (!supportedImagesFormatsList.Contains(fileType))
                 {
                     globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
+                    isFileUploadHasError = true;
                     return;
                 }
 
                 if (e.File.Size > maxProfileImageUploadSize)
                 {
                     globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    isFileUploadHasError = true;
                     return;
                 }
 
@@ -124,6 +131,8 @@ namespace Web.UI.Pages.Aircraft
                 aircraftImageBytes = ms.ToArray();
 
                 isAircraftImageChanged = true;
+                isFileAdded = true;
+                fileName = e.File.Name;
             }
             catch (Exception ex)
             {
@@ -174,7 +183,6 @@ namespace Web.UI.Pages.Aircraft
 
                 if (!isAircraftImageChanged)
                 {
-                    response.Message = "Aircraft Added Successfully";
                     ManageResponse(response, "Aircraft Details", true);
                 }
                 else
@@ -249,10 +257,10 @@ namespace Web.UI.Pages.Aircraft
 
         void OnCategoryDropDownValueChange(int value, bool isManualTriggerdEvent = false)
         {
-            if (aircraftData.AircraftCategoryId == value)
-            {
-                return;
-            }
+            //if (aircraftData.AircraftCategoryId == value)
+            //{
+            //    return;
+            //}
 
             aircraftData.AircraftCategoryId = value;
 

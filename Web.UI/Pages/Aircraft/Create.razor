@@ -224,37 +224,13 @@
                     <div class="row">
                         <div class="col-6">
                             <label>Aircraft Image</label>
-                            <div image-container>
-                                <style>
-                                    .drag-area {
-                                        width: 100%;
-                                        height: 106px;
-                                        background: #F8F8F8;
-                                        border: 0.5px dashed #606060;
-                                        border-radius: 8px;
-                                    }
 
-                                    .icon > svg {
-                                        width: 30;
-                                        height: 30;
-                                    }
+                            <CustomFileUpload DisplayName="@fileName" IsFileAdded="@isFileAdded" supportedFormats="@supportedImagesFormats"
+                                              OnInputFileChangeCallback="OnInputFileChangeAsync"
+                                              IsFileUploadHasError="@isFileUploadHasError"></CustomFileUpload>
 
-                                    .header {
-                                        font-style: normal;
-                                        font-weight: 300;
-                                        font-size: 12px;
-                                    }
-                                </style>
-                                <label class="drag-area d-flex align-items-center k-cursor-pointer" for="aircraftImage">
-                                    <div class="text-center mx-auto">
-                                        <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
-                                        <header class="header">Drag and drop or <br /> browse to choose images</header>
-                                    </div>
-                                </label>
-
-                                <InputFile id="aircraftImage" accept="@supportedImagesFormat" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
-                            </div>
                         </div>
+
                         @if (isDisplayNoofPropellersDropDown)
                         {
 
@@ -272,7 +248,7 @@
 
                         @if (isAllowToLock)
                         {
-                            <div class="col-6">
+                            <div class="col-6" style="margin-top:20px">
                                 <div class="row">
                                     <div class="col-9">
                                         <label for="@nameof(aircraftData.IsEnginesareTurbines)">Is Locked For Update postils</label>

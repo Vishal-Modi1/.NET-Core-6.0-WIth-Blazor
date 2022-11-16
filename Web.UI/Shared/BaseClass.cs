@@ -21,7 +21,7 @@ namespace Web.UI.Shared
         public long maxProfileImageUploadSize = Configuration.ConfigurationSettings.Instance.MaxProfileImageSize;
 
         List<string> supportedDocumentsFormat = Configuration.ConfigurationSettings.Instance.SupportedDocuments.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
-        public string supportedImagesFormat = Configuration.ConfigurationSettings.Instance.SupportedImageTypes;
+        public string supportedImagesFormats = Configuration.ConfigurationSettings.Instance.SupportedImageTypes;
 
         public bool isDisplayPopup { get; set; }
         public bool isDisplayChildPopup { get; set; }

@@ -153,7 +153,7 @@ namespace Web.UI.Pages.Aircraft
                 ChangeLoaderVisibilityAction(true);
                  
                 string fileType = Path.GetExtension(e.File.Name);
-                List<string> supportedImagesFormatsList = supportedImagesFormat?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> supportedImagesFormatsList = supportedImagesFormats?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (supportedImagesFormatsList is not null && !supportedImagesFormatsList.Contains(fileType))
                 {

@@ -288,12 +288,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-button.k-button-Outline-secondary {
-  border-color: #979797 !important;
-  color: #979797 !important;
+  border: 1px solid #3066f8 !important;
+  color: #3066f8 !important;
 }
 .k-button.k-button-Outline-secondary:hover {
-  border-color: #979797 !important;
-  color: #979797 !important;
+  border: 1px solid #3066f8 !important;
+  color: white !important;
+  background-color: #3066f8 !important;
 }
 
 .login-button {
@@ -606,4 +607,8 @@ td, span, p {
 
 .nearby-weather-1 {
   border-bottom: 2px solid #E3E3E3;
+}
+
+.common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
+  background: #6fa9ff26 !important;
 }

@@ -16,7 +16,7 @@
                             <span class="d-flex justify-content-end mt-3 k-cursor-pointer">
                                 <label for="filePicker" class="k-cursor-pointer">
                                     <CustomIcons IconName="edit-square" PrimaryColor="white" />
-                                    <InputFile id="filePicker" accept="@supportedImagesFormat" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
+                                    <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
                                 </label>
                             </span>
 
@@ -56,10 +56,14 @@
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Category</FontLabel></div>
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#3066F8">@(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</FontLabel></div>
                         </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Turbines</FontLabel></div>
-                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.IsEnginesareTurbines == true ? "Available" : "Not Available")</FontLabel></div>
-                        </div>
+
+                        @if (aircraftData.IsEnginesareTurbines == true)
+                        {
+                            <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Turbines</FontLabel></div>
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">Available</FontLabel></div>
+                            </div>
+                        }
                     </div>
                 </div>
                 <hr class="m-0" />

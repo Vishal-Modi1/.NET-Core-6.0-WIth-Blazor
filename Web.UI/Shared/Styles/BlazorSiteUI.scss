@@ -61,6 +61,7 @@ $BG-BTN-DANGER-HOVER: #CA2323;
 $BG-BTN-INFO: #008EA4;
 $BG-BTN-INFO-HOVER: #17A2B8;
 $BG-SECONDARY: #979797;
+$BG-SECONDARY-BUTTON: #3066f8;
 /*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
@@ -387,13 +388,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .k-button {
     &.k-button-Outline-secondary {
-        border-color: $BG-SECONDARY !important;
-        color: $BG-SECONDARY !important;
+        border: 1px solid $BG-SECONDARY-BUTTON !important;
+        color: $BG-SECONDARY-BUTTON !important;
     }
 
     &.k-button-Outline-secondary:hover {
-        border-color: $BG-SECONDARY !important;
-        color: $BG-SECONDARY !important;
+        border: 1px solid $BG-SECONDARY-BUTTON !important;
+        color: white !important;
+        background-color: $BG-SECONDARY-BUTTON !important
     }
 }
 .login-button {

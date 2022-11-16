@@ -16,7 +16,8 @@
                         <label>Upload</label>
 
                         <CustomFileUpload DisplayName="@discrepancyFileVM.DisplayName" IsFileAdded="@isFileAdded" 
-                        OnInputFileChangeCallback="OnInputFileChangeAsync" IsFileUploadHasError="@isFileUploadHasError"></CustomFileUpload>
+                        supportedFormats="@supportedImagesFormats" OnInputFileChangeCallback="OnInputFileChangeAsync"
+                        IsFileUploadHasError="@isFileUploadHasError"></CustomFileUpload>
 
                         @if (isFileUploadHasError)
                         {
