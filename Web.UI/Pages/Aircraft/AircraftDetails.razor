@@ -25,7 +25,10 @@
                         </div>
                         <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 100px;border-radius: 0 0 7px 7px;">
                             <div class="col-12 text-center">
-                                <h5><b>@aircraftData.TailNo - @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name) @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</b></h5>
+                                <h5>
+                                    <b>@aircraftData.TailNo - @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name) @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</b>
+                                    <span @onclick=@(AircraftEditDialog)><CustomIcons IconName="grid-edit" PrimaryColor="#3066F8"></CustomIcons></span>
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -47,16 +50,15 @@
                         <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Model</FontLabel></div>
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</FontLabel></div>
-                        </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Make</FontLabel></div>
-                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</FontLabel></div>
-                        </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Category</FontLabel></div>
-                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#3066F8">@(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</FontLabel></div>
-                        </div>
-
+                            </div>
+                            <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Make</FontLabel></div>
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name)</FontLabel></div>
+                            </div>
+                            <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Category</FontLabel></div>
+                                <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#3066F8">@(aircraftData.AircraftCategoryList?.Where(p => p.Id == aircraftData.AircraftCategoryId).FirstOrDefault()?.Name)</FontLabel></div>
+                            </div>
                         @if (aircraftData.IsEnginesareTurbines == true)
                         {
                             <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
@@ -64,32 +66,36 @@
                                 <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">Available</FontLabel></div>
                             </div>
                         }
+                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                            <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Status</FontLabel></div>
+                            <div class="col-6 d-flex justify-content-start"><span @onclick=@(OpenStatusUpdateDialog)><CustomIcons IconName="grid-edit" PrimaryColor="#3066F8"></CustomIcons></span></div>
+                        </div>
                     </div>
                 </div>
                 <hr class="m-0" />
-               
+
             </div>
         </div>
         <div class="col-md-12 col-lg-9 col-12 my-0 ps-0">
             <div class="card">
                 <div class="row m-2">
                     <div class="d-flex justify-content-end">
-                        <TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
-                                   Enabled="@(!isBusy && isUnLocked)" Class="btn k-btn-primary mx-2" ThemeColor="primary">
-                            <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
-                            Edit
-                            <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy">
-                            </TelerikLoader>
-                        </TelerikButton>
+                        @*<TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
+                    Enabled="@(!isBusy && isUnLocked)" Class="btn k-btn-primary mx-2" ThemeColor="primary">
+                    <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                    Edit
+                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy">
+                    </TelerikLoader>
+                    </TelerikButton>
 
 
-                        <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton && isUnLocked)"
-                                   Class="btn k-btn-primary mx-2" ThemeColor="primary">
-                            <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
-                            Update Status
-                            <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
-                            </TelerikLoader>
-                        </TelerikButton>
+                    <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton && isUnLocked)"
+                    Class="btn k-btn-primary mx-2" ThemeColor="primary">
+                    <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
+                    Update Status
+                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                    </TelerikButton>*@
 
                         <TelerikButton ThemeColor="secondary" FillMode="Outline" Class="mx-2 k-btn-secondary-outline" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">Back</TelerikButton>
                     </div>
@@ -98,7 +104,7 @@
             </div>
         </div>
     </div>
-    
+
 }
 
 @if (isDisplayPopup)
