@@ -46,15 +46,6 @@
 </div>
 
 <div style="position: relative; width:100%; min-height: 400px;">
-    <TelerikLoaderContainer OverlayThemeColor="light"
-                            Visible="@(isGridDataLoading)"
-                            Text="@null" Class="initial-data-loader">
-        <Template>
-            <TelerikLoader Type="@LoaderType.InfiniteSpinner"
-                           Size="@(ThemeConstants.Loader.Size.Large)">
-            </TelerikLoader>
-        </Template>
-    </TelerikLoaderContainer>
 
     <TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
                  Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">

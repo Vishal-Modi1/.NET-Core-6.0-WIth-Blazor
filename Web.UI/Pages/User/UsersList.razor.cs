@@ -74,6 +74,11 @@ namespace Web.UI.Pages.User
                 datatableParams.CompanyId = userFilterVM.CompanyId;
             }
 
+            if(userFilterVM.RoleId != 0)
+            {
+                datatableParams.RoleId = userFilterVM.RoleId;
+            }
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;

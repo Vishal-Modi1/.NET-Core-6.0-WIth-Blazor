@@ -40,20 +40,23 @@
             @{
                 DiscrepancyFileVM discrepancyFileVM = dataItem as DiscrepancyFileVM;
 
-                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>OpenCreateDialog(discrepancyFileVM)"
+                if (isAllowToEdit)
+                {
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>OpenCreateDialog(discrepancyFileVM)"
                            ThemeColor="success" Enabled=!discrepancyFileVM.IsLoadingEditButton>
 
-                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="discrepancyFileVM.IsLoadingEditButton">
-                    </TelerikLoader>
+                        </TelerikLoader>
 
-                </TelerikButton>
+                    </TelerikButton>
 
-                <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(discrepancyFileVM)">
-                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                </TelerikButton>
+                    <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(discrepancyFileVM)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    </TelerikButton>
 
+                }
             }
         </GridCommandColumn>
 
@@ -72,7 +75,8 @@
             @if (operationType == OperationType.Create || operationType == OperationType.Edit)
             {
                 <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create discrepancyFileVM="@_discrepancyFile"
-                                                                              CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create>
+                                                                              CloseDialogCallBack="@CloseDialog">
+                </Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create>
             }
             else if (operationType == OperationType.DocumentViewer)
             {

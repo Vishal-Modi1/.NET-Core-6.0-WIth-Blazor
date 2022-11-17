@@ -1,4 +1,5 @@
-﻿<TelerikForm Model="@discrepancyFileVM" OnValidSubmit="@Submit" Class="popup-content">
+﻿@using DataModels.Enums
+<TelerikForm Model="@discrepancyFileVM" OnValidSubmit="@Submit" Class="popup-content">
 
     <FormValidation>
         <CustomValidationSummary></CustomValidationSummary>
@@ -30,7 +31,6 @@
                        <TelerikTextBox Class="w-100" PlaceHolder="Enter description" @bind-Value="@discrepancyFileVM.DisplayName" />
                         <TelerikValidationMessage For="@(() => discrepancyFileVM.DisplayName)"></TelerikValidationMessage>
                     </div>
-
                     
                 </div>
             
@@ -44,8 +44,10 @@
         <div class="row mb-0">
             <div class="col-md-12 text-right">
 
-                <FormFooterComponent id="@discrepancyFileVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
-                </FormFooterComponent>
+
+                    <FormFooterComponent id="@discrepancyFileVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
+
 
             </div>
 

@@ -12,7 +12,15 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
         [CascadingParameter] public TelerikGrid<DiscrepancyFileVM> grid { get; set; }
         [Parameter] public long DiscrepancyIdParam { get; set; }
         DiscrepancyFileVM _discrepancyFile;
+        bool isAllowToEdit;
 
+        protected override Task OnInitializedAsync()
+        {
+            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            isAllowToEdit = globalMembers.UserRole == UserRole.SuperAdmin || globalMembers.UserRole == UserRole.Admin || globalMembers.UserRole == UserRole.Mechanic;
+            
+            return base.OnInitializedAsync();
+        }
         async Task LoadData(GridReadEventArgs args)
         {
             isGridDataLoading = true;

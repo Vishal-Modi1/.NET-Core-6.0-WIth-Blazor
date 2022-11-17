@@ -14,7 +14,7 @@ namespace Service.Interface
 
         CurrentResponse AcceptInvitation(string token);
 
-        CurrentResponse List(DatatableParams datatableParams);
+        CurrentResponse List(UserDatatableParams datatableParams);
 
         CurrentResponse Delete(long id, long deletedBy);
 

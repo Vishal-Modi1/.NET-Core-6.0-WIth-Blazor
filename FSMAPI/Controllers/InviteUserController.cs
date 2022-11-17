@@ -111,7 +111,7 @@ namespace FSMAPI.Controllers
 
         [HttpPost]
         [Route("list")]
-        public IActionResult List(DatatableParams datatableParams)
+        public IActionResult List(UserDatatableParams datatableParams)
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
 

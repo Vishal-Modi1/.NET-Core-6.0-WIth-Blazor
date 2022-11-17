@@ -40,7 +40,7 @@ namespace Web.UI.Pages.User
         {
             isGridDataLoading = true;
 
-            DatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime");
+            UserDatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime").Cast<UserDatatableParams>();
             datatableParams.SearchText = searchText;
            
             pageSize = datatableParams.Length;
@@ -52,6 +52,11 @@ namespace Web.UI.Pages.User
             else
             {
                 datatableParams.CompanyId = userFilterVM.CompanyId;
+            }
+
+            if (userFilterVM.RoleId != 0)
+            {
+                datatableParams.RoleId = userFilterVM.RoleId;
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);

@@ -1,4 +1,5 @@
 ﻿@namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
+@using DataModels.Enums
 
 <TelerikForm Model="@discrepancyData" OnValidSubmit="@Submit" Class="popup-content">
 
@@ -60,9 +61,11 @@
         <div class="row mb-0">
             <div class="col-md-12 text-right">
 
-                <FormFooterComponent id="@discrepancyData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
-                </FormFooterComponent>
-
+                @if (discrepancyData.Id == 0 || globalMembers.UserRole == UserRole.SuperAdmin || globalMembers.UserRole == UserRole.Admin || globalMembers.UserRole == UserRole.Mechanic)
+                {
+                    <FormFooterComponent id="@discrepancyData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
+                }
             </div>
 
         </div>

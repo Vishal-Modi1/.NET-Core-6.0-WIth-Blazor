@@ -161,7 +161,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse List(DatatableParams datatableParams)
+        public CurrentResponse List(UserDatatableParams datatableParams)
         {
             try
             {

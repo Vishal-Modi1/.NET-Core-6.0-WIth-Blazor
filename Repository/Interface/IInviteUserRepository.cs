@@ -7,7 +7,7 @@ namespace Repository.Interface
 {
     public interface IInviteUserRepository : IBaseRepository<InviteUser>
     {
-        List<InviteUserDataVM> List(DatatableParams datatableParams);
+        List<InviteUserDataVM> List(UserDatatableParams datatableParams);
 
         void Delete(long id, long deletedBy);
 

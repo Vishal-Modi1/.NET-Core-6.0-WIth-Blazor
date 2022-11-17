@@ -19,11 +19,14 @@ namespace Repository
             this._myContext = dbContext;
         }
 
-        public List<InviteUserDataVM> List(DatatableParams datatableParams)
+        public List<InviteUserDataVM> List(UserDatatableParams datatableParams)
         {
             List<InviteUserDataVM> list;
 
-            string sql = $"EXEC dbo.GetInvitedUsersList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
+            string sql = $"EXEC dbo.GetInvitedUsersList '{ datatableParams.SearchText }', " +
+                $"{ datatableParams.Start }, {datatableParams.Length},'" +
+                $"{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
+                $" {datatableParams.CompanyId},{datatableParams.RoleId}";
 
             list = _myContext.InviteUserData.FromSqlRaw<InviteUserDataVM>(sql).ToList();
 
