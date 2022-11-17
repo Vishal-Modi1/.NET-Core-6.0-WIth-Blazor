@@ -9,6 +9,7 @@
         public bool IsBusyUnCheckOutButton { get; set; }
         public bool IsBusyCheckOutButton { get; set; }
         public bool IsVisibleDeleteDialog { get; set; }
+        public bool IsDisplayCheckInForm { get; set; }
         public bool IsBusyDeleteButton { get; set; }
         public bool IsDisplayCheckOutOption { get; set; }
         public bool IsDisplayForm { get; set; }

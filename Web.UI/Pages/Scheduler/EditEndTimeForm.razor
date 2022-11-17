@@ -1,0 +1,53 @@
+﻿<TelerikForm Model="@schedulerVM" OnValidSubmit="@UpdateEndTime">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+        <div class="row compact-row">
+            <div class="col-6">
+                <label>Start Time</label>
+                <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime" Enabled="false"
+                                       Format="MM/dd/yyyy %h:mm tt" Id="startTime" Class="w-100">
+
+                    <DateTimePickerSteps Minute="30" />
+
+                </TelerikDateTimePicker>
+            </div>
+            <div class="col-6">
+                <label>End Time</label>
+                <TelerikDateTimePicker @bind-Value="@schedulerVM.EndTime"
+                                       Format="MM/dd/yyyy %h:mm tt" Id="endTime" Class="w-100">
+
+                    <DateTimePickerSteps Minute="30" />
+
+                </TelerikDateTimePicker>
+
+                <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="d-flex btn-grp  justify-content-evenly ">
+
+            <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
+                Update
+                <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                </TelerikLoader>
+
+            </TelerikButton>
+
+            <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => HideEditEndTimeForm()" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                Cancel
+            </TelerikButton>
+
+        </div>
+
+    </FormButtons>
+</TelerikForm>

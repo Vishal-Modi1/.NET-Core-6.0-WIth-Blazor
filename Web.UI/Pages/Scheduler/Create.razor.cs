@@ -42,20 +42,16 @@ namespace Web.UI.Pages.Scheduler
         AirportDetailsViewModel airportDetails = new ();
 
         List<DropDownGuidValues> departureAirportList, arrivalAirpotList;
-
         List<RadioButtonItem> flightTypes { get; set; } = new List<RadioButtonItem>
         {
             new RadioButtonItem { Id = 1, Text = "Local" },
             new RadioButtonItem { Id = 2, Text = "Cross Country" },
         };
-
         List<RadioButtonItem> flightRules { get; set; } = new List<RadioButtonItem>
         {
             new RadioButtonItem { Id = 1, Text = "VFR" },
             new RadioButtonItem { Id = 2, Text = "IFR" },
         };
-
-        EditContext checkInForm;
 
         protected override async Task OnInitializedAsync()
         {
@@ -74,8 +70,6 @@ namespace Web.UI.Pages.Scheduler
                 isAllowToDelete = true;
                 isAllowToEdit = true;
             }
-
-            checkInForm = new EditContext(schedulerVM);
         }
 
         private async void OnValidSubmit()
@@ -191,71 +185,20 @@ namespace Web.UI.Pages.Scheduler
         public void CheckInAircraft()
         {
             uiOptions.IsDisplayMainForm = false;
-        }
-
-        private void HideEditEndTimeForm()
-        {
-            uiOptions.IsDisplayEditEndTimeForm = false;
-            uiOptions.IsDisplayMainForm = true;
-
-            if (IsOpenFromContextMenu)
-            {
-                CloseDialog();
-            }
+            uiOptions.IsDisplayCheckInForm = true;
         }
 
         public void ShowEditEndTimeForm()
         {
             uiOptions.IsDisplayMainForm = false;
+            uiOptions.IsDisplayCheckInForm = false;
             uiOptions.IsDisplayEditEndTimeForm = true;
-        }
-
-        private async Task UpdateEndTime()
-        {
-            isBusySubmitButton = true;
-
-            SchedulerEndTimeDetailsVM schedulerEndTimeDetailsVM = new SchedulerEndTimeDetailsVM();
-
-            schedulerEndTimeDetailsVM.ScheduleId = schedulerVM.Id;
-            schedulerEndTimeDetailsVM.EndTime = DateConverter.ToUTC(schedulerVM.EndTime, timezone);
-            schedulerEndTimeDetailsVM.StartTime = DateConverter.ToUTC(schedulerVM.StartTime, timezone);
-            schedulerEndTimeDetailsVM.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
-
-            CurrentResponse response = await AircraftSchedulerService.UpdateScheduleEndTime(dependecyParams, schedulerEndTimeDetailsVM);
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                if (Convert.ToBoolean(response.Data) == true)
-                {
-                    uiOptions.IsDisplayEditEndTimeForm = false;
-                    uiOptions.IsDisplayMainForm = true;
-                    globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
-                    RefreshSchedulerDataSource(ScheduleOperations.UpdateEndTime);
-
-                    if (IsOpenFromContextMenu)
-                    {
-                        CloseDialog();
-                    }
-
-                    base.StateHasChanged();
-                }
-                else
-                {
-                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
-                }
-            }
-            else
-            {
-                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
-            }
-
-            isBusySubmitButton = false;
-            base.StateHasChanged();
         }
 
         public void EditFlightTime()
         {
             uiOptions.IsDisplayMainForm = false;
+            uiOptions.IsDisplayCheckInForm = true;
 
             foreach (AircraftEquipmentTimeVM aircraftEquipmentTimeVM in schedulerVM.AircraftEquipmentsTimeList)
             {
@@ -269,31 +212,20 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        private async Task CheckIn()
+        public void CloseCheckInForm()
         {
-            if (!checkInForm.Validate())
+            if (IsOpenFromContextMenu)
             {
-                return;
+               CloseDialog();
             }
-
-            isBusySubmitButton = true;
-
-            CurrentResponse response = await AircraftSchedulerDetailService.CheckIn(dependecyParams, schedulerVM.AircraftEquipmentsTimeList);
-
-            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
+            else
             {
-                CloseDialog();
-                schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut = false;
-
-                RefreshSchedulerDataSource(ScheduleOperations.CheckIn);
+                uiOptions.IsDisplayMainForm = true;
+                uiOptions.IsDisplayCheckInForm = false;
             }
-
-            isBusySubmitButton = false;
         }
 
-        public void OpenForm()
+       public void OpenForm()
         {
             if (schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
             {
@@ -301,6 +233,9 @@ namespace Web.UI.Pages.Scheduler
             }
 
             uiOptions.IsDisplayForm = true;
+            uiOptions.IsDisplayMainForm = true;
+            uiOptions.IsDisplayCheckInForm = false;
+
             base.StateHasChanged();
         }
 
@@ -461,27 +396,6 @@ namespace Web.UI.Pages.Scheduler
             await InvokeAsync(() => StateHasChanged());
         }
 
-        public void TextBoxChangeEvent(decimal value, int index)
-        {
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = value - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-            schedulerVM.AircraftEquipmentsTimeList[index].InTime = value;
-        }
-
-        public void EditFlightTimeTextBoxChangeEvent(decimal value, int index)
-        {
-            //if (string.IsNullOrWhiteSpace(value.ToString()))
-            //{
-            //    return;
-            //}
-
-            schedulerVM.AircraftEquipmentsTimeList[index].TotalHours = value - schedulerVM.AircraftEquipmentsTimeList[index].Hours;
-            schedulerVM.AircraftEquipmentHobbsTimeList[index].InTime = value;
-            schedulerVM.AircraftEquipmentsTimeList[index].InTime = value;
-
-            base.StateHasChanged();
-        }
-
-        
         private async Task UnCheckOutAppointment()
         {
             uiOptions.IsBusyUnCheckOutButton = true;
@@ -639,6 +553,17 @@ namespace Web.UI.Pages.Scheduler
             }
 
             ChangeLoaderVisibilityAction(false);
+        }
+
+        private void HideEditEndTimeForm()
+        {
+            uiOptions.IsDisplayEditEndTimeForm = false;
+            uiOptions.IsDisplayMainForm = true;
+
+            if (IsOpenFromContextMenu)
+            {
+                CloseDialog();
+            }
         }
     }
 }

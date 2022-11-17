@@ -152,14 +152,6 @@
 
                         @if (schedulerVM.ScheduleActivityId > 0)
                         {
-                            @*@if (uiOptions.isDisplayRecurring)
-                                {
-                                <div class="col-6">
-                                <label>Recurring ?</label>
-                                <TelerikSwitch Id="isRecurring" @bind-Value=@schedulerVM.IsRecurring />
-                                </div>
-                                }*@
-
                             @if (uiOptions.IsDisplayMember1Dropdown)
                             {
                                 <div class="col-6">
@@ -282,14 +274,14 @@
             }
             else
             {
-               <Web.UI.Pages.Scheduler.DetailsView CheckInAircraftParentEvent="@CheckInAircraft" 
-               CheckOutAircraftParentEvent="@CheckOutAircraft" CloseDialogParentEvent="@CloseDialog"
-               EditFlightTimeParentEvent="@EditFlightTime" isAllowToDelete="@isAllowToDelete" isAllowToEdit="@isAllowToEdit"
-               OpenDeleteDialogParentEvent="@OpenDeleteDialog" OpenFormParentEvent="@OpenForm" OpenMainFormParentEvent="@OpenMainForm"
-               OpenUnCheckOutDialogParentEvent="@OpenUnCheckOutDialog" schedulerVM="@schedulerVM" 
-               ShowEditEndTimeFormParentEvent="@ShowEditEndTimeForm" uiOptions="@uiOptions">
+                <Web.UI.Pages.Scheduler.DetailsView CheckInAircraftParentEvent="@CheckInAircraft"
+                                            CheckOutAircraftParentEvent="@CheckOutAircraft" CloseDialogParentEvent="@CloseDialog"
+                                            EditFlightTimeParentEvent="@EditFlightTime" isAllowToDelete="@isAllowToDelete" isAllowToEdit="@isAllowToEdit"
+                                            OpenDeleteDialogParentEvent="@OpenDeleteDialog" OpenFormParentEvent="@OpenForm" OpenMainFormParentEvent="@OpenMainForm"
+                                            OpenUnCheckOutDialogParentEvent="@OpenUnCheckOutDialog" schedulerVM="@schedulerVM"
+                                            ShowEditEndTimeFormParentEvent="@ShowEditEndTimeForm" uiOptions="@uiOptions">
 
-               </Web.UI.Pages.Scheduler.DetailsView>
+                </Web.UI.Pages.Scheduler.DetailsView>
             }
 
             @if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut || schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
@@ -337,216 +329,22 @@
 
         <FormButtons></FormButtons>
     </TelerikForm>
-
-    @if (schedulerVM.AircraftSchedulerDetailsVM != null
-&& (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName) || !string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName)))
-    {
-        <div class="row justify-content-between align-items-center m-0 custom-border-y my-2 mt-0">
-            <div class="col-3 d-flex flex-column">
-                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
-                {
-                    <div class="d-flex justify-content-center">
-                        <FontLabel fontColor="#00AFA5" Class="font-weight-bold">Checked Out</FontLabel>
-                    </div>
-                    <FontLabel fontSize="12px" Class="d-flex justify-content-center">@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>
-                }
-            </div>
-            <div class="col-3 d-flex flex-column">
-                <span class="d-flex justify-content-center">
-                    <div class="row m-0">
-                        <div class="col-12">
-                            <style type="text/css">
-                                .small-svg svg {
-                                    width: 250px !important;
-                                    height: auto !important;
-                                }
-                            </style>
-                            <span class="small-svg">
-                                <CustomIcons IconName="start-end-plain-time" />
-                            </span>
-
-                        </div>
-                        <div class="col-12 d-flex justify-content-between">
-                            @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckOutByUserName))
-                            {
-                                <FontLabel fontSize="12px">@schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value.ToString("%h:mm tt")</FontLabel>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
-                            {
-                                <FontLabel fontSize="12px">@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("%h:mm tt")</FontLabel>
-                            }
-                        </div>
-                    </div>
-                </span>
-            </div>
-            <div class="col-3 d-flex flex-column">
-                @if (!string.IsNullOrWhiteSpace(schedulerVM.AircraftSchedulerDetailsVM.CheckInByUserName))
-                {
-                    <div class="d-flex justify-content-center">
-                        <FontLabel fontColor="#FE5722" Class="font-weight-bold">Checked In</FontLabel>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <FontLabel fontSize="12px">@schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value.ToString("ddd, MMM dd, yyyy")</FontLabel>
-                    </div>
-                }
-            </div>
-        </div>
-
-    }
 }
-else if (uiOptions.IsDisplayEditEndTimeForm)
+
+@if (uiOptions.IsDisplayEditEndTimeForm)
 {
-    <TelerikForm Model="@schedulerVM" OnValidSubmit="@UpdateEndTime">
-
-        <FormValidation>
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-        </FormValidation>
-
-        <FormItems>
-            <div class="row compact-row">
-                <div class="col-6">
-                    <label>Start Time</label>
-                    <TelerikDateTimePicker @bind-Value="@schedulerVM.StartTime" Enabled="false"
-                                       Format="MM/dd/yyyy %h:mm tt" Id="startTime" Class="w-100">
-
-                        <DateTimePickerSteps Minute="30" />
-
-                    </TelerikDateTimePicker>
-                </div>
-                <div class="col-6">
-                    <label>End Time</label>
-                    <TelerikDateTimePicker @bind-Value="@schedulerVM.EndTime"
-                                       Format="MM/dd/yyyy %h:mm tt" Id="endTime" Class="w-100">
-
-                        <DateTimePickerSteps Minute="30" />
-
-                    </TelerikDateTimePicker>
-
-                    <TelerikValidationMessage For="@(() => schedulerVM.EndTime)"></TelerikValidationMessage>
-                </div>
-            </div>
-
-            <hr class="hr-gray mt-3 mb-3" />
-
-        </FormItems>
-
-        <FormButtons>
-
-            <div class="d-flex btn-grp  justify-content-evenly ">
-
-                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
-                    Update
-                    <TelerikLoader Class="loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                    </TelerikLoader>
-
-                </TelerikButton>
-
-                <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => HideEditEndTimeForm()" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
-                    Cancel
-                </TelerikButton>
-
-            </div>
-
-        </FormButtons>
-    </TelerikForm>
-
+    <EditEndTimeForm CloseDialogParentEvent=@CloseDialog IsOpenFromContextMenu=@IsOpenFromContextMenu
+                 RefreshSchedulerDataSourceParentEvent=@RefreshSchedulerDataSourceParentEvent
+                 schedulerVM=@schedulerVM uiOptions="@uiOptions" HideEditEndTimeFormParentEvent=@HideEditEndTimeForm >
+    </EditEndTimeForm>
 }
-else
+
+@if (uiOptions.IsDisplayCheckInForm)
 {
-    <TelerikForm Model="@schedulerVM" EditContext="checkInForm" OnValidSubmit="@CheckIn">
-
-        <FormValidation>
-
-            <CustomValidationSummary> </CustomValidationSummary>
-
-        </FormValidation>
-
-        <FormItems>
-
-            <table style="width:100%;" class="custom-event-editor table table-striped table-hover my-1" cellpadding="5">
-
-                <thead>
-
-                    <tr>
-                        <th>Meter</th>
-                        <th>Time Out</th>
-                        <th>Time In</th>
-                        <th>Total</th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @for (int index = 0; index < schedulerVM.AircraftEquipmentsTimeList.Count(); index++)
-                    {
-                        int indexValue = index;
-
-                        AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
-                        <tr>
-                            <td>@schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName</td>
-                            <td>
-
-                                @*@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours*@
-
-                                <TelerikNumericTextBox Class="" Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
-                                @* <RadzenNumeric Visible="false" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours Class="w-100" />*@
-
-                            </td>
-
-                            <td class="">
-                                @if (aircraftScheduleHobbsTime == null)
-                                {
-                                    <TelerikNumericTextBox Placeholder="Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
-                                               Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime"
-                                               ValueExpression="@( () => @schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime )"
-                                               ValueChanged="@( (decimal value) => TextBoxChangeEvent(value, indexValue) )">
-                                    </TelerikNumericTextBox>
-
-                                    <TelerikValidationMessage For="@(() => schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime)"></TelerikValidationMessage>
-
-                                }
-                                else
-                                {
-                                    schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime = aircraftScheduleHobbsTime.InTime;
-                                    <TelerikNumericTextBox Placeholder="Hours"
-                                               Value="@aircraftScheduleHobbsTime.InTime"
-                                               ValueExpression="@(() => aircraftScheduleHobbsTime.InTime)"
-                                               ValueChanged="@( (decimal value) => EditFlightTimeTextBoxChangeEvent(value, indexValue) )">
-                                    </TelerikNumericTextBox>
-
-                                    <TelerikValidationMessage For="@(() => aircraftScheduleHobbsTime.InTime)"></TelerikValidationMessage>
-                                }
-
-                            </td>
-
-                            <td>
-                                @schedulerVM.AircraftEquipmentsTimeList[index].TotalHours
-                            </td>
-
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div>
-                <div class="d-flex justify-content-end">
-                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
-                        Check In
-                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                        </TelerikLoader>
-
-                    </TelerikButton>
-
-
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenMainForm" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
-                        Cancel
-                    </TelerikButton>
-                </div>
-            </div>
-
-        </FormItems>
-        <FormButtons></FormButtons>
-    </TelerikForm>
+     <EditCheckInForm CloseDialogParentEvent=@CloseDialog IsOpenFromContextMenu=@IsOpenFromContextMenu
+                 RefreshSchedulerDataSourceParentEvent=@RefreshSchedulerDataSourceParentEvent
+                 schedulerVM=@schedulerVM uiOptions="@uiOptions" CloseCheckInFormParentEvent=@CloseCheckInForm >
+    </EditCheckInForm>
 }
 @{
     if (isDisplayChildPopup)
