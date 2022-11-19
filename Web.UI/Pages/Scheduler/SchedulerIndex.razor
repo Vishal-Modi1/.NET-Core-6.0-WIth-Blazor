@@ -67,7 +67,7 @@
         <div class="col-md-6 col-sm-6">
 
             <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"  Class="common-bg" 
                          Placeholder="Select Company" ValueField="Id"
                          Value="@schedulerFilter.CompanyId"
                          ValueExpression="@( () => schedulerFilter.CompanyId )"
