@@ -21,6 +21,7 @@ using Web.UI.Data.AircraftStatus;
 using Web.UI.Data.InviteUser;
 using Web.UI.Data.Airport;
 using Web.UI.Data.Discrepancy;
+using Web.UI.Data.EmailConfiguration;
 
 namespace Web.UI.CustomServicesExtensions
 {
@@ -54,6 +55,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<AirportService>();
             builder.Services.AddScoped<DiscrepancyService>();
             builder.Services.AddScoped<DiscrepancyFileService>();
+            builder.Services.AddScoped<EmailConfigurationService>();
         }
     }
 }

@@ -74,6 +74,7 @@ namespace Web.UI.Pages.Scheduler
 
         private async void OnValidSubmit()
         {
+
             uiOptions.IsDisplayCheckOutOption = false;
 
             if (!isValidAirportsSelected)
@@ -96,6 +97,7 @@ namespace Web.UI.Pages.Scheduler
             }
 
             isBusySubmitButton = true;
+            ChangeLoaderVisibilityAction(true);
 
             schedulerVM.AircraftEquipmentsTimeList.Clear();
             CurrentResponse response = await AircraftSchedulerService.SaveandUpdateAsync(dependecyParams, schedulerVM, DateConverter.ToUTC(schedulerVM.StartTime, timezone), DateConverter.ToUTC(schedulerVM.EndTime, timezone));
@@ -118,7 +120,7 @@ namespace Web.UI.Pages.Scheduler
             }
 
             isBusySubmitButton = false;
-
+            ChangeLoaderVisibilityAction(false);
             CloseDialog();
             await LoadDataAsync();
         }
@@ -127,6 +129,11 @@ namespace Web.UI.Pages.Scheduler
         {
             bool isValid = true;
             isBusySubmitButton = true;
+
+            if(departureAirportList == null)
+            {
+                return isValid;
+            }
 
             var departureAirport = departureAirportList.Where(p => p.Name.ToLower() == schedulerVM.DepartureAirport.ToLower()).FirstOrDefault();
 
@@ -186,6 +193,7 @@ namespace Web.UI.Pages.Scheduler
         {
             uiOptions.IsDisplayMainForm = false;
             uiOptions.IsDisplayCheckInForm = true;
+            uiOptions.IsAllowToAddDiscrepancy = true;
         }
 
         public void ShowEditEndTimeForm()

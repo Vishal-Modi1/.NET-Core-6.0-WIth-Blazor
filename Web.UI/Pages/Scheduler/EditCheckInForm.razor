@@ -1,94 +1,122 @@
 ﻿@using DataModels.Entities
+@using Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
+
 <TelerikForm Model="@schedulerVM" EditContext="checkInForm" OnValidSubmit="@CheckIn">
 
-        <FormValidation>
+    <FormValidation>
 
-            <CustomValidationSummary> </CustomValidationSummary>
+        <CustomValidationSummary> </CustomValidationSummary>
 
-        </FormValidation>
+    </FormValidation>
 
-        <FormItems>
+    <FormItems>
 
-            <table style="width:100%;" class="custom-event-editor table table-striped table-hover my-1" cellpadding="5">
+        <table style="width:100%;" class="custom-event-editor table table-striped table-hover my-1" cellpadding="5">
 
-                <thead>
+            <thead>
 
+                <tr>
+                    <th>Meter</th>
+                    <th>Time Out</th>
+                    <th>Time In</th>
+                    <th>Total</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @for (int index = 0; index < schedulerVM.AircraftEquipmentsTimeList.Count(); index++)
+                {
+                    int indexValue = index;
+
+                    AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
                     <tr>
-                        <th>Meter</th>
-                        <th>Time Out</th>
-                        <th>Time In</th>
-                        <th>Total</th>
-                    </tr>
+                        <td>@schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName</td>
+                        <td>
 
-                </thead>
+                            @*@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours*@
 
-                <tbody>
+                            <TelerikNumericTextBox Class="" Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
+                            @* <RadzenNumeric Visible="false" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours Class="w-100" />*@
 
-                    @for (int index = 0; index < schedulerVM.AircraftEquipmentsTimeList.Count(); index++)
-                    {
-                        int indexValue = index;
+                        </td>
 
-                        AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
-                        <tr>
-                            <td>@schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName</td>
-                            <td>
-
-                                @*@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours*@
-
-                                <TelerikNumericTextBox Class="" Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
-                                @* <RadzenNumeric Visible="false" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours Class="w-100" />*@
-
-                            </td>
-
-                            <td class="">
-                                @if (aircraftScheduleHobbsTime == null)
-                                {
-                                    <TelerikNumericTextBox Placeholder="Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
+                        <td class="">
+                            @if (aircraftScheduleHobbsTime == null)
+                            {
+                                <TelerikNumericTextBox Placeholder="Hours" Id="@schedulerVM.AircraftEquipmentsTimeList[index].EquipmentName"
                                                Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime"
                                                ValueExpression="@( () => @schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime )"
                                                ValueChanged="@( (decimal value) => TextBoxChangeEvent(value, indexValue) )">
-                                    </TelerikNumericTextBox>
+                                </TelerikNumericTextBox>
 
-                                    <TelerikValidationMessage For="@(() => schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime)"></TelerikValidationMessage>
+                                <TelerikValidationMessage For="@(() => schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime)"></TelerikValidationMessage>
 
-                                }
-                                else
-                                {
-                                    schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime = aircraftScheduleHobbsTime.InTime;
-                                    <TelerikNumericTextBox Placeholder="Hours"
+                            }
+                            else
+                            {
+                                schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime = aircraftScheduleHobbsTime.InTime;
+                                <TelerikNumericTextBox Placeholder="Hours"
                                                Value="@aircraftScheduleHobbsTime.InTime"
                                                ValueExpression="@(() => aircraftScheduleHobbsTime.InTime)"
                                                ValueChanged="@( (decimal value) => EditFlightTimeTextBoxChangeEvent(value, indexValue) )">
-                                    </TelerikNumericTextBox>
+                                </TelerikNumericTextBox>
 
-                                    <TelerikValidationMessage For="@(() => aircraftScheduleHobbsTime.InTime)"></TelerikValidationMessage>
-                                }
+                                <TelerikValidationMessage For="@(() => aircraftScheduleHobbsTime.InTime)"></TelerikValidationMessage>
+                            }
 
-                            </td>
+                        </td>
 
-                            <td>
-                                @schedulerVM.AircraftEquipmentsTimeList[index].TotalHours
-                            </td>
+                        <td>
+                            @schedulerVM.AircraftEquipmentsTimeList[index].TotalHours
+                        </td>
 
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div>
-                <div class="d-flex justify-content-end">
-                    <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
-                        Update
-                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <div class="d-flex justify-content-end">
+                
+                @if (uiOptions.IsAllowToAddDiscrepancy)
+                {
+                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@OpenCreateDiscrepancyDialog" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusyDiscrepancyButton)">
+                        Add Discrepancy
+                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyDiscrepancyButton">
                         </TelerikLoader>
 
                     </TelerikButton>
+                }
 
-                    <TelerikButton ButtonType="@ButtonType.Button" OnClick="@CloseCheckInForm" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
-                        Cancel
-                    </TelerikButton>
-                </div>
+                <TelerikButton ButtonType="@ButtonType.Submit" ThemeColor="info" Class="btn k-btn-primary mx-1" Enabled="@(!isBusySubmitButton)">
+                    Update
+                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+                    </TelerikLoader>
+
+                </TelerikButton>
+
+                <TelerikButton ButtonType="@ButtonType.Button" OnClick="@CloseCheckInForm" ThemeColor="secondary" FillMode="Outline" Class="ms-1 k-btn-secondary-outline" Enabled="@(!isBusySubmitButton)">
+                    Cancel
+                </TelerikButton>
             </div>
+        </div>
 
-        </FormItems>
-        <FormButtons></FormButtons>
-    </TelerikForm>
+    </FormItems>
+    <FormButtons></FormButtons>
+</TelerikForm>
+
+
+@if (isDisplayChildPopup)
+{
+    <CustomPopupComponent Title="@childPopupTitle"
+                      ShowHeaderCloseButton="@true"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayChildPopup = false;})">
+        <Body>
+
+            <CreateTabs discrepancyData="@discrepancy" CloseDialogCallBack="@CloseChildDialog"></CreateTabs>
+
+        </Body>
+    </CustomPopupComponent>
+}

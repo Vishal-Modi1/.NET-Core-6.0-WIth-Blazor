@@ -1,0 +1,71 @@
+﻿@namespace Web.UI.Pages.Company.DetailsView.Settings.EmailSettings
+@using DataModels.Enums
+
+<TelerikForm Model="@emailConfiguration" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <CustomValidationSummary></CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@emailConfiguration.Id" name="Id" />
+
+        <div class="row my-3">
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>Email Type</label>
+                        <TelerikComboBox Id="emailTypeId" Data="@emailConfigurationData.EmailTypesList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Email Type" ValueField="Id"
+                                         Value="@emailConfiguration.EmailTypeId"
+                                         ValueExpression="@(() => emailConfiguration.EmailTypeId )"
+                                         ValueChanged="@((int value) => OnEmailTypeValueChanged(value))">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => emailConfiguration.EmailTypeId)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>Email</label>
+                        <TelerikTextBox Class="w-100" PlaceHolder="Enter email" @bind-Value="@emailConfiguration.Email" />
+                        <TelerikValidationMessage For="@(() => emailConfiguration.Email)"></TelerikValidationMessage>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    @*  <div class="col-6">
+                        <label>Status</label>
+                        <TelerikComboBox Id="statusId" Data="@emailConfiguration.StatusList" TextField="Name"
+                        Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                        Placeholder="Select Status" ValueField="Id"
+                        @bind-Value="emailConfiguration.EmailConfigurationStatusId">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => emailConfiguration.EmailConfigurationStatusId)"></TelerikValidationMessage>
+                        </div>*@
+
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+
+    </FormItems>
+    <FormButtons>
+        <div class="row mb-0">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@emailConfiguration.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

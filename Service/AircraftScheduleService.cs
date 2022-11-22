@@ -25,12 +25,14 @@ namespace Service
         private readonly IUserVSCompanyRepository _userVSCompanyRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly ISendMailService _sendMailService;
+        private readonly IEmailConfigurationRepository _emailConfigurationRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
             IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository, ICompanyRepository companyRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
-            IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository)
+            IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository,
+            IEmailConfigurationRepository emailConfigurationRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
@@ -41,6 +43,7 @@ namespace Service
             _userPreferenceRepository = userPreferenceRepository;
             _userVSCompanyRepository = userVSCompanyRepository;
             _companyRepository = companyRepository;
+            _emailConfigurationRepository = emailConfigurationRepository;
             _sendMailService = new SendMailService();
         }
 
@@ -396,6 +399,7 @@ namespace Service
                 viewModel.ToEmail = user.Email;
                 viewModel.Member1 = viewModel.UserName = user.FirstName + " " + user.LastName;
 
+                viewModel.CompanyEmail = GetCompanyEmail(schedulerVM.CompanyId);
                 _sendMailService.AppointmentCreated(viewModel);
 
                 // Sending mail to co-member
@@ -407,6 +411,7 @@ namespace Service
                     viewModel.ToEmail = user.Email;
                     viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
 
+                    viewModel.CompanyEmail = GetCompanyEmail(schedulerVM.CompanyId);
                     _sendMailService.AppointmentCreated(viewModel);
                 }
                 else if (schedulerVM.InstructorId != null)
@@ -416,6 +421,7 @@ namespace Service
                     viewModel.ToEmail = user.Email;
                     viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
 
+                    viewModel.CompanyEmail = GetCompanyEmail(schedulerVM.CompanyId);
                     _sendMailService.AppointmentCreated(viewModel);
                 }
             }
@@ -423,6 +429,18 @@ namespace Service
             {
 
             }
+        }
+
+        private string GetCompanyEmail(int companyId)
+        {
+            EmailConfiguration emailConfiguration = _emailConfigurationRepository.FindByCondition(p => p.EmailTypeId == (byte)EmailTypes.Reservation);
+            
+            if (emailConfiguration != null && !string.IsNullOrWhiteSpace(emailConfiguration.Email))
+            {
+                return emailConfiguration.Email;
+            }
+
+            return "";
         }
 
         #region Object Mapping

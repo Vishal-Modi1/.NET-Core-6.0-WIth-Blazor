@@ -182,6 +182,8 @@ namespace Service
                 List<string> emails = new List<string>() { viewModel.ToEmail };
                 MailSettings mailSettings = GetMailSettings(emails, "Upflyte Appointment", emailTemplateBody, "");
 
+                mailSettings.CC = viewModel.CompanyEmail;
+
                 bool isMailSent = _mailSender.SendMail(mailSettings);
 
                 return isMailSent;
@@ -209,6 +211,7 @@ namespace Service
 
                 MailSettings mailSettings = GetMailSettings(viewModel.ToEmails, viewModel.Subject, emailTemplateBody, "");
 
+                mailSettings.CC = viewModel.CompanyEmail;
                 bool isMailSent = _mailSender.SendMail(mailSettings);
 
                 return isMailSent;

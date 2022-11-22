@@ -13,6 +13,7 @@ namespace DataModels.VM.Discrepancy
         public string Description { get; set; }
         public string ActionTaken { get; set; }
         public string Subject { get; set; }
+        public string CompanyEmail { get; set; }
         public List<string> ToEmails { get; set; } = new();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataModels.Constants;
 using DataModels.Enums;
 using DataModels.VM.Common;
+using DataModels.VM.Discrepancy;
 using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -21,6 +22,8 @@ namespace Web.UI.Pages.Scheduler
 
         DependecyParams dependecyParams;
         EditContext checkInForm;
+        bool isBusyDiscrepancyButton;
+        DiscrepancyVM discrepancy;
 
         protected override async Task OnInitializedAsync()
         {
@@ -65,6 +68,35 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
+        async Task OpenCreateDiscrepancyDialog()
+        {
+            operationType = OperationType.Create;
+            isBusyDiscrepancyButton = true;
+            childPopupTitle = "Create New Discrepancy";
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            discrepancy = await DiscrepancyService.GetDetailsAsync(dependecyParams, 0);
+
+            discrepancy.AircraftId = schedulerVM.AircraftId.GetValueOrDefault();
+
+            if (!globalMembers.IsSuperAdmin)
+            {
+                discrepancy.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, globalMembers.CompanyId);
+                discrepancy.CompanyId = globalMembers.CompanyId;
+            }
+            else
+            {
+                discrepancy.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, schedulerVM.CompanyId);
+                discrepancy.CompanyId = schedulerVM.CompanyId;
+            }
+
+            discrepancy.StatusList = await DiscrepancyService.ListStatusDropdownValues(dependecyParams);
+            isBusyDiscrepancyButton = false;
+
+            isDisplayChildPopup = true;
+            base.StateHasChanged();
+        }
+
         private void CloseCheckInForm()
         {
             CloseCheckInFormParentEvent.InvokeAsync();
@@ -73,6 +105,11 @@ namespace Web.UI.Pages.Scheduler
         private void CloseDialog()
         {
             CloseDialogParentEvent.InvokeAsync();
+        }
+
+        private void CloseChildDialog()
+        {
+            isDisplayChildPopup = false;
         }
 
         private void RefreshSchedulerDataSource(ScheduleOperations scheduleOperations)

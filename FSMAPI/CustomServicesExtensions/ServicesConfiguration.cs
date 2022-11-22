@@ -44,6 +44,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IDiscrepancyStatusService, DiscrepancyStatusService>();
             services.AddScoped<IDiscrepancyHistoryService, DiscrepancyHistoryService>();
             services.AddScoped<IDiscrepancyFileService, DiscrepancyFileService>();
+            services.AddScoped<IEmailConfigurationService, EmailConfigurationService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -86,6 +87,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IDiscrepancyStatusRepository, DiscrepancyStatusRepository>();
             services.AddScoped<IDiscrepancyHistoryRepository, DiscrepancyHistoryRepository>();
             services.AddScoped<IDiscrepancyFileRepository, DiscrepancyFileRepository>();
+            services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
         }
     }
 }

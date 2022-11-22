@@ -16,6 +16,7 @@ namespace DataModels.VM.Scheduler
         public string ActivityType { get; set; }
         public DateTime StartTime { get; set; }  
         public DateTime EndTime { get; set; }
+        public string CompanyEmail { get; set; }
 
     }
 }

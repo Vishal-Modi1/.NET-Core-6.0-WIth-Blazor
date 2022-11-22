@@ -8,6 +8,7 @@ using DataModels.VM.Common;
 using DataModels.VM.Company;
 using DataModels.VM.Discrepancy;
 using DataModels.VM.Document;
+using DataModels.VM.EmailConfiguration;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Location;
 using DataModels.VM.Reservation;
@@ -128,6 +129,10 @@ namespace Repository
 
         public DbSet<DiscrepancyHistory> DiscrepanciesHistory { get; set; }
 
+        public DbSet<EmailConfiguration> EmailsConfiguration { get; set; }
+
+        public DbSet<EmailType> EmailTypes { get; set; }
+
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
         public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }
@@ -145,6 +150,8 @@ namespace Repository
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 
         public DbSet<DiscrepancyDataVM> DiscrepancyDataVM { get; internal set; }
+
+        public DbSet<EmailConfigurationDataVM> EmailsConfigurationDataVM { get; internal set; }
 
         public DbSet<DiscrepancyHistoryVM> DiscrepancyHistoryVM { get; internal set; }
 

@@ -5,6 +5,23 @@
 {
         <TelerikTabStrip Class="k-tabstrip-list">
 
+          @*  <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mx-2">
+                                <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Stats</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+
+                        <Web.UI.Pages.Statistics.CompanyStatistics>
+                        </Web.UI.Pages.Statistics.CompanyStatistics>
+
+                    </Content>
+                </TabStripTab>*@
+
             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
             {
                 <TabStripTab>
@@ -81,5 +98,23 @@
                     </Web.UI.Pages.Aircraft.Index>
                 </Content>
             </TabStripTab>
+
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mx-2">
+                                <CustomIcons IconName="setting" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Settings</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+
+                        <Web.UI.Pages.Company.DetailsView.Settings.Index CompanyIdParam="@CompanyData.Id">
+                        </Web.UI.Pages.Company.DetailsView.Settings.Index>
+
+                    </Content>
+                </TabStripTab>
+
         </TelerikTabStrip>
 }

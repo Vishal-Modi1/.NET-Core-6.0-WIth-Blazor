@@ -21,12 +21,13 @@ namespace Service
         private readonly IUserRepository _userRepository;
         private readonly ISendMailService _sendMailService;
         private readonly IAircraftRepository _aircraftRepository;
+        private readonly IEmailConfigurationRepository _emailConfigurationRepository;
 
         public DiscrepancyService(IDiscrepancyRepository discrepancyRepository,
             IUserRepository userRepository, ISendMailService sendMailService,
             IDiscrepancyHistoryRepository discrepancyHistoryRepository,
             IDiscrepancyStatusRepository discrepancyStatusRepository,
-            IAircraftRepository aircraftRepository)
+            IAircraftRepository aircraftRepository, IEmailConfigurationRepository emailConfigurationRepository)
         {
             _discrepancyRepository = discrepancyRepository;
             _discrepancyHistoryRepository = discrepancyHistoryRepository;
@@ -34,6 +35,7 @@ namespace Service
             _userRepository = userRepository;
             _sendMailService = sendMailService;
             _aircraftRepository = aircraftRepository;
+            _emailConfigurationRepository = emailConfigurationRepository;
         }
 
         public CurrentResponse Create(DiscrepancyVM discrepancyVM, string timezone)
@@ -278,6 +280,13 @@ namespace Service
                 }
 
                 viewModel.ToEmails.AddRange(usersList.Select(p => p.Email));
+
+                EmailConfiguration emailConfiguration = _emailConfigurationRepository.FindByCondition(p=>p.EmailTypeId == (byte)EmailTypes.Discrepancy);
+                if (emailConfiguration != null && !string.IsNullOrWhiteSpace(emailConfiguration.Email))
+                {
+                    viewModel.CompanyEmail = emailConfiguration.Email;
+                }
+
                 _sendMailService.DiscrepancyCreated(viewModel);
 
                 //foreach (User user in usersList)
