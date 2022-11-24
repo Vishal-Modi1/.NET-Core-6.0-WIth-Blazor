@@ -133,6 +133,8 @@ namespace Repository
 
         public DbSet<EmailType> EmailTypes { get; set; }
 
+        public DbSet<AirTrafficControlCenter> AirTrafficControlCenters { get; set; }
+
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
         public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }

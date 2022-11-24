@@ -41,7 +41,7 @@
     <Content Update="Pages\Aircraft\AircraftDetails.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
-    <Content Update="Pages\Company\DetailsView\Settings\EmailSettings\Index.razor">
+    <Content Update="Pages\Company\DetailsView\Settings\Notifications\Index.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Update="Pages\User\Index.razor">

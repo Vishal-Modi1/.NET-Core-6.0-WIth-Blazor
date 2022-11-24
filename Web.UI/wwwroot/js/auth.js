@@ -158,3 +158,8 @@ export function copyTextToClipboard(text) {
     document.body.removeChild(dummy);
 
 }
+
+export function ReloadVideo() {
+
+    document.getElementById("videoTagId").load();
+}

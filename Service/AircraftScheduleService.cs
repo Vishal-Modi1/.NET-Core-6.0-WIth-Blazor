@@ -66,6 +66,22 @@ namespace Service
                     schedulerVM.AircraftEquipmentsTimeList.ForEach(p => { p.AircraftScheduleId = aircraftSchedule.Id; });
 
                     SetAircraftEquipmentHobbsTime(schedulerVM);
+
+                    if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+                    {
+                        schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedOut";
+                    }
+                    else
+                    {
+                        if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedIn";
+                        }
+                        else
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "Scheduled";
+                        }
+                    }
                 }
 
                 if (roleId == (int)DataModels.Enums.UserRole.SuperAdmin)
