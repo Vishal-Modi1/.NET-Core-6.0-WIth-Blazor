@@ -8,7 +8,7 @@ using Web.UI.Data.EmailConfiguration;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.Company.DetailsView.Settings.EmailSettings
+namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications
 {
     partial class Index
     {

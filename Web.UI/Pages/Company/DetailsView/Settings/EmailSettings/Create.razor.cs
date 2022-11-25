@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Web.UI.Data.EmailConfiguration;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.Company.DetailsView.Settings.EmailSettings
+namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications
 {
     partial class Create
     {
