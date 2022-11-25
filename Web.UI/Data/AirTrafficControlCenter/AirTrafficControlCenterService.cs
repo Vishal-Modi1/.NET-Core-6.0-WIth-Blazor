@@ -30,5 +30,30 @@ namespace Web.UI.Data.AirTrafficControlCenter
                 return new List<DataModels.Entities.AirTrafficControlCenter>();
             }
         }
+
+        public async Task<CurrentResponse> SetDefault(DependecyParams dependecyParams, int userAirTrafficControlCenterId)
+        {
+            dependecyParams.URL = $"userAirTrafficControlCenter/setDefault?userAirTrafficControlCenterId={userAirTrafficControlCenterId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<int> GetDefault(DependecyParams dependecyParams)
+        {
+            try
+            {
+                dependecyParams.URL = "userAirTrafficControlCenter/GetDefault";
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+                int value = JsonConvert.DeserializeObject<int>(response.Data.ToString());
+
+                return value;
+            }
+            catch (Exception exc)
+            {
+                return 0;
+            }
+        }
     }
 }

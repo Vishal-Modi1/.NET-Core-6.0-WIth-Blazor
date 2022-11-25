@@ -3,14 +3,24 @@
 <PageTitle>Weather | Upflyte </PageTitle>
 
 <div class="card p-3">
+
+
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between">
                 <div>
-                    <ComponentTitle Title="CWSU Pre-Duty Weather Briefings" Type="AdministrationTitle" />
+                    <ComponentTitle Title="Pre-Duty Weather Briefings" Type="AdministrationTitle" />
                 </div>
             </div>
             <hr class="mt-2 my-1" />
+            <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => SetDefault()" Enabled="@(!isBusyAddButton)">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Set Default
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
+                        </TelerikButton>
+                    </div>
+
         </div>
     </div>
 

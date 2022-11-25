@@ -19,10 +19,22 @@ namespace Web.UI.Pages.Weather
 
         private async Task LoadData()
         {
+            ChangeLoaderVisibilityAction(true);
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             centers =  await AirTrafficControlCenterService.ListAllAsync(dependecyParams);
 
             dropDownValues = centers.Select(p => new DropDownValues() { Id = p.Id, Name = p.Name }).ToList();
+
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            centerValue = await AirTrafficControlCenterService.GetDefault(dependecyParams);
+
+            if(centerValue != 0)
+            {
+                selectedCenter = centers.Where(p => p.Id == centerValue).FirstOrDefault();
+            }
+
+            ChangeLoaderVisibilityAction(false);
         }
 
         public async Task LoadVideo(int value)
@@ -37,6 +49,25 @@ namespace Web.UI.Pages.Weather
 
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("ReloadVideo");
+        }
+
+        public async Task SetDefault()
+        {
+            if(centerValue == 0)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Please select center");
+                return;
+            }
+
+            isBusyAddButton = true;
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await AirTrafficControlCenterService.SetDefault(dependecyParams, centerValue);
+
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+
+            isBusyAddButton = false;
+
         }
     }
 }

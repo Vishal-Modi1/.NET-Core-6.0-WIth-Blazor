@@ -12,8 +12,6 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications
 {
     partial class Index
     {
-        //
-        [Parameter] public EmailConfigurationService EmailConfigurationService { get; set; }
         [CascadingParameter] public TelerikGrid<EmailConfigurationDataVM> grid { get; set; }
         [Parameter] public int CompanyIdParam { get; set; }
 

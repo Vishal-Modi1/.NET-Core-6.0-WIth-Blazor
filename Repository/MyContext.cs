@@ -135,6 +135,9 @@ namespace Repository
 
         public DbSet<AirTrafficControlCenter> AirTrafficControlCenters { get; set; }
 
+        public DbSet<UserAirTrafficControlCenter> UsersAirTrafficControlCenter { get; set; }
+
+        //List Objects
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
         public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }

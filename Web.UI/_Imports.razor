@@ -33,6 +33,8 @@
 @using Web.UI.Data.MyAccount
 @using Web.UI.Data.Airport
 @using Web.UI.Data.Discrepancy
+@using Web.UI.Data.EmailConfiguration
+@using Web.UI.Data.AirTrafficControlCenter
 
 @using Web.UI.Shared.Components.DialogFooter;
 @using Web.UI.Shared.Components.CustomPopup;
@@ -77,5 +79,7 @@
 @inject AirportService AirportService
 @inject DiscrepancyService DiscrepancyService
 @inject DiscrepancyFileService DiscrepancyFileService
+@inject EmailConfigurationService EmailConfigurationService
+@inject AirTrafficControlCenterService AirTrafficControlCenterService
 
 @inherits BaseClass

@@ -9,8 +9,6 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications
 {
     partial class Create
     {
-        //
-        [Parameter] public EmailConfigurationService EmailConfigurationService { get; set; }
         [Parameter] public EmailConfigurationVM emailConfigurationData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         [Parameter] public EventCallback<EmailConfigurationVM> UpdateTabUI { get; set; }
