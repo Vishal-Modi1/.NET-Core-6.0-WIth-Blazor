@@ -4,6 +4,7 @@ using DataModels.VM.EmailConfiguration;
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
 using Utilities;
+using Web.UI.Data.EmailConfiguration;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
 
@@ -11,6 +12,8 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.EmailSettings
 {
     partial class Index
     {
+        //
+        [Parameter] public EmailConfigurationService EmailConfigurationService { get; set; }
         [CascadingParameter] public TelerikGrid<EmailConfigurationDataVM> grid { get; set; }
         [Parameter] public int CompanyIdParam { get; set; }
 
