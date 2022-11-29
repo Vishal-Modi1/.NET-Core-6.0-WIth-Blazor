@@ -18,7 +18,7 @@
                 </span>
                 <span>Web Permissions</span>
             </div>
-              <hr class="mt-2 my-1" />
+            <hr class="mt-2 my-1" />
         </HeaderTemplate>
         <Content>
             <div class="row">
@@ -31,79 +31,95 @@
                     </div>
                 </div>
             </div>
-            <div class="row my-2">
-                <div class="col-md-4">
 
-                    <TelerikComboBox Id=roleId Data="@userrolePermissionFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                     Placeholder="Select Role" ValueField="Id">
-                    </TelerikComboBox>
+            <div>
+                <TelerikPanelBar Data="@FilterPanelData">
+                    <PanelBarBindings>
+                        <PanelBarBinding Level="0">
+                            <ContentTemplate>
 
-                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-4">
 
-                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-                {
-                    <div class="col-md-4">
+                                        <TelerikComboBox Id=roleId Data="@userrolePermissionFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
+                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                         Placeholder="Select Role" ValueField="Id">
+                                        </TelerikComboBox>
 
-                        <TelerikComboBox Id=companyId Data="@userrolePermissionFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                     Placeholder="Select Company" ValueField="Id">
-                        </TelerikComboBox>
+                                    </div>
 
-                    </div>
-                }
+                                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                                    {
+                                        <div class="col-md-4">
 
-                <div class="col-md-4">
+                                            <TelerikComboBox Id=companyId Data="@userrolePermissionFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                         Placeholder="Select Company" ValueField="Id">
+                                            </TelerikComboBox>
 
-                    <TelerikComboBox Id=moduleId Data="@userrolePermissionFilterVM.ModuleList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                     Placeholder="Select Module" ValueField="Id">
-                    </TelerikComboBox>
+                                        </div>
+                                    }
 
-                </div>
+                                    <div class="col-md-4">
 
+                                        <TelerikComboBox Id=moduleId Data="@userrolePermissionFilterVM.ModuleList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
+                                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                         Placeholder="Select Module" ValueField="Id">
+                                        </TelerikComboBox>
+
+                                    </div>
+
+                                </div>
+
+
+                            </ContentTemplate>
+                        </PanelBarBinding>
+                    </PanelBarBindings>
+                </TelerikPanelBar>
             </div>
 
-                <TelerikGrid TItem="UserRolePermissionDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
-                             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
-                             SelectionMode="GridSelectionMode.Multiple" SelectedItems="@webPermissions"
-                             SelectedItemsChanged="@((IEnumerable<UserRolePermissionDataVM> permissionsList) => OnSelect(permissionsList))">
 
-                    <GridSettings>
-                        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-                    </GridSettings>
 
-                    <GridColumns>
+            <TelerikGrid TItem="UserRolePermissionDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+                         Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
+                         SelectionMode="GridSelectionMode.Multiple" SelectedItems="@webPermissions"
+                         SelectedItemsChanged="@((IEnumerable<UserRolePermissionDataVM> permissionsList) => OnSelect(permissionsList))">
 
-                        <GridColumn Field="@nameof(UserRolePermissionDataVM.RoleName)" Title="Role"></GridColumn>
-                        <GridColumn Field="@nameof(UserRolePermissionDataVM.DisplayName)" Title="Module"></GridColumn>
-                        <GridColumn Field="@nameof(UserRolePermissionDataVM.PermissionType)" Title="Permission Type"></GridColumn>
+                <GridSettings>
+                    <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+                </GridSettings>
 
-                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-                        {
-                            <GridColumn Field="@nameof(UserRolePermissionDataVM.CompanyName)" Title="Company"></GridColumn>
-                        }
+                <GridColumns>
 
-                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
-                        {
-                            <GridCheckboxColumn SelectAll="true" CheckBoxOnlySelection="true" Title="Select" Width="170px">
+                    <GridColumn Field="@nameof(UserRolePermissionDataVM.RoleName)" Title="Role"></GridColumn>
+                    <GridColumn Field="@nameof(UserRolePermissionDataVM.DisplayName)" Title="Module"></GridColumn>
+                    <GridColumn Field="@nameof(UserRolePermissionDataVM.PermissionType)" Title="Permission Type"></GridColumn>
 
-                                <HeaderTemplate>
-                                    @{
-                                        <TelerikCheckBox @bind-Value="@selectAllWebPermissions"
-                                                 Enabled="false"
-                                                 TabIndex="-1"
-                                                 Indeterminate="@(selectAllWebPermissions == null)" />
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                    {
+                        <GridColumn Field="@nameof(UserRolePermissionDataVM.CompanyName)" Title="Company"></GridColumn>
+                    }
 
-                                        <TelerikButton OnClick="@SelectAllWebPermissions">
-                                            @(selectAllWebPermissions.HasValue && selectAllWebPermissions.Value ? "Deny All" : "Grant All")
-                                        </TelerikButton>
-                                    }
-                                </HeaderTemplate>
-                            </GridCheckboxColumn>
-                        }
-                    </GridColumns>
-                </TelerikGrid>
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                    {
+                        <GridCheckboxColumn SelectAll="true" CheckBoxOnlySelection="true" Title="Select" Width="170px">
+
+                            <HeaderTemplate>
+                                @{
+                                    <TelerikCheckBox @bind-Value="@selectAllWebPermissions"
+                                             Enabled="false"
+                                             TabIndex="-1"
+                                             Indeterminate="@(selectAllWebPermissions == null)" />
+
+                                    <TelerikButton OnClick="@SelectAllWebPermissions">
+                                        @(selectAllWebPermissions.HasValue && selectAllWebPermissions.Value ? "Deny All" : "Grant All")
+                                    </TelerikButton>
+                                }
+                            </HeaderTemplate>
+                        </GridCheckboxColumn>
+                    }
+                </GridColumns>
+            </TelerikGrid>
 
         </Content>
     </TabStripTab>
@@ -116,7 +132,7 @@
                 </span>
                 <span>Mobile Permission</span>
             </div>
-              <hr class="mt-2 my-1" />
+            <hr class="mt-2 my-1" />
         </HeaderTemplate>
         <Content>
             <div class="row">
@@ -129,81 +145,94 @@
                     </div>
                 </div>
             </div>
-            <div class="row my-2">
-                <div class="col-md-4">
 
-                    <TelerikComboBox Id=roleId Data="@userrolePermissionFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                     Placeholder="Select Role" ValueField="Id">
-                    </TelerikComboBox>
+            <TelerikPanelBar Data="@FilterPanelData">
+                <PanelBarBindings>
+                    <PanelBarBinding Level="0">
+                        <ContentTemplate>
 
-                </div>
+                            <div class="row my-2">
+                                <div class="col-md-4">
 
-                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-                {
-                    <div class="col-md-4">
+                                    <TelerikComboBox Id=roleId Data="@userrolePermissionFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Role" ValueField="Id">
+                                    </TelerikComboBox>
 
-                        <TelerikComboBox Id=companyId Data="@userrolePermissionFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                     Placeholder="Select Company" ValueField="Id">
-                        </TelerikComboBox>
+                                </div>
 
-                    </div>
-                }
+                                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                                {
+                                    <div class="col-md-4">
 
-                <div class="col-md-4">
+                                        <TelerikComboBox Id=companyId Data="@userrolePermissionFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Company" ValueField="Id">
+                                        </TelerikComboBox>
 
-                    <TelerikComboBox Id=moduleId Data="@userrolePermissionFilterVM.ModuleList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                     Placeholder="Select Module" ValueField="Id">
-                    </TelerikComboBox>
+                                    </div>
+                                }
 
-                </div>
-            </div>
+                                <div class="col-md-4">
 
-                <TelerikGrid TItem="UserRolePermissionDataVM" OnRead="@LoadData" Pageable="true" @ref="@mobileAppPermissionGrid"
-                             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
-                             SelectionMode="GridSelectionMode.Multiple" SelectedItems="@mobileAppPermissions"
-                             SelectedItemsChanged="@((IEnumerable<UserRolePermissionDataVM> permissionsList) => OnMobilePermissionSelect(permissionsList))">
+                                    <TelerikComboBox Id=moduleId Data="@userrolePermissionFilterVM.ModuleList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
+                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                     Placeholder="Select Module" ValueField="Id">
+                                    </TelerikComboBox>
 
-                    <GridSettings>
+                                </div>
+                            </div>
 
-                        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-                    </GridSettings>
 
-                    <GridColumns>
+                        </ContentTemplate>
+                    </PanelBarBinding>
+                </PanelBarBindings>
+            </TelerikPanelBar>
 
-                        <GridColumn Field="@nameof(UserRolePermissionDataVM.RoleName)" Title="Role"></GridColumn>
-                        <GridColumn Field="@nameof(UserRolePermissionDataVM.DisplayName)" Title="Module"></GridColumn>
-                        <GridColumn Field="@nameof(UserRolePermissionDataVM.PermissionType)" Title="Permission Type"></GridColumn>
 
-                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-                        {
-                            <GridColumn Field="@nameof(UserRolePermissionDataVM.CompanyName)" Title="Company"></GridColumn>
-                        }
+            <TelerikGrid TItem="UserRolePermissionDataVM" OnRead="@LoadData" Pageable="true" @ref="@mobileAppPermissionGrid"
+                         Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
+                         SelectionMode="GridSelectionMode.Multiple" SelectedItems="@mobileAppPermissions"
+                         SelectedItemsChanged="@((IEnumerable<UserRolePermissionDataVM> permissionsList) => OnMobilePermissionSelect(permissionsList))">
 
-                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
-                        {
-                            <GridCheckboxColumn SelectAll="true" CheckBoxOnlySelection="true" Title="Select" Width="170px">
+                <GridSettings>
 
-                                <HeaderTemplate>
-                                    @{
-                                        <TelerikCheckBox @bind-Value="@selectAllMobileAppPermissions"
-                                                 Enabled="false"
-                                                 TabIndex="-1"
-                                                 Indeterminate="@(selectAllMobileAppPermissions == null)" />
+                    <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+                </GridSettings>
 
-                                        <TelerikButton OnClick="@SelectAllMobileAppPermissions">
-                                            @(selectAllMobileAppPermissions.HasValue && selectAllMobileAppPermissions.Value ? "Deny All" : "Grant All")
-                                        </TelerikButton>
-                                    }
-                                </HeaderTemplate>
+                <GridColumns>
 
-                            </GridCheckboxColumn>
-                        }
-                    </GridColumns>
+                    <GridColumn Field="@nameof(UserRolePermissionDataVM.RoleName)" Title="Role"></GridColumn>
+                    <GridColumn Field="@nameof(UserRolePermissionDataVM.DisplayName)" Title="Module"></GridColumn>
+                    <GridColumn Field="@nameof(UserRolePermissionDataVM.PermissionType)" Title="Permission Type"></GridColumn>
 
-                </TelerikGrid>
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                    {
+                        <GridColumn Field="@nameof(UserRolePermissionDataVM.CompanyName)" Title="Company"></GridColumn>
+                    }
+
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                    {
+                        <GridCheckboxColumn SelectAll="true" CheckBoxOnlySelection="true" Title="Select" Width="170px">
+
+                            <HeaderTemplate>
+                                @{
+                                    <TelerikCheckBox @bind-Value="@selectAllMobileAppPermissions"
+                                             Enabled="false"
+                                             TabIndex="-1"
+                                             Indeterminate="@(selectAllMobileAppPermissions == null)" />
+
+                                    <TelerikButton OnClick="@SelectAllMobileAppPermissions">
+                                        @(selectAllMobileAppPermissions.HasValue && selectAllMobileAppPermissions.Value ? "Deny All" : "Grant All")
+                                    </TelerikButton>
+                                }
+                            </HeaderTemplate>
+
+                        </GridCheckboxColumn>
+                    }
+                </GridColumns>
+
+            </TelerikGrid>
 
         </Content>
     </TabStripTab>

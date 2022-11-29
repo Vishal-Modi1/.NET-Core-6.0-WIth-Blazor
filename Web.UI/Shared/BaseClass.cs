@@ -3,6 +3,7 @@ using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Telerik.Blazor.Components;
+using Web.UI.Models.Shared;
 using Web.UI.Utilities;
 
 namespace Web.UI.Shared
@@ -36,6 +37,8 @@ namespace Web.UI.Shared
         [CascadingParameter] public GlobalMembers globalMembers { get; set; }
     
         public CurrentUserPermissionManager _currentUserPermissionManager;
+
+        public IEnumerable<FilterPanel> FilterPanelData { get; set; } = new List<FilterPanel>() { new FilterPanel() { Id = 0, Text = "Filters" } };
 
         public void OnSearchValueChanges<TypeOfValue>(string selectedValue, TelerikGrid<TypeOfValue> grid) where TypeOfValue : class
         {
