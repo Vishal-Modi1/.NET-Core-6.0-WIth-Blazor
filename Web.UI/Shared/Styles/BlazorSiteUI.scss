@@ -48,7 +48,7 @@ $BG-LIGHT-BLUE: #3066F8;
 $BG-MENU-ITEM: #0062FE;
 $BG-MENU-ITEM-TEXT-COLOR: #121D2D;
 /*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
-$BG-MENU-ITEM-SELECTED: #3066f81c;
+$BG-MENU-ITEM-SELECTED: #3066f80f;
 $BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
 $BG-MENU-TITLE-HEADER: #022254;
 $BG-MENU-ITEM-HOVER: #eee;
@@ -554,7 +554,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-inner {
-    background-color: #3066f81c;
+    background-color: #3066f80f;
 }
 
 .k-input-button, .k-input-button:hover {
@@ -721,5 +721,9 @@ td,span,p
     border-bottom: 2px solid #E3E3E3;
 }
 .common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
-    background: #3066f81c !important;
+    background: #3066f80f !important;
+}
+
+.k-input-md .k-input-button {
+    background-color: #3066f84f !important
 }

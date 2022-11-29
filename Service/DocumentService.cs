@@ -18,15 +18,17 @@ namespace Service
         private readonly IModuleDetailsRepository _moduleDetailsRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IDocumentTagRepository _documentTagRepository;
+        private readonly IUserRepository _userRepository;
 
         public DocumentService(IDocumentRepository documentRepository,
-            IModuleDetailsRepository moduleDetailsRepository,
+            IModuleDetailsRepository moduleDetailsRepository, IUserRepository userRepository,
             ICompanyRepository companyRepository, IDocumentTagRepository documentTagRepository)
         {
             _documentRepository = documentRepository;
             _moduleDetailsRepository = moduleDetailsRepository;
             _companyRepository = companyRepository;
             _documentTagRepository = documentTagRepository;
+            _userRepository = userRepository;
         }
 
         public CurrentResponse Create(DocumentVM documentVM)
@@ -168,14 +170,24 @@ namespace Service
             }
         }
 
-        public CurrentResponse GetFiltersValue()
+        public CurrentResponse GetFiltersValue(int? companyId)
         {
             try
             {
                 DocumentFilterVM documentFilterVM = new DocumentFilterVM();
 
-                documentFilterVM.Companies = _companyRepository.ListDropDownValues();
+                if (companyId == null)
+                {
+                    documentFilterVM.Companies = _companyRepository.ListDropDownValues();
+                }
+                else
+                {
+                    documentFilterVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId.Value);
+                }
+
                 documentFilterVM.ModulesList = _moduleDetailsRepository.ListDropDownValues();
+
+                SetDocumentTypesList(documentFilterVM);
 
                 CreateResponse(documentFilterVM, HttpStatusCode.OK, "");
 
@@ -312,6 +324,15 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        private void SetDocumentTypesList(DocumentFilterVM documentFilterVM)
+        {
+            documentFilterVM.TypesList.Add(new DropDownValues() { Id = 1, Name = "Excel" });
+            documentFilterVM.TypesList.Add(new DropDownValues() { Id = 2, Name = "Word" });
+            documentFilterVM.TypesList.Add(new DropDownValues() { Id = 3, Name = "Text" });
+            documentFilterVM.TypesList.Add(new DropDownValues() { Id = 4, Name = "Image" });
+            documentFilterVM.TypesList.Add(new DropDownValues() { Id = 5, Name = "PDF" });
         }
 
         #region Object Mapping
