@@ -616,3 +616,10 @@ td, span, p {
 .k-input-md .k-input-button {
   background-color: #3066f84f !important;
 }
+
+.weather-brify {
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px;
+}

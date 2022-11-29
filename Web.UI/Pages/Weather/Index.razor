@@ -1,10 +1,10 @@
 ﻿@page "/Weather"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Weather | Upflyte </PageTitle>
 
 <div class="card p-3">
-
-
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between">
@@ -13,66 +13,61 @@
                 </div>
             </div>
             <hr class="mt-2 my-1" />
-            <div class="col-md-4">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                @foreach (var data in centers)
+                {
+                    string link = $"https://www.weather.gov/{data.Code}/predutyweatherbriefing";
+                    <div class="col-sm-9 col-md-4 col-xl-3 weather-brify cursor-pointer">
+                        <span class="" @onclick=@(() => RedirectToNewTab(link))>
+                            <CustomIcons IconName="earth-icon" PrimaryColor="#3066F8"></CustomIcons>
+                            @data.Name
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <TelerikComboBox Id=center Data="@dropDownValues" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Center" ValueField="Id"
+                                         Value="@centerValue"
+                                         ValueExpression="@( () => centerValue )"
+                                         ValueChanged="@( (int value) => LoadVideo(value) )">
+                        </TelerikComboBox>
+                    </div>
+                    <div>
                         <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => SetDefault()" Enabled="@(!isBusyAddButton)">
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Set Default
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Save Default
                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                         </TelerikButton>
                     </div>
-
+                </div>
+                @if (selectedCenter != null)
+                {
+                    <div class="col-12 mt-2">
+                        <video autoplay="" id="videoTagId" loop="" controls="" width="100%">
+                            <source type="video/mp4" src="@selectedCenter.VideoURL">
+                        </video>
+                    </div>
+                }
+            </div>
         </div>
-    </div>
-
-    <div>
-
-        <table style="width:100%">
-
-            @{int counter = 0;}
-<tbody>
-    
-        @foreach (var data in centers)
-        {
-             if (counter % 4 == 0)
-            {
-                @:<tr style="height:10px">
-            }
-
-            string link = $"https://www.weather.gov/{data.Code}/predutyweatherbriefing";
-            <td style="width:10%">
-               <a href="@link" target="_blank"> @data.Name </a>
-            </td>
-
-            counter++;
-            if (counter % 4 == 0)
-            {
-                @:</tr>
-            }
-        }
-    
-</tbody>
-          
-        </table>
-
-    </div>
-
-    <div class="col-md-3">
-
-        <TelerikComboBox Id=center Data="@dropDownValues" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Center" ValueField="Id"
-                         Value="@centerValue" 
-                         ValueExpression="@( () => centerValue )"
-                         ValueChanged="@( (int value) => LoadVideo(value) )">
-        </TelerikComboBox>
-
-        @if (selectedCenter != null)
-        {
-            <video autoplay="" id="videoTagId" loop="" controls="" width="640" height="480">
-                <source type="video/mp4" src="@selectedCenter.VideoURL">
-            </video>
-        }
-
     </div>
 </div>
 
+@code {
+    private async Task RedirectToNewTab(string link)
+    {
+        await JSRuntime.InvokeVoidAsync("open", link, "_blank");
+    }
+}
