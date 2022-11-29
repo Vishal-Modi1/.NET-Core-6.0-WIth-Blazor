@@ -90,17 +90,11 @@ namespace Repository
             {
                 List<DocumentDataVM> list;
 
-                string aircraftId = "";
-
-                if(datatableParams.AircraftId != null)
-                {
-                    aircraftId = $",{datatableParams.AircraftId.ToString()}";
-                }
-
-                string sql = $"EXEC dbo.GetDocumentsList {(short)datatableParams.UserRole},'{datatableParams.SearchText }', { datatableParams.Start }, " +
-                    $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', " +
-                    $"{datatableParams.IsFromMyProfile},{datatableParams.CompanyId},{datatableParams.ModuleId}," +
-                    $"{datatableParams.UserId}{aircraftId}";
+                string sql = $"EXEC dbo.GetDocumentsList @RoleId = {(short)datatableParams.UserRole}, @SearchValue = '{datatableParams.SearchText }'," +
+                    $"@PageNo = { datatableParams.Start }, " +
+                    $"@PageSize = {datatableParams.Length}, @SortColumn = '{datatableParams.SortOrderColumn}',@SortOrder = '{datatableParams.OrderType}', " +
+                    $"@IsPersonalDocument = {datatableParams.IsFromMyProfile},@CompanyId = {datatableParams.CompanyId},@ModuleId = {datatableParams.ModuleId}," +
+                    $"@UserId = {datatableParams.UserId},@AircraftId = {datatableParams.AircraftId.GetValueOrDefault()}, @DocumentType = '{datatableParams.DocumentType}'";
 
                 list = _myContext.DocumentDataVM.FromSqlRaw<DocumentDataVM>(sql).ToList();
 

@@ -35,8 +35,10 @@ namespace Web.UI.Pages.Document
         string[] imageFormats = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
         string[] previewSupportedFormats = new string[] { ".pdf", ".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
         DocumentVM documentData;
-        DocumentDataVM documentDataVM;
-      
+        DocumentDataVM documentDataVM; DependecyParams dependecyParams;
+        DocumentDatatableParams datatableParams;
+
+
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -50,16 +52,20 @@ namespace Web.UI.Pages.Document
 
             SetSelectedMenuItem("Document");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
 
+            if(globalMembers.IsSuperAdmin && ParentModuleName == Module.Aircraft.ToString())
+            {
+                documentFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, CompanyIdParam.Value);
+            }
          }
 
         async Task LoadData(GridReadEventArgs args)
         {
             isGridDataLoading = true;
 
-            DocumentDatatableParams datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
+            datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
 
             datatableParams.ModuleId = documentFilterVM.ModuleId;
             datatableParams.AircraftId = AircraftIdParam;
@@ -74,16 +80,22 @@ namespace Web.UI.Pages.Document
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }
+            else if(ParentModuleName == Module.Aircraft.ToString())
+            {
+                datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
+            }
             else
             {
                 datatableParams.CompanyId = documentFilterVM.CompanyId;
             }
 
+            datatableParams.UserId = documentFilterVM.UserId;
+            datatableParams.DocumentType = documentFilterVM.DocumentType;
+
             datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
@@ -96,12 +108,35 @@ namespace Web.UI.Pages.Document
             isGridDataLoading = false;
         }
 
-        private void OnCompanyValueChanges(int selectedValue)
+        private async Task OnCompanyValueChanges(int selectedValue)
         {
             if (documentFilterVM.CompanyId != selectedValue)
             {
-                grid.Rebind();
+                ChangeLoaderVisibilityAction(true);
+
                 documentFilterVM.CompanyId = selectedValue;
+                documentFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentFilterVM.CompanyId);
+                grid.Rebind();
+
+                ChangeLoaderVisibilityAction(false);
+            }
+        }
+
+        private void OnUserValueChanges(long selectedValue)
+        {
+            if (documentFilterVM.UserId != selectedValue)
+            {
+                documentFilterVM.UserId = selectedValue;
+                grid.Rebind();
+            }
+        }
+
+        private void OnTypeValueChanges(string selectedValue)
+        {
+            if (documentFilterVM.DocumentType != selectedValue)
+            {
+                documentFilterVM.DocumentType = selectedValue;
+                grid.Rebind();
             }
         }
 
@@ -129,7 +164,6 @@ namespace Web.UI.Pages.Document
                 popupTitle = "Update Document";
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData = await DocumentService.GetDetailsAsync(dependecyParams, documentDataVM.Id == Guid.Empty ? Guid.Empty : documentDataVM.Id);
 
             if(documentData != null && CompanyIdParam != null)
@@ -180,7 +214,6 @@ namespace Web.UI.Pages.Document
         {
             isBusyDeleteButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.DeleteAsync(dependecyParams, id);
 
             isBusyDeleteButton = false;
@@ -212,7 +245,6 @@ namespace Web.UI.Pages.Document
             DocumentDataVM documentDataVM = data.Where(p => p.Id == Guid.Parse(id)).First();
             documentDataVM.TotalDownloads += 1;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             await DocumentService.UpdateTotalDownloadsAsync(dependecyParams, Guid.Parse(id));
         }
 
@@ -299,7 +331,6 @@ namespace Web.UI.Pages.Document
             popupTitle = "Share Document";
 
             documentDataVM = data.Where(p => p.Id == id).First();
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             await DocumentService.UpdateTotalSharesAsync(dependecyParams, documentDataVM.Id);
             documentDataVM.TotalShares += 1;
 
