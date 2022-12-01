@@ -4,6 +4,7 @@ using DataModels.Constants;
 using FSMAPI.Controllers;
 using FSMAPI.CustomServicesExtensions;
 using FSMAPI.Filters;
+using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
@@ -22,7 +23,11 @@ var builder = WebApplication.CreateBuilder(args);
 var _configurationSettings = ConfigurationSettings.Instance;
 var _environment = builder.Environment;
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonDateTimeConverter());
+}
+);
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -108,7 +113,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateIssuer = true,
         ValidIssuer = _configurationSettings.JWTIssuer,
-      //  ValidAudience = _configurationSettings.JWTIssuer,
+        //  ValidAudience = _configurationSettings.JWTIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationSettings.JWTKey)),
         ClockSkew = TimeSpan.Zero // remove delay of token when expire
     };
@@ -139,7 +144,7 @@ builder.Services.AddScoped<MyContext>();
 
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
-    
+
     options.InvalidModelStateResponseFactory = context =>
     {
         var result = new ValidationFailedResult(context.ModelState);

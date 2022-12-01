@@ -318,6 +318,25 @@ namespace Service
             {
                 List<SchedulerVM> schedulersList = _aircraftScheduleRepository.List(schedulerFilter);
 
+                foreach (var schedulerVM in schedulersList)
+                {
+                    if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+                    {
+                        schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedOut";
+                    }
+                    else
+                    {
+                        if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedIn";
+                        }
+                        else
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "Scheduled";
+                        }
+                    }
+                }
+
                 CreateResponse(schedulersList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
