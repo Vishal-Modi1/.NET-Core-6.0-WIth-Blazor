@@ -18,25 +18,21 @@
                     </div>
                 </HeaderTemplate>
                 <Content>
-                       @* <div class="row">
-                            <div class="col-12">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <ComponentTitle Title="Pre-Duty Weather Briefings" Type="AdministrationTitle" />
-                                    </div>
-                                </div>
-                                <hr class="mt-2 my-1" />
-                            </div>
-                        </div>*@
+                    @* <div class="row">
+                    <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                    <div>
+                    <ComponentTitle Title="Pre-Duty Weather Briefings" Type="AdministrationTitle" />
+                    </div>
+                    </div>
+                    <hr class="mt-2 my-1" />
+                    </div>
+                    </div>*@
 
 
                     <div class="row">
-
                         <div class="col-md-6">
                             <div class="row">
-
-                            </div>
-                            <div class="d-md-flex justify-content-md-between">
                                 <div class="col-12 col-md-12 col-lg-7 col-sm-12 col-xs-12 mb-1">
                                     <TelerikComboBox Id=center Data="@dropDownValues" TextField="Name"
                                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -46,7 +42,7 @@
                                                      ValueChanged="@( (int value) => LoadVideo(value) )">
                                     </TelerikComboBox>
                                 </div>
-                                <div class="col-12 col-lg-5 col-sm-10 mb-1 d-flex align-items-center justify-content-end border-0">
+                                <div class="col-12 col-sm-12 col-lg-5 mb-1 d-flex align-items-center justify-content-end border-0">
                                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => SetDefault()" Enabled="@(!isBusyAddButton)">
                                         Save Default
                                         <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
@@ -66,11 +62,10 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="row" style="border: 1px solid #D9D9D9; border-radius: 6px;padding: 10px;margin: 10px;background-color:lightgray">
-                                <div style="text-align:center;font-weight:bold">Preduty Weather Briefing Links</div>
+                            <div class="row">
+                                <div class="col" style="border: 1px solid #D9D9D9; border-radius: 6px;padding: 10px;margin: 10px;background-color:lightgray;text-align:center;font-weight:bold">Preduty Weather Briefing Links</div>
                             </div>
                             <div class="row">
-
                                 @foreach (var data in centers)
                                 {
                                     string link = $"https://www.weather.gov/{data.Code}/predutyweatherbriefing";
@@ -83,7 +78,6 @@
                                 }
                             </div>
                         </div>
-
                     </div>
                 </Content>
             </TabStripTab>
