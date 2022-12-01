@@ -25,8 +25,14 @@
         <hr class="mt-2 my-1" />
     </div>
 </div>
-<div class="row my-2">
-        <div class="col-md-4">
+
+   <div>
+        <TelerikPanelBar Data="@FilterPanelData">
+            <PanelBarBindings>
+                <PanelBarBinding Level="0">
+                    <ContentTemplate>
+                        <div class="row my-2">
+                                 <div class="col-md-4">
             <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )" />
         </div>
 
@@ -34,7 +40,7 @@
              <TelerikComboBox Id=city Data="@companyFilter.Cities" TextField="Name" @bind-Value="@city"
                              Filterable="true" FilterOperator="@StringFilterOperator.Contains" 
                             OnChange="() => grid.Rebind()" Placeholder="Select City" ValueField="Name">
-                </TelerikComboBox>
+             </TelerikComboBox>
         </div>
 
          <div class="col-md-4">
@@ -43,7 +49,14 @@
                              OnChange="() => grid.Rebind()" Placeholder="Select State" ValueField="Name">
                 </TelerikComboBox>
         </div>
-</div>
+                        </div>
+
+                    </ContentTemplate>
+                </PanelBarBinding>
+            </PanelBarBindings>
+        </TelerikPanelBar>
+    </div>
+
 
 <div style="position: relative; width:100%; min-height: 400px;">
 

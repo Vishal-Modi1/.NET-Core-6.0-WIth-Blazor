@@ -59,7 +59,7 @@ namespace Web.UI.Pages.Document
             {
                 documentFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, CompanyIdParam.Value);
             }
-         }
+        }
 
         async Task LoadData(GridReadEventArgs args)
         {
