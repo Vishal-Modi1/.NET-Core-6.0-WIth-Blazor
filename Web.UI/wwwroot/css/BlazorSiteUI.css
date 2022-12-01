@@ -622,4 +622,5 @@ td, span, p {
   border-radius: 6px;
   padding: 10px;
   margin: 10px;
+  max-width: 248px;
 }
