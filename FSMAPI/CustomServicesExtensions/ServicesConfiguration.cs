@@ -47,6 +47,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IEmailConfigurationService, EmailConfigurationService>();
             services.AddScoped<IAirTrafficControlCenterService, AirTrafficControlCenterService>();
             services.AddScoped<IUserAirTrafficControlCenterService, UserAirTrafficControlCenterService>();
+            services.AddScoped<IWindyMapConfigurationService, WindyMapConfigurationService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -92,6 +93,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
             services.AddScoped<IAirTrafficControlCenterRepository, AirTrafficControlCenterRepository>();
             services.AddScoped<IUserAirTrafficControlCenterRepository, UserAirTrafficControlCenterRepository>();
+            services.AddScoped<IWindyMapConfigurationRepository, WindyMapConfigurationRepository>();
         }
     }
 }

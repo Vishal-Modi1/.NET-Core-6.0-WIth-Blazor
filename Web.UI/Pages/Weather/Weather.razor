@@ -1,4 +1,103 @@
 ﻿
-<iframe width="650" id="windyFrame" height="450" src="https://embed.windy.com/embed2.html?lat=21.189&lon=72.829&detailLat=21.189&detailLon=72.829&width=650&height=450&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default&radarRange=-1" frameborder="0"></iframe>
 
-@*$('#currentElement').attr("src", $('#currentElement').attr("src"));*@
+<TelerikForm Model="@windyMapConfiguration" OnValidSubmit="@Submit">
+
+    <FormValidation>
+        <CustomValidationSummary> </CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="row">
+
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="width" class="k-label k-form-label">Width</label>
+            </div>
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="height" class="k-label k-form-label">Height</label>
+            </div>
+
+            <div class="col-md-6">
+                <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox>
+            </div>
+
+            <div class="col-md-6">
+                <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="wind" class="k-label k-form-label">Wind</label>
+            </div>
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="temperature" class="k-label k-form-label">Temperature</label>
+            </div>
+
+            <div class="col-md-6">
+                <TelerikComboBox Id=windSpeedId Data="@windSpeedList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Temperature" ValueField="Id"
+                                 Value="@windyMapConfiguration.Wind" ClearButton="false"
+                                 ValueExpression="@( () => windyMapConfiguration.Wind )"
+                                 ValueChanged="@( (string value) => OnWindSpeedChange(value) )">
+                </TelerikComboBox>
+            </div>
+
+            <div class="col-md-6">
+                <TelerikComboBox Id=temperatureId Data="@temperaturesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Temperature" ValueField="Id"
+                                 Value="@windyMapConfiguration.Temperature" ClearButton="false"
+                                 ValueExpression="@( () => windyMapConfiguration.Temperature )"
+                                 ValueChanged="@( (string value) => OnTemperatureTypeChange(value) )">
+                </TelerikComboBox>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6 align-items-center d-flex">
+                <label for="forecast" class="k-label k-form-label">Forecast For</label>
+            </div>
+
+            <div class="col-md-6 align-items-center d-flex">
+            </div>
+
+            <div class="col-md-6">
+                <TelerikComboBox Id=forecastId Data="@forecastList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Forecast" ValueField="Id"
+                                 Value="@windyMapConfiguration.Forecast" ClearButton="false"
+                                 ValueExpression="@( () => windyMapConfiguration.Forecast )"
+                                 ValueChanged="@( (string value) => OnForecastChange(value) )">
+                </TelerikComboBox>
+            </div>
+
+            <div class="col-md-6">
+            </div>
+
+        </div>
+
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="col-md-6" style="text-align:right">
+
+            <TelerikButton Class="btn k-btn-primary" ButtonType="ButtonType.Submit" ThemeColor="primary" Enabled="@(!isBusyAddButton)">
+                Save Default
+                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                </TelerikLoader>
+            </TelerikButton>
+
+        </div>
+
+    </FormButtons>
+</TelerikForm>
+
+<div class="row">
+<iframe width="@windyMapConfiguration.Width" id="windyFrame" height="@windyMapConfiguration.Height" src="@mapSrc" frameborder="0"></iframe>
+</div>

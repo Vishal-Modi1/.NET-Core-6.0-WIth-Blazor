@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
 
-namespace Web.UI.Data.AirTrafficControlCenter
+namespace Web.UI.Data.Weather
 {
     public class AirTrafficControlCenterService
     {

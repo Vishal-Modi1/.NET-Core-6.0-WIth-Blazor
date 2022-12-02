@@ -22,7 +22,7 @@ using Web.UI.Data.InviteUser;
 using Web.UI.Data.Airport;
 using Web.UI.Data.Discrepancy;
 using Web.UI.Data.EmailConfiguration;
-using Web.UI.Data.AirTrafficControlCenter;
+using Web.UI.Data.Weather;
 
 namespace Web.UI.CustomServicesExtensions
 {
@@ -58,6 +58,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<DiscrepancyFileService>();
             builder.Services.AddScoped<EmailConfigurationService>();
             builder.Services.AddScoped<AirTrafficControlCenterService>();
+            builder.Services.AddScoped<WindyMapConfigurationService>();
         }
     }
 }

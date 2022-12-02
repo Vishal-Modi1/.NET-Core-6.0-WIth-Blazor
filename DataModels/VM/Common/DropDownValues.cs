@@ -22,4 +22,12 @@ namespace DataModels.VM.Common
 
         public string Name { get; set; }
     }
+
+    public class DropDownStringValues
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
 }
