@@ -14,6 +14,7 @@
     <Content Remove="compilerconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Pages\Weather\Index.razor~RF1fd4ddcd.TMP" />
     <None Remove="Shared\Styles\EmptyLayout.scss" />
   </ItemGroup>
   <ItemGroup>

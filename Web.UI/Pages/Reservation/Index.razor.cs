@@ -129,13 +129,13 @@ namespace Web.UI.Pages.Reservation
 
         async void OnStartDateChange()
         {
-            datatableParams.StartDate = startDate;
+            datatableParams.StartDate = DateConverter.ToUTC(startDate.GetValueOrDefault(), globalMembers.Timezone);
             ReloadData();
         }
 
         async void OnEndDateChange()
         {
-            datatableParams.EndDate = endDate;
+            datatableParams.EndDate = DateConverter.ToUTC(endDate.GetValueOrDefault(), globalMembers.Timezone);
             ReloadData();
         }
 
@@ -186,9 +186,9 @@ namespace Web.UI.Pages.Reservation
 
         public async Task LoadDataAsync(GridReadEventArgs args)
         {
-            if (datatableParams.StartDate != null)
+            if (datatableParams.StartDate.HasValue)
             {
-                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value.Date, globalMembers.Timezone);
+                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value, globalMembers.Timezone);
             }
 
             if (datatableParams.EndDate != null)

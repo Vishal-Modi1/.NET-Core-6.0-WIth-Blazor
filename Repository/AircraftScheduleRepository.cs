@@ -30,7 +30,7 @@ namespace Repository
                                                      where aircraft.CompanyId == schedulerFilter.CompanyId && aircraftSchedules.IsActive == true
                                                      && aircraftSchedules.StartDateTime >= schedulerFilter.StartTime
                                                      && aircraftSchedules.EndDateTime <= schedulerFilter.EndTime
-                                                     && aircraftSchedules.IsDeleted == false
+                                                     && aircraftSchedules.IsDeleted == false 
                                                      select new SchedulerVM()
                                                      {
                                                          Id = aircraftSchedules.Id,
@@ -41,6 +41,8 @@ namespace Repository
                                                          AircraftId = aircraftSchedules.AircraftId,
                                                          TailNo = aircraft.TailNo,
                                                          Member1 = userDetails == null ? "" : (userDetails.FirstName + " " + userDetails.LastName),
+                                                         CompanyId = aircraft.CompanyId.GetValueOrDefault(),
+                                                         IsDeleted = aircraftSchedules.IsDeleted,
                                                          AircraftSchedulerDetailsVM = details == null ?
                                                          new AircraftSchedulerDetailsVM() :
                                                          new AircraftSchedulerDetailsVM()

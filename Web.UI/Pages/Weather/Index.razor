@@ -12,73 +12,15 @@
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
                         <span class="mx-2">
-                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Flightdocument" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                            <CustomIcons IconName="weatherbriefings" PrimaryColor="#3066f8"></CustomIcons>
                         </span>
                         <span>Briefings</span>
                     </div>
                 </HeaderTemplate>
                 <Content>
-                    @* <div class="row">
-                    <div class="col-12">
-                    <div class="d-flex justify-content-between">
-                    <div>
-                    <ComponentTitle Title="Pre-Duty Weather Briefings" Type="AdministrationTitle" />
-                    </div>
-                    </div>
-                    <hr class="mt-2 my-1" />
-                    </div>
-                    </div>*@
-
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-12 col-md-12 col-lg-7 col-sm-12 col-xs-12 mb-1">
-                                    <TelerikComboBox Id=center Data="@dropDownValues" TextField="Name"
-                                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                     Placeholder="Select Center" ValueField="Id"
-                                                     Value="@centerValue"
-                                                     ValueExpression="@( () => centerValue )"
-                                                     ValueChanged="@( (int value) => LoadVideo(value) )">
-                                    </TelerikComboBox>
-                                </div>
-                                <div class="col-12 col-sm-12 col-lg-5 mb-1 d-flex align-items-center justify-content-end border-0">
-                                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => SetDefault()" Enabled="@(!isBusyAddButton)">
-                                        Save Default
-                                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                                        </TelerikLoader>
-                                    </TelerikButton>
-                                </div>
-                            </div>
-                            <div class="row">
-                                @if (selectedCenter != null)
-                                {
-                                    <div class="col-12 mt-2">
-                                        <video autoplay="" id="videoTagId" loop="" controls="" width="100%">
-                                            <source type="video/mp4" src="@selectedCenter.VideoURL">
-                                        </video>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col" style="border: 1px solid #D9D9D9; border-radius: 6px;padding: 10px;margin: 10px;background-color:lightgray;text-align:center;font-weight:bold">Preduty Weather Briefing Links</div>
-                            </div>
-                            <div class="row">
-                                @foreach (var data in centers)
-                                {
-                                    string link = $"https://www.weather.gov/{data.Code}/predutyweatherbriefing";
-                                    <div class="weather-brify cursor-pointer">
-                                        <span class="" @onclick=@(() => RedirectToNewTab(link))>
-                                            <CustomIcons IconName="earth-icon" PrimaryColor="#3066F8"></CustomIcons>
-                                            @data.Name
-                                        </span>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    
+                    <Briefings></Briefings>
+                    
                 </Content>
             </TabStripTab>
 
@@ -94,6 +36,8 @@
                 </HeaderTemplate>
                 <Content>
 
+                    <Weather></Weather>
+
                 </Content>
             </TabStripTab>
             <TabStripTab>
@@ -101,7 +45,8 @@
                     <div class="d-flex justify-content-center align-items-center">
 
                         <span class="mx-2">
-                            <CustomIcons IconName="weatherbriefings" PrimaryColor="#3066f8"></CustomIcons>
+                            
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Flightdocument" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
                         </span>
                         <span>Interactive</span>
                     </div>
@@ -111,53 +56,6 @@
                 </Content>
             </TabStripTab>
 
-
-
         </TelerikTabStrip>
     </div>
 </div>
-@code {
-    private async Task RedirectToNewTab(string link)
-    {
-        await JSRuntime.InvokeVoidAsync("open", link, "_blank");
-    }
-}
-@*<div id="container">
-    <div class="card">
-
-        <TelerikTabStrip Class="k-tabstrip-list">
-
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="mx-2">
-                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="scheduler" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                        </span>
-                        <span>Scheduler</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-
-                </Content>
-            </TabStripTab>
-
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-
-                        <span class="mx-2">
-                            <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Reservations</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-
-                </Content>
-            </TabStripTab>
-
-
-        </TelerikTabStrip>
-
-    </div>
-</div>*@

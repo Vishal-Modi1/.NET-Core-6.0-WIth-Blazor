@@ -28,7 +28,6 @@ namespace Web.UI.Pages.Scheduler
         List<ResourceData> aircraftsResourceList = new List<ResourceData>();
         string moduleName = "Scheduler";
         public UIOptions uiOptions = new UIOptions();
-        string timezone = "";
         SchedulerFilter schedulerFilter = new SchedulerFilter();
 
         List<long> selectedAircraftList = new List<long>();
@@ -55,8 +54,7 @@ namespace Web.UI.Pages.Scheduler
             }
 
             dataSource = new List<SchedulerVM>();
-            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
-            currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
+            currentDate = DateConverter.ToLocal(DateTime.UtcNow, globalMembers.Timezone);
 
             InitializeValues();
 
@@ -165,15 +163,15 @@ namespace Web.UI.Pages.Scheduler
             schedulerFilter.StartTime = dates.Item1;
             schedulerFilter.EndTime = dates.Item2;
 
-            schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, timezone);
-            schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
+            schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, globalMembers.Timezone);
+            schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), globalMembers.Timezone);
 
             dataSource = await AircraftSchedulerService.ListAsync(dependecyParams, schedulerFilter);
 
             dataSource.ForEach(x =>
             {
-                x.StartTime = DateConverter.ToLocal(x.StartTime, timezone);
-                x.EndTime = DateConverter.ToLocal(x.EndTime, timezone);
+                x.StartTime = DateConverter.ToLocal(x.StartTime, globalMembers.Timezone);
+                x.EndTime = DateConverter.ToLocal(x.EndTime, globalMembers.Timezone);
 
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
@@ -212,12 +210,12 @@ namespace Web.UI.Pages.Scheduler
 
             if (schedulerFilter.StartTime != null)
             {
-                schedulerFilter.StartTime = DateConverter.ToLocal(schedulerFilter.StartTime, timezone);
+                schedulerFilter.StartTime = DateConverter.ToLocal(schedulerFilter.StartTime, globalMembers.Timezone);
             }
 
             if (schedulerFilter.EndTime != null)
             {
-                schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
+                schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, globalMembers.Timezone);
             }
 
             ChangeLoaderVisibilityAction(false);
@@ -367,17 +365,17 @@ namespace Web.UI.Pages.Scheduler
         {
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, id);
 
-            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
-            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
+            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, globalMembers.Timezone);
+            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, globalMembers.Timezone);
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, globalMembers.Timezone);
             }
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, globalMembers.Timezone);
             }
         }
 
