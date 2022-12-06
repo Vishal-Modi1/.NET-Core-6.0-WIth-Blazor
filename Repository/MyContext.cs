@@ -137,6 +137,8 @@ namespace Repository
 
         public DbSet<UserAirTrafficControlCenter> UsersAirTrafficControlCenter { get; set; }
 
+        public DbSet<WindyMapConfiguration> WindyMapConfigurations{ get; set; }
+
         //List Objects
         public DbSet<LocationDataVM> LocationsList { get; set; }
 

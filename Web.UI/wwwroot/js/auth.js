@@ -163,3 +163,18 @@ export function ReloadVideo() {
 
     document.getElementById("videoTagId").load();
 }
+
+export function RefreshWindyMap(src) {
+
+    $('#windyFrame').attr("src", src);
+}
+
+export function RefreshHeight(heigth) {
+
+    $('#windyFrame').attr("height", heigth);
+}
+
+export function RefreshWidth(width) {
+
+    $('#windyFrame').attr("width", width);
+}

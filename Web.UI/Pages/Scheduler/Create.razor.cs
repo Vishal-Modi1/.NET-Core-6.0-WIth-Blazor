@@ -207,6 +207,7 @@ namespace Web.UI.Pages.Scheduler
         {
             uiOptions.IsDisplayMainForm = false;
             uiOptions.IsDisplayCheckInForm = true;
+            uiOptions.IsAllowToAddDiscrepancy = false;
 
             foreach (AircraftEquipmentTimeVM aircraftEquipmentTimeVM in schedulerVM.AircraftEquipmentsTimeList)
             {
