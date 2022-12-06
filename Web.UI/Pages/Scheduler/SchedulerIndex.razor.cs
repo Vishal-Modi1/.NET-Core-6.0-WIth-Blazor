@@ -42,7 +42,7 @@ namespace Web.UI.Pages.Scheduler
 
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
-
+        bool isFilterBarVisible;
         protected override async Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);

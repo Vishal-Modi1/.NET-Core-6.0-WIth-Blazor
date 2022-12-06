@@ -12,8 +12,9 @@ namespace Web.UI.Pages.AircraftMake
 {
     partial class Index
     {
+        bool isFilterBarVisible;
         [CascadingParameter] public TelerikGrid<AircraftMakeDataVM> grid { get; set; }
-
+        
         IList<AircraftMakeDataVM> data;
         string moduleName = Module.Aircraft.ToString();
         DE.AircraftMake _aircraftMake { get; set; }

@@ -33,58 +33,71 @@
             <hr class="mt-2 my-1" />
         </div>
     </div>
-
     <div>
-        <TelerikPanelBar Data="@FilterPanelData">
-            <PanelBarBindings>
-                <PanelBarBinding Level="0">
-                    <ContentTemplate>
-                        <div class="row my-2">
-                            @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == Module.Company.ToString())
-                            {
-                                <div class="col-md-3 col-sm-12 my-1">
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                           OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                           OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between">
+                    <h5 class="my-0">
+                        <CustomIcons IconName="search" /> Search
+                    </h5>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus" />
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus" />
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+                <div class="row my-2">
+                    @if (string.IsNullOrWhiteSpace(ParentModuleName) || ParentModuleName == Module.Company.ToString())
+                    {
+                        <div class="col-md-3 col-sm-12 my-1">
 
-                                    <TelerikComboBox Id=moduleId Data="@documentFilterVM.ModulesList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Module" ValueField="Id" Class="common-bg">
-                                    </TelerikComboBox>
+                            <TelerikComboBox Id=moduleId Data="@documentFilterVM.ModulesList" TextField="Name" ValueChanged="@( (int value) => OnModuleValueChanges(value) )"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Module" ValueField="Id" Class="common-bg">
+                            </TelerikComboBox>
 
-                                </div>
-                            }
-
-                            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName == "")
-                            {
-                                <div class="col-md-3 col-sm-12 my-1">
-                                    <TelerikComboBox Id=companyId Data="@documentFilterVM.Companies" TextField="Name" ValueChanged="@((int value) => OnCompanyValueChanges(value) )"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Company" ValueField="Id" Class="common-bg">
-                                    </TelerikComboBox>
-                                </div>
-                            }
-
-                            <div class="col-md-3 col-sm-12 my-1">
-                                <TelerikComboBox Id=userId Data="@documentFilterVM.UsersList" TextField="Name" ValueChanged="@((long value) => OnUserValueChanges(value) )"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select User" ValueField="Id" Class="common-bg">
-                                </TelerikComboBox>
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 my-1">
-                                <TelerikComboBox Id=documentType Data="@documentFilterVM.TypesList" TextField="Name" ValueChanged="@( (string value) => OnTypeValueChanges(value) )"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Type" ValueField="Name" Class="common-bg">
-                                </TelerikComboBox>
-                            </div>
-
-                            <div class="col-md-3 col-sm-12 my-1">
-                                <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" Class="common-bg" PlaceHolder="Search Document" ValueChanged="@( (string value) => OnSearchValueChanges<DocumentDataVM>(value, grid) )" />
-                            </div>
                         </div>
+                    }
 
-                    </ContentTemplate>
-                </PanelBarBinding>
-            </PanelBarBindings>
-        </TelerikPanelBar>
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName == "")
+                    {
+                        <div class="col-md-3 col-sm-12 my-1">
+                            <TelerikComboBox Id=companyId Data="@documentFilterVM.Companies" TextField="Name" ValueChanged="@((int value) => OnCompanyValueChanges(value) )"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Company" ValueField="Id" Class="common-bg">
+                            </TelerikComboBox>
+                        </div>
+                    }
+
+                    <div class="col-md-3 col-sm-12 my-1">
+                        <TelerikComboBox Id=userId Data="@documentFilterVM.UsersList" TextField="Name" ValueChanged="@((long value) => OnUserValueChanges(value) )"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select User" ValueField="Id" Class="common-bg">
+                        </TelerikComboBox>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 my-1">
+                        <TelerikComboBox Id=documentType Data="@documentFilterVM.TypesList" TextField="Name" ValueChanged="@( (string value) => OnTypeValueChanges(value) )"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Type" ValueField="Name" Class="common-bg">
+                        </TelerikComboBox>
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 my-1">
+                        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" Class="common-bg" PlaceHolder="Search Document" ValueChanged="@( (string value) => OnSearchValueChanges<DocumentDataVM>(value, grid) )" />
+                    </div>
+                </div>
+            </ChildContent>
+        </CustomCollapseBar>
     </div>
 
     <TelerikGrid TItem="DocumentDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"

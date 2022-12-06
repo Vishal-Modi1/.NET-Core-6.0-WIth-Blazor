@@ -11,6 +11,7 @@ namespace Web.UI.Pages.UserRolePermission
 {
     partial class Index
     {
+        bool isFilterBarVisible;
         [CascadingParameter] public TelerikGrid<UserRolePermissionDataVM> grid { get; set; }
         [CascadingParameter] public TelerikGrid<UserRolePermissionDataVM> mobileAppPermissionGrid { get; set; }
 

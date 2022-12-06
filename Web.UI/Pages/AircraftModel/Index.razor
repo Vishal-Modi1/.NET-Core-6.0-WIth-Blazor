@@ -27,24 +27,36 @@
     </div>
 </div>
 
-
-<div>
-    <TelerikPanelBar Data="@FilterPanelData">
-        <PanelBarBindings>
-            <PanelBarBinding Level="0">
-                <ContentTemplate>
-
-                    <div class="row my-2">
-                        <div class="col-md-4">
-                            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Model" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftModelDataVM>(value, grid) )" />
-                        </div>
-                    </div>
-                </ContentTemplate>
-            </PanelBarBinding>
-        </PanelBarBindings>
-    </TelerikPanelBar>
-</div>
-
+ <div>
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                    <h5 class="my-0">
+                       <CustomIcons IconName="search"/> Search
+                    </h5>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus"/>
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus"/>
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+            <div class="row my-2">
+                <div class="col-md-4">
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Model" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftModelDataVM>(value, grid) )" />
+                </div>
+            </div>
+            </ChildContent>
+        </CustomCollapseBar>
+    </div>
 
 <TelerikGrid TItem="AircraftModelDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">

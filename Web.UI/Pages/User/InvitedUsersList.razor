@@ -38,45 +38,58 @@
         <hr class="mt-2 my-1" />
     </div>
 </div>
-
 <div>
-    <TelerikPanelBar Data="@FilterPanelData">
-        <PanelBarBindings>
-            <PanelBarBinding Level="0">
-                <ContentTemplate>
+    <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+        <HeaderContent>
+            <div class="d-flex justify-content-between">
+                <h5 class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </h5>
+                <span>
+                    @if (isFilterBarVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
+        </HeaderContent>
+        <ChildContent>
+            <div class="row my-2">
+                <div class="col-md-4">
+                    <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
+                                     Placeholder="Select Role" ValueField="Id">
+                    </TelerikComboBox>
 
-                    <div class="row my-2">
-                        <div class="col-md-4">
-                            <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
-                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
-                                             Placeholder="Select Role" ValueField="Id">
-                            </TelerikComboBox>
+                </div>
 
-                        </div>
+                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
+                {
+                    <div class="col-md-4">
 
-                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
-                        {
-                            <div class="col-md-4">
-
-                                <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                             Placeholder="Select Company" ValueField="Id" Class="common-bg">
-                                </TelerikComboBox>
-                            </div>
-                        }
-
-                        <div class="col-md-4">
-                            <TelerikTextBox Class="common-bg" Name="SearchText" PlaceHolder="Search User" ValueChanged="@( (string value) => OnSearchValueChanges<InviteUserDataVM>(value, grid) )" />
-                        </div>
-
+                        <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name" ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Company" ValueField="Id" Class="common-bg">
+                        </TelerikComboBox>
                     </div>
+                }
 
+                <div class="col-md-4">
+                    <TelerikTextBox Class="common-bg" Name="SearchText" PlaceHolder="Search User" ValueChanged="@( (string value) => OnSearchValueChanges<InviteUserDataVM>(value, grid) )" />
+                </div>
 
-                </ContentTemplate>
-            </PanelBarBinding>
-        </PanelBarBindings>
-    </TelerikPanelBar>
+            </div>
+        </ChildContent>
+    </CustomCollapseBar>
 </div>
+
+
 
 <TelerikGrid TItem="InviteUserDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
              Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">

@@ -58,13 +58,29 @@
         <hr class="mt-2 my-1" />
     </div>
 </div>
-
 <div>
-    <TelerikPanelBar Data="@FilterPanelData">
-        <PanelBarBindings>
-            <PanelBarBinding Level="0">
-                <ContentTemplate>
-                    <div class="row my-2">
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                    <h5 class="my-0">
+                       <CustomIcons IconName="search"/> Search
+                    </h5>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus"/>
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus"/>
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+               <div class="row my-2">
 
                         @if (globalMembers.IsSuperAdmin)
                         {
@@ -92,12 +108,9 @@
                         </div>
 
                     </div>
-                </ContentTemplate>
-            </PanelBarBinding>
-        </PanelBarBindings>
-    </TelerikPanelBar>
-</div>
-
+            </ChildContent>
+        </CustomCollapseBar>
+    </div>
 <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
                   @ref="@scheduleRef"
                   OnItemClick="@OnClickHandlerAsync"

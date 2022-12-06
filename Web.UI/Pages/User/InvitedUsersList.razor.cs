@@ -13,6 +13,7 @@ namespace Web.UI.Pages.User
 {
     partial class InvitedUsersList
     {
+        bool isFilterBarVisible;
         [CascadingParameter] public TelerikGrid<InviteUserDataVM> grid { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
         [Parameter] public int? CompanyIdParam { get; set; }

@@ -13,6 +13,7 @@ namespace Web.UI.Pages.Company
     {
         [CascadingParameter] public TelerikGrid<CompanyVM> grid { get; set; }
         string moduleName = Module.Company.ToString();
+        bool isFilterBarVisible;
         CompanyVM _companyData { get; set; }
         string state, city;
         CompanyFilter companyFilter = new CompanyFilter();
