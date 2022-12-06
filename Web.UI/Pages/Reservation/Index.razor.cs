@@ -35,6 +35,7 @@ namespace Web.UI.Pages.Reservation
         public DateTime? startDate, endDate;
         IList<ReservationDataVM> data;
         int reservationFilterTypeId;
+        bool isFilterBarVisible;
         DependecyParams dependecyParams;
 
         #endregion

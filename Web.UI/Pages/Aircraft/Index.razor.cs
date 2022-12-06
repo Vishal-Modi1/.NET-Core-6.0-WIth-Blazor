@@ -25,6 +25,7 @@ namespace Web.UI.Pages.Aircraft
         List<AircraftDataVM> airCraftsVM;
         AircraftVM aircraftData;
         long userId;
+        bool isFilterBarVisible;
 
         string moduleName = "Aircraft";
         public bool isDisplayGridView = true, isAllowEdit;

@@ -37,104 +37,118 @@
     </div>
 
     <div>
-        <TelerikPanelBar Data="@FilterPanelData">
-            <PanelBarBindings>
-                <PanelBarBinding Level="0">
-                    <ContentTemplate>
-                        <div class="row my-2">
-                            <div class="col-md-3 my-1">
-                                <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange" Class="common-bg"
-                                                   Format="MM/dd/yyyy" Placeholder="Select Start Date" Id="startDate">
-                                </TelerikDatePicker>
-                            </div>
-                            <div class="col-md-3 my-1">
-                                <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange" Class="common-bg"
-                                                   Format="MM/dd/yyyy" Id="endDate" Placeholder="Select End Date">
-                                </TelerikDatePicker>
-                            </div>
-                            @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
-                            {
-                                <div class="col-md-3 my-1">
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                    <h5 class="my-0">
+                       <CustomIcons IconName="search"/> Search
+                    </h5>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus"/>
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus"/>
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+                <div class="row my-2">
+                    <div class="col-md-3 my-1">
+                        <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange" Class="common-bg"
+                                           Format="MM/dd/yyyy" Placeholder="Select Start Date" Id="startDate">
+                        </TelerikDatePicker>
+                    </div>
+                    <div class="col-md-3 my-1">
+                        <TelerikDatePicker @bind-Value="@endDate" OnChange="@OnEndDateChange" Class="common-bg"
+                                           Format="MM/dd/yyyy" Id="endDate" Placeholder="Select End Date">
+                        </TelerikDatePicker>
+                    </div>
+                    @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
+                    {
+                        <div class="col-md-3 my-1">
 
-                                    <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name" Class="common-bg"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Company" ValueField="Id"
-                                                 Value="@reservationFilterVM.CompanyId"
-                                                 ValueExpression="@( () => reservationFilterVM.CompanyId )"
-                                                 ValueChanged="@( (int value) => GetUsersList(value) )">
-                                    </TelerikComboBox>
-
-                                </div>
-
-                                <div class="col-md-3 my-1">
-                                    <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name" Class="common-bg"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select User" ValueField="Id"
-                                                 @bind-Value="@reservationFilterVM.UserId"
-                                                 OnChange="() => grid.Rebind()">
-                                    </TelerikComboBox>
-                                </div>
-                            }
-
-                            @if (AircraftId == null)
-                            {
-                                <div class="col-md-3 my-1">
-
-                                    <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name" Class="common-bg"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Aircraft" ValueField="Id"
-                                                 @bind-Value="@reservationFilterVM.AircraftId"
-                                                 OnChange="() => grid.Rebind()">
-                                    </TelerikComboBox>
-
-                                </div>
-                            }
-                            <div class="col-md-3 my-1">
-
-                                <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation" Class="common-bg"
-                                                ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
-
-                            </div>
-
-                            <div class="col-md-3 my-1">
-
-                                <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name" Class="common-bg"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Reservation Type" ValueField="Id"
-                                                 @bind-Value="@reservationFilterTypeId"
-                                                 OnChange="() => grid.Rebind()">
-                                </TelerikComboBox>
-
-                            </div>
-
-                            <div class="col-md-3 my-1">
-
-                                <TelerikComboBox Id=departureAirport Data="@reservationFilterVM.DepartureAirportsList" TextField="Name" Class="common-bg"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Departure Airport" ValueField="Id"
-                                                 @bind-Value="@reservationFilterVM.DepartureAirportId"
-                                                 OnChange="() => grid.Rebind()">
-                                </TelerikComboBox>
-
-                            </div>
-
-                            <div class="col-md-3 my-1">
-
-                                <TelerikComboBox Id=arrivalAirport Data="@reservationFilterVM.ArrivalAirportsList" TextField="Name" Class="common-bg"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Arrival Airport" ValueField="Id"
-                                                 @bind-Value="@reservationFilterVM.ArrivalAirportId"
-                                                 OnChange="() => grid.Rebind()">
-                                </TelerikComboBox>
-
-                            </div>
+                            <TelerikComboBox Id=companyId Data="@reservationFilterVM.Companies" TextField="Name" Class="common-bg"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Company" ValueField="Id"
+                                         Value="@reservationFilterVM.CompanyId"
+                                         ValueExpression="@( () => reservationFilterVM.CompanyId )"
+                                         ValueChanged="@( (int value) => GetUsersList(value) )">
+                            </TelerikComboBox>
 
                         </div>
 
-                    </ContentTemplate>
-                </PanelBarBinding>
-            </PanelBarBindings>
-        </TelerikPanelBar>
+                        <div class="col-md-3 my-1">
+                            <TelerikComboBox Id=userId Data="@reservationFilterVM.Users" TextField="Name" Class="common-bg"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select User" ValueField="Id"
+                                         @bind-Value="@reservationFilterVM.UserId"
+                                         OnChange="() => grid.Rebind()">
+                            </TelerikComboBox>
+                        </div>
+                    }
+
+                    @if (AircraftId == null)
+                    {
+                        <div class="col-md-3 my-1">
+
+                            <TelerikComboBox Id=aircraftId Data="@reservationFilterVM.Aircrafts" TextField="Name" Class="common-bg"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Aircraft" ValueField="Id"
+                                         @bind-Value="@reservationFilterVM.AircraftId"
+                                         OnChange="() => grid.Rebind()">
+                            </TelerikComboBox>
+
+                        </div>
+                    }
+                    <div class="col-md-3 my-1">
+
+                        <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Reservation" Class="common-bg"
+                                        ValueChanged="@( (string value) => OnSearchValueChanges<ReservationDataVM>(value, grid) )" />
+
+                    </div>
+
+                    <div class="col-md-3 my-1">
+
+                        <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name" Class="common-bg"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Reservation Type" ValueField="Id"
+                                         @bind-Value="@reservationFilterTypeId"
+                                         OnChange="() => grid.Rebind()">
+                        </TelerikComboBox>
+
+                    </div>
+
+                    <div class="col-md-3 my-1">
+
+                        <TelerikComboBox Id=departureAirport Data="@reservationFilterVM.DepartureAirportsList" TextField="Name" Class="common-bg"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Departure Airport" ValueField="Id"
+                                         @bind-Value="@reservationFilterVM.DepartureAirportId"
+                                         OnChange="() => grid.Rebind()">
+                        </TelerikComboBox>
+
+                    </div>
+
+                    <div class="col-md-3 my-1">
+
+                        <TelerikComboBox Id=arrivalAirport Data="@reservationFilterVM.ArrivalAirportsList" TextField="Name" Class="common-bg"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Arrival Airport" ValueField="Id"
+                                         @bind-Value="@reservationFilterVM.ArrivalAirportId"
+                                         OnChange="() => grid.Rebind()">
+                        </TelerikComboBox>
+
+                    </div>
+
+                </div>
+            </ChildContent>
+        </CustomCollapseBar>
     </div>
 
     <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -161,7 +175,7 @@
 
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
-                        <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+                                <label> @value.StartDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
                     }
 
                 </Template>
@@ -174,7 +188,7 @@
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
 
-                        <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
+                                <label> @value.EndDateTime.ToString("ddd, dd MMM yyyy HH:mm")</label>
                     }
 
                 </Template>
@@ -186,7 +200,7 @@
 
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
-                        <label>  @value.AirFrameTime.GetValueOrDefault() </label>
+                                <label>  @value.AirFrameTime.GetValueOrDefault() </label>
                     }
 
                 </Template>
@@ -222,12 +236,12 @@
                 @{
                     ReservationDataVM value = dataItem as ReservationDataVM;
 
-                    <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!value.IsButtonLoading)">
-                        <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons>
-                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@value.IsButtonLoading">
-                        </TelerikLoader>
+                            <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="()=>OpenSchedulerDialog(value)" Enabled="@(!value.IsButtonLoading)">
+                                <CustomIcons IconName="view" PrimaryColor="White"></CustomIcons>
+                                <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@value.IsButtonLoading">
+                                </TelerikLoader>
 
-                    </TelerikButton>
+                            </TelerikButton>
                 }
             </GridCommandColumn>
 

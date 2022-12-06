@@ -8,7 +8,7 @@
 @if (aircraftData != null)
 {
     <div class="row my-0">
-        <div class="col-md-12 col-lg-3 col-12 my-0">
+        <div class="col-md-12 col-lg-3 col-12 my-0 @(isLeftBarVisible ? "":"d-none")" >
             <div class="card p-0">
                 <div class="card-body p-0">
                     <div>
@@ -87,7 +87,8 @@
 
             </div>
         </div>
-        <div class="col-md-12 col-lg-9 col-12 my-0 ps-0">
+        <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0":"col-lg-12")">
+            <div class="cursor-pointer" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="16px"> Toggle Left Pane</FontLabel></div>
             <div class="card">
                         @*<TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
                     Enabled="@(!isBusy && isUnLocked)" Class="btn k-btn-primary mx-2" ThemeColor="primary">
@@ -105,6 +106,7 @@
                     <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
                     </TelerikLoader>
                     </TelerikButton>*@
+                @*<div @onclick="@(() => {isLeftBarVisible = !isLeftBarVisible;})"><FontLabel fontColor="#3066F8" fontSize="16px"> Toggle Left Pane</FontLabel></div>*@
                 <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData />
             </div>
         </div>
