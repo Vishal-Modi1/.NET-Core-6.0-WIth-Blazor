@@ -40,22 +40,22 @@
 </div>
 
  <div>
-        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible" 
+        <CustomCollapseBar Class="my-0"  IsFilterBarVisible="isFilterBarVisible" 
         OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
         OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
             <HeaderContent>
                 <div class="d-flex justify-content-between" >
-                    <h5 class="my-0">
+                    <h6 class="my-0">
                        <CustomIcons IconName="search"/> Search
-                    </h5>
+                    </h6>
                     <span>
                         @if (isFilterBarVisible)
                         {
-                            <CustomIcons IconName="minus"/>
+                            <CustomIcons IconName="plus"/>
                         }
                         else
                         {
-                            <CustomIcons IconName="plus"/>
+                            <CustomIcons IconName="minus"/>
                         }
                     </span>
                 </div>

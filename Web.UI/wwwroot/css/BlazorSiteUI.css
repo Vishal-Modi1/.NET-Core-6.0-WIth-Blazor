@@ -35,7 +35,7 @@ body {
 }
 
 hr {
-  border: 1px solid #ffffff8c;
+  border: 1px solid rgba(255, 255, 255, 0.5490196078);
 }
 
 .bg-primary-f {
@@ -88,7 +88,7 @@ form .row {
 }
 
 .telerik-blazor.k-invalid input, .telerik-blazor.k-invalid button, .telerik-blazor.k-invalid k-autocomplete {
-  background: #ffd1d178;
+  background: rgba(255, 209, 209, 0.4705882353);
 }
 .telerik-blazor.k-invalid button {
   background: #ffd1d1;
@@ -223,13 +223,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   right: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #f5f7ff;
+  border-right: 10px solid rgb(245, 247, 255);
 }
 .telerik-blazor.k-drawer .menu-item-text-color {
   color: #121D2D;
 }
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: #3066f80f;
+  background-color: rgba(48, 102, 248, 0.0588235294);
   border-left: 6px solid #3066F8;
   /*Update class according */
 }
@@ -343,7 +343,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   cursor: pointer;
   border: none;
   background: none;
-  color: #FFFF;
+  color: white;
 }
 
 .hr-gray {
@@ -427,7 +427,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .k-tabstrip-items .k-tabstrip-item.k-item.k-active .k-link {
   border-bottom: 4px solid #3066F8;
-  background: #3066f80f !important;
+  background: rgba(48, 102, 248, 0.0588235294) !important;
   /*color: $WHITE-TEXT !important;*/
 }
 
@@ -436,16 +436,16 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .invalid {
-  background-color: #FFD1D178;
+  background-color: rgba(255, 209, 209, 0.4705882353);
   border: 1px solid #FF0000;
 }
 
 .k-input-inner {
-  background-color: #3066f80f;
+  background-color: rgba(48, 102, 248, 0.0588235294);
 }
 
 .k-input-button, .k-input-button:hover {
-  background-color: #3066f842;
+  background-color: rgba(48, 102, 248, 0.2588235294);
 }
 
 .k-btn-grid-delete {
@@ -529,7 +529,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .modal .modal-content {
   border-radius: 12px !important;
-  background-color: #fff0;
+  background-color: rgba(255, 255, 255, 0);
   border: 0;
 }
 .modal .modal-backdrop.show {
@@ -610,11 +610,11 @@ td, span, p {
 }
 
 .common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
-  background: #3066f80f !important;
+  background: rgba(48, 102, 248, 0.0588235294) !important;
 }
 
 .k-input-md .k-input-button {
-  background-color: #3066f84f !important;
+  background-color: rgba(48, 102, 248, 0.3098039216) !important;
 }
 
 .weather-brify {
@@ -623,4 +623,8 @@ td, span, p {
   padding: 10px;
   margin: 10px;
   max-width: 200px;
+}
+
+#collapseOne .card-body {
+  padding: 5px 7px !important;
 }
