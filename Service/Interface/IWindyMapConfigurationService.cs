@@ -7,6 +7,6 @@ namespace Service.Interface
     {
         CurrentResponse FindByUserId(long userId);
 
-        CurrentResponse SetDefault(WindyMapConfiguration WindyMapConfiguration);
+        CurrentResponse SetDefault(WindyMapConfiguration windyMapConfiguration);
     }
 }

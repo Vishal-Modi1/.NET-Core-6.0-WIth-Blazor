@@ -8,12 +8,12 @@
     </thead>
     <tbody>
 
-        @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Air Frame") && x.IsDeleted == false).Count() > 0)
+        @if (AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Hobbs Total") && x.IsDeleted == false).Count() > 0)
         {
-            foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Air Frame") && x.IsDeleted == false).ToList())
+            foreach (var item in AircraftData.AircraftEquipmentTimesList.Where(x => x.EquipmentName.Contains("Hobbs Total") && x.IsDeleted == false).ToList())
             {
                 <tr>
-                    <td>Total @(item.EquipmentName)</td>
+                    <td>@(item.EquipmentName)</td>
                     <td><h4><span class="badge bg-success">@(item.Hours) Hours</span></h4></td>
                 </tr>
             }

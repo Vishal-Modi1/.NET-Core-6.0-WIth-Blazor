@@ -5,13 +5,30 @@
                 <span class="mx-2">
                     <CustomIcons IconName="notification" PrimaryColor="#3066f8"></CustomIcons>
                 </span>
-                <span>Notifications</span>
+                <span>Notifications <CustomIcons IconName="quickTip" PrimaryColor="#3066f8"></CustomIcons></span>
             </div>
         </HeaderTemplate>
         <Content>
 
             <Web.UI.Pages.Company.DetailsView.Settings.Notifications.Index CompanyIdParam="@CompanyIdParam">
             </Web.UI.Pages.Company.DetailsView.Settings.Notifications.Index>
+
+        </Content>
+    </TabStripTab>
+
+     <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="mx-2">
+                    <CustomIcons IconName="notification" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Billing Configuration</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+
+            <Web.UI.Pages.Company.DetailsView.Settings.BillingConfiguration.Index CompanyIdParam="@CompanyIdParam">
+            </Web.UI.Pages.Company.DetailsView.Settings.BillingConfiguration.Index>
 
         </Content>
     </TabStripTab>

@@ -2,7 +2,7 @@
 using DataModels.VM.EmailConfiguration;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using Web.UI.Data.EmailConfiguration;
+using Web.UI.Data.Company.Settings;
 using Web.UI.Utilities;
 
 namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications

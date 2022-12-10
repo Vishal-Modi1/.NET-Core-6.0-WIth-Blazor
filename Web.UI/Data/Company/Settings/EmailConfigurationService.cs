@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
 
-namespace Web.UI.Data.EmailConfiguration
+namespace Web.UI.Data.Company.Settings
 {
     public class EmailConfigurationService
     {

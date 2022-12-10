@@ -33,12 +33,10 @@
                     AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
                     <tr>
                         <td>@schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName</td>
-                        <td>
+                        <td style="width:25%">
 
                             @*@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours*@
-
                             <TelerikNumericTextBox Class="" Placeholder="Enter Hours" @bind-Value="@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours"></TelerikNumericTextBox>
-                            @* <RadzenNumeric Visible="false" @bind-Value=@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours Class="w-100" />*@
 
                         </td>
 
@@ -52,7 +50,6 @@
                                 </TelerikNumericTextBox>
 
                                 <TelerikValidationMessage For="@(() => schedulerVM.AircraftEquipmentsTimeList[indexValue].InTime)"></TelerikValidationMessage>
-
                             }
                             else
                             {

@@ -1,0 +1,47 @@
+﻿@namespace Web.UI.Pages.Company.DetailsView.Settings.BillingConfiguration
+@using DataModels.Enums
+
+<TelerikForm Model="@billingConfigurationData" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <CustomValidationSummary></CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@billingConfigurationData.Id" name="Id" />
+
+        <div class="row my-3">
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>Billing Follows</label>
+                        <TelerikComboBox Id="emailTypeId" Data="@billingConfigurationData.BillingFollowsList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Type" ValueField="Id"
+                                         @bind-Value="@billingConfigurationData.BillingFollows">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => billingConfigurationData.BillingFollows)"></TelerikValidationMessage>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+
+    </FormItems>
+    <FormButtons>
+        <div class="row mb-0">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@billingConfigurationData.Id" IsSubmitButtonLoading="@isBusySubmitButton" >
+                </FormFooterComponent>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

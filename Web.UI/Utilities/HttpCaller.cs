@@ -170,9 +170,9 @@ namespace Web.UI.Utilities
                 {
                     _response = new CurrentResponse();
                     _response.Status = httpResponseMessage.StatusCode;
-                    APIErrorResponse aPIErrorResponse = JsonConvert.DeserializeObject<APIErrorResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result); 
+                    APIErrorResponse apiError = JsonConvert.DeserializeObject<APIErrorResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result); 
 
-                    _response.Message = aPIErrorResponse.Message;
+                    _response.Message = apiError.Message;
                 }
             }
             catch(Exception exc)

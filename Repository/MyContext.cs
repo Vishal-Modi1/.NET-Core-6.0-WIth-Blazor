@@ -59,7 +59,6 @@ namespace Repository
 
         public DbSet<BillingHistory> BillingHistories { get; set; }
 
-
         public DbSet<EmailToken> EmailTokens { get; set; }
 
         public DbSet<InstructorTypeVM> InstructorType { get; set; }
@@ -121,6 +120,7 @@ namespace Repository
         public DbSet<AircraftStatus> AircraftStatuses { get; set; }
 
         public DbSet<DiscrepancyStatus> DiscrepancyStatuses { get; set; }
+
         public DbSet<DiscrepancyFile> DiscrepancyFiles { get; set; }
 
         public DbSet<UserVSCompany> UsersVsCompanies { get; set; }
@@ -139,7 +139,11 @@ namespace Repository
 
         public DbSet<WindyMapConfiguration> WindyMapConfigurations{ get; set; }
 
+        public DbSet<BillingConfiguration> BillingConfigurations { get; set; }
+
         //List Objects
+
+        #region Data list
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
         public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }
@@ -173,6 +177,7 @@ namespace Repository
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
         public DbSet<DropDownGuidValues> AirportsList { get; set; }
-    }
 
+        #endregion
+    }
 }
