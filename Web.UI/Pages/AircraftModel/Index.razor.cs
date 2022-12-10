@@ -13,7 +13,6 @@ namespace Web.UI.Pages.AircraftModel
     partial class Index
     {
         [CascadingParameter] public TelerikGrid<AircraftModelDataVM> grid { get; set; }
-        bool isFilterBarVisible;
         IList<AircraftModelDataVM> data;
         string moduleName = Module.Aircraft.ToString();
         DE.AircraftModel _aircraftModel { get; set; }

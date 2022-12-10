@@ -22,7 +22,6 @@ namespace Web.UI.Pages.User
         string message = "", moduleName = "User";
         bool isBusyUpdateStatusButton;
         List<UserDataVM> data;
-        bool isFilterBarVisible;
 
         protected override async Task OnInitializedAsync()
         {

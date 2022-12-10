@@ -10,6 +10,8 @@ namespace Web.UI.Shared
 {
     public class BaseClass : ComponentBase
     {
+        public bool isFilterBarVisible;
+
         [CascadingParameter]
         public Action<bool> ChangeLoaderVisibilityAction { get; set; }
 

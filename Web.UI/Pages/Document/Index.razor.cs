@@ -31,7 +31,6 @@ namespace Web.UI.Pages.Document
         string moduleName = "Document", documentPath;
         private string? result;
         bool isImageType;
-        bool isFilterBarVisible;
 
         string[] imageFormats = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
         string[] previewSupportedFormats = new string[] { ".pdf", ".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };

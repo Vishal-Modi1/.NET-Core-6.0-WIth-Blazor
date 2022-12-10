@@ -36,15 +36,15 @@
         </div>
     </div>
 
-    <div>
-        <CustomCollapseBar Class="my-0"  IsFilterBarVisible="isFilterBarVisible" 
+<div>
+        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
         OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
         OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
             <HeaderContent>
                 <div class="d-flex justify-content-between" >
-                    <h6 class="my-0">
-                       <CustomIcons IconName="search"/> Search
-                    </h6>
+                <span class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </span>
                     <span>
                         @if (isFilterBarVisible)
                         {
@@ -57,7 +57,7 @@
                     </span>
                 </div>
             </HeaderContent>
-            <ChildContent>
+           <ChildContent>
                 <div class="row my-2">
                     <div class="col-md-3 my-1">
                         <TelerikDatePicker @bind-Value="@startDate" OnChange="@OnStartDateChange" Class="common-bg"
@@ -149,8 +149,7 @@
                 </div>
             </ChildContent>
         </CustomCollapseBar>
-    </div>
-
+</div>
     <TelerikGrid TItem="ReservationDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
                  Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 

@@ -59,14 +59,14 @@
     </div>
 </div>
 <div>
-        <CustomCollapseBar Class="my-0"  IsFilterBarVisible="isFilterBarVisible" 
+        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
         OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
         OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
             <HeaderContent>
                 <div class="d-flex justify-content-between" >
-                    <h6 class="my-0">
-                       <CustomIcons IconName="search"/> Search
-                    </h6>
+                   <span class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </span>
                     <span>
                         @if (isFilterBarVisible)
                         {
@@ -74,12 +74,12 @@
                         }
                         else
                         {
-                        <CustomIcons IconName="minus" />
+                            <CustomIcons IconName="minus"/>
                         }
                     </span>
                 </div>
             </HeaderContent>
-            <ChildContent>
+             <ChildContent>
                <div class="row my-2">
 
                         @if (globalMembers.IsSuperAdmin)
@@ -110,7 +110,7 @@
                     </div>
             </ChildContent>
         </CustomCollapseBar>
-    </div>
+</div>
 <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
                   @ref="@scheduleRef"
                   OnItemClick="@OnClickHandlerAsync"

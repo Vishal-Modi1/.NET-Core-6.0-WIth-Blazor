@@ -12,7 +12,6 @@ namespace Web.UI.Pages.Location
 {
     partial class Index
     {
-        bool isFilterBarVisible;
         [CascadingParameter] public TelerikGrid<LocationDataVM> grid { get; set; }
 
         IList<LocationDataVM> data;

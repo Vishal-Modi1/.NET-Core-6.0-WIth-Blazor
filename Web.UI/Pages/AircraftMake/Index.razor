@@ -28,34 +28,34 @@
 </div>
 
 <div>
-    <CustomCollapseBar Class="my-0"  IsFilterBarVisible="isFilterBarVisible"
-                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
-                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
-        <HeaderContent>
-            <div class="d-flex justify-content-between">
-                <h6 class="my-0">
+        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                   <span class="my-0">
                     <CustomIcons IconName="search" /> Search
-                </h6>
-                <span>
-                    @if (isFilterBarVisible)
-                    {
-                        <CustomIcons IconName="plus" />
-                    }
-                    else
-                    {
-                        <CustomIcons IconName="minus" />
-                    }
                 </span>
-            </div>
-        </HeaderContent>
-        <ChildContent>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="plus"/>
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="minus"/>
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
             <div class="row my-2">
                 <div class="col-md-4">
                     <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Make" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftMakeDataVM>(value, grid) )" />
                 </div>
             </div>
         </ChildContent>
-    </CustomCollapseBar>
+        </CustomCollapseBar>
 </div>
 
 <TelerikGrid TItem="AircraftMakeDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"

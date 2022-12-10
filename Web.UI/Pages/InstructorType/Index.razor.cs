@@ -11,7 +11,6 @@ namespace Web.UI.Pages.InstructorType
 {
     partial class Index
     {
-        bool isFilterBarVisible;
         [CascadingParameter] public TelerikGrid<InstructorTypeVM> grid { get; set; }
         IList<InstructorTypeVM> data;
         string moduleName = "InstructorType";
