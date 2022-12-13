@@ -1,10 +1,10 @@
 ﻿<div id="accordion" class="@Class">
     <div class="card">
-        <div class="card-header cursor-pointer" id="headingOne" @onclick=@(() => ToggleCollapseExpande())>
+        <div class="card-header cursor-pointer" style="border-bottom: 0;" id="heading" @onclick=@(() => ToggleCollapseExpande())>
             @HeaderContent
         </div>
-        <div id="collapseOne" class="collapse @(IsFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body">
+        <div id="collapseOne" class=" collapse @(IsFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body ">
                 @ChildContent
             </div>
         </div>

@@ -5,12 +5,16 @@ namespace Web.UI.Shared.Components.CustomCollapseBar
     {
         [Parameter]
         public bool IsFilterBarVisible { get; set; } = false;
+         [Parameter]
+        public bool IsExpanded { get; set; } = false;
 
         [Parameter]
         public RenderFragment? ChildContent { get; set; }
         
         [Parameter]
         public RenderFragment? HeaderContent { get; set; }
+        [Parameter]
+        public RenderFragment? Header { get; set; }
         
         [Parameter]
         public string Class { get; set; } 
@@ -33,6 +37,5 @@ namespace Web.UI.Shared.Components.CustomCollapseBar
             }
 
         }
-         
 }
 }
