@@ -1,103 +1,277 @@
-﻿
+﻿@*<div>
 
-<TelerikForm Model="@windyMapConfiguration" OnValidSubmit="@Submit">
+            <TelerikForm Model="@windyMapConfiguration" OnValidSubmit="@Submit">
 
-    <FormValidation>
-        <CustomValidationSummary> </CustomValidationSummary>
-    </FormValidation>
+                <FormValidation>
+                    <CustomValidationSummary> </CustomValidationSummary>
+                </FormValidation>
 
-    <FormItems>
+                <FormItems>
+
+                    <div class="row">
+
+                        <div class="col-md-6 align-items-center d-flex">
+                            <label for="width" class="k-label k-form-label">Width</label>
+                        </div>
+                        <div class="col-md-6 align-items-center d-flex">
+                            <label for="height" class="k-label k-form-label">Height</label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6 align-items-center d-flex">
+                            <label for="wind" class="k-label k-form-label">Wind</label>
+                        </div>
+                        <div class="col-md-6 align-items-center d-flex">
+                            <label for="temperature" class="k-label k-form-label">Temperature</label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <TelerikComboBox Id=windSpeedId Data="@windSpeedList" TextField="Name"
+                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                             Placeholder="Select Temperature" ValueField="Id"
+                                             Value="@windyMapConfiguration.Wind" ClearButton="false"
+                                             ValueExpression="@( () => windyMapConfiguration.Wind )"
+                                             ValueChanged="@( (string value) => OnWindSpeedChange(value) )">
+                            </TelerikComboBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <TelerikComboBox Id=temperatureId Data="@temperaturesList" TextField="Name"
+                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                             Placeholder="Select Temperature" ValueField="Id"
+                                             Value="@windyMapConfiguration.Temperature" ClearButton="false"
+                                             ValueExpression="@( () => windyMapConfiguration.Temperature )"
+                                             ValueChanged="@( (string value) => OnTemperatureTypeChange(value) )">
+                            </TelerikComboBox>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 align-items-center d-flex">
+                            <label for="forecast" class="k-label k-form-label">Forecast For</label>
+                        </div>
+
+                        <div class="col-md-6 align-items-center d-flex">
+                        </div>
+
+                        <div class="col-md-6">
+                            <TelerikComboBox Id=forecastId Data="@forecastList" TextField="Name"
+                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                             Placeholder="Select Forecast" ValueField="Id"
+                                             Value="@windyMapConfiguration.Forecast" ClearButton="false"
+                                             ValueExpression="@( () => windyMapConfiguration.Forecast )"
+                                             ValueChanged="@( (string value) => OnForecastChange(value) )">
+                            </TelerikComboBox>
+                        </div>
+
+                        <div class="col-md-6">
+                        </div>
+
+                    </div>
+
+                </FormItems>
+
+                <FormButtons>
+
+                    <div class="col-md-6" style="text-align:right">
+
+                        <TelerikButton Class="btn k-btn-primary" ButtonType="ButtonType.Submit" ThemeColor="primary" Enabled="@(!isBusyAddButton)">
+                            Save Default
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
+                        </TelerikButton>
+
+                    </div>
+
+                </FormButtons>
+
+            </TelerikForm>
+</div>*@
+
+<div id="parent" style="position: relative">
+    <div class="collapsebar" style="position:absolute;top:;left:12px">
 
         <div class="row">
+            <div class=" p-0">
 
-            <div class="col-md-6 align-items-center d-flex">
-                <label for="width" class="k-label k-form-label">Width</label>
-            </div>
-            <div class="col-md-6 align-items-center d-flex">
-                <label for="height" class="k-label k-form-label">Height</label>
-            </div>
 
-            <div class="col-md-6">
-                <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox>
-            </div>
+                <Web.UI.Shared.Components.CustomCollapses.CustomCollapses Class="my-0" IsFilterBarVisible="isFilterBarVisible"
+                                                                          OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                                                                          OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
 
-            <div class="col-md-6">
-                <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox>
+                     <HeaderContent>
+
+
+                    <div class="d-flex justify-content-start">
+
+                    <span>
+                    @if (isFilterBarVisible)
+                    {
+                    <CustomIcons IconName="menu" PrimaryColor="black" />
+                    }
+                    else
+                    {
+                    <CustomIcons IconName="menu" PrimaryColor="black" />
+                    }
+                    </span>
+                    <input placeholder="search location" style="border-radius:100px;" />
+                    </div>
+                    </HeaderContent>
+                    <ChildContent>
+                        <div class="card">
+                            <TelerikForm Model="@windyMapConfiguration" OnValidSubmit="@Submit">
+
+                                <FormValidation>
+                                    <CustomValidationSummary> </CustomValidationSummary>
+                                </FormValidation>
+
+                                <FormItems>
+
+                                    @* <div class="justify-content-center">*@
+                                    <div class="row">
+                                        <div style="font-weight:bold">Configure your map</div>
+                                    </div>
+                                    <hr class="m-0" />
+                                    <div class="row">
+                                        <div class="col-md-12 align-items-center d-flex">
+                                            <label for="width" class="k-label k-form-label col-md-3">Width</label>
+                                            <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox>px
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 align-items-center d-flex">
+                                            <label for="height" class="k-label k-form-label col-md-3">Height</label>
+                                            <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox>px
+                                        </div>
+                                    </div>
+                                    @*
+                                    <div class="col-md-6">
+                                    <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                    <TelerikNumericTextBox @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox>
+                                    </div>*@
+
+
+
+                                    <div class="row">
+
+                                        <div class="col-md-12 align-items-center d-flex">
+                                            <label for="wind" class="k-label k-form-label col-md-3">Wind</label>
+                                            <TelerikComboBox Id=windSpeedId Data="@windSpeedList" TextField="Name"
+                                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                             Placeholder="Select Temperature" ValueField="Id"
+                                                             Value="@windyMapConfiguration.Wind" ClearButton="false"
+                                                             ValueExpression="@( () => windyMapConfiguration.Wind )"
+                                                             ValueChanged="@( (string value) => OnWindSpeedChange(value) )">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12  align-items-center d-flex">
+                                            <label for="temperature" class="k-label k-form-label col-md-3">Temperature</label>
+                                            <TelerikComboBox Id=temperatureId Data="@temperaturesList" TextField="Name"
+                                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                             Placeholder="Select Temperature" ValueField="Id"
+                                                             Value="@windyMapConfiguration.Temperature" ClearButton="false"
+                                                             ValueExpression="@( () => windyMapConfiguration.Temperature )"
+                                                             ValueChanged="@( (string value) => OnTemperatureTypeChange(value) )">
+                                            </TelerikComboBox>
+                                        </div>
+                                    </div>
+
+                                    @* <div class="col-md-6">
+                                    <TelerikComboBox Id=windSpeedId Data="@windSpeedList" TextField="Name"
+                                    Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                    Placeholder="Select Temperature" ValueField="Id"
+                                    Value="@windyMapConfiguration.Wind" ClearButton="false"
+                                    ValueExpression="@( () => windyMapConfiguration.Wind )"
+                                    ValueChanged="@( (string value) => OnWindSpeedChange(value) )">
+                                    </TelerikComboBox>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                    <TelerikComboBox Id=temperatureId Data="@temperaturesList" TextField="Name"
+                                    Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                    Placeholder="Select Temperature" ValueField="Id"
+                                    Value="@windyMapConfiguration.Temperature" ClearButton="false"
+                                    ValueExpression="@( () => windyMapConfiguration.Temperature )"
+                                    ValueChanged="@( (string value) => OnTemperatureTypeChange(value) )">
+                                    </TelerikComboBox>
+                                    </div>*@
+
+
+                                    <div class="row">
+
+                                        <div class="col-md-12 align-items-center d-flex">
+                                            <label for="forecast" class="k-label k-form-label   col-md-3">Forecast For</label>
+                                            <TelerikComboBox Id=forecastId Data="@forecastList" TextField="Name"
+                                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                             Placeholder="Select Forecast" ValueField="Id"
+                                                             Value="@windyMapConfiguration.Forecast" ClearButton="false"
+                                                             ValueExpression="@( () => windyMapConfiguration.Forecast )"
+                                                             ValueChanged="@( (string value) => OnForecastChange(value) )">
+                                            </TelerikComboBox>
+                                        </div>
+
+                                        <div class="col-md-6 align-items-center d-flex">
+                                        </div>
+
+                                        @*<div class="col-md-6">
+                                        <TelerikComboBox Id=forecastId Data="@forecastList" TextField="Name"
+                                        Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                        Placeholder="Select Forecast" ValueField="Id"
+                                        Value="@windyMapConfiguration.Forecast" ClearButton="false"
+                                        ValueExpression="@( () => windyMapConfiguration.Forecast )"
+                                        ValueChanged="@( (string value) => OnForecastChange(value) )">
+                                        </TelerikComboBox>
+                                        </div>*@
+
+                                        <div class="col-md-6">
+                                        </div>
+
+                                    </div>
+                                    @* </div>*@
+
+                                </FormItems>
+
+                                <FormButtons>
+
+                                    <div class="col-md-6" style="text-align:right">
+
+                                        <TelerikButton Class="btn k-btn-primary" ButtonType="ButtonType.Submit" ThemeColor="primary" Enabled="@(!isBusyAddButton)">
+                                            Save Default
+                                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                            </TelerikLoader>
+                                        </TelerikButton>
+
+                                    </div>
+
+                                </FormButtons>
+
+                            </TelerikForm>
+                        </div>
+                    </ChildContent>
+                </Web.UI.Shared.Components.CustomCollapses.CustomCollapses>
             </div>
         </div>
+    </div>
 
-
-        <div class="row">
-
-            <div class="col-md-6 align-items-center d-flex">
-                <label for="wind" class="k-label k-form-label">Wind</label>
-            </div>
-            <div class="col-md-6 align-items-center d-flex">
-                <label for="temperature" class="k-label k-form-label">Temperature</label>
-            </div>
-
-            <div class="col-md-6">
-                <TelerikComboBox Id=windSpeedId Data="@windSpeedList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Temperature" ValueField="Id"
-                                 Value="@windyMapConfiguration.Wind" ClearButton="false"
-                                 ValueExpression="@( () => windyMapConfiguration.Wind )"
-                                 ValueChanged="@( (string value) => OnWindSpeedChange(value) )">
-                </TelerikComboBox>
-            </div>
-
-            <div class="col-md-6">
-                <TelerikComboBox Id=temperatureId Data="@temperaturesList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Temperature" ValueField="Id"
-                                 Value="@windyMapConfiguration.Temperature" ClearButton="false"
-                                 ValueExpression="@( () => windyMapConfiguration.Temperature )"
-                                 ValueChanged="@( (string value) => OnTemperatureTypeChange(value) )">
-                </TelerikComboBox>
-            </div>
-        </div>
-
-        <div class="row">
-
-            <div class="col-md-6 align-items-center d-flex">
-                <label for="forecast" class="k-label k-form-label">Forecast For</label>
-            </div>
-
-            <div class="col-md-6 align-items-center d-flex">
-            </div>
-
-            <div class="col-md-6">
-                <TelerikComboBox Id=forecastId Data="@forecastList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Forecast" ValueField="Id"
-                                 Value="@windyMapConfiguration.Forecast" ClearButton="false"
-                                 ValueExpression="@( () => windyMapConfiguration.Forecast )"
-                                 ValueChanged="@( (string value) => OnForecastChange(value) )">
-                </TelerikComboBox>
-            </div>
-
-            <div class="col-md-6">
-            </div>
-
-        </div>
-
-    </FormItems>
-
-    <FormButtons>
-
-        <div class="col-md-6" style="text-align:right">
-
-            <TelerikButton Class="btn k-btn-primary" ButtonType="ButtonType.Submit" ThemeColor="primary" Enabled="@(!isBusyAddButton)">
-                Save Default
-                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                </TelerikLoader>
-            </TelerikButton>
-
-        </div>
-
-    </FormButtons>
-</TelerikForm>
-
-<div>
-<iframe width="@windyMapConfiguration.Width" id="windyFrame" height="@windyMapConfiguration.Height" src="@mapSrc" frameborder="0"></iframe>
+    <div class="iframe">
+        <iframe width="@windyMapConfiguration.Width" id="windyFrame" height="@windyMapConfiguration.Height" src="@mapSrc" onforminput="@windyMapConfiguration" frameborder="0">
+        </iframe>
+    </div>
 </div>
