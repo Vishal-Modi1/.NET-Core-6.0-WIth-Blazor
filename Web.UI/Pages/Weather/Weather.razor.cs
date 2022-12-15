@@ -13,6 +13,7 @@ namespace Web.UI.Pages.Weather
         List<DropDownStringValues> forecastList = new();
         string mapSrc = "";
         bool isFilterBarVisible;
+
         protected override async Task OnInitializedAsync()
         {
             SetWindDropDownList();
