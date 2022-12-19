@@ -4,16 +4,16 @@
         position: relative;
     }
 
-    /* position icon over textbox */
-    .tb-icon-container .k-icon {
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0.5em;
+        /* position icon over textbox */
+        .tb-icon-container .k-icon {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0.5em;
+        }
 
-    }
-    .comp-full-width{
-        width: 150px!important;
+    .comp-full-width {
+        width: 150px !important;
     }
 </style>
 
@@ -25,13 +25,13 @@
                     <span class="mr-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
                         <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="weathermenu" PrimaryColor="white"> </CustomIcons></FontLabel>
                     </span>
-               @*     <span class="tb-icon-container">
+                    @*     <span class="tb-icon-container">
                         <TelerikIcon Icon="zoom" Class="pt-1 px-1" />
                         <input placeholder="&nbsp;&nbsp;    search location" style="border-radius:100px;" />
-                    </span>*@
+                        </span>*@
                     @*<span class="mx-2">
                         <FontLabel Class="text-white cursor-pointer"><TelerikIcon Icon="share" Class="pt-1" /></FontLabel>
-                    </span>*@
+                        </span>*@
                 </span>
 
                 <div id="collapseOne" class=" collapse @(isFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
@@ -57,7 +57,7 @@
                                                     <td style="text-align: right;"><FontLabel Class="mx-2">Width:</FontLabel></td>
                                                     <td>
                                                         <span style="text-align: left;" class="d-flex justify-content-start align-items-center py-2">
-                                                            <TelerikNumericTextBox Class="comp-full-width" @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox>px
+                                                            <TelerikNumericTextBox Class="comp-full-width" @bind-Value="@windyMapConfiguration.Width" OnChange="@OnWidthChange"></TelerikNumericTextBox> <span style="margin-left:5px"> px </span>
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -65,7 +65,7 @@
                                                     <td style="text-align: right;"><FontLabel Class="mx-2">Height:</FontLabel></td>
                                                     <td>
                                                         <span style="text-align: left;" class="d-flex justify-content-start align-items-center py-2">
-                                                            <TelerikNumericTextBox Class="comp-full-width" @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox>px
+                                                            <TelerikNumericTextBox Class="comp-full-width" @bind-Value="@windyMapConfiguration.Height" OnChange="@OnHeightChange"></TelerikNumericTextBox> <span style="margin-left:5px"> px </span>
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -111,10 +111,22 @@
                                                         </span>
                                                     </td>
                                                 </tr>
+
                                             </tbody>
                                         </table>
+
                                     </FormItems>
-                                    <FormButtons></FormButtons>
+                                    <FormButtons>
+
+                                        <div class="col-12 col-sm-12 col-lg-5 mb-1 d-flex align-items-center justify-content-end border-0" style="margin-right:13px">
+                                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => Submit()" Enabled="@(!isBusyAddButton)">
+                                                Save Default
+                                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                                </TelerikLoader>
+                                            </TelerikButton>
+                                        </div>
+
+                                    </FormButtons>
                                 </TelerikForm>
                             </div>
                         </div>
