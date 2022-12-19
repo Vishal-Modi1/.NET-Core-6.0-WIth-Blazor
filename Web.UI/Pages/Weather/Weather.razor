@@ -23,15 +23,15 @@
             <div class="py-2">
                 <span class="ma-2">
                     <span class="mr-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
-                        <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="menu" PrimaryColor="white"> </CustomIcons></FontLabel>
+                        <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="weathermenu" PrimaryColor="white"> </CustomIcons></FontLabel>
                     </span>
-                    <span class="tb-icon-container">
+               @*     <span class="tb-icon-container">
                         <TelerikIcon Icon="zoom" Class="pt-1 px-1" />
                         <input placeholder="&nbsp;&nbsp;    search location" style="border-radius:100px;" />
-                    </span>
-                    <span class="mx-2">
+                    </span>*@
+                    @*<span class="mx-2">
                         <FontLabel Class="text-white cursor-pointer"><TelerikIcon Icon="share" Class="pt-1" /></FontLabel>
-                    </span>
+                    </span>*@
                 </span>
 
                 <div id="collapseOne" class=" collapse @(isFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
