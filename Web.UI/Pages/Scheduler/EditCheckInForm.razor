@@ -29,10 +29,16 @@
                 @for (int index = 0; index < schedulerVM.AircraftEquipmentsTimeList.Count(); index++)
                 {
                     int indexValue = index;
+                    string equipmentName = schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName;
+
+                    @if(equipmentName.Contains("Propeller") && !isDisplayPropeller)
+                    {
+                        continue;
+                    }
 
                     AircraftScheduleHobbsTime aircraftScheduleHobbsTime = schedulerVM.AircraftEquipmentHobbsTimeList.Where(p => p.AircraftEquipmentTimeId == schedulerVM.AircraftEquipmentsTimeList[index].Id).FirstOrDefault();
                     <tr>
-                        <td>@schedulerVM.AircraftEquipmentsTimeList[indexValue].EquipmentName</td>
+                        <td>@equipmentName</td>
                         <td style="width:25%">
 
                             @*@schedulerVM.AircraftEquipmentsTimeList[indexValue].Hours*@

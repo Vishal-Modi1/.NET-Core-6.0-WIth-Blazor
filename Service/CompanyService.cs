@@ -324,6 +324,25 @@ namespace Service
             }
         }
 
+        public CurrentResponse IsDisplayPropeller(int id)
+        {
+            try
+            {
+                bool isDisplayPropeller = _companyRepository.FindByCondition(p=>p.Id == id).IsDisplayPropeller;
+
+                CreateResponse(isDisplayPropeller, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse UpdateCreatedBy(int id, long createdBy)
         {
             try

@@ -187,7 +187,7 @@ namespace Repository
 
             if (existingCompany != null)
             {
-                existingCompany.IsDisplayPropeller = existingCompany.IsDisplayPropeller;
+                existingCompany.IsDisplayPropeller = value;
             }
 
             _myContext.SaveChanges();

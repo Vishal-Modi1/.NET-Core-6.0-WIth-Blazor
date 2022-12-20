@@ -22,19 +22,42 @@ namespace Web.UI.Pages.Scheduler
 
         DependecyParams dependecyParams;
         EditContext checkInForm;
-        bool isBusyDiscrepancyButton;
+        bool isBusyDiscrepancyButton, isDisplayPropeller;
         DiscrepancyVM discrepancy;
 
         protected override async Task OnInitializedAsync()
         {
+            ChangeLoaderVisibilityAction(true);
+
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             checkInForm = new EditContext(schedulerVM);
+
+            await IsDisplayPropeller();
+
+            ChangeLoaderVisibilityAction(false);
+        }
+
+        private async Task IsDisplayPropeller()
+        {
+            isDisplayPropeller = await CompanyService.IsDisplayPropeller(dependecyParams, schedulerVM.CompanyId);
+
+            //Remove propeller from list to avoid validations
+            if(!isDisplayPropeller)
+            {
+                schedulerVM.AircraftEquipmentsTimeList.RemoveAll(p => p.EquipmentName.Contains("Propeller"));
+            }
         }
 
         private async Task CheckIn()
         {
             if (!checkInForm.Validate())
             {
+                return;
+            }
+
+            if(schedulerVM.AircraftEquipmentsTimeList.Any(p=>p.InTime == 0))
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "In time must be greater than out time");
                 return;
             }
 

@@ -23,5 +23,7 @@ namespace Service.Interface
         Company FindByCondition(Expression<Func<Company, bool>> predicate);
         CurrentResponse GetFiltersValue();
         CurrentResponse SetPropellerConfiguration(int id, bool value);
+
+        CurrentResponse IsDisplayPropeller(int id);
     }
 }

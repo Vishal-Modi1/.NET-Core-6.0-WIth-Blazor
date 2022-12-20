@@ -189,6 +189,15 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
+        [Route("isDisplayPropeller")]
+        public IActionResult IsDisplayPropeller(int id)
+        {
+            CurrentResponse response = _companyService.IsDisplayPropeller(id);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
         [Route("setPropellerConfiguration")]
         public IActionResult SetPropellerConfiguration(bool value, int companyId = 0)
         {

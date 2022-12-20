@@ -153,10 +153,31 @@ namespace Web.UI.Data.Company
         {
             try
             {
-                dependecyParams.URL = $"company/SetPropellerConfiguration?value={value}&companyId={companyId}";
+                dependecyParams.URL = $"company/setPropellerConfiguration?value={value}&companyId={companyId}";
                 CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
                 return response;
+            }
+            catch (Exception exc)
+            {
+                return new();
+            }
+        }
+
+        public async Task<bool> IsDisplayPropeller(DependecyParams dependecyParams, int companyId)
+        {
+            try
+            {
+                dependecyParams.URL = $"company/isDisplayPropeller?id={companyId}";
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+                if (response.Status == System.Net.HttpStatusCode.OK)
+                {
+                    bool isDisplayPropeller = Convert.ToBoolean(response.Data.ToString());
+                    return isDisplayPropeller;
+                }
+
+                return false;
             }
             catch (Exception exc)
             {
