@@ -148,5 +148,20 @@ namespace Web.UI.Data.Company
 
             return companyFilter;
         }
+
+        public async Task<CurrentResponse> SetPropellerConfiguration(DependecyParams dependecyParams, int companyId, bool value)
+        {
+            try
+            {
+                dependecyParams.URL = $"company/SetPropellerConfiguration?value={value}&companyId={companyId}";
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+                return response;
+            }
+            catch (Exception exc)
+            {
+                return new();
+            }
+        }
     }
 }

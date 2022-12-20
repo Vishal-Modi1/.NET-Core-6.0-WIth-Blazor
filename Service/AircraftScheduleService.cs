@@ -241,7 +241,7 @@ namespace Service
 
                 if (isScheduleChanged)
                 {
-                    SendScheduleMail(schedulerVM, "You appointment has been updated.", timezone);
+                    SendScheduleMail(schedulerVM, "You appointment has been updated", timezone);
                 }
 
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment updated successfully");
@@ -355,7 +355,7 @@ namespace Service
             try
             {
                 _aircraftScheduleRepository.Delete(id, deletedBy);
-                CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully.");
+                CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully");
 
                 return _currentResponse;
             }

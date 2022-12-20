@@ -166,7 +166,6 @@ namespace Service
             }
         }
 
-
         public CurrentResponse ListDropDownValuesByUserId(long userId)
         {
             try
@@ -223,6 +222,24 @@ namespace Service
             }
         }
 
+        public CurrentResponse SetPropellerConfiguration(int id, bool value)
+        {
+            try
+            {
+                _companyRepository.SetPropellerConfiguration(id, value);
+                CreateResponse(true, HttpStatusCode.OK, "Value updated");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse FindById(int id)
         {
             Company company = _companyRepository.FindByCondition(p => p.Id == id);
@@ -254,7 +271,7 @@ namespace Service
                 Company company = _companyRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
                 company.Logo = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.CompanyLogo}/{company.Logo}";
 
-                CreateResponse(company, HttpStatusCode.OK, "Company logo updated successfully.");
+                CreateResponse(company, HttpStatusCode.OK, "Company logo updated successfully");
 
                 return _currentResponse;
             }
@@ -315,14 +332,14 @@ namespace Service
 
                 if (company == null)
                 {
-                    CreateResponse(company, HttpStatusCode.NotFound, "Company not found.");
+                    CreateResponse(company, HttpStatusCode.NotFound, "Company not found");
                     return _currentResponse;
                 }
 
                 company.CreatedBy = createdBy;
                 company = _companyRepository.Edit(company);
 
-                CreateResponse(company, HttpStatusCode.OK, "Company details updated successfully.");
+                CreateResponse(company, HttpStatusCode.OK, "Company details updated successfully");
 
                 return _currentResponse;
             }
@@ -353,6 +370,7 @@ namespace Service
             companyVM.PrimaryAirport = company.PrimaryAirport;
             companyVM.PrimaryServiceId = company.PrimaryServiceId;
             companyVM.Logo = company.Logo;
+            companyVM.IsDisplayPropeller = company.IsDisplayPropeller;
 
             companyVM.LogoPath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.CompanyLogo}/{companyVM.Logo}";
 
@@ -374,6 +392,7 @@ namespace Service
             company.Website = companyVM.Website;
             company.PrimaryAirport = companyVM.PrimaryAirport;
             company.PrimaryServiceId = companyVM.PrimaryServiceId == null ? null : (short)companyVM.PrimaryServiceId;
+            company.IsDisplayPropeller = companyVM.IsDisplayPropeller;
 
             company.IsActive = true;
             company.CreatedBy = companyVM.CreatedBy;

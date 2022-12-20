@@ -24,6 +24,9 @@ namespace Repository.Interface
         List<DropDownValues> ListDropDownValuesByUserId(long userId);
 
         List<DropDownValues> ListCityDropDownValues();
+
         List<DropDownValues> ListStateDropDownValues();
+
+        void SetPropellerConfiguration(int id, bool value);
     }
 }

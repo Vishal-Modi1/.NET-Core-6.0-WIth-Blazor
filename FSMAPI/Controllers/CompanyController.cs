@@ -180,12 +180,33 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listdropdownvaluesbyuserid")]
+        [Route("listDropdownValuesbyUserId")]
         public IActionResult ListDropDownValuesByUserId(long userId)
         {
             CurrentResponse response = _companyService.ListDropDownValuesByUserId(userId);
 
             return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("setPropellerConfiguration")]
+        public IActionResult SetPropellerConfiguration(bool value, int companyId = 0)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                CurrentResponse response = _companyService.SetPropellerConfiguration(companyId, value);
+
+                return APIResponse(response);
+            }
+            else
+            {
+                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                CurrentResponse response = _companyService.SetPropellerConfiguration(Convert.ToInt32(companyIdValue), value);
+
+                return APIResponse(response);
+            }
         }
     }
 }

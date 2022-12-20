@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.BillingConfigurations;
+using DataModels.VM.Company;
 using Microsoft.AspNetCore.Components;
 using Web.UI.Data.Company.Settings;
 using Web.UI.Utilities;
@@ -7,7 +8,7 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.BillingConfiguration
 {
     partial class Index
     {
-        [Parameter] public int CompanyIdParam { get; set; }
+        [Parameter] public CompanyVM CompanyData { get; set; }
         BillingConfigurationVM billingConfiguration;
 
         protected override async Task OnInitializedAsync()
@@ -16,10 +17,10 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.BillingConfiguration
             ChangeLoaderVisibilityAction(true);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            billingConfiguration = await BillingConfigurationService.GetDefault(dependecyParams, CompanyIdParam);
+            billingConfiguration = await BillingConfigurationService.GetDefault(dependecyParams, CompanyData.Id);
 
             ChangeLoaderVisibilityAction(false);
-            billingConfiguration.CompanyId = CompanyIdParam;
+            billingConfiguration.CompanyId = CompanyData.Id;
         }
     }
 }

@@ -44,6 +44,7 @@ namespace DataModels.VM.Company
         [NotMapped]
         public string LogoPath { get; set; }
 
+        public bool IsDisplayPropeller { get; set; }
         public int TotalAircrafts { get; set; }
 
         public int TotalUsers { get; set; }

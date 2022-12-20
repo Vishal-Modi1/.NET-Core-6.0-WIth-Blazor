@@ -62,12 +62,12 @@ namespace Repository
         public List<DropDownValues> ListStateDropDownValues()
         {
             List<DropDownValues> data = (from company in _myContext.Companies
-                        group company by company.State into c
-                        select new DropDownValues()
-                        {
-                            Id = 1,
-                            Name = c.First().State
-                        }).ToList();
+                                         group company by company.State into c
+                                         select new DropDownValues()
+                                         {
+                                             Id = 1,
+                                             Name = c.First().State
+                                         }).ToList();
 
             data = data.Where(p => p.Name != "").ToList();
 
@@ -81,7 +81,7 @@ namespace Repository
                                                 on company.Id equals usercompany.CompanyId
                                                 where company.IsDeleted == false &&
                                                 usercompany.IsActive == true &&
-                                                usercompany.IsDeleted == false 
+                                                usercompany.IsDeleted == false
                                                 && usercompany.UserId == userId
                                                 select new DropDownValues()
                                                 {
@@ -179,6 +179,18 @@ namespace Repository
             }
 
             return false;
+        }
+
+        public void SetPropellerConfiguration(int id, bool value)
+        {
+            Company existingCompany = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+
+            if (existingCompany != null)
+            {
+                existingCompany.IsDisplayPropeller = existingCompany.IsDisplayPropeller;
+            }
+
+            _myContext.SaveChanges();
         }
     }
 }
