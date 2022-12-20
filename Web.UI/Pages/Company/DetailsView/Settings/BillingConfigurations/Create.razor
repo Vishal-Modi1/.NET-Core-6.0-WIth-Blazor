@@ -15,7 +15,9 @@
             <div class="col-12">
 
                 <div class="row">
+                   
                     <div class="col-6">
+                        
                         <label>Billing Follows</label>
                         <TelerikComboBox Id="emailTypeId" Data="@billingConfigurationData.BillingFollowsList" TextField="Name"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -24,43 +26,39 @@
                         </TelerikComboBox>
 
                         <TelerikValidationMessage For="@(() => billingConfigurationData.BillingFollows)"></TelerikValidationMessage>
+                       
+                    </div>
+
+                    <div class="col-6 d-flex align-items-center justify-content-end">
+                      
+                        <FormFooterComponent id="@billingConfigurationData.Id" IsSubmitButtonLoading="@isBusySubmitButton">
+                        </FormFooterComponent>
                     </div>
                 </div>
             </div>
         </div>
 
-        <hr class="hr-gray mt-3 mb-3" />
+        <div class="col-12"><hr class="hr-gray mt-3 mb-3" /></div>
 
     </FormItems>
-    <FormButtons>
-        <div class="row mb-0">
-            <div class="col-md-12 text-right">
-
-                <FormFooterComponent id="@billingConfigurationData.Id" IsSubmitButtonLoading="@isBusySubmitButton">
-                </FormFooterComponent>
-
-            </div>
-        </div>
-
-    </FormButtons>
+    <FormButtons></FormButtons>
 
 </TelerikForm>
 
 
-<div class="col-6">
+<div class="col-12">
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             <label>Is Display Propeller</label>
             <div>
                 <TelerikSwitch Id="isDisplay" @bind-Value=@CompanyData.IsDisplayPropeller />
             </div>
         </div>
+        <div class="col-6 d-flex align-items-center justify-content-end">
+            <TelerikButton Class="btn k-btn-primary mx-1" ThemeColor="primary" OnClick="() => SetPropellerConfiguration()" Enabled="!isBusyAddButton">
+                Set Default
+                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
+            </TelerikButton>
+        </div>
     </div>
-</div>
-
-<div class="col-md-4">
-    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => SetPropellerConfiguration()" Enabled="!isBusyAddButton">
-         Set Default
-        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyAddButton"></TelerikLoader>
-    </TelerikButton>
 </div>
