@@ -27,7 +27,7 @@ namespace Service.Interface
 
         CurrentResponse FindById(long id,bool isSuperAdmin, int? companyId);
 
-        CurrentResponse UpdateImageName(long id, string imageName);
+        CurrentResponse UpdateImageName(long id, string imageName, int companyId);
 
         CurrentResponse ListDropdownValuesByCompanyId(int companyId);
 

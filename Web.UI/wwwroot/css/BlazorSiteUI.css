@@ -568,7 +568,7 @@ label, a,
   cursor: pointer !important;
 }
 
-td, span, p {
+th, td, span, p {
   font-size: 12px !important;
 }
 

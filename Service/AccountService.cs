@@ -43,7 +43,7 @@ namespace Service
 
                 if(userVSCompany != null)
                 {
-                    companyId = userVSCompany.CompanyId.ToString();
+                    companyId = userVSCompany.CompanyId.GetValueOrDefault().ToString();
                     user.CompanyId = userVSCompany.CompanyId;
                 }
 

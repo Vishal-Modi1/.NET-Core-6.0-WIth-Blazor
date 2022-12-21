@@ -3,6 +3,6 @@
     public class ResourceData
     {
         public long Id { get; set; }
-        public string AircraftTailNo { get; set; }
+        public string Text { get; set; }
     }
 }
