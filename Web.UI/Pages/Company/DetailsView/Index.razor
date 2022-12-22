@@ -114,15 +114,7 @@
                         <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Contact No</FontLabel></div>
                         <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@(companyData.ContactNo == null ? "-" : companyData.ContactNo)</FontLabel></div>
                     </div>
-                    <div class="row p-4 m-0 w-100 ap-value d-flex align-items-center border-0">
-                        <div class="col-12 d-flex justify-content-center">
-                            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="@CompanyEditDialog" Enabled="@(!isBusyAddButton)">
-                                Update Details
-                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                                </TelerikLoader>
-                            </TelerikButton>
-                        </div>
-                    </div>
+                  
                 </div>
             </div>
         </div>

@@ -101,7 +101,6 @@
         <GridColumn Field="@nameof(InviteUserDataVM.Email)" Title="Email"></GridColumn>
         <GridColumn Field="@nameof(InviteUserDataVM.Role)" Title="Role"></GridColumn>
         <GridColumn Field="@nameof(InviteUserDataVM.CompanyName)" Title="Company" Visible="@globalMembers.IsSuperAdmin"></GridColumn>
-        <GridColumn Field="@nameof(InviteUserDataVM.InvitedOn)" Title="Invited On"></GridColumn>
 
         <GridColumn Field="@nameof(InviteUserDataVM.InvitedOn)" Context="dataItem" Title="Invited On">
             <Template>
