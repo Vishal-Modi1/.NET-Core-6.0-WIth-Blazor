@@ -10,7 +10,6 @@
         timeZone: GetTimeZone()
     };
 
-
     $.ajax({
 
         url: url,
@@ -177,4 +176,9 @@ export function RefreshHeight(heigth) {
 export function RefreshWidth(width) {
 
     $('#windyFrame').attr("width", width);
+}
+
+export function LoadRadarMap(src) {
+
+    $('#radarMap').attr("src", src);
 }
