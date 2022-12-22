@@ -633,3 +633,7 @@ td, span, p {
 .k-input {
   height: 31px !important;
 }
+
+.k-multiselect {
+  height: auto !important;
+}

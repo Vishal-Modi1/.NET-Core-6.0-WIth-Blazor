@@ -29,17 +29,18 @@
     }
 </style>
 <div class="row my-0">
-    <div class="col-md-12 col-lg-4 col-12 my-0  @(isLeftBarVisible ? "":"d-none")">
+    <div class="col-md-12 col-lg-3 col-12 my-0  @(isLeftBarVisible ? "":"d-none")">
         <div class="card p-0">
             <div class="card-body p-0">
                 <div>
                     <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
                         <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
 
-                            <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link mx-2  btn-sm" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
+                            <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link mx-2 p-1 " OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
                                 <CustomIcons IconName="arrow" />
                                 <FontLabel fontColor="#3066F8" fontSize="">Back</FontLabel>
                             </TelerikButton>
+
                             <label for="filePicker" class="k-cursor-pointer">
                                 <CustomIcons IconName="edit-square" PrimaryColor="white" />
                                 <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
@@ -67,13 +68,13 @@
                         </div>
                         </div>
                     </div>*@
-                <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
+                <div class="row  d-flex justify-content-between  d-flex align-items-center my-1">
                     <div class="d-flex justify-content-around  align-items-center">
                         <span class="mx-2">
                             <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
                         </span>
                         Company information
-                        <TelerikButton ThemeColor="info" Class="btn k-btn-primary k-ml-3 btn-xs btn-sm" Size="xs" OnClick="@(() => CompanyEditDialog())">
+                        <TelerikButton  ThemeColor="info" Class="btn k-btn-primary p-1 mx-1" Size="xs" OnClick="@(() => CompanyEditDialog())">
                             Update
                         </TelerikButton>
                     </div>
@@ -126,7 +127,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-12  col-12 my-0 @(isLeftBarVisible ? "col-lg-8 ps-0":"col-lg-12")">
+    <div class="col-md-12  col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0":"col-lg-12")">
             <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="16px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
         <div class="card p-0">
             <div class="card-body p-0">
