@@ -116,6 +116,14 @@
         <GridColumn Field="@nameof(UserDataVM.Email)" Title="Email"></GridColumn>
         <GridColumn Field="@nameof(UserDataVM.UserRole)" Title="User Role"></GridColumn>
         <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")"></GridColumn>
+        <GridColumn Field="@nameof(UserDataVM.CreatedOn)" Context="dataItem" Title="Created On">
+            <Template>
+                @{
+                    var data = dataItem as UserDataVM;
+                   <div> @data.CreatedOn.ToString("MM-dd-yyyy") </div>
+                }
+            </Template>
+        </GridColumn>
 
         <GridColumn Field="@nameof(UserDataVM.IsActive)" Context="dataItem" Title="Is Active">
             <Template>

@@ -42,6 +42,7 @@ namespace Web.UI.Pages.Scheduler
 
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
+        public DateTime DayStart { get; set; } = new DateTime(2000, 1, 1, 7, 0, 0);
         protected override async Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);
@@ -247,7 +248,7 @@ namespace Web.UI.Pages.Scheduler
 
             foreach (DropDownLargeValues aircraft in aircraftList)
             {
-                aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.Name, Id = aircraft.Id });
+                aircraftResourceList.Add(new ResourceData { Text = aircraft.Name, Id = aircraft.Id });
             }
 
             return aircraftResourceList;
@@ -434,7 +435,7 @@ namespace Web.UI.Pages.Scheduler
 
                 foreach (DropDownLargeValues aircraft in aircraftList)
                 {
-                    aircraftResourceList.Add(new ResourceData { AircraftTailNo = aircraft.Name, Id = aircraft.Id });
+                    aircraftResourceList.Add(new ResourceData { Text = aircraft.Name, Id = aircraft.Id });
                 }
 
                 aircraftsResourceList = aircraftResourceList;

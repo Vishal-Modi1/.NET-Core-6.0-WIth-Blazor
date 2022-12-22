@@ -217,7 +217,7 @@ namespace FSMAPI.Controllers
 
             if (isFileUploaded)
             {
-                response = _userService.UpdateImageName(Convert.ToInt64(form["UserId"]), fileName);
+                response = _userService.UpdateImageName(Convert.ToInt64(form["UserId"]), fileName, Convert.ToInt32(companyId));
             }
 
             return APIResponse(response);

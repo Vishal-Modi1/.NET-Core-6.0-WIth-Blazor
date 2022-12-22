@@ -408,14 +408,14 @@ namespace Service
             }
         }
 
-        public CurrentResponse UpdateImageName(long id, string imageName)
+        public CurrentResponse UpdateImageName(long id, string imageName, int companyId)
         {
             try
             {
                 bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
 
                 User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
-                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{user}/{user.ImageName}";
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{companyId}/{user.ImageName}";
 
                 CreateResponse(user, HttpStatusCode.OK, "Profile picture updated successfully.");
 

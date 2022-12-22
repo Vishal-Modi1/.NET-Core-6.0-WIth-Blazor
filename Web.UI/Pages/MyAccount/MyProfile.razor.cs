@@ -72,10 +72,11 @@ namespace Web.UI.Pages.MyAccount
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
+                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
                 CloseDialog();
 
                 var b64String = Convert.ToBase64String(byteArray);
-                userVM.ImageName = "data:image/png;base64," + b64String;
+                userVM.ImageName = globalMembers.UserImagePath = "data:image/png;base64," + b64String;
             }
         }
 
@@ -123,7 +124,6 @@ namespace Web.UI.Pages.MyAccount
             var b64String = Convert.ToBase64String(byteArray);
             string imageURL = "data:image/png;base64," + b64String;
         }
-
 
         async Task OnChangeAsync(byte[] bytes)
         {

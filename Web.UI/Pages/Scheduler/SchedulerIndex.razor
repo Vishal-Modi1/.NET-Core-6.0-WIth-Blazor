@@ -158,7 +158,7 @@
     </ItemTemplate>
 
     <SchedulerViews>
-        <SchedulerDayView />
+        <SchedulerDayView  />
         <SchedulerWeekView />
         <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
         <SchedulerMonthView></SchedulerMonthView>
@@ -166,7 +166,7 @@
     </SchedulerViews>
 
     <SchedulerResources>
-        <SchedulerResource Field="AircraftId" TextField="AircraftTailNo" ValueField="Id" Data="@aircraftsResourceList"></SchedulerResource>
+        <SchedulerResource Field="AircraftId" TextField="Text" ValueField="Id" Data="@aircraftsResourceList"></SchedulerResource>
     </SchedulerResources>
     <SchedulerSettings>
         <SchedulerGroupSettings Resources="@resources" Orientation="@SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>

@@ -39,27 +39,27 @@
 </div>
 
 <div>
-        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
-        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
-        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
-            <HeaderContent>
-                <div class="d-flex justify-content-between" >
-                   <span class="my-0">
+    <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+        <HeaderContent>
+            <div class="d-flex justify-content-between">
+                <span class="my-0">
                     <CustomIcons IconName="search" /> Search
                 </span>
-                    <span>
-                        @if (isFilterBarVisible)
-                        {
-                            <CustomIcons IconName="plus"/>
-                        }
-                        else
-                        {
-                            <CustomIcons IconName="minus"/>
-                        }
-                    </span>
-                </div>
-            </HeaderContent>
-            <ChildContent>
+                <span>
+                    @if (isFilterBarVisible)
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                </span>
+            </div>
+        </HeaderContent>
+        <ChildContent>
             <div class="row my-2">
                 <div class="col-md-4">
                     <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
@@ -86,7 +86,7 @@
 
             </div>
         </ChildContent>
-        </CustomCollapseBar>
+    </CustomCollapseBar>
 </div>
 
 <TelerikGrid TItem="InviteUserDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -101,6 +101,16 @@
         <GridColumn Field="@nameof(InviteUserDataVM.Email)" Title="Email"></GridColumn>
         <GridColumn Field="@nameof(InviteUserDataVM.Role)" Title="Role"></GridColumn>
         <GridColumn Field="@nameof(InviteUserDataVM.CompanyName)" Title="Company" Visible="@globalMembers.IsSuperAdmin"></GridColumn>
+        <GridColumn Field="@nameof(InviteUserDataVM.InvitedOn)" Title="Invited On"></GridColumn>
+
+        <GridColumn Field="@nameof(InviteUserDataVM.InvitedOn)" Context="dataItem" Title="Invited On">
+            <Template>
+                @{
+                    var data = dataItem as InviteUserDataVM;
+                    <div> @data.InvitedOn.ToString("MM-dd-yyyy") </div>
+                }
+            </Template>
+        </GridColumn>
 
         <GridCommandColumn Context="dataItem" Title="Action">
             @{
