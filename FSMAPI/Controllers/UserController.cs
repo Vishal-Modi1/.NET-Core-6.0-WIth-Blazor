@@ -38,17 +38,35 @@ namespace FSMAPI.Controllers
         [Route("getDetails")]
         public IActionResult GetDetails(long id, int companyId)
         {
-            if (companyId == 0)
-            {
-                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                companyId = company == "" ? 0 : Convert.ToInt32(company);
-            }
-
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
-            CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
-            return APIResponse(response);
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
+                return APIResponse(response);
+            }
+            else if (role.Replace(" ", "") == DataModels.Enums.UserRole.Admin.ToString())
+            {
+                if(_jWTTokenGenerator.GetCompanyId() != companyId)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
+                return APIResponse(response);
+            }
+            else 
+            {
+                if (_jWTTokenGenerator.GetCompanyId() != companyId || _jWTTokenGenerator.GetUserId() != id)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
+                return APIResponse(response);
+            }
         }
 
         [AllowAnonymous]

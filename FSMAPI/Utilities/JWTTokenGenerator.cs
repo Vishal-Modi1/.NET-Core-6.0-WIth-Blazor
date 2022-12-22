@@ -76,5 +76,21 @@ namespace FSMAPI.Utilities
 
             return claimValue;
         }
+
+        public int GetCompanyId()
+        {
+            string companyId = GetClaimValue(CustomClaimTypes.CompanyId);
+            int value = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
+            return value;
+        }
+
+        public long GetUserId()
+        {
+            string userId = GetClaimValue(CustomClaimTypes.UserId);
+            long value = userId == "" ? 0 : Convert.ToInt64(userId);
+
+            return value;
+        }
     }
 }

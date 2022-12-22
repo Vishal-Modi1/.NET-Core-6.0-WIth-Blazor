@@ -19,7 +19,7 @@ namespace FSMAPI.Controllers
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public AircraftController(IAircraftService airCraftService, 
+        public AircraftController(IAircraftService airCraftService,
              IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
@@ -45,10 +45,17 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(AircraftDatatableParams aircraftDatatableParams)
         {
-            if (aircraftDatatableParams.CompanyId == 0)
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                aircraftDatatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+                int companyId = _jWTTokenGenerator.GetCompanyId();
+                if (companyId != aircraftDatatableParams.CompanyId && aircraftDatatableParams.CompanyId != 0)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                aircraftDatatableParams.CompanyId = companyId;
             }
 
             CurrentResponse response = _aircraftService.List(aircraftDatatableParams);
@@ -77,8 +84,8 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(AircraftVM airCraftVM)
         {
             airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-           
-            if(airCraftVM.OwnerId == 0)
+
+            if (airCraftVM.OwnerId == 0)
             {
                 airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             }
@@ -132,19 +139,19 @@ namespace FSMAPI.Controllers
             {
                 return Ok(false);
             }
-            
+
             IFormCollection form = Request.Form;
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
 
             string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["AircraftId"]}.jpeg";
 
-            if(string.IsNullOrWhiteSpace(companyId))
+            if (string.IsNullOrWhiteSpace(companyId))
             {
                 companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.AircraftImage + "\\" + companyId , form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.AircraftImage + "\\" + companyId, form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "false";

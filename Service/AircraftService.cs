@@ -241,7 +241,7 @@ namespace Service
                     aircraftFilterVM.Companies = _companyRepository.ListDropDownValues();
                 }
 
-                aircraftFilterVM.Companies = _companyRepository.ListDropDownValues();
+                //aircraftFilterVM.Companies = _companyRepository.ListDropDownValues();
 
                 CreateResponse(aircraftFilterVM, HttpStatusCode.OK, "");
 

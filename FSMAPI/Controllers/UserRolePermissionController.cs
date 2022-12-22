@@ -29,10 +29,17 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(UserRolePermissionDatatableParams datatableParams)
         {
-            if (datatableParams.CompanyId == 0)
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                datatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+                int companyId = _jWTTokenGenerator.GetCompanyId();
+                if (companyId != datatableParams.CompanyId && datatableParams.CompanyId != 0)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                datatableParams.CompanyId = companyId;
             }
 
             CurrentResponse response = _userRolePermissionService.List(datatableParams);
@@ -44,10 +51,9 @@ namespace FSMAPI.Controllers
         [Route("listbyroleid")]
         public IActionResult ListByRoleId()
         {
-            string companyIdClaim = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             string roleIdClaim = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
 
-            int companyId = companyIdClaim == "" ? 0 : Convert.ToInt32(companyIdClaim);
+            int companyId = _jWTTokenGenerator.GetCompanyId();
             int roleId = roleIdClaim == "" ? 0 : Convert.ToInt32(roleIdClaim);
 
             CurrentResponse response = _userRolePermissionService.GetByRoleId(roleId, companyId);
@@ -71,9 +77,17 @@ namespace FSMAPI.Controllers
         [Route("updatepermission")]
         public IActionResult UpdatePermission(int id, bool isAllow)
         {
-            CurrentResponse response = _userRolePermissionService.UpdatePermission(id, isAllow);
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
 
-            return APIResponse(response);
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                CurrentResponse response = _userRolePermissionService.UpdatePermission(id, isAllow);
+                return APIResponse(response);
+            }
+            else
+            {
+                return APIResponse(UnAuthorizedResponse.Response());
+            }
         }
 
 
@@ -81,24 +95,47 @@ namespace FSMAPI.Controllers
         [Route("updatepermissions")]
         public IActionResult UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
-            if (userRolePermissionFilterVM.CompanyId == 0)
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                userRolePermissionFilterVM.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+                if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+                {
+                    int companyId = _jWTTokenGenerator.GetCompanyId();
+                    if (companyId != userRolePermissionFilterVM.CompanyId && userRolePermissionFilterVM.CompanyId != 0)
+                    {
+                        return APIResponse(UnAuthorizedResponse.Response());
+                    }
+
+                    userRolePermissionFilterVM.CompanyId = companyId;
+                }
+
+                CurrentResponse response = _userRolePermissionService.UpdatePermissions(userRolePermissionFilterVM);
+
+                return APIResponse(response);
+
             }
-
-            CurrentResponse response = _userRolePermissionService.UpdatePermissions(userRolePermissionFilterVM);
-
-            return APIResponse(response);
+            else
+            {
+                return APIResponse(UnAuthorizedResponse.Response());
+            }
         }
 
         [HttpGet]
         [Route("updatemobileapppermission")]
         public IActionResult UpdateMobileAppPermission(int id, bool isAllow)
         {
-            CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermission(id, isAllow);
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
 
-            return APIResponse(response);
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermission(id, isAllow);
+                return APIResponse(response);
+            }
+            else
+            {
+                return APIResponse(UnAuthorizedResponse.Response());
+            }
         }
 
 
@@ -106,15 +143,29 @@ namespace FSMAPI.Controllers
         [Route("updatemobileapppermissions")]
         public IActionResult UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
-            if (userRolePermissionFilterVM.CompanyId == 0)
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString() )
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                userRolePermissionFilterVM.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+                if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+                {
+                    int companyId = _jWTTokenGenerator.GetCompanyId();
+                    if (companyId != userRolePermissionFilterVM.CompanyId && userRolePermissionFilterVM.CompanyId != 0)
+                    {
+                        return APIResponse(UnAuthorizedResponse.Response());
+                    }
+
+                    userRolePermissionFilterVM.CompanyId = companyId;
+                }
+
+                CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermissions(userRolePermissionFilterVM);
+
+                return APIResponse(response);
             }
-
-            CurrentResponse response = _userRolePermissionService.UpdateMobileAppPermissions(userRolePermissionFilterVM);
-
-            return APIResponse(response);
+            else
+            {
+                return APIResponse(UnAuthorizedResponse.Response());
+            }
         }
     }
 }
