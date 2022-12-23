@@ -178,15 +178,14 @@ namespace FSMAPI.Controllers
         [Route("findbyid")]
         public IActionResult FindById(long id)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int? companyIdValue = companyId == "" ? null : Convert.ToInt32(companyId);
+            int companyId = _jWTTokenGenerator.GetCompanyId();
 
             string role = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleId = role == "" ? 0 : Convert.ToInt32(role);
 
             bool isSuperAdmin = roleId == (int)DataModels.Enums.UserRole.SuperAdmin;
 
-            CurrentResponse response = _userService.FindById(id, isSuperAdmin, companyIdValue);
+            CurrentResponse response = _userService.FindById(id, isSuperAdmin, companyId);
 
             return APIResponse(response);
         }
@@ -204,6 +203,13 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvaluesbycompanyid")]
         public IActionResult ListDropDownValuesByCompanyId(int companyId)
         {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _userService.ListDropdownValuesByCompanyId(companyId);
 
             return APIResponse(response);

@@ -83,21 +83,21 @@ namespace Web.UI.Pages.Weather
 
         private async Task RefreshMap()
         {
-            mapSrc = $"https://embed.windy.com/embed2.html?lat=21.189&lon=72.829&detailLat=21.189&detailLon=72.829&width={windyMapConfiguration.Width}&height={windyMapConfiguration.Height}&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar={windyMapConfiguration.Forecast}&pressure=&type=map&location=coordinates&detail=&metricWind={windyMapConfiguration.Wind}&metricTemp={windyMapConfiguration.Temperature}&radarRange=-1";
+            mapSrc = $"https://embed.windy.com/embed2.html?lat=36.1480886&lon=-96.1611269&detailLat=36.1480886&detailLon=-96.1611269&width={windyMapConfiguration.Width}&height={windyMapConfiguration.Height}&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar={windyMapConfiguration.Forecast}&pressure=&type=map&location=coordinates&detail=&metricWind={windyMapConfiguration.Wind}&metricTemp={windyMapConfiguration.Temperature}&radarRange=-1";
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("RefreshWindyMap", mapSrc);
         }
 
         private async Task RefreshHeight()
         {
-            mapSrc = $"https://embed.windy.com/embed2.html?lat=21.189&lon=72.829&detailLat=21.189&detailLon=72.829&width={windyMapConfiguration.Width}&height={windyMapConfiguration.Height}&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar={windyMapConfiguration.Forecast}&pressure=&type=map&location=coordinates&detail=&metricWind={windyMapConfiguration.Wind}&metricTemp={windyMapConfiguration.Temperature}&radarRange=-1";
+            mapSrc = $"https://embed.windy.com/embed2.html?lat=36.1480886&lon=-96.1611269&detailLat=36.1480886&detailLon=-96.1611269&width={windyMapConfiguration.Width}&height={windyMapConfiguration.Height}&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar={windyMapConfiguration.Forecast}&pressure=&type=map&location=coordinates&detail=&metricWind={windyMapConfiguration.Wind}&metricTemp={windyMapConfiguration.Temperature}&radarRange=-1";
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("RefreshHeight", windyMapConfiguration.Height);
         }
 
         private async Task RefreshWidth()
         {
-            mapSrc = $"https://embed.windy.com/embed2.html?lat=21.189&lon=72.829&detailLat=21.189&detailLon=72.829&width={windyMapConfiguration.Width}&height={windyMapConfiguration.Height}&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar={windyMapConfiguration.Forecast}&pressure=&type=map&location=coordinates&detail=&metricWind={windyMapConfiguration.Wind}&metricTemp={windyMapConfiguration.Temperature}&radarRange=-1";
+            mapSrc = $"https://embed.windy.com/embed2.html?lat=36.1480886&lon=-96.1611269&detailLat=36.1480886&detailLon=-96.1611269&width={windyMapConfiguration.Width}&height={windyMapConfiguration.Height}&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar={windyMapConfiguration.Forecast}&pressure=&type=map&location=coordinates&detail=&metricWind={windyMapConfiguration.Wind}&metricTemp={windyMapConfiguration.Temperature}&radarRange=-1";
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("RefreshWidth", windyMapConfiguration.Width);
         }

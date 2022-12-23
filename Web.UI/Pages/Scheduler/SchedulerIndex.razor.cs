@@ -19,19 +19,24 @@ namespace Web.UI.Pages.Scheduler
 {
     partial class SchedulerIndex
     {
+        #region params
         public TelerikScheduler<SchedulerVM> scheduleRef { get; set; }
 
         SchedulerVM schedulerVM;
         List<SchedulerVM> dataSource;
         public SchedulerView currentView { get; set; } = SchedulerView.Timeline;
         public List<string> resources = new List<string>() { "AircraftId" };
+        public List<string> pilotResources = new List<string>() { "Member1Id" };
         List<ResourceData> aircraftsResourceList = new List<ResourceData>();
+        List<ResourceData> pilotsResourceList = new List<ResourceData>();
         string moduleName = "Scheduler";
         public UIOptions uiOptions = new UIOptions();
         SchedulerFilter schedulerFilter = new SchedulerFilter();
 
         List<long> selectedAircraftList = new List<long>();
-        List<DropDownLargeValues> multiSelectData = new List<DropDownLargeValues>();
+        List<long> selectedPilotsList = new List<long>();
+        List<DropDownLargeValues> multiSelectAircraftsList = new List<DropDownLargeValues>();
+        List<DropDownLargeValues> multiSelectPilotsList = new List<DropDownLargeValues>();
 
         DependecyParams dependecyParams;
         public List<ContextMenuItem> menuItems { get; set; }
@@ -39,10 +44,14 @@ namespace Web.UI.Pages.Scheduler
 
         Create createScheduleRef;
         public bool IsOpenFromContextMenu { get; set; }
-
+        public bool DisplayAircraftScheduler { get; set; } = true;
+        public bool IsDisplayActiveTodayPilots { get; set; } = false;
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
         public DateTime DayStart { get; set; } = new DateTime(2000, 1, 1, 7, 0, 0);
+
+        #endregion
+
         protected override async Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);
@@ -60,6 +69,7 @@ namespace Web.UI.Pages.Scheduler
 
             schedulerVM = new SchedulerVM();
             aircraftsResourceList = new List<ResourceData>();
+            pilotsResourceList = new List<ResourceData>();
         }
 
         private async Task OpenDetailPopup()
@@ -99,6 +109,7 @@ namespace Web.UI.Pages.Scheduler
                     UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
 
                     aircraftsResourceList = await GetAircraftData(aircraftPreference);
+                    pilotsResourceList = await GetPilotsList(0);
                 }
                 else
                 {
@@ -222,9 +233,23 @@ namespace Web.UI.Pages.Scheduler
             base.StateHasChanged();
         }
 
+        private async Task<List<ResourceData>> GetPilotsList(int companyId)
+        {
+            multiSelectPilotsList = await UserService.ListDropDownValuesByCompanyId(dependecyParams,companyId);
+            pilotsResourceList = new List<ResourceData>();
+
+            selectedPilotsList = multiSelectPilotsList.Select(p => p.Id).ToList();
+            foreach (DropDownLargeValues pilot in multiSelectPilotsList)
+            {
+                pilotsResourceList.Add(new ResourceData { Text = pilot.Name, Id = pilot.Id });
+            }
+
+            return pilotsResourceList;
+        }
+
         private async Task GetAircraftData(int value = 0)
         {
-            multiSelectData = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, value);
+            multiSelectAircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, value);
         }
 
         private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
@@ -235,11 +260,11 @@ namespace Web.UI.Pages.Scheduler
             if (aircraftPreference != null)
             {
                 List<long> aircraftIds = aircraftPreference.ListPreferencesIds.Select(long.Parse).ToList();
-                aircraftList = multiSelectData.Where(p => aircraftIds.Contains(p.Id)).ToList();
+                aircraftList = multiSelectAircraftsList.Where(p => aircraftIds.Contains(p.Id)).ToList();
             }
             else
             {
-                aircraftList = multiSelectData;
+                aircraftList = multiSelectAircraftsList;
             }
 
             selectedAircraftList = aircraftList.Select(p => p.Id).ToList();
@@ -429,7 +454,7 @@ namespace Web.UI.Pages.Scheduler
                 resources = new List<string>() { "AircraftId" };
                 List<DropDownLargeValues> aircraftList = new List<DropDownLargeValues>();
 
-                aircraftList = multiSelectData.Where(p => selectedAircraftList.Contains(p.Id)).ToList();
+                aircraftList = multiSelectAircraftsList.Where(p => selectedAircraftList.Contains(p.Id)).ToList();
 
                 List<ResourceData> aircraftResourceList = new List<ResourceData>();
 
@@ -439,6 +464,47 @@ namespace Web.UI.Pages.Scheduler
                 }
 
                 aircraftsResourceList = aircraftResourceList;
+            }
+
+            base.StateHasChanged();
+        }
+
+        void UpdateSelectedPilotData(List<long> selectedData)
+        {
+            selectedPilotsList = selectedData;
+            base.StateHasChanged();
+        }
+
+        public async Task GetAutocompleteData(int companyId)
+        {
+            schedulerFilter.CompanyId = companyId;
+            await GetAircraftData(companyId);
+            await GetPilotsList(companyId);
+        }
+
+        void OnPilotsListChange(List<long> selectedData)
+        {
+            selectedPilotsList = selectedData;
+            if (selectedPilotsList == null || selectedPilotsList.Count() == 0)
+            {
+                resources = new List<string>();
+                pilotsResourceList = new List<ResourceData>();
+            }
+            else
+            {
+                resources = new List<string>() { "Member1Id" };
+                List<DropDownLargeValues> aircraftList = new List<DropDownLargeValues>();
+
+                aircraftList = multiSelectPilotsList.Where(p => selectedPilotsList.Contains(p.Id)).ToList();
+
+                List<ResourceData> pilotResourceList = new List<ResourceData>();
+
+                foreach (DropDownLargeValues aircraft in aircraftList)
+                {
+                    pilotResourceList.Add(new ResourceData { Text = aircraft.Name, Id = aircraft.Id });
+                }
+
+                pilotsResourceList = pilotResourceList;
             }
 
             base.StateHasChanged();
@@ -588,6 +654,22 @@ namespace Web.UI.Pages.Scheduler
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
+        }
+
+        public async void DisplayActivePilot(object value)
+        {
+            IsDisplayActiveTodayPilots = (bool)value;
+
+            if (IsDisplayActiveTodayPilots)
+            {
+                pilotsResourceList = pilotsResourceList.Where(p=> dataSource.Select(p=>p.Member1Id).Contains(p.Id)).ToList();
+            }
+            else
+            {
+                await GetPilotsList(globalMembers.CompanyId);
+            }
+
+            scheduleRef.Rebind();
         }
 
         private async Task CheckOut()

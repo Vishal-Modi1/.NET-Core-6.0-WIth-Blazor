@@ -40,6 +40,7 @@ namespace Repository
                                                          Comments = aircraftSchedules.Comments,
                                                          AircraftId = aircraftSchedules.AircraftId,
                                                          TailNo = aircraft.TailNo,
+                                                         Member1Id = aircraftSchedules.Member1Id,
                                                          Member1 = userDetails == null ? "" : (userDetails.FirstName + " " + userDetails.LastName),
                                                          CompanyId = aircraft.CompanyId.GetValueOrDefault(),
                                                          IsDeleted = aircraftSchedules.IsDeleted,

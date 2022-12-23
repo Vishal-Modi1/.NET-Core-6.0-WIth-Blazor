@@ -22,6 +22,8 @@ namespace Web.UI.Pages.Weather
             
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("LoadRadarMap", mapSrc);
+
+            ChangeLoaderVisibilityAction(false);
         }
     }
 }

@@ -37,6 +37,8 @@
         <div class="d-flex justify-content-between">
             <div>
                 <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
+                <TelerikSwitch Class="float-right" Id="menuSwitch" @bind-Value="@DisplayAircraftScheduler"></TelerikSwitch>
+
             </div>
             <div>
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
@@ -50,67 +52,76 @@
                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
 
-                        </TelerikButton> 
+                        </TelerikButton>
                     </div>
                 }
             </div>
         </div>
     </div>
 </div>
-<div>
-        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
-        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
-        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+
+@if (DisplayAircraftScheduler)
+{
+    <div>
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
             <HeaderContent>
-                <div class="d-flex justify-content-between" >
-                   <span class="my-0">
-                    <CustomIcons IconName="search" /> Search
-                </span>
+                <div class="d-flex justify-content-between">
+                    <span class="my-0">
+                        <CustomIcons IconName="search" /> Search
+                    </span>
                     <span>
                         @if (isFilterBarVisible)
                         {
-                            <CustomIcons IconName="plus"/>
+                            <CustomIcons IconName="plus" />
                         }
                         else
                         {
-                            <CustomIcons IconName="minus"/>
+                            <CustomIcons IconName="minus" />
                         }
                     </span>
                 </div>
             </HeaderContent>
-             <ChildContent>
-               <div class="row my-2">
+            <ChildContent>
 
-                        @if (globalMembers.IsSuperAdmin)
-                        {
-                            <div class="col-md-6 col-sm-6">
 
-                                <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
-                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
-                                             Placeholder="Select Company" ValueField="Id"
-                                             Value="@schedulerFilter.CompanyId"
-                                             ValueExpression="@( () => schedulerFilter.CompanyId )"
-                                             ValueChanged="@( (int value) => GetAircraftsList(value) )">
-                                </TelerikComboBox>
+                @if (globalMembers.IsSuperAdmin)
+                {
+                    <div class="row my-2">
 
-                            </div>
+                        <div class="col-md-12 col-sm-12">
 
-                        }
-
-                        <div class="col-md-6 col-sm-6">
-
-                            <MultiSelectWithAllCheckbox Data="@multiSelectData" SelectedData="@selectedAircraftList"
-                                                        OnChangeEventCallback="@OnAircraftsListChange" PlaceHolderText="Select Aircrafts"
-                                                        UpdateParentListCallback="@UpdateSelectedAircraftData">
-                            </MultiSelectWithAllCheckbox>
+                            <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
+                                     Placeholder="Select Company" ValueField="Id"
+                                     Value="@schedulerFilter.CompanyId"
+                                     ValueExpression="@( () => schedulerFilter.CompanyId )"
+                                     ValueChanged="@( (int value) => GetAutocompleteData(value) )">
+                            </TelerikComboBox>
 
                         </div>
 
                     </div>
+                }
+
+                <div class="row my-2">
+
+                    <div class="col-md-12 col-sm-12">
+
+                        <MultiSelectWithAllCheckbox Data="@multiSelectAircraftsList" SelectedData="@selectedAircraftList"
+                                                OnChangeEventCallback="@OnAircraftsListChange" PlaceHolderText="Select Aircrafts"
+                                                UpdateParentListCallback="@UpdateSelectedAircraftData">
+                        </MultiSelectWithAllCheckbox>
+
+                    </div>
+
+                </div>
+
             </ChildContent>
         </CustomCollapseBar>
-</div>
-<TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+    </div>
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
                   @ref="@scheduleRef"
                   OnItemClick="@OnClickHandlerAsync"
                   OnItemDoubleClick="@OnDoubleClickHandler"
@@ -125,8 +136,8 @@
                   IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
                   ViewChanged="@ViewChangedHandler">
 
-    <ItemTemplate>
-        @{
+        <ItemTemplate>
+            @{
             var appt = context as SchedulerVM;
 
             if (appt.AircraftSchedulerDetailsVM.IsCheckOut)
@@ -158,7 +169,7 @@
     </ItemTemplate>
 
     <SchedulerViews>
-        <SchedulerDayView  />
+        <SchedulerDayView />
         <SchedulerWeekView />
         <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
         <SchedulerMonthView></SchedulerMonthView>
@@ -173,6 +184,140 @@
     </SchedulerSettings>
 
 </TelerikScheduler>
+
+
+
+}
+else
+{
+    <div>
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between">
+                    <span class="my-0">
+                        <CustomIcons IconName="search" /> Search
+                    </span>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="plus" />
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="minus" />
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+
+                @if (globalMembers.IsSuperAdmin)
+                {
+                    <div class="row my-2">
+
+                        <div class="col-md-12 col-sm-12">
+
+                            <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
+                                     Placeholder="Select Company" ValueField="Id"
+                                     Value="@schedulerFilter.CompanyId"
+                                     ValueExpression="@( () => schedulerFilter.CompanyId )"
+                                     ValueChanged="@( (int value) => GetAutocompleteData(value) )">
+                            </TelerikComboBox>
+
+                        </div>
+                    </div>
+
+                }
+
+                <div class="row my-2">
+
+                    <div class="col-md-9 col-sm-9">
+
+                        <MultiSelectWithAllCheckbox Data="@multiSelectPilotsList" SelectedData="@selectedPilotsList"
+                                                OnChangeEventCallback="@OnPilotsListChange" PlaceHolderText="Select Pilots"
+                                                UpdateParentListCallback="@UpdateSelectedPilotData">
+                        </MultiSelectWithAllCheckbox>
+
+                    </div>
+
+                    <div class="col-md-3 col-sm-3">
+
+                        <TelerikSwitch Class="float-right" Id="activePilotDisplay" @bind-Value="@IsDisplayActiveTodayPilots" OnChange="@DisplayActivePilot"></TelerikSwitch>
+
+                    </div>
+
+                </div>
+            </ChildContent>
+        </CustomCollapseBar>
+    </div>
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+                  @ref="@scheduleRef"
+                  OnItemClick="@OnClickHandlerAsync"
+                  OnItemDoubleClick="@OnDoubleClickHandler"
+                  AllowCreate="true" AllowDelete="true" AllowUpdate="true"
+                  OnEdit="@EditHandler"
+                  DateChanged="@DateChangedHandler"
+                  IdField="@(nameof(SchedulerVM.Id))"
+                  StartField="@(nameof(SchedulerVM.StartTime))"
+                  EndField="@(nameof(SchedulerVM.EndTime))"
+                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
+                  ViewChanged="@ViewChangedHandler">
+
+        <ItemTemplate>
+            @{
+            var appt = context as SchedulerVM;
+
+            if (appt.AircraftSchedulerDetailsVM.IsCheckOut)
+            {
+                appt.Color = "#33ff81";
+            }
+            else
+            {
+                if (appt.AircraftSchedulerDetailsVM.CheckInTime != null)
+                {
+                    appt.Color = "#B8B8B8";
+                }
+                else
+                {
+                    appt.Color = "#007bff";
+                }
+            }
+
+            <div class="custom-appointment schedule-popup"
+             title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
+             data-member1="@appt.Member1"
+             style="height:100%;background-color: @appt.Color"
+             data-aircraft="@appt.TailNo"
+                 @oncontextmenu:preventDefault="true"
+                 @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
+                <div style="font-size:12px;background-color: @appt.Color" class="k-event-template">@appt.DisplayTitle</div>
+            </div>
+        }
+    </ItemTemplate>
+
+    <SchedulerViews>
+        <SchedulerDayView />
+        <SchedulerWeekView />
+        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
+        <SchedulerMonthView></SchedulerMonthView>
+        <SchedulerTimelineView />
+    </SchedulerViews>
+
+    <SchedulerResources>
+        <SchedulerResource Field="Member1Id" TextField="Text" ValueField="Id" Data="@pilotsResourceList"></SchedulerResource>
+    </SchedulerResources>
+    <SchedulerSettings>
+        <SchedulerGroupSettings Resources="@pilotResources" Orientation="@SchedulerGroupOrientation.Vertical">
+        </SchedulerGroupSettings>
+    </SchedulerSettings>
+
+</TelerikScheduler>
+}
 
 <TelerikContextMenu Data="@menuItems" @ref="@contextMenu"
                     TextField="Text" IconField="Icon" DisabledField="Disabled"
