@@ -35,32 +35,37 @@
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between">
-            <div>
+            <div class="col-md-2 d-flex">
                 <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
-                <TelerikSwitch Class="float-right" Id="menuSwitch" @bind-Value="@DisplayAircraftScheduler"></TelerikSwitch>
-
             </div>
-            <div>
+            <div class="d-flex">
+            <div class="col-md-10 d-flex">
                 @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
                 {
-                    <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
-                                   Enabled="@(!isBusyAddButton)">
 
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    <TelerikRadioGroup Data="@viewOptions" ValueField="@nameof(RadioButtonItem.Id)"
+                                   TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerViewOption"
+                                   Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnschedulerViewOptionValueChange()"
+                                   LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
 
-                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                            </TelerikLoader>
 
-                        </TelerikButton>
-                    </div>
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                               Enabled="@(!isBusyAddButton)">
+
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
+
+                    </TelerikButton>
                 }
             </div>
         </div>
     </div>
 </div>
+</div>
 
-@if (DisplayAircraftScheduler)
+@if (displayAircraftScheduler)
 {
     <div>
         <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
@@ -169,11 +174,11 @@
     </ItemTemplate>
 
     <SchedulerViews>
-        <SchedulerDayView />
-        <SchedulerWeekView />
-        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
+        <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
         <SchedulerMonthView></SchedulerMonthView>
-        <SchedulerTimelineView />
+        <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
     </SchedulerViews>
 
     <SchedulerResources>
@@ -184,9 +189,6 @@
     </SchedulerSettings>
 
 </TelerikScheduler>
-
-
-
 }
 else
 {
@@ -245,7 +247,7 @@ else
 
                     <div class="col-md-3 col-sm-3">
 
-                        <TelerikSwitch Class="float-right" Id="activePilotDisplay" @bind-Value="@IsDisplayActiveTodayPilots" OnChange="@DisplayActivePilot"></TelerikSwitch>
+                        <TelerikSwitch Class="float-right" Id="activePilotDisplay" @bind-Value="@isDisplayActiveTodayPilots" OnChange="@DisplayActivePilot"></TelerikSwitch>
 
                     </div>
 
@@ -301,11 +303,11 @@ else
     </ItemTemplate>
 
     <SchedulerViews>
-        <SchedulerDayView />
-        <SchedulerWeekView />
-        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" />
+        <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
         <SchedulerMonthView></SchedulerMonthView>
-        <SchedulerTimelineView />
+        <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
     </SchedulerViews>
 
     <SchedulerResources>
@@ -359,7 +361,7 @@ else
                 OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
                 RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
                 CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
-                IsOpenFromContextMenu="@IsOpenFromContextMenu"></Create>
+                IsOpenFromContextMenu="@isOpenFromContextMenu"></Create>
 
                 }
                 else if (operationType == OperationType.UnCheckOut)

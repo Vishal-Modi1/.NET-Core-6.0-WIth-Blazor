@@ -43,12 +43,24 @@ namespace Web.UI.Pages.Scheduler
         TelerikContextMenu<ContextMenuItem> contextMenu { get; set; }
 
         Create createScheduleRef;
-        public bool IsOpenFromContextMenu { get; set; }
-        public bool DisplayAircraftScheduler { get; set; } = true;
-        public bool IsDisplayActiveTodayPilots { get; set; } = false;
+        public bool isOpenFromContextMenu { get; set; }
+        public bool displayAircraftScheduler { get; set; } = true;
+        public bool isDisplayActiveTodayPilots { get; set; } = false;
+        public int schedulerViewOption = 0;
+
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
-        public DateTime DayStart { get; set; } = new DateTime(2000, 1, 1, 7, 0, 0);
+
+        public DateTime dayStart { get; set; } = new DateTime(2000, 1, 1, 0, 0, 0);
+        public DateTime dayEnd { get; set; } = new DateTime(2000, 1, 1, 23, 0, 0);
+        public DateTime workDayStart { get; set; } = new DateTime(2000, 1, 1, 9, 0, 0);
+        public DateTime workDayEnd { get; set; } = new DateTime(2000, 1, 1, 17, 0, 0);
+
+        List<RadioButtonItem> viewOptions { get; set; } = new List<RadioButtonItem>
+        {
+            new RadioButtonItem { Id = 0,Text = "Aircrafts" },
+            new RadioButtonItem { Id = 1, Text = "Pilots" },
+        };
 
         #endregion
 
@@ -302,7 +314,7 @@ namespace Web.UI.Pages.Scheduler
         {
             SchedulerVM currentItem = args.Item as SchedulerVM;
             args.ShouldRender = false;
-            IsOpenFromContextMenu = false;
+            isOpenFromContextMenu = false;
 
             operationType = OperationType.Create;
 
@@ -313,7 +325,7 @@ namespace Web.UI.Pages.Scheduler
         {
             SchedulerVM currentItem = args.Item as SchedulerVM;
             args.ShouldRender = false;
-            IsOpenFromContextMenu = false;
+            isOpenFromContextMenu = false;
             operationType = OperationType.Create;
 
             await OpenAppointmentDialog(currentItem);
@@ -539,7 +551,7 @@ namespace Web.UI.Pages.Scheduler
         async Task OnContextMenuClickItem(ContextMenuItem clickedItem)
         {
             operationType = OperationType.Create;
-            IsOpenFromContextMenu = true;
+            isOpenFromContextMenu = true;
             schedulerVM = dataSource.Where(p => p.Id == clickedItem.ScheduleDetails.Id).FirstOrDefault();
             popupTitle = "Schedule Appointment";
 
@@ -658,9 +670,9 @@ namespace Web.UI.Pages.Scheduler
 
         public async void DisplayActivePilot(object value)
         {
-            IsDisplayActiveTodayPilots = (bool)value;
+            isDisplayActiveTodayPilots = (bool)value;
 
-            if (IsDisplayActiveTodayPilots)
+            if (isDisplayActiveTodayPilots)
             {
                 pilotsResourceList = pilotsResourceList.Where(p=> dataSource.Select(p=>p.Member1Id).Contains(p.Id)).ToList();
             }
@@ -670,6 +682,18 @@ namespace Web.UI.Pages.Scheduler
             }
 
             scheduleRef.Rebind();
+        }
+
+        void OnschedulerViewOptionValueChange()
+        {
+            if (schedulerViewOption == 0)
+            {
+                displayAircraftScheduler = true;
+            }
+            else
+            {
+                displayAircraftScheduler = false;
+            }
         }
 
         private async Task CheckOut()
