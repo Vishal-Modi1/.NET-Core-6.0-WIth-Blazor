@@ -21,9 +21,7 @@ namespace Web.UI.Shared
 
         [Parameter] public bool Expanded { get; set; }
         [Parameter] public bool IsMainContainerTransparent { get; set; } = true;
-
         public GlobalMembers globalMembers = new GlobalMembers();
-
         TelerikDrawer<MenuItem> drawerRef { get; set; }
 
         bool isDrawerExpanded { get; set; } = true;

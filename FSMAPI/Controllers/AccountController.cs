@@ -11,6 +11,7 @@ using DataModels.Constants;
 using Configuration;
 using DataModels.VM.User;
 using DataModels.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FSMAPI.Controllers
 {
@@ -185,7 +186,39 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("activateaccount")]
+        [Route("getDetailsFromToken")]
+        [AllowAnonymous]
+        public IActionResult GetDetailsFromToken(string token)
+        {
+            try
+            {
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                JwtSecurityToken jwtSecurityToken = handler.ReadJwtToken(token);
+
+                if (jwtSecurityToken == null || jwtSecurityToken.Claims.Count() == 0)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                long userId = Convert.ToInt64(jwtSecurityToken.Claims.First(claim => claim.Type == CustomClaimTypes.UserId).Value);
+                int companyId = Convert.ToInt32(jwtSecurityToken.Claims.First(claim => claim.Type == CustomClaimTypes.CompanyId).Value);
+                string timezone = jwtSecurityToken.Claims.First(claim => claim.Type == CustomClaimTypes.TimeZone).Value;
+
+                CurrentResponse response = _userService.GetById(userId, companyId);
+
+                User user = (User)(response.Data);
+                response = GetDetails(response, user, timezone);
+
+                return APIResponse(response);
+            }
+            catch (Exception ex)
+            {
+                return APIResponse(UnAuthorizedResponse.Response());
+            }
+        }
+
+        [HttpGet]
+        [Route("activateAccount")]
         [AllowAnonymous]
         public IActionResult ActivateAccount(string token)
         {

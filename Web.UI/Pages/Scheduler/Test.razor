@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Primitives
+
+@layout EmptyLayout
+
+@inject IJSRuntime JSRunTime
+
+@page "/Test1"
+
+@code {
+
+    StringValues link;
+    private string? result;
+    private DotNetObjectReference<Test>? objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try{
+            if (firstRender)
+            {
+                var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+                QueryHelpers.ParseQuery(uri.Query).TryGetValue("token", out link);
+
+                if (link.Count() == 0 || link[0] == "")
+                {
+                    NavigationManager.NavigateTo("/Dashboard");
+                }
+
+                var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
+                await authModule.InvokeVoidAsync("signinwithtoken", link[0], "/SchedulerMobileView");
+
+                objRef = DotNetObjectReference.Create(this);
+                result = await authModule.InvokeAsync<string>("SetDotNetObject", objRef, "");
+            }
+
+        }
+        catch(Exception exc)
+        {
+            
+        }
+
+    }
+
+}
+

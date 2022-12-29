@@ -11,6 +11,7 @@
 @using Web.UI.Models.Scheduler;
 
 @page "/SchedulerIndex"
+@inject IJSRuntime JSRunTime
 
 <style>
     .k-scheduler .k-event {
@@ -38,31 +39,29 @@
             <div class="col-md-2 d-flex">
                 <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
             </div>
-            <div class="d-flex">
-            <div class="col-md-10 d-flex">
-                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
-                {
+            <div class="col-md-3 d-flex justify-content-end">
+                <div class="col-md-12 d-flex justify-content-end">
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+                    {
+                        <TelerikRadioGroup Data="@viewOptions" ValueField="@nameof(RadioButtonItem.Id)"
+                                       TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerViewOption"
+                                       Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnschedulerViewOptionValueChange()"
+                                       LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
 
-                    <TelerikRadioGroup Data="@viewOptions" ValueField="@nameof(RadioButtonItem.Id)"
-                                   TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerViewOption"
-                                   Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnschedulerViewOptionValueChange()"
-                                   LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
+                        <TelerikButton Class="btn k-btn-primary ms-3" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                                   Enabled="@(!isBusyAddButton)">
 
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
 
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
-                               Enabled="@(!isBusyAddButton)">
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
 
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-
-                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                        </TelerikLoader>
-
-                    </TelerikButton>
-                }
+                        </TelerikButton>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 @if (displayAircraftScheduler)
@@ -112,12 +111,23 @@
 
                 <div class="row my-2">
 
-                    <div class="col-md-12 col-sm-12">
+                    <div class="col-md-10 col-sm-10">
 
                         <MultiSelectWithAllCheckbox Data="@multiSelectAircraftsList" SelectedData="@selectedAircraftList"
                                                 OnChangeEventCallback="@OnAircraftsListChange" PlaceHolderText="Select Aircrafts"
                                                 UpdateParentListCallback="@UpdateSelectedAircraftData">
                         </MultiSelectWithAllCheckbox>
+
+                    </div>
+
+                     <div class="col-md-2 col-sm-2">
+
+                        <TelerikCheckBox Id="activeAircraftsDisplay" 
+                                     Value="@isDisplayTodayActiveAircrafts"
+                                     ValueChanged="@((bool value) => DisplayActiveAircrafts(value))">
+                        </TelerikCheckBox>
+
+                        <label for="activeAircraftsDisplay">Today's Active Aircrafts</label>
 
                     </div>
 
@@ -236,7 +246,7 @@ else
 
                 <div class="row my-2">
 
-                    <div class="col-md-9 col-sm-9">
+                    <div class="col-md-10 col-sm-10">
 
                         <MultiSelectWithAllCheckbox Data="@multiSelectPilotsList" SelectedData="@selectedPilotsList"
                                                 OnChangeEventCallback="@OnPilotsListChange" PlaceHolderText="Select Pilots"
@@ -245,9 +255,14 @@ else
 
                     </div>
 
-                    <div class="col-md-3 col-sm-3">
+                    <div class="col-md-2 col-sm-2">
 
-                        <TelerikSwitch Class="float-right" Id="activePilotDisplay" @bind-Value="@isDisplayActiveTodayPilots" OnChange="@DisplayActivePilot"></TelerikSwitch>
+                        <TelerikCheckBox Id="activePilotDisplay" 
+                                     Value="@isDisplayTodayActivePilots"
+                                     ValueChanged="@((bool value) => DisplayActivePilot(value))">
+                        </TelerikCheckBox>
+
+                        <label for="activePilotDisplay">Today's Active Pilots</label>
 
                     </div>
 

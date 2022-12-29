@@ -17,6 +17,14 @@ namespace Web.UI.Data.Account
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
+        public async Task<CurrentResponse> GetDetailsFromToken(DependecyParams dependecyParams, string token)
+        {
+            dependecyParams.URL = $"account/getDetailsFromToken?token={token}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
+
         public async Task<CurrentResponse> ForgetPasswordAsync(DependecyParams dependecyParams, ForgotPasswordVM forgotPasswordVM)
         {
             dependecyParams.JsonData = JsonConvert.SerializeObject(forgotPasswordVM);

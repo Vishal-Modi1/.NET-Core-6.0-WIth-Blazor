@@ -29,6 +29,28 @@
     });
 }
 
+export function signinwithtoken(token, redirect) {
+
+    var url = "/api/auth/signInWithToken?token=" + token;
+
+    $.ajax({
+
+        url: url,
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+
+            if (response.status == 200) {
+
+                location.replace(redirect);
+            }
+            else {
+                alert();
+            }
+        }
+    });
+}
+
 export function ChangeCompany(userId, companyId) {
 
     var url = "/api/auth/changecompany?userId=" + userId + "&companyId=" + companyId + "&timezone=" + GetTimeZone();
@@ -181,4 +203,22 @@ export function RefreshWidth(width) {
 export function LoadRadarMap(src) {
 
     $('#radarMap').attr("src", src);
+}
+
+export function updateschedulerheadercolumns() {
+
+    var width = $('.k-scheduler-body .k-heading-cell').first().css("min-width")
+
+    $('.k-heading-cell').each(function (e, data) {
+
+        $(data).css("font-weight", "normal");
+    });
+
+    $('.k-scheduler-body .k-heading-cell').each(function (e, data) {
+
+        $(data).css("min-width", width);
+        $(data).css("justify-content", "left");
+        $(data).css("font-weight", "normal");
+    });
+
 }

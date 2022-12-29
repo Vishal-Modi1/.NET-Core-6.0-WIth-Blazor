@@ -1,5 +1,4 @@
-﻿using DataModels.Constants;
-using DataModels.Enums;
+﻿using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using DataModels.VM.UserPreference;
@@ -14,11 +13,14 @@ using Microsoft.AspNetCore.Components.Web;
 using Web.UI.Models.Scheduler;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.WebUtilities;
+using DataModels.VM.Account;
+using Newtonsoft.Json;
 using Microsoft.JSInterop;
+using DataModels.Constants;
 
 namespace Web.UI.Pages.Scheduler
 {
-    partial class SchedulerIndex
+    partial class SchedulerMobileView
     {
         #region params
         public TelerikScheduler<SchedulerVM> scheduleRef { get; set; }
@@ -30,8 +32,6 @@ namespace Web.UI.Pages.Scheduler
         public List<string> pilotResources = new List<string>() { "Member1Id" };
         List<ResourceData> aircraftsResourceList = new List<ResourceData>();
         List<ResourceData> pilotsResourceList = new List<ResourceData>();
-        List<ResourceData> allAircraftsResourceList = new List<ResourceData>();
-        List<ResourceData> allPilotsResourceList = new List<ResourceData>();
         string moduleName = "Scheduler";
         public UIOptions uiOptions = new UIOptions();
         SchedulerFilter schedulerFilter = new SchedulerFilter();
@@ -48,12 +48,12 @@ namespace Web.UI.Pages.Scheduler
         Create createScheduleRef;
         public bool isOpenFromContextMenu { get; set; }
         public bool displayAircraftScheduler { get; set; } = true;
-        public bool isDisplayTodayActivePilots { get; set; } = false;
-        public bool isDisplayTodayActiveAircrafts { get; set; } = false;
+        public bool isDisplayActiveTodayPilots { get; set; } = false;
         public int schedulerViewOption = 0;
 
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
+
         public DateTime dayStart { get; set; } = new DateTime(2000, 1, 1, 0, 0, 0);
         public DateTime dayEnd { get; set; } = new DateTime(2000, 1, 1, 23, 0, 0);
         public DateTime workDayStart { get; set; } = new DateTime(2000, 1, 1, 9, 0, 0);
@@ -64,22 +64,13 @@ namespace Web.UI.Pages.Scheduler
             new RadioButtonItem { Id = 0,Text = "Aircrafts" },
             new RadioButtonItem { Id = 1, Text = "Pilots" },
         };
-
+        string timezone = "";
+      
         #endregion
 
         protected override async Task OnInitializedAsync()
         {
-            ChangeLoaderVisibilityAction(true);
-
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
-            {
-                NavigationManager.NavigateTo("/Dashboard");
-            }
-
             dataSource = new List<SchedulerVM>();
-            currentDate = DateConverter.ToLocal(DateTime.UtcNow, globalMembers.Timezone);
-
             InitializeValues();
 
             schedulerVM = new SchedulerVM();
@@ -87,6 +78,42 @@ namespace Web.UI.Pages.Scheduler
             pilotsResourceList = new List<ResourceData>();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
+                //CurrentResponse response = await AccountService.GetDetailsFromToken(dependecyParams, link[0]);
+
+                //if (response.Status != System.Net.HttpStatusCode.OK)
+                //{
+                //    NavigationManager.NavigateTo("/Dashboard");
+                //}
+
+                //LoginResponseVM loginResponse = JsonConvert.DeserializeObject<LoginResponseVM>(response.Data.ToString());
+                //timezone = loginResponse.LocalTimeZone;
+
+                if (!false)
+                {
+                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
+                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
+
+                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
+                    pilotsResourceList = await GetPilotsList(0);
+                }
+                else
+                {
+                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
+                }
+
+                await LoadDataAsync();
+                await OpenDetailPopup();
+
+                currentDate = DateConverter.ToLocal(DateTime.UtcNow, timezone);
+            }
+        }
+        
         private async Task OpenDetailPopup()
         {
             StringValues link;
@@ -97,49 +124,19 @@ namespace Web.UI.Pages.Scheduler
             {
                 return;
             }
-
+   
             var base64EncodedBytes = Convert.FromBase64String(link[0]);
             string scheduleId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
 
-            ChangeLoaderVisibilityAction(true);
 
             SchedulerVM schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, Convert.ToInt64(scheduleId));
 
-            ChangeLoaderVisibilityAction(false);
-
-            await OpenAppointmentDialog(schedulerVM);
+            await OpenAppointmentDialog(schedulerVM); 
 
             StateHasChanged();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
-                if (!globalMembers.IsSuperAdmin)
-                {
-                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
-                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
-
-                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
-                    pilotsResourceList = await GetPilotsList(0);
-
-                    await LoadDataAsync();
-                    await UpdateSchedulerUI();
-                }
-                else
-                {
-                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
-                }
-
-                ChangeLoaderVisibilityAction(false);
-                //await OpenDetailPopup();
-            }
-        }
-
-        async Task ShowContextMenu(MouseEventArgs e, SchedulerVM clickedItem)
+         async Task ShowContextMenu(MouseEventArgs e, SchedulerVM clickedItem)
         {
             menuItems = new List<ContextMenuItem>();
 
@@ -179,35 +176,24 @@ namespace Web.UI.Pages.Scheduler
         {
             currentDate = currDate;
             await LoadDataAsync();
-
-            if (schedulerViewOption == 1)
-            {
-                DisplayActivePilot(isDisplayTodayActivePilots);
-            }
-            else
-            {
-                DisplayActiveAircrafts(isDisplayTodayActiveAircrafts);
-            }
         }
 
         public async Task LoadDataAsync()
         {
-            ChangeLoaderVisibilityAction(true);
-
             Tuple<DateTime, DateTime> dates = TelerikSchedulerDateHelper.GetDates(currentDate, currentView, multiDayDaysCount);
 
             schedulerFilter.StartTime = dates.Item1;
             schedulerFilter.EndTime = dates.Item2;
 
-            schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, globalMembers.Timezone);
-            schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddTicks(-1), globalMembers.Timezone);
+            schedulerFilter.StartTime = DateConverter.ToUTC(schedulerFilter.StartTime.Date, timezone);
+            schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddDays(1).AddTicks(-1), timezone);
 
             dataSource = await AircraftSchedulerService.ListAsync(dependecyParams, schedulerFilter);
 
             dataSource.ForEach(x =>
             {
-                x.StartTime = DateConverter.ToLocal(x.StartTime, globalMembers.Timezone);
-                x.EndTime = DateConverter.ToLocal(x.EndTime, globalMembers.Timezone);
+                x.StartTime = DateConverter.ToLocal(x.StartTime, timezone);
+                x.EndTime = DateConverter.ToLocal(x.EndTime, timezone);
 
                 if (x.AircraftSchedulerDetailsVM.IsCheckOut)
                 {
@@ -246,23 +232,12 @@ namespace Web.UI.Pages.Scheduler
 
             if (schedulerFilter.StartTime != null)
             {
-                schedulerFilter.StartTime = DateConverter.ToLocal(schedulerFilter.StartTime, globalMembers.Timezone);
+                schedulerFilter.StartTime = DateConverter.ToLocal(schedulerFilter.StartTime, timezone);
             }
 
             if (schedulerFilter.EndTime != null)
             {
-                schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, globalMembers.Timezone);
-            }
-
-            ChangeLoaderVisibilityAction(false);
-
-            if (displayAircraftScheduler && isDisplayTodayActiveAircrafts)
-            {
-                DisplayActiveAircrafts(isDisplayTodayActiveAircrafts);
-            }
-            else if (!displayAircraftScheduler && isDisplayTodayActivePilots)
-            {
-                DisplayActivePilot(isDisplayTodayActivePilots);
+                schedulerFilter.EndTime = DateConverter.ToLocal(schedulerFilter.EndTime, timezone);
             }
 
             base.StateHasChanged();
@@ -270,7 +245,7 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task<List<ResourceData>> GetPilotsList(int companyId)
         {
-            multiSelectPilotsList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, companyId);
+            multiSelectPilotsList = await UserService.ListDropDownValuesByCompanyId(dependecyParams,companyId);
             pilotsResourceList = new List<ResourceData>();
 
             selectedPilotsList = multiSelectPilotsList.Select(p => p.Id).ToList();
@@ -279,26 +254,12 @@ namespace Web.UI.Pages.Scheduler
                 pilotsResourceList.Add(new ResourceData { Text = pilot.Name, Id = pilot.Id });
             }
 
-            allPilotsResourceList = pilotsResourceList;
             return pilotsResourceList;
         }
 
         private async Task GetAircraftData(int value = 0)
         {
             multiSelectAircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, value);
-            selectedAircraftList = multiSelectAircraftsList.Select(p => p.Id).ToList();
-
-            List<DropDownLargeValues> aircraftList = multiSelectAircraftsList;
-            selectedAircraftList = aircraftList.Select(p => p.Id).ToList();
-
-            aircraftsResourceList = new List<ResourceData>();
-
-            foreach (DropDownLargeValues aircraft in aircraftList)
-            {
-                aircraftsResourceList.Add(new ResourceData { Text = aircraft.Name, Id = aircraft.Id });
-            }
-
-            allAircraftsResourceList = aircraftsResourceList;
         }
 
         private async Task<List<ResourceData>> GetAircraftData(UserPreferenceVM aircraftPreference)
@@ -324,8 +285,6 @@ namespace Web.UI.Pages.Scheduler
             {
                 aircraftResourceList.Add(new ResourceData { Text = aircraft.Name, Id = aircraft.Id });
             }
-
-            allAircraftsResourceList = aircraftResourceList;
 
             return aircraftResourceList;
         }
@@ -417,8 +376,6 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task OpenAppointmentDialog(SchedulerVM args)
         {
-            ChangeLoaderVisibilityAction(true);
-
             await SetSchedulerDetails(args.Id);
 
             uiOptions.IsDisplayForm = false;
@@ -432,7 +389,6 @@ namespace Web.UI.Pages.Scheduler
             uiOptions.IsDisplayMainForm = true;
             uiOptions.IsDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
 
-            ChangeLoaderVisibilityAction(false);
             isDisplayPopup = true;
             popupTitle = "Schedule Appointment";
         }
@@ -441,17 +397,17 @@ namespace Web.UI.Pages.Scheduler
         {
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, id);
 
-            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, globalMembers.Timezone);
-            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, globalMembers.Timezone);
+            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
+            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, globalMembers.Timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, timezone);
             }
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, globalMembers.Timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
             }
         }
 
@@ -517,279 +473,19 @@ namespace Web.UI.Pages.Scheduler
                 aircraftsResourceList = aircraftResourceList;
             }
 
-            isDisplayTodayActiveAircrafts = false;
-            scheduleRef.Rebind();
-            UpdateSchedulerUI();
-            base.StateHasChanged();
-        }
-
-        void UpdateSelectedPilotData(List<long> selectedData)
-        {
-            selectedPilotsList = selectedData;
             base.StateHasChanged();
         }
 
         public async Task GetAutocompleteData(int companyId)
         {
             schedulerFilter.CompanyId = companyId;
-
-            await LoadDataAsync();
             await GetAircraftData(companyId);
             await GetPilotsList(companyId);
-
-            await UpdateSchedulerUI();
-        }
-
-        void OnPilotsListChange(List<long> selectedData)
-        {
-            selectedPilotsList = selectedData;
-            if (selectedPilotsList == null || selectedPilotsList.Count() == 0)
-            {
-                resources = new List<string>();
-                pilotsResourceList = new List<ResourceData>();
-            }
-            else
-            {
-                resources = new List<string>() { "Member1Id" };
-                List<DropDownLargeValues> pilotsList = new List<DropDownLargeValues>();
-
-                pilotsList = multiSelectPilotsList.Where(p => selectedPilotsList.Contains(p.Id)).ToList();
-
-                List<ResourceData> pilotResourceList = new List<ResourceData>();
-
-                foreach (DropDownLargeValues aircraft in pilotsList)
-                {
-                    pilotResourceList.Add(new ResourceData { Text = aircraft.Name, Id = aircraft.Id });
-                }
-
-                pilotsResourceList = pilotResourceList;
-            }
-
-            isDisplayTodayActivePilots = false;
-            scheduleRef.Rebind();
-            UpdateSchedulerUI();
-            base.StateHasChanged();
-        }
-
-        async void GetAircraftsList(int value)
-        {
-            ChangeLoaderVisibilityAction(true);
-            schedulerFilter.CompanyId = value;
-
-            resources = new List<string>();
-            aircraftsResourceList = new List<ResourceData>();
-
-            selectedAircraftList = new List<long>();
-            await GetAircraftData(value);
-
-            await LoadDataAsync();
-
-            ChangeLoaderVisibilityAction(false);
         }
 
         private void CloseDialog()
         {
             isDisplayPopup = false;
-        }
-
-        private void OpenDialog()
-        {
-            isDisplayPopup = true;
-        }
-
-        async Task OnContextMenuClickItem(ContextMenuItem clickedItem)
-        {
-            operationType = OperationType.Create;
-            isOpenFromContextMenu = true;
-            schedulerVM = dataSource.Where(p => p.Id == clickedItem.ScheduleDetails.Id).FirstOrDefault();
-            popupTitle = "Schedule Appointment";
-
-            ChangeLoaderVisibilityAction(true);
-            await contextMenu.HideAsync();
-
-            if (clickedItem.Type == ScheduleOperations.ViewDetails)
-            {
-                await OpenAppointmentDialog(clickedItem.ScheduleDetails);
-            }
-            else if (clickedItem.Type == ScheduleOperations.Delete)
-            {
-                operationType = OperationType.Delete;
-                isDisplayPopup = true;
-            }
-            else if (clickedItem.Type == ScheduleOperations.UnCheckOut)
-            {
-                operationType = OperationType.UnCheckOut;
-                isDisplayPopup = true;
-            }
-            else if (clickedItem.Type == ScheduleOperations.Edit)
-            {
-                await SetSchedulerDetails(schedulerVM.Id);
-                isDisplayPopup = true;
-                base.StateHasChanged();
-                createScheduleRef.OpenForm();
-            }
-            else if (clickedItem.Type == ScheduleOperations.CheckIn)
-            {
-                await SetSchedulerDetails(schedulerVM.Id);
-                isDisplayPopup = true;
-                base.StateHasChanged();
-                createScheduleRef.CheckInAircraft();
-            }
-            else if (clickedItem.Type == ScheduleOperations.UpdateFlightTime)
-            {
-                await SetSchedulerDetails(schedulerVM.Id);
-                isDisplayPopup = true;
-                base.StateHasChanged();
-                createScheduleRef.EditFlightTime();
-            }
-            else if (clickedItem.Type == ScheduleOperations.UpdateEndTime)
-            {
-                await SetSchedulerDetails(schedulerVM.Id);
-                isDisplayPopup = true;
-                base.StateHasChanged();
-                createScheduleRef.ShowEditEndTimeForm();
-            }
-
-            else if (clickedItem.Type == ScheduleOperations.CheckOut)
-            {
-                await CheckOutAircraft();
-            }
-
-            ChangeLoaderVisibilityAction(false);
-        }
-
-        public async Task DeleteAsync()
-        {
-            uiOptions.IsBusyDeleteButton = true;
-
-            CurrentResponse response = await AircraftSchedulerService.DeleteAsync(dependecyParams, schedulerVM.Id);
-
-            uiOptions.IsBusyDeleteButton = false;
-
-            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                CloseDialog();
-            }
-
-            await LoadDataAsync();
-        }
-
-        private async Task UnCheckOutAppointment()
-        {
-            uiOptions.IsBusyUnCheckOutButton = true;
-
-            CurrentResponse response = await AircraftSchedulerDetailService.UnCheckOut(dependecyParams, schedulerVM.AircraftSchedulerDetailsVM.Id);
-
-            uiOptions.IsBusyUnCheckOutButton = false;
-
-            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                schedulerVM.AircraftSchedulerDetailsVM = new AircraftSchedulerDetailsVM();
-                base.StateHasChanged();
-                await RefreshSchedulerDataSourceAsync(ScheduleOperations.UnCheckOut);
-                CloseDialog();
-            }
-        }
-
-        public async Task CheckOutAircraft()
-        {
-            CurrentResponse response = await AircraftSchedulerDetailService.IsAircraftAlreadyCheckOutAsync(dependecyParams, schedulerVM.AircraftId.GetValueOrDefault());
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                if ((bool)response.Data == true)
-                {
-                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
-                }
-                else
-                {
-                    await CheckOut();
-                }
-            }
-            else
-            {
-                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
-            }
-
-        }
-
-        public async void DisplayActiveAircrafts(bool value)
-        {
-            isDisplayTodayActiveAircrafts = value;
-
-            if (isDisplayTodayActiveAircrafts)
-            {
-                if (!aircraftsResourceList.Any(p => dataSource.Select(p => p.AircraftId).Contains(p.Id)))
-                {
-                    aircraftsResourceList = new List<ResourceData>();
-                    globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "There is no active flight today");
-                    aircraftsResourceList = allAircraftsResourceList;
-                }
-                else
-                {
-                    aircraftsResourceList = new List<ResourceData>();
-                    aircraftsResourceList = allAircraftsResourceList.Where(p => dataSource.Select(p => p.AircraftId).Contains(p.Id)).ToList();
-                }
-            }
-            else
-            {
-                aircraftsResourceList = new List<ResourceData>();
-                aircraftsResourceList = allAircraftsResourceList;
-            }
-
-            selectedAircraftList = aircraftsResourceList.Select(p => p.Id).ToList();
-            scheduleRef.Rebind();
-            UpdateSchedulerUI();
-        }
-
-        private async Task UpdateSchedulerUI()
-        {
-            var authModule = await JSRunTime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-            await authModule.InvokeVoidAsync("updateschedulerheadercolumns");
-        }
-
-        public async void DisplayActivePilot(bool value)
-        {
-            isDisplayTodayActivePilots = value;
-
-            if (isDisplayTodayActivePilots)
-            {
-                if (!pilotsResourceList.Any(p => dataSource.Select(p => p.Member1Id).Contains(p.Id)))
-                {
-                    globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "There is no active flight today");
-                    pilotsResourceList = allPilotsResourceList;
-                }
-                else
-                {
-                    pilotsResourceList = pilotsResourceList.Where(p => dataSource.Select(p => p.Member1Id).Contains(p.Id)).ToList();
-                }
-            }
-            else
-            {
-                pilotsResourceList = allPilotsResourceList;
-            }
-
-            selectedPilotsList = pilotsResourceList.Select(p => p.Id).ToList();
-            scheduleRef.Rebind();
-            UpdateSchedulerUI();
-        }
-
-        void OnschedulerViewOptionValueChange()
-        {
-            if (schedulerViewOption == 0)
-            {
-                displayAircraftScheduler = true;
-            }
-            else
-            {
-                displayAircraftScheduler = false;
-            }
-
-            UpdateSchedulerUI();
         }
 
         private async Task CheckOut()
