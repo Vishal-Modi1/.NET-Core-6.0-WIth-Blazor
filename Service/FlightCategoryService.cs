@@ -32,7 +32,7 @@ namespace Service
                 }
                 else
                 {
-                    flightCategory = _flightCategoryRepository.Edit(flightCategory);
+                    flightCategory = _flightCategoryRepository.Create(flightCategory);
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category added successfully");
                 }
 

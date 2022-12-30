@@ -36,6 +36,17 @@
                                         Categories
                                     </span>
                                     <span>
+
+                                        <TelerikButton Class="btn k-btn-primary ms-3" ThemeColor="primary" OnClick="() => OpenCreateCategoryDialogAsync(new DataModels.Entities.FlightCategory())"
+                                                       Enabled="@(!isBusyAddButton)">
+
+                                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+
+                                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                            </TelerikLoader>
+
+                                        </TelerikButton>
+
                                         @if (isFilterBarVisible)
                                         {
                                             <CustomIcons IconName="plus" />
@@ -60,14 +71,20 @@
                                                     <td>
 
                                                         <input type="checkbox" checked @onchange="(e => CheckboxChangedAsync(e, item))"
-                                                        style="height:18px;width:18px;accent-color:@item.Color;" />
-                                                       
+                                                           style="height:18px;width:18px;accent-color:@item.Color;" />
+
                                                         <label for="@item.Id">
                                                             @item.Name
                                                         </label>
 
                                                     </td>
-                                                    <td> <a href="javascript:void(0)"> Edit </a> </td>
+                                                    <td>
+                                                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>OpenCreateCategoryDialogAsync(item)"
+                                                                   ThemeColor="success">
+
+                                                            <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                                                        </TelerikButton>
+                                                    </td>
                                                 </tr>
                                             }
                                         </table>
@@ -128,3 +145,20 @@
     </div>
 
 </div>
+
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+           
+                <CreateCategory flightCategory="@_flightCategory" CloseDialogCallBack="@CloseDialog"></CreateCategory>
+            
+
+        </Body>
+    </CustomPopupComponent>
+}

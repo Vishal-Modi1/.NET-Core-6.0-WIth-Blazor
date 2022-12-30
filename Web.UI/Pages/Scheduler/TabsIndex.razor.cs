@@ -15,10 +15,11 @@ namespace Web.UI.Pages.Scheduler
         DependecyParams dependecyParams;
         List<FlightCategory> flightCategories = new ();
         SchedulerIndex schedulerIndex;
+        FlightCategory _flightCategory;
 
         protected override Task OnInitializedAsync()
         {
-            isLeftBarVisible = false;
+            isLeftBarVisible = true;
             SetSelectedMenuItem("Scheduler");
 
             return base.OnInitializedAsync();
@@ -74,7 +75,31 @@ namespace Web.UI.Pages.Scheduler
             {
                 args.Class = "highlightDates";
             }
+        }
 
+        void OpenCreateCategoryDialogAsync(FlightCategory flightCategory)
+        {
+            isDisplayPopup = true;
+            _flightCategory = flightCategory;
+
+            if (flightCategory.Id == 0)
+            {
+                popupTitle = "Edit Category";
+            }
+            else
+            {
+                popupTitle = "Create Category";
+            }
+        }
+
+        void CloseDialog(bool reloadGrid)
+        {
+            isDisplayPopup = false;
+
+            if (reloadGrid)
+            {
+                //grid.Rebind();
+            }
         }
     }
 }
