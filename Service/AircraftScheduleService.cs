@@ -26,13 +26,14 @@ namespace Service
         private readonly ICompanyRepository _companyRepository;
         private readonly ISendMailService _sendMailService;
         private readonly IEmailConfigurationRepository _emailConfigurationRepository;
+        private readonly IFlightCategoryRepository _flightCategoryRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
             IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository, ICompanyRepository companyRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
             IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository,
-            IEmailConfigurationRepository emailConfigurationRepository)
+            IEmailConfigurationRepository emailConfigurationRepository, IFlightCategoryRepository flightCategoryRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
@@ -44,6 +45,7 @@ namespace Service
             _userVSCompanyRepository = userVSCompanyRepository;
             _companyRepository = companyRepository;
             _emailConfigurationRepository = emailConfigurationRepository;
+            _flightCategoryRepository = flightCategoryRepository;   
             _sendMailService = new SendMailService();
         }
 
@@ -106,7 +108,9 @@ namespace Service
                 ListDropDownValues(schedulerVM, companyId, roleId);
                 FilterValuesByUserPreferences(schedulerVM, userId);
 
+
                 schedulerVM.RoleId = roleId;
+                schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);  
 
                 CreateResponse(schedulerVM, HttpStatusCode.OK, "");
             }
@@ -510,6 +514,7 @@ namespace Service
             aircraftSchedule.PrivateComments = schedulerVM.InternalComments;
             aircraftSchedule.FlightRoutes = schedulerVM.FlightRoutes;
             aircraftSchedule.StandBy = schedulerVM.IsStandBy;
+            aircraftSchedule.FlightCategoryId = schedulerVM.FlightCategoryId;
             aircraftSchedule.IsActive = true;
 
             aircraftSchedule.CreatedBy = schedulerVM.CreatedBy;
@@ -553,6 +558,7 @@ namespace Service
             schedulerVM.Comments = aircraftSchedule.Comments;
             schedulerVM.InternalComments = aircraftSchedule.PrivateComments;
             schedulerVM.FlightRoutes = aircraftSchedule.FlightRoutes;
+            schedulerVM.FlightCategoryId = aircraftSchedule.FlightCategoryId;
             schedulerVM.IsStandBy = aircraftSchedule.StandBy;
             schedulerVM.CreatedBy = aircraftSchedule.CreatedBy;
 

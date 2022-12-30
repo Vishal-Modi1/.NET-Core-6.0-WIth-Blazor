@@ -39,7 +39,7 @@
             <div class="col-md-2 d-flex">
                 <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
             </div>
-            <div class="col-md-3 d-flex justify-content-end">
+            <div class="col-md-6 d-flex justify-content-end">
                 <div class="col-md-12 d-flex justify-content-end">
                     @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
                     {
@@ -64,7 +64,7 @@
     </div>
 </div>
 
-@if (displayAircraftScheduler)
+@if (schedulerType == Models.Enums.SchedulerType.Aircraft)
 {
     <div>
         <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
@@ -88,7 +88,6 @@
                 </div>
             </HeaderContent>
             <ChildContent>
-
 
                 @if (globalMembers.IsSuperAdmin)
                 {
@@ -120,9 +119,9 @@
 
                     </div>
 
-                     <div class="col-md-2 col-sm-2">
+                    <div class="col-md-2 col-sm-2">
 
-                        <TelerikCheckBox Id="activeAircraftsDisplay" 
+                        <TelerikCheckBox Id="activeAircraftsDisplay"
                                      Value="@isDisplayTodayActiveAircrafts"
                                      ValueChanged="@((bool value) => DisplayActiveAircrafts(value))">
                         </TelerikCheckBox>
@@ -200,7 +199,7 @@
 
 </TelerikScheduler>
 }
-else
+else if (schedulerType == Models.Enums.SchedulerType.Pilot)
 {
     <div>
         <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
@@ -257,7 +256,7 @@ else
 
                     <div class="col-md-2 col-sm-2">
 
-                        <TelerikCheckBox Id="activePilotDisplay" 
+                        <TelerikCheckBox Id="activePilotDisplay"
                                      Value="@isDisplayTodayActivePilots"
                                      ValueChanged="@((bool value) => DisplayActivePilot(value))">
                         </TelerikCheckBox>
@@ -332,6 +331,48 @@ else
         <SchedulerGroupSettings Resources="@pilotResources" Orientation="@SchedulerGroupOrientation.Vertical">
         </SchedulerGroupSettings>
     </SchedulerSettings>
+
+</TelerikScheduler>
+}
+else
+{
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+                  @ref="@scheduleRef"
+                  OnItemClick="@OnClickHandlerAsync"
+                  OnItemDoubleClick="@OnDoubleClickHandler"
+                  AllowCreate="true" AllowDelete="true" AllowUpdate="true"
+                  OnEdit="@EditHandler"
+                  DateChanged="@DateChangedHandler"
+                  IdField="@(nameof(SchedulerVM.Id))"
+                  StartField="@(nameof(SchedulerVM.StartTime))"
+                  EndField="@(nameof(SchedulerVM.EndTime))"
+                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
+                  ViewChanged="@ViewChangedHandler">
+
+        <ItemTemplate>
+            @{
+            var appt = context as SchedulerVM;
+            var flightCategory = flightCategories.Where(p => p.Id == appt.FlightCategoryId).First();
+
+            appt.Color = flightCategory.Color;
+
+            <div class="custom-appointment schedule-popup"
+             title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
+             data-member1="@appt.Member1"
+             style="height:100%;background-color: @appt.Color"
+             data-aircraft="@appt.TailNo"
+                 @oncontextmenu:preventDefault="true"
+                 @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
+                <div style="font-size:12px;background-color: @appt.Color" class="k-event-template">@appt.DisplayTitle</div>
+            </div>
+        }
+    </ItemTemplate>
+
+    <SchedulerViews>
+        <SchedulerMonthView></SchedulerMonthView>
+    </SchedulerViews>
 
 </TelerikScheduler>
 }

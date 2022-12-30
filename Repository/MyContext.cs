@@ -140,6 +140,8 @@ namespace Repository
         public DbSet<WindyMapConfiguration> WindyMapConfigurations{ get; set; }
 
         public DbSet<BillingConfiguration> BillingConfigurations { get; set; }
+     
+        public DbSet<FlightCategory> FlightCategories { get; set; }
 
         //List Objects
 

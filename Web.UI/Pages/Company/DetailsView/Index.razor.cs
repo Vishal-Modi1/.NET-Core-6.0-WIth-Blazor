@@ -18,7 +18,6 @@ namespace Web.UI.Pages.Company.DetailsView
         public CompanyVM companyData { get; set; }
         string moduleName = Module.Company.ToString();
         public bool isAllowToEdit;
-        public bool isLeftBarVisible { get; set; } = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -171,12 +170,6 @@ namespace Web.UI.Pages.Company.DetailsView
                 companyData.Logo = "data:image/png;base64," + b64String;
                 CloseDialog();
             }
-        }
-
-        private bool ToggleLeftPane()
-        {
-            isLeftBarVisible = !isLeftBarVisible;
-            return isLeftBarVisible;
         }
     }
 }

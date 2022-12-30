@@ -26,12 +26,12 @@ var _environment = builder.Environment;
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonDateTimeConverter());
-}
-);
+});
 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -51,7 +51,9 @@ builder.Services.AddSwaggerGen(c =>
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
     c.IncludeXmlComments(xmlPath);
+
 });
 
 #region API rate limit configuraiton

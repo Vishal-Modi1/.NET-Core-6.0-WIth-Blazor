@@ -49,6 +49,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserAirTrafficControlCenterService, UserAirTrafficControlCenterService>();
             services.AddScoped<IWindyMapConfigurationService, WindyMapConfigurationService>();
             services.AddScoped<IBillingConfigurationService, BillingConfigurationService>();
+            services.AddScoped<IFlightCategoryService, FlightCategoryService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -96,6 +97,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserAirTrafficControlCenterRepository, UserAirTrafficControlCenterRepository>();
             services.AddScoped<IWindyMapConfigurationRepository, WindyMapConfigurationRepository>();
             services.AddScoped<IBillingConfigurationRepository, BillingConfigurationRepository>();
+            services.AddScoped<IFlightCategoryRepository, FlightCategoryRepository>();
         }
     }
 }

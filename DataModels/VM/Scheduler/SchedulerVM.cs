@@ -70,6 +70,9 @@ namespace DataModels.VM.Scheduler
         [Required(ErrorMessage = "Title is required")]
         public string DisplayTitle { get; set; }
 
+        [Required(ErrorMessage = "Flight Category is required")]
+        public int FlightCategoryId { get; set; }
+
         public string FlightRoutes { get; set; }
 
         public string Comments { get; set; }
@@ -110,6 +113,7 @@ namespace DataModels.VM.Scheduler
         public List<DropDownLargeValues> InstructorsList { get; set; }
         public List<DropDownLargeValues> AircraftsList { get; set; }
         public List<DropDownValues> CompaniesList { get; set; }
+        public List<DropDownValues> FlightCategoriesList { get; set; }
         public List<DropDownLargeValues> UsersList { get; set; }
         public List<DropDownLargeValues> Member1List { get; set; }
         public List<DropDownLargeValues> Member2List { get; set; }

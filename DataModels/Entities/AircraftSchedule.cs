@@ -7,6 +7,7 @@ namespace DataModels.Entities
         public long Id { get; set; }
 
         public int SchedulActivityTypeId { get; set; }
+        public int FlightCategoryId { get; set; }
 
         public Guid ReservationId { get; set; }
     

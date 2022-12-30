@@ -15,12 +15,16 @@ using Web.UI.Models.Scheduler;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.JSInterop;
+using Web.UI.Models.Enums;
+using DataModels.Entities;
 
 namespace Web.UI.Pages.Scheduler
 {
     partial class SchedulerIndex
     {
         #region params
+        
+        [Parameter] public List<FlightCategory> Categories { get; set; }
         public TelerikScheduler<SchedulerVM> scheduleRef { get; set; }
 
         SchedulerVM schedulerVM;
@@ -42,12 +46,13 @@ namespace Web.UI.Pages.Scheduler
         List<DropDownLargeValues> multiSelectPilotsList = new List<DropDownLargeValues>();
 
         DependecyParams dependecyParams;
+        List<FlightCategory> flightCategories = new();
         public List<ContextMenuItem> menuItems { get; set; }
         TelerikContextMenu<ContextMenuItem> contextMenu { get; set; }
 
         Create createScheduleRef;
         public bool isOpenFromContextMenu { get; set; }
-        public bool displayAircraftScheduler { get; set; } = true;
+        public SchedulerType schedulerType { get; set; } = SchedulerType.Aircraft;
         public bool isDisplayTodayActivePilots { get; set; } = false;
         public bool isDisplayTodayActiveAircrafts { get; set; } = false;
         public int schedulerViewOption = 0;
@@ -63,6 +68,7 @@ namespace Web.UI.Pages.Scheduler
         {
             new RadioButtonItem { Id = 0,Text = "Aircrafts" },
             new RadioButtonItem { Id = 1, Text = "Pilots" },
+            new RadioButtonItem { Id = 2, Text = "Calender" },
         };
 
         #endregion
@@ -85,6 +91,35 @@ namespace Web.UI.Pages.Scheduler
             schedulerVM = new SchedulerVM();
             aircraftsResourceList = new List<ResourceData>();
             pilotsResourceList = new List<ResourceData>();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+                if (!globalMembers.IsSuperAdmin)
+                {
+                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
+                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
+
+                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
+                    pilotsResourceList = await GetPilotsList(0);
+
+                    await LoadDataAsync();
+                    await UpdateSchedulerUI();
+                }
+                else
+                {
+                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
+                }
+
+                flightCategories = await FlightCategoryService.ListAll(dependecyParams);
+
+                ChangeLoaderVisibilityAction(false);
+                //await OpenDetailPopup();
+            }
         }
 
         private async Task OpenDetailPopup()
@@ -112,32 +147,6 @@ namespace Web.UI.Pages.Scheduler
             StateHasChanged();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-
-                if (!globalMembers.IsSuperAdmin)
-                {
-                    List<UserPreferenceVM> userPrefernecesList = await UserService.FindMyPreferencesById(dependecyParams);
-                    UserPreferenceVM aircraftPreference = userPrefernecesList.Where(p => p.PreferenceType == PreferenceType.Aircraft).FirstOrDefault();
-
-                    aircraftsResourceList = await GetAircraftData(aircraftPreference);
-                    pilotsResourceList = await GetPilotsList(0);
-
-                    await LoadDataAsync();
-                    await UpdateSchedulerUI();
-                }
-                else
-                {
-                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
-                }
-
-                ChangeLoaderVisibilityAction(false);
-                //await OpenDetailPopup();
-            }
-        }
 
         async Task ShowContextMenu(MouseEventArgs e, SchedulerVM clickedItem)
         {
@@ -173,6 +182,8 @@ namespace Web.UI.Pages.Scheduler
         async Task ViewChangedHandler(SchedulerView nextView)
         {
             currentView = nextView;
+            await LoadDataAsync();
+            await UpdateSchedulerUI();
         }
 
         async Task DateChangedHandler(DateTime currDate)
@@ -256,11 +267,11 @@ namespace Web.UI.Pages.Scheduler
 
             ChangeLoaderVisibilityAction(false);
 
-            if (displayAircraftScheduler && isDisplayTodayActiveAircrafts)
+            if (schedulerType == SchedulerType.Aircraft && isDisplayTodayActiveAircrafts)
             {
                 DisplayActiveAircrafts(isDisplayTodayActiveAircrafts);
             }
-            else if (!displayAircraftScheduler && isDisplayTodayActivePilots)
+            else if (schedulerType == SchedulerType.Pilot && isDisplayTodayActivePilots)
             {
                 DisplayActivePilot(isDisplayTodayActivePilots);
             }
@@ -778,18 +789,42 @@ namespace Web.UI.Pages.Scheduler
             UpdateSchedulerUI();
         }
 
-        void OnschedulerViewOptionValueChange()
+        async void OnschedulerViewOptionValueChange()
         {
+            currentView = SchedulerView.Timeline;
+            currentDate = DateTime.Today;
+
             if (schedulerViewOption == 0)
             {
-                displayAircraftScheduler = true;
+                schedulerType = SchedulerType.Aircraft;
+            }
+            else if(schedulerViewOption == 1)
+            {
+                schedulerType = SchedulerType.Pilot;
             }
             else
             {
-                displayAircraftScheduler = false;
+                await LoadCalendarViewData();
             }
 
-            UpdateSchedulerUI();
+            await UpdateSchedulerUI();
+        }
+
+        public async Task LoadCalendarViewData()
+        {
+            currentDate = new DateTime(currentDate.Year, currentDate.Month, 1);
+            schedulerType = SchedulerType.Calender;
+            currentView = SchedulerView.Month;
+
+            await LoadDataAsync();
+
+            foreach (var item in Categories)
+            {
+                if(!item.IsActive)
+                {
+                    dataSource.RemoveAll(p => p.FlightCategoryId == item.Id);
+                }
+            }
         }
 
         private async Task CheckOut()

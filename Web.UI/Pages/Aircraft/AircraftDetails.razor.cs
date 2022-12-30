@@ -17,7 +17,6 @@ namespace Web.UI.Pages.Aircraft
 {
     partial class AircraftDetails
     {
-        private bool isLeftBarVisible { get; set; } = true;
         public string AircraftId { get; set; }
 
         [Parameter]
@@ -236,9 +235,6 @@ namespace Web.UI.Pages.Aircraft
             }
         }
 
-        private bool ToggleLeftPane() {
-            isLeftBarVisible = !isLeftBarVisible;
-            return isLeftBarVisible;
-        }
+       
     }
 }

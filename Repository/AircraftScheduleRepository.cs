@@ -38,6 +38,7 @@ namespace Repository
                                                          StartTime = Convert.ToDateTime(aircraftSchedules.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss")),
                                                          EndTime = aircraftSchedules.EndDateTime,
                                                          Comments = aircraftSchedules.Comments,
+                                                         FlightCategoryId = aircraftSchedules.FlightCategoryId,
                                                          AircraftId = aircraftSchedules.AircraftId,
                                                          TailNo = aircraft.TailNo,
                                                          Member1Id = aircraftSchedules.Member1Id,
@@ -87,6 +88,7 @@ namespace Repository
                     existingAppointment.Comments = aircraftSchedule.Comments;
                     existingAppointment.PrivateComments = aircraftSchedule.PrivateComments;
                     existingAppointment.FlightRoutes = aircraftSchedule.FlightRoutes;
+                    existingAppointment.FlightCategoryId = aircraftSchedule.FlightCategoryId;
                     existingAppointment.StandBy = aircraftSchedule.StandBy;
 
                     existingAppointment.UpdatedOn = aircraftSchedule.UpdatedOn;

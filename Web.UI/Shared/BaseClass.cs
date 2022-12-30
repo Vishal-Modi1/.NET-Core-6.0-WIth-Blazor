@@ -25,6 +25,7 @@ namespace Web.UI.Shared
 
         List<string> supportedDocumentsFormat = Configuration.ConfigurationSettings.Instance.SupportedDocuments.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
         public string supportedImagesFormats = Configuration.ConfigurationSettings.Instance.SupportedImageTypes;
+        public bool isLeftBarVisible { get; set; } = true;
 
         public bool isDisplayPopup { get; set; }
         public bool isDisplayChildPopup { get; set; }
@@ -62,6 +63,12 @@ namespace Web.UI.Shared
             {
                 globalMembers.SelectedItem = globalMembers.MenuItems.Where(x => x.Name == moduleName).FirstOrDefault();
             }
+        }
+
+        public bool ToggleLeftPane()
+        {
+            isLeftBarVisible = !isLeftBarVisible;
+            return isLeftBarVisible;
         }
     }
 }

@@ -135,6 +135,19 @@
 
                             <TelerikValidationMessage For="@(() => schedulerVM.ArrivalAirport)"></TelerikValidationMessage>
                         </div>
+
+                          <div class="col-6">
+                                <label>Flight Category</label>
+                                <TelerikComboBox Id=flightCategoryId Data="@schedulerVM.FlightCategoriesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Category" ValueField="Id"
+                                 @bind-Value="@(schedulerVM.FlightCategoryId)">
+
+                                </TelerikComboBox>
+
+                                <TelerikValidationMessage For="@(() => schedulerVM.FlightCategoryId)"></TelerikValidationMessage>
+                            </div>
+
                         @if (uiOptions.IsDisplayAircraftDropDown)
                         {
                             <div class="col-6">

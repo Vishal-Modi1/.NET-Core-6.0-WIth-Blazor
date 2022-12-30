@@ -74,7 +74,6 @@ namespace Web.UI.Pages.Scheduler
 
         private async void OnValidSubmit()
         {
-
             uiOptions.IsDisplayCheckOutOption = false;
 
             if (!isValidAirportsSelected)

@@ -50,9 +50,9 @@
                         <img src="@companyData.Logo" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
                              style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
                     </div>
-                    <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 100px;border-radius: 0 0 7px 7px;">
+                    <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 75px;border-radius: 0 0 7px 7px;">
                         <div class="col-12 text-center">
-                            <h5><b>@companyData.Name</b></h5>
+                            <span>@companyData.Name</span>
                         </div>
                     </div>
                 </div>
@@ -72,8 +72,8 @@
                     <div class="d-flex justify-content-around  align-items-center">
                         <span class="mx-2">
                             <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
                         Company information
+                        </span>
                         <TelerikButton  ThemeColor="info" Class="btn k-btn-primary p-1 mx-1" Size="xs" OnClick="@(() => CompanyEditDialog())">
                             Update
                         </TelerikButton>
@@ -120,7 +120,7 @@
         </div>
     </div>
     <div class="col-md-12  col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0":"col-lg-12")">
-            <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="16px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
+            <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
         <div class="card p-0">
             <div class="card-body p-0">
             <Web.UI.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData />
