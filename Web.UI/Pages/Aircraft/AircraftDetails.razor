@@ -9,10 +9,10 @@
 {
     <div class="row my-0">
         <div class="col-md-12 col-lg-3 col-12 my-0 @(isLeftBarVisible ? "":"d-none")">
-            <div class="card p-0">
-                <div class="card-body p-0">
+            <div class="card p-0 no-box-shadow">
+                <div class="card-body p-0 ">
                     <div>
-                        <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
+                        <div class="row d-flex justify-content-center align-items-start w-100 m-0" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(aircraftData.ImagePath)'), url('../img/thumbnail-aircraft.png');">
                             <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
 
                                 <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link mx-2 p-1" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
@@ -28,16 +28,16 @@
                                 </label>
                             </span>
 
-                            <img src="@aircraftData.ImagePath" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
-                             style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
+                            @*<img src="@aircraftData.ImagePath" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
+                             style="height: 126px !important;width: 126px !important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">*@
                         </div>
-                        <div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 75px;border-radius: 0 0 7px 7px;">
+                        @*<div class="row bg-white d-flex align-items-end w-100 m-0" style="height: 75px;border-radius: 0 0 7px 7px;">
                             <div class="col-12 text-center">
                                 <span>
                                     <b>@aircraftData.TailNo - @(aircraftData.AircraftMakeList?.Where(p => p.Id == aircraftData.AircraftMakeId).FirstOrDefault()?.Name) @(aircraftData.AircraftModelList?.Where(p => p.Id == aircraftData.AircraftModelId).FirstOrDefault()?.Name)</b>
                                 </span>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                     <hr class="m-0" />
                     <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
@@ -91,10 +91,47 @@
                 <hr class="m-0" />
 
             </div>
+
+            <div class="card no-box-shadow my-2">
+                <div class="d-flex justify-content-between p-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
+
+                    <span class="my-1" style="font-weight:bold"> <FontLabel fontSize="12px" >Upcoming Flights</FontLabel></span>
+                    <span>
+                       <span class="mx-2 my-1">
+                            <CustomIcons IconName="minus" PrimaryColor="black"> </CustomIcons>
+                       </span>
+                       <span class="my-1 mx-1 p-1">
+                        @if (!isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                        }
+                         </span>
+                    </span>
+                </div>
+                <div id="collapseOne" class="collapse @(isFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        @for (int i = 0; i < 4; i++)
+                        {
+                            <hr class="m-0" />
+                            string idName = "flight" + i;
+                            <div class="d-flex my-2">
+                                <TelerikCheckBox Id="@idName" Value="true" />
+                                <label for="@idName" class="k-label k-form-label">Flight name @(i)</label>
+
+                            </div>
+                           
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0":"col-lg-12")">
             <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
-            <div class="card">
+            <div class="card no-box-shadow ">
                 @*<TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
                     Enabled="@(!isBusy && isUnLocked)" Class="btn k-btn-primary mx-2" ThemeColor="primary">
                     <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>

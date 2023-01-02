@@ -18,7 +18,7 @@ namespace Web.UI.Pages.Aircraft
     partial class AircraftDetails
     {
         public string AircraftId { get; set; }
-
+        bool isFilterBarVisible;
         [Parameter]
         public AircraftVM aircraftData { get; set; }
 
