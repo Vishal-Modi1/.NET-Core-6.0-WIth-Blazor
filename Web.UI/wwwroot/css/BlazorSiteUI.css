@@ -110,7 +110,7 @@ form .row {
 
 /*GLOBAL CLASSES*/
 .card, .k-card.telerik-blazor {
-  box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+  /*box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);*/
   border-radius: 8px;
 }
 
@@ -636,4 +636,8 @@ th, td, span, p {
 
 .k-multiselect {
   height: auto !important;
+}
+
+.no-box-shadow {
+  box-shadow: none !important;
 }
