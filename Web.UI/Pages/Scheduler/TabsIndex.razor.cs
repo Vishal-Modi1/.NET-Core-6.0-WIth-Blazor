@@ -20,6 +20,7 @@ namespace Web.UI.Pages.Scheduler
         protected override Task OnInitializedAsync()
         {
             isLeftBarVisible = true;
+            isFilterBarVisible = true;
             SetSelectedMenuItem("Scheduler");
 
             return base.OnInitializedAsync();
