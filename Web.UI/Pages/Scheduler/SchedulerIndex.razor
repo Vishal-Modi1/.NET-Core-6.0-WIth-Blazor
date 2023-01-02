@@ -354,7 +354,7 @@ else
         <ItemTemplate>
             @{
             var appt = context as SchedulerVM;
-            var flightCategory = flightCategories.Where(p => p.Id == appt.FlightCategoryId).First();
+            var flightCategory = Categories.Where(p => p.Id == appt.FlightCategoryId).First();
 
             appt.Color = flightCategory.Color;
 

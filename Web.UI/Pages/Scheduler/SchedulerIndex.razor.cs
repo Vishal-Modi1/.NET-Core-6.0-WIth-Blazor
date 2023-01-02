@@ -23,8 +23,9 @@ namespace Web.UI.Pages.Scheduler
     partial class SchedulerIndex
     {
         #region params
-        
-        [Parameter] public List<FlightCategory> Categories { get; set; }
+
+        [CascadingParameter(Name = "categories")]
+        public List<FlightCategory> Categories { get; set; }
         public TelerikScheduler<SchedulerVM> scheduleRef { get; set; }
 
         SchedulerVM schedulerVM;
@@ -46,7 +47,6 @@ namespace Web.UI.Pages.Scheduler
         List<DropDownLargeValues> multiSelectPilotsList = new List<DropDownLargeValues>();
 
         DependecyParams dependecyParams;
-        List<FlightCategory> flightCategories = new();
         public List<ContextMenuItem> menuItems { get; set; }
         TelerikContextMenu<ContextMenuItem> contextMenu { get; set; }
 
@@ -115,8 +115,6 @@ namespace Web.UI.Pages.Scheduler
                     schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
                 }
 
-                flightCategories = await FlightCategoryService.ListAll(dependecyParams);
-
                 ChangeLoaderVisibilityAction(false);
                 //await OpenDetailPopup();
             }
@@ -146,7 +144,6 @@ namespace Web.UI.Pages.Scheduler
 
             StateHasChanged();
         }
-
 
         async Task ShowContextMenu(MouseEventArgs e, SchedulerVM clickedItem)
         {

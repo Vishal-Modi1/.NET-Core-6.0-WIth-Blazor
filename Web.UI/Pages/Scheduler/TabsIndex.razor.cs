@@ -45,6 +45,7 @@ namespace Web.UI.Pages.Scheduler
         async Task LoadCategoris()
         {
             flightCategories = await FlightCategoryService.ListAll(dependecyParams);
+            base.StateHasChanged();
         }
 
         async Task LoadDataAsync()
@@ -93,13 +94,13 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        void CloseDialog(bool reloadGrid)
+        async Task CloseDialog(bool reloadGrid)
         {
             isDisplayPopup = false;
 
             if (reloadGrid)
             {
-                //grid.Rebind();
+                await LoadCategoris();
             }
         }
     }
