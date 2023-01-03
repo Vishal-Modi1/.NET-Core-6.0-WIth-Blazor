@@ -11,7 +11,7 @@
     font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }*/
 
-*{
+* {
     font-family: 'Readex Pro'
 }
 
@@ -90,7 +90,7 @@ $BG-ACTIVE-TAB: #1E8A88;
 $WHITE-TEXT: #FFFFFF;
 
 /*Custom Colors*/
-$RED-COLOR : #c00;
+$RED-COLOR: #c00;
 $GREEN-COLOR: #009B51;
 $PURPLE-COLOR: #673AB7;
 $BLUE-COLOR: #0d6efd;
@@ -152,6 +152,7 @@ form .btn-danger {
 form .row {
     margin-bottom: 16px;
 }
+
 .telerik-blazor.k-invalid {
     input, button, k-autocomplete {
         background: #ffd1d178;
@@ -175,10 +176,11 @@ form .row {
     position: absolute;
 }
 /*GLOBAL CLASSES*/
-.card, .k-card.telerik-blazor{
+.card, .k-card.telerik-blazor {
     /*box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);*/
     border-radius: 8px;
 }
+
 .TelerikNotification .k-notification-container .k-notification-wrap {
     width: 300px;
     height: 50px;
@@ -386,6 +388,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         color: white;
     }
 }
+
 .k-button {
     &.k-button-Outline-secondary {
         border: 1px solid $BG-SECONDARY-BUTTON !important;
@@ -398,6 +401,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         background-color: $BG-SECONDARY-BUTTON !important
     }
 }
+
 .login-button {
     width: 100% !important;
 }
@@ -417,7 +421,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .dropdown-menu {
     box-shadow: 0 4px 8px 0 rgb(2 34 84 / 35%), 0 6px 20px 0 rgb(2 34 84 / 61%) !important;
-    z-index:1051;
+    z-index: 1051;
 }
 
 .show-notification-dot {
@@ -451,15 +455,19 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     background: none;
     color: #FFFF;
 }
+
 .hr-gray {
     border: 1px solid #bfbfbf;
 }
+
 .hr-blue {
     border: 1px solid #EBECF3;
 }
+
 .k-form-buttons {
     margin-top: 0;
 }
+
 .k-form-buttons.k-actions-start {
     justify-content: flex-end !important;
     display: flex !important;
@@ -506,6 +514,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .k-tabstrip-items-wrapper .k-item {
     color: $TEXT-TAB-STRIP !important;
 }
+
 .k-tabstrip-top {
     .k-tabstrip-items-wrapper {
         margin-bottom: 0;
@@ -515,7 +524,8 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             color: #3066F8 !important;
         }
     }
-} 
+}
+
 .k-tabstrip-items {
     /*padding: 15px;*/
 
@@ -596,14 +606,15 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     font-size: 18px;
     line-height: 23px;
 }
+
 .custom-elipse {
     box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
     border-radius: 50px;
     width: 40px;
     height: 40px;
 }
-@media (min-width: 576px) 
-{
+
+@media (min-width: 576px) {
     .modal-dialog {
         max-width: 1000px;
         margin: 1.75rem auto;
@@ -671,22 +682,25 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     width: 100%;
     padding: 4px 0;
 }
+
 .row.compact-row > .col-6 {
     padding: 10px;
 }
-label, a, 
+
+label, a,
 .text-14 {
     font-size: 12px !important;
 }
+
 .text-16 {
     font-size: 16px !important;
 }
-.cursor-pointer{
-    cursor:pointer !important;
+
+.cursor-pointer {
+    cursor: pointer !important;
 }
 
-th,td,span,p
-{
+th, td, span, p {
     font-size: 12px !important
 }
 
@@ -702,24 +716,29 @@ th,td,span,p
     z-index: 1060 !important;
 }
 
-.k-notification{
+.k-notification {
     max-width: 400px;
 }
+
 .ap-title {
     color: $PRIMARY-COLOR;
     background: #E3E3E3;
 }
+
 .ap-value {
     color: $PRIMARY-COLOR;
     /*background: #F8F8F8;*/
     border-bottom: 2px solid #E3E3E3;
 }
+
 .ad-text {
     padding: 5px !important;
 }
+
 .nearby-weather-1 {
     border-bottom: 2px solid #E3E3E3;
 }
+
 .common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
     background: #3066f80f !important;
 }
@@ -727,6 +746,7 @@ th,td,span,p
 .k-input-md .k-input-button {
     background-color: #3066f84f !important
 }
+
 .weather-brify {
     border: 1px solid #D9D9D9;
     border-radius: 6px;
@@ -749,5 +769,38 @@ th,td,span,p
 }
 
 .no-box-shadow {
-    box-shadow: none!important;
+    box-shadow: none !important;
+}
+
+.k-calendar-sm.k-month-calendar, .k-calendar-sm .k-calendar-monthview {
+    --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 30px );
+}
+
+.k-calendar-custom-small {
+    width: 100% !important;
+
+    .k-calendar-header {
+        width: 100% !important;
+        display: block !important;
+    }
+
+    .k-calendar-view.k-calendar-monthview {
+        margin: 0 !important;
+        padding: 0 4px;
+        width: 100%;
+
+        .k-calendar-td {
+            inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+            block-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+        }
+
+        .k-calendar-table.k-month {
+            margin: 0 !important;
+        }
+    }
+
+    .k-calendar-thead > .k-calendar-tr > .k-calendar-th, .k-calendar-tbody > .k-calendar-tr > .k-calendar-th {
+        width: 20px !important;
+        height: 20px !important;
+    }
 }

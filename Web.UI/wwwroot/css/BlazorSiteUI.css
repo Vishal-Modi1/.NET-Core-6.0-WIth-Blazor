@@ -641,3 +641,31 @@ th, td, span, p {
 .no-box-shadow {
   box-shadow: none !important;
 }
+
+.k-calendar-sm.k-month-calendar, .k-calendar-sm .k-calendar-monthview {
+  --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 30px );
+}
+
+.k-calendar-custom-small {
+  width: 100% !important;
+}
+.k-calendar-custom-small .k-calendar-header {
+  width: 100% !important;
+  display: block !important;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview {
+  margin: 0 !important;
+  padding: 0 4px;
+  width: 100%;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-td {
+  inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+  block-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-table.k-month {
+  margin: 0 !important;
+}
+.k-calendar-custom-small .k-calendar-thead > .k-calendar-tr > .k-calendar-th, .k-calendar-custom-small .k-calendar-tbody > .k-calendar-tr > .k-calendar-th {
+  width: 20px !important;
+  height: 20px !important;
+}
