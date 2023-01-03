@@ -37,8 +37,13 @@ namespace Web.UI.Pages.Scheduler
             if (firstRender)
             {
                 dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+
+                ChangeLoaderVisibilityAction(true);
+                        
                 await LoadDataAsync();
                 await LoadCategoris();
+
+                ChangeLoaderVisibilityAction(false);
             }
         }
 

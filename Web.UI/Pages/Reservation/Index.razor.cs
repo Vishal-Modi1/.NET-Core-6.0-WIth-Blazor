@@ -10,6 +10,7 @@ using DataModels.Constants;
 using Telerik.Blazor.Components;
 using Utilities;
 using Web.UI.Models.Scheduler;
+using DataModels.Entities;
 
 namespace Web.UI.Pages.Reservation
 {
@@ -21,6 +22,9 @@ namespace Web.UI.Pages.Reservation
         [Parameter] public long? AircraftId { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
         [Parameter] public int? CompanyId { get; set; }
+
+        [CascadingParameter(Name = "categories")]
+        public List<FlightCategory> Categories { get; set; }
 
         [CascadingParameter]
         public TelerikGrid<ReservationDataVM> grid { get; set; }
@@ -42,6 +46,7 @@ namespace Web.UI.Pages.Reservation
         string moduleName = "Reservation";
         UIOptions uiOptions = new UIOptions();
         List<DropDownValues> reservationTypeFilter;
+        bool isDisplayMyFlightsOnly;
 
         protected override async Task OnInitializedAsync()
         {
@@ -167,11 +172,20 @@ namespace Web.UI.Pages.Reservation
             {
                 datatableParams.UserId = reservationFilterVM.UserId;
             }
-            else if(ParentModuleName == "MyProfile" && !globalMembers.IsSuperAdmin && !globalMembers.IsAdmin)
+
+            if(!globalMembers.IsSuperAdmin && isDisplayMyFlightsOnly)
+            {
+                datatableParams.UserId = globalMembers.UserId;
+            }
+            else if (ParentModuleName == "MyProfile" && !globalMembers.IsSuperAdmin && !globalMembers.IsAdmin)
             {
                 datatableParams.UserId = UserId;
             }
-            
+            else
+            {
+                datatableParams.UserId = null;
+            }
+
             if (AircraftId == null)
             {
                 datatableParams.AircraftId = reservationFilterVM.AircraftId;
@@ -201,10 +215,19 @@ namespace Web.UI.Pages.Reservation
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
 
+            bool isCreator = false;
+
             data.ToList().ForEach(p =>
             {
                 p.StartDateTime = DateConverter.ToLocal(p.StartDateTime, globalMembers.Timezone);
                 p.EndDateTime = DateConverter.ToLocal(p.EndDateTime, globalMembers.Timezone);
+
+                isCreator = (globalMembers.UserId == p.CreatedBy || globalMembers.UserId == p.Member1Id);
+
+                if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin || isCreator)
+                {
+                    p.IsAllowToCheckDetails = true;
+                }
             });
 
             if (datatableParams.StartDate != null)
@@ -280,6 +303,12 @@ namespace Web.UI.Pages.Reservation
         public async Task DeleteEventAsync()
         {
             ReloadData();
+        }
+
+        public async void DisplayMyFlights(bool value)
+        {
+           isDisplayMyFlightsOnly = value;
+           ReloadData();
         }
 
         public void InitializeValues()

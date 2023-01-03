@@ -643,7 +643,7 @@ th, td, span, p {
 }
 
 .k-calendar-sm.k-month-calendar, .k-calendar-sm .k-calendar-monthview {
-  --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 30px );
+  --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 38px );
 }
 
 .k-calendar-custom-small {

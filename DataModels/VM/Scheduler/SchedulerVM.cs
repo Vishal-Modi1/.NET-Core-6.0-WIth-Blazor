@@ -108,6 +108,8 @@ namespace DataModels.VM.Scheduler
         public string CssClass { get; set; }
         public string Color { get; set; }
 
+        [NotMapped]
+        public bool IsAllowToCheckDetails { get; set; }
         public List<DropDownGuidValues> DepartureAirportsList { get; set; } = new List<DropDownGuidValues>();
         public List<DropDownGuidValues> ArrivalAirportsList { get; set; }
         public List<DropDownLargeValues> InstructorsList { get; set; }

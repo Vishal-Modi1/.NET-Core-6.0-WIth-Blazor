@@ -172,7 +172,7 @@
 
             <div class="custom-appointment schedule-popup"
              title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
-             data-member1="@appt.Member1"
+             data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
              style="height:100%;background-color: @appt.Color"
              data-aircraft="@appt.TailNo"
                  @oncontextmenu:preventDefault="true"
@@ -306,7 +306,7 @@ else if (schedulerType == Models.Enums.SchedulerType.Pilot)
 
             <div class="custom-appointment schedule-popup"
              title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
-             data-member1="@appt.Member1"
+             data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
              style="height:100%;background-color: @appt.Color"
              data-aircraft="@appt.TailNo"
                  @oncontextmenu:preventDefault="true"
@@ -360,7 +360,7 @@ else
 
             <div class="custom-appointment schedule-popup"
              title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
-             data-member1="@appt.Member1"
+             data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
              style="height:100%;background-color: @appt.Color"
              data-aircraft="@appt.TailNo"
                  @oncontextmenu:preventDefault="true"
@@ -388,6 +388,7 @@ else
         @{
             var dataAttributes = context.DataAttributes;
             var title = context.Title;
+            var isAllowToCheckDetails = Convert.ToBoolean(dataAttributes["isallowtocheckdetails"]);
         }
 
         <ul>
@@ -395,7 +396,11 @@ else
             <li>Start Time: @(dataAttributes["start"])</li>
             <li>End Time: @(dataAttributes["end"])</li>
             <li>Aircraft: @(dataAttributes["aircraft"])</li>
-            <li>Member: @(dataAttributes["member1"])</li>
+
+            @if (isAllowToCheckDetails)
+            {
+                <li>Member: @(dataAttributes["member1"])</li>
+            }
         </ul>
     </Template>
 </TelerikTooltip>

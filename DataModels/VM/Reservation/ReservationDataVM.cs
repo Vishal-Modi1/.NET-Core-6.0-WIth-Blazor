@@ -21,8 +21,12 @@ namespace DataModels.VM.Reservation
         public string Member1 { get; set; }
         public string Instructor { get; set; }
         public long? InstructorId { get; set; }
+        public long CreatedBy { get; set; }
+        public long Member1Id { get; set; }
 
         [NotMapped]
         public bool IsButtonLoading { get; set; }
+        [NotMapped]
+        public bool IsAllowToCheckDetails { get; set; }
     }
 }

@@ -147,6 +147,11 @@ namespace Web.UI.Pages.Scheduler
 
         async Task ShowContextMenu(MouseEventArgs e, SchedulerVM clickedItem)
         {
+            if(!clickedItem.IsAllowToCheckDetails)
+            {
+                return;
+            }
+
             menuItems = new List<ContextMenuItem>();
 
             if (clickedItem.AircraftSchedulerDetailsVM.IsCheckOut)
@@ -211,6 +216,7 @@ namespace Web.UI.Pages.Scheduler
             schedulerFilter.EndTime = DateConverter.ToUTC(schedulerFilter.EndTime.Date.AddTicks(-1), globalMembers.Timezone);
 
             dataSource = await AircraftSchedulerService.ListAsync(dependecyParams, schedulerFilter);
+            bool isCreator = false;
 
             dataSource.ForEach(x =>
             {
@@ -249,6 +255,13 @@ namespace Web.UI.Pages.Scheduler
                     {
                         x.CssClass = "scheduled";
                     }
+                }
+
+                isCreator = (globalMembers.UserId == schedulerVM.CreatedBy || globalMembers.UserId == schedulerVM.Member1Id);
+
+                if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin || isCreator)
+                {
+                    x.IsAllowToCheckDetails = true;
                 }
             });
 
@@ -360,22 +373,30 @@ namespace Web.UI.Pages.Scheduler
         private async Task OnDoubleClickHandler(SchedulerItemDoubleClickEventArgs args)
         {
             SchedulerVM currentItem = args.Item as SchedulerVM;
-            args.ShouldRender = false;
-            isOpenFromContextMenu = false;
 
-            operationType = OperationType.Create;
+            if (currentItem.IsAllowToCheckDetails)
+            {
+                args.ShouldRender = false;
+                isOpenFromContextMenu = false;
 
-            await OpenAppointmentDialog(currentItem);
+                operationType = OperationType.Create;
+
+                await OpenAppointmentDialog(currentItem);
+            }
         }
 
         private async Task OnClickHandlerAsync(SchedulerItemClickEventArgs args)
         {
             SchedulerVM currentItem = args.Item as SchedulerVM;
-            args.ShouldRender = false;
-            isOpenFromContextMenu = false;
-            operationType = OperationType.Create;
 
-            await OpenAppointmentDialog(currentItem);
+            if (currentItem.IsAllowToCheckDetails)
+            {
+                args.ShouldRender = false;
+                isOpenFromContextMenu = false;
+                operationType = OperationType.Create;
+
+                await OpenAppointmentDialog(currentItem);
+            }
         }
 
         async Task EditHandler(SchedulerEditEventArgs args)
@@ -386,13 +407,8 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task OpenCreateScheduleDialogAsync(DateTime? startTime = null, DateTime? endTime = null, long? aircraftId = null)
         {
-
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler"))
             {
-                //await DialogService.OpenAsync<UnAuthorized>("UnAuthorized",
-                //  new Dictionary<string, object>() { { "UnAuthorizedMessage", "You are not authorized to create new reservation. Please contact to your administartor" } },
-                //  new DialogOptions() { Width = "410px", Height = "165px" });
-
                 return;
             }
 
@@ -795,12 +811,14 @@ namespace Web.UI.Pages.Scheduler
             {
                 schedulerType = SchedulerType.Aircraft;
             }
-            else if(schedulerViewOption == 1)
+            else if (schedulerViewOption == 1)
             {
                 schedulerType = SchedulerType.Pilot;
             }
             else
             {
+                schedulerType = SchedulerType.Calender;
+                currentView = SchedulerView.Month;
                 await LoadCalendarViewData();
             }
 
@@ -810,14 +828,14 @@ namespace Web.UI.Pages.Scheduler
         public async Task LoadCalendarViewData()
         {
             currentDate = new DateTime(currentDate.Year, currentDate.Month, 1);
-            schedulerType = SchedulerType.Calender;
-            currentView = SchedulerView.Month;
+            //schedulerType = SchedulerType.Calender;
+            //currentView = SchedulerView.Month;
 
             await LoadDataAsync();
 
             foreach (var item in Categories)
             {
-                if(!item.IsActive)
+                if (!item.IsActive)
                 {
                     dataSource.RemoveAll(p => p.FlightCategoryId == item.Id);
                 }
