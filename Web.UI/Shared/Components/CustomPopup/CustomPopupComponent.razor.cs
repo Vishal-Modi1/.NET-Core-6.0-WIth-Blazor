@@ -33,7 +33,7 @@ namespace Web.UI.Shared.Components.CustomPopup
         /// <summary>
         /// 
         /// </summary>
-        [Parameter] public bool ShowHeaderCloseButton { get; set; }
+        [Parameter] public bool ShowHeaderCloseButton { get; set; } = true;
         
         /// <summary>
         /// 

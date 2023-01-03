@@ -817,6 +817,7 @@ namespace Web.UI.Pages.Scheduler
             }
             else
             {
+                currentDate = new DateTime(currentDate.Year, currentDate.Month, 1);
                 schedulerType = SchedulerType.Calender;
                 currentView = SchedulerView.Month;
                 await LoadCalendarViewData();
@@ -827,10 +828,6 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task LoadCalendarViewData()
         {
-            currentDate = new DateTime(currentDate.Year, currentDate.Month, 1);
-            //schedulerType = SchedulerType.Calender;
-            //currentView = SchedulerView.Month;
-
             await LoadDataAsync();
 
             foreach (var item in Categories)
