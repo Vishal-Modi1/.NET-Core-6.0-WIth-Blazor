@@ -17,7 +17,10 @@ namespace Web.UI.Shared.Components.CustomCollapseBar
         public RenderFragment? Header { get; set; }
         
         [Parameter]
-        public string Class { get; set; } 
+        public string Class { get; set; }         
+
+        [Parameter]
+        public string HeaderClass { get; set; } 
         
         [Parameter]
         public EventCallback OnPanelExpanded { get; set; }

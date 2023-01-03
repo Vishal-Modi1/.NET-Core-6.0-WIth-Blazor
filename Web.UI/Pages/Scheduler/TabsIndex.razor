@@ -81,9 +81,9 @@
     @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
     {
         <div class="col-12 my-0 col-lg-3 col-md-12 @(isLeftBarVisible ? "":"d-none")">
-            @*Calender start*@
             <div class="card p-0 m-0 mb-2">
                 <div class="card-body p-0 m-0">
+                    @*Calender start*@
                     <div class="">
                         <TelerikCalendar Date="@currentDate" Class="k-calendar-sm k-calendar-custom-small" View="CalendarView.Month"
                                      OnCellRender="@OnCellRenderHandler"
@@ -91,79 +91,78 @@
                                      SelectionMode="@CalendarSelectionMode.Multiple">
                         </TelerikCalendar>
                     </div>
+                    @*Calender end*@
+                    @*Category start*@
+                    <CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white"
+                                   OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                                   OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+                        <HeaderContent>
+                            <div class="d-flex justify-content-between">
+                                <span class="my-0" style="font-weight:bold">
+                                    Categories
+                                </span>
+                                <span>
+                                    <span class="mx-2 my-1" @onclick:stopPropagation="true" @onclick:preventDefault="true"
+                                      @onclick="() => OpenCreateCategoryDialogAsync(new DataModels.Entities.FlightCategory())">
+                                        <span>
+                                            @*manage plus icon click here in this span*@
+                                            <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
+                                        </span>
+                                    </span>
 
+                                    @if (isFilterBarVisible)
+                                    {
+                                        <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                                    }
+                                    else
+                                    {
+                                        <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                                    }
+                                </span>
+                            </div>
+                        </HeaderContent>
+                        <ChildContent>
+                            <div class="my-2 mx-1">
+                                @for (var i = 0; i < flightCategories.Count; i++)
+                                {
+                                    var item = flightCategories[i];
+                                    if (i > 0)
+                                    {
+                                        <hr class="m-0" />
+                                    }
+
+                                    <div class="d-flex justify-content-between my-1">
+                                        <div>
+
+                                            <label class="container my-0" for="@item.Id">
+
+                                                <input type="checkbox" id="@item.Id" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item))"
+                                               style="height:18px;width:18px;accent-color:@item.Color;">@item.Name
+
+                                                @if (item.IsActive)
+                                                {
+                                                    <span class="checkmark" style="background-color:@item.Color;border-color:@item.Color"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="checkmark"></span>
+                                                }
+
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <span @onclick="() => OpenCreateCategoryDialogAsync(item)" class="my-2">
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </ChildContent>
+                    </CustomCollapseBar>
+                    @*Category end*@
                 </div>
             </div>
-            @*Calender end*@
-            @*Category start*@
-            <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
-                           OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
-                           OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
-                <HeaderContent>
-                    <div class="d-flex justify-content-between">
-                        <span class="my-0" style="font-weight:bold">
-                            Categories
-                        </span>
-                        <span>
-                            <span class="mx-2 my-1" @onclick:stopPropagation="true" @onclick:preventDefault="true"
-                            @onclick="() => OpenCreateCategoryDialogAsync(new DataModels.Entities.FlightCategory())">
-                                <span>
-                                    @*manage plus icon click here in this span*@
-                                    <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
-                                </span>
-                            </span>
-
-                            @if (isFilterBarVisible)
-                            {
-                                <CustomIcons IconName="arrow-down" PrimaryColor="black" />
-                            }
-                            else{
-                            <CustomIcons IconName="arrow-up" PrimaryColor="black" />
-                            }
-                        </span>
-                    </div>
-                </HeaderContent>
-                <ChildContent>
-                    <div class="my-2 mx-1">
-                        @for (var i = 0; i < flightCategories.Count; i++)
-                        {
-                            var item = flightCategories[i];
-                            if (i > 0)
-                            {
-                                <hr class="m-0" />
-                            }
-
-                            <div class="d-flex justify-content-between my-1">
-                                <div>
-
-                                    <label class="container my-2" for="@item.Id">
-
-                                        <input type="checkbox" id="@item.Id" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item))"
-                                       style="height:18px;width:18px;accent-color:@item.Color;">@item.Name
-
-                                        @if (item.IsActive)
-                                        {
-                                            <span class="checkmark" style="background-color:@item.Color;border-color:@item.Color"></span>
-                                        }
-                                        else
-                                        {
-                                            <span class="checkmark"></span>
-                                        }
-
-                                    </label>
-                                </div>
-                                <div>
-                                    <span @onclick="() => OpenCreateCategoryDialogAsync(item)" class="my-2">
-                                    </span>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </ChildContent>
-            </CustomCollapseBar>
-            @*Category end*@
         </div>
-
     }
 
     @{
