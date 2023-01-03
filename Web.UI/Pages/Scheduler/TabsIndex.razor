@@ -179,7 +179,10 @@
                             </div>
                         </HeaderTemplate>
                         <Content>
-                            <Web.UI.Pages.Scheduler.SchedulerIndex @ref="@schedulerIndex" Categories="@flightCategories"></Web.UI.Pages.Scheduler.SchedulerIndex>
+                            <CascadingValue Value="@flightCategories" Name="categories">
+                                <Web.UI.Pages.Scheduler.SchedulerIndex @ref="@schedulerIndex" ></Web.UI.Pages.Scheduler.SchedulerIndex>
+                            </CascadingValue>
+
                         </Content>
                     </TabStripTab>
 

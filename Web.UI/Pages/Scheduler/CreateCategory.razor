@@ -17,29 +17,29 @@
             <input type="hidden" value="@flightCategory.Id" name="Id" />
 
             <div class="row">
-                <div class="col-md-12 align-items-center d-flex">
-                    <label for="name" class="k-label k-form-label">Name</label>
-                </div>
-                <div class="col-md-12">
-                    <TelerikTextBox Id="name" @bind-Value="@flightCategory.Name" PlaceHolder="Name"></TelerikTextBox>
-                    <TelerikValidationMessage For="@(() => flightCategory.Name)"></TelerikValidationMessage>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="name" class="k-label k-form-label">Name</label>
+
+                            <TelerikTextBox Id="name" @bind-Value="@flightCategory.Name" PlaceHolder="Name"></TelerikTextBox>
+                            <TelerikValidationMessage For="@(() => flightCategory.Name)"></TelerikValidationMessage>
+                        </div>
+
+                    <div class="col-6">
+                        <label for="address" class="k-label k-form-label">Physical Address</label>
+                        <div class="col-md-12">
+                            <TelerikColorPicker @bind-Value="@flightCategory.Color">
+                                <ColorPickerViews>
+                                    <ColorPickerGradientView ShowOpacityEditor="false"></ColorPickerGradientView>
+                                </ColorPickerViews>
+                            </TelerikColorPicker>
+
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-12 align-items-center d-flex">
-                    <label for="address" class="k-label k-form-label">Physical Address</label>
-                </div>
-                <div class="col-md-12">
-                    <TelerikColorPicker @bind-Value="@flightCategory.Color">
-                        <ColorPickerViews>
-                            <ColorPickerGradientView ShowOpacityEditor="false"></ColorPickerGradientView>
-                        </ColorPickerViews>
-                    </TelerikColorPicker>
-
-                </div>
-            </div>
-
         </div>
         <hr class="hr-gray mt-3 mb-3" />
     </FormItems>
