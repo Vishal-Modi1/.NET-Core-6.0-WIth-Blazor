@@ -1,4 +1,6 @@
-﻿@page "/Scheduler"
+﻿@using Web.UI.Pages.Common;
+
+@page "/Scheduler"
 
 <PageTitle> Scheduler | Upflyte  </PageTitle>
 
@@ -74,19 +76,20 @@
         transform: rotate(45deg);
     }
 
-    .collapsebarcard{
-        border-radius:0px;
+    .collapsebarcard {
+        border-radius: 0px;
     }
 </style>
 
 <div class="row my-0">
-
-    @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
-    {
-        <div class="col-12 my-0 col-lg-3 col-md-12 @(isLeftBarVisible ? "":"d-none")">
+    <div class="col-12 my-0 col-lg-3 col-md-12 @(isLeftBarVisible ? "":"d-none")">
+       
+        @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
+        {
             <div class="card p-0 m-0 mb-2">
                 <div class="card-body p-0 m-0">
                     @*Calender start*@
+
                     <div class="">
                         <TelerikCalendar Date="@currentDate" Class="k-calendar-sm k-calendar-custom-small" View="CalendarView.Month"
                                      OnCellRender="@OnCellRenderHandler"
@@ -123,19 +126,19 @@
                                     }
                                 </span>
                             </div>
-                           
+
                         </HeaderContent>
 
                         <ChildContent>
 
                             <div class="my-2 mx-1">
-                                
+
                                 @foreach (var item in flightCategories.Select((item, flightCategories) => new { item, flightCategories }))
-                                {                               
+                                {
                                     <div class="d-flex justify-content-between my-2">
-                                     
+
                                         <div>
-                                          
+
                                             <label class="container my-0" for="@item.item.Id">
 
                                                 <input type="checkbox" id="@item.item.Id" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item.item))"
@@ -152,7 +155,7 @@
 
                                             </label>
                                         </div>
-                                     
+
                                         <div>
                                             <span @onclick="() => OpenCreateCategoryDialogAsync(item.item)" class="my-2">
                                             </span>
@@ -160,18 +163,23 @@
                                     </div>
                                     <hr class="m-0" />
                                 }
-                            
+
                             </div>
                         </ChildContent>
                     </CustomCollapseBar>
                     @*Category end*@
-                </div>
+
             </div>
         </div>
-    }
+
+        }
+
+        <UpcomingFlights upcomingFlights="@upcomingFlights"></UpcomingFlights>
+
+    </div>
 
     @{
-        string cssClass = ((globalMembers.IsSuperAdmin || globalMembers.IsAdmin) ? (isLeftBarVisible ? "col-lg-9 ps-0" : "col-lg-12") : "col-lg-12");
+        string cssClass = isLeftBarVisible ? "col-lg-9 ps-0" : "col-lg-12";
     }
     <div class="col-md-12 col-12 my-0 @cssClass">
 

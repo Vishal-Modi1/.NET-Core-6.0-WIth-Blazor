@@ -3,6 +3,7 @@ using DataModels.VM.Reservation;
 using Repository.Interface;
 using Service.Interface;
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Service
@@ -62,7 +63,61 @@ namespace Service
 
             catch (Exception exc)
             {
-                CreateResponse(new ReservationFilterVM(), HttpStatusCode.InternalServerError, exc.ToString());
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse ListUpcomingFlightsByUserId(long userId)
+        {
+            try
+            {
+                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByUserId(userId);
+                CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse ListUpcomingFlightsByCompanyId(int companyId)
+        {
+            try
+            {
+                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByCompanyId(companyId);
+                CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse ListUpcomingFlightsByAircraftId(long aircraftId)
+        {
+            try
+            {
+                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByAircraftId(aircraftId);
+                CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
 
                 return _currentResponse;
             }

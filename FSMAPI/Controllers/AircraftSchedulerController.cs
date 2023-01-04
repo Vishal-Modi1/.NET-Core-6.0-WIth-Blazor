@@ -75,6 +75,12 @@ namespace FSMAPI.Controllers
             //}
 
             string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                schedulerVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
 
             schedulerVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleService.Create(schedulerVM, timezone);
@@ -101,6 +107,13 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(SchedulerVM schedulerVM)
         {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                schedulerVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             schedulerVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
             string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
 

@@ -12,15 +12,14 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Net;
 using Microsoft.AspNetCore.Components.Forms;
+using DataModels.VM.Reservation;
 
 namespace Web.UI.Pages.Aircraft
 {
     partial class AircraftDetails
     {
+        [Parameter] public AircraftVM aircraftData { get; set; }
         public string AircraftId { get; set; }
-        bool isFilterBarVisible;
-        [Parameter]
-        public AircraftVM aircraftData { get; set; }
 
         public string CompanyName;
 
@@ -29,9 +28,12 @@ namespace Web.UI.Pages.Aircraft
         public bool isAllowToEdit, isUnLocked;
         DataModels.Enums.UserRole userRole;
         string modelWidth = "600px";
+        public List<UpcomingFlight> upcomingFlights = new();
+        DependecyParams dependecyParams;
 
         protected override Task OnInitializedAsync()
         {
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             ChangeLoaderVisibilityAction(true);
             SetSelectedMenuItem(moduleName);
             return base.OnInitializedAsync();
@@ -74,10 +76,16 @@ namespace Web.UI.Pages.Aircraft
                 isUnLocked = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || !aircraftData.IsLock;
 
                 SetCompanyName();
+                await LoadUpcomingFlights();
 
                 ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
+        }
+
+        private async Task LoadUpcomingFlights()
+        {
+            upcomingFlights = await ReservationService.ListUpcomingFlightsByAircraftId(dependecyParams, aircraftData.Id);
         }
 
         private async Task SetAircraftData()
@@ -94,7 +102,6 @@ namespace Web.UI.Pages.Aircraft
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
             AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
         }
 
@@ -105,7 +112,6 @@ namespace Web.UI.Pages.Aircraft
             popupTitle = "Edit Aircraft Details";
             modelWidth = "600px";
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
 
             SetCompanyName();
@@ -116,14 +122,14 @@ namespace Web.UI.Pages.Aircraft
 
         async Task OpenStatusUpdateDialog()
         {
-            isUpdateButtonBusy = true;
+            ChangeLoaderVisibilityAction(true);
+
             operationType = OperationType.UpdateStatus;
             modelWidth = "400px";
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
 
-            isUpdateButtonBusy = false;
+            ChangeLoaderVisibilityAction(false);
             isDisplayPopup = true;
             popupTitle = "Update Status";
         }
@@ -137,7 +143,6 @@ namespace Web.UI.Pages.Aircraft
         {
             aircraftData.AircraftStatusId = Convert.ToByte(id);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftStatusService.GetById(dependecyParams, aircraftData.AircraftStatusId);
 
             if (response.Status == HttpStatusCode.OK)
@@ -202,7 +207,6 @@ namespace Web.UI.Pages.Aircraft
                 multiContent.Add(new StringContent(aircraftData.Id.ToString()), "AircraftId");
                 multiContent.Add(new StringContent(aircraftData.CompanyId.ToString()), "CompanyId");
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.UploadAircraftImageAsync(dependecyParams, multiContent);
 
                 ManageFileUploadResponse(response, true, bytes);
@@ -234,7 +238,5 @@ namespace Web.UI.Pages.Aircraft
                 CompanyName = aircraftData.Companies.Where(p => p.Id == aircraftData.CompanyId).FirstOrDefault().Name;
             }
         }
-
-       
     }
 }

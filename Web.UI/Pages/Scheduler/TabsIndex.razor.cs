@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
 using Utilities;
 using Web.UI.Utilities;
+using DataModels.VM.Reservation;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -16,7 +17,7 @@ namespace Web.UI.Pages.Scheduler
         List<FlightCategory> flightCategories = new ();
         SchedulerIndex schedulerIndex;
         FlightCategory _flightCategory;
-
+        public List<UpcomingFlight> upcomingFlights = new();
         protected override Task OnInitializedAsync()
         {
             isLeftBarVisible = true;
@@ -42,9 +43,15 @@ namespace Web.UI.Pages.Scheduler
                         
                 await LoadDataAsync();
                 await LoadCategoris();
+                await LoadUpcomingFlights();
 
                 ChangeLoaderVisibilityAction(false);
             }
+        }
+
+        private async Task LoadUpcomingFlights()
+        {
+            upcomingFlights = await ReservationService.ListUpcomingFlightsByCompanyId(dependecyParams, globalMembers.CompanyId);
         }
 
         async Task LoadCategoris()

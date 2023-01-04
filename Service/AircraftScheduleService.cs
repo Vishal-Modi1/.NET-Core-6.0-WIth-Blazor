@@ -472,7 +472,7 @@ namespace Service
 
         private string GetCompanyEmail(int companyId)
         {
-            EmailConfiguration emailConfiguration = _emailConfigurationRepository.FindByCondition(p => p.EmailTypeId == (byte)EmailTypes.Reservation);
+            EmailConfiguration emailConfiguration = _emailConfigurationRepository.FindByCondition(p => p.EmailTypeId == (byte)EmailTypes.Reservation && p.CompanyId == companyId);
             
             if (emailConfiguration != null && !string.IsNullOrWhiteSpace(emailConfiguration.Email))
             {
@@ -495,6 +495,7 @@ namespace Service
                 aircraftSchedule.ReservationId = Guid.NewGuid();
             }
 
+            aircraftSchedule.CompanyId = schedulerVM.CompanyId;
             aircraftSchedule.StartDateTime = schedulerVM.StartTime;
             aircraftSchedule.EndDateTime = schedulerVM.EndTime;
             aircraftSchedule.DepartureAirportId = schedulerVM.DepartureAirportId;
@@ -540,6 +541,7 @@ namespace Service
             schedulerVM.ScheduleActivityId = aircraftSchedule.SchedulActivityTypeId;
             schedulerVM.ReservationId = aircraftSchedule.ReservationId;
 
+            schedulerVM.CompanyId = aircraftSchedule.CompanyId;
             schedulerVM.StartTime = aircraftSchedule.StartDateTime;
             schedulerVM.EndTime = aircraftSchedule.EndDateTime;
             schedulerVM.DepartureAirportId = aircraftSchedule.DepartureAirportId;

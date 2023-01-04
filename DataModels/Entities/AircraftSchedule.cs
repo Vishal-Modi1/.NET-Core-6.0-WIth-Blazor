@@ -27,6 +27,8 @@ namespace DataModels.Entities
 
         public long Member1Id { get; set; }
 
+        public int CompanyId { get; set; }
+
         public long? Member2Id { get; set; }
 
         public long? InstructorId { get; set; }

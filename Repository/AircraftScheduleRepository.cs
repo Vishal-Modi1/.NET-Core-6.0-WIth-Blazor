@@ -74,6 +74,7 @@ namespace Repository
                     existingAppointment.SchedulActivityTypeId = aircraftSchedule.SchedulActivityTypeId;
                     existingAppointment.StartDateTime = aircraftSchedule.StartDateTime;
                     existingAppointment.EndDateTime = aircraftSchedule.EndDateTime;
+                    existingAppointment.CompanyId = aircraftSchedule.CompanyId;
                     existingAppointment.DepartureAirportId = aircraftSchedule.DepartureAirportId;
                     existingAppointment.DepartureAirportName = aircraftSchedule.DepartureAirportName;
                     existingAppointment.ArrivalAirportId = aircraftSchedule.ArrivalAirportId;

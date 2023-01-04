@@ -1,4 +1,5 @@
 ﻿@using DataModels.Enums;
+@using Web.UI.Pages.Common;
 @page "/AircraftDetails"
 
 @inject NavigationManager NavigationManager
@@ -91,63 +92,13 @@
               
             </div>
 
-            <div class="card no-box-shadow my-2">
-                <div class="d-flex justify-content-between p-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
-
-                    <span class="my-1" style="font-weight:bold"> <FontLabel fontSize="12px" >Upcoming Flights</FontLabel></span>
-                    <span>
-                       <span class="mx-2 my-1">
-                            <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
-                       </span>
-                       <span class="my-1 mx-1 p-1">
-                        @if (!isFilterBarVisible)
-                        {
-                            <CustomIcons IconName="arrow-down" PrimaryColor="black" />
-                        }
-                        else
-                        {
-                            <CustomIcons IconName="arrow-up" PrimaryColor="black" />
-                        }
-                         </span>
-                    </span>
-                </div>
-                <div id="collapseOne" class="collapse @(isFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
-                    <div class="card-body">
-                        @for (int i = 0; i < 4; i++)
-                        {
-                            <hr class="m-0" />
-                            string idName = "flight" + i;
-                            <div class="d-flex my-2">
-                                <TelerikCheckBox Id="@idName" Value="true" />
-                                <label for="@idName" class="k-label k-form-label">Flight name @(i)</label>
-
-                            </div>
-                           
-                        }
-                    </div>
-                </div>
-            </div>
+            <UpcomingFlights upcomingFlights="@upcomingFlights"></UpcomingFlights>
+           
         </div>
         <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0":"col-lg-12")">
             <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
             <div class="card no-box-shadow ">
-                @*<TelerikButton ButtonType="@ButtonType.Submit" OnClick=@(AircraftEditDialog)
-                    Enabled="@(!isBusy && isUnLocked)" Class="btn k-btn-primary mx-2" ThemeColor="primary">
-                    <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
-                    Edit
-                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusy">
-                    </TelerikLoader>
-                    </TelerikButton>
-
-
-                    <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenStatusUpdateDialog" Enabled="@(!isBusyAddButton && isUnLocked)"
-                    Class="btn k-btn-primary mx-2" ThemeColor="primary">
-                    <CustomIcons IconName="grid-edit" PrimaryColor="White"></CustomIcons>
-                    Update Status
-                    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusyAddButton">
-                    </TelerikLoader>
-                    </TelerikButton>*@
-                @*<div @onclick="@(() => {isLeftBarVisible = !isLeftBarVisible;})"><FontLabel fontColor="#3066F8" fontSize="12px"> Toggle Left Pane</FontLabel></div>*@
+               
                 <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData />
             </div>
         </div>

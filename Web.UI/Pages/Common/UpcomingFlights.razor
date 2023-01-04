@@ -1,0 +1,49 @@
+﻿<div class="card no-box-shadow my-2" style="cursor:pointer">
+    <div class="d-flex justify-content-between p-2" style="margin-left:10px;" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
+
+        <span class="my-1"> <FontLabel fontSize="12px">Upcoming Flights</FontLabel></span>
+        <span>
+            <span class="my-1 mx-1 p-1">
+                @if (!isFilterBarVisible)
+                {
+                    <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                }
+                else
+                {
+                    <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                }
+            </span>
+        </span>
+    </div>
+
+    <div id="collapseOne" class="collapse @(isFilterBarVisible ? "show":"")" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body">
+
+            @if (upcomingFlights.Any())
+            {
+                foreach (var item in upcomingFlights.Select((value, i) => new { i, value }))
+                {
+                    <hr class="m-0" />
+                    var value = item.value;
+                    string idName = "flight" + item.i;
+
+                    <div class="d-flex my-2" style="margin-left:10px;">
+                        @* <TelerikCheckBox Id="@idName" Value="true" />*@
+                        <label for="@idName" class="k-label k-form-label"><b>@(item.i + 1).)</b>  @value.Title (@value.StartDate.ToString("MM-dd-yyyy HH:mm tt"))</label>
+
+                    </div>
+                }
+            }
+            else
+            {
+                <hr class="m-0" />
+                <div class="d-flex my-2" style="margin-left:10px;">
+
+                    <label class="k-label k-form-label"> No Flights are available</label>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

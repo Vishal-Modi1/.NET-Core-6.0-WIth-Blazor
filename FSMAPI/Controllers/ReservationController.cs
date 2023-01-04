@@ -48,5 +48,46 @@ namespace FSMAPI.Controllers
 
             return APIResponse(response);
         }
+
+        [HttpGet]
+        [Route("listUpcomingFlightsByUserId")]
+        public IActionResult ListUpcomingFlightsByUserId(long userId)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                userId = _jWTTokenGenerator.GetUserId();
+            }
+
+            CurrentResponse response = _reservationService.ListUpcomingFlightsByUserId(userId);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listUpcomingFlightsByAircraftId")]
+        public IActionResult ListUpcomingFlightsByAircraftId(long aircraftId)
+        {
+            CurrentResponse response = _reservationService.ListUpcomingFlightsByAircraftId(aircraftId);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listUpcomingFlightsByCompanyId")]
+        public IActionResult ListUpcomingFlightsByCompanyId(int companyId)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _reservationService.ListUpcomingFlightsByCompanyId(companyId);
+
+            return APIResponse(response);
+        }
     }
 }

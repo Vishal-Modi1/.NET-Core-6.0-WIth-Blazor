@@ -14,6 +14,7 @@ namespace DataModels.VM.Discrepancy
         public string Description { get; set; }
         public string ActionTaken { get; set; }
         public int CompanyId { get; set; }
+        public int DiscrepancyFilesCount { get; set; }
         public byte DiscrepancyStatusId { get; set; }
         public string Status { get; set; }
 
