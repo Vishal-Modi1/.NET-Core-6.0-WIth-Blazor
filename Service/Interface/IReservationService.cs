@@ -1,5 +1,6 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.Reservation;
+using System;
 
 namespace Service.Interface
 {
@@ -9,10 +10,10 @@ namespace Service.Interface
 
         CurrentResponse GetFiltersValue(int roleId, int compamyId);
 
-        CurrentResponse ListUpcomingFlightsByUserId(long userId);
+        CurrentResponse ListUpcomingFlightsByUserId(long userId, DateTime userTime);
 
-        CurrentResponse ListUpcomingFlightsByCompanyId(int companyId);
+        CurrentResponse ListUpcomingFlightsByCompanyId(int companyId, DateTime userTime);
 
-        CurrentResponse ListUpcomingFlightsByAircraftId(long aircraftId);
+        CurrentResponse ListUpcomingFlightsByAircraftId(long aircraftId, DateTime userTime);
     }
 }

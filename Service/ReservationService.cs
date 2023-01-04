@@ -69,11 +69,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListUpcomingFlightsByUserId(long userId)
+        public CurrentResponse ListUpcomingFlightsByUserId(long userId, DateTime userTime)
         {
             try
             {
-                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByUserId(userId);
+                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByUserId(userId, userTime);
                 CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -87,11 +87,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListUpcomingFlightsByCompanyId(int companyId)
+        public CurrentResponse ListUpcomingFlightsByCompanyId(int companyId, DateTime userTime)
         {
             try
             {
-                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByCompanyId(companyId);
+                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByCompanyId(companyId, userTime);
                 CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -105,11 +105,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListUpcomingFlightsByAircraftId(long aircraftId)
+        public CurrentResponse ListUpcomingFlightsByAircraftId(long aircraftId, DateTime userTime)
         {
             try
             {
-                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByAircraftId(aircraftId);
+                List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByAircraftId(aircraftId, userTime);
                 CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
 
                 return _currentResponse;

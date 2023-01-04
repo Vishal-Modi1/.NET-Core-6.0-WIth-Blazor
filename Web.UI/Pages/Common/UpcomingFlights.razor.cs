@@ -13,21 +13,18 @@ namespace Web.UI.Pages.Common
             isFilterBarVisible = true;
         }
 
-        protected override void OnAfterRender(bool firstRender)
+        protected override void OnParametersSet()
         {
-            if (firstRender)
+            if (upcomingFlights == null)
             {
-                if (upcomingFlights == null)
-                {
-                    return;
-                }
-
-                upcomingFlights.ForEach(p =>
-                    {
-                        p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
-
-                    });
+                return;
             }
+
+            upcomingFlights.ForEach(p =>
+            {
+                p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
+
+            });
         }
     }
 }
