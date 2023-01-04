@@ -74,6 +74,9 @@
         transform: rotate(45deg);
     }
 
+    .collapsebarcard{
+        border-radius:0px;
+    }
 </style>
 
 <div class="row my-0">
@@ -93,7 +96,7 @@
                     </div>
                     @*Calender end*@
                     @*Category start*@
-                    <CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white"
+                    <CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white" CardClass="collapsebarcard"
                                    OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
                                    OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
                         <HeaderContent>
@@ -120,28 +123,27 @@
                                     }
                                 </span>
                             </div>
+                           
                         </HeaderContent>
+
                         <ChildContent>
+
                             <div class="my-2 mx-1">
-                                @for (var i = 0; i < flightCategories.Count; i++)
-                                {
-                                    var item = flightCategories[i];
-                                    if (i > 0)
-                                    {
-                                        <hr class="m-0" />
-                                    }
-
+                                
+                                @foreach (var item in flightCategories.Select((item, flightCategories) => new { item, flightCategories }))
+                                {                               
                                     <div class="d-flex justify-content-between my-2">
+                                     
                                         <div>
+                                          
+                                            <label class="container my-0" for="@item.item.Id">
 
-                                            <label class="container my-0" for="@item.Id">
+                                                <input type="checkbox" id="@item.item.Id" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item.item))"
+                                               style="height:18px;width:18px;accent-color:@item.item.Color;">@item.item.Name
 
-                                                <input type="checkbox" id="@item.Id" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item))"
-                                               style="height:18px;width:18px;accent-color:@item.Color;">@item.Name
-
-                                                @if (item.IsActive)
+                                                @if (item.item.IsActive)
                                                 {
-                                                    <span class="checkmark" style="background-color:@item.Color;border-color:@item.Color"></span>
+                                                    <span class="checkmark" style="background-color:@item.item.Color;border-color:@item.item.Color"></span>
                                                 }
                                                 else
                                                 {
@@ -150,12 +152,15 @@
 
                                             </label>
                                         </div>
+                                     
                                         <div>
-                                            <span @onclick="() => OpenCreateCategoryDialogAsync(item)" class="my-2">
+                                            <span @onclick="() => OpenCreateCategoryDialogAsync(item.item)" class="my-2">
                                             </span>
                                         </div>
                                     </div>
+                                    <hr class="m-0" />
                                 }
+                            
                             </div>
                         </ChildContent>
                     </CustomCollapseBar>

@@ -21,6 +21,9 @@ namespace Web.UI.Shared.Components.CustomCollapseBar
 
         [Parameter]
         public string HeaderClass { get; set; } 
+
+        [Parameter]
+        public string CardClass { get; set; } 
         
         [Parameter]
         public EventCallback OnPanelExpanded { get; set; }
