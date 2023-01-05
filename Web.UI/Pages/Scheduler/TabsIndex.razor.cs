@@ -52,6 +52,11 @@ namespace Web.UI.Pages.Scheduler
         private async Task LoadUpcomingFlights()
         {
             upcomingFlights = await ReservationService.ListUpcomingFlightsByCompanyId(dependecyParams, globalMembers.CompanyId);
+            upcomingFlights.ForEach(p =>
+            {
+                p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
+
+            });
         }
 
         async Task LoadCategoris()

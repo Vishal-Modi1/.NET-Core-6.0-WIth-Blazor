@@ -1,4 +1,5 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.Constants;
+using DataModels.VM.Common;
 using DataModels.VM.Reservation;
 using Repository.Interface;
 using Service.Interface;
@@ -92,6 +93,12 @@ namespace Service
             try
             {
                 List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByCompanyId(companyId, userTime);
+
+                foreach (UpcomingFlight upcomingFlight in listUpcomingFlights)
+                {
+                    upcomingFlight.AircraftImage = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.AircraftImage}/{companyId}/{upcomingFlight.AircraftImage}";
+                }
+
                 CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -110,6 +117,12 @@ namespace Service
             try
             {
                 List<UpcomingFlight> listUpcomingFlights = _reservationRepository.ListUpcomingFlightsByAircraftId(aircraftId, userTime);
+
+                foreach (UpcomingFlight upcomingFlight in listUpcomingFlights)
+                {
+                    upcomingFlight.PilotImage = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{upcomingFlight.CompanyId}/{upcomingFlight.PilotImage}";
+                }
+
                 CreateResponse(listUpcomingFlights, HttpStatusCode.OK, "");
 
                 return _currentResponse;

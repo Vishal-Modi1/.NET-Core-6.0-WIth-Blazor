@@ -70,6 +70,7 @@ namespace Web.UI.Data.Reservation
         {
             dependecyParams.URL = $"reservation/listUpcomingFlightsByCompanyId?companyId={companyId}";
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
             List<UpcomingFlight> list = UpcomingFlightsList(response);
 
             return list;

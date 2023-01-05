@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Net;
 using Web.UI.Utilities;
 using DataModels.VM.Reservation;
+using Utilities;
 
 namespace Web.UI.Pages.Company.DetailsView
 {
@@ -186,6 +187,11 @@ namespace Web.UI.Pages.Company.DetailsView
         private async Task LoadUpcomingFlights()
         {
             upcomingFlights = await ReservationService.ListUpcomingFlightsByCompanyId(dependecyParams, companyData.Id);
+            upcomingFlights.ForEach(p =>
+            {
+                p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
+
+            });
         }
     }
 }
