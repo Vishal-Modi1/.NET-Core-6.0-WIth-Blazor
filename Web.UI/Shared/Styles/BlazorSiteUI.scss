@@ -794,11 +794,16 @@ th, td, span, p {
         padding: 0 4px;
         width: 100%;
 
-        table
-        {
-            border-spacing:5px;
+        table {
+            border-spacing: 5px;
         }
+
         .k-calendar-td {
+
+            .k-link {
+                border-radius: 50%;
+            }
+
             inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
             block-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
         }

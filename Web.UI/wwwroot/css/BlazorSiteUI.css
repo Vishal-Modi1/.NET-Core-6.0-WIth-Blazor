@@ -670,6 +670,9 @@ th, td, span, p {
   inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
   block-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
 }
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-td .k-link {
+  border-radius: 50%;
+}
 .k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-table.k-month {
   margin: 0 !important;
 }
