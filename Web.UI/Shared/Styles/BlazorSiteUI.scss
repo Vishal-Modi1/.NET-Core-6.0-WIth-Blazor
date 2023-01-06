@@ -804,3 +804,19 @@ th, td, span, p {
         height: 20px !important;
     }
 }
+
+.profile-image-hover {
+    .hignlight-hover {
+        background-color: transparent;
+        border: transparent;
+    }
+}
+
+.profile-image-hover:hover {
+    .hignlight-hover {
+        padding: 5px 10px !important;
+        border-color: #022254bf;
+        background-color: #022254bf;
+        border-radius: 8px;
+    }
+}

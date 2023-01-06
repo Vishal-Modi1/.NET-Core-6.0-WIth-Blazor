@@ -669,3 +669,15 @@ th, td, span, p {
   width: 20px !important;
   height: 20px !important;
 }
+
+.profile-image-hover .hignlight-hover {
+  background-color: transparent;
+  border: transparent;
+}
+
+.profile-image-hover:hover .hignlight-hover {
+  padding: 5px 10px !important;
+  border-color: rgba(2, 34, 84, 0.7490196078);
+  background-color: rgba(2, 34, 84, 0.7490196078);
+  border-radius: 8px;
+}

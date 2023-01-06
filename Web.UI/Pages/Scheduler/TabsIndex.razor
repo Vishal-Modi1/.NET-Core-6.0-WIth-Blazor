@@ -82,7 +82,7 @@
 </style>
 
 <div class="row my-0">
-    <div class="col-12 my-0 col-lg-3 col-md-12 @(isLeftBarVisible ? "":"d-none")">
+    <div class="col-12 my-0 col-lg-3 col-md-12 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
        
         @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
         {
@@ -179,7 +179,7 @@
     </div>
 
     @{
-        string cssClass = isLeftBarVisible ? "col-lg-9 ps-0" : "col-lg-12";
+        string cssClass = isLeftBarVisible ? "col-lg-9 col-xl-10 ps-0" : "col-lg-12";
     }
     <div class="col-md-12 col-12 my-0 @cssClass">
 

@@ -34,15 +34,14 @@
         <div class="card p-0  no-box-shadow">
             <div class="card-body p-0">
                 <div>
-                    <div class="row d-flex justify-content-center align-items-start w-100 m-0" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(companyData.LogoPath)'), url('../img/company-default-logo.png');">
+                    <div class="row d-flex justify-content-center align-items-start w-100 m-0 profile-image-hover" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(companyData.LogoPath)'), url('../img/company-default-logo.png');">
                         <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
 
-                            <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link mx-2 p-1 " OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
-                                <CustomIcons IconName="arrow" />
-                                <FontLabel fontColor="#3066F8" fontSize="">Back</FontLabel>
+                            <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link  m-0 p-0 hignlight-hover" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
+                                <CustomIcons IconName="share-backward-line" PrimaryColor="#FFF" />
                             </TelerikButton>
 
-                            <label for="filePicker" class="k-cursor-pointer">
+                            <label for="filePicker" class="k-cursor-pointer hignlight-hover">
                                 <CustomIcons IconName="edit-square" PrimaryColor="white" />
                                 <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
                             </label>
