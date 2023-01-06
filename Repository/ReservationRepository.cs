@@ -50,10 +50,26 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<UpcomingFlight> upcomingFlights = _myContext.AircraftSchedules.Where(p => p.Member1Id == userId
-                && p.StartDateTime >= userCurrentTime && p.IsDeleted == false && p.IsActive == true)
-                    .OrderBy(o => o.StartDateTime).Take(5).Select(l => new UpcomingFlight()
-                    { Id = l.Id, StartDate = l.StartDateTime, Title = l.ScheduleTitle }).ToList();
+                List<UpcomingFlight> upcomingFlights = (from aircraftSchedule in _myContext.AircraftSchedules
+                                                        join aircraft in _myContext.Aircrafts
+                                                        on aircraftSchedule.AircraftId equals aircraft.Id
+                                                        join user in _myContext.Users
+                                                        on aircraftSchedule.Member1Id equals user.Id
+                                                        where aircraftSchedule.IsActive == true &&
+                                                        aircraftSchedule.Member1Id == userId &&
+                                                        aircraftSchedule.IsDeleted == false &&
+                                                        aircraftSchedule.StartDateTime >= userCurrentTime
+                                                        orderby aircraftSchedule.StartDateTime
+                                                        select new UpcomingFlight()
+                                                        {
+                                                            Id = aircraftSchedule.Id,
+                                                            StartDate = aircraftSchedule.StartDateTime,
+                                                            Title = aircraftSchedule.ScheduleTitle,
+                                                            Member1 = user.FirstName + " " + user.LastName,
+                                                            TailNo = aircraft.TailNo,
+                                                            CompanyId = aircraftSchedule.CompanyId
+
+                                                        }).Take(5).ToList();
 
                 return upcomingFlights;
             }
@@ -63,10 +79,27 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<UpcomingFlight> upcomingFlights = _myContext.AircraftSchedules.Where(p => p.CompanyId == companyId
-                && p.StartDateTime >= userCurrentTime && p.IsDeleted == false && p.IsActive == true)
-                    .OrderBy(o => o.StartDateTime).Take(5).Select(l => new UpcomingFlight()
-                    { Id = l.Id, StartDate = l.StartDateTime, Title = l.ScheduleTitle }).ToList();
+                List<UpcomingFlight> upcomingFlights = (from aircraftSchedule in _myContext.AircraftSchedules
+                                                        join aircraft in _myContext.Aircrafts
+                                                        on aircraftSchedule.AircraftId equals aircraft.Id
+                                                        join user in _myContext.Users
+                                                        on aircraftSchedule.Member1Id equals user.Id
+                                                        where aircraftSchedule.IsActive == true &&
+                                                        aircraftSchedule.CompanyId == companyId &&
+                                                        aircraftSchedule.IsDeleted == false &&
+                                                        aircraftSchedule.StartDateTime >= userCurrentTime
+                                                        orderby aircraftSchedule.StartDateTime
+                                                        select new UpcomingFlight()
+                                                        {
+                                                            Id = aircraftSchedule.Id,
+                                                            StartDate = aircraftSchedule.StartDateTime,
+                                                            Title = aircraftSchedule.ScheduleTitle,
+                                                            Member1 = user.FirstName + " " + user.LastName,
+                                                            TailNo = aircraft.TailNo,
+                                                            CompanyId = aircraftSchedule.CompanyId,
+                                                            AircraftImage = aircraft.ImageName
+
+                                                        }).Take(5).ToList();
 
                 return upcomingFlights;
             }
@@ -76,10 +109,27 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<UpcomingFlight> upcomingFlights = _myContext.AircraftSchedules.Where(p => p.AircraftId == aircraftId
-                && p.StartDateTime >= userCurrentTime && p.IsDeleted == false && p.IsActive == true)
-                    .OrderBy(o => o.StartDateTime).Take(5).Select(l => new UpcomingFlight()
-                    { Id = l.Id, StartDate = l.StartDateTime, Title = l.ScheduleTitle }).ToList();
+                List<UpcomingFlight> upcomingFlights = (from aircraftSchedule in _myContext.AircraftSchedules
+                                                        join aircraft in _myContext.Aircrafts
+                                                        on aircraftSchedule.AircraftId equals aircraft.Id
+                                                        join user in _myContext.Users
+                                                        on aircraftSchedule.Member1Id equals user.Id
+                                                        where aircraftSchedule.IsActive == true &&
+                                                        aircraftSchedule.AircraftId == aircraftId &&
+                                                        aircraftSchedule.IsDeleted == false &&
+                                                        aircraftSchedule.StartDateTime >= userCurrentTime
+                                                        orderby aircraftSchedule.StartDateTime
+                                                        select new UpcomingFlight()
+                                                        {
+                                                            Id = aircraftSchedule.Id,
+                                                            StartDate = aircraftSchedule.StartDateTime,
+                                                            Title = aircraftSchedule.ScheduleTitle,
+                                                            Member1 = user.FirstName + " " + user.LastName,
+                                                            TailNo = aircraft.TailNo,
+                                                            CompanyId = aircraftSchedule.CompanyId,
+                                                            PilotImage = user.ImageName
+
+                                                        }).Take(5).ToList();
 
                 return upcomingFlights;
             }

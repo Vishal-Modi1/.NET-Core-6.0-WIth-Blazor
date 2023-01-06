@@ -1,4 +1,14 @@
-﻿<div class="card no-box-shadow my-2" style="cursor:pointer">
+﻿<style>
+
+    .labelText {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+</style>
+
+<div class="card no-box-shadow my-2" style="cursor:pointer">
     <div class="d-flex justify-content-between p-2" style="margin-left:10px;" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
 
         <span class="my-1"> <FontLabel fontSize="12px">Upcoming Flights</FontLabel></span>
@@ -28,8 +38,38 @@
                     string idName = "flight" + item.i;
 
                     <div class="d-flex my-2" style="margin-left:10px;">
-                        @* <TelerikCheckBox Id="@idName" Value="true" />*@
-                        <label for="@idName" class="k-label k-form-label"><b>@(item.i + 1).)</b>  @value.Title (@value.StartDate.ToString("MM-dd-yyyy HH:mm tt"))</label>
+
+                        @if (IsForAircraft)
+                        {
+                            @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
+                            {
+                                <img src='@value.PilotImage'
+                     onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+                     style="height: 35px;width: 35px;border-radius:50px;margin-right:10px">
+                            }
+
+                            <label for="@idName" class="k-label k-form-label labelText">
+
+                                @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
+                                {
+                                    @value.Member1 
+                                }
+
+                                  @value.StartDate.ToString("MM-dd-yyy HH:mm tt")
+                            </label>
+
+                        }
+                        else
+                        {
+
+                            <img src='@value.AircraftImage'
+                     onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
+                     style="height: 35px;width: 35px;border-radius:50px;margin-right:10px">
+
+                            <label for="@idName" class="k-label k-form-label labelText">
+                                @value.TailNo @value.StartDate.ToString("MM-dd-yyyy HH:mm tt")
+                            </label>
+                        }
 
                     </div>
                 }

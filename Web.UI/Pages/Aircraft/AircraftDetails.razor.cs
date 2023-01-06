@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System.Net;
 using Microsoft.AspNetCore.Components.Forms;
 using DataModels.VM.Reservation;
+using Utilities;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -86,6 +87,11 @@ namespace Web.UI.Pages.Aircraft
         private async Task LoadUpcomingFlights()
         {
             upcomingFlights = await ReservationService.ListUpcomingFlightsByAircraftId(dependecyParams, aircraftData.Id);
+            upcomingFlights.ForEach(p =>
+            {
+                p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
+
+            });
         }
 
         private async Task SetAircraftData()

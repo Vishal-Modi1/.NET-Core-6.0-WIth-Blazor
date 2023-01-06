@@ -157,7 +157,8 @@
                                         </div>
 
                                         <div>
-                                            <span @onclick="() => OpenCreateCategoryDialogAsync(item.item)" class="my-2">
+                                            <span @onclick="() => OpenCreateCategoryDialogAsync(item.item)" style="cursor:pointer" class="my-2">
+                                                <CustomIcons IconName="grid-edit" PrimaryColor="blue"></CustomIcons>
                                             </span>
                                         </div>
                                     </div>
@@ -174,7 +175,7 @@
 
         }
 
-        <UpcomingFlights upcomingFlights="@upcomingFlights"></UpcomingFlights>
+        <UpcomingFlights upcomingFlights="@upcomingFlights" IsForAircraft="false"></UpcomingFlights>
 
     </div>
 
