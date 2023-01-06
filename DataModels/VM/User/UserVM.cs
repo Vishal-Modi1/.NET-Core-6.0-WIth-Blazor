@@ -84,5 +84,7 @@ namespace DataModels.VM.User
 
         [NotMapped]
         public new long? CreatedBy { get; set; }
+
+        public bool IsArchive { get; set; }
     }
 }

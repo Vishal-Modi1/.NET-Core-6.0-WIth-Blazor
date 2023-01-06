@@ -13,6 +13,7 @@
         ChangePassword = 9,
         ChangeCompany = 10,
         InviteUser = 11,
-        UnCheckOut = 12
+        UnCheckOut = 12,
+        Archive = 13
     }
 }

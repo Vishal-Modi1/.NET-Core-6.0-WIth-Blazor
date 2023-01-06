@@ -69,7 +69,7 @@
                         <li @onclick="@(() => NavigateToPageAsync(item))" @onclick:stopPropagation
                     class="k-drawer-item @(GetSelectedItemClass(item))
                                 @(isDrawerExpanded ? "":"d-flex justify-content-center")"
-                    style="white-space:nowrap">
+                    style="white-space:nowrap" title="@item.DisplayName">
 
                             <div class="px-2">
                                 <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.Controller"
@@ -92,11 +92,11 @@
                                 {
                                 <div class="selected-arrow"></div>
                                 }
-
                         </li>
 
                         }
                     }
+
             </ul>
         </div>
 
@@ -129,5 +129,7 @@
         </div>
     </DrawerContent>
 </TelerikDrawer>
+
+
 
 }

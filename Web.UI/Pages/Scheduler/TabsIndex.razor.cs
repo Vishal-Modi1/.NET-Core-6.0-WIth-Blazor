@@ -18,6 +18,7 @@ namespace Web.UI.Pages.Scheduler
         SchedulerIndex schedulerIndex;
         FlightCategory _flightCategory;
         public List<UpcomingFlight> upcomingFlights = new();
+      
         protected override Task OnInitializedAsync()
         {
             isLeftBarVisible = true;

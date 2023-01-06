@@ -349,6 +349,33 @@ namespace Service
             }
         }
 
+        public CurrentResponse UpdateArchiveStatus(long id, bool isArchive)
+        {
+            try
+            {
+                _userRepository.UpdateArchiveStatus(id, isArchive);
+
+                string message = "User archived successfully.";
+
+                if (!isArchive)
+                {
+                    message = "User Unarchived successfully.";
+
+                }
+
+                CreateResponse(true, HttpStatusCode.OK, message);
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse GetFiltersValue(int roleId)
         {
             try

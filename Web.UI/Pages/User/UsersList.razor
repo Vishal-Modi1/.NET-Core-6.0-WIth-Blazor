@@ -86,6 +86,17 @@
                             <TelerikTextBox Name="SearchText" PlaceHolder="Search User" Class="common-bg" ValueChanged="@( (string value) => OnSearchValueChanges<UserDataVM>(value, grid) )" />
                         </div>
 
+                        <div class="col-md-4" style="display:flex;align-items:center;">
+                          
+                            <TelerikCheckBox Id="archive"
+                                     Value="@userFilterVM.IsArchive"
+                                     ValueChanged="@((bool value) => DisplayArchiveUsers(value))">
+                            </TelerikCheckBox>
+
+                            <label for="archive" style="padding-left:7px;">Show Archived Users</label>
+                            
+                        </div>
+
                     </div>
             </ChildContent>
         </CustomCollapseBar>
@@ -131,6 +142,16 @@
                     var data = dataItem as UserDataVM;
                     <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserStatusDialog(data)"
                                  Id="@("chkIsActive"+ data.Id)" @bind-Value="@(data.IsActive)" />
+                }
+            </Template>
+        </GridColumn>
+
+         <GridColumn Field="@nameof(UserDataVM.IsArchive)" Context="dataItem" Title="Is Archive">
+            <Template>
+                @{
+                    var data = dataItem as UserDataVM;
+                    <TelerikCheckBox TValue="bool" OnChange="() => OpenUpdateUserArchiveStatusDialog(data)"
+                                 Id="@("chkIsArchive"+ data.Id)" @bind-Value="@(data.IsArchive)" />
                 }
             </Template>
         </GridColumn>
@@ -209,7 +230,7 @@
 
                             @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                             {
-                                <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="info" OnClick="()=>UpdateIsUserActiveAsync(userData.IsActive,userData.Id)">
+                                <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="primary" OnClick="()=>UpdateIsUserActiveAsync(userData.IsActive,userData.Id)">
                                     Yes
                                     <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyUpdateStatusButton">
                                     </TelerikLoader>
@@ -217,6 +238,29 @@
                             }
 
                             <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>RevokeUserStatusChange()">
+                                No
+                            </TelerikButton>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (operationType == OperationType.Archive)
+            {
+                <div>
+                    <p class="mb-4"> @message <b> @(userData.FirstName + " " + userData.LastName) </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                            {
+                                <TelerikButton Class="mr-1 btn k-btn-grid-primary" ThemeColor="primary" OnClick="()=>UpdateUserArchiveAsync(userData.IsArchive,userData.Id)">
+                                    Yes
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="isBusyUpdateStatusButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+                            }
+
+                            <TelerikButton Class="mr-1 btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>RevokeUserArchiveStatusChange()">
                                 No
                             </TelerikButton>
                         </div>

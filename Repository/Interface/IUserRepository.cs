@@ -32,5 +32,7 @@ namespace Repository.Interface
         List<DropDownLargeValues> ListDropdownValuesbyCompanyId(int companyId);
 
         List<User> ListAllbyCompanyId(int companyId);
+
+        void UpdateArchiveStatus(long id, bool isArchive);
     }
 }

@@ -4,7 +4,6 @@ using Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using DataModels.VM.Common;
 using DataModels.VM.User;
 using DataModels.VM.Account;
@@ -47,6 +46,7 @@ namespace Repository
             existingDetails.ExternalId = user.ExternalId;
             existingDetails.IsSendEmailInvite = user.IsSendEmailInvite;
             existingDetails.IsSendTextMessage = user.IsSendTextMessage;
+            existingDetails.IsArchive = user.IsArchive;
 
             if (!string.IsNullOrWhiteSpace(user.Password))
             {
@@ -124,7 +124,7 @@ namespace Repository
         {
             List<UserDataVM> list;
 
-            string sql = $"EXEC dbo.GetUsersList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
+            string sql = $"EXEC dbo.GetUsersList '{datatableParams.IsArchive}','{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                 $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{datatableParams.RoleId}";
 
             list = _myContext.UserSearchList.FromSqlRaw<UserDataVM>(sql).ToList();
@@ -153,6 +153,17 @@ namespace Repository
             if (user != null)
             {
                 user.IsActive = isActive;
+                _myContext.SaveChanges();
+            }
+        }
+
+        public void UpdateArchiveStatus(long id, bool isArchive)
+        {
+            User user = _myContext.Users.Where(p => p.Id == id).FirstOrDefault();
+
+            if (user != null)
+            {
+                user.IsArchive = isArchive;
                 _myContext.SaveChanges();
             }
         }

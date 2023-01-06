@@ -34,8 +34,7 @@ namespace DataModels.Entities
         [NotMapped]
         public string RoleName { get; set; }
         public string Password { get; set; }
-
         public new long? CreatedBy { get; set; }
-
+        public bool IsArchive { get; set; }
     }
 }

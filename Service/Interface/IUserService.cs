@@ -37,6 +37,8 @@ namespace Service.Interface
 
         CurrentResponse GetMasterDetails(int roleId, bool isInvited, string token);
 
+        CurrentResponse UpdateArchiveStatus(long id, bool isArchive);
+
         CurrentResponse GetById(long id, int companyId);
     }
 }

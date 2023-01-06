@@ -150,6 +150,15 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpGet]
+        [Route("updateArchiveStatus")]
+        public IActionResult UpdateArchiveStatus(long id, bool isArchive)
+        {
+            CurrentResponse response = _userService.UpdateArchiveStatus(id, isArchive);
+
+            return APIResponse(response);
+        }
+
         [HttpPost]
         [Route("list")]
         public IActionResult List(UserDatatableParams datatableParams)

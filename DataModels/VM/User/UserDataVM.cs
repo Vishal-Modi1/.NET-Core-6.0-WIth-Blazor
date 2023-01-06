@@ -26,6 +26,8 @@ namespace DataModels.VM.User
         
         public bool IsActive { get; set; }
 
+        public bool IsArchive { get; set; }
+
         public string UserRole { get; set; }
 
         public DateTime CreatedOn { get; set; }

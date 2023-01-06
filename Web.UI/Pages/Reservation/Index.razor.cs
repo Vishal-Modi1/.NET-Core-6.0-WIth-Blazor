@@ -46,7 +46,7 @@ namespace Web.UI.Pages.Reservation
         string moduleName = "Reservation";
         UIOptions uiOptions = new UIOptions();
         List<DropDownValues> reservationTypeFilter;
-        bool isDisplayMyFlightsOnly;
+        bool isDisplayMyFlightsOnly = true;
 
         protected override async Task OnInitializedAsync()
         {

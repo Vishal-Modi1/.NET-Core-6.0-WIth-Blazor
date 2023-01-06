@@ -40,6 +40,11 @@ namespace Web.UI.Pages.Scheduler
             {
                 CloseDialog(true);
             }
+
+            else if(response.Status == System.Net.HttpStatusCode.Ambiguous)
+            {
+                return;
+            }
             else
             {
                 CloseDialog(false);
