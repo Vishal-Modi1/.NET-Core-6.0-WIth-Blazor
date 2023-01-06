@@ -646,6 +646,11 @@ th, td, span, p {
   --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 38px );
 }
 
+.highlightDates {
+  border: 1px solid #3066f8 !important;
+  border-radius: 50%;
+}
+
 .k-calendar-custom-small {
   width: 100% !important;
 }
@@ -657,6 +662,9 @@ th, td, span, p {
   margin: 0 !important;
   padding: 0 4px;
   width: 100%;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview table {
+  border-spacing: 5px;
 }
 .k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-td {
   inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
