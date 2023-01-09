@@ -45,7 +45,7 @@ namespace Service
             _userVSCompanyRepository = userVSCompanyRepository;
             _companyRepository = companyRepository;
             _emailConfigurationRepository = emailConfigurationRepository;
-            _flightCategoryRepository = flightCategoryRepository;   
+            _flightCategoryRepository = flightCategoryRepository;
             _sendMailService = new SendMailService();
         }
 
@@ -108,10 +108,25 @@ namespace Service
                 ListDropDownValues(schedulerVM, companyId, roleId);
                 FilterValuesByUserPreferences(schedulerVM, userId);
 
-
                 schedulerVM.RoleId = roleId;
-                schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);  
 
+                CreateResponse(schedulerVM, HttpStatusCode.OK, "");
+            }
+            catch (Exception ex)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+            return _currentResponse;
+        }
+
+        public CurrentResponse GetDropdownValuesByCompanyId(int roleId, int companyId, long userId)
+        {
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            try
+            {
+                ListDropDownValues(schedulerVM, companyId, roleId);
                 CreateResponse(schedulerVM, HttpStatusCode.OK, "");
             }
             catch (Exception ex)
@@ -168,6 +183,8 @@ namespace Service
             schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
 
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
+            schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);
+
         }
 
         public CurrentResponse ListActivityTypeDropDownValues(int roleId)
@@ -473,7 +490,7 @@ namespace Service
         private string GetCompanyEmail(int companyId)
         {
             EmailConfiguration emailConfiguration = _emailConfigurationRepository.FindByCondition(p => p.EmailTypeId == (byte)EmailTypes.Reservation && p.CompanyId == companyId);
-            
+
             if (emailConfiguration != null && !string.IsNullOrWhiteSpace(emailConfiguration.Email))
             {
                 return emailConfiguration.Email;

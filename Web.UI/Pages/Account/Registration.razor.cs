@@ -18,8 +18,6 @@ namespace Web.UI.Pages.Account
 
         int currentStep = 0;
         bool isLoading, isValidToken, showError;
-        DependecyParams dependecyParams;
-
         string link;
 
         protected override Task OnInitializedAsync()
@@ -45,7 +43,7 @@ namespace Web.UI.Pages.Account
 
                         //globalMembers.UINotification.DisplayInfoNotification(globalMembers.UINotification.Instance, "Validating token ...");
 
-                        DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                        dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                         CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, this.link);
                         await ManageResponseAsync(response);
                         showError = false;
@@ -83,7 +81,7 @@ namespace Web.UI.Pages.Account
         {
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 userVM = await UserService.GetMasterDetailsAsync(dependecyParams, true, link);
                 await GetCompanyDetails(dependecyParams);
@@ -115,7 +113,7 @@ namespace Web.UI.Pages.Account
 
         async Task<bool> IsCompanyExistAsync()
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.IsCompanyExistAsync(dependecyParams, companyData.Id, companyData.Name);
 
             bool isCompanyExist = ManageIsCompanyExistResponse(response, companyData.Name);
@@ -142,7 +140,7 @@ namespace Web.UI.Pages.Account
              ChangeLoaderVisibilityAction(true);
             base.StateHasChanged();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             if (!userVM.IsInvited)
             {
@@ -208,7 +206,7 @@ namespace Web.UI.Pages.Account
         {
             companyData.CreatedBy = userVM.Id;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             var response = await CompanyService.UpdateCreatedByAsync(dependecyParams, companyData.Id, userVM.Id);
 
             if (response == null)

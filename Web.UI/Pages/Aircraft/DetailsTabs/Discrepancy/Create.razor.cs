@@ -16,7 +16,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
         {
             isBusySubmitButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DiscrepancyService.SaveandUpdateAsync(dependecyParams, discrepancyData);
 
             DiscrepancyVM discrepancyInfo = JsonConvert.DeserializeObject<DiscrepancyVM>(response.Data.ToString());

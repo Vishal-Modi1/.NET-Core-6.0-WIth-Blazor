@@ -340,7 +340,7 @@ namespace Web.UI.Pages.Scheduler
             {
                 ChangeLoaderVisibilityAction(true);
 
-                SchedulerVM schedulerVMData = await AircraftSchedulerService.GetDetailsByCompanyIdAsync(dependecyParams, schedulerVM.Id, value);
+                SchedulerVM schedulerVMData = await AircraftSchedulerService.GetDropdownValuesByCompanyId(dependecyParams, schedulerVM.Id, value);
 
                 ChangeLoaderVisibilityAction(false);
 
@@ -348,6 +348,7 @@ namespace Web.UI.Pages.Scheduler
                 schedulerVM.Member2List = schedulerVMData.Member2List;
                 schedulerVM.InstructorsList = schedulerVMData.InstructorsList;
                 schedulerVM.AircraftsList = schedulerVMData.AircraftsList;
+                schedulerVM.FlightCategoriesList = schedulerVMData.FlightCategoriesList;
             }
         }
 

@@ -34,7 +34,7 @@ namespace Web.UI.Pages.Account
                 else
                 {
                     this.link = url[0];
-                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                    dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                     CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, this.link);
                     await ManageResponseAsync(response);
                 }
@@ -48,7 +48,7 @@ namespace Web.UI.Pages.Account
         {
             isBusySubmitButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await InviteUserService.AcceptInvitationAsync(dependecyParams, this.link);
 
             isBusySubmitButton = false;
@@ -67,7 +67,7 @@ namespace Web.UI.Pages.Account
         {
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 userVM = await UserService.GetMasterDetailsAsync(dependecyParams, true, link);
             }
             else

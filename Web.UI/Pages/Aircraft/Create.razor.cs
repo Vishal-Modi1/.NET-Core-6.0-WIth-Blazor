@@ -56,7 +56,7 @@ namespace Web.UI.Pages.Aircraft
                 ChangeLoaderVisibilityAction(true);
 
                 aircraftData.CompanyId = value;
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 aircraftData.OwnersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, aircraftData.CompanyId.Value);
 
                 ChangeLoaderVisibilityAction(false);
@@ -144,7 +144,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (steps.ActiveTabIndex == 0)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.IsAircraftExistAsync(dependecyParams, aircraftData.Id, aircraftData.TailNo);
                 bool isAircraftExist = ManageIsAircraftExistResponse(response, "");
 
@@ -159,7 +159,7 @@ namespace Web.UI.Pages.Aircraft
             {
                 isBusySubmitButton = true;
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.SaveandUpdateAsync(dependecyParams, aircraftData);
 
                 if (response != null)
@@ -388,7 +388,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (reloadData)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 CurrentResponse response = await AircraftMakeService.ListDropdownValues(dependecyParams);
                 aircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
@@ -403,7 +403,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (reloadData)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftModelService.ListDropdownValues(dependecyParams);
                 aircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 

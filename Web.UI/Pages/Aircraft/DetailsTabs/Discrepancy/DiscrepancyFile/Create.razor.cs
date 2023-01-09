@@ -51,7 +51,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
             multiContent.Add(new StringContent(discrepancyFileVM.DisplayName), "DisplayName");
             multiContent.Add(new StringContent(discrepancyFileVM.DiscrepancyId.ToString()), "DiscrepancyId");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DiscrepancyFileService.UploadDocumentAsync(dependecyParams, multiContent);
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 

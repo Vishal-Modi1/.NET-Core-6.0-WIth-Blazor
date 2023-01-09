@@ -46,6 +46,22 @@ namespace Web.UI.Data.AircraftSchedule
             return schedulerVM;
         }
 
+        public async Task<SchedulerVM> GetDropdownValuesByCompanyId(DependecyParams dependecyParams, long id, int companyId)
+        {
+            dependecyParams.URL = $"aircraftscheduler/getDropdownValuesByCompanyId?companyId={companyId}";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                schedulerVM = JsonConvert.DeserializeObject<SchedulerVM>(response.Data.ToString());
+            }
+
+            return schedulerVM;
+        }
+
         public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, SchedulerVM schedulerVM, DateTime startTime, DateTime endTime)
         {
             DateTime localStartTime = schedulerVM.StartTime;

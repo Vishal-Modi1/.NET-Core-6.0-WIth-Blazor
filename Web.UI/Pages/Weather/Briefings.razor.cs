@@ -61,7 +61,7 @@ namespace Web.UI.Pages.Weather
 
             isBusyAddButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AirTrafficControlCenterService.SetDefault(dependecyParams, centerValue);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);

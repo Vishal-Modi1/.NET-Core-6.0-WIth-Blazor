@@ -25,7 +25,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             Statuses = new List<DropDownValues>();
 
@@ -93,7 +93,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
                 popupTitle = "Update Discrepancy";
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             discrepancy = await DiscrepancyService.GetDetailsAsync(dependecyParams, discrepancyDataVM.Id);
 
             discrepancy.AircraftId = AircraftIdParam;

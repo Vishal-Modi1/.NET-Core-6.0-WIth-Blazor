@@ -27,7 +27,7 @@ namespace Web.UI.Pages.Weather
         {
             ChangeLoaderVisibilityAction(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             windyMapConfiguration = await WindyMapConfigurationService.GetDefault(dependecyParams);
 
             if (windyMapConfiguration.Id == 0)
@@ -106,7 +106,7 @@ namespace Web.UI.Pages.Weather
         {
             isBusyAddButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await WindyMapConfigurationService.SetDefault(dependecyParams, windyMapConfiguration);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);

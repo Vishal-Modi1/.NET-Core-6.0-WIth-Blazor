@@ -8,8 +8,5 @@ namespace DataModels.Entities
         public string Name { get; set; }
         public string Color { get; set; }
         public int? CompanyId { get; set; }
-
-        [NotMapped]
-        public bool IsActive { get; set; } = true;
     }
 }

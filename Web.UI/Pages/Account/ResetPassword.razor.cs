@@ -51,7 +51,7 @@ namespace Web.UI.Pages.Account
                     resetPasswordVM.Token = link[0];
                     //globalMembers.UINotification.DisplayInfoNotification(globalMembers.UINotification.Instance, "Validating Token...");
 
-                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                    dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                     response = await AccountService.ValidateTokenAsync(dependecyParams, link[0]);
 
                     ManageResponse();
@@ -86,7 +86,7 @@ namespace Web.UI.Pages.Account
         {
             isBusy = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             response = await AccountService.ResetPasswordAsync(dependecyParams, resetPasswordVM);
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);

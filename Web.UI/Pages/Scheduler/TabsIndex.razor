@@ -1,4 +1,5 @@
-﻿@using Web.UI.Pages.Common;
+﻿@using DataModels.VM.Scheduler
+@using Web.UI.Pages.Common;
 
 @page "/Scheduler"
 
@@ -77,22 +78,23 @@
 
 <div class="row my-0">
     <div class="col-12 my-0 col-lg-3 col-md-12 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
-       
-        @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
-        {
-            <div class="card p-0 m-0 mb-2">
-                <div class="card-body p-0 m-0">
-                    @*Calender start*@
 
-                    <div class="">
-                        <TelerikCalendar Date="@currentDate" Class="k-calendar-sm k-calendar-custom-small" View="CalendarView.Month"
+        <div class="p-0 m-0 mb-2">
+            <div class="p-0 m-0">
+                @*Calender start*@
+
+                <div class="">
+                    <TelerikCalendar Date="@currentDate" Class="k-calendar-sm k-calendar-custom-small" View="CalendarView.Month"
                                      OnCellRender="@OnCellRenderHandler"
                                      DateChanged="@OnCalendarDateChanged"
                                      SelectionMode="@CalendarSelectionMode.Multiple">
-                        </TelerikCalendar>
-                    </div>
-                    @*Calender end*@
-                    @*Category start*@
+                    </TelerikCalendar>
+                </div>
+                @*Calender end*@
+                @*Category start*@
+
+                @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
+                {
                     <CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white" CardClass="collapsebarcard"
                                    OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
                                    OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
@@ -103,7 +105,7 @@
                                 </span>
                                 <span>
                                     <span class="mx-2 my-1" @onclick:stopPropagation="true" @onclick:preventDefault="true"
-                                      @onclick="() => OpenCreateCategoryDialogAsync(new DataModels.Entities.FlightCategory())">
+                                      @onclick="() => OpenCreateCategoryDialogAsync(new FlightCategoryVM())">
                                         <span>
                                             @*manage plus icon click here in this span*@
                                             <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
@@ -112,11 +114,11 @@
 
                                     @if (isFilterBarVisible)
                                     {
-                                        <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                                        <CustomIcons IconName="arrow-up" PrimaryColor="black" />
                                     }
                                     else
                                     {
-                                        <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                                        <CustomIcons IconName="arrow-down" PrimaryColor="black" />
                                     }
                                 </span>
                             </div>
@@ -163,11 +165,9 @@
                         </ChildContent>
                     </CustomCollapseBar>
                     @*Category end*@
-
+                }
             </div>
         </div>
-
-        }
 
         <UpcomingFlights upcomingFlights="@upcomingFlights" IsForAircraft="false"></UpcomingFlights>
 
@@ -178,7 +178,33 @@
     }
     <div class="col-md-12 col-12 my-0 @cssClass">
 
-        <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
+        <div class="cursor-pointer mb-2 d-flex">
+
+            <div class="col-md-2" @onclick=@(() => ToggleLeftPane())>
+                <FontLabel fontColor="#3066F8" fontSize="12px">
+                    <CustomIcons IconName="toggle-hamburg"></CustomIcons>
+                    Toggle Left Pane
+                </FontLabel>
+            </div>
+
+            @if (globalMembers.IsSuperAdmin)
+            {
+                <div class="col-md-10 d-flex justify-content-end">
+                    <div class="col-md-6 ">
+
+                        <TelerikComboBox Id=companyId Data="@companies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
+                                     Placeholder="Select Company" ValueField="Id"
+                                     Value="@companyId"
+                                     ValueExpression="@( () => companyId )"
+                                     ValueChanged="@( (int value) => GetScheduleData(value) )">
+                        </TelerikComboBox>
+
+                    </div>
+                </div>
+            }
+
+        </div>
         <div id="container">
             <div class="card">
 
@@ -195,7 +221,7 @@
                         </HeaderTemplate>
                         <Content>
                             <CascadingValue Value="@flightCategories" Name="categories">
-                                <Web.UI.Pages.Scheduler.SchedulerIndex @ref="@schedulerIndex"></Web.UI.Pages.Scheduler.SchedulerIndex>
+                                <Web.UI.Pages.Scheduler.SchedulerIndex @ref="@schedulerIndex" CompanyId="@companyId"></Web.UI.Pages.Scheduler.SchedulerIndex>
                             </CascadingValue>
 
                         </Content>
@@ -236,7 +262,7 @@
         <Body>
 
 
-            <CreateCategory flightCategory="@_flightCategory" CloseDialogCallBack="@CloseDialog"></CreateCategory>
+            <CreateCategory flightCategory="@_flightCategory" Companies="@companies"  CloseDialogCallBack="@CloseDialog"></CreateCategory>
 
 
         </Body>

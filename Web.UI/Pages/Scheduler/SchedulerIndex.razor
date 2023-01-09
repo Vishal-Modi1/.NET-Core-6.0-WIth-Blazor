@@ -89,25 +89,6 @@
             </HeaderContent>
             <ChildContent>
 
-                @if (globalMembers.IsSuperAdmin)
-                {
-                    <div class="row my-2">
-
-                        <div class="col-md-12 col-sm-12">
-
-                            <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
-                                     Placeholder="Select Company" ValueField="Id"
-                                     Value="@schedulerFilter.CompanyId"
-                                     ValueExpression="@( () => schedulerFilter.CompanyId )"
-                                     ValueChanged="@( (int value) => GetAutocompleteData(value) )">
-                            </TelerikComboBox>
-
-                        </div>
-
-                    </div>
-                }
-
                 <div class="row my-2">
 
                     <div class="col-md-10 col-sm-10">
@@ -224,25 +205,6 @@ else if (schedulerType == Models.Enums.SchedulerType.Pilot)
             </HeaderContent>
             <ChildContent>
 
-                @if (globalMembers.IsSuperAdmin)
-                {
-                    <div class="row my-2">
-
-                        <div class="col-md-12 col-sm-12">
-
-                            <TelerikComboBox Id=companyId Data="@schedulerFilter.Companies" TextField="Name"
-                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
-                                     Placeholder="Select Company" ValueField="Id"
-                                     Value="@schedulerFilter.CompanyId"
-                                     ValueExpression="@( () => schedulerFilter.CompanyId )"
-                                     ValueChanged="@( (int value) => GetAutocompleteData(value) )">
-                            </TelerikComboBox>
-
-                        </div>
-                    </div>
-
-                }
-
                 <div class="row my-2">
 
                     <div class="col-md-10 col-sm-10">
@@ -352,13 +314,16 @@ else
                   ViewChanged="@ViewChangedHandler">
 
         <ItemTemplate>
+
             @{
-            var appt = context as SchedulerVM;
-            var flightCategory = Categories.Where(p => p.Id == appt.FlightCategoryId).First();
+            try
+            {
+                var appt = context as SchedulerVM;
+                var flightCategory = Categories.Where(p => p.Id == appt.FlightCategoryId).First();
 
-            appt.Color = flightCategory.Color;
+                appt.Color = flightCategory.Color;
 
-            <div class="custom-appointment schedule-popup"
+                <div class="custom-appointment schedule-popup"
              title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
              data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
              style="height:100%;background-color: @appt.Color"
@@ -366,12 +331,21 @@ else
                  @oncontextmenu:preventDefault="true"
                  @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
                 <div style="font-size:12px;background-color: @appt.Color" class="k-event-template">@appt.DisplayTitle</div>
-            </div>
+                </div>
+
+            }
+            catch(Exception exc)
+            {
+                
+            }
         }
     </ItemTemplate>
 
     <SchedulerViews>
-        <SchedulerMonthView></SchedulerMonthView>
+
+        <SchedulerMonthView>
+
+        </SchedulerMonthView>
     </SchedulerViews>
 
 </TelerikScheduler>

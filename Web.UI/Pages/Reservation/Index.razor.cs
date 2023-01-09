@@ -46,10 +46,12 @@ namespace Web.UI.Pages.Reservation
         string moduleName = "Reservation";
         UIOptions uiOptions = new UIOptions();
         List<DropDownValues> reservationTypeFilter;
-        bool isDisplayMyFlightsOnly = true;
+        bool isDisplayMyFlightsOnly;
 
         protected override async Task OnInitializedAsync()
         {
+            isDisplayMyFlightsOnly = (!globalMembers.IsSuperAdmin && !globalMembers.IsAdmin);
+
             GetReservationTypeFilter();
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);

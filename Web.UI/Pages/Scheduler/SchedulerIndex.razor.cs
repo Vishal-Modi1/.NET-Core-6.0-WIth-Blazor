@@ -23,9 +23,10 @@ namespace Web.UI.Pages.Scheduler
     partial class SchedulerIndex
     {
         #region params
+        [Parameter]public int CompanyId { get; set; }
 
         [CascadingParameter(Name = "categories")]
-        public List<FlightCategory> Categories { get; set; }
+        public List<FlightCategoryVM> Categories { get; set; }
         public TelerikScheduler<SchedulerVM> scheduleRef { get; set; }
 
         SchedulerVM schedulerVM;
@@ -46,7 +47,6 @@ namespace Web.UI.Pages.Scheduler
         List<DropDownLargeValues> multiSelectAircraftsList = new List<DropDownLargeValues>();
         List<DropDownLargeValues> multiSelectPilotsList = new List<DropDownLargeValues>();
 
-        DependecyParams dependecyParams;
         public List<ContextMenuItem> menuItems { get; set; }
         TelerikContextMenu<ContextMenuItem> contextMenu { get; set; }
 
@@ -56,7 +56,6 @@ namespace Web.UI.Pages.Scheduler
         public bool isDisplayTodayActivePilots { get; set; } = false;
         public bool isDisplayTodayActiveAircrafts { get; set; } = false;
         public int schedulerViewOption = 0;
-
         int multiDayDaysCount { get; set; } = 10;
         DateTime currentDate = DateTime.Now;
         public DateTime dayStart { get; set; } = new DateTime(2000, 1, 1, 0, 0, 0);
@@ -110,9 +109,9 @@ namespace Web.UI.Pages.Scheduler
                     await LoadDataAsync();
                     await UpdateSchedulerUI();
                 }
-                else
+                else if(CompanyId != 0)
                 {
-                    schedulerFilter.Companies = await CompanyService.ListDropDownValues(dependecyParams);
+                  await GetAutocompleteData(CompanyId);
                 }
 
                 ChangeLoaderVisibilityAction(false);
@@ -562,6 +561,9 @@ namespace Web.UI.Pages.Scheduler
             await GetPilotsList(companyId);
 
             await UpdateSchedulerUI();
+
+            base.StateHasChanged();
+
         }
 
         void OnPilotsListChange(List<long> selectedData)
@@ -802,7 +804,7 @@ namespace Web.UI.Pages.Scheduler
             UpdateSchedulerUI();
         }
 
-        async void OnschedulerViewOptionValueChange()
+        public async void OnschedulerViewOptionValueChange()
         {
             currentView = SchedulerView.Timeline;
             currentDate = DateTime.Today;

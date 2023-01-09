@@ -59,6 +59,20 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpGet]
+        [Route("getDropdownValuesByCompanyId")]
+        public IActionResult GetDropdownValuesByCompanyId(int companyId)
+        {
+            string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
+
+            string userId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            long userIdValue = userId == "" ? 0 : Convert.ToInt64(userId);
+
+            CurrentResponse response = _aircraftScheduleService.GetDropdownValuesByCompanyId(roleIdValue, companyId, userIdValue);
+            return APIResponse(response);
+        }
+
 
         [HttpPost]
         [Route("create")]
@@ -92,10 +106,11 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(SchedulerFilter schedulerFilter)
         {
-            if (schedulerFilter.CompanyId == 0)
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                schedulerFilter.CompanyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);
+                schedulerFilter.CompanyId = _jWTTokenGenerator.GetCompanyId();
             }
 
             CurrentResponse response = _aircraftScheduleService.List(schedulerFilter);

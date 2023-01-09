@@ -13,9 +13,26 @@
     </FormValidation>
 
     <FormItems>
+
         <div class="popup-content">
             <input type="hidden" value="@flightCategory.Id" name="Id" />
 
+            @if (globalMembers.IsSuperAdmin)
+            {
+                  <div class="row">
+                    <div class="col-6">
+                        <label>Company</label>
+
+                        <TelerikComboBox Id=companyId Data="@Companies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Company" ValueField="Id"
+                                     @bind-Value="@flightCategory.CompanyId">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => flightCategory.CompanyId)"></TelerikValidationMessage>
+                    </div>
+                </div>
+            }
             <div class="row">
                 <div class="col-12">
                     <div class="row">
@@ -26,22 +43,23 @@
                             <TelerikValidationMessage For="@(() => flightCategory.Name)"></TelerikValidationMessage>
                         </div>
 
-                    <div class="col-6">
-                        <label for="address" class="k-label k-form-label">Physical Address</label>
-                        <div class="col-md-12">
-                            <TelerikColorPicker @bind-Value="@flightCategory.Color">
-                                <ColorPickerViews>
-                                    <ColorPickerGradientView ShowOpacityEditor="false"></ColorPickerGradientView>
-                                </ColorPickerViews>
-                            </TelerikColorPicker>
+                        <div class="col-6">
+                            <label for="address" class="k-label k-form-label">Physical Address</label>
+                            <div class="col-md-12">
+                                <TelerikColorPicker @bind-Value="@flightCategory.Color">
+                                    <ColorPickerViews>
+                                        <ColorPickerGradientView ShowOpacityEditor="false"></ColorPickerGradientView>
+                                    </ColorPickerViews>
+                                </TelerikColorPicker>
 
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <hr class="hr-gray mt-3 mb-3" />
+    
     </FormItems>
 
     <FormButtons>

@@ -1,5 +1,5 @@
-﻿using DataModels.Entities;
-using DataModels.VM.Common;
+﻿using DataModels.VM.Common;
+using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
@@ -15,7 +15,7 @@ namespace Web.UI.Data.AircraftSchedule
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, FlightCategory flightCategory)
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, FlightCategoryVM flightCategory)
         {
             dependecyParams.JsonData = JsonConvert.SerializeObject(flightCategory);
             dependecyParams.URL = "flightCategory/create";
@@ -39,16 +39,16 @@ namespace Web.UI.Data.AircraftSchedule
             return response;
         }
 
-        public async Task<List<FlightCategory>> ListAll(DependecyParams dependecyParams)
+        public async Task<List<FlightCategoryVM>> ListAll(DependecyParams dependecyParams, int companyId)
         {
-            dependecyParams.URL = $"flightCategory/listall";
+            dependecyParams.URL = $"flightCategory/listall?companyId={companyId}";
 
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
-            List<FlightCategory> categoriesList = new List<FlightCategory>();
+            List<FlightCategoryVM> categoriesList = new List<FlightCategoryVM>();
 
             if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
             {
-                categoriesList = JsonConvert.DeserializeObject<List<FlightCategory>>(response.Data.ToString());
+                categoriesList = JsonConvert.DeserializeObject<List<FlightCategoryVM>>(response.Data.ToString());
             }
 
             return categoriesList;

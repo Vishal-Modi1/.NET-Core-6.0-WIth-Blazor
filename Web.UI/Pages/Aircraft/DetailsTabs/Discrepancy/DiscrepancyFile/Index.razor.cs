@@ -25,7 +25,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
         {
             isGridDataLoading = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             var data = await DiscrepancyFileService.ListAsync(dependecyParams, DiscrepancyIdParam);
 
             args.Total = data.Count();
@@ -57,7 +57,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
         {
             isBusyDeleteButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DiscrepancyFileService.DeleteAsync(dependecyParams, id);
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
@@ -88,7 +88,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
                 childPopupTitle = "Update Discrepancy";
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             _discrepancyFile = await DiscrepancyFileService.GetDetailsAsync(dependecyParams, discrepancyFileVM.Id);
             _discrepancyFile.DiscrepancyId = DiscrepancyIdParam;
 

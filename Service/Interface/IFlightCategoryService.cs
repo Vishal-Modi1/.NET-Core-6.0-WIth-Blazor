@@ -1,13 +1,13 @@
-﻿using DataModels.Entities;
+﻿using DataModels.VM.Scheduler;
 using DataModels.VM.Common;
 
 namespace Service.Interface
 {
     public interface IFlightCategoryService
     {
-        CurrentResponse Create(FlightCategory flightCategory);
+        CurrentResponse Create(FlightCategoryVM flightCategoryVM);
         CurrentResponse ListDropDownValues(int companyId);
-        CurrentResponse Edit(FlightCategory flightCategory);
+        CurrentResponse Edit(FlightCategoryVM flightCategoryVM);
         CurrentResponse Delete(int id);
         CurrentResponse ListByCompanyId(int companyId);
     }

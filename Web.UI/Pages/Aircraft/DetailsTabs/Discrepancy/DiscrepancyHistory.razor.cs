@@ -25,7 +25,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
         {
             ChangeLoaderVisibilityAction(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             discrepancyHistoryData = await DiscrepancyService.ListDiscrepancyHistoryAsync(dependecyParams, discrepancyId);
 
             ChangeLoaderVisibilityAction(false);

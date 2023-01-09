@@ -30,8 +30,7 @@ namespace Web.UI.Pages.Aircraft
         DataModels.Enums.UserRole userRole;
         string modelWidth = "600px";
         public List<UpcomingFlight> upcomingFlights = new();
-        DependecyParams dependecyParams;
-
+        
         protected override Task OnInitializedAsync()
         {
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);

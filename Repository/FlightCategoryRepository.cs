@@ -43,6 +43,7 @@ namespace Repository
             {
                 existingFlightCategory.Name = flightCategory.Name;
                 existingFlightCategory.Color = flightCategory.Color;
+                existingFlightCategory.CompanyId = flightCategory.CompanyId;
 
                 _myContext.SaveChanges();
             }

@@ -78,7 +78,7 @@ namespace Web.UI.Pages.UserRolePermission
             datatableParams.RoleId = userrolePermissionFilterVM.UserRoleId;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserRolePermissionService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;

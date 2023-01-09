@@ -8,6 +8,7 @@ using DataModels.VM.Common;
 using Service.Interface;
 using DataModels.Constants;
 using System.Linq.Expressions;
+using DataModels.VM.Scheduler;
 
 namespace Service
 {
@@ -20,11 +21,11 @@ namespace Service
             _flightCategoryRepository = flightCategoryRepository;
         }
 
-        public CurrentResponse Create(FlightCategory flightCategory)
+        public CurrentResponse Create(FlightCategoryVM flightCategoryVM)
         {
             try
             {
-                FlightCategory existingCategory = _flightCategoryRepository.FindByCondition(p => p.Id != flightCategory.Id && p.Name == flightCategory.Name && p.CompanyId == flightCategory.CompanyId);
+                FlightCategory existingCategory = _flightCategoryRepository.FindByCondition(p => p.Id != flightCategoryVM.Id && p.Name == flightCategoryVM.Name && p.CompanyId == flightCategoryVM.CompanyId);
 
                 if (existingCategory is not null)
                 {
@@ -32,6 +33,7 @@ namespace Service
                 }
                 else
                 {
+                    FlightCategory flightCategory = ToDataObject(flightCategoryVM);
                     flightCategory = _flightCategoryRepository.Create(flightCategory);
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category added successfully");
                 }
@@ -46,11 +48,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse Edit(FlightCategory flightCategory)
+        public CurrentResponse Edit(FlightCategoryVM flightCategoryVM)
         {
             try
             {
-                FlightCategory existingCategory = _flightCategoryRepository.FindByCondition(p=>p.Id != flightCategory.Id && p.Name == flightCategory.Name && p.CompanyId == flightCategory.CompanyId);
+                FlightCategory existingCategory = _flightCategoryRepository.FindByCondition(p=>p.Id != flightCategoryVM.Id && p.Name == flightCategoryVM.Name && p.CompanyId == flightCategoryVM.CompanyId);
 
                 if (existingCategory is not null)
                 {
@@ -58,6 +60,7 @@ namespace Service
                 }
                 else
                 {
+                    FlightCategory flightCategory = ToDataObject(flightCategoryVM);
                     flightCategory = _flightCategoryRepository.Edit(flightCategory);
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category updated successfully");
                 }
@@ -115,7 +118,9 @@ namespace Service
             try
             {
                 List<FlightCategory> flightCategories =  _flightCategoryRepository.ListByCompanyId(companyId);
-                CreateResponse(flightCategories, HttpStatusCode.OK, "Category deleted successfully.");
+                List<FlightCategoryVM> flightCategoryVMs  = ToBusinessObjectList(flightCategories);
+                
+                CreateResponse(flightCategoryVMs, HttpStatusCode.OK, "Category deleted successfully.");
 
                 return _currentResponse;
             }
@@ -126,6 +131,43 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        private List<FlightCategoryVM> ToBusinessObjectList(List<FlightCategory> flightCategories)
+        {
+            List<FlightCategoryVM> flightCategoryVMs = new List<FlightCategoryVM>();
+
+            foreach (FlightCategory flightCategory in flightCategories)
+            {
+                FlightCategoryVM flightCategoryVM = ToBusinessObject(flightCategory);
+                flightCategoryVMs.Add(flightCategoryVM);
+            }
+
+            return flightCategoryVMs;
+        }
+
+        private FlightCategoryVM ToBusinessObject(FlightCategory flightCategory)
+        {
+            FlightCategoryVM flightCategoryVM = new FlightCategoryVM();
+
+            flightCategoryVM.Id = flightCategory.Id;
+            flightCategoryVM.Name = flightCategory.Name;
+            flightCategoryVM.CompanyId = flightCategory.CompanyId;
+            flightCategoryVM.Color = flightCategory.Color;
+            
+            return flightCategoryVM;
+        }
+
+        private FlightCategory ToDataObject(FlightCategoryVM flightCategoryVM)
+        {
+            FlightCategory flightCategory = new FlightCategory();
+
+            flightCategory.Id = flightCategoryVM.Id;
+            flightCategory.Name = flightCategoryVM.Name;
+            flightCategory.CompanyId = flightCategoryVM.CompanyId;
+            flightCategory.Color = flightCategoryVM.Color;
+
+            return flightCategory;
         }
     }
 }

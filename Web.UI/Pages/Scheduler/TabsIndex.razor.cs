@@ -5,6 +5,7 @@ using Telerik.Blazor.Components;
 using Utilities;
 using Web.UI.Utilities;
 using DataModels.VM.Reservation;
+using DataModels.VM.Common;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -13,12 +14,13 @@ namespace Web.UI.Pages.Scheduler
         public DateTime currentDate = DateTime.Today;
         SchedulerFilter schedulerFilter = new SchedulerFilter();
         List<SchedulerVM> dataSource;
-        DependecyParams dependecyParams;
-        List<FlightCategory> flightCategories = new ();
+        List<FlightCategoryVM> flightCategories = new ();
         SchedulerIndex schedulerIndex;
-        FlightCategory _flightCategory;
+        FlightCategoryVM _flightCategory;
         public List<UpcomingFlight> upcomingFlights = new();
-      
+        public List<DropDownValues> companies = new ();
+        public int companyId;
+
         protected override Task OnInitializedAsync()
         {
             isLeftBarVisible = true;
@@ -28,12 +30,6 @@ namespace Web.UI.Pages.Scheduler
             return base.OnInitializedAsync();
         }
 
-        private async Task CheckboxChangedAsync(ChangeEventArgs e, FlightCategory flightCategory)
-        {
-            flightCategory.IsActive = (bool)e.Value;
-            await schedulerIndex.LoadCalendarViewData();
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -41,28 +37,52 @@ namespace Web.UI.Pages.Scheduler
                 dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 ChangeLoaderVisibilityAction(true);
-                        
-                await LoadDataAsync();
-                await LoadCategoris();
-                await LoadUpcomingFlights();
+
+                if (globalMembers.IsSuperAdmin)
+                {
+                    companies = await CompanyService.ListDropDownValues(dependecyParams);
+                }
+                else
+                {
+                    await LoadCategoris();
+                    await LoadUpcomingFlights();
+                    await LoadDataAsync();
+                }
 
                 ChangeLoaderVisibilityAction(false);
             }
         }
 
+        async Task GetScheduleData(int value)
+        {
+            companyId = value;
+            schedulerFilter.CompanyId = companyId;
+
+            await LoadDataAsync();
+            await LoadCategoris();
+            await LoadUpcomingFlights();
+
+            await schedulerIndex.GetAutocompleteData(companyId);
+        }
+
+        private async Task CheckboxChangedAsync(ChangeEventArgs e, FlightCategoryVM flightCategory)
+        {
+            flightCategory.IsActive = (bool)e.Value;
+            await schedulerIndex.LoadCalendarViewData();
+        }
+
         private async Task LoadUpcomingFlights()
         {
-            upcomingFlights = await ReservationService.ListUpcomingFlightsByCompanyId(dependecyParams, globalMembers.CompanyId);
+            upcomingFlights = await ReservationService.ListUpcomingFlightsByCompanyId(dependecyParams, companyId);
             upcomingFlights.ForEach(p =>
             {
                 p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
-
             });
         }
 
         async Task LoadCategoris()
         {
-            flightCategories = await FlightCategoryService.ListAll(dependecyParams);
+            flightCategories = await FlightCategoryService.ListAll(dependecyParams, companyId);
             base.StateHasChanged();
         }
 
@@ -97,18 +117,18 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-        void OpenCreateCategoryDialogAsync(FlightCategory flightCategory)
+        void OpenCreateCategoryDialogAsync(FlightCategoryVM flightCategory)
         {
             isDisplayPopup = true;
             _flightCategory = flightCategory;
 
             if (flightCategory.Id == 0)
             {
-                popupTitle = "Edit Category";
+                popupTitle = "Create Category";
             }
             else
             {
-                popupTitle = "Create Category";
+                popupTitle = "Edit Category";
             }
         }
 

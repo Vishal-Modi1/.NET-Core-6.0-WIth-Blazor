@@ -26,7 +26,7 @@ namespace Web.UI.Shared
         List<string> supportedDocumentsFormat = Configuration.ConfigurationSettings.Instance.SupportedDocuments.Split(new String[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
         public string supportedImagesFormats = Configuration.ConfigurationSettings.Instance.SupportedImageTypes;
         public bool isLeftBarVisible { get; set; } = true;
-
+        public DependecyParams dependecyParams { get; set; }
         public bool isDisplayPopup { get; set; }
         public bool isDisplayChildPopup { get; set; }
         public string popupTitle { get; set; }

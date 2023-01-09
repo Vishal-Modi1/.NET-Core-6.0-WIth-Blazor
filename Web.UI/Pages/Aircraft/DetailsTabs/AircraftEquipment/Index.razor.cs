@@ -44,7 +44,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
             AircraftEquipmentDatatableParams datatableParams = new DatatableParams().Create(args, "Status").Cast<AircraftEquipmentDatatableParams>();
             datatableParams.AircraftId = AircraftId;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await AircraftEquipmentService.ListAsync(dependecyParams, datatableParams);
 
             data.ForEach(p =>
@@ -59,7 +59,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async Task DeleteAsync(long id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftEquipmentService.DeleteAsync(dependecyParams, id);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
@@ -85,7 +85,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 popupTitle = "Update Equipment Details";
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, aircraftEquipmentDataVM.Id);
 
             if (aircraftEquipmentsVM.LogEntryDate == null)

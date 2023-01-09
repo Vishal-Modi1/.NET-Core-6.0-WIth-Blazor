@@ -6,6 +6,8 @@ namespace Service.Interface
     public interface IAircraftScheduleService
     {
         CurrentResponse GetDetails(int roleId, int companyId, long id, long userId);
+        
+        CurrentResponse GetDropdownValuesByCompanyId(int roleId, int companyId, long userId);
 
         CurrentResponse Create(SchedulerVM schedulerVM, string timezone);
 

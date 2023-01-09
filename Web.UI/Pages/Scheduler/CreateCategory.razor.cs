@@ -3,12 +3,14 @@ using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Web.UI.Utilities;
 using System.Drawing;
+using DataModels.VM.Scheduler;
 
 namespace Web.UI.Pages.Scheduler
 {
     partial class CreateCategory
     {
-        [Parameter] public FlightCategory flightCategory { get; set; }
+        [Parameter] public FlightCategoryVM flightCategory { get; set; }
+        [Parameter] public List<DropDownValues> Companies {get;set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         string originalColor = "";
 

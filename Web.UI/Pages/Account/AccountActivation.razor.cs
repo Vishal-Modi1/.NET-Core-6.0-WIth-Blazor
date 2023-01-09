@@ -35,7 +35,7 @@ namespace Web.UI.Pages.Account
                     //message = "Validating token ...";
                     //StateHasChanged();
 
-                    DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                    dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                     CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, Link);
                     await ManageResponseAsync(response);
                     ShowError = false;
@@ -50,7 +50,7 @@ namespace Web.UI.Pages.Account
         {
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 response = await AccountService.ActivateAccountAsync(dependecyParams, Link);
                 IsValidToken = true;
