@@ -171,7 +171,8 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-drawer-expanded .k-drawer.k-drawer-start {
-  border-right-width: 0;
+  border-right-width: medium;
+  border-right-color: lightgrey;
 }
 
 .k-drawer-left.k-drawer-mini .k-drawer {
