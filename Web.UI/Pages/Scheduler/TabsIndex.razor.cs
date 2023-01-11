@@ -20,6 +20,8 @@ namespace Web.UI.Pages.Scheduler
         public List<UpcomingFlight> upcomingFlights = new();
         public List<DropDownValues> companies = new ();
         public int companyId;
+        public TelerikTabStrip tabRef { get; set; }
+        int cureActiveTabIndex;
 
         protected override Task OnInitializedAsync()
         {
@@ -130,6 +132,11 @@ namespace Web.UI.Pages.Scheduler
             {
                 popupTitle = "Edit Category";
             }
+        }
+
+        void TabChangedHandler(int newIndex)
+        {
+            cureActiveTabIndex = newIndex;
         }
 
         async Task CloseDialog(bool reloadGrid)

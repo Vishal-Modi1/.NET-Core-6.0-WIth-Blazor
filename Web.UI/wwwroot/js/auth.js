@@ -205,6 +205,32 @@ export function LoadRadarMap(src) {
     $('#radarMap').attr("src", src);
 }
 
+export function RefreshRadarMapWidth(width) {
+
+    $('#radarMap').css("width", width + "px");
+}
+
+export function RefreshRadarMapHeight(height) {
+
+    $('#radarMap').css( "height", height + "px");
+}
+
+export function LoadAircraftLiveTrackerMap(src) {
+
+    $('#aircraftLiveTrackerMap').attr("src", src);
+}
+
+export function RefreshAircraftLiveTrackerMapWidth(width) {
+
+    $('#radarMap').css("width", width + "px");
+}
+
+export function RefreshAircraftLiveTrackerMapHeight(height) {
+
+    $('#aircraftLiveTrackerMap').css("height", height + "px");
+}
+
+
 export function updateschedulerheadercolumns() {
 
     var width = $('.k-scheduler-body .k-heading-cell').first().css("min-width")

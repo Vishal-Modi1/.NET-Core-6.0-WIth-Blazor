@@ -50,6 +50,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IWindyMapConfigurationService, WindyMapConfigurationService>();
             services.AddScoped<IBillingConfigurationService, BillingConfigurationService>();
             services.AddScoped<IFlightCategoryService, FlightCategoryService>();
+            services.AddScoped<IAircraftLiveTrackerMapConfigurationService, AircraftLiveTrackerMapConfigurationService>();
+            services.AddScoped<IRadarMapConfigurationService, RadarMapConfigurationService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -98,6 +100,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IWindyMapConfigurationRepository, WindyMapConfigurationRepository>();
             services.AddScoped<IBillingConfigurationRepository, BillingConfigurationRepository>();
             services.AddScoped<IFlightCategoryRepository, FlightCategoryRepository>();
+            services.AddScoped<IAircraftLiveTrackerMapConfigurationRepository, AircraftLiveTrackerMapConfigurationRepository>();
+            services.AddScoped<IRadarMapConfigurationRepository, RadarMapConfigurationRepository>();
         }
     }
 }

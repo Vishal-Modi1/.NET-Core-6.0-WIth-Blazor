@@ -11,24 +11,24 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class WindyMapConfigurationController : BaseAPIController
+    public class RadarMapConfigurationController : BaseAPIController
     {
-        private readonly IWindyMapConfigurationService _windyMapConfigurationService;
+        private readonly IRadarMapConfigurationService _radarMapConfigurationService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public WindyMapConfigurationController(IWindyMapConfigurationService WindyMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public RadarMapConfigurationController(IRadarMapConfigurationService RadarMapConfigurationService, IHttpContextAccessor httpContextAccessor)
         {
-            _windyMapConfigurationService = WindyMapConfigurationService;
+            _radarMapConfigurationService = RadarMapConfigurationService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("setDefault")]
-        public IActionResult SetDefault(WindyMapConfigurationVM windyMapConfigurationVM)
+        public IActionResult SetDefault(RadarMapConfigurationVM radarMapConfigurationVM)
         {
             string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
-            windyMapConfigurationVM.UserId = Convert.ToInt64(loggedInUser);
-            CurrentResponse response = _windyMapConfigurationService.SetDefault(windyMapConfigurationVM);
+            radarMapConfigurationVM.UserId = Convert.ToInt64(loggedInUser);
+            CurrentResponse response = _radarMapConfigurationService.SetDefault(radarMapConfigurationVM);
 
             return APIResponse(response);
         }
@@ -39,7 +39,7 @@ namespace FSMAPI.Controllers
         public IActionResult GetDefault()
         {
             string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
-            CurrentResponse response = _windyMapConfigurationService.FindByUserId(Convert.ToInt64(loggedInUser));
+            CurrentResponse response = _radarMapConfigurationService.FindByUserId(Convert.ToInt64(loggedInUser));
             
             return APIResponse(response);
         }

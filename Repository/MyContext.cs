@@ -139,6 +139,10 @@ namespace Repository
 
         public DbSet<WindyMapConfiguration> WindyMapConfigurations{ get; set; }
 
+        public DbSet<RadarMapConfiguration> RadarMapConfigurations { get; set; }
+
+        public DbSet<AircraftLiveTrackerMapConfiguration> AircraftLiveTrackerMapConfigurations { get; set; }
+
         public DbSet<BillingConfiguration> BillingConfigurations { get; set; }
      
         public DbSet<FlightCategory> FlightCategories { get; set; }

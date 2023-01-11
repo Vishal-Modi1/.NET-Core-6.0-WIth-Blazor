@@ -137,6 +137,7 @@ builder.Services.AddAuthorization(cfg =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<MyContext>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 // if want to ignore model validations on form post
 //builder.Services.Configure<ApiBehaviorOptions>(options =>

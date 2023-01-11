@@ -1,5 +1,5 @@
-﻿using DataModels.Entities;
-using DataModels.VM.Common;
+﻿using DataModels.VM.Common;
+using DataModels.VM.Weather;
 
 namespace Service.Interface
 {
@@ -7,6 +7,6 @@ namespace Service.Interface
     {
         CurrentResponse FindByUserId(long userId);
 
-        CurrentResponse SetDefault(WindyMapConfiguration windyMapConfiguration);
+        CurrentResponse SetDefault(WindyMapConfigurationVM windyMapConfigurationVM);
     }
 }

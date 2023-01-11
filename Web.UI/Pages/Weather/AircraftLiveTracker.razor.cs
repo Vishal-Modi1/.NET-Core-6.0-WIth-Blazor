@@ -1,14 +1,14 @@
-﻿using DataModels.VM.Weather;
-using DataModels.VM.Common;
+﻿using DataModels.VM.Common;
+using DataModels.VM.Weather;
 using Microsoft.JSInterop;
 using Web.UI.Utilities;
 
 namespace Web.UI.Pages.Weather
 {
-    partial class Radar
+    partial class AircraftLiveTracker
     {
         string mapSrc = "";
-        RadarMapConfigurationVM radarMapConfiguration = new();
+        AircraftLiveTrackerMapConfigurationVM aircraftLiveTrackerMapConfiguration = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -19,17 +19,17 @@ namespace Web.UI.Pages.Weather
         {
             ChangeLoaderVisibilityAction(true);
 
-            mapSrc = $"https://weather.cod.edu/satrad/?parms=continental-conus-13-24-0-100-1&checked=map&colorbar=data";
+            mapSrc = $"https://globe.adsbexchange.com/";
 
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-            await authModule.InvokeVoidAsync("LoadRadarMap", mapSrc);
+            await authModule.InvokeVoidAsync("LoadAircraftLiveTrackerMap", mapSrc);
 
             ChangeLoaderVisibilityAction(true);
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            radarMapConfiguration = await RadarMapConfigurationService.GetDefault(dependecyParams);
+            aircraftLiveTrackerMapConfiguration = await AircraftLiveTrackerMapConfigurationService.GetDefault(dependecyParams);
 
-            if (radarMapConfiguration.Id == 0)
+            if (aircraftLiveTrackerMapConfiguration.Id == 0)
             {
                 SetDefaultValues();
             }
@@ -44,16 +44,16 @@ namespace Web.UI.Pages.Weather
 
         private void SetDefaultValues()
         {
-            radarMapConfiguration.Height = 700;
-            radarMapConfiguration.Width = 1200;
+            aircraftLiveTrackerMapConfiguration.Height = 700;
+            aircraftLiveTrackerMapConfiguration.Width = 1200;
         }
 
         public async Task OnWidthChange()
         {
-            if (radarMapConfiguration.Width < 500)
+            if (aircraftLiveTrackerMapConfiguration.Width < 500)
             {
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Minimum width should be 500px");
-                radarMapConfiguration.Width = 500;
+                aircraftLiveTrackerMapConfiguration.Width = 500;
                 return;
             }
 
@@ -62,10 +62,10 @@ namespace Web.UI.Pages.Weather
 
         public async Task OnHeightChange()
         {
-            if (radarMapConfiguration.Height < 500)
+            if (aircraftLiveTrackerMapConfiguration.Height < 500)
             {
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Minimum height should be 500px");
-                radarMapConfiguration.Height = 500;
+                aircraftLiveTrackerMapConfiguration.Height = 500;
                 return;
             }
 
@@ -75,13 +75,13 @@ namespace Web.UI.Pages.Weather
         private async Task RefreshHeight()
         {
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-            await authModule.InvokeVoidAsync("RefreshRadarMapHeight", radarMapConfiguration.Height);
+            await authModule.InvokeVoidAsync("RefreshAircraftLiveTrackerMapHeight", aircraftLiveTrackerMapConfiguration.Height);
         }
 
         private async Task RefreshWidth()
         {
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
-            await authModule.InvokeVoidAsync("RefreshRadarMapWidth", radarMapConfiguration.Width);
+            await authModule.InvokeVoidAsync("RefreshAircraftLiveTrackerMapWidth", aircraftLiveTrackerMapConfiguration.Width);
         }
 
         public async Task Submit()
@@ -89,7 +89,7 @@ namespace Web.UI.Pages.Weather
             isBusyAddButton = true;
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            CurrentResponse response = await RadarMapConfigurationService.SetDefault(dependecyParams, radarMapConfiguration);
+            CurrentResponse response = await AircraftLiveTrackerMapConfigurationService.SetDefault(dependecyParams, aircraftLiveTrackerMapConfiguration);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 

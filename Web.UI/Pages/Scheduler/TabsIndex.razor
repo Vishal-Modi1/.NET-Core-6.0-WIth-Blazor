@@ -74,6 +74,18 @@
     .collapsebarcard {
         border-radius: 0px;
     }
+
+    @@media (max-width: 1441px) and (min-width: 1200px) {
+    .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%!important;
+    }
+
+    .col-xl-10 {
+        flex: 0 0 auto;
+        width: 80% !important;
+    }
+}
 </style>
 
 <div class="row my-0">
@@ -180,14 +192,14 @@
 
         <div class="cursor-pointer mb-2 d-flex">
 
-            <div class="col-md-2" @onclick=@(() => ToggleLeftPane())>
+            <div class="col-2" @onclick=@(() => ToggleLeftPane())>
                 <FontLabel fontColor="#3066F8" fontSize="12px">
                     <CustomIcons IconName="toggle-hamburg"></CustomIcons>
                     Toggle Left Pane
                 </FontLabel>
             </div>
 
-            @if (globalMembers.IsSuperAdmin)
+            @if (globalMembers.IsSuperAdmin && cureActiveTabIndex == 0)
             {
                 <div class="col-md-10 d-flex justify-content-end">
                     <div class="col-md-6 ">
@@ -208,7 +220,7 @@
         <div id="container">
             <div class="card">
 
-                <TelerikTabStrip Class="k-tabstrip-list">
+                <TelerikTabStrip Class="k-tabstrip-list"  ActiveTabIndexChanged="@TabChangedHandler">
 
                     <TabStripTab>
                         <HeaderTemplate>

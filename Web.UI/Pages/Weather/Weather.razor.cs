@@ -1,5 +1,5 @@
-﻿using DataModels.Entities;
-using DataModels.VM.Common;
+﻿using DataModels.VM.Common;
+using DataModels.VM.Weather;
 using Microsoft.JSInterop;
 using Web.UI.Utilities;
 
@@ -7,7 +7,7 @@ namespace Web.UI.Pages.Weather
 {
     partial class Weather
     {
-        WindyMapConfiguration windyMapConfiguration = new();
+        WindyMapConfigurationVM windyMapConfiguration = new();
         List<DropDownStringValues> windSpeedList = new();
         List<DropDownStringValues> temperaturesList = new();
         List<DropDownStringValues> forecastList = new();
@@ -49,8 +49,8 @@ namespace Web.UI.Pages.Weather
             windyMapConfiguration.Wind = "default";
             windyMapConfiguration.Temperature = "default";
             windyMapConfiguration.Forecast = "now";
-            windyMapConfiguration.Height = 450;
-            windyMapConfiguration.Width = 650;
+            windyMapConfiguration.Height = 500;
+            windyMapConfiguration.Width = 500;
         }
 
         public async Task OnWindSpeedChange(string value)
@@ -73,11 +73,25 @@ namespace Web.UI.Pages.Weather
 
         public async Task OnWidthChange()
         {
+            if (windyMapConfiguration.Width < 500)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Minimum width should be 500px");
+                windyMapConfiguration.Width = 500;
+                return;
+            }
+
             await RefreshWidth();
         }
 
         public async Task OnHeightChange()
         {
+            if (windyMapConfiguration.Height < 500)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Minimum height should be 500px");
+                windyMapConfiguration.Height = 500;
+                return;
+            }
+
             await RefreshHeight();
         }
 

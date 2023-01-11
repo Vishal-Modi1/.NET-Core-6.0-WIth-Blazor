@@ -1,4 +1,4 @@
-﻿using DataModels.Entities;
+﻿using DataModels.VM.Weather;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
@@ -15,25 +15,25 @@ namespace Web.UI.Data.Weather
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> SetDefault(DependecyParams dependecyParams, WindyMapConfiguration windyMapConfiguration)
+        public async Task<CurrentResponse> SetDefault(DependecyParams dependecyParams, WindyMapConfigurationVM windyMapConfigurationVM)
         {
-            dependecyParams.JsonData = JsonConvert.SerializeObject(windyMapConfiguration);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(windyMapConfigurationVM);
             dependecyParams.URL = $"windyMapConfiguration/setDefault";
             CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }
 
-        public async Task<WindyMapConfiguration> GetDefault(DependecyParams dependecyParams)
+        public async Task<WindyMapConfigurationVM> GetDefault(DependecyParams dependecyParams)
         {
             try
             {
                 dependecyParams.URL = "windyMapConfiguration/GetDefault";
                 CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
-                WindyMapConfiguration windyMapConfiguration = JsonConvert.DeserializeObject<WindyMapConfiguration>(response.Data.ToString());
+                WindyMapConfigurationVM windyMapConfigurationVM = JsonConvert.DeserializeObject<WindyMapConfigurationVM>(response.Data.ToString());
 
-                return windyMapConfiguration;
+                return windyMapConfigurationVM;
             }
             catch (Exception exc)
             {

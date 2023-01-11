@@ -11,24 +11,24 @@ namespace FSMAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class WindyMapConfigurationController : BaseAPIController
+    public class AircraftLiveTrackerMapConfigurationController : BaseAPIController
     {
-        private readonly IWindyMapConfigurationService _windyMapConfigurationService;
+        private readonly IAircraftLiveTrackerMapConfigurationService _aircraftLiveTrackerMapConfigurationService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public WindyMapConfigurationController(IWindyMapConfigurationService WindyMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public AircraftLiveTrackerMapConfigurationController(IAircraftLiveTrackerMapConfigurationService AircraftLiveTrackerMapConfigurationService, IHttpContextAccessor httpContextAccessor)
         {
-            _windyMapConfigurationService = WindyMapConfigurationService;
+            _aircraftLiveTrackerMapConfigurationService = AircraftLiveTrackerMapConfigurationService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("setDefault")]
-        public IActionResult SetDefault(WindyMapConfigurationVM windyMapConfigurationVM)
+        public IActionResult SetDefault(AircraftLiveTrackerMapConfigurationVM aircraftLiveTrackerMapConfigurationVM)
         {
             string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
-            windyMapConfigurationVM.UserId = Convert.ToInt64(loggedInUser);
-            CurrentResponse response = _windyMapConfigurationService.SetDefault(windyMapConfigurationVM);
+            aircraftLiveTrackerMapConfigurationVM.UserId = Convert.ToInt64(loggedInUser);
+            CurrentResponse response = _aircraftLiveTrackerMapConfigurationService.SetDefault(aircraftLiveTrackerMapConfigurationVM);
 
             return APIResponse(response);
         }
@@ -39,7 +39,7 @@ namespace FSMAPI.Controllers
         public IActionResult GetDefault()
         {
             string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
-            CurrentResponse response = _windyMapConfigurationService.FindByUserId(Convert.ToInt64(loggedInUser));
+            CurrentResponse response = _aircraftLiveTrackerMapConfigurationService.FindByUserId(Convert.ToInt64(loggedInUser));
             
             return APIResponse(response);
         }

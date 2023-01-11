@@ -3,22 +3,22 @@ using Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using DataModels.VM.Company;
 using DataModels.VM.Common;
 using Service.Interface;
-using DataModels.Constants;
-using System.Linq.Expressions;
 using DataModels.VM.Scheduler;
+using AutoMapper;
 
 namespace Service
 {
     public class FlightCategoryService : BaseService, IFlightCategoryService
     {
         private readonly IFlightCategoryRepository _flightCategoryRepository;
+        private readonly IMapper _mapper;
 
-        public FlightCategoryService(IFlightCategoryRepository flightCategoryRepository)
+        public FlightCategoryService(IFlightCategoryRepository flightCategoryRepository, IMapper mapper)
         {
             _flightCategoryRepository = flightCategoryRepository;
+            _mapper = mapper;
         }
 
         public CurrentResponse Create(FlightCategoryVM flightCategoryVM)
@@ -33,7 +33,7 @@ namespace Service
                 }
                 else
                 {
-                    FlightCategory flightCategory = ToDataObject(flightCategoryVM);
+                    FlightCategory flightCategory = _mapper.Map<FlightCategory>(flightCategoryVM);
                     flightCategory = _flightCategoryRepository.Create(flightCategory);
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category added successfully");
                 }
@@ -60,7 +60,9 @@ namespace Service
                 }
                 else
                 {
-                    FlightCategory flightCategory = ToDataObject(flightCategoryVM);
+                    FlightCategory flightCategory = _mapper.Map<FlightCategory>(flightCategoryVM);
+
+                 //   FlightCategory flightCategory = ToDataObject(flightCategoryVM);
                     flightCategory = _flightCategoryRepository.Edit(flightCategory);
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category updated successfully");
                 }
@@ -118,8 +120,8 @@ namespace Service
             try
             {
                 List<FlightCategory> flightCategories =  _flightCategoryRepository.ListByCompanyId(companyId);
-                List<FlightCategoryVM> flightCategoryVMs  = ToBusinessObjectList(flightCategories);
-                
+                List<FlightCategoryVM> flightCategoryVMs = _mapper.Map<List<FlightCategoryVM>>(flightCategories);
+
                 CreateResponse(flightCategoryVMs, HttpStatusCode.OK, "Category deleted successfully.");
 
                 return _currentResponse;
@@ -131,43 +133,6 @@ namespace Service
 
                 return _currentResponse;
             }
-        }
-
-        private List<FlightCategoryVM> ToBusinessObjectList(List<FlightCategory> flightCategories)
-        {
-            List<FlightCategoryVM> flightCategoryVMs = new List<FlightCategoryVM>();
-
-            foreach (FlightCategory flightCategory in flightCategories)
-            {
-                FlightCategoryVM flightCategoryVM = ToBusinessObject(flightCategory);
-                flightCategoryVMs.Add(flightCategoryVM);
-            }
-
-            return flightCategoryVMs;
-        }
-
-        private FlightCategoryVM ToBusinessObject(FlightCategory flightCategory)
-        {
-            FlightCategoryVM flightCategoryVM = new FlightCategoryVM();
-
-            flightCategoryVM.Id = flightCategory.Id;
-            flightCategoryVM.Name = flightCategory.Name;
-            flightCategoryVM.CompanyId = flightCategory.CompanyId;
-            flightCategoryVM.Color = flightCategory.Color;
-            
-            return flightCategoryVM;
-        }
-
-        private FlightCategory ToDataObject(FlightCategoryVM flightCategoryVM)
-        {
-            FlightCategory flightCategory = new FlightCategory();
-
-            flightCategory.Id = flightCategoryVM.Id;
-            flightCategory.Name = flightCategoryVM.Name;
-            flightCategory.CompanyId = flightCategoryVM.CompanyId;
-            flightCategory.Color = flightCategoryVM.Color;
-
-            return flightCategory;
         }
     }
 }
