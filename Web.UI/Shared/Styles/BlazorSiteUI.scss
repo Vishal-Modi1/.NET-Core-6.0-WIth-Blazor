@@ -835,3 +835,15 @@ th, td, span, p {
         border-radius: 8px;
     }
 }
+
+@media (max-width: 1440px) and (min-width: 1200px) {
+    .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+
+    .col-xl-10 {
+        flex: 0 0 auto;
+        width: 80%;
+    }
+}

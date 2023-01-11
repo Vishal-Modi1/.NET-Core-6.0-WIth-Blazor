@@ -693,3 +693,14 @@ th, td, span, p {
   background-color: rgba(2, 34, 84, 0.7490196078);
   border-radius: 8px;
 }
+
+@media (max-width: 1440px) and (min-width: 1200px) {
+  .col-xl-2 {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+  .col-xl-10 {
+    flex: 0 0 auto;
+    width: 80%;
+  }
+}
