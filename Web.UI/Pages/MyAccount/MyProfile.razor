@@ -30,11 +30,9 @@
     }
 </style>
  <div class="row my-0">
-        <div class=" col-12 col-md-12 col-lg-4 col-xl-2 px-1  my-0 @(isLeftBarVisible ? "":"d-none")">
+        <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
             <div class="card p-0 no-box-shadow">
                 <div class="card-body p-0 ">
-        @*<div class="p-0 m-0 mb-2">
-            <div class="p-0 m-0 ">*@
                     <div>
                         <div class="row d-flex justify-content-center align-items-start w-100 m-0 profile-image-hover" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(userVM.ImageName)'), url('../img/thumbnail-userprofile.png');">
                             <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
@@ -52,7 +50,7 @@
                     </div>
                     <hr class="m-0" />
                     <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
-                    <div class="d-flex justify-content-between my-2 align-items-center">
+                    <div class="d-flex justify-content-start  align-items-center">
                             <span class="mx-2">
                             <CustomIcons IconName="user" PrimaryColor="black"></CustomIcons>
                                  Personal Information
@@ -177,12 +175,8 @@
            @* <UpcomingFlights upcomingFlights="@upcomingFlights"></UpcomingFlights>*@
            
         </div>
-    <div class="col-12 col-md-12  my-0 @(isLeftBarVisible ? "col-lg-8 ps-0 col-xl-10":"col-lg-12")">
-        <div class="col-12" @onclick=@(() => ToggleLeftPane())>
-            <FontLabel fontColor="#3066F8" fontSize="12px">
-                <CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane
-            </FontLabel>
-        </div>
+    <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
+        <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
     <div class="card">
             <TelerikTabStrip Class="k-tabstrip-list">
 
