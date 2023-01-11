@@ -9,7 +9,7 @@
 @if (aircraftData != null)
 {
     <div class="row my-0">
-        <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
+        <div class="col-12 col-md-12 col-lg-4 col-xl-2 px-1  my-0 @(isLeftBarVisible ? "":"d-none")">
             <div class="card p-0 no-box-shadow">
                 <div class="card-body p-0 ">
                     <div>
@@ -93,8 +93,8 @@
             <UpcomingFlights upcomingFlights="@upcomingFlights" IsForAircraft="true"></UpcomingFlights>
            
         </div>
-        <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
-            <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
+        <div class="col-12 col-md-12 my-0 @(isLeftBarVisible ? "col-lg-8 ps-0 col-xl-10":"col-lg-12")">
+            <div class="col-12" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
             <div class="card no-box-shadow ">
                
                 <Web.UI.Pages.Aircraft.DetailsTabs.Index aircraftData=@aircraftData />

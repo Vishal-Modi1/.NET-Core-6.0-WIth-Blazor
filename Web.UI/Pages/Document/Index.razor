@@ -192,7 +192,8 @@
 
                 <Template>
 
-                    <span class="d-flex">
+                    @*<span class="d-flex">*@
+                        <span>
                         @{
                             DocumentDataVM value = dataItem as DocumentDataVM;
                             bool isShareble = !value.IsShareable || (value.LastShareDate != null && value.LastShareDate.Value < DateTime.Now.Date);
