@@ -29,5 +29,21 @@ namespace Repository
          
             _myContext.SaveChanges();
         }
+
+        public void SetDefault(long userId, short height, short width)
+        {
+            AircraftLiveTrackerMapConfiguration data = FindByCondition(p => p.UserId == userId);
+
+            if (data == null)
+            {
+                data = new AircraftLiveTrackerMapConfiguration();
+            }
+
+            data.UserId = userId;
+            data.Height = height;
+            data.Width = width;
+
+            SetDefault(data);
+        }
     }
 }

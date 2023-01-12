@@ -29,5 +29,21 @@ namespace Repository
          
             _myContext.SaveChanges();
         }
+
+        public void SetDefault(long userId, short height, short width)
+        {
+            RadarMapConfiguration data = FindByCondition(p => p.UserId == userId);
+
+            if (data == null)
+            {
+                data = new RadarMapConfiguration();
+            }
+
+            data.UserId = userId;
+            data.Height = height;
+            data.Width = width;
+
+            SetDefault(data);
+        }
     }
 }

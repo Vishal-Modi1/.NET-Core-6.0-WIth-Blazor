@@ -11,13 +11,19 @@ namespace Service
 {
     public class WindyMapConfigurationService : BaseService, IWindyMapConfigurationService
     {
-        private readonly IWindyMapConfigurationRepository _WindyMapConfigurationRepository;
+        private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
+        private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
 
-        public WindyMapConfigurationService(IWindyMapConfigurationRepository 
-            WindyMapConfigurationRepository, IMapper mapper)
+        public WindyMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
+            aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
+            IRadarMapConfigurationRepository radarMapConfigurationRepository,
+            IWindyMapConfigurationRepository windyMapConfigurationRepository)
         {
-            _WindyMapConfigurationRepository = WindyMapConfigurationRepository;
+            _windyMapConfigurationRepository = windyMapConfigurationRepository;
+            _radarMapConfigurationRepository = radarMapConfigurationRepository;
+            _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _mapper = mapper;
         }
 
@@ -26,7 +32,7 @@ namespace Service
             try
             {
                 WindyMapConfigurationVM windyMapConfigurationVM = new();
-                WindyMapConfiguration data = _WindyMapConfigurationRepository.FindByCondition(p => p.UserId == userId);
+                WindyMapConfiguration data = _windyMapConfigurationRepository.FindByCondition(p => p.UserId == userId);
 
                 if (data is not null)
                 {
@@ -50,7 +56,14 @@ namespace Service
             try
             {
                 WindyMapConfiguration windyMapConfiguration = _mapper.Map<WindyMapConfiguration>(windyMapConfigurationVM);
-                _WindyMapConfigurationRepository.SetDefault(windyMapConfiguration);
+                _windyMapConfigurationRepository.SetDefault(windyMapConfiguration);
+                
+                if (windyMapConfigurationVM.IsApplyToAll)
+                {
+                    _radarMapConfigurationRepository.SetDefault(windyMapConfiguration.UserId, windyMapConfiguration.Height, windyMapConfiguration.Width);
+                    _aircraftLiveTrackerMapConfigurationRepository.SetDefault(windyMapConfiguration.UserId, windyMapConfiguration.Height, windyMapConfiguration.Width);
+                }
+
                 windyMapConfigurationVM = _mapper.Map<WindyMapConfigurationVM>(windyMapConfiguration);
 
                 CreateResponse(windyMapConfigurationVM, HttpStatusCode.OK, "Default value updated");
@@ -64,5 +77,7 @@ namespace Service
                 return _currentResponse;
             }
         }
+
+        
     }
 }

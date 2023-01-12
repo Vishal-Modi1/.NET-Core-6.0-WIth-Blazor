@@ -11,13 +11,19 @@ namespace Service
 {
     public class RadarMapConfigurationService : BaseService, IRadarMapConfigurationService
     {
+        private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
         private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
 
-        public RadarMapConfigurationService(IRadarMapConfigurationRepository 
-            radarMapConfigurationRepository, IMapper mapper)
+        public RadarMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
+            aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
+            IRadarMapConfigurationRepository radarMapConfigurationRepository,
+            IWindyMapConfigurationRepository windyMapConfigurationRepository)
         {
             _radarMapConfigurationRepository = radarMapConfigurationRepository;
+            _windyMapConfigurationRepository = windyMapConfigurationRepository;
+            _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _mapper = mapper;
         }
 
@@ -51,6 +57,13 @@ namespace Service
             {
                 RadarMapConfiguration radarMapConfiguration = _mapper.Map<RadarMapConfiguration>(radarMapConfigurationVM);
                 _radarMapConfigurationRepository.SetDefault(radarMapConfiguration);
+                
+                if (radarMapConfigurationVM.IsApplyToAll)
+                {
+                    _aircraftLiveTrackerMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
+                    _windyMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
+                }
+                
                 radarMapConfigurationVM = _mapper.Map<RadarMapConfigurationVM>(radarMapConfiguration);
 
                 CreateResponse(true, HttpStatusCode.OK, "Default value updated");

@@ -12,12 +12,18 @@ namespace Service
     public class AircraftLiveTrackerMapConfigurationService : BaseService, IAircraftLiveTrackerMapConfigurationService
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
+        private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
 
         public AircraftLiveTrackerMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
-            aircraftLiveTrackerMapConfigurationRepository, IMapper mapper)
+            aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
+            IRadarMapConfigurationRepository radarMapConfigurationRepository,
+            IWindyMapConfigurationRepository windyMapConfigurationRepository)
         {
             _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
+            _radarMapConfigurationRepository = radarMapConfigurationRepository;
+            _windyMapConfigurationRepository = windyMapConfigurationRepository;
             _mapper = mapper;
         }
 
@@ -51,6 +57,13 @@ namespace Service
             {
                 AircraftLiveTrackerMapConfiguration aircraftLiveTrackerMapConfiguration = _mapper.Map<AircraftLiveTrackerMapConfiguration>(aircraftLiveTrackerMapConfigurationVM);
                 _aircraftLiveTrackerMapConfigurationRepository.SetDefault(aircraftLiveTrackerMapConfiguration);
+
+                if(aircraftLiveTrackerMapConfigurationVM.IsApplyToAll)
+                {
+                    _radarMapConfigurationRepository.SetDefault(aircraftLiveTrackerMapConfiguration.UserId, aircraftLiveTrackerMapConfiguration.Height, aircraftLiveTrackerMapConfiguration.Width);
+                    _windyMapConfigurationRepository.SetDefault(aircraftLiveTrackerMapConfiguration.UserId, aircraftLiveTrackerMapConfiguration.Height, aircraftLiveTrackerMapConfiguration.Width);
+                }
+
                 aircraftLiveTrackerMapConfigurationVM = _mapper.Map<AircraftLiveTrackerMapConfigurationVM>(aircraftLiveTrackerMapConfiguration);
 
                 CreateResponse(true, HttpStatusCode.OK, "Default value updated");

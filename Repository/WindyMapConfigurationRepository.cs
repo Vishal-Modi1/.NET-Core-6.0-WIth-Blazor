@@ -32,5 +32,21 @@ namespace Repository
          
             _myContext.SaveChanges();
         }
+
+        public void SetDefault(long userId, short height, short width)
+        {
+            WindyMapConfiguration data = FindByCondition(p => p.UserId == userId);
+
+            if (data == null)
+            {
+                data = new WindyMapConfiguration();
+            }
+
+            data.UserId = userId;
+            data.Height = height;
+            data.Width = width;
+
+            SetDefault(data);
+        }
     }
 }
