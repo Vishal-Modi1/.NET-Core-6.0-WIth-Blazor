@@ -51,6 +51,33 @@ namespace Repository
             return flightCategory;
         }
 
+        public void CreateForAllCompanies(FlightCategory flightCategory)
+        {
+            List<Company> companies = _myContext.Companies.Where(p => p.IsActive && !p.IsDeleted).ToList();
+            List<FlightCategory> existingCategories = _myContext.FlightCategories.Where(p => p.Name == flightCategory.Name).ToList();
+
+            List<FlightCategory> flightCategories = new List<FlightCategory>();
+
+            foreach (Company company in companies)
+            {
+                if (!existingCategories.Any(p => p.Name == flightCategory.Name && p.CompanyId == company.Id))
+                {
+                    FlightCategory category = new FlightCategory();
+                    category.CompanyId = company.Id;
+                    category.Name = flightCategory.Name;
+                    category.Color = flightCategory.Color;
+
+                    flightCategories.Add(category);
+                }
+            }
+
+            if (flightCategories.Any())
+            {
+                _myContext.FlightCategories.AddRange(flightCategories);
+                _myContext.SaveChanges();
+            }
+        }
+
         public void Delete(int id)
         {
             FlightCategory flightCategory = _myContext.FlightCategories.Where(p => p.Id == id).FirstOrDefault();

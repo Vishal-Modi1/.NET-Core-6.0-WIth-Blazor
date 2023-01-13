@@ -127,7 +127,9 @@
         <GridColumn Field="@nameof(UserDataVM.Email)" Title="Email"></GridColumn>
         <GridColumn Field="@nameof(UserDataVM.UserRole)" Title="User Role"></GridColumn>
         <GridColumn Field="@nameof(UserDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")"></GridColumn>
-        <GridColumn Field="@nameof(UserDataVM.CreatedOn)" Context="dataItem" Title="Created On">
+
+
+        <GridColumn Field="@nameof(UserDataVM.CreatedOn)" Context="dataItem" Title="Created On" Visible="@(!userFilterVM.IsArchive)">
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
@@ -136,7 +138,7 @@
             </Template>
         </GridColumn>
 
-        <GridColumn Field="@nameof(UserDataVM.IsActive)" Context="dataItem" Title="Is Active">
+        <GridColumn Field="@nameof(UserDataVM.IsActive)" Context="dataItem" Title="Is Active" Visible="@(!userFilterVM.IsArchive)">
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
@@ -146,7 +148,18 @@
             </Template>
         </GridColumn>
 
-         <GridColumn Field="@nameof(UserDataVM.IsArchive)" Context="dataItem" Title="Is Archive">
+         <GridColumn Field="@nameof(UserDataVM.IsArchive)" Context="dataItem" Title="Archived On" Visible="@(userFilterVM.IsArchive)">
+            <Template>
+                
+            @{
+                    var data = dataItem as UserDataVM;
+                   <div> @data.ArchivedOn.GetValueOrDefault().ToString("MM/dd/yyyy") </div>
+                }
+
+            </Template>
+        </GridColumn>
+
+          <GridColumn Field="@nameof(UserDataVM.ArchivedOn)" Context="dataItem" Title="Is Archive">
             <Template>
                 @{
                     var data = dataItem as UserDataVM;

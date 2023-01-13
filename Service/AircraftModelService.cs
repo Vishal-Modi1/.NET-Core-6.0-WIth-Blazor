@@ -46,7 +46,7 @@ namespace Service
 
         private bool IsAircraftModelExist(AircraftModel aircraftModel)
         {
-            AircraftModel aircraftModelInfo = _aircraftModelRepository.FindByCondition(p => p.Name == aircraftModel.Name && p.Id != aircraftModel.Id);
+            AircraftModel aircraftModelInfo = _aircraftModelRepository.FindByCondition(p => p.Name == aircraftModel.Name && p.Id != aircraftModel.Id && p.CompanyId == aircraftModel.CompanyId);
 
             if (aircraftModelInfo == null)
             {
@@ -90,11 +90,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListDropDownValues()
+        public CurrentResponse ListDropDownValues(int companyId)
         {
             try
             {
-                List<DropDownValues> aircraftMakeList = _aircraftModelRepository.ListDropDownValues();
+                List<DropDownValues> aircraftMakeList = _aircraftModelRepository.ListDropDownValues(companyId);
                 CreateResponse(aircraftMakeList, HttpStatusCode.OK, "");
 
                 return _currentResponse;

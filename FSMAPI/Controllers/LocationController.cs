@@ -42,9 +42,16 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("listdropdownvalues")]
-        public IActionResult ListDropDownValues()
+        public IActionResult ListDropDownValues(int companyId)
         {
-            CurrentResponse response = _locationService.ListDropDownValues();
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _locationService.ListDropDownValues(companyId);
 
             return APIResponse(response);
         }
@@ -54,10 +61,16 @@ namespace FSMAPI.Controllers
         public IActionResult Create(LocationVM locationVM)
         {
             string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
                 locationVM.CreatedBy = Convert.ToInt64(loggedInUser);
+            }
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                locationVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
             }
 
             CurrentResponse response = _locationService.Create(locationVM);
@@ -69,6 +82,12 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(LocationVM locationVM)
         {
             locationVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                locationVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
 
             CurrentResponse response = _locationService.Edit(locationVM);
             return APIResponse(response);

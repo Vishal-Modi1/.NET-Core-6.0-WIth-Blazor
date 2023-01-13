@@ -146,6 +146,7 @@ namespace Repository
             if (company != null)
             {
                 company.IsDeleted = true;
+                company.IsActive = false;
                 company.DeletedBy = deletedBy;
                 company.DeletedOn = DateTime.UtcNow;
 

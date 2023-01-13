@@ -10,9 +10,20 @@ namespace Web.UI.Pages.Scheduler
     partial class CreateCategory
     {
         [Parameter] public FlightCategoryVM flightCategory { get; set; }
-        [Parameter] public List<DropDownValues> Companies {get;set; }
+        [Parameter] public List<DropDownValues> Companies { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         string originalColor = "";
+
+        protected override void OnParametersSet()
+        {
+            if (globalMembers.IsSuperAdmin && !Companies.Any(p=> p.Id == int.MaxValue))
+            {
+                Companies.Insert(0, new DropDownValues() { Id = int.MaxValue, Name = "All Companies" });
+                base.StateHasChanged();
+            }
+
+            base.OnParametersSet();
+        }
 
         protected override Task OnParametersSetAsync()
         {
@@ -31,6 +42,11 @@ namespace Web.UI.Pages.Scheduler
                 flightCategory.Color = "#" + myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
             }
 
+            if (flightCategory.CompanyId == int.MaxValue && globalMembers.IsSuperAdmin)
+            {
+                flightCategory.IsForAllCompanies = true;
+            }
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await FlightCategoryService.SaveandUpdateAsync(dependecyParams, flightCategory);
 
@@ -43,7 +59,7 @@ namespace Web.UI.Pages.Scheduler
                 CloseDialog(true);
             }
 
-            else if(response.Status == System.Net.HttpStatusCode.Ambiguous)
+            else if (response.Status == System.Net.HttpStatusCode.Ambiguous)
             {
                 return;
             }

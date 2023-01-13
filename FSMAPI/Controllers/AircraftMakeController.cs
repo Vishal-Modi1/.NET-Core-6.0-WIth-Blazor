@@ -1,5 +1,7 @@
-﻿using DataModels.Entities;
+﻿using DataModels.Constants;
+using DataModels.Entities;
 using DataModels.VM.Common;
+using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
 
@@ -10,16 +12,25 @@ namespace FSMAPI.Controllers
     public class AircraftMakeController : BaseAPIController
     {
         private readonly IAircraftMakeService _aircraftMakeService;
+        private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public AircraftMakeController(IAircraftMakeService aircraftMakeService)
+        public AircraftMakeController(IAircraftMakeService aircraftMakeService, IHttpContextAccessor httpContextAccessor)
         {
             _aircraftMakeService = aircraftMakeService;
+            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("create")]
         public IActionResult Create(AircraftMake aircraftMake)
         {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                aircraftMake.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _aircraftMakeService.Create(aircraftMake);
 
             return APIResponse(response);
@@ -38,6 +49,13 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(DatatableParams datatableParams)
         {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                datatableParams.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _aircraftMakeService.List(datatableParams);
 
             return APIResponse(response);
@@ -45,9 +63,16 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("listdropdownvalues")]
-        public IActionResult ListDropDownValues()
+        public IActionResult ListDropDownValues(int companyId)
         {
-            CurrentResponse response = _aircraftMakeService.ListDropDownValues();
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _aircraftMakeService.ListDropDownValues(companyId);
 
             return APIResponse(response);
         }
@@ -65,6 +90,13 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftMake aircraftMake)
         {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                aircraftMake.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _aircraftMakeService.Edit(aircraftMake);
             return APIResponse(response);
         }

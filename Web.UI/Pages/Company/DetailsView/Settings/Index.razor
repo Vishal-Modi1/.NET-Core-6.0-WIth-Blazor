@@ -1,4 +1,5 @@
-﻿<TelerikTabStrip>
+﻿
+<TelerikTabStrip>
     <TabStripTab>
         <HeaderTemplate>
             <div class="d-flex justify-content-center align-items-center">
@@ -32,5 +33,56 @@
 
         </Content>
     </TabStripTab>
+
+                    <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+
+                            <span class="mx-2">
+                                <CustomIcons IconName="location" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Location</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.Company.DetailsView.Settings.Location.Index CompanyId="@CompanyData.Id">
+
+                        </Web.UI.Pages.Company.DetailsView.Settings.Location.Index>
+                    </Content>
+                </TabStripTab>
+
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mx-2">
+                                <CustomIcons IconName="make" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Make</span>
+
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Index CompanyId="@CompanyData.Id">
+
+                        </Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Index>
+                    </Content>
+                </TabStripTab>
+
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+
+                            <span class="mx-2">
+                                <CustomIcons IconName="model" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Model</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Index CompanyId="@CompanyData.Id">
+
+                        </Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Index>
+                    </Content>
+                </TabStripTab>
 
 </TelerikTabStrip>

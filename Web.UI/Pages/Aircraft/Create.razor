@@ -1,7 +1,7 @@
 ﻿@using DataModels.VM.Aircraft
 @using Web.UI.Utilities;
 @using DataModels.Enums;
-@using Web.UI.Pages.AircraftModel;
+@using Web.UI.Pages.Company.DetailsView.Settings.AircraftModel;
 @using Web.UI.Shared.Components.FileUploader;
 
 <style>
@@ -329,9 +329,9 @@
                       OnClose="@(()=> {isDisplayMakePopup = false;})">
         <Body>
 
-            <Web.UI.Pages.AircraftMake.Create AircraftMake="@aircraftMake" CloseDialogCallBack="@CloseMakeDialogAsync">
+            <Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Create AircraftMake="@aircraftMake" CloseDialogCallBack="@CloseMakeDialogAsync">
 
-            </Web.UI.Pages.AircraftMake.Create>
+            </Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Create>
 
         </Body>
     </CustomPopupComponent>
@@ -347,9 +347,9 @@
                       OnClose="@(()=> {isDisplayModelPopup = false;})">
         <Body>
 
-            <Web.UI.Pages.AircraftModel.Create AircraftModel="@aircraftModel" CloseDialogCallBack="@CloseModelDialogAsync">
+            <Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Create AircraftModel="@aircraftModel" CloseDialogCallBack="@CloseModelDialogAsync">
 
-            </Web.UI.Pages.AircraftModel.Create>
+            </Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Create>
 
         </Body>
     </CustomPopupComponent>

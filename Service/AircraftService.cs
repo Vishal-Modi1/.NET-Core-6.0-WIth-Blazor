@@ -175,8 +175,8 @@ namespace Service
 
                 aircraftVM.AircraftCategoryList = _aircraftCategoryRepository.ListDropDownValues();
                 aircraftVM.AircraftClassList = _aircraftClassRepository.ListDropDownValues();
-                aircraftVM.AircraftMakeList = _aircraftMakeRepository.ListDropDownValues();
-                aircraftVM.AircraftModelList = _aircraftModelRepository.ListDropDownValues();
+                aircraftVM.AircraftMakeList = _aircraftMakeRepository.ListDropDownValues(companyId);
+                aircraftVM.AircraftModelList = _aircraftModelRepository.ListDropDownValues(companyId);
                 aircraftVM.FlightSimulatorClassList = _aircraftRepository.ListFlightSimulatorClassDropDownValues();
                 aircraftVM.AircraftStatusList = _aircraftStatusRepository.ListDropDownValues();
                 aircraftVM.OwnersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);

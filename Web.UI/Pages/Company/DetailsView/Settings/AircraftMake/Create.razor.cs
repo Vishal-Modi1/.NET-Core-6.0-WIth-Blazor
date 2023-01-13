@@ -3,11 +3,11 @@ using DE = DataModels.Entities;
 using Microsoft.AspNetCore.Components;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.AircraftModel
+namespace Web.UI.Pages.Company.DetailsView.Settings.AircraftMake
 {
     public partial class Create
     {
-        [Parameter] public DE.AircraftModel aircraftModel { get; set; }
+        [Parameter] public DE.AircraftMake aircraftMake { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         public async Task Submit()
@@ -15,7 +15,7 @@ namespace Web.UI.Pages.AircraftModel
             isBusySubmitButton = true;
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            CurrentResponse response = await AircraftModelService.SaveandUpdateAsync(dependecyParams, aircraftModel);
+            CurrentResponse response = await AircraftMakeService.SaveandUpdateAsync(dependecyParams, aircraftMake);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 

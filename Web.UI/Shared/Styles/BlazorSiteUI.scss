@@ -778,7 +778,7 @@ th, td, span, p {
 }
 
 .highlightDates {
-    border: 2px solid #3066f8 !important;
+    border: 1px solid rgb(21 203 55 / 70%) !important;
     border-radius: 50%;
 }
 
@@ -796,7 +796,7 @@ th, td, span, p {
         width: 100%;
 
         table {
-            border-spacing: 5px;
+            border-spacing: 10px;
         }
 
         .k-calendar-td {
@@ -821,17 +821,17 @@ th, td, span, p {
 }
 
 .profile-image-hover {
-    .hignlight-hover {
+    .highlight-hover {
         background-color: transparent;
         border: transparent;
     }
 }
 
 .profile-image-hover:hover {
-    .hignlight-hover {
+    .highlight-hover {
         padding: 5px 10px !important;
-        border-color: #022254bf;
-        background-color: #022254bf;
+        border-color: #3066f8 !important;
+        background-color: #3066f8 !important;
         border-radius: 8px;
     }
 }

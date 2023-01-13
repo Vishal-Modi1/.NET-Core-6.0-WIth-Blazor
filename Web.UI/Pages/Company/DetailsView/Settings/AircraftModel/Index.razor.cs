@@ -8,11 +8,12 @@ using DE = DataModels.Entities;
 using Web.UI.Extensions;
 using Telerik.Blazor.Components;
 
-namespace Web.UI.Pages.AircraftModel
+namespace Web.UI.Pages.Company.DetailsView.Settings.AircraftModel
 {
     partial class Index
     {
         [CascadingParameter] public TelerikGrid<AircraftModelDataVM> grid { get; set; }
+        [Parameter] public int CompanyId { get; set; }
         IList<AircraftModelDataVM> data;
         string moduleName = Module.Aircraft.ToString();
         DE.AircraftModel _aircraftModel { get; set; }
@@ -24,9 +25,10 @@ namespace Web.UI.Pages.AircraftModel
 
         async Task LoadData(GridReadEventArgs args)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             DatatableParams datatableParams = new DatatableParams().Create(args, "Name");
 
+            datatableParams.CompanyId = CompanyId;
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
             
@@ -40,6 +42,7 @@ namespace Web.UI.Pages.AircraftModel
             _aircraftModel = new DE.AircraftModel();
             _aircraftModel.Id = aircraftModel.Id;
             _aircraftModel.Name = aircraftModel.Name;
+            _aircraftModel.CompanyId = CompanyId;
 
             if (_aircraftModel.Id == 0)
             {

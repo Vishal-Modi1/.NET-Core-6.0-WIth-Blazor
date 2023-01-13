@@ -98,11 +98,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListDropDownValues()
+        public CurrentResponse ListDropDownValues(int companyId)
         {
             try
             {
-                List<DropDownValues> locationsList = _locationRepository.ListDropDownValues();
+                List<DropDownValues> locationsList = _locationRepository.ListDropDownValues(companyId);
 
                 CreateResponse(locationsList, HttpStatusCode.OK, "");
 
@@ -154,7 +154,8 @@ namespace Service
 
         private bool IsLocationExist(LocationVM locationVM)
         {
-            Location location = _locationRepository.FindByCondition(p=> p.Id != locationVM.Id &&  p.TimezoneId == locationVM.TimezoneId && p.AirportCode == locationVM.AirportCode);
+            Location location = _locationRepository.FindByCondition(p=> p.Id != locationVM.Id && p.TimezoneId == locationVM.TimezoneId 
+            && p.AirportCode == locationVM.AirportCode && p.CompanyId == locationVM.CompanyId);
         
             if(location != null)
             {
@@ -174,7 +175,8 @@ namespace Service
             locationVM.TimezoneId = location.TimezoneId;
             locationVM.AirportCode = location.AirportCode;
             locationVM.PhysicalAddress = location.PhysicalAddress;
-           
+            location.CompanyId = locationVM.CompanyId;
+
             return locationVM;
         }
 
@@ -185,6 +187,7 @@ namespace Service
             location.Id = locationVM.Id;
             location.TimezoneId = locationVM.TimezoneId;
             location.AirportCode = locationVM.AirportCode;
+            location.CompanyId = locationVM.CompanyId;
             location.PhysicalAddress = locationVM.PhysicalAddress;
 
             location.CreatedBy = locationVM.CreatedBy;

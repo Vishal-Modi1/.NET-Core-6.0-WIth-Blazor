@@ -16,12 +16,12 @@
                         <div class="row d-flex justify-content-center align-items-start w-100 m-0 profile-image-hover" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(aircraftData.ImagePath)'), url('../img/thumbnail-aircraft.png');">
                             <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
                                 
-                                <TelerikButton Size="xs" Class="btn k-btn-link m-0 p-0 hignlight-hover"
+                                <TelerikButton Size="xs" Class="btn k-btn-link m-0 p-0 highlight-hover"
                                            OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
                                     <CustomIcons IconName="share-backward-line" PrimaryColor="#FFF" />
                                 </TelerikButton>
 
-                                <label for="filePicker" class="k-cursor-pointer hignlight-hover">
+                                <label for="filePicker" class="k-cursor-pointer highlight-hover">
                                     <CustomIcons IconName="edit-square" PrimaryColor="white" />
                                     <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
                                 </label>

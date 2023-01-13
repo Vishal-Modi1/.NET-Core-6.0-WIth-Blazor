@@ -164,6 +164,17 @@ namespace Repository
             if (user != null)
             {
                 user.IsArchive = isArchive;
+                user.IsActive = !isArchive;
+
+                if(isArchive)
+                {
+                    user.ArchivedOn = DateTime.UtcNow;
+                }
+                else
+                {
+                    user.ArchivedOn = null; 
+                }
+
                 _myContext.SaveChanges();
             }
         }

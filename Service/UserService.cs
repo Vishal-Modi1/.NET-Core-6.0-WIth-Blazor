@@ -538,6 +538,8 @@ namespace Service
             user.ExternalId = userVM.ExternalId;
             user.IsSendEmailInvite = userVM.IsSendEmailInvite;
             user.IsSendTextMessage = userVM.IsSendTextMessage;
+            user.IsArchive = userVM.IsArchive;
+            user.ArchivedOn = userVM.ArchivedOn;
             user.CreatedBy = userVM.CreatedBy;
             user.UpdatedBy = userVM.UpdatedBy;
 
@@ -575,6 +577,8 @@ namespace Service
             userDetails.IsSendEmailInvite = user.IsSendEmailInvite;
             userDetails.Gender = user.Gender;
             userDetails.IsSendTextMessage = user.IsSendTextMessage;
+            userDetails.IsArchive = user.IsArchive;
+            userDetails.ArchivedOn = user.ArchivedOn;
 
             return userDetails;
         }

@@ -12,6 +12,9 @@ namespace DataModels.VM.Scheduler
 
         [Required(ErrorMessage = "Company is required")]
         public int? CompanyId { get; set; }
+
+        public bool IsForAllCompanies { get; set; }
+
         public bool IsActive { get; set; } = true;
     }
 }

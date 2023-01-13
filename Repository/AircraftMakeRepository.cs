@@ -49,11 +49,12 @@ namespace Repository
             }
         }
 
-        public List<DropDownValues> ListDropDownValues()
+        public List<DropDownValues> ListDropDownValues(int companyId)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> aircraftMakeList = (from aircraftMake in _myContext.AircraftMakes
+                                                         where aircraftMake.CompanyId == companyId
                                                          select new DropDownValues()
                                                          {
                                                              Id = aircraftMake.Id,
@@ -70,7 +71,7 @@ namespace Repository
             {
                 List<AircraftMakeDataVM> list;
 
-                string sql = $"EXEC dbo.GetAircraftMakesList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
+                string sql = $"EXEC dbo.GetAircraftMakesList   { datatableParams.CompanyId},'{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 list = _myContext.AircraftMakesList.FromSqlRaw<AircraftMakeDataVM>(sql).ToList();

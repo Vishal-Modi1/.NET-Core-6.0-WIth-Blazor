@@ -78,11 +78,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListDropDownValues()
+        public CurrentResponse ListDropDownValues(int companyId)
         {
             try
             {
-                List<DropDownValues> aircraftMakeList = _aircraftMakeRepository.ListDropDownValues();
+                List<DropDownValues> aircraftMakeList = _aircraftMakeRepository.ListDropDownValues(companyId);
                 CreateResponse(aircraftMakeList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -97,7 +97,7 @@ namespace Service
 
         private bool IsAircraftMakeExist(AircraftMake aircraftMake)
         {
-            AircraftMake aircraftMakeInfo = _aircraftMakeRepository.FindByCondition(p => p.Name == aircraftMake.Name && p.Id != aircraftMake.Id);
+            AircraftMake aircraftMakeInfo = _aircraftMakeRepository.FindByCondition(p => p.Name == aircraftMake.Name && p.Id != aircraftMake.Id && p.CompanyId == aircraftMake.CompanyId);
 
             if (aircraftMakeInfo == null)
             {

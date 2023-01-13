@@ -8,12 +8,12 @@ using DataModels.Enums;
 using Newtonsoft.Json;
 using Telerik.Blazor.Components;
 
-namespace Web.UI.Pages.Location
+namespace Web.UI.Pages.Company.DetailsView.Settings.Location
 {
     partial class Index
     {
         [CascadingParameter] public TelerikGrid<LocationDataVM> grid { get; set; }
-
+        [Parameter] public int CompanyId { get; set; }
         IList<LocationDataVM> data;
         LocationVM locationData;
         string moduleName = "Location";
@@ -31,6 +31,7 @@ namespace Web.UI.Pages.Location
         async Task LoadData(GridReadEventArgs args)
         {
             DatatableParams datatableParams = new DatatableParams().Create(args, "AirportCode");
+            datatableParams.CompanyId = CompanyId;
 
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
@@ -65,6 +66,8 @@ namespace Web.UI.Pages.Location
                 locationData = JsonConvert.DeserializeObject<LocationVM>(response.Data.ToString());
                 locationData.Timezones = await TimezoneService.ListDropDownValues(dependecyParams);
             }
+
+            locationData.CompanyId = CompanyId;
 
             if (locationDetails.Id == 0)
             {

@@ -3,7 +3,7 @@ using DataModels.VM.Location;
 using Microsoft.AspNetCore.Components;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.Location
+namespace Web.UI.Pages.Company.DetailsView.Settings.Location
 {
     public partial class Create
     {

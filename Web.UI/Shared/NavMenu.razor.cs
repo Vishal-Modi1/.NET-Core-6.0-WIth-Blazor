@@ -124,7 +124,7 @@ namespace Web.UI.Shared
 
                 if (item.Controller.ToLower() == Module.Company.ToString().ToLower())
                 {
-                    await OpenCompanyDetailPage(1);
+                    await OpenCompanyDetailPage(globalMembers.CompanyId);
                 }
                 else
                 {

@@ -41,12 +41,13 @@ namespace Repository
             }
         }
 
-        public List<DropDownValues> ListDropDownValues()
+        public List<DropDownValues> ListDropDownValues(int companyId)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> aircraftModelList = (from aircraftModel in _myContext.AircraftModels
-                                                         select new DropDownValues()
+                                                          where aircraftModel.CompanyId == companyId
+                                                          select new DropDownValues()
                                                          {
                                                              Id = aircraftModel.Id,
                                                              Name = aircraftModel.Name
@@ -63,7 +64,7 @@ namespace Repository
             {
                 List<AircraftModelDataVM> list;
 
-                string sql = $"EXEC dbo.GetAircraftModelsList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
+                string sql = $"EXEC dbo.GetAircraftModelsList { datatableParams.CompanyId},'{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 list = _myContext.AircraftModelsList.FromSqlRaw<AircraftModelDataVM>(sql).ToList();

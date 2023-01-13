@@ -13,5 +13,7 @@ namespace Repository.Interface
         List<FlightCategory> ListByCompanyId(int companyId);
 
         void Delete(int id);
+
+        void CreateForAllCompanies(FlightCategory flightCategory);
     }
 }

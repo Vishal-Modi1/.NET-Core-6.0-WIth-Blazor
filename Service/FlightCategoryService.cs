@@ -34,7 +34,16 @@ namespace Service
                 else
                 {
                     FlightCategory flightCategory = _mapper.Map<FlightCategory>(flightCategoryVM);
-                    flightCategory = _flightCategoryRepository.Create(flightCategory);
+
+                    if (flightCategoryVM.IsForAllCompanies)
+                    {
+                        _flightCategoryRepository.CreateForAllCompanies(flightCategory);
+                    }
+                    else
+                    {
+                        flightCategory = _flightCategoryRepository.Create(flightCategory);
+                    }
+
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category added successfully");
                 }
 
@@ -61,8 +70,6 @@ namespace Service
                 else
                 {
                     FlightCategory flightCategory = _mapper.Map<FlightCategory>(flightCategoryVM);
-
-                 //   FlightCategory flightCategory = ToDataObject(flightCategoryVM);
                     flightCategory = _flightCategoryRepository.Edit(flightCategory);
                     CreateResponse(flightCategory, HttpStatusCode.OK, "Category updated successfully");
                 }
