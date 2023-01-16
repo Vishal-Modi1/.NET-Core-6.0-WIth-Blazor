@@ -13,6 +13,7 @@ namespace FSMAPI.Utilities
             CreateMap<WindyMapConfigurationVM, WindyMapConfiguration>().ReverseMap();
             CreateMap<AircraftLiveTrackerMapConfigurationVM, AircraftLiveTrackerMapConfiguration>().ReverseMap();
             CreateMap<RadarMapConfigurationVM, RadarMapConfiguration>().ReverseMap();
+            CreateMap<VFRMapConfigurationVM, VFRMapConfiguration>().ReverseMap();
         }
     }
 }
