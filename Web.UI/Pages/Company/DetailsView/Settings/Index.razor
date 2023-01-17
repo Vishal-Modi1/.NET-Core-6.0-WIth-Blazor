@@ -17,7 +17,7 @@
         </Content>
     </TabStripTab>
 
-     <TabStripTab>
+    <TabStripTab>
         <HeaderTemplate>
             <div class="d-flex justify-content-center align-items-center">
                 <span class="mx-2">
@@ -34,55 +34,73 @@
         </Content>
     </TabStripTab>
 
-                    <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
 
-                            <span class="mx-2">
-                                <CustomIcons IconName="location" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Location</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Company.DetailsView.Settings.Location.Index CompanyId="@CompanyData.Id">
+                <span class="mx-2">
+                    <CustomIcons IconName="location" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Location</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Company.DetailsView.Settings.Location.Index CompanyId="@CompanyData.Id">
 
-                        </Web.UI.Pages.Company.DetailsView.Settings.Location.Index>
-                    </Content>
-                </TabStripTab>
+            </Web.UI.Pages.Company.DetailsView.Settings.Location.Index>
+        </Content>
+    </TabStripTab>
 
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="make" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Make</span>
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="mx-2">
+                    <CustomIcons IconName="make" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Make</span>
 
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Index CompanyId="@CompanyData.Id">
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Index CompanyId="@CompanyData.Id">
 
-                        </Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Index>
-                    </Content>
-                </TabStripTab>
+            </Web.UI.Pages.Company.DetailsView.Settings.AircraftMake.Index>
+        </Content>
+    </TabStripTab>
 
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
 
-                            <span class="mx-2">
-                                <CustomIcons IconName="model" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Model</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Index CompanyId="@CompanyData.Id">
+                <span class="mx-2">
+                    <CustomIcons IconName="model" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Model</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Index CompanyId="@CompanyData.Id">
 
-                        </Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Index>
-                    </Content>
-                </TabStripTab>
+            </Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Index>
+        </Content>
+    </TabStripTab>
+
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="mx-2">
+                    <CustomIcons IconName="calendar" PrimaryColor="#3066f8"></CustomIcons>
+                </span>
+                <span>Date Formats</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+
+            <Web.UI.Pages.Company.DetailsView.Settings.DateFormat.Index CompanyId="@CompanyData.Id">
+            </Web.UI.Pages.Company.DetailsView.Settings.DateFormat.Index>
+
+        </Content>
+    </TabStripTab>
+
 
 </TelerikTabStrip>

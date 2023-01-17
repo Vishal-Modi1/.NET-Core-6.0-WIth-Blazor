@@ -1,0 +1,68 @@
+﻿@namespace Web.UI.Pages.Company.DetailsView.Settings.DateFormat
+@using DataModels.Enums
+@using DataModels.VM.EmailConfiguration
+@using Telerik.Blazor
+@using Web.UI.Shared.Components
+
+@page "/DateFormat"
+
+<TelerikForm Model="@companyDateFormat" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <CustomValidationSummary></CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@companyDateFormat.Id" name="Id" />
+
+        <div class="row my-3">
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>Date Format</label>
+
+                        <TelerikComboBox Id="dateFormatId" Data="@companyDateFormat.DateFormatsList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Format" ValueField="Id"
+                                         Value="@companyDateFormat.DateFormatId"
+                                         ValueExpression="@(() => companyDateFormat.DateFormatId )"
+                                         ValueChanged="@((Int16 value) => OnDateFormatValueChanged(value))">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => companyDateFormat.DateFormatId)"></TelerikValidationMessage>
+                    </div>
+
+                    @if (companyDateFormat.DateFormatId > 0)
+                    {
+                        <div class="col-6">
+                            <label>
+                                <b> i.e. </b>
+                                @exampleDate
+                            </label>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+
+    </FormItems>
+    <FormButtons>
+        <div class="row mb-0">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@companyDateFormat.Id"
+                                     IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
+                </FormFooterComponent>
+
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

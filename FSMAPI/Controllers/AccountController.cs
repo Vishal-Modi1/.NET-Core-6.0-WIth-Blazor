@@ -29,10 +29,12 @@ namespace FSMAPI.Controllers
         private readonly IEmailTokenService _emailTokenService;
         private readonly ConfigurationSettings _configurationSettings;
         private readonly IMyAccountService _myAccountService;
+        private readonly ICompanyDateFormatService _companyDateFormatService;
 
         public AccountController(IAccountService accountService, IUserRolePermissionService userRolePermissionService,
             IUserService userService, ISendMailService sendMailService, IMyAccountService myAccountService,
-            IHttpContextAccessor httpContextAccessor, IEmailTokenService emailTokenService)
+            IHttpContextAccessor httpContextAccessor, IEmailTokenService emailTokenService,
+            ICompanyDateFormatService companyDateFormatService)
         {
             _accountService = accountService;
             _userService = userService;
@@ -43,6 +45,7 @@ namespace FSMAPI.Controllers
             _emailTokenService = emailTokenService;
             _configurationSettings = ConfigurationSettings.Instance;
             _myAccountService = myAccountService;
+            _companyDateFormatService = companyDateFormatService;
         }
 
         [HttpPost]
@@ -95,6 +98,8 @@ namespace FSMAPI.Controllers
                 timeZone = userTimeZone;
             }
 
+            string dateFormat = _companyDateFormatService.FindDateFormatByCompanyId(user.CompanyId.GetValueOrDefault());
+
             response.Data = new LoginResponseVM
             {
                 AccessToken = accessToken,
@@ -110,7 +115,8 @@ namespace FSMAPI.Controllers
                 UserPermissionList = userRolePermissionsList,
                 ImageURL = user.ImageName,
                 LocalTimeZone = timeZone,
-                CompanyId = user.CompanyId.GetValueOrDefault()
+                CompanyId = user.CompanyId.GetValueOrDefault(),
+                DateFormat = dateFormat
             };
 
             return response;

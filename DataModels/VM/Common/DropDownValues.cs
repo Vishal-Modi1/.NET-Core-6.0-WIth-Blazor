@@ -9,6 +9,13 @@ namespace DataModels.VM.Common
         public string Name { get; set; }
     }
 
+    public class DropDownSmallValues
+    {
+        public Int16 Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
     public class DropDownLargeValues
     {
         public long Id { get; set; }

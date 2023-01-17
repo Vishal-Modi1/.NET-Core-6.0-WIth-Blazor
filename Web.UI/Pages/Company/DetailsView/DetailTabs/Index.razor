@@ -3,118 +3,119 @@
 
 @if (CompanyData != null && CompanyData.Id != 0)
 {
-        <TelerikTabStrip Class="k-tabstrip-list">
+    <TelerikTabStrip Class="k-tabstrip-list">
 
-          @*  <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Stats</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
+        @*  <TabStripTab>
+            <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+            <span class="mx-2">
+            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+            </span>
+            <span>Stats</span>
+            </div>
+            </HeaderTemplate>
+            <Content>
 
-                        <Web.UI.Pages.Statistics.CompanyStatistics>
-                        </Web.UI.Pages.Statistics.CompanyStatistics>
+            <Web.UI.Pages.Statistics.CompanyStatistics>
+            </Web.UI.Pages.Statistics.CompanyStatistics>
 
-                    </Content>
-                </TabStripTab>*@
+            </Content>
+            </TabStripTab>*@
 
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
-            {
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Users</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-
-                        <Web.UI.Pages.User.Index CompanyIdParam="@CompanyData.Id"
-                                         ParentModuleName="@Module.Company.ToString()">
-                        </Web.UI.Pages.User.Index>
-
-                    </Content>
-                </TabStripTab>
-
-            }
-
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Reservation.ToString()))
-            {
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Reservation</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Reservation.Index ParentModuleName="@Module.Company.ToString()" CompanyId="@CompanyData.Id">
-
-                        </Web.UI.Pages.Reservation.Index>
-                    </Content>
-                </TabStripTab>
-
-            }
-
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Document.ToString()))
-            {
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="document" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Documents</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Document.Index ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
-
-                        </Web.UI.Pages.Document.Index>
-                    </Content>
-                </TabStripTab>
-            }
-
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
+        {
             <TabStripTab>
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
                         <span class="mx-2">
-                            <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
+                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
                         </span>
-                        <span>Aircrafts</span>
+                        <span>Users</span>
                     </div>
                 </HeaderTemplate>
                 <Content>
-                    <Web.UI.Pages.Aircraft.Index ParentModuleName="@Module.Company.ToString()" ParentCompanyId="@CompanyData.Id">
 
-                    </Web.UI.Pages.Aircraft.Index>
+                    <Web.UI.Pages.User.Index CompanyIdParam="@CompanyData.Id"
+                                     ParentModuleName="@Module.Company.ToString()">
+                    </Web.UI.Pages.User.Index>
+
                 </Content>
             </TabStripTab>
 
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="setting" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Settings</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
+        }
 
-                        <Web.UI.Pages.Company.DetailsView.Settings.Index CompanyData="@CompanyData">
-                        </Web.UI.Pages.Company.DetailsView.Settings.Index>
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Reservation.ToString()))
+        {
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
+                        </span>
+                        <span>Reservation</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <Web.UI.Pages.Reservation.Index ParentModuleName="@Module.Company.ToString()" CompanyId="@CompanyData.Id">
 
-                    </Content>
-                </TabStripTab>
+                    </Web.UI.Pages.Reservation.Index>
+                </Content>
+            </TabStripTab>
 
-        </TelerikTabStrip>
+        }
+
+        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.Document.ToString()))
+        {
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <CustomIcons IconName="document" PrimaryColor="#3066f8"></CustomIcons>
+                        </span>
+                        <span>Documents</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <Web.UI.Pages.Document.Index ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
+
+                    </Web.UI.Pages.Document.Index>
+                </Content>
+            </TabStripTab>
+        }
+
+        <TabStripTab>
+            <HeaderTemplate>
+                <div class="d-flex justify-content-center align-items-center">
+                    <span class="mx-2">
+                        <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
+                    </span>
+                    <span>Aircrafts</span>
+                </div>
+            </HeaderTemplate>
+            <Content>
+                <Web.UI.Pages.Aircraft.Index ParentModuleName="@Module.Company.ToString()" ParentCompanyId="@CompanyData.Id">
+
+                </Web.UI.Pages.Aircraft.Index>
+            </Content>
+        </TabStripTab>
+
+        <TabStripTab>
+            <HeaderTemplate>
+                <div class="d-flex justify-content-center align-items-center">
+                    <span class="mx-2">
+                        <CustomIcons IconName="setting" PrimaryColor="#3066f8"></CustomIcons>
+                    </span>
+                    <span>Settings</span>
+                </div>
+            </HeaderTemplate>
+            <Content>
+
+                <Web.UI.Pages.Company.DetailsView.Settings.Index CompanyData="@CompanyData">
+                </Web.UI.Pages.Company.DetailsView.Settings.Index>
+
+            </Content>
+        </TabStripTab>
+
+      
+    </TelerikTabStrip>
 }

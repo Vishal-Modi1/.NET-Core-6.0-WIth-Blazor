@@ -15,9 +15,9 @@ namespace Web.UI.Data.Weather
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<CurrentResponse> SetDefault(DependecyParams dependecyParams, RadarMapConfigurationVM RadarMapConfigurationVM)
+        public async Task<CurrentResponse> SetDefault(DependecyParams dependecyParams, RadarMapConfigurationVM radarMapConfigurationVM)
         {
-            dependecyParams.JsonData = JsonConvert.SerializeObject(RadarMapConfigurationVM);
+            dependecyParams.JsonData = JsonConvert.SerializeObject(radarMapConfigurationVM);
             dependecyParams.URL = $"radarMapConfiguration/setDefault";
             CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 

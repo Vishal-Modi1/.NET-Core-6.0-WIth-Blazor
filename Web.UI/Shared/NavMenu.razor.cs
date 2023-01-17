@@ -76,6 +76,7 @@ namespace Web.UI.Shared
             globalMembers.IsAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.Admin;
             globalMembers.Timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
             globalMembers.UserImagePath = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.ProfileImageURL);
+            globalMembers.DateFormat = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.DateFormat);
         }
 
         private async Task SetNavigationHeaderValues(ClaimsPrincipal user, DependecyParams dependecyParams)
@@ -179,5 +180,7 @@ namespace Web.UI.Shared
         public string UserImagePath { get; set; }
 
         public string Timezone { get; set; }
+
+        public string DateFormat { get; set; }
     }
 }

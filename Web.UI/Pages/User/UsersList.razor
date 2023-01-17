@@ -133,7 +133,7 @@
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
-                   <div> @data.CreatedOn.ToString("MM/dd/yyyy") </div>
+                   <div> @data.CreatedOn.Format(data.CreatedOn, globalMembers.DateFormat, false)</div>
                 }
             </Template>
         </GridColumn>

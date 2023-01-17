@@ -12,6 +12,9 @@
 @using Telerik.Blazor.Components
 @using Microsoft.Extensions.Caching.Memory
 
+
+@using Web.UI.Extensions;
+
 @*Data Services*@
 @using Web.UI.Data.User
 @using Web.UI.Data.Company
@@ -88,5 +91,6 @@
 @inject AircraftLiveTrackerMapConfigurationService AircraftLiveTrackerMapConfigurationService
 @inject BillingConfigurationService BillingConfigurationService
 @inject FlightCategoryService FlightCategoryService
+@inject CompanyDateFormatService CompanyDateFormatService
 
 @inherits BaseClass

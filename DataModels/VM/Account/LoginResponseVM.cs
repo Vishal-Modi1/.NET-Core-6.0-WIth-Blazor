@@ -22,5 +22,6 @@ namespace DataModels.VM.Account
         public string Gender { get; set; }
         public List<UserRolePermissionDataVM> UserPermissionList { get; set; }
         public string LocalTimeZone { get; set; }
+        public string DateFormat { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications
 {
     partial class Create
     {
-        [Parameter] public EmailConfigurationVM emailConfigurationData { get; set; }
+        [Parameter] public EmailConfigurationVM EmailConfigurationData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         [Parameter] public EventCallback<EmailConfigurationVM> UpdateTabUI { get; set; }
 
@@ -49,7 +49,7 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.Notifications
 
             emailConfiguration.EmailTypeId = value;
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            emailConfiguration = await EmailConfigurationService.GetDetailsByEmailTypeAndCompanyIdAsync(dependecyParams, value, emailConfigurationData.CompanyId);
+            emailConfiguration = await EmailConfigurationService.GetDetailsByEmailTypeAndCompanyIdAsync(dependecyParams, value, EmailConfigurationData.CompanyId);
 
             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();

@@ -94,10 +94,7 @@ namespace Web.UI.Controllers
             string url = $"Account/RefreshToken?refreshToken={refreshToken}&userId={userId}";
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, url, "", null);
-
             var response = await _httpCaller.GetAsync(dependecyParams);
-
-            string jsonData = JsonConvert.SerializeObject(response.Data);
 
             if (response.Status == HttpStatusCode.OK)
             {
@@ -155,7 +152,8 @@ namespace Web.UI.Controllers
                   new Claim(CustomClaimTypes.CompanyName, loginResponse.CompanyName == null ? "" : loginResponse.CompanyName),
                   new Claim(CustomClaimTypes.CompanyId, loginResponse.CompanyId.ToString()),
                   new Claim(CustomClaimTypes.ProfileImageURL, loginResponse.ImageURL),
-                  new Claim(CustomClaimTypes.TimeZone, loginResponse.LocalTimeZone)
+                  new Claim(CustomClaimTypes.TimeZone, loginResponse.LocalTimeZone),
+                  new Claim(CustomClaimTypes.DateFormat, loginResponse.DateFormat)
                };
 
                 _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);

@@ -64,6 +64,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<AircraftLiveTrackerMapConfigurationService>();
             builder.Services.AddScoped<BillingConfigurationService>();
             builder.Services.AddScoped<FlightCategoryService>();
+            builder.Services.AddScoped<CompanyDateFormatService>();
         }
     }
 }

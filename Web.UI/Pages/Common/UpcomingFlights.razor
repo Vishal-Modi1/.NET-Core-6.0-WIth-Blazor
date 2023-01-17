@@ -55,9 +55,8 @@
                                     @value.Member1 
                                 }
 
-                                  @value.StartDate.ToString("MM-dd-yyy HH:mm tt")
+                                @value.StartDate.Format(value.StartDate, globalMembers.DateFormat, true);
                             </label>
-
                         }
                         else
                         {

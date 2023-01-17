@@ -149,6 +149,10 @@ namespace Repository
      
         public DbSet<FlightCategory> FlightCategories { get; set; }
 
+        public DbSet<DateFormat> DateFormats { get; set; }
+       
+        public DbSet<CompanyDateFormat> CompaniesDateFormat { get; set; }
+
         //List Objects
 
         #region Data list
