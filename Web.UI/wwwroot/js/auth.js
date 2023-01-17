@@ -205,6 +205,11 @@ export function LoadRadarMap(src) {
     $('#radarMap').attr("src", src);
 }
 
+export function LoadVFRMap(src) {
+
+    $('#vFRMap').attr("src", src);
+}
+
 export function RefreshRadarMapWidth(width) {
 
     $('#radarMap').css("width", width + "px");
@@ -230,6 +235,15 @@ export function RefreshAircraftLiveTrackerMapHeight(height) {
     $('#aircraftLiveTrackerMap').css("height", height + "px");
 }
 
+export function RefreshVFRMapWidth(width) {
+
+    $('#vFRMap').css("width", width + "px");
+}
+
+export function RefreshVFRMapHeight(height) {
+
+    $('#vFRMap').css("height", height + "px");
+}
 
 export function updateschedulerheadercolumns() {
 

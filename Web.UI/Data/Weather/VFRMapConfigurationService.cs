@@ -28,7 +28,7 @@ namespace Web.UI.Data.Weather
         {
             try
             {
-                dependecyParams.URL = "VFRMapConfiguration/GetDefault";
+                dependecyParams.URL = "VFRMapConfiguration/getDefault";
                 CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
                 VFRMapConfigurationVM VFRMapConfigurationVM = JsonConvert.DeserializeObject<VFRMapConfigurationVM>(response.Data.ToString());
