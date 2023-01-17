@@ -17,6 +17,7 @@ namespace Service
     public class VFRMapConfigurationService : BaseService, IVFRMapConfigurationService
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
+        private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
         private readonly IVFRMapConfigurationRepository _vFRMapConfigurationRepository;
         private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
@@ -24,9 +25,10 @@ namespace Service
         public VFRMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
             aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
             IVFRMapConfigurationRepository vFRMapConfigurationRepository,
-            IWindyMapConfigurationRepository windyMapConfigurationRepository)
+            IWindyMapConfigurationRepository windyMapConfigurationRepository, IRadarMapConfigurationRepository radarMapConfigurationRepository)
         {
             _vFRMapConfigurationRepository = vFRMapConfigurationRepository;
+            _radarMapConfigurationRepository = radarMapConfigurationRepository;
             _windyMapConfigurationRepository = windyMapConfigurationRepository;
             _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _mapper = mapper;
@@ -36,15 +38,15 @@ namespace Service
         {
             try
             {
-                VFRMapConfigurationVM radarMapConfigurationVM = new();
+                VFRMapConfigurationVM vFRMapConfigurationVM = new();
                 VFRMapConfiguration data = _vFRMapConfigurationRepository.FindByCondition(p => p.UserId == userId);
 
                 if (data is not null)
                 {
-                    radarMapConfigurationVM = _mapper.Map<VFRMapConfigurationVM>(data);
+                    vFRMapConfigurationVM = _mapper.Map<VFRMapConfigurationVM>(data);
                 }
 
-                CreateResponse(radarMapConfigurationVM, HttpStatusCode.OK, "");
+                CreateResponse(vFRMapConfigurationVM, HttpStatusCode.OK, "");
 
                 return _currentResponse;
             }
@@ -60,16 +62,17 @@ namespace Service
         {
             try
             {
-                VFRMapConfiguration radarMapConfiguration = _mapper.Map<VFRMapConfiguration>(vFRMapConfigurationVM);
-                _vFRMapConfigurationRepository.SetDefault(radarMapConfiguration);
+                VFRMapConfiguration vFRMapConfiguration = _mapper.Map<VFRMapConfiguration>(vFRMapConfigurationVM);
+                _vFRMapConfigurationRepository.SetDefault(vFRMapConfiguration);
 
                 if (vFRMapConfigurationVM.IsApplyToAll)
                 {
-                    _aircraftLiveTrackerMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
-                    _windyMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
+                    _aircraftLiveTrackerMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
+                    _windyMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
+                    _radarMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
                 }
 
-                vFRMapConfigurationVM = _mapper.Map<VFRMapConfigurationVM>(radarMapConfiguration);
+                vFRMapConfigurationVM = _mapper.Map<VFRMapConfigurationVM>(vFRMapConfiguration);
 
                 CreateResponse(true, HttpStatusCode.OK, "Default value updated");
 

@@ -13,18 +13,20 @@ namespace Service
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
         private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly IVFRMapConfigurationRepository _vFRMapConfigurationRepository;
         private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
 
         public AircraftLiveTrackerMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
             aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
             IRadarMapConfigurationRepository radarMapConfigurationRepository,
-            IWindyMapConfigurationRepository windyMapConfigurationRepository)
+            IWindyMapConfigurationRepository windyMapConfigurationRepository, IVFRMapConfigurationRepository vFRMapConfigurationRepository)
         {
             _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _radarMapConfigurationRepository = radarMapConfigurationRepository;
             _windyMapConfigurationRepository = windyMapConfigurationRepository;
             _mapper = mapper;
+            _vFRMapConfigurationRepository = vFRMapConfigurationRepository;
         }
 
         public CurrentResponse FindByUserId(long userId)
@@ -61,6 +63,7 @@ namespace Service
                 if(aircraftLiveTrackerMapConfigurationVM.IsApplyToAll)
                 {
                     _radarMapConfigurationRepository.SetDefault(aircraftLiveTrackerMapConfiguration.UserId, aircraftLiveTrackerMapConfiguration.Height, aircraftLiveTrackerMapConfiguration.Width);
+                    _vFRMapConfigurationRepository.SetDefault(aircraftLiveTrackerMapConfiguration.UserId, aircraftLiveTrackerMapConfiguration.Height, aircraftLiveTrackerMapConfiguration.Width);
                     _windyMapConfigurationRepository.SetDefault(aircraftLiveTrackerMapConfiguration.UserId, aircraftLiveTrackerMapConfiguration.Height, aircraftLiveTrackerMapConfiguration.Width);
                 }
 
