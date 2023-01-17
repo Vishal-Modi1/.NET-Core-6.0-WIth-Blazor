@@ -73,7 +73,19 @@
                     <AircraftLiveTracker></AircraftLiveTracker>
                 </Content>
             </TabStripTab>
-
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="radar" PrimaryColor="#3066f8" />
+                        </span>
+                        <span>VFR</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <VFR />
+                </Content>
+            </TabStripTab>
         </TelerikTabStrip>
     </div>
 </div>
