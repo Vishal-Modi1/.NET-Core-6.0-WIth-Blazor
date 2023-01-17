@@ -52,6 +52,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IFlightCategoryService, FlightCategoryService>();
             services.AddScoped<IAircraftLiveTrackerMapConfigurationService, AircraftLiveTrackerMapConfigurationService>();
             services.AddScoped<IRadarMapConfigurationService, RadarMapConfigurationService>();
+            services.AddScoped<IVFRMapConfigurationService, VFRMapConfigurationService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -102,6 +103,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IFlightCategoryRepository, FlightCategoryRepository>();
             services.AddScoped<IAircraftLiveTrackerMapConfigurationRepository, AircraftLiveTrackerMapConfigurationRepository>();
             services.AddScoped<IRadarMapConfigurationRepository, RadarMapConfigurationRepository>();
+            services.AddScoped<IVFRMapConfigurationRepository, VFRMapConfigurationRepository>();
         }
     }
 }
