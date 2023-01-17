@@ -20,7 +20,7 @@ namespace Web.UI.Pages.Weather
         {
             ChangeLoaderVisibilityAction(true);
 
-            mapSrc = $"https://weather.cod.edu/satrad/?parms=continental-conus-13-24-0-100-1&checked=map&colorbar=data";
+            mapSrc = $"https://vfrmap.com/";
 
             var authModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await authModule.InvokeVoidAsync("LoadVFRMap", mapSrc);

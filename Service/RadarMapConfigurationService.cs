@@ -13,18 +13,20 @@ namespace Service
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
         private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly IVFRMapConfigurationRepository _vFRMapConfigurationRepository;
         private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
 
         public RadarMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
             aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
             IRadarMapConfigurationRepository radarMapConfigurationRepository,
-            IWindyMapConfigurationRepository windyMapConfigurationRepository)
+            IWindyMapConfigurationRepository windyMapConfigurationRepository, IVFRMapConfigurationRepository vFRMapConfigurationRepository)
         {
             _radarMapConfigurationRepository = radarMapConfigurationRepository;
             _windyMapConfigurationRepository = windyMapConfigurationRepository;
             _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _mapper = mapper;
+            _vFRMapConfigurationRepository = vFRMapConfigurationRepository;
         }
 
         public CurrentResponse FindByUserId(long userId)
@@ -62,6 +64,7 @@ namespace Service
                 {
                     _aircraftLiveTrackerMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
                     _windyMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
+                    _vFRMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
                 }
                 
                 radarMapConfigurationVM = _mapper.Map<RadarMapConfigurationVM>(radarMapConfiguration);
