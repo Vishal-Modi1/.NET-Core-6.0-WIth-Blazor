@@ -39,67 +39,67 @@
 </div>
 
 <div>
-        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
-        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
-        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
-            <HeaderContent>
-                <div class="d-flex justify-content-between" >
-                   <span class="my-0">
+    <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+        <HeaderContent>
+            <div class="d-flex justify-content-between">
+                <span class="my-0">
                     <CustomIcons IconName="search" /> Search
                 </span>
-                    <span>
-                        @if (isFilterBarVisible)
-                        {
+                <span>
+                    @if (isFilterBarVisible)
+                    {
                         <CustomIcons IconName="minus" />
-                        }
-                        else
-                        {
+                    }
+                    else
+                    {
                         <CustomIcons IconName="plus" />
-                        }
-                    </span>
+                    }
+                </span>
+            </div>
+        </HeaderContent>
+        <ChildContent>
+            <div class="row my-2">
+                <div class="col-md-4">
+                    <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Role" ValueField="Id" Class="common-bg">
+                    </TelerikComboBox>
+
                 </div>
-            </HeaderContent>
-            <ChildContent>
-               <div class="row my-2">
-                        <div class="col-md-4">
-                            <TelerikComboBox Id=roleId Data="@userFilterVM.UserRoles" TextField="Name" ValueChanged="@( (int value) => OnRoleValueChanges(value) )"
-                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                             Placeholder="Select Role" ValueField="Id" Class="common-bg">
-                            </TelerikComboBox>
 
-                        </div>
+                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
+                {
+                    <div class="col-md-4">
 
-                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
-                        {
-                            <div class="col-md-4">
-
-                                <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name"
-                                             ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                                             Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                             Placeholder="Select Company" ValueField="Id" Class="common-bg">
-                                </TelerikComboBox>
-
-                            </div>
-                        }
-
-                        <div class="col-md-4">
-                            <TelerikTextBox Name="SearchText" PlaceHolder="Search User" Class="common-bg" ValueChanged="@( (string value) => OnSearchValueChanges<UserDataVM>(value, grid) )" />
-                        </div>
-
-                        <div class="col-md-4" style="display:flex;align-items:center;">
-                          
-                            <TelerikCheckBox Id="archive"
-                                     Value="@userFilterVM.IsArchive"
-                                     ValueChanged="@((bool value) => DisplayArchiveUsers(value))">
-                            </TelerikCheckBox>
-
-                            <label for="archive" style="padding-left:7px;">Show Archived Users</label>
-                            
-                        </div>
+                        <TelerikComboBox Id=companyId Data="@userFilterVM.Companies" TextField="Name"
+                                     ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Company" ValueField="Id" Class="common-bg">
+                        </TelerikComboBox>
 
                     </div>
-            </ChildContent>
-        </CustomCollapseBar>
+                }
+
+                <div class="col-md-4">
+                    <TelerikTextBox Name="SearchText" PlaceHolder="Search User" Class="common-bg" ValueChanged="@( (string value) => OnSearchValueChanges<UserDataVM>(value, grid) )" />
+                </div>
+
+                <div class="col-md-4" style="display:flex;align-items:center;">
+
+                    <TelerikCheckBox Id="archive"
+                                     Value="@userFilterVM.IsArchive"
+                                     ValueChanged="@((bool value) => DisplayArchiveUsers(value))">
+                    </TelerikCheckBox>
+
+                    <label for="archive" style="padding-left:7px;">Show Archived Users</label>
+
+                </div>
+
+            </div>
+        </ChildContent>
+    </CustomCollapseBar>
 </div>
 
 <TelerikGrid TItem="UserDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -133,7 +133,7 @@
             <Template>
                 @{
                     var data = dataItem as UserDataVM;
-                   <div> @data.CreatedOn.Format(data.CreatedOn, globalMembers.DateFormat, false)</div>
+                    <div> @data.CreatedOn.Format(data.CreatedOn, globalMembers.DateFormat, false)</div>
                 }
             </Template>
         </GridColumn>
@@ -148,18 +148,18 @@
             </Template>
         </GridColumn>
 
-         <GridColumn Field="@nameof(UserDataVM.IsArchive)" Context="dataItem" Title="Archived On" Visible="@(userFilterVM.IsArchive)">
+        <GridColumn Field="@nameof(UserDataVM.ArchivedOn)" Context="dataItem" Title="Archived On" Visible="@(userFilterVM.IsArchive)">
             <Template>
-                
-            @{
+
+                @{
                     var data = dataItem as UserDataVM;
-                   <div> @data.ArchivedOn.GetValueOrDefault().ToString("MM/dd/yyyy") </div>
+                    <div> @data.ArchivedOn.GetValueOrDefault().Format(data.ArchivedOn.GetValueOrDefault(), globalMembers.DateFormat, false)</div>
                 }
 
             </Template>
         </GridColumn>
 
-          <GridColumn Field="@nameof(UserDataVM.ArchivedOn)" Context="dataItem" Title="Is Archive">
+        <GridColumn Field="@nameof(UserDataVM.IsArchive)" Context="dataItem" Title="Is Archive">
             <Template>
                 @{
                     var data = dataItem as UserDataVM;

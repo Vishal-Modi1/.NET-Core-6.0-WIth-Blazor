@@ -8,11 +8,14 @@ namespace Web.UI.Extensions
         {
             if (isDisplayTime)
             {
-                return value.ToString(format, CultureInfo.InvariantCulture);
+                string dateFormat = format.Replace("$", " ");
+                return value.ToString(dateFormat, CultureInfo.InvariantCulture);
             }
             else
             {
-                return value.ToString(format, CultureInfo.InvariantCulture);
+                string dateFormat = format.Split(new char[] { '$' }, StringSplitOptions.RemoveEmptyEntries).First();
+             
+                return value.ToString(dateFormat, CultureInfo.InvariantCulture);
             }
         }
     }

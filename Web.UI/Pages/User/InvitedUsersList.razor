@@ -106,7 +106,7 @@
             <Template>
                 @{
                     var data = dataItem as InviteUserDataVM;
-                    <div> @data.InvitedOn.ToString("MM/dd/yyyy") </div>
+                    <div> @data.InvitedOn.Format(data.InvitedOn, globalMembers.DateFormat, false)</div>
                 }
             </Template>
         </GridColumn>

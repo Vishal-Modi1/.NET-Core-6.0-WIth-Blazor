@@ -18,11 +18,11 @@ namespace Repository
 
         public List<DropDownSmallValues> ListDropDownValues()
         {
-            List<DropDownSmallValues> dateFormats = (from dateFormat in _myContext.DateFormats
+            List<DropDownSmallValues> dateFormats = (from dateFormat in _myContext.DateTimeFormats
                                                 select new DropDownSmallValues() {
                                                 
                                                     Id = dateFormat.Id,
-                                                    Name = dateFormat.Name,
+                                                    Name = dateFormat.DateFormat + " " + dateFormat.TimeFormat,
 
                                                 }).ToList();
         
@@ -50,10 +50,10 @@ namespace Repository
 
         public string FindDateFormatValue(int companyId)
         {
-            string dateFormatValue = (from dateFormat in _myContext.DateFormats 
+            string dateFormatValue = (from dateFormat in _myContext.DateTimeFormats 
                         join companyDateFormat in _myContext.CompaniesDateFormat
                         on dateFormat.Id equals companyDateFormat.DateFormatId 
-                        where companyDateFormat.CompanyId == companyId select dateFormat.Name).FirstOrDefault();
+                        where companyDateFormat.CompanyId == companyId select dateFormat.DateFormat + "$" + dateFormat.TimeFormat).FirstOrDefault();
 
             return dateFormatValue;
         }

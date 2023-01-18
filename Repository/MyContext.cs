@@ -149,7 +149,7 @@ namespace Repository
      
         public DbSet<FlightCategory> FlightCategories { get; set; }
 
-        public DbSet<DateFormat> DateFormats { get; set; }
+        public DbSet<DateTimeFormat> DateTimeFormats { get; set; }
        
         public DbSet<CompanyDateFormat> CompaniesDateFormat { get; set; }
 

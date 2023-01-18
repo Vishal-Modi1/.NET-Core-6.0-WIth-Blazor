@@ -25,7 +25,9 @@
 
         <div class="d-flex justify-content-center">
 
-            <FontLabel fontSize="12px">@schedulerVM.StartTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+            <FontLabel fontSize="12px">
+                @schedulerVM.StartTime.Format(schedulerVM.StartTime, globalMembers.DateFormat, false)
+                </FontLabel>
 
         </div>
     </div>
@@ -59,7 +61,10 @@
         </div>
         <div class="d-flex justify-content-center">
 
-            <FontLabel fontSize="12px">@schedulerVM.EndTime.ToString("ddd, MMM dd, yyyy")</FontLabel>
+            <FontLabel fontSize="12px">
+
+                @schedulerVM.EndTime.Format(schedulerVM.EndTime, globalMembers.DateFormat, false)
+                </FontLabel>
         </div>
 
     </div>
