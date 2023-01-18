@@ -1,13 +1,18 @@
 using AspNetCoreRateLimit;
 using Configuration;
 using DataModels.Constants;
+using FSMAPI.Controllers;
 using FSMAPI.CustomServicesExtensions;
+using FSMAPI.Filters;
+using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Repository;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mime;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -18,11 +23,15 @@ var builder = WebApplication.CreateBuilder(args);
 var _configurationSettings = ConfigurationSettings.Instance;
 var _environment = builder.Environment;
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonDateTimeConverter());
+});
 
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -42,7 +51,9 @@ builder.Services.AddSwaggerGen(c =>
 
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
     c.IncludeXmlComments(xmlPath);
+
 });
 
 #region API rate limit configuraiton
@@ -104,7 +115,7 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateIssuer = true,
         ValidIssuer = _configurationSettings.JWTIssuer,
-      //  ValidAudience = _configurationSettings.JWTIssuer,
+        //  ValidAudience = _configurationSettings.JWTIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationSettings.JWTKey)),
         ClockSkew = TimeSpan.Zero // remove delay of token when expire
     };
@@ -126,7 +137,30 @@ builder.Services.AddAuthorization(cfg =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<MyContext>();
+builder.Services.AddAutoMapper(typeof(Program));
 
+// if want to ignore model validations on form post
+//builder.Services.Configure<ApiBehaviorOptions>(options =>
+//{
+//    options.SuppressModelStateInvalidFilter = true;
+//});
+
+builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+{
+
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var result = new ValidationFailedResult(context.ModelState);
+        // TODO: add `using System.Net.Mime;` to resolve MediaTypeNames
+        result.ContentTypes.Add(MediaTypeNames.Application.Json);
+        return result;
+    };
+});
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ValidateFilterAttribute));
+});
 
 //Services
 builder.Services.AddCustomServices();

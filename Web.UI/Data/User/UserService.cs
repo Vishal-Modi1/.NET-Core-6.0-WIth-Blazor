@@ -68,6 +68,15 @@ namespace Web.UI.Data.User
             return response;
         }
 
+        public async Task<CurrentResponse> UpdateIsUserArchive(DependecyParams dependecyParams, long id, bool isArchive)
+        {
+            dependecyParams.URL = $"user/updateArchiveStatus?id={id}&isArchive={isArchive}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
+
         public async Task<UserVM> GetDetailsAsync(DependecyParams dependecyParams, long id, int companyId)
         {
             dependecyParams.URL = $"user/getDetails?id={id}&companyId={companyId}";

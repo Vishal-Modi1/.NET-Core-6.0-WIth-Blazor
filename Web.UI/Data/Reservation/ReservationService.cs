@@ -47,5 +47,45 @@ namespace Web.UI.Data.Reservation
 
             return reservationFilterVM;
         }
+
+        public async Task<List<UpcomingFlight>> ListUpcomingFlightsByUserId(DependecyParams dependecyParams, long userId)
+        {
+            dependecyParams.URL = $"reservation/listUpcomingFlightsByUserId?userId={userId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<UpcomingFlight> list = UpcomingFlightsList(response);
+
+            return list;
+        }
+
+        public async Task<List<UpcomingFlight>> ListUpcomingFlightsByAircraftId(DependecyParams dependecyParams, long aircraftId)
+        {
+            dependecyParams.URL = $"reservation/listUpcomingFlightsByAircraftId?aircraftId={aircraftId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<UpcomingFlight> list = UpcomingFlightsList(response);
+
+            return list;
+        }
+
+        public async Task<List<UpcomingFlight>> ListUpcomingFlightsByCompanyId(DependecyParams dependecyParams, int companyId)
+        {
+            dependecyParams.URL = $"reservation/listUpcomingFlightsByCompanyId?companyId={companyId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            List<UpcomingFlight> list = UpcomingFlightsList(response);
+
+            return list;
+        }
+
+        private List<UpcomingFlight> UpcomingFlightsList(CurrentResponse response)
+        {
+            List<UpcomingFlight> list = new List<UpcomingFlight>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                list = JsonConvert.DeserializeObject<List<UpcomingFlight>>(response.Data.ToString());
+            }
+
+            return list;
+        }
     }
 }

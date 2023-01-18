@@ -22,7 +22,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAircraftService, AircraftService>();
             services.AddScoped<IEquipmentStatusService, StatusService>();
             services.AddScoped<IEquipmentClassificationService, EquipmentClassificationService>();
-            services.AddScoped<IAirCraftEquipmentService, AircraftEquipmentService>();
+            services.AddScoped<IAircraftEquipmentService, AircraftEquipmentService>();
             services.AddScoped<IUserRolePermissionService, UserRolePermissionService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IAircraftScheduleService, AircraftScheduleService>();
@@ -40,6 +40,20 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserVSCompanyService, UserVSCompanyService>();
             services.AddScoped<IAircraftStatusService, AircraftStatusService>();
             services.AddScoped<IInviteUserService, InviteUserService>();
+            services.AddScoped<IDiscrepancyService, DiscrepancyService>();
+            services.AddScoped<IDiscrepancyStatusService, DiscrepancyStatusService>();
+            services.AddScoped<IDiscrepancyHistoryService, DiscrepancyHistoryService>();
+            services.AddScoped<IDiscrepancyFileService, DiscrepancyFileService>();
+            services.AddScoped<IEmailConfigurationService, EmailConfigurationService>();
+            services.AddScoped<IAirTrafficControlCenterService, AirTrafficControlCenterService>();
+            services.AddScoped<IUserAirTrafficControlCenterService, UserAirTrafficControlCenterService>();
+            services.AddScoped<IWindyMapConfigurationService, WindyMapConfigurationService>();
+            services.AddScoped<IBillingConfigurationService, BillingConfigurationService>();
+            services.AddScoped<IFlightCategoryService, FlightCategoryService>();
+            services.AddScoped<IAircraftLiveTrackerMapConfigurationService, AircraftLiveTrackerMapConfigurationService>();
+            services.AddScoped<IRadarMapConfigurationService, RadarMapConfigurationService>();
+            services.AddScoped<ICompanyDateFormatService, CompanyDateFormatService>();
+            services.AddScoped<IVFRMapConfigurationService, VFRMapConfigurationService>();
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -60,7 +74,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IAircraftRepository, AircraftRepository>();
             services.AddScoped<IEquipmentStatusRepository, StatusRepository>();
             services.AddScoped<IEquipmentClassificationRepository, EquipmentClassificationRepository>();
-            services.AddScoped<IAircraftEquipmentRepository, AirCraftEquipmentRepository>();
+            services.AddScoped<IAircraftEquipmentRepository, AircraftEquipmentRepository>();
             services.AddScoped<IUserRolePermissionRepository, UserRolePermissionRepository>();
             services.AddScoped<IModuleDetailsRepository, ModuleDetailsRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -78,8 +92,20 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserVSCompanyRepository, UserVSCompanyRepository>();
             services.AddScoped<IAircraftStatusRepository, AircraftStatusRepository>();
             services.AddScoped<IInviteUserRepository, InviteUserRepository>();
-            //services.AddScoped(typeof(IRepository<>), typeof(ReadOnlyRepositoryBase<>));
-            //services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IDiscrepancyRepository, DiscrepancyRepository>();
+            services.AddScoped<IDiscrepancyStatusRepository, DiscrepancyStatusRepository>();
+            services.AddScoped<IDiscrepancyHistoryRepository, DiscrepancyHistoryRepository>();
+            services.AddScoped<IDiscrepancyFileRepository, DiscrepancyFileRepository>();
+            services.AddScoped<IEmailConfigurationRepository, EmailConfigurationRepository>();
+            services.AddScoped<IAirTrafficControlCenterRepository, AirTrafficControlCenterRepository>();
+            services.AddScoped<IUserAirTrafficControlCenterRepository, UserAirTrafficControlCenterRepository>();
+            services.AddScoped<IWindyMapConfigurationRepository, WindyMapConfigurationRepository>();
+            services.AddScoped<IBillingConfigurationRepository, BillingConfigurationRepository>();
+            services.AddScoped<IFlightCategoryRepository, FlightCategoryRepository>();
+            services.AddScoped<IAircraftLiveTrackerMapConfigurationRepository, AircraftLiveTrackerMapConfigurationRepository>();
+            services.AddScoped<IRadarMapConfigurationRepository, RadarMapConfigurationRepository>();
+            services.AddScoped<ICompanyDateFormatRepository, CompanyDateFormatRepository>();
+            services.AddScoped<IVFRMapConfigurationRepository, VFRMapConfigurationRepository>();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Web.UI.Data;
-using Web.UI.Data.Account;
+﻿using Web.UI.Data.Account;
 using Web.UI.Data.Aircraft;
 using Web.UI.Data.Aircraft.AircraftEquipment;
 using Web.UI.Data.Common;
@@ -20,6 +19,10 @@ using Web.UI.Data.Location;
 using Web.UI.Data.Timezone;
 using Web.UI.Data.AircraftStatus;
 using Web.UI.Data.InviteUser;
+using Web.UI.Data.Airport;
+using Web.UI.Data.Discrepancy;
+using Web.UI.Data.Company.Settings;
+using Web.UI.Data.Weather;
 
 namespace Web.UI.CustomServicesExtensions
 {
@@ -50,6 +53,18 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<TimezoneService>();
             builder.Services.AddScoped<AircraftStatusService>();
             builder.Services.AddScoped<InviteUserService>();
+            builder.Services.AddScoped<AirportService>();
+            builder.Services.AddScoped<DiscrepancyService>();
+            builder.Services.AddScoped<DiscrepancyFileService>();
+            builder.Services.AddScoped<EmailConfigurationService>();
+            builder.Services.AddScoped<AirTrafficControlCenterService>();
+            builder.Services.AddScoped<WindyMapConfigurationService>();
+            builder.Services.AddScoped<RadarMapConfigurationService>();
+            builder.Services.AddScoped<VFRMapConfigurationService>();
+            builder.Services.AddScoped<AircraftLiveTrackerMapConfigurationService>();
+            builder.Services.AddScoped<BillingConfigurationService>();
+            builder.Services.AddScoped<FlightCategoryService>();
+            builder.Services.AddScoped<CompanyDateFormatService>();
         }
     }
 }

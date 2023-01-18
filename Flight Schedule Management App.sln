@@ -13,11 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSMAPI", "FSMAPI\FSMAPI.csproj", "{FACDD143-3FA7-44D6-99A6-6CC0673AFAE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FSM.Blazor", "FSM.Blazor\FSM.Blazor.csproj", "{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.UI", "Web.UI\Web.UI.csproj", "{11BBE62A-88D7-495C-9542-3CE755311253}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PasswordDecryptor", "PasswordDescryptor\PasswordDecryptor.csproj", "{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,14 +67,6 @@ Global
 		{FACDD143-3FA7-44D6-99A6-6CC0673AFAE1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FACDD143-3FA7-44D6-99A6-6CC0673AFAE1}.Release|x64.ActiveCfg = Release|x64
 		{FACDD143-3FA7-44D6-99A6-6CC0673AFAE1}.Release|x64.Build.0 = Release|x64
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Debug|x64.ActiveCfg = Debug|x64
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Debug|x64.Build.0 = Debug|x64
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|x64.ActiveCfg = Release|x64
-		{8D2FC407-52FE-484B-BC84-CA7E6EC2CD67}.Release|x64.Build.0 = Release|x64
 		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CED5C3F-7D4D-4CDD-A67E-E368A0DDE7E6}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -91,6 +83,14 @@ Global
 		{11BBE62A-88D7-495C-9542-3CE755311253}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11BBE62A-88D7-495C-9542-3CE755311253}.Release|x64.ActiveCfg = Release|Any CPU
 		{11BBE62A-88D7-495C-9542-3CE755311253}.Release|x64.Build.0 = Release|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Debug|x64.Build.0 = Debug|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Release|x64.ActiveCfg = Release|Any CPU
+		{2E289F33-FEA0-4925-B3BA-A3D325FC5ED5}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

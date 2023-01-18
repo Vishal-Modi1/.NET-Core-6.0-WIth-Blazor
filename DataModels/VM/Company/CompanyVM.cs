@@ -13,6 +13,16 @@ namespace DataModels.VM.Company
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "City is required")]
+        public string City { get; set; }
+
+        [Required(ErrorMessage = "State is required")]
+        public string State { get; set; }
+
+        [Required(ErrorMessage = "Zipcode is required")]
+        [RegularExpression("\\b\\d{5}\\b", ErrorMessage = "Invalid zipcode")]
+        public string Zipcode { get; set; }
+
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }
         [Required(ErrorMessage = "Timezone is required")]
@@ -33,6 +43,11 @@ namespace DataModels.VM.Company
         public bool IsLoadingEditButton { get; set; }
         [NotMapped]
         public string LogoPath { get; set; }
+
+        public bool IsDisplayPropeller { get; set; }
+        public int TotalAircrafts { get; set; }
+
+        public int TotalUsers { get; set; }
         [NotMapped]
         public new long? CreatedBy { get; set; }
         public int TotalRecords { get; set; }

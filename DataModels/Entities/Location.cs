@@ -7,6 +7,7 @@ namespace DataModels.Entities
         public int Id { get; set; }
         public string PhysicalAddress { get; set; }
         public short TimezoneId { get; set; }
+        public int CompanyId { get; set; }
         public string AirportCode { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }

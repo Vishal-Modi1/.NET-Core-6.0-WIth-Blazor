@@ -35,10 +35,17 @@ namespace Web.UI.Controllers
 
 
         [HttpGet]
-        [Route("api/auth/test")]
-        public async Task<IActionResult> SignInPost1()
+        [Route("api/auth/signInWithToken")]
+        public async Task<IActionResult> SignInWithToken(string token)
         {
-            return Ok("test");
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, $"Account/getDetailsFromToken?token={token}", null, null);
+            var response = await _httpCaller.GetAsync(dependecyParams);
+            if (response.Status == HttpStatusCode.OK)
+            {
+                await AddCookieAsync(response.Data);
+            }
+
+            return Ok(response);
         }
 
         [HttpPost]
@@ -48,7 +55,7 @@ namespace Web.UI.Controllers
             string jsonData = JsonConvert.SerializeObject(loginVM);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, "Account/login", jsonData, null);
-            
+
             var response = await _httpCaller.PostAsync(dependecyParams);
             //jsonData = JsonConvert.SerializeObject(response.Data);
 
@@ -87,10 +94,7 @@ namespace Web.UI.Controllers
             string url = $"Account/RefreshToken?refreshToken={refreshToken}&userId={userId}";
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(_httpClient, url, "", null);
-
             var response = await _httpCaller.GetAsync(dependecyParams);
-
-            string jsonData = JsonConvert.SerializeObject(response.Data);
 
             if (response.Status == HttpStatusCode.OK)
             {
@@ -148,7 +152,8 @@ namespace Web.UI.Controllers
                   new Claim(CustomClaimTypes.CompanyName, loginResponse.CompanyName == null ? "" : loginResponse.CompanyName),
                   new Claim(CustomClaimTypes.CompanyId, loginResponse.CompanyId.ToString()),
                   new Claim(CustomClaimTypes.ProfileImageURL, loginResponse.ImageURL),
-                  new Claim(CustomClaimTypes.TimeZone, loginResponse.LocalTimeZone)
+                  new Claim(CustomClaimTypes.TimeZone, loginResponse.LocalTimeZone),
+                  new Claim(CustomClaimTypes.DateFormat, loginResponse.DateFormat)
                };
 
                 _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
@@ -201,7 +206,7 @@ namespace Web.UI.Controllers
                   new Claim(CustomClaimTypes.TimeZone, identity.FindFirst(CustomClaimTypes.TimeZone).Value),
                };
 
-           //     _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
+                //     _currentUserPermissionManager.AddInCache(loginResponse.Id, loginResponse.UserPermissionList);
 
                 //var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
                 var grandmaIdentity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -1,0 +1,40 @@
+﻿@using global::Utilities
+
+<style>
+
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+<table>
+
+    <tr style="height: 37px;text-align: center;">
+
+        <th style="width:17%">Created on</th>
+        <th style="width:17%">Created by</th>
+        <th style="width:66%">Log</th>
+
+    </tr>
+
+    @foreach (var item in discrepancyHistoryData.OrderBy(p=>p.CreatedOn).ToList())
+    {
+        <tr>
+            <td style="font-size:13px !important;padding:8px !important">@DateConverter.ToLocal(item.CreatedOn, globalMembers.Timezone) </td>
+            <td style="font-size:13px !important;text-align:center">@item.CreatedBy</td>
+            <td style="font-size:13px !important;padding:8px !important">@item.Message</td>
+        </tr>
+    }
+</table>
+
+@*<div class="row mb-0">
+    <div class="col-md-12 text-right">
+
+        <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(false)" ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline">
+            Cancel
+        </TelerikButton>
+
+    </div>
+</div>*@
+
+

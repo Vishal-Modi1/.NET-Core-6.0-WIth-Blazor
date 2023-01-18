@@ -2,7 +2,7 @@
 
 @page "/Users"
 
-<TelerikTabStrip>
+<TelerikTabStrip Class="k-tabstrip-list">
 
     <TabStripTab>
         <HeaderTemplate>
@@ -14,7 +14,9 @@
             </div>
         </HeaderTemplate>
         <Content>
-            <Web.UI.Pages.User.UsersList ParentModuleName="Administration"></Web.UI.Pages.User.UsersList>
+            <Web.UI.Pages.User.UsersList ParentModuleName="@ParentModuleName" CompanyIdParam="@CompanyIdParam">
+
+            </Web.UI.Pages.User.UsersList>
         </Content>
     </TabStripTab>
 
@@ -28,7 +30,7 @@
             </div>
         </HeaderTemplate>
         <Content>
-            <Web.UI.Pages.User.InvitedUsersList ParentModuleName="Administration"></Web.UI.Pages.User.InvitedUsersList>
+            <Web.UI.Pages.User.InvitedUsersList ParentModuleName="@ParentModuleName" CompanyIdParam="@CompanyIdParam"></Web.UI.Pages.User.InvitedUsersList>
         </Content>
     </TabStripTab>
 

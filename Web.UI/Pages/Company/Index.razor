@@ -6,40 +6,70 @@
 @page "/Company"
 
 <div class="row">
-    <div class="col d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Companies" Type="AdministrationTitle" />
-        </div>
-        <div>
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-            {
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                    </TelerikButton>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col d-flex justify-content-between my-2">
-        <div class="col-md-4">
-            <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )" />
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <ComponentTitle Title="Companies" Type="AdministrationTitle" />
+            </div>
+            <div>
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                {
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
 
+<div>
+        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                   <span class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </span>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                        <CustomIcons IconName="minus" />
+                        }
+                        else
+                        {
+                        <CustomIcons IconName="plus" />
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+              <ChildContent>
+            <div class="row my-2">
+                <div class="col-md-4">
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Company" ValueChanged="@( (string value) => OnSearchValueChanges<CompanyVM>(value, grid) )" />
+                </div>
+
+                <div class="col-md-4">
+                    <TelerikComboBox Id=city Data="@companyFilter.Cities" TextField="Name" @bind-Value="@city"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     OnChange="() => grid.Rebind()" Placeholder="Select City" ValueField="Name">
+                    </TelerikComboBox>
+                </div>
+
+                <div class="col-md-4">
+                    <TelerikComboBox Id=city Data="@companyFilter.States" TextField="Name" @bind-Value="@state"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     OnChange="() => grid.Rebind()" Placeholder="Select State" ValueField="Name">
+                    </TelerikComboBox>
+                </div>
+            </div>
+        </ChildContent>
+        </CustomCollapseBar>
+</div>
 <div style="position: relative; width:100%; min-height: 400px;">
-    <TelerikLoaderContainer OverlayThemeColor="light"
-                            Visible="@(isGridDataLoading)"
-                            Text="@null" Class="initial-data-loader">
-        <Template>
-            <TelerikLoader Type="@LoaderType.InfiniteSpinner"
-                           Size="@(ThemeConstants.Loader.Size.Large)">
-            </TelerikLoader>
-        </Template>
-    </TelerikLoaderContainer>
 
     <TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
                  Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
@@ -50,7 +80,7 @@
 
         <GridColumns>
 
-            <GridColumn Context="dataItem" Title="Logo" Width="80px">
+            <GridColumn Context="dataItem" Title="Logo" Width="10%">
                 <Template>
                     @{
                         var data = dataItem as CompanyVM;
@@ -61,7 +91,7 @@
                 </Template>
             </GridColumn>
 
-            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company">
+            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company" Width="25%">
                 <Template>
                     @{
                         var data = context as CompanyVM;
@@ -69,10 +99,11 @@
                     }
                 </Template>
             </GridColumn>
-            <GridColumn Field="@nameof(CompanyVM.Address)" />
-            <GridColumn Field="@nameof(CompanyVM.TimeZone)" />
-            <GridColumn Field="@nameof(CompanyVM.ContactNo)" Sortable="false" />
-            <GridColumn Field="@nameof(CompanyVM.Website)" Sortable="false" />
+            <GridColumn Field="@nameof(CompanyVM.City)" Width="15%" />
+            <GridColumn Field="@nameof(CompanyVM.State)" Width="15%" />
+            @*<GridColumn Field="@nameof(CompanyVM.TimeZone)" Width="12%"/>*@
+            <GridColumn Field="@nameof(CompanyVM.TotalAircrafts)" Title="Aicrafts" TextAlign="@ColumnTextAlign.Center" Width="10%" />
+            <GridColumn Field="@nameof(CompanyVM.TotalUsers)" Title="Users" TextAlign="@ColumnTextAlign.Center" Width="10%" />
 
             <GridCommandColumn Context="dataItem" Title="Action">
                 @{

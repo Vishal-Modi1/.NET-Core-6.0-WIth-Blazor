@@ -1,0 +1,58 @@
+﻿@using DataModels.Enums
+<TelerikForm Model="@discrepancyFileVM" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <CustomValidationSummary></CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@discrepancyFileVM.Id" name="Id" />
+
+        <div class="row my-3">
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>Upload</label>
+
+                        <CustomFileUpload DisplayName="@discrepancyFileVM.DisplayName" IsFileAdded="@isFileAdded" 
+                        supportedFormats="@supportedImagesFormats" OnInputFileChangeCallback="OnInputFileChangeAsync"
+                        IsFileUploadHasError="@isFileUploadHasError"></CustomFileUpload>
+
+                        @if (isFileUploadHasError)
+                        {
+                            <span style="color:red !important">@errorMessage</span>
+                        }
+                    </div>
+
+                    <div class="col-6">
+                        <label>Name</label>
+                       <TelerikTextBox Class="w-100" PlaceHolder="Enter description" @bind-Value="@discrepancyFileVM.DisplayName" />
+                        <TelerikValidationMessage For="@(() => discrepancyFileVM.DisplayName)"></TelerikValidationMessage>
+                    </div>
+                    
+                </div>
+            
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+
+    </FormItems>
+    <FormButtons>
+        <div class="row mb-0">
+            <div class="col-md-12 text-right">
+
+
+                    <FormFooterComponent id="@discrepancyFileVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
+
+
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

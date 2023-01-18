@@ -1,13 +1,18 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Readex+Pro&display=swap');
 
 
-html, body, .selected-font {
-    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+
+/*html, body, .selected-font {
+    font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
 
 .k-drawer, .k-tabstrip-items {
-    font-family: Outfit,'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}*/
+
+* {
+    font-family: 'Readex Pro'
 }
 
 
@@ -43,7 +48,7 @@ $BG-LIGHT-BLUE: #3066F8;
 $BG-MENU-ITEM: #0062FE;
 $BG-MENU-ITEM-TEXT-COLOR: #121D2D;
 /*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
-$BG-MENU-ITEM-SELECTED: #3066f81c;
+$BG-MENU-ITEM-SELECTED: #3066f80f;
 $BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
 $BG-MENU-TITLE-HEADER: #022254;
 $BG-MENU-ITEM-HOVER: #eee;
@@ -56,6 +61,7 @@ $BG-BTN-DANGER-HOVER: #CA2323;
 $BG-BTN-INFO: #008EA4;
 $BG-BTN-INFO-HOVER: #17A2B8;
 $BG-SECONDARY: #979797;
+$BG-SECONDARY-BUTTON: #3066f8;
 /*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
@@ -84,7 +90,7 @@ $BG-ACTIVE-TAB: #1E8A88;
 $WHITE-TEXT: #FFFFFF;
 
 /*Custom Colors*/
-$RED-COLOR : #c00;
+$RED-COLOR: #c00;
 $GREEN-COLOR: #009B51;
 $PURPLE-COLOR: #673AB7;
 $BLUE-COLOR: #0d6efd;
@@ -94,7 +100,7 @@ body {
 }
 
 hr {
-    border: 1px solid #eee;
+    border: 1px solid #ffffff8c;
 }
 
 .bg-primary-f {
@@ -146,8 +152,9 @@ form .btn-danger {
 form .row {
     margin-bottom: 16px;
 }
+
 .telerik-blazor.k-invalid {
-    input, button {
+    input, button, k-autocomplete {
         background: #ffd1d178;
     }
 
@@ -165,15 +172,15 @@ form .row {
     height: 15px;
     border-radius: 50%;
     border: 2px solid white;
-    bottom: 0;
-    right: 0;
+    top: 0;
     position: absolute;
 }
 /*GLOBAL CLASSES*/
-.card, .k-card.telerik-blazor{
-    box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+.card, .k-card.telerik-blazor {
+    /*box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);*/
     border-radius: 8px;
 }
+
 .TelerikNotification .k-notification-container .k-notification-wrap {
     width: 300px;
     height: 50px;
@@ -236,7 +243,8 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .k-drawer-expanded {
     .k-drawer.k-drawer-start {
-        border-right-width: 0;
+        border-right-width: medium;
+        border-right-color: lightgrey;
     }
 }
 
@@ -272,16 +280,16 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .user-face {
     padding: 34px;
-    font-size: 14px;
+    font-size: 12px;
     color: black !important;
 }
 
 .k-button.drawer-hamburger {
-    background: transparent;
+    background: transparent !important;
     color: $BG-MENU-ITEM-TEXT-COLOR !important;
     border: 0;
     box-shadow: none;
-    padding: 34px;
+    padding: 0 34px 0 34px;
 }
 
 .telerik-blazor {
@@ -291,7 +299,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
         .k-drawer-item {
             border-left: 6px solid $BG-MAIN-MENU;
-            font-size: 14px;
+            font-size: 12px;
 
             .selected-arrow {
                 width: 0;
@@ -345,6 +353,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         background-color: $BG-BTN-PRIMARY-HOVER !important;
     }
 
+    &.k-btn-primary:focus {
+        outline: none !important;
+        box-shadow: 0 0 0px 2px rgb(62 128 237 / 30%);
+    }
+
     &.k-btn-danger {
         color: white;
         border: 1px solid $BG-BTN-DANGER !important;
@@ -375,20 +388,21 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     &.k-btn-secondary:hover {
         color: white;
     }
-
-    
 }
+
 .k-button {
     &.k-button-Outline-secondary {
-        border-color: $BG-SECONDARY !important;
-        color: $BG-SECONDARY !important;
+        border: 1px solid $BG-SECONDARY-BUTTON !important;
+        color: $BG-SECONDARY-BUTTON !important;
     }
 
     &.k-button-Outline-secondary:hover {
-        border-color: $BG-SECONDARY !important;
-        color: $BG-SECONDARY !important;
+        border: 1px solid $BG-SECONDARY-BUTTON !important;
+        color: white !important;
+        background-color: $BG-SECONDARY-BUTTON !important
     }
 }
+
 .login-button {
     width: 100% !important;
 }
@@ -408,7 +422,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .dropdown-menu {
     box-shadow: 0 4px 8px 0 rgb(2 34 84 / 35%), 0 6px 20px 0 rgb(2 34 84 / 61%) !important;
-    z-index:1051;
+    z-index: 1051;
 }
 
 .show-notification-dot {
@@ -442,15 +456,19 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     background: none;
     color: #FFFF;
 }
+
 .hr-gray {
     border: 1px solid #bfbfbf;
 }
+
 .hr-blue {
     border: 1px solid #EBECF3;
 }
+
 .k-form-buttons {
     margin-top: 0;
 }
+
 .k-form-buttons.k-actions-start {
     justify-content: flex-end !important;
     display: flex !important;
@@ -469,13 +487,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*Telerik Card Css*/
 .flight-info-card {
-    background: #EEF1F5;
     border: 2px solid #E0E0E0;
     border-radius: 8px;
 
     .k-card.telerik-blazor {
         height: 200px;
-        overflow-y: auto;
     }
 }
 
@@ -499,6 +515,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .k-tabstrip-items-wrapper .k-item {
     color: $TEXT-TAB-STRIP !important;
 }
+
 .k-tabstrip-top {
     .k-tabstrip-items-wrapper {
         margin-bottom: 0;
@@ -508,13 +525,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             color: #3066F8 !important;
         }
     }
-} 
+}
+
 .k-tabstrip-items {
     /*padding: 15px;*/
 
     .k-tabstrip-item.k-item {
         .k-link {
-            font-size: 14px;
+            font-size: 12px;
             color: #111111 !important;
             border-right: 2px solid rgba(17, 17, 17, 0.141);
         }
@@ -547,7 +565,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-inner {
-    background-color: #3066f81c;
+    background-color: #3066f80f;
 }
 
 .k-input-button, .k-input-button:hover {
@@ -583,17 +601,25 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .component-title {
-    font-family: 'Outfit';
+    font-family: 'Readex Pro';
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
     line-height: 23px;
 }
+
 .custom-elipse {
     box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
     border-radius: 50px;
     width: 40px;
     height: 40px;
+}
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 1000px;
+        margin: 1.75rem auto;
+    }
 }
 /*Modal style*/
 .modal {
@@ -615,6 +641,14 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         z-index: 1055;
         background-color: #ffffff;
         border-radius: 20px 20px 12px 12px !important;
+
+        &.modal-md-new {
+            width: 730px;
+
+            .modal-content {
+                width: 730px;
+            }
+        }
     }
 
     .modal-header {
@@ -649,25 +683,175 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
     width: 100%;
     padding: 4px 0;
 }
+
 .row.compact-row > .col-6 {
     padding: 10px;
 }
-label, a, 
+
+label, a,
 .text-14 {
-    font-size: 14px !important;
+    font-size: 12px !important;
 }
+
 .text-16 {
     font-size: 16px !important;
 }
-.cursor-pointer{
-    cursor:pointer !important;
+
+.cursor-pointer {
+    cursor: pointer !important;
 }
 
+th, td, span, p {
+    font-size: 12px !important
+}
+
+.k-scheduler-row {
+    font-size: 12px !important
+}
 /*TELERIK TEXTBOX INNER TEXT FONT SIZE & PLACEHOLDER SIZE*/
 .k-input-inner {
-    font-size:14px
+    font-size: 12px
 }
 /*TOASTR CLASS*/
 .k-notification-group {
     z-index: 1060 !important;
+}
+
+.k-notification {
+    max-width: 400px;
+}
+
+.ap-title {
+    color: $PRIMARY-COLOR;
+    background: #E3E3E3;
+}
+
+.ap-value {
+    color: $PRIMARY-COLOR;
+    /*background: #F8F8F8;*/
+    border-bottom: 2px solid #E3E3E3;
+}
+
+.ad-text {
+    padding: 5px !important;
+}
+
+.nearby-weather-1 {
+    border-bottom: 2px solid #E3E3E3;
+}
+
+.common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
+    background: #3066f80f !important;
+}
+
+.k-input-md .k-input-button {
+    background-color: #3066f84f !important
+}
+
+.weather-brify {
+    border: 1px solid #D9D9D9;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px;
+    max-width: 200px;
+}
+
+#collapseOne .card-body {
+    padding: 0px 7px 5px 5px !important;
+}
+
+/*Update all controll height*/
+.k-input {
+    height: 31px !important;
+}
+
+.k-multiselect {
+    height: auto !important;
+}
+
+.no-box-shadow {
+    box-shadow: none !important;
+}
+
+.k-calendar-sm.k-month-calendar, .k-calendar-sm .k-calendar-monthview {
+    --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 38px );
+}
+
+.highlightDates {
+    border: 1px solid rgb(21 203 55 / 70%) !important;
+    border-radius: 50%;
+}
+
+.k-calendar-custom-small {
+    width: 100% !important;
+
+    .k-calendar-header {
+        width: 100% !important;
+        display: block !important;
+    }
+
+    .k-calendar-view.k-calendar-monthview {
+        margin: 0 !important;
+        padding: 0 4px;
+        width: 100%;
+
+        table {
+            border-spacing: 10px;
+        }
+
+        .k-calendar-td {
+
+            .k-link {
+                border-radius: 50%;
+            }
+
+            inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+            block-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+        }
+
+        .k-calendar-table.k-month {
+            margin: 0 !important;
+        }
+    }
+
+    .k-calendar-thead > .k-calendar-tr > .k-calendar-th, .k-calendar-tbody > .k-calendar-tr > .k-calendar-th {
+        width: 20px !important;
+        height: 20px !important;
+    }
+}
+
+.profile-image-hover {
+    .highlight-hover {
+        background-color: transparent;
+        border: transparent;
+    }
+}
+
+.profile-image-hover:hover {
+    .highlight-hover {
+        padding: 5px 10px !important;
+        border-color: #3066f8 !important;
+        background-color: #3066f8 !important;
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 1440px) and (min-width: 1200px) {
+    .col-xl-2 {
+        width: 20%!important;
+    }
+
+    .col-xl-10 {
+        width: 80% !important;
+    }
+}
+
+@media (max-width: 2000px) and (min-width: 1441px) {
+    .col-xl-2 {
+        width: 20% !important;
+    }
+
+    .col-xl-10 {
+        width: 80% !important;
+    }
 }

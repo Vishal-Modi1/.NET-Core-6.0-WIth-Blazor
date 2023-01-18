@@ -34,7 +34,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
             aircraftEquipmentsVM.LogEntryDate = DateConverter.ToUTC(aircraftEquipmentsVM.LogEntryDate.Value, timeZone);
             aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToUTC(aircraftEquipmentsVM.ManufacturerDate.Value, timeZone);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftEquipmentService.SaveandUpdateAsync(dependecyParams, aircraftEquipmentsVM);
 
             isBusySubmitButton = false;
@@ -44,7 +44,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

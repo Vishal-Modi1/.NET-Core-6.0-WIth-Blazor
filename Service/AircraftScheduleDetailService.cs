@@ -179,7 +179,7 @@ namespace Service
 
                 if (response)
                 {
-                    CreateResponse(true, HttpStatusCode.OK, "Aircraft is already checked-out. The aircraft must be checked-in before you can check it out.");
+                    CreateResponse(true, HttpStatusCode.OK, "Aircraft is already checked-out. The aircraft must be checked-in before you check it out.");
                 }
                 else
                 {

@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
+using Utilities;
 
 namespace Service
 {
@@ -21,12 +23,17 @@ namespace Service
         private readonly IAircraftScheduleHobbsTimeRepository _aircraftScheduleHobbsTimeRepository;
         private readonly IUserPreferenceRepository _userPreferenceRepository;
         private readonly IUserVSCompanyRepository _userVSCompanyRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly ISendMailService _sendMailService;
+        private readonly IEmailConfigurationRepository _emailConfigurationRepository;
+        private readonly IFlightCategoryRepository _flightCategoryRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
-            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository,
+            IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository, ICompanyRepository companyRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
-            IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository)
+            IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository,
+            IEmailConfigurationRepository emailConfigurationRepository, IFlightCategoryRepository flightCategoryRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
@@ -36,6 +43,10 @@ namespace Service
             _aircraftScheduleHobbsTimeRepository = aircraftScheduleHobbsTimeRepository;
             _userPreferenceRepository = userPreferenceRepository;
             _userVSCompanyRepository = userVSCompanyRepository;
+            _companyRepository = companyRepository;
+            _emailConfigurationRepository = emailConfigurationRepository;
+            _flightCategoryRepository = flightCategoryRepository;
+            _sendMailService = new SendMailService();
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id, long userId)
@@ -57,12 +68,65 @@ namespace Service
                     schedulerVM.AircraftEquipmentsTimeList.ForEach(p => { p.AircraftScheduleId = aircraftSchedule.Id; });
 
                     SetAircraftEquipmentHobbsTime(schedulerVM);
+
+                    if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+                    {
+                        schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedOut";
+                    }
+                    else
+                    {
+                        if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedIn";
+                        }
+                        else
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "Scheduled";
+                        }
+                    }
+                }
+
+                if (roleId == (int)DataModels.Enums.UserRole.SuperAdmin)
+                {
+                    schedulerVM.CompaniesList = _companyRepository.ListDropDownValues();
+
+                    if (schedulerVM.AircraftId != null)
+                    {
+                        schedulerVM.CompanyId = companyId = _aircraftRepository.FindByCondition(p => p.Id == schedulerVM.AircraftId).CompanyId.GetValueOrDefault();
+                    }
+                }
+                else
+                {
+                    schedulerVM.CompanyId = companyId;
+                }
+
+                if (companyId != 0)
+                {
+                    schedulerVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
                 }
 
                 ListDropDownValues(schedulerVM, companyId, roleId);
-
                 FilterValuesByUserPreferences(schedulerVM, userId);
 
+                schedulerVM.RoleId = roleId;
+
+                CreateResponse(schedulerVM, HttpStatusCode.OK, "");
+            }
+            catch (Exception ex)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, ex.Message);
+            }
+
+            return _currentResponse;
+        }
+
+        public CurrentResponse GetDropdownValuesByCompanyId(int roleId, int companyId, long userId)
+        {
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            try
+            {
+                ListDropDownValues(schedulerVM, companyId, roleId);
                 CreateResponse(schedulerVM, HttpStatusCode.OK, "");
             }
             catch (Exception ex)
@@ -100,7 +164,7 @@ namespace Service
                         continue;
                     }
 
-                    List<int> activityTypeIds = activityType.PreferencesIds.Split(new char[] { ',' }).Select(p => Convert.ToInt32(p)).ToList();
+                    List<long> activityTypeIds = activityType.PreferencesIds.Split(new char[] { ',' }).Select(p => Convert.ToInt64(p)).ToList();
                     schedulerVM.ScheduleActivitiesList = schedulerVM.ScheduleActivitiesList.Where(p => activityTypeIds.Contains(p.Id)).ToList();
                 }
             }
@@ -117,15 +181,17 @@ namespace Service
 
             schedulerVM.Member1List = schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
             schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
-            
+
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
+            schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);
+
         }
 
         public CurrentResponse ListActivityTypeDropDownValues(int roleId)
         {
             try
             {
-                List<DropDownValues> scheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
+                List<DropDownLargeValues> scheduleActivitiesList = _aircraftScheduleRepository.ListActivityTypeDropDownValues(roleId);
                 CreateResponse(scheduleActivitiesList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -147,7 +213,7 @@ namespace Service
             schedulerVM.AircraftEquipmentHobbsTimeList = _aircraftScheduleHobbsTimeRepository.ListByCondition(p => equipmentIdsList.Contains(p.AircraftEquipmentTimeId) && p.AircraftScheduleId == schedulerVM.Id);
         }
 
-        public CurrentResponse Create(SchedulerVM schedulerVM)
+        public CurrentResponse Create(SchedulerVM schedulerVM, string timezone)
         {
             try
             {
@@ -161,9 +227,9 @@ namespace Service
                 }
 
                 AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
-
                 aircraftSchedule = _aircraftScheduleRepository.Create(aircraftSchedule);
-                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Aircraft Appointment created successfully");
+                SendScheduleMail(schedulerVM, "You appointment has been scheduled.", timezone);
+                CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment created successfully");
 
                 return _currentResponse;
             }
@@ -175,7 +241,7 @@ namespace Service
             }
         }
 
-        public CurrentResponse Edit(SchedulerVM schedulerVM)
+        public CurrentResponse Edit(SchedulerVM schedulerVM, string timezone)
         {
             try
             {
@@ -188,8 +254,16 @@ namespace Service
                     return _currentResponse;
                 }
 
+                AircraftSchedule existingAircraftSchedule = _aircraftScheduleRepository.FindByCondition(p => p.Id == schedulerVM.Id);
                 AircraftSchedule aircraftSchedule = ToDataObject(schedulerVM);
                 aircraftSchedule = _aircraftScheduleRepository.Edit(aircraftSchedule);
+
+                bool isScheduleChanged = IsScheduleChanged(existingAircraftSchedule, schedulerVM);
+
+                if (isScheduleChanged)
+                {
+                    SendScheduleMail(schedulerVM, "You appointment has been updated", timezone);
+                }
 
                 CreateResponse(aircraftSchedule, HttpStatusCode.OK, "Appointment updated successfully");
 
@@ -201,6 +275,20 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        private bool IsScheduleChanged(AircraftSchedule existingAircraftSchedule, SchedulerVM schedulerVM)
+        {
+            if (existingAircraftSchedule.InstructorId != schedulerVM.InstructorId || existingAircraftSchedule.Member1Id != schedulerVM.Member1Id
+                || existingAircraftSchedule.Member2Id != schedulerVM.Member2Id || existingAircraftSchedule.StartDateTime != schedulerVM.StartTime
+                || existingAircraftSchedule.EndDateTime != schedulerVM.EndTime || existingAircraftSchedule.AircraftId != schedulerVM.AircraftId
+                || existingAircraftSchedule.DepartureAirportName != schedulerVM.DepartureAirport || existingAircraftSchedule.ArrivalAirportName
+                != schedulerVM.ArrivalAirport || existingAircraftSchedule.ScheduleTitle != schedulerVM.DisplayTitle)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private bool IsAircraftAvailable(SchedulerVM schedulerVM)
@@ -251,6 +339,25 @@ namespace Service
             {
                 List<SchedulerVM> schedulersList = _aircraftScheduleRepository.List(schedulerFilter);
 
+                foreach (var schedulerVM in schedulersList)
+                {
+                    if (schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut)
+                    {
+                        schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedOut";
+                    }
+                    else
+                    {
+                        if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "CheckedIn";
+                        }
+                        else
+                        {
+                            schedulerVM.AircraftSchedulerDetailsVM.FlightStatus = "Scheduled";
+                        }
+                    }
+                }
+
                 CreateResponse(schedulersList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -269,7 +376,7 @@ namespace Service
             try
             {
                 _aircraftScheduleRepository.Delete(id, deletedBy);
-                CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully.");
+                CreateResponse(true, HttpStatusCode.OK, "Appointment deleted successfully");
 
                 return _currentResponse;
             }
@@ -310,14 +417,94 @@ namespace Service
             }
         }
 
+        private void SendScheduleMail(SchedulerVM schedulerVM, string message, string timezone)
+        {
+            try
+            {
+                AppointmentCreatedSendEmailViewModel viewModel = new();
+
+                viewModel.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
+                viewModel.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
+                viewModel.DepartureAirport = schedulerVM.DepartureAirport;
+                viewModel.ArrivalAirport = schedulerVM.ArrivalAirport;
+
+                byte[] encodedBytes = Encoding.UTF8.GetBytes(schedulerVM.Id.ToString() + "FlyManager");
+                var data = Encoding.Default.GetBytes(schedulerVM.Id.ToString());
+                viewModel.Link = $"{Configuration.ConfigurationSettings.Instance.WebURL}scheduler?ScheduleId={Convert.ToBase64String(encodedBytes)}";
+
+                User user = new User();
+
+                if (schedulerVM.Member2Id != null)
+                {
+                    user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member2Id);
+                    viewModel.Member2 = user.FirstName + " " + user.LastName;
+                }
+                else if (schedulerVM.InstructorId != null)
+                {
+                    user = _userRepository.FindByCondition(p => p.Id == schedulerVM.InstructorId);
+                    viewModel.Member2 = user.FirstName + " " + user.LastName;
+                }
+
+                viewModel.Aircraft = schedulerVM.AircraftsList.Where(p => p.Id == schedulerVM.AircraftId).First().Name;
+                viewModel.ActivityType = schedulerVM.ScheduleActivitiesList.Where(p => p.Id == schedulerVM.ScheduleActivityId).First().Name;
+
+                // Sending mail to first member
+                viewModel.Message = message;
+
+                user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member1Id);
+                viewModel.ToEmail = user.Email;
+                viewModel.Member1 = viewModel.UserName = user.FirstName + " " + user.LastName;
+
+                viewModel.CompanyEmail = GetCompanyEmail(schedulerVM.CompanyId);
+                _sendMailService.AppointmentCreated(viewModel);
+
+                // Sending mail to co-member
+
+                if (schedulerVM.Member2Id != null)
+                {
+                    viewModel.Message = message;
+                    user = _userRepository.FindByCondition(p => p.Id == schedulerVM.Member2Id);
+                    viewModel.ToEmail = user.Email;
+                    viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
+
+                    viewModel.CompanyEmail = GetCompanyEmail(schedulerVM.CompanyId);
+                    _sendMailService.AppointmentCreated(viewModel);
+                }
+                else if (schedulerVM.InstructorId != null)
+                {
+                    viewModel.Message = $"{viewModel.Member1} has scheduled an appointment. you are the part of an appointment.";
+                    user = _userRepository.FindByCondition(p => p.Id == schedulerVM.InstructorId);
+                    viewModel.ToEmail = user.Email;
+                    viewModel.Member2 = viewModel.UserName = user.FirstName + " " + user.LastName;
+
+                    viewModel.CompanyEmail = GetCompanyEmail(schedulerVM.CompanyId);
+                    _sendMailService.AppointmentCreated(viewModel);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private string GetCompanyEmail(int companyId)
+        {
+            EmailConfiguration emailConfiguration = _emailConfigurationRepository.FindByCondition(p => p.EmailTypeId == (byte)EmailTypes.Reservation && p.CompanyId == companyId);
+
+            if (emailConfiguration != null && !string.IsNullOrWhiteSpace(emailConfiguration.Email))
+            {
+                return emailConfiguration.Email;
+            }
+
+            return "";
+        }
+
         #region Object Mapping
         private AircraftSchedule ToDataObject(SchedulerVM schedulerVM)
         {
             AircraftSchedule aircraftSchedule = new AircraftSchedule();
 
-            Random rnd = new Random();
-
-            aircraftSchedule.SchedulActivityTypeId = schedulerVM.ScheduleActivityId.GetValueOrDefault();
+            aircraftSchedule.SchedulActivityTypeId = Convert.ToInt32(schedulerVM.ScheduleActivityId.GetValueOrDefault());
             aircraftSchedule.Id = schedulerVM.Id;
 
             if (schedulerVM.Id == 0)
@@ -325,8 +512,13 @@ namespace Service
                 aircraftSchedule.ReservationId = Guid.NewGuid();
             }
 
+            aircraftSchedule.CompanyId = schedulerVM.CompanyId;
             aircraftSchedule.StartDateTime = schedulerVM.StartTime;
             aircraftSchedule.EndDateTime = schedulerVM.EndTime;
+            aircraftSchedule.DepartureAirportId = schedulerVM.DepartureAirportId;
+            aircraftSchedule.DepartureAirportName = schedulerVM.DepartureAirport;
+            aircraftSchedule.ArrivalAirportId = schedulerVM.ArrivalAirportId;
+            aircraftSchedule.ArrivalAirportName = schedulerVM.ArrivalAirport;
             aircraftSchedule.IsRecurring = schedulerVM.IsRecurring;
             aircraftSchedule.Member1Id = schedulerVM.Member1Id;
             aircraftSchedule.Member2Id = schedulerVM.Member2Id;
@@ -340,6 +532,7 @@ namespace Service
             aircraftSchedule.PrivateComments = schedulerVM.InternalComments;
             aircraftSchedule.FlightRoutes = schedulerVM.FlightRoutes;
             aircraftSchedule.StandBy = schedulerVM.IsStandBy;
+            aircraftSchedule.FlightCategoryId = schedulerVM.FlightCategoryId;
             aircraftSchedule.IsActive = true;
 
             aircraftSchedule.CreatedBy = schedulerVM.CreatedBy;
@@ -365,8 +558,13 @@ namespace Service
             schedulerVM.ScheduleActivityId = aircraftSchedule.SchedulActivityTypeId;
             schedulerVM.ReservationId = aircraftSchedule.ReservationId;
 
+            schedulerVM.CompanyId = aircraftSchedule.CompanyId;
             schedulerVM.StartTime = aircraftSchedule.StartDateTime;
             schedulerVM.EndTime = aircraftSchedule.EndDateTime;
+            schedulerVM.DepartureAirportId = aircraftSchedule.DepartureAirportId;
+            schedulerVM.DepartureAirport = aircraftSchedule.DepartureAirportName;
+            schedulerVM.ArrivalAirportId = aircraftSchedule.ArrivalAirportId;
+            schedulerVM.ArrivalAirport = aircraftSchedule.ArrivalAirportName;
             schedulerVM.IsRecurring = aircraftSchedule.IsRecurring;
             schedulerVM.Member1Id = aircraftSchedule.Member1Id;
             schedulerVM.Member2Id = aircraftSchedule.Member2Id;
@@ -379,6 +577,7 @@ namespace Service
             schedulerVM.Comments = aircraftSchedule.Comments;
             schedulerVM.InternalComments = aircraftSchedule.PrivateComments;
             schedulerVM.FlightRoutes = aircraftSchedule.FlightRoutes;
+            schedulerVM.FlightCategoryId = aircraftSchedule.FlightCategoryId;
             schedulerVM.IsStandBy = aircraftSchedule.StandBy;
             schedulerVM.CreatedBy = aircraftSchedule.CreatedBy;
 

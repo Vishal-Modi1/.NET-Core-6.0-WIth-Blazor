@@ -1,4 +1,6 @@
-﻿namespace DataModels.Models
+﻿using System.Collections.Generic;
+
+namespace DataModels.Models
 {
     public class MailSettings
     {
@@ -6,7 +8,7 @@
         public int Port{ get; set; }
         public string From { get; set; }
         public string Password { get; set; }
-        public string To { get; set; }
+        public List<string> To { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
         public string FromName { get; set; }

@@ -26,9 +26,9 @@ namespace Web.UI.Data.AircraftSchedule
             return response;
         }
 
-        public async Task<CurrentResponse> UnCheckOut(DependecyParams dependecyParams, long scheduleId)
+        public async Task<CurrentResponse> UnCheckOut(DependecyParams dependecyParams, long id)
         {
-            dependecyParams.URL  = "aircraftschedulerdetail/uncheckout?scheduleId=" + scheduleId;
+            dependecyParams.URL  = "aircraftschedulerdetail/uncheckout?id=" + id;
 
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 

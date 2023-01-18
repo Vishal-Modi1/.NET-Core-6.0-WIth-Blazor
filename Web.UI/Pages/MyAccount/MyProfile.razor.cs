@@ -48,7 +48,7 @@ namespace Web.UI.Pages.MyAccount
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
             }
             else
             {
@@ -68,14 +68,15 @@ namespace Web.UI.Pages.MyAccount
 
         private void ManageFileUploadResponse(CurrentResponse response, byte[] byteArray)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
+                userVM = JsonConvert.DeserializeObject<UserVM>(response.Data.ToString());
                 CloseDialog();
 
                 var b64String = Convert.ToBase64String(byteArray);
-                userVM.ImageName = "data:image/png;base64," + b64String;
+                userVM.ImageName = globalMembers.UserImagePath = "data:image/png;base64," + b64String;
             }
         }
 
@@ -89,17 +90,17 @@ namespace Web.UI.Pages.MyAccount
             try
             {
                 string fileType = Path.GetExtension(e.File.Name);
-                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> supportedImagesFormatsList = supportedImagesFormats.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (!supportedImagesFormatsList.Contains(fileType))
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
                     return;
                 }
 
                 if (e.File.Size > maxProfileImageUploadSize)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
                     return;
                 }
 
@@ -111,7 +112,7 @@ namespace Web.UI.Pages.MyAccount
             }
             catch (Exception ex)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
         }
 
@@ -123,7 +124,6 @@ namespace Web.UI.Pages.MyAccount
             var b64String = Convert.ToBase64String(byteArray);
             string imageURL = "data:image/png;base64," + b64String;
         }
-
 
         async Task OnChangeAsync(byte[] bytes)
         {

@@ -1,0 +1,13 @@
+﻿@*@using DataModels.VM.Common
+
+<TelerikComboBox Data="@Data" TextField="Name" ValueField="Id" @bind-Value="selectedValue"
+                 Placeholder="Select an item..." ClearButton="true" Filterable="true">
+</TelerikComboBox>
+
+@code {
+
+    [Parameter] public List<DropDownLargeValues> Data { get; set; }
+
+
+}
+*@

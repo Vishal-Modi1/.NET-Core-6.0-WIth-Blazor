@@ -6,19 +6,18 @@ namespace Web.UI.Pages.Administration
     partial class Index
     {
         List<MenuItem> menuItems = new List<MenuItem>();
-        TelerikTabStrip telerikTabStrip;
-
+        
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                 ChangeLoaderVisibilityAction(true);
+                SetSelectedMenuItem("Administration");
+                ChangeLoaderVisibilityAction(true);
              
                 menuItems = await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider);
                 menuItems = menuItems.Where(p => p.IsAdministrationModule == true).ToList();
 
-                 ChangeLoaderVisibilityAction(false);
-                telerikTabStrip.ActiveTabIndex = 4;
+                ChangeLoaderVisibilityAction(false);
                 
                 base.StateHasChanged();
             }

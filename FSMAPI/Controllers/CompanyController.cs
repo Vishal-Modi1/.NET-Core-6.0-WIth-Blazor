@@ -25,9 +25,21 @@ namespace FSMAPI.Controllers
             _fileUploader = new FileUploader(webHostEnvironment);
         }
 
+        [HttpGet]
+        [Route("getfilters")]
+        public IActionResult GetFilters()
+        {
+            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            int CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+
+            CurrentResponse response = _companyService.GetFiltersValue();
+
+            return APIResponse(response);
+        }
+
         [HttpPost]
         [Route("list")]
-        public IActionResult List(DatatableParams datatableParams)
+        public IActionResult List(CompanyDatatableParams datatableParams)
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
 
@@ -168,12 +180,42 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listdropdownvaluesbyuserid")]
+        [Route("listDropdownValuesbyUserId")]
         public IActionResult ListDropDownValuesByUserId(long userId)
         {
             CurrentResponse response = _companyService.ListDropDownValuesByUserId(userId);
 
             return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("isDisplayPropeller")]
+        public IActionResult IsDisplayPropeller(int id)
+        {
+            CurrentResponse response = _companyService.IsDisplayPropeller(id);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("setPropellerConfiguration")]
+        public IActionResult SetPropellerConfiguration(bool value, int companyId = 0)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                CurrentResponse response = _companyService.SetPropellerConfiguration(companyId, value);
+
+                return APIResponse(response);
+            }
+            else
+            {
+                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                CurrentResponse response = _companyService.SetPropellerConfiguration(Convert.ToInt32(companyIdValue), value);
+
+                return APIResponse(response);
+            }
         }
     }
 }

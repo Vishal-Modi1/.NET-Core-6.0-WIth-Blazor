@@ -9,21 +9,26 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Net;
 using Web.UI.Utilities;
+using DataModels.VM.Reservation;
+using Utilities;
 
 namespace Web.UI.Pages.Company.DetailsView
 {
     partial class Index
     {
         public string CompanyId { get; set; }
-        public CompanyVM companyData { get; set; }
+        public CompanyVM companyData { get; set; } = new();
         string moduleName = Module.Company.ToString();
         public bool isAllowToEdit;
+        public List<UpcomingFlight> upcomingFlights = new();
+        DependecyParams dependecyParams;
 
         protected override async Task OnInitializedAsync()
         {
+            SetSelectedMenuItem(moduleName);
             ChangeLoaderVisibilityAction(true);
 
-            companyData = new CompanyVM();
+            companyData = new();
             companyData.PrimaryServicesList = new List<DropDownValues>();
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -40,7 +45,7 @@ namespace Web.UI.Pages.Company.DetailsView
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
             CompanyId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.GetDetailsAsync(dependecyParams, Convert.ToInt32(CompanyId));
 
             if (response.Status == HttpStatusCode.OK)
@@ -69,37 +74,43 @@ namespace Web.UI.Pages.Company.DetailsView
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
             long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-
             bool isCreator = userId == companyData.CreatedBy;
 
-            if (isAdmin || isSuperAdmin || isCreator)
+            if (globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isCreator)
             {
                 isAllowToEdit = true;
             }
 
+            await LoadUpcomingFlights();
+
             ChangeLoaderVisibilityAction(false);
         }
+
+        //protected override async Task OnAfterRenderAsync(bool firstRender)
+        //{
+        //    if (firstRender)
+        //    {
+                
+        //    }
+        //}
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             try
             {
                 string fileType = Path.GetExtension(e.File.Name);
-                List<string> supportedImagesFormatsList = supportedImagesFormat?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> supportedImagesFormatsList = supportedImagesFormats?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (supportedImagesFormatsList is not null && !supportedImagesFormatsList.Contains(fileType))
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
                     return;
                 }
 
                 if (e.File.Size > maxProfileImageUploadSize)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
                     return;
                 }
 
@@ -111,12 +122,13 @@ namespace Web.UI.Pages.Company.DetailsView
             }
             catch (Exception ex)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
         }
 
         void CompanyEditDialog()
         {
+            popupTitle = "Edit Details";
             isDisplayPopup = true;
         }
 
@@ -148,7 +160,6 @@ namespace Web.UI.Pages.Company.DetailsView
                 string companyId = companyData.Id == null ? "0" : companyData.Id.ToString();
                 multiContent.Add(new StringContent(companyId), "CompanyId");
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await CompanyService.UploadLogo(dependecyParams, multiContent);
 
                 ManageFileUploadResponse(response, true, bytes);
@@ -163,7 +174,7 @@ namespace Web.UI.Pages.Company.DetailsView
 
         private void ManageFileUploadResponse(CurrentResponse response, bool isCloseDialog, byte[] byteArray)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == HttpStatusCode.OK && isCloseDialog)
             {
@@ -171,6 +182,16 @@ namespace Web.UI.Pages.Company.DetailsView
                 companyData.Logo = "data:image/png;base64," + b64String;
                 CloseDialog();
             }
+        }
+
+        private async Task LoadUpcomingFlights()
+        {
+            upcomingFlights = await ReservationService.ListUpcomingFlightsByCompanyId(dependecyParams, companyData.Id);
+            upcomingFlights.ForEach(p =>
+            {
+                p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
+
+            });
         }
     }
 }

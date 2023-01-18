@@ -1,12 +1,8 @@
 ﻿using DataModels.VM.Account;
-using Microsoft.JSInterop;
-using Web.UI.Extensions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
-using Telerik.Blazor.Components;
-using Microsoft.AspNetCore.Components;
-using Web.UI.Shared;
-using static Telerik.Blazor.ThemeConstants;
+using Microsoft.JSInterop;
 
 namespace Web.UI.Pages.Account
 {
@@ -15,7 +11,7 @@ namespace Web.UI.Pages.Account
         public LoginVM loginVM = new LoginVM();
         bool isPopup = Configuration.ConfigurationSettings.Instance.IsDiplsayValidationInPopupEffect;
         
-        bool isBusy;
+        bool isBusy, isDisplayLoader;
         
         private string? result;
         private DotNetObjectReference<Login>? objRef;
@@ -23,6 +19,7 @@ namespace Web.UI.Pages.Account
 
         protected override Task OnInitializedAsync()
         {
+            isDisplayLoader = true;
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("TokenExpired", out link);
@@ -33,6 +30,17 @@ namespace Web.UI.Pages.Account
             }
 
             return base.OnInitializedAsync();
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            if(!firstRender)
+            {
+                isDisplayLoader = false;
+                base.StateHasChanged();
+            }
+
+            base.OnAfterRender(firstRender);
         }
 
         async Task Submit()
@@ -58,7 +66,7 @@ namespace Web.UI.Pages.Account
         [JSInvokable]
         public void ManageLoginResponse(string responseMessage)
         {
-            uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, responseMessage);
+            globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, responseMessage);
             SetButtonState(false);
         }
 

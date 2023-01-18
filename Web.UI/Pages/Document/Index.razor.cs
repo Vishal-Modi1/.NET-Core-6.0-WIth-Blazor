@@ -7,9 +7,8 @@ using Microsoft.JSInterop;
 using System.Net;
 using DataModels.Enums;
 using Telerik.Blazor.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
 using DataModels.Constants;
+using Utilities;
 
 namespace Web.UI.Pages.Document
 {
@@ -19,6 +18,8 @@ namespace Web.UI.Pages.Document
 
         [Parameter] public string ParentModuleName { get; set; }
         [Parameter] public int? CompanyIdParam { get; set; }
+        [Parameter] public long? AircraftIdParam { get; set; }
+        [Parameter] public bool? IsPersonalDocument { get; set; }
         [CascadingParameter] public TelerikGrid<DocumentDataVM> grid { get; set; }
        
         private DotNetObjectReference<Index>? objRef;
@@ -34,8 +35,9 @@ namespace Web.UI.Pages.Document
         string[] imageFormats = new string[] { ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
         string[] previewSupportedFormats = new string[] { ".pdf", ".txt", ".png", ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp", ".svg" };
         DocumentVM documentData;
-        DocumentDataVM documentDataVM;
-        bool isSuperAdmin;
+        DocumentDataVM documentDataVM; DependecyParams dependecyParams;
+        DocumentDatatableParams datatableParams;
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,17 +50,26 @@ namespace Web.UI.Pages.Document
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            SetSelectedMenuItem("Document");
+
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentFilterVM = await DocumentService.GetFiltersAsync(dependecyParams);
 
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
+            if(globalMembers.IsSuperAdmin && ParentModuleName == Module.Aircraft.ToString())
+            {
+                documentFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, CompanyIdParam.Value);
+            }
         }
 
         async Task LoadData(GridReadEventArgs args)
         {
-            DocumentDatatableParams datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
+            isGridDataLoading = true;
+
+            datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
 
             datatableParams.ModuleId = documentFilterVM.ModuleId;
+            datatableParams.AircraftId = AircraftIdParam;
+            datatableParams.IsFromMyProfile = IsPersonalDocument.GetValueOrDefault();
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
             {
@@ -69,27 +80,63 @@ namespace Web.UI.Pages.Document
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }
+            else if(ParentModuleName == Module.Aircraft.ToString())
+            {
+                datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
+            }
             else
             {
                 datatableParams.CompanyId = documentFilterVM.CompanyId;
             }
 
+            datatableParams.UserId = documentFilterVM.UserId;
+            datatableParams.DocumentType = documentFilterVM.DocumentType;
+
             datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await DocumentService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
+
+            data.ToList().ForEach(p =>
+            {
+                p.CreatedOn = DateConverter.ToLocal(p.CreatedOn, globalMembers.Timezone);
+            });
+
+            isGridDataLoading = false;
         }
 
-        private void OnCompanyValueChanges(int selectedValue)
+        private async Task OnCompanyValueChanges(int selectedValue)
         {
             if (documentFilterVM.CompanyId != selectedValue)
             {
-                grid.Rebind();
+                ChangeLoaderVisibilityAction(true);
+
                 documentFilterVM.CompanyId = selectedValue;
+                documentFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentFilterVM.CompanyId);
+                grid.Rebind();
+
+                ChangeLoaderVisibilityAction(false);
+            }
+        }
+
+        private void OnUserValueChanges(long selectedValue)
+        {
+            if (documentFilterVM.UserId != selectedValue)
+            {
+                documentFilterVM.UserId = selectedValue;
+                grid.Rebind();
+            }
+        }
+
+        private void OnTypeValueChanges(string selectedValue)
+        {
+            if (documentFilterVM.DocumentType != selectedValue)
+            {
+                documentFilterVM.DocumentType = selectedValue;
+                grid.Rebind();
             }
         }
 
@@ -102,7 +149,7 @@ namespace Web.UI.Pages.Document
             }
         }
 
-        async Task DocumentCreateDialog(DocumentDataVM documentDataVM)
+        async Task OpenDocumentCreateDialog(DocumentDataVM documentDataVM)
         {
             if (documentDataVM.Id == Guid.Empty)
             {
@@ -117,9 +164,15 @@ namespace Web.UI.Pages.Document
                 popupTitle = "Update Document";
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData = await DocumentService.GetDetailsAsync(dependecyParams, documentDataVM.Id == Guid.Empty ? Guid.Empty : documentDataVM.Id);
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+
+            if(documentData != null && CompanyIdParam != null)
+            {
+                documentData.CompanyId = CompanyIdParam.Value;
+                documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams,CompanyIdParam.Value);
+            }
+
+            documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {
@@ -150,6 +203,10 @@ namespace Web.UI.Pages.Document
                 documentDataVM.IsLoadingEditButton = false;
             }
 
+            documentData.AircraftId = AircraftIdParam;
+            documentData.IsPersonalDocument = IsPersonalDocument.GetValueOrDefault();
+
+
             isDisplayPopup = true;
         }
 
@@ -157,7 +214,6 @@ namespace Web.UI.Pages.Document
         {
             isBusyDeleteButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.DeleteAsync(dependecyParams, id);
 
             isBusyDeleteButton = false;
@@ -179,7 +235,7 @@ namespace Web.UI.Pages.Document
             var jsFile = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "/js/auth.js");
             await jsFile.InvokeVoidAsync("copyTextToClipboard", link);
 
-            uiNotification.DisplaySuccessNotification(uiNotification.Instance, "Link copied to the clipboard");
+            globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "Link copied to the clipboard");
             await CloseDialog(false);
         }
 
@@ -189,7 +245,6 @@ namespace Web.UI.Pages.Document
             DocumentDataVM documentDataVM = data.Where(p => p.Id == Guid.Parse(id)).First();
             documentDataVM.TotalDownloads += 1;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             await DocumentService.UpdateTotalDownloadsAsync(dependecyParams, Guid.Parse(id));
         }
 
@@ -220,7 +275,7 @@ namespace Web.UI.Pages.Document
             }
             catch (Exception ex)
             { 
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
             finally
             {
@@ -276,7 +331,6 @@ namespace Web.UI.Pages.Document
             popupTitle = "Share Document";
 
             documentDataVM = data.Where(p => p.Id == id).First();
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             await DocumentService.UpdateTotalSharesAsync(dependecyParams, documentDataVM.Id);
             documentDataVM.TotalShares += 1;
 

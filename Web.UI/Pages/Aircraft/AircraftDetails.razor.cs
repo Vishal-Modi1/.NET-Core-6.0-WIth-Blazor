@@ -11,27 +11,31 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Net;
+using Microsoft.AspNetCore.Components.Forms;
+using DataModels.VM.Reservation;
+using Utilities;
 
 namespace Web.UI.Pages.Aircraft
 {
     partial class AircraftDetails
     {
+        [Parameter] public AircraftVM aircraftData { get; set; }
         public string AircraftId { get; set; }
-
-        [Parameter]
-        public AircraftVM aircraftData { get; set; }
 
         public string CompanyName;
 
         public bool isDataLoaded = false, isBusy = false, isUpdateButtonBusy = false, isDisplayLoader;
         string moduleName = "Aircraft";
-        public bool isAllowToEdit;
+        public bool isAllowToEdit, isUnLocked;
         DataModels.Enums.UserRole userRole;
         string modelWidth = "600px";
-
+        public List<UpcomingFlight> upcomingFlights = new();
+        
         protected override Task OnInitializedAsync()
         {
-             ChangeLoaderVisibilityAction(true);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            ChangeLoaderVisibilityAction(true);
+            SetSelectedMenuItem(moduleName);
             return base.OnInitializedAsync();
         }
 
@@ -42,20 +46,7 @@ namespace Web.UI.Pages.Aircraft
                 _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
                 userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
 
-                StringValues link;
-                var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
-                QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
-
-                if (link.Count() == 0 || link[0] == "")
-                {
-                    NavigationManager.NavigateTo("/Dashboard");
-                }
-
-                var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-                AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
-
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
+                await SetAircraftData();
 
                 try
                 {
@@ -72,23 +63,51 @@ namespace Web.UI.Pages.Aircraft
 
                 }
 
-                bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-                bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
                 long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-
                 bool isCreator = userId == aircraftData.CreatedBy;
 
-                if (isAdmin || isSuperAdmin || isCreator)
+                bool isOwner = userId == aircraftData.OwnerId;
+
+                if (globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isCreator)
                 {
                     isAllowToEdit = true;
                 }
 
-                SetCompanyName();
+                isUnLocked = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || !aircraftData.IsLock;
 
-                 ChangeLoaderVisibilityAction(false);
+                SetCompanyName();
+                await LoadUpcomingFlights();
+
+                ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
+        }
+
+        private async Task LoadUpcomingFlights()
+        {
+            upcomingFlights = await ReservationService.ListUpcomingFlightsByAircraftId(dependecyParams, aircraftData.Id);
+            upcomingFlights.ForEach(p =>
+            {
+                p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
+
+            });
+        }
+
+        private async Task SetAircraftData()
+        {
+            StringValues link;
+            var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            QueryHelpers.ParseQuery(uri.Query).TryGetValue("AircraftId", out link);
+
+            if (link.Count() == 0 || link[0] == "")
+            {
+                NavigationManager.NavigateTo("/Dashboard");
+            }
+
+            var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+
+            aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
         }
 
         async Task AircraftEditDialog()
@@ -98,7 +117,6 @@ namespace Web.UI.Pages.Aircraft
             popupTitle = "Edit Aircraft Details";
             modelWidth = "600px";
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
 
             SetCompanyName();
@@ -109,19 +127,19 @@ namespace Web.UI.Pages.Aircraft
 
         async Task OpenStatusUpdateDialog()
         {
-            isUpdateButtonBusy = true;
+            ChangeLoaderVisibilityAction(true);
+
             operationType = OperationType.UpdateStatus;
             modelWidth = "400px";
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
 
-            isUpdateButtonBusy = false;
+            ChangeLoaderVisibilityAction(false);
             isDisplayPopup = true;
             popupTitle = "Update Status";
         }
 
-        async Task CloseDialog()
+        void CloseDialog()
         {
             isDisplayPopup = false;
         }
@@ -130,12 +148,89 @@ namespace Web.UI.Pages.Aircraft
         {
             aircraftData.AircraftStatusId = Convert.ToByte(id);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftStatusService.GetById(dependecyParams, aircraftData.AircraftStatusId);
 
             if (response.Status == HttpStatusCode.OK)
             {
                 aircraftData.AircraftStatus = JsonConvert.DeserializeObject<AircraftStatus>(response.Data.ToString());
+            }
+        }
+
+        private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
+        {
+            try
+            {
+                ChangeLoaderVisibilityAction(true);
+                 
+                string fileType = Path.GetExtension(e.File.Name);
+                List<string> supportedImagesFormatsList = supportedImagesFormats?.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                if (supportedImagesFormatsList is not null && !supportedImagesFormatsList.Contains(fileType))
+                {
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
+                    return;
+                }
+
+                if (e.File.Size > maxProfileImageUploadSize)
+                {
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    return;
+                }
+
+                MemoryStream ms = new MemoryStream();
+                await e.File.OpenReadStream(maxProfileImageUploadSize).CopyToAsync(ms);
+                byte[] bytes = ms.ToArray();
+
+                await OnChangeAsync(bytes);
+            }
+            catch (Exception ex)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
+            }
+
+            ChangeLoaderVisibilityAction(false);
+        }
+
+        async Task OnChangeAsync(byte[] bytes)
+        {
+            if (string.IsNullOrWhiteSpace(aircraftData.ImagePath))
+            {
+                return;
+            }
+
+            //byte[] bytes = Convert.FromBase64String(companyData.LogoPath.Substring(companyData.LogoPath.IndexOf(",") + 1));
+
+            ByteArrayContent data = new ByteArrayContent(bytes);
+
+            try
+            {
+                MultipartFormDataContent multiContent = new MultipartFormDataContent
+                {
+                   { data, "0","0" }
+                };
+
+                multiContent.Add(new StringContent(aircraftData.Id.ToString()), "AircraftId");
+                multiContent.Add(new StringContent(aircraftData.CompanyId.ToString()), "CompanyId");
+
+                CurrentResponse response = await AircraftService.UploadAircraftImageAsync(dependecyParams, multiContent);
+
+                ManageFileUploadResponse(response, true, bytes);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void ManageFileUploadResponse(CurrentResponse response, bool isCloseDialog, byte[] byteArray)
+        {
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+
+            if (response.Status == HttpStatusCode.OK && isCloseDialog)
+            {
+                var b64String = Convert.ToBase64String(byteArray);
+                aircraftData.ImagePath = "data:image/png;base64," + b64String;
+                CloseDialog();
             }
         }
 

@@ -16,8 +16,10 @@ else
 
     </TelerikButton>
 }
-
-<TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(false)" ThemeColor="secondary" FillMode="Outline"  Class="mx-1 k-btn-secondary-outline" Enabled="@(!IsSubmitButtonLoading)">
+@if (!IsHideCancelButton)
+{
+    <TelerikButton ButtonType="@ButtonType.Button" OnClick="() => CloseDialog(false)" ThemeColor="secondary" FillMode="Outline"  Class="mx-1 k-btn-secondary-outline" Enabled="@(!IsSubmitButtonLoading)">
     Cancel
 </TelerikButton>
+}
 

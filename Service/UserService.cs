@@ -193,13 +193,14 @@ namespace Service
                 User user = ToDataObject(userVM);
                 user = _userRepository.Edit(user);
 
-                var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && userVM.CompanyId == p.CompanyId); 
+                var userCompanyDetails = _userVSCompanyRepository.FindByCondition(p => p.UserId == userVM.Id && userVM.ExistingCompanyId == p.CompanyId); 
 
                 if(userCompanyDetails != null)
                 {
                     userCompanyDetails.UpdatedBy = userVM.UpdatedBy;
                     userCompanyDetails.CompanyId = userVM.CompanyId;
                     userCompanyDetails.RoleId = userVM.RoleId;
+                    userCompanyDetails.ExistingCompanyId = userVM.ExistingCompanyId;
 
                     _userVSCompanyRepository.Edit(userCompanyDetails);
                 }
@@ -348,6 +349,33 @@ namespace Service
             }
         }
 
+        public CurrentResponse UpdateArchiveStatus(long id, bool isArchive)
+        {
+            try
+            {
+                _userRepository.UpdateArchiveStatus(id, isArchive);
+
+                string message = "User archived successfully.";
+
+                if (!isArchive)
+                {
+                    message = "User Unarchived successfully.";
+
+                }
+
+                CreateResponse(true, HttpStatusCode.OK, message);
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse GetFiltersValue(int roleId)
         {
             try
@@ -407,14 +435,14 @@ namespace Service
             }
         }
 
-        public CurrentResponse UpdateImageName(long id, string imageName)
+        public CurrentResponse UpdateImageName(long id, string imageName, int companyId)
         {
             try
             {
                 bool isImageNameUpdated = _userRepository.UpdateImageName(id, imageName);
 
                 User user = _userRepository.FindByCondition(p => p.Id == id && p.IsDeleted != true && p.IsActive == true);
-                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{user}/{user.ImageName}";
+                user.ImageName = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.UserProfileImage}/{companyId}/{user.ImageName}";
 
                 CreateResponse(user, HttpStatusCode.OK, "Profile picture updated successfully.");
 
@@ -510,6 +538,8 @@ namespace Service
             user.ExternalId = userVM.ExternalId;
             user.IsSendEmailInvite = userVM.IsSendEmailInvite;
             user.IsSendTextMessage = userVM.IsSendTextMessage;
+            user.IsArchive = userVM.IsArchive;
+            user.ArchivedOn = userVM.ArchivedOn;
             user.CreatedBy = userVM.CreatedBy;
             user.UpdatedBy = userVM.UpdatedBy;
 
@@ -547,6 +577,8 @@ namespace Service
             userDetails.IsSendEmailInvite = user.IsSendEmailInvite;
             userDetails.Gender = user.Gender;
             userDetails.IsSendTextMessage = user.IsSendTextMessage;
+            userDetails.IsArchive = user.IsArchive;
+            userDetails.ArchivedOn = user.ArchivedOn;
 
             return userDetails;
         }

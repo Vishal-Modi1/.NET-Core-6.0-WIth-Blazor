@@ -30,6 +30,38 @@ namespace Web.UI.Data.AircraftSchedule
             return schedulerVM;
         }
 
+        public async Task<SchedulerVM> GetDetailsByCompanyIdAsync(DependecyParams dependecyParams, long id, int companyId)
+        {
+            dependecyParams.URL = $"aircraftscheduler/getDetailsByCompanyId?id={id}&companyId={companyId}";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                schedulerVM = JsonConvert.DeserializeObject<SchedulerVM>(response.Data.ToString());
+            }
+
+            return schedulerVM;
+        }
+
+        public async Task<SchedulerVM> GetDropdownValuesByCompanyId(DependecyParams dependecyParams, long id, int companyId)
+        {
+            dependecyParams.URL = $"aircraftscheduler/getDropdownValuesByCompanyId?companyId={companyId}";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            SchedulerVM schedulerVM = new SchedulerVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                schedulerVM = JsonConvert.DeserializeObject<SchedulerVM>(response.Data.ToString());
+            }
+
+            return schedulerVM;
+        }
+
         public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, SchedulerVM schedulerVM, DateTime startTime, DateTime endTime)
         {
             DateTime localStartTime = schedulerVM.StartTime;
@@ -39,7 +71,7 @@ namespace Web.UI.Data.AircraftSchedule
             schedulerVM.EndTime = endTime;
 
             dependecyParams.JsonData = JsonConvert.SerializeObject(schedulerVM);
-           
+
             schedulerVM.StartTime = localStartTime;
             schedulerVM.EndTime = localEndTime;
 
@@ -90,16 +122,16 @@ namespace Web.UI.Data.AircraftSchedule
             return response;
         }
 
-        public async Task<List<DropDownValues>> ListActivityTypeDropDownValues(DependecyParams dependecyParams)
+        public async Task<List<DropDownLargeValues>> ListActivityTypeDropDownValues(DependecyParams dependecyParams)
         {
             dependecyParams.URL = $"aircraftscheduler/listactivitytypedropdownvalues";
             var response = await _httpCaller.GetAsync(dependecyParams);
 
-            List<DropDownValues> activityList = new List<DropDownValues>();
+            List<DropDownLargeValues> activityList = new List<DropDownLargeValues>();
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                activityList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+                activityList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
             }
 
             return activityList;

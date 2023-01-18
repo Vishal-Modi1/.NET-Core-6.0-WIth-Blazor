@@ -22,7 +22,6 @@ namespace Web.UI.Pages.User
         string message = "", moduleName = "User";
         bool isBusyUpdateStatusButton;
         List<UserDataVM> data;
-        bool isSuperAdmin { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -38,9 +37,7 @@ namespace Web.UI.Pages.User
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
 
-            var user = (await AuthStat).User;
-            isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
-        }
+          }
 
         private void OnCompanyValueChanges(int selectedValue)
         {
@@ -77,12 +74,25 @@ namespace Web.UI.Pages.User
                 datatableParams.CompanyId = userFilterVM.CompanyId;
             }
 
+            if(userFilterVM.RoleId != 0)
+            {
+                datatableParams.RoleId = userFilterVM.RoleId;
+            }
+
+            datatableParams.IsArchive = userFilterVM.IsArchive;
+
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
 
             isGridDataLoading = false;
+        }
+
+        public async void DisplayArchiveUsers(bool value)
+        {
+            userFilterVM.IsArchive = value;
+            grid.Rebind();
         }
 
         async Task UserCreateDialog(UserDataVM userInfo)
@@ -134,7 +144,7 @@ namespace Web.UI.Pages.User
 
             isBusyDeleteButton = false;
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -142,7 +152,7 @@ namespace Web.UI.Pages.User
             }
         }
 
-        async Task CloseDialog(bool reloadGrid)
+        void CloseDialog(bool reloadGrid)
         {
             isDisplayPopup = false;
 
@@ -162,7 +172,7 @@ namespace Web.UI.Pages.User
 
             isBusyUpdateStatusButton = false;
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -174,10 +184,37 @@ namespace Web.UI.Pages.User
             }
         }
 
-        async Task RevokeUserStatusChange()
+        async Task UpdateUserArchiveAsync(bool? value, long id)
+        {
+            isBusyUpdateStatusButton = true;
+
+            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await UserService.UpdateIsUserArchive(dependecyParams, id, value.GetValueOrDefault());
+
+            isBusyUpdateStatusButton = false;
+
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                CloseDialog(true);
+            }
+            else
+            {
+                CloseDialog(false);
+            }
+        }
+
+        void RevokeUserStatusChange()
         {
             isDisplayPopup = false;
             data.Where(p => p.Id == userData.Id).First().IsActive = !userData.IsActive;
+        }
+
+        void RevokeUserArchiveStatusChange()
+        {
+            isDisplayPopup = false;
+            data.Where(p => p.Id == userData.Id).First().IsArchive = !userData.IsArchive;
         }
 
         async Task OpenDeleteDialog(UserDataVM userInfo)
@@ -212,6 +249,28 @@ namespace Web.UI.Pages.User
             {
                 message = "Are you sure, you want to deactivate ";
                 popupTitle = "Deactivate User";
+            }
+        }
+
+        void OpenUpdateUserArchiveStatusDialog(UserDataVM userInfo)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Archive;
+
+            message = "Are you sure, you want to archive ";
+            popupTitle = "Archive User";
+
+            userData = new UserVM();
+            userData.Id = userInfo.Id;
+
+            userData.FirstName = userInfo.FirstName;
+            userData.LastName = userInfo.LastName;
+            userData.IsArchive = userInfo.IsArchive;
+
+            if (userData.IsArchive == false)
+            {
+                message = "Are you sure, you want to unarchive ";
+                popupTitle = "Unarchive User";
             }
         }
     }

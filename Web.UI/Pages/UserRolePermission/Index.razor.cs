@@ -78,7 +78,7 @@ namespace Web.UI.Pages.UserRolePermission
             datatableParams.RoleId = userrolePermissionFilterVM.UserRoleId;
             pageSize = datatableParams.Length;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await UserRolePermissionService.ListAsync(dependecyParams, datatableParams);
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
@@ -228,7 +228,7 @@ namespace Web.UI.Pages.UserRolePermission
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionAsync(dependecyParams, id, value.GetValueOrDefault(), isForWeb);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -276,7 +276,7 @@ namespace Web.UI.Pages.UserRolePermission
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await UserRolePermissionService.UpdatePermissionsAsync(dependecyParams, userrolePermissionFilterVM, isForWeb);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -295,7 +295,7 @@ namespace Web.UI.Pages.UserRolePermission
             isDisplayPopup = false;
             RefreshGrid();
 
-            data.Where(p => p.Id == userRolePermissionDataVM.Id).First().IsAllowed = !userRolePermissionDataVM.IsAllowed;
+            //data.Where(p => p.Id == userRolePermissionDataVM.Id).First().IsAllowed = !userRolePermissionDataVM.IsAllowed;
             //base.StateHasChanged();
         }
 

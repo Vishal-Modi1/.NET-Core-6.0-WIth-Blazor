@@ -18,7 +18,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                _myContext.AirCrafts.Add(airCraft);
+                _myContext.Aircrafts.Add(airCraft);
                 _myContext.SaveChanges();
 
                 return airCraft;
@@ -29,7 +29,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                Aircraft airCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+                Aircraft airCraft = _myContext.Aircrafts.Where(p => p.Id == id).FirstOrDefault();
 
                 if (airCraft != null)
                 {
@@ -46,27 +46,29 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == airCraft.Id).FirstOrDefault();
+                Aircraft existingAircraft = _myContext.Aircrafts.Where(p => p.Id == airCraft.Id).FirstOrDefault();
 
-                if (existingAirCraft != null)
+                if (existingAircraft != null)
                 {
-                    existingAirCraft.CompanyId = airCraft.CompanyId;
-                    existingAirCraft.TailNo = airCraft.TailNo;
-                    existingAirCraft.Year = airCraft.Year;
-                    existingAirCraft.AircraftMakeId = airCraft.AircraftMakeId;
-                    existingAirCraft.AircraftModelId = airCraft.AircraftModelId;
-                    existingAirCraft.AircraftCategoryId = airCraft.AircraftCategoryId;
-                    existingAirCraft.AircraftClassId = airCraft.AircraftClassId;
-                    existingAirCraft.FlightSimulatorClassId = airCraft.FlightSimulatorClassId;
-                    existingAirCraft.NoofEngines = airCraft.NoofEngines;
-                    existingAirCraft.NoofPropellers = airCraft.NoofPropellers;
-                    existingAirCraft.IsEngineshavePropellers = airCraft.IsEngineshavePropellers;
-                    existingAirCraft.IsEnginesareTurbines = airCraft.IsEnginesareTurbines;
-                    existingAirCraft.TrackOilandFuel = airCraft.TrackOilandFuel;
-                    existingAirCraft.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
+                    existingAircraft.CompanyId = airCraft.CompanyId;
+                    existingAircraft.TailNo = airCraft.TailNo;
+                    existingAircraft.Year = airCraft.Year;
+                    existingAircraft.AircraftMakeId = airCraft.AircraftMakeId;
+                    existingAircraft.AircraftModelId = airCraft.AircraftModelId;
+                    existingAircraft.AircraftCategoryId = airCraft.AircraftCategoryId;
+                    existingAircraft.AircraftClassId = airCraft.AircraftClassId;
+                    existingAircraft.FlightSimulatorClassId = airCraft.FlightSimulatorClassId;
+                    existingAircraft.NoofEngines = airCraft.NoofEngines;
+                    existingAircraft.NoofPropellers = airCraft.NoofPropellers;
+                    existingAircraft.IsEngineshavePropellers = airCraft.IsEngineshavePropellers;
+                    existingAircraft.IsEnginesareTurbines = airCraft.IsEnginesareTurbines;
+                    existingAircraft.TrackOilandFuel = airCraft.TrackOilandFuel;
+                    existingAircraft.IsIdentifyMeterMismatch = airCraft.IsIdentifyMeterMismatch;
+                    existingAircraft.OwnerId = airCraft.OwnerId;
+                    existingAircraft.IsLockedForUpdate = airCraft.IsLockedForUpdate;
 
-                    existingAirCraft.UpdatedBy = airCraft.UpdatedBy;
-                    existingAirCraft.UpdatedOn = airCraft.UpdatedOn;
+                    existingAircraft.UpdatedBy = airCraft.UpdatedBy;
+                    existingAircraft.UpdatedOn = airCraft.UpdatedOn;
                 }
 
                 _myContext.SaveChanges();
@@ -79,7 +81,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                return _myContext.AirCrafts.Where(predicate).FirstOrDefault();
+                return _myContext.Aircrafts.Where(predicate).FirstOrDefault();
             }
         }
 
@@ -87,9 +89,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
-
-                string sql = $"EXEC dbo.GetAircraftsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{(datatableParams.IsActive == true ? 1 : 0)}";
+                string sql = $"EXEC dbo.GetAircraftsList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}',{datatableParams.CompanyId},{(datatableParams.IsActive == true ? 1 : 0)}";
                 List<AircraftDataVM> airCraftList = _myContext.AircraftDataVMs.FromSqlRaw<AircraftDataVM>(sql).ToList();
 
                 return airCraftList;
@@ -100,7 +100,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                return _myContext.AirCrafts.Where(p=> p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false).ToList();
+                return _myContext.Aircrafts.Where(p=> p.CompanyId == companyId && p.IsActive == true && p.IsDeleted == false).ToList();
             }
         }
 
@@ -131,11 +131,11 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+                Aircraft existingAircraft = _myContext.Aircrafts.Where(p => p.Id == id).FirstOrDefault();
 
-                if (existingAirCraft != null)
+                if (existingAircraft != null)
                 {
-                    existingAirCraft.ImageName = imageName;
+                    existingAircraft.ImageName = imageName;
                     _myContext.SaveChanges();
 
                     return true;
@@ -149,7 +149,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<DropDownLargeValues> aircraftsList = (from aircraft in _myContext.AirCrafts
+                List<DropDownLargeValues> aircraftsList = (from aircraft in _myContext.Aircrafts
                                                            where aircraft.IsDeleted == false
                                                            && aircraft.IsActive == true
                                                            && (companyId == 0 || (aircraft.CompanyId == companyId))
@@ -167,11 +167,29 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                Aircraft existingAirCraft = _myContext.AirCrafts.Where(p => p.Id == id).FirstOrDefault();
+                Aircraft existingAircraft = _myContext.Aircrafts.Where(p => p.Id == id).FirstOrDefault();
 
-                if (existingAirCraft != null)
+                if (existingAircraft != null)
                 {
-                    existingAirCraft.AircraftStatusId = statusId;
+                    existingAircraft.AircraftStatusId = statusId;
+                    _myContext.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool UpdateIsLockedForUpdate(long id, bool isLock)
+        {
+            using (_myContext = new MyContext())
+            {
+                Aircraft existingAircraft = _myContext.Aircrafts.Where(p => p.Id == id).FirstOrDefault();
+
+                if (existingAircraft != null)
+                {
+                    existingAircraft.IsLockedForUpdate = isLock;
                     _myContext.SaveChanges();
 
                     return true;

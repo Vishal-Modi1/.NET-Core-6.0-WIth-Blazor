@@ -41,12 +41,13 @@ namespace Repository
             }
         }
 
-        public List<DropDownValues> ListDropDownValues()
+        public List<DropDownValues> ListDropDownValues(int companyId)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> aircraftModelList = (from aircraftModel in _myContext.AircraftModels
-                                                         select new DropDownValues()
+                                                          where aircraftModel.CompanyId == companyId
+                                                          select new DropDownValues()
                                                          {
                                                              Id = aircraftModel.Id,
                                                              Name = aircraftModel.Name
@@ -61,10 +62,9 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<AircraftModelDataVM> list;
 
-                string sql = $"EXEC dbo.GetAircraftModelsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                string sql = $"EXEC dbo.GetAircraftModelsList { datatableParams.CompanyId},'{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 list = _myContext.AircraftModelsList.FromSqlRaw<AircraftModelDataVM>(sql).ToList();
@@ -92,7 +92,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                return _myContext.AirCrafts.Where(p => p.AircraftModelId == id).Any();
+                return _myContext.Aircrafts.Where(p => p.AircraftModelId == id).Any();
             }
         }
 

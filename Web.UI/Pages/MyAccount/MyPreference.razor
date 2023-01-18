@@ -2,8 +2,6 @@
 @using DataModels.VM.UserPreference
 @using DataModels.Enums
 
-<h3>My Preference</h3>
-
 <TelerikForm Model="@userPreferenceVM" EditContext="@preferenceForm" OnValidSubmit="@Submit">
 
     <FormValidation>
@@ -42,10 +40,10 @@
                 </div>
                 <div class="col-md-4">
 
-                    <TelerikMultiSelect Data="@userPreferenceVM.AircraftList"
-                                    @bind-Value="@userPreferenceVM.AircraftIds" AutoClose="false" Placeholder="Select aircrafts"
-                                    TextField="Name" ValueField="Id">
-                    </TelerikMultiSelect>
+                    <MultiSelectWithAllCheckbox Data="@userPreferenceVM.AircraftList" SelectedData="@userPreferenceVM.AircraftIds"
+                                                    PlaceHolderText="Select Tags"
+                                                    UpdateParentListCallback="@UpdateSelectedAircraftData">
+                      </MultiSelectWithAllCheckbox>
 
                     <TelerikValidationMessage For="@(() => userPreferenceVM.AircraftIds)"></TelerikValidationMessage>
 
@@ -61,10 +59,10 @@
                 </div>
                 <div class="col-md-4">
 
-                    <TelerikMultiSelect Data="@userPreferenceVM.ActivityTypeList"
-                                    @bind-Value="@userPreferenceVM.ActivityIds" AutoClose="false" Placeholder="Select activities"
-                                    TextField="Name" ValueField="Id">
-                    </TelerikMultiSelect>
+                    <MultiSelectWithAllCheckbox Data="@userPreferenceVM.ActivityTypeList" SelectedData="@userPreferenceVM.ActivityIds"
+                                                    PlaceHolderText="Select Activities"
+                                                    UpdateParentListCallback="@UpdateSelectedActivityTypeData">
+                      </MultiSelectWithAllCheckbox>
 
                     <TelerikValidationMessage For="@(() => userPreferenceVM.ActivityIds)"></TelerikValidationMessage>
 

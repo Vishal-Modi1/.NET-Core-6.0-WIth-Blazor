@@ -1,6 +1,5 @@
 ﻿using FSMAPI.Utilities;
 using DataModels.Constants;
-using DataModels.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
@@ -15,18 +14,16 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class AircraftController : BaseAPIController
     {
-        private readonly IAircraftService _airCraftService;
+        private readonly IAircraftService _aircraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
-        private readonly IAircraftModelService _aircraftModelService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
         private readonly FileUploader _fileUploader;
 
-        public AircraftController(IAircraftService airCraftService, 
-            IAircraftModelService aircraftModelService, IAircraftEquipementTimeService aircraftEquipementTimeService,
+        public AircraftController(IAircraftService airCraftService,
+             IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
-            _airCraftService = airCraftService;
-            _aircraftModelService = aircraftModelService;
+            _aircraftService = airCraftService;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
@@ -39,7 +36,7 @@ namespace FSMAPI.Controllers
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
-            CurrentResponse response = _airCraftService.GetFiltersValue(companyIdValue);
+            CurrentResponse response = _aircraftService.GetFiltersValue(companyIdValue);
 
             return APIResponse(response);
         }
@@ -48,13 +45,20 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(AircraftDatatableParams aircraftDatatableParams)
         {
-            if (aircraftDatatableParams.CompanyId == 0)
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                aircraftDatatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+                int companyId = _jWTTokenGenerator.GetCompanyId();
+                if (companyId != aircraftDatatableParams.CompanyId && aircraftDatatableParams.CompanyId != 0)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                aircraftDatatableParams.CompanyId = companyId;
             }
 
-            CurrentResponse response = _airCraftService.List(aircraftDatatableParams);
+            CurrentResponse response = _aircraftService.List(aircraftDatatableParams);
 
             return APIResponse(response);
         }
@@ -64,7 +68,13 @@ namespace FSMAPI.Controllers
         public IActionResult Create(AircraftVM airCraftVM)
         {
             airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _airCraftService.Create(airCraftVM);
+
+            if (airCraftVM.OwnerId == 0)
+            {
+                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            }
+
+            CurrentResponse response = _aircraftService.Create(airCraftVM);
 
             return APIResponse(response);
         }
@@ -74,7 +84,13 @@ namespace FSMAPI.Controllers
         public IActionResult Edit(AircraftVM airCraftVM)
         {
             airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            CurrentResponse response = _airCraftService.Edit(airCraftVM);
+
+            if (airCraftVM.OwnerId == 0)
+            {
+                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            }
+
+            CurrentResponse response = _aircraftService.Edit(airCraftVM);
 
             return APIResponse(response);
         }
@@ -85,19 +101,22 @@ namespace FSMAPI.Controllers
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
-            CurrentResponse response = _airCraftService.GetDetails(id, companyIdValue);
+            CurrentResponse response = _aircraftService.GetDetails(id, companyIdValue);
 
             return APIResponse(response);
         }
 
         [HttpGet]
         [Route("listAll")]
-        public IActionResult ListAll()
+        public IActionResult ListAll(int companyId)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            if (companyId == 0)
+            {
+                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                companyId = company == "" ? 0 : Convert.ToInt32(company);
+            }
 
-            CurrentResponse response = _airCraftService.ListAllByCompanyId(companyIdValue);
+            CurrentResponse response = _aircraftService.ListAllByCompanyId(companyId);
             return APIResponse(response);
         }
 
@@ -107,7 +126,7 @@ namespace FSMAPI.Controllers
         {
             long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
 
-            CurrentResponse response = _airCraftService.Delete(id, deletedBy);
+            CurrentResponse response = _aircraftService.Delete(id, deletedBy);
 
             return APIResponse(response);
         }
@@ -120,48 +139,63 @@ namespace FSMAPI.Controllers
             {
                 return Ok(false);
             }
-            
+
             IFormCollection form = Request.Form;
 
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
 
             string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["AircraftId"]}.jpeg";
 
-            if(string.IsNullOrWhiteSpace(companyId))
+            if (string.IsNullOrWhiteSpace(companyId))
             {
                 companyId = form["CompanyId"];
             }
 
-            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.AircraftImage + "\\" + companyId , form, fileName);
+            bool isFileUploaded = await _fileUploader.UploadAsync(UploadDirectories.AircraftImage + "\\" + companyId, form, fileName);
 
             CurrentResponse response = new CurrentResponse();
             response.Data = "false";
 
             if (isFileUploaded)
             {
-                response = _airCraftService.UpdateImageName(Convert.ToInt32(form["AircraftId"]), fileName);
+                response = _aircraftService.UpdateImageName(Convert.ToInt64(form["AircraftId"]), fileName);
             }
 
             return APIResponse(response);
         }
 
         [HttpGet]
-        [Route("isaircraftexist")]
-        public IActionResult IsAirCraftExist(long id, string tailNo)
+        [Route("isAircraftExist")]
+        public IActionResult IsAircraftExist(long id, string tailNo)
         {
-            CurrentResponse response = _airCraftService.IsAirCraftExist(id, tailNo);
+            CurrentResponse response = _aircraftService.IsAircraftExist(id, tailNo);
 
             return APIResponse(response);
         }
 
         [HttpGet]
-        [Route("listdropdownvalues")]
+        [Route("listDropdownValues")]
         public IActionResult ListAircraftDropdownValues()
         {
             string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
-            CurrentResponse response = _airCraftService.ListAircraftDropdownValues(companyIdValue);
+            CurrentResponse response = _aircraftService.ListAircraftDropdownValues(companyIdValue);
+            return APIResponse(response);
+        }
+
+
+        [HttpGet]
+        [Route("listDropdownValuesByCompanyId")]
+        public IActionResult ListAircraftDropdownValuesByCompanyId(int companyId)
+        {
+            if (companyId == 0)
+            {
+                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                companyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);
+            }
+
+            CurrentResponse response = _aircraftService.ListAircraftDropdownValues(companyId);
             return APIResponse(response);
         }
 
@@ -169,12 +203,22 @@ namespace FSMAPI.Controllers
         [Route("updatestatus")]
         public IActionResult UpdateStatus(long id, byte statusId)
         {
-            CurrentResponse response = _airCraftService.UpdateStatus(id, statusId);
+            CurrentResponse response = _aircraftService.UpdateStatus(id, statusId);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("lockAircraft")]
+        public IActionResult LockAircraft(long id, bool isLock)
+        {
+            CurrentResponse response = _aircraftService.LockAircraft(id, isLock);
 
             return APIResponse(response);
         }
 
         #region Aircraft Equipment
+
         [HttpPost]
         [Route("createaircraftequipment")]
         public IActionResult CreateAircraftEquipment(List<AircraftEquipmentTimeCreateVM> aircraftEquipmentTimeVM)
@@ -183,7 +227,7 @@ namespace FSMAPI.Controllers
 
             if (aircraftEquipmentTimeVM.Count > 0)
             {
-                _aircraftEquipementTimeService.DeleteAllEquipmentTimeByAirCraftId(aircraftEquipmentTimeVM.FirstOrDefault().AircraftId, createdBy);
+                _aircraftEquipementTimeService.DeleteAllEquipmentTimeByAircraftId(aircraftEquipmentTimeVM.FirstOrDefault().AircraftId, createdBy);
             }
 
             CurrentResponse response = new CurrentResponse();

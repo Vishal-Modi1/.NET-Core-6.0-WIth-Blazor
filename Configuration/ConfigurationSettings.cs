@@ -42,6 +42,11 @@ namespace Configuration
             get => configuration.GetValue<string>("APIURL");
         }
 
+        public string WebURL
+        {
+            get => configuration.GetValue<string>("WebURL");
+        }
+
         public string UploadDirectoryPath
         {
             get => configuration.GetValue<string>("UploadDirectoryPath");
@@ -102,6 +107,11 @@ namespace Configuration
             get => configuration.GetValue<string>("SupportedImageTypes");
         }
 
+        public string AirportAPIURL
+        {
+            get => configuration.GetValue<string>("AirportAPIURL");
+        }
+
         public MailSettingConfig MailSetting
         {
             get => MailSettingConfig.Instance;
@@ -116,7 +126,5 @@ namespace Configuration
         public bool IsDiplsayValidationInPopupEffect = false;
 
         public string  PagingSummaryFormat = "Displaying page {0} of {1} (total {2} records)";
-
-
     }
 }

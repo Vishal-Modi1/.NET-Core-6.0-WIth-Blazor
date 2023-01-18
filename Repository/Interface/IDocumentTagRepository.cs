@@ -1,4 +1,5 @@
 ﻿using DataModels.Entities;
+using DataModels.VM.Common;
 using DataModels.VM.Document;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,7 @@ namespace Repository.Interface
         List<DocumentTagVM> ListByCondition(Expression<Func<DocumentTag, bool>> predicate);
 
         DocumentTagVM FindByCondition(Expression<Func<DocumentTag, bool>> predicate);
+
+        List<DropDownLargeValues> ListDropDownValues();
     }
 }

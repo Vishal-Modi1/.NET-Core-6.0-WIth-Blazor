@@ -28,13 +28,10 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             timeZone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
-            bool isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.Admin).Result;
-            bool isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, DataModels.Enums.UserRole.SuperAdmin).Result;
-
             long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
             bool isCreator = userId == CreatedBy;
 
-            if (isAdmin || isSuperAdmin || isCreator)
+            if (globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isCreator)
             {
                 isAllowToEdit = true;
             }
@@ -47,7 +44,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
             AircraftEquipmentDatatableParams datatableParams = new DatatableParams().Create(args, "Status").Cast<AircraftEquipmentDatatableParams>();
             datatableParams.AircraftId = AircraftId;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             data = await AircraftEquipmentService.ListAsync(dependecyParams, datatableParams);
 
             data.ForEach(p =>
@@ -62,10 +59,10 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
 
         async Task DeleteAsync(long id)
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftEquipmentService.DeleteAsync(dependecyParams, id);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -88,7 +85,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 popupTitle = "Update Equipment Details";
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftEquipmentsVM = await AircraftEquipmentService.GetEquipmentDetailsAsync(dependecyParams, aircraftEquipmentDataVM.Id);
 
             if (aircraftEquipmentsVM.LogEntryDate == null)
@@ -109,7 +106,7 @@ namespace Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment
                 aircraftEquipmentsVM.ManufacturerDate = DateConverter.ToLocal(aircraftEquipmentsVM.ManufacturerDate.Value, timeZone);
             }
 
-            aircraftEquipmentsVM.AirCraftId = AircraftId;
+            aircraftEquipmentsVM.AircraftId = AircraftId;
 
             if (aircraftEquipmentDataVM.Id == 0)
             {

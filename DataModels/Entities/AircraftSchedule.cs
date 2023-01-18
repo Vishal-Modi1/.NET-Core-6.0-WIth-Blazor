@@ -7,6 +7,7 @@ namespace DataModels.Entities
         public long Id { get; set; }
 
         public int SchedulActivityTypeId { get; set; }
+        public int FlightCategoryId { get; set; }
 
         public Guid ReservationId { get; set; }
     
@@ -14,9 +15,19 @@ namespace DataModels.Entities
 
         public DateTime EndDateTime { get; set; }
 
+        public Guid? DepartureAirportId { get; set; }
+
+        public string DepartureAirportName { get; set; }
+
+        public Guid? ArrivalAirportId { get; set; }
+
+        public string ArrivalAirportName { get; set; }
+
         public bool IsRecurring { get; set; }
 
-        public long? Member1Id { get; set; }
+        public long Member1Id { get; set; }
+
+        public int CompanyId { get; set; }
 
         public long? Member2Id { get; set; }
 

@@ -10,7 +10,6 @@
         timeZone: GetTimeZone()
     };
 
-
     $.ajax({
 
         url: url,
@@ -25,6 +24,28 @@
             }
             else {
                 return dotnetReferenceObject.invokeMethodAsync("ManageLoginResponse", response.message);
+            }
+        }
+    });
+}
+
+export function signinwithtoken(token, redirect) {
+
+    var url = "/api/auth/signInWithToken?token=" + token;
+
+    $.ajax({
+
+        url: url,
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (response) {
+
+            if (response.status == 200) {
+
+                location.replace(redirect);
+            }
+            else {
+                alert();
             }
         }
     });
@@ -156,5 +177,88 @@ export function copyTextToClipboard(text) {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
+
+}
+
+export function ReloadVideo() {
+
+    document.getElementById("videoTagId").load();
+}
+
+export function RefreshWindyMap(src) {
+
+    $('#windyFrame').attr("src", src);
+}
+
+export function RefreshHeight(heigth) {
+
+    $('#windyFrame').attr("height", heigth);
+}
+
+export function RefreshWidth(width) {
+
+    $('#windyFrame').attr("width", width);
+}
+
+export function LoadRadarMap(src) {
+
+    $('#radarMap').attr("src", src);
+}
+
+export function LoadVFRMap(src) {
+
+    $('#vFRMap').attr("src", src);
+}
+
+export function RefreshRadarMapWidth(width) {
+
+    $('#radarMap').css("width", width + "px");
+}
+
+export function RefreshRadarMapHeight(height) {
+
+    $('#radarMap').css( "height", height + "px");
+}
+
+export function LoadAircraftLiveTrackerMap(src) {
+
+    $('#aircraftLiveTrackerMap').attr("src", src);
+}
+
+export function RefreshAircraftLiveTrackerMapWidth(width) {
+
+    $('#radarMap').css("width", width + "px");
+}
+
+export function RefreshAircraftLiveTrackerMapHeight(height) {
+
+    $('#aircraftLiveTrackerMap').css("height", height + "px");
+}
+
+export function RefreshVFRMapWidth(width) {
+
+    $('#vFRMap').css("width", width + "px");
+}
+
+export function RefreshVFRMapHeight(height) {
+
+    $('#vFRMap').css("height", height + "px");
+}
+
+export function updateschedulerheadercolumns() {
+
+    var width = $('.k-scheduler-body .k-heading-cell').first().css("min-width")
+
+    $('.k-heading-cell').each(function (e, data) {
+
+        $(data).css("font-weight", "normal");
+    });
+
+    $('.k-scheduler-body .k-heading-cell').each(function (e, data) {
+
+        $(data).css("min-width", width);
+        $(data).css("justify-content", "left");
+        $(data).css("font-weight", "normal");
+    });
 
 }

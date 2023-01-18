@@ -1,11 +1,11 @@
 ﻿@using DataModels.VM.User
 
-<PageTitle>Invite User | Fly Manager </PageTitle>
+<PageTitle>Invite User | Upflyte </PageTitle>
 
 <TelerikForm Model="@inviteUserVM" OnValidSubmit="@Invite">
 
     <FormValidation>
-        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <CustomValidationSummary> </CustomValidationSummary>
     </FormValidation>
 
     <FormItems>
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            @if (isSuperAdmin)
+            @if (globalMembers.IsSuperAdmin)
             {
                 <div class="row">
                     <div class="col-md-12 align-items-center d-flex">

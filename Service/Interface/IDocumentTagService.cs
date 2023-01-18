@@ -8,5 +8,7 @@ namespace Service.Interface
         CurrentResponse List();
 
         CurrentResponse Create(DocumentTagVM documentTagVM);
+
+        CurrentResponse ListDropDownValues();
     }
 }

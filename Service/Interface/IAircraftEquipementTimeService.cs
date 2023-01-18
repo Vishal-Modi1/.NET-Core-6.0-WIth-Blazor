@@ -8,7 +8,7 @@ namespace Service.Interface
     public interface IAircraftEquipementTimeService
     {
         CurrentResponse Create(AircraftEquipmentTimeCreateVM aircraftEquipmentTimeVM);
-        bool DeleteAllEquipmentTimeByAirCraftId(long AirCraftId, long UpdatedBy);
+        bool DeleteAllEquipmentTimeByAircraftId(long AircraftId, long UpdatedBy);
         List<AircraftEquipmentTime> ToDataObjectList(List<AircraftEquipmentTimeVM> aircraftEquipmentTimesVMList);
         List<AircraftEquipmentTimeCreateVM> ToCreateBusinessObjectList(List<AircraftEquipmentTime> aircraftEquipmentTimesList);
     }

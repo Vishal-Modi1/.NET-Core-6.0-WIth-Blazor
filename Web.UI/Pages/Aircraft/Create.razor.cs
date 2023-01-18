@@ -7,6 +7,7 @@ using Web.UI.Data.AircraftMake;
 using Web.UI.Utilities;
 using Telerik.Blazor.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using DataModels.Constants;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -25,16 +26,49 @@ namespace Web.UI.Pages.Aircraft
 
         bool isAircraftImageChanged, isDisplayMakePopup, isDisplayModelPopup;
         byte[] aircraftImageBytes;
+        public bool isAllowToLock, isFileUploadHasError,isFileAdded;
 
+        string fileName = "";
         protected override Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
+            
+            isAircraftImageChanged = false;
+            aircraftData.IsEquipmentTimesListChanged = false;
+
+            SetDropdownValues();
+
+            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+            bool isOwner = userId == aircraftData.OwnerId;
+
+            isAllowToLock = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || aircraftData.Id == 0;
+
+            OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
+            OnCompanyValueChange(aircraftData.CompanyId);
+
+            return base.OnInitializedAsync();
+        }
+
+        private async Task OnCompanyValueChange(int? value)
+        {
+            if (value != null)
+            {
+                ChangeLoaderVisibilityAction(true);
+
+                aircraftData.CompanyId = value;
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                aircraftData.OwnersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, aircraftData.CompanyId.Value);
+
+                ChangeLoaderVisibilityAction(false);
+                base.StateHasChanged();
+            }
+        }
+
+        private void SetDropdownValues()
+        {
             YearDropDown = new List<DropDownValues>();
             NoofEnginesDropDown = new List<DropDownValues>();
             NoofPropellersDropDown = new List<DropDownValues>();
-
-            isAircraftImageChanged = false;
-            aircraftData.IsEquipmentTimesListChanged = false;
 
             for (int year = 1; year <= 5; year++)
             {
@@ -56,11 +90,6 @@ namespace Web.UI.Pages.Aircraft
                 aircraftData.NoofEngines = 1;
             }
 
-            //aircraftData.TrackOilandFuel = true;
-            //aircraftData.IsEnginesareTurbines = true;
-            //aircraftData.IsEngineshavePropellers = true;
-            //aircraftData.IsIdentifyMeterMismatch = true;
-
             if (aircraftData.AircraftMakeList.Where(p => p.Id == int.MaxValue).Count() == 0)
             {
                 aircraftData.AircraftMakeList.Add(new DropDownValues() { Id = int.MaxValue, Name = "Add New ++" });
@@ -71,27 +100,29 @@ namespace Web.UI.Pages.Aircraft
             {
                 aircraftData.AircraftStatusId = 1;
             }
-
-            OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
-            return base.OnInitializedAsync();
         }
 
         private async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             try
             {
+                isFileUploadHasError = false;
+                isFileAdded = false;
+
                 string fileType = Path.GetExtension(e.File.Name);
-                List<string> supportedImagesFormatsList = supportedImagesFormat.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                List<string> supportedImagesFormatsList = supportedImagesFormats.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 if (!supportedImagesFormatsList.Contains(fileType))
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "File type is not supported");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
+                    isFileUploadHasError = true;
                     return;
                 }
 
                 if (e.File.Size > maxProfileImageUploadSize)
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, $"File size exceeds maximum limit { maxProfileImageUploadSize / (1024 * 1024) } MB.");
+                    isFileUploadHasError = true;
                     return;
                 }
 
@@ -100,10 +131,12 @@ namespace Web.UI.Pages.Aircraft
                 aircraftImageBytes = ms.ToArray();
 
                 isAircraftImageChanged = true;
+                isFileAdded = true;
+                fileName = e.File.Name;
             }
             catch (Exception ex)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, ex.ToString());
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
         }
 
@@ -111,7 +144,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (steps.ActiveTabIndex == 0)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.IsAircraftExistAsync(dependecyParams, aircraftData.Id, aircraftData.TailNo);
                 bool isAircraftExist = ManageIsAircraftExistResponse(response, "");
 
@@ -126,7 +159,7 @@ namespace Web.UI.Pages.Aircraft
             {
                 isBusySubmitButton = true;
 
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftService.SaveandUpdateAsync(dependecyParams, aircraftData);
 
                 if (response != null)
@@ -150,7 +183,6 @@ namespace Web.UI.Pages.Aircraft
 
                 if (!isAircraftImageChanged)
                 {
-                    response.Message = "Aircraft Added Successfully";
                     ManageResponse(response, "Aircraft Details", true);
                 }
                 else
@@ -225,10 +257,10 @@ namespace Web.UI.Pages.Aircraft
 
         void OnCategoryDropDownValueChange(int value, bool isManualTriggerdEvent = false)
         {
-            if (aircraftData.AircraftCategoryId == value)
-            {
-                return;
-            }
+            //if (aircraftData.AircraftCategoryId == value)
+            //{
+            //    return;
+            //}
 
             aircraftData.AircraftCategoryId = value;
 
@@ -315,7 +347,7 @@ namespace Web.UI.Pages.Aircraft
             
             if ((bool)response.Data == true)
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 isAircraftExist = true;
             }
 
@@ -324,7 +356,7 @@ namespace Web.UI.Pages.Aircraft
 
         private async void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -334,7 +366,7 @@ namespace Web.UI.Pages.Aircraft
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -356,7 +388,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (reloadData)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 CurrentResponse response = await AircraftMakeService.ListDropdownValues(dependecyParams);
                 aircraftData.AircraftMakeList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
@@ -371,7 +403,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (reloadData)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                 CurrentResponse response = await AircraftModelService.ListDropdownValues(dependecyParams);
                 aircraftData.AircraftModelList = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
 

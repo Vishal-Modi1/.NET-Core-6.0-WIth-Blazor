@@ -1,0 +1,108 @@
+﻿@namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile
+@using DataModels.Enums
+@using DataModels.VM.Discrepancy
+@using Telerik.Blazor
+@using Web.UI.Shared.Components
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+
+            <div class="col-md-4">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" Enabled="@(!isBusyAddButton)"
+                               OnClick="() => OpenCreateDialog(new DiscrepancyFileVM())">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                </TelerikButton>
+            </div>
+        </div>
+    </div>
+</div>
+
+<TelerikGrid TItem="DiscrepancyFileVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler"
+             SelectionMode="@GridSelectionMode.Single"
+             SelectedItemsChanged="@((IEnumerable<DiscrepancyFileVM> discrepanciesList) => OnSelect(discrepanciesList))">
+
+    <GridSettings>
+        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+    </GridSettings>
+
+    <GridColumns>
+
+        <GridColumn Field="@nameof(DiscrepancyFileVM.DisplayName)" Title="File Name" />
+        <GridColumn Field="@nameof(DiscrepancyFileVM.AddedBy)" Title="Added By" />
+        <GridColumn Field="@nameof(DiscrepancyFileVM.CreatedOn)" Title="Created On" />
+
+        <GridCommandColumn Context="dataItem" Title="Action">
+            @{
+                DiscrepancyFileVM discrepancyFileVM = dataItem as DiscrepancyFileVM;
+
+                if (isAllowToEdit)
+                {
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>OpenCreateDialog(discrepancyFileVM)"
+                           ThemeColor="success" Enabled=!discrepancyFileVM.IsLoadingEditButton>
+
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="discrepancyFileVM.IsLoadingEditButton">
+                        </TelerikLoader>
+
+                    </TelerikButton>
+
+                    <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" OnClick="()=>OpenDeleteDialog(discrepancyFileVM)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    </TelerikButton>
+
+                }
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
+
+@if (isDisplayChildPopup)
+{
+    <CustomPopupComponent Title="@childPopupTitle"
+                      ShowHeaderCloseButton="operationType == OperationType.DocumentViewer"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayChildPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create discrepancyFileVM="@_discrepancyFile"
+                                                                              CloseDialogCallBack="@CloseDialog">
+                </Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.DiscrepancyFile.Create>
+            }
+            else if (operationType == OperationType.DocumentViewer)
+            {
+                <img src="@_discrepancyFile.FilePath" style="max-width:100%;max-height:100%;" />
+            }
+            else
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to remove <b> @_discrepancyFile.DisplayName </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_discrepancyFile.Id)" Enabled="@(!isBusyDeleteButton)">
+                                Yes
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+
+                            <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </Body>
+    </CustomPopupComponent>
+}

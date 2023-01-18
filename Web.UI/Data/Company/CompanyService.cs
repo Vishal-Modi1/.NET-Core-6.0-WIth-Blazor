@@ -15,7 +15,7 @@ namespace Web.UI.Data.Company
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<CompanyVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
+        public async Task<List<CompanyVM>> ListAsync(DependecyParams dependecyParams, CompanyDatatableParams datatableParams)
         {
             dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
             dependecyParams.URL = "Company/List";
@@ -132,6 +132,57 @@ namespace Web.UI.Data.Company
             CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
 
             return response;
+        }
+
+        public async Task<CompanyFilter> GetFiltersAsync(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = "company/getfilters";
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            CompanyFilter companyFilter = new CompanyFilter();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                companyFilter = JsonConvert.DeserializeObject<CompanyFilter>(response.Data.ToString());
+            }
+
+            return companyFilter;
+        }
+
+        public async Task<CurrentResponse> SetPropellerConfiguration(DependecyParams dependecyParams, int companyId, bool value)
+        {
+            try
+            {
+                dependecyParams.URL = $"company/setPropellerConfiguration?value={value}&companyId={companyId}";
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+                return response;
+            }
+            catch (Exception exc)
+            {
+                return new();
+            }
+        }
+
+        public async Task<bool> IsDisplayPropeller(DependecyParams dependecyParams, int companyId)
+        {
+            try
+            {
+                dependecyParams.URL = $"company/isDisplayPropeller?id={companyId}";
+                CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+                if (response.Status == System.Net.HttpStatusCode.OK)
+                {
+                    bool isDisplayPropeller = Convert.ToBoolean(response.Data.ToString());
+                    return isDisplayPropeller;
+                }
+
+                return false;
+            }
+            catch (Exception exc)
+            {
+                return new();
+            }
         }
     }
 }

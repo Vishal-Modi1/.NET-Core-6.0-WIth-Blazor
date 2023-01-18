@@ -32,6 +32,15 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpGet]
+        [Route("listdropdownvalues")]
+        public IActionResult ListDropdownValues()
+        {
+            CurrentResponse response = _documentTagService.ListDropDownValues();
+
+            return APIResponse(response);
+        }
+
         [HttpPost]
         [Route("create")]
         public IActionResult Create(DocumentTagVM documentTagVM)

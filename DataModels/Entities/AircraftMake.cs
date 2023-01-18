@@ -8,5 +8,6 @@ namespace DataModels.Entities
 
         [Required(ErrorMessage = "Make is required")]
         public string Name { get; set; }
+        public int CompanyId { get; set; }
     }
 }

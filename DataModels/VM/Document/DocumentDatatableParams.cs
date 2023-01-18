@@ -8,6 +8,8 @@ namespace DataModels.VM.Document
 
         public long UserId { get; set; }
 
-        public Enums.UserRole UserRole { get; set; }
+        public long? AircraftId { get; set; }
+
+        public string DocumentType { get; set; }
     }
 }

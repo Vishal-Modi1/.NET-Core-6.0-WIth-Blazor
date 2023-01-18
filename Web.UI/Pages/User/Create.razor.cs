@@ -25,13 +25,13 @@ namespace Web.UI.Pages.User
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
 
         EditContext userForm;
-        bool isInstructorTypeDropdownVisible = false;
+        bool isInstructorTypeDropdownVisible = false, isLoggedIn;
         int? roleId;
-
+       
         List<RadioButtonItem> genderOptions { get; set; } = new List<RadioButtonItem>
         {
-            new RadioButtonItem { Id = 0,Text = "Female" },
-            new RadioButtonItem { Id = 1, Text = "Male" },
+            new RadioButtonItem { Id = 0,Text = "Male" },
+            new RadioButtonItem { Id = 1, Text = "Female" },
         };
 
         protected override async Task OnInitializedAsync()
@@ -42,15 +42,17 @@ namespace Web.UI.Pages.User
             if (userData != null)
             {
                 isInstructorTypeDropdownVisible = userData.IsInstructor;
+                OnGenderValueChange();
             }
             else
             {
                 userData = new UserVM();
             }
 
-            userData.IsAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
+            isLoggedIn = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result) ;
+            userData.IsAuthenticated = (!string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result) && userData.RoleId != (int)UserRole.SuperAdmin);
 
-            if (!userData.IsAuthenticated && !userData.IsInvited)
+            if (!isLoggedIn && !userData.IsInvited)
             {
                 userData.RoleId = userData.UserRoles.Where(p => p.Name == UserRole.Owner.ToString()).First().Id;
             }
@@ -59,6 +61,8 @@ namespace Web.UI.Pages.User
             {
                 userData.IsSendEmailInvite = userData.IsSendTextMessage = true;
             }
+
+            userData.ExistingCompanyId = userData.CompanyId;
         }
 
         public async Task Submit()
@@ -67,6 +71,11 @@ namespace Web.UI.Pages.User
 
             CurrentResponse response;
             bool isEmailExist = false;
+
+            if (userData.UserPreferences != null)
+            {
+                userData.UserPreferences.Clear();
+            }
 
             if (userData.Id == 0)
             {
@@ -95,7 +104,7 @@ namespace Web.UI.Pages.User
             }
         }
 
-        async void OnGenderValueChange()
+        void OnGenderValueChange()
         {
             if (userData.GenderId == 0)
             {
@@ -121,19 +130,18 @@ namespace Web.UI.Pages.User
 
         private void ManageResponse(CurrentResponse response, string summary, bool isCloseDialog)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 CloseDialog(true);
             }
-            
         }
 
         private bool ManageIsEmailExistResponse(CurrentResponse response)
         {
             bool isEmailExist = false;
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status != System.Net.HttpStatusCode.OK)
             {

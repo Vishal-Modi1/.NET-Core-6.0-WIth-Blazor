@@ -4,8 +4,11 @@ using DataModels.VM.AircraftEquipment;
 using DataModels.VM.AircraftMake;
 using DataModels.VM.AircraftModel;
 using DataModels.VM.BillingHistory;
+using DataModels.VM.Common;
 using DataModels.VM.Company;
+using DataModels.VM.Discrepancy;
 using DataModels.VM.Document;
+using DataModels.VM.EmailConfiguration;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Location;
 using DataModels.VM.Reservation;
@@ -56,12 +59,11 @@ namespace Repository
 
         public DbSet<BillingHistory> BillingHistories { get; set; }
 
-
         public DbSet<EmailToken> EmailTokens { get; set; }
 
         public DbSet<InstructorTypeVM> InstructorType { get; set; }
 
-        public DbSet<Aircraft> AirCrafts { get; set; }
+        public DbSet<Aircraft> Aircrafts { get; set; }
 
         public DbSet<AircraftMake> AircraftMakes { get; set; }
 
@@ -117,8 +119,43 @@ namespace Repository
 
         public DbSet<AircraftStatus> AircraftStatuses { get; set; }
 
+        public DbSet<DiscrepancyStatus> DiscrepancyStatuses { get; set; }
+
+        public DbSet<DiscrepancyFile> DiscrepancyFiles { get; set; }
+
         public DbSet<UserVSCompany> UsersVsCompanies { get; set; }
 
+        public DbSet<Discrepancy> Discrepancies { get; set; }
+
+        public DbSet<DiscrepancyHistory> DiscrepanciesHistory { get; set; }
+
+        public DbSet<EmailConfiguration> EmailsConfiguration { get; set; }
+
+        public DbSet<EmailType> EmailTypes { get; set; }
+
+        public DbSet<AirTrafficControlCenter> AirTrafficControlCenters { get; set; }
+
+        public DbSet<UserAirTrafficControlCenter> UsersAirTrafficControlCenter { get; set; }
+
+        public DbSet<WindyMapConfiguration> WindyMapConfigurations{ get; set; }
+
+        public DbSet<RadarMapConfiguration> RadarMapConfigurations { get; set; } 
+        
+        public DbSet<VFRMapConfiguration> VFRMapConfigurations { get; set; }
+
+        public DbSet<AircraftLiveTrackerMapConfiguration> AircraftLiveTrackerMapConfigurations { get; set; }
+
+        public DbSet<BillingConfiguration> BillingConfigurations { get; set; }
+     
+        public DbSet<FlightCategory> FlightCategories { get; set; }
+
+        public DbSet<DateTimeFormat> DateTimeFormats { get; set; }
+       
+        public DbSet<CompanyDateFormat> CompaniesDateFormat { get; set; }
+
+        //List Objects
+
+        #region Data list
         public DbSet<LocationDataVM> LocationsList { get; set; }
 
         public DbSet<AircraftMakeDataVM> AircraftMakesList { get; set; }
@@ -135,6 +172,12 @@ namespace Repository
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 
+        public DbSet<DiscrepancyDataVM> DiscrepancyDataVM { get; internal set; }
+
+        public DbSet<EmailConfigurationDataVM> EmailsConfigurationDataVM { get; internal set; }
+
+        public DbSet<DiscrepancyHistoryVM> DiscrepancyHistoryVM { get; internal set; }
+
         public DbSet<UserVM> UserDetails { get; set; }
 
         public DbSet<AircraftEquipmentDataVM> AircraftEquipmentData { get; set; }
@@ -145,6 +188,8 @@ namespace Repository
 
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
-    }
+        public DbSet<DropDownGuidValues> AirportsList { get; set; }
 
+        #endregion
+    }
 }

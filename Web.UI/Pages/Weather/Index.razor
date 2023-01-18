@@ -1,0 +1,91 @@
+﻿@page "/Weather"
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+
+<PageTitle>Weather | Upflyte </PageTitle>
+<div id="container">
+    <div class="card">
+        <TelerikTabStrip Class="k-tabstrip-list">
+
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <CustomIcons IconName="weatherbriefings" PrimaryColor="#3066f8"></CustomIcons>
+                        </span>
+                        <span>Briefings</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    
+                    <Briefings></Briefings>
+                    
+                </Content>
+            </TabStripTab>
+
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+
+                        <span class="mx-2">
+                            <CustomIcons IconName="weathercloud" PrimaryColor="#3066f8"></CustomIcons>
+                        </span>
+                        <span>Weather</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+
+                    <Weather></Weather>
+
+                </Content>
+            </TabStripTab>
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+
+                        <span class="mx-2">
+                            
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="radar" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+
+                        </span>
+                        <span>Radar</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <Radar></Radar>
+                </Content>
+            </TabStripTab>
+
+             <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+
+                        <span class="mx-2">
+                            
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="aircraft-live-tracking" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+
+                        </span>
+                        <span>Live Tarcker</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <AircraftLiveTracker></AircraftLiveTracker>
+                </Content>
+            </TabStripTab>
+            <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <span class="mx-2">
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="radar" PrimaryColor="#3066f8" />
+                        </span>
+                        <span>VFR</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                    <VFR />
+                </Content>
+            </TabStripTab>
+        </TelerikTabStrip>
+    </div>
+</div>

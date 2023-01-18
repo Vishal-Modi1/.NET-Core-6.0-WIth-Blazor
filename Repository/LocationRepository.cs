@@ -63,14 +63,15 @@ namespace Repository
             }
         }
 
-        public List<DropDownValues> ListDropDownValues()
+        public List<DropDownValues> ListDropDownValues(int companyd)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> locationList = (from location in _myContext.Locations
                                                      join timezone in _myContext.Timezones
                                                      on location.TimezoneId equals timezone.Id
-                                                     where location.DeletedBy != null
+                                                     where location.DeletedBy != null &&
+                                                     location.CompanyId == companyd
                                                      select new DropDownValues()
                                                      {
                                                          Id = location.Id,
@@ -85,9 +86,8 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<LocationDataVM> list;
-                string sql = $"EXEC dbo.GetLocationsList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                string sql = $"EXEC dbo.GetLocationsList { datatableParams.CompanyId},'{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 list = _myContext.LocationsList.FromSqlRaw<LocationDataVM>(sql).ToList();

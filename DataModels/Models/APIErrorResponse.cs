@@ -1,7 +1,10 @@
-﻿namespace DataModels.Models
+﻿using Newtonsoft.Json;
+
+namespace DataModels.Models
 {
     public class APIErrorResponse
     {
-        public string Error { get; set; }
+        [JsonProperty(PropertyName = "message")]
+        public string Message { get; set; }
     }
 }

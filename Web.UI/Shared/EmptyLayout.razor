@@ -17,7 +17,7 @@
 
         </Web.UI.Shared.Components.PageLoader.PageLoader>
 
-        <CascadingValue IsFixed="true" Value="@UINotification">
+        <CascadingValue IsFixed="true" Value="@globalMembers">
             <CascadingValue Value="@ChangeLoaderVisibility" TValue="Action<bool>">
                 <style>
                     body {
@@ -70,6 +70,8 @@
 
     public bool isDisplayPageLoader { get; set; }
 
+    public GlobalMembers globalMembers = new GlobalMembers();
+
     UINotification UINotification { get; set; } = new UINotification();
 
     public string EmptyLayoutTitle { get; set; } = "LOGIN TEXT MSG";
@@ -89,6 +91,17 @@
     {
         isDisplayPageLoader = visible;
         StateHasChanged();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        InitializeGlobalMembers();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void InitializeGlobalMembers()
+    {
+        globalMembers.UINotification = UINotification;
     }
 
     public void SetEmptyLayoutTitle(string title) => EmptyLayoutTitle = title;

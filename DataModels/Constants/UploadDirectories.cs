@@ -8,5 +8,6 @@
         public const string Document = "Documents";
         public const string TempDocument = "TempDocuments";
         public const string CompanyLogo = "CompanyLogos";
+        public const string Discrepancy = "Discrepancies";
     }
 }

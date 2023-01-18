@@ -9,7 +9,7 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Repository
 {
-    public class AirCraftEquipmentRepository : IAircraftEquipmentRepository
+    public class AircraftEquipmentRepository : IAircraftEquipmentRepository
     {
         private MyContext _myContext;
 
@@ -87,10 +87,9 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<AircraftEquipmentDataVM> list;
 
-                string sql = $"EXEC dbo.GetAircraftEquipmentList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', { datatableParams.AircraftId }";
+                string sql = $"EXEC dbo.GetAircraftEquipmentList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', { datatableParams.AircraftId }";
 
                 list = _myContext.AircraftEquipmentData.FromSqlRaw<AircraftEquipmentDataVM>(sql).ToList();
 

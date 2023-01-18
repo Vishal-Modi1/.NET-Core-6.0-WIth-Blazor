@@ -75,6 +75,24 @@ namespace Service
             }
         }
 
+        public CurrentResponse ListDropDownValues()
+        {
+            try
+            {
+                List<DropDownLargeValues> documentTagsList = _documentTagRepository.ListDropDownValues();
+                CreateResponse(documentTagsList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         private DocumentTag ToDataObject(DocumentTagVM documentTagVM)
         {
             DocumentTag documentTag = new DocumentTag();

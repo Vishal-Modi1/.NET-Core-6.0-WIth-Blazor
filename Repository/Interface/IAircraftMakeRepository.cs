@@ -11,7 +11,7 @@ namespace Repository.Interface
     {
         AircraftMake Create(AircraftMake aircraftMake);
 
-        List<DropDownValues> ListDropDownValues();
+        List<DropDownValues> ListDropDownValues(int companyId);
 
         List<AircraftMake> List();
 

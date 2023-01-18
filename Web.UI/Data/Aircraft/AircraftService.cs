@@ -39,11 +39,11 @@ namespace Web.UI.Data.Aircraft
             }
         }
 
-        public async Task<List<DE.Aircraft>> ListAllAsync(DependecyParams dependecyParams)
+        public async Task<List<DE.Aircraft>> ListAllAsync(DependecyParams dependecyParams, int companyId)
         {
             try
             {
-                dependecyParams.URL = "aircraft/listall";
+                dependecyParams.URL = $"aircraft/listall?companyId={companyId}";
 
                 CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
                 List<DE.Aircraft> aircraftList = JsonConvert.DeserializeObject<List<DE.Aircraft>>(response.Data.ToString());
@@ -136,6 +136,21 @@ namespace Web.UI.Data.Aircraft
             return airCraftList;
         }
 
+        public async Task<List<DropDownLargeValues>> ListDropdownValuesByCompanyId(DependecyParams dependecyParams, int companyId)
+        {
+            dependecyParams.URL = $"aircraft/listdropdownvaluesbycompanyid?companyId={companyId}"; 
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            List<DropDownLargeValues> airCraftList = new List<DropDownLargeValues>();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                airCraftList = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return airCraftList;
+        }
+
         public async Task<CurrentResponse> IsAircraftExistAsync(DependecyParams dependecyParams, long id, string tailNo)
         {
             dependecyParams.URL = $"aircraft/isaircraftexist?id={id}&tailNo={tailNo}";
@@ -156,6 +171,14 @@ namespace Web.UI.Data.Aircraft
         public async Task<CurrentResponse> UpdateStatus(DependecyParams dependecyParams, long id, byte statusId)
         {
             dependecyParams.URL = $"aircraft/updatestatus?id={id}&statusId={statusId}";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> LockAircraft(DependecyParams dependecyParams, long id, bool isLock)
+        {
+            dependecyParams.URL = $"aircraft/updatestatus?id={id}&isLock={isLock}";
             CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
 
             return response;

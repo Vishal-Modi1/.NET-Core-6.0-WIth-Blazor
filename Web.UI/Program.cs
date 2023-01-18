@@ -10,7 +10,6 @@ using System.Net;
 var builder = WebApplication.CreateBuilder(args);
 var _configurationSettings = ConfigurationSettings.Instance;
 
-
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();

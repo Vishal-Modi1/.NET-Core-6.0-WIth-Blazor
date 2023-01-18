@@ -28,6 +28,10 @@ namespace DataModels.Entities
 
         public long UserId { get; set; }
 
+        public long? AircraftId { get; set; }
+
+        public bool IsPersonalDocument { get; set; }
+
         public bool IsShareable { get; set; }
         public int ModuleId { get; set; }
 

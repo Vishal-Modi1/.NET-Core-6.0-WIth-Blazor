@@ -30,5 +30,9 @@ namespace Repository.Interface
         List<UserPreferenceVM> FindPreferenceById(long id);
 
         List<DropDownLargeValues> ListDropdownValuesbyCompanyId(int companyId);
+
+        List<User> ListAllbyCompanyId(int companyId);
+
+        void UpdateArchiveStatus(long id, bool isArchive);
     }
 }

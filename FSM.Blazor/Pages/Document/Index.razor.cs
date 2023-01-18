@@ -112,7 +112,7 @@ namespace FSM.Blazor.Pages.Document
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData = await DocumentService.GetDetailsAsync(dependecyParams, id == null ? Guid.Empty : id.Value);
-            documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+          //  documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {

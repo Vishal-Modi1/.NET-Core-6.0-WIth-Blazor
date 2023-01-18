@@ -668,6 +668,8 @@ GO
 --INSERT INTO UserRolePermissions VALUES(1,4,5,null,1)
 --Go
 
+INSERT INTO UserRoleVsScheduleActivityType (UserRoleId, ActivityTypeIds) Values (1, (SELECT STRING_AGG(id,',') as id FROM ScheduleActivityTypes ))
+
 INSERT INTO Users Values('Vishal', 'Modi', 'vmodi@cendien.com', 1,'8980228627',1,0,null,null,null,'1994-10-21','Male',
 						102,'VGVzdEAxMjQ=',1,1,0,SYSDATETIME(),null,null,null,null,null)
 GO
@@ -675,6 +677,24 @@ GO
 INSERT INTO Users Values('Israel', 'Denis', 'idenis@cendien.com', 1,'(214) 202-5896',1,0,null,null,null,'1994-10-21','Male',
 						236,'VGVzdEAxMjQ=',1,1,0,SYSDATETIME(),null,null,null,null,null)
 GO
+
+INSERT INTO UserPreferences (UserId, PreferenceType, PreferencesIds) VALUES
+(41,'Aircraft',(SELECT STRING_AGG(id,',') as id FROM Aircrafts where IsDeleted = 0 and IsActive = 1 ))
+GO
+
+INSERT INTO UserPreferences (UserId, PreferenceType, PreferencesIds) VALUES
+(41,'ScheduleActivityType',(SELECT STRING_AGG(id,',') as id FROM ScheduleActivityTypes ))
+GO
+
+INSERT INTO Users (FirstName,LastName,Email,IsSendEmailInvite,IsInstructor,DateofBirth,Gender,CountryId,
+Password,IsSendTextMessage,IsActive,IsDeleted,CreatedOn)
+Values('Ariel', 'Paulino Super Admin', 'ariel.paulino@cendien.com', 1, 1,'1994-10-21','Male',
+102,'VGVzdEAxMjQ=',1,1,0,SYSDATETIME())
+GO
+
+Insert into UsersVSCompanies (Userid,roleid, isactive,isdeleted,createdby,createdon) values(41, 1,1,0,1,SYSDATETIME())
+GO
+
 
 SET IDENTITY_INSERT [dbo].ScheduleActivityTypes ON
 GO

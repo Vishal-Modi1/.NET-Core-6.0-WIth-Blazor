@@ -19,7 +19,7 @@ namespace Repository
         public UserVSCompany Edit(UserVSCompany userVSCompany)
         {
 
-            UserVSCompany existingDetails = _myContext.UsersVsCompanies.Where(x => x.UserId == userVSCompany.UserId && x.CompanyId == userVSCompany.CompanyId).FirstOrDefault();
+            UserVSCompany existingDetails = _myContext.UsersVsCompanies.Where(x => x.UserId == userVSCompany.UserId && x.CompanyId == userVSCompany.ExistingCompanyId).FirstOrDefault();
 
             if (existingDetails != null)
             {

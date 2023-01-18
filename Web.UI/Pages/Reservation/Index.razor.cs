@@ -9,27 +9,28 @@ using DataModels.Enums;
 using DataModels.Constants;
 using Telerik.Blazor.Components;
 using Utilities;
-using Web.UI.Pages.Scheduler;
+using Web.UI.Models.Scheduler;
+using DataModels.Entities;
 
 namespace Web.UI.Pages.Reservation
 {
     partial class Index
     {
         #region Params
-
+        
         [Parameter] public long UserId { get; set; }
         [Parameter] public long? AircraftId { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
         [Parameter] public int? CompanyId { get; set; }
+
+        [CascadingParameter(Name = "categories")]
+        public List<FlightCategory> Categories { get; set; }
 
         [CascadingParameter]
         public TelerikGrid<ReservationDataVM> grid { get; set; }
         ReservationDataTableParams datatableParams;
         ReservationFilterVM reservationFilterVM = new ReservationFilterVM();
         SchedulerVM schedulerVM;
-
-        string timezone = "";
-        bool isSuperAdmin, isAdmin;
 
         #endregion
 
@@ -45,26 +46,20 @@ namespace Web.UI.Pages.Reservation
         string moduleName = "Reservation";
         UIOptions uiOptions = new UIOptions();
         List<DropDownValues> reservationTypeFilter;
+        bool isDisplayMyFlightsOnly;
 
         protected override async Task OnInitializedAsync()
         {
-            GetReservationTypeFilter();
+            isDisplayMyFlightsOnly = (!globalMembers.IsSuperAdmin && !globalMembers.IsAdmin);
 
-            reservationFilterVM.Aircrafts = new List<DropDownLargeValues>();
-            reservationFilterVM.Companies = new List<DropDownValues>();
-            reservationFilterVM.Users = new List<DropDownLargeValues>();
+            GetReservationTypeFilter();
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, DataModels.Enums.PermissionType.View, moduleName))
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
-
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
-            isAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result;
-
-            timezone = ClaimManager.GetClaimValue(AuthenticationStateProvider, CustomClaimTypes.TimeZone);
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             reservationFilterVM = await ReservationService.GetFiltersAsync(dependecyParams);
@@ -141,13 +136,13 @@ namespace Web.UI.Pages.Reservation
 
         async void OnStartDateChange()
         {
-            datatableParams.StartDate = startDate;
+            datatableParams.StartDate = DateConverter.ToUTC(startDate.GetValueOrDefault(), globalMembers.Timezone);
             ReloadData();
         }
 
         async void OnEndDateChange()
         {
-            datatableParams.EndDate = endDate;
+            datatableParams.EndDate = DateConverter.ToUTC(endDate.GetValueOrDefault(), globalMembers.Timezone);
             ReloadData();
         }
 
@@ -158,6 +153,8 @@ namespace Web.UI.Pages.Reservation
             datatableParams.SearchText = searchText;
             datatableParams.StartDate = startDate;
             datatableParams.EndDate = endDate;
+            datatableParams.ArrivalAirportId = reservationFilterVM.ArrivalAirportId;
+            datatableParams.DepartureAirportId = reservationFilterVM.DepartureAirportId;
 
             if (reservationFilterTypeId != 0)
             {
@@ -178,6 +175,19 @@ namespace Web.UI.Pages.Reservation
                 datatableParams.UserId = reservationFilterVM.UserId;
             }
 
+            if(!globalMembers.IsSuperAdmin && isDisplayMyFlightsOnly)
+            {
+                datatableParams.UserId = globalMembers.UserId;
+            }
+            else if (ParentModuleName == "MyProfile" && !globalMembers.IsSuperAdmin && !globalMembers.IsAdmin)
+            {
+                datatableParams.UserId = UserId;
+            }
+            else
+            {
+                datatableParams.UserId = null;
+            }
+
             if (AircraftId == null)
             {
                 datatableParams.AircraftId = reservationFilterVM.AircraftId;
@@ -187,24 +197,19 @@ namespace Web.UI.Pages.Reservation
                 datatableParams.AircraftId = AircraftId;
             }
 
-            //if (!isSuperAdmin && !isAdmin)
-            //{
-            //    datatableParams.UserId = UserId;
-            //}
-
-            await LoadDataAsync(args);
+           await LoadDataAsync(args);
         }
 
         public async Task LoadDataAsync(GridReadEventArgs args)
         {
-            if (datatableParams.StartDate != null)
+            if (datatableParams.StartDate.HasValue)
             {
-                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value.Date, timezone);
+                datatableParams.StartDate = DateConverter.ToUTC(datatableParams.StartDate.Value, globalMembers.Timezone);
             }
 
             if (datatableParams.EndDate != null)
             {
-                datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), timezone);
+                datatableParams.EndDate = DateConverter.ToUTC(datatableParams.EndDate.Value.Date.AddDays(1).AddTicks(-1), globalMembers.Timezone);
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -212,20 +217,29 @@ namespace Web.UI.Pages.Reservation
             args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
             args.Data = data;
 
+            bool isCreator = false;
+
             data.ToList().ForEach(p =>
             {
-                p.StartDateTime = DateConverter.ToLocal(p.StartDateTime, timezone);
-                p.EndDateTime = DateConverter.ToLocal(p.EndDateTime, timezone);
+                p.StartDateTime = DateConverter.ToLocal(p.StartDateTime, globalMembers.Timezone);
+                p.EndDateTime = DateConverter.ToLocal(p.EndDateTime, globalMembers.Timezone);
+
+                isCreator = (globalMembers.UserId == p.CreatedBy || globalMembers.UserId == p.Member1Id);
+
+                if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin || isCreator)
+                {
+                    p.IsAllowToCheckDetails = true;
+                }
             });
 
             if (datatableParams.StartDate != null)
             {
-                datatableParams.StartDate = DateConverter.ToLocal(datatableParams.StartDate.Value, timezone);
+                datatableParams.StartDate = DateConverter.ToLocal(datatableParams.StartDate.Value, globalMembers.Timezone);
             }
 
             if (datatableParams.EndDate != null)
             {
-                datatableParams.EndDate = DateConverter.ToLocal(datatableParams.EndDate.Value, timezone);
+                datatableParams.EndDate = DateConverter.ToLocal(datatableParams.EndDate.Value, globalMembers.Timezone);
             }
         }
 
@@ -239,29 +253,29 @@ namespace Web.UI.Pages.Reservation
 
             schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, reservationDataVM.Id);
 
-            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, timezone);
-            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, timezone);
+            schedulerVM.StartTime = DateConverter.ToLocal(schedulerVM.StartTime, globalMembers.Timezone);
+            schedulerVM.EndTime = DateConverter.ToLocal(schedulerVM.EndTime, globalMembers.Timezone);
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckOutTime.Value, globalMembers.Timezone);
             }
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime != null)
             {
-                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, timezone);
+                schedulerVM.AircraftSchedulerDetailsVM.CheckInTime = DateConverter.ToLocal(schedulerVM.AircraftSchedulerDetailsVM.CheckInTime.Value, globalMembers.Timezone);
             }
 
-            uiOptions.isDisplayForm = false;
-            uiOptions.isDisplayCheckOutOption = false;
+            uiOptions.IsDisplayForm = false;
+            uiOptions.IsDisplayCheckOutOption = false;
 
             if (schedulerVM.AircraftSchedulerDetailsVM.CheckInTime == null)
             {
-                uiOptions.isDisplayCheckOutOption = true;
+                uiOptions.IsDisplayCheckOutOption = true;
             }
 
-            uiOptions.isDisplayMainForm = true;
-            uiOptions.isDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
+            uiOptions.IsDisplayMainForm = true;
+            uiOptions.IsDisplayCheckInButton = schedulerVM.AircraftSchedulerDetailsVM.IsCheckOut;
 
             popupTitle = "Schedule Appointment";
             isDisplayPopup = true;
@@ -293,23 +307,29 @@ namespace Web.UI.Pages.Reservation
             ReloadData();
         }
 
+        public async void DisplayMyFlights(bool value)
+        {
+           isDisplayMyFlightsOnly = value;
+           ReloadData();
+        }
+
         public void InitializeValues()
         {
-            uiOptions.isDisplayRecurring = true;
-            uiOptions.isDisplayMember1Dropdown = true;
-            uiOptions.isDisplayAircraftDropDown = true;
+            uiOptions.IsDisplayRecurring = true;
+            uiOptions.IsDisplayMember1Dropdown = true;
+            uiOptions.IsDisplayAircraftDropDown = true;
             if (schedulerVM == null)
             {
                 schedulerVM = new SchedulerVM();
                 schedulerVM.IsDisplayMember2Dropdown = false;
             }
-            uiOptions.isDisplayFlightRoutes = false;
-            uiOptions.isDisplayInstructor = false;
-            uiOptions.isDisplayFlightInfo = false;
-            uiOptions.isDisplayStandBy = true;
-            uiOptions.isDisplayForm = true;
-            uiOptions.isDisplayCheckOutOption = false;
-            uiOptions.isDisplayMainForm = true;
+            uiOptions.IsDisplayFlightRoutes = false;
+            uiOptions.IsDisplayInstructor = false;
+            uiOptions.IsDisplayFlightInfo = false;
+            uiOptions.IsDisplayStandBy = true;
+            uiOptions.IsDisplayForm = true;
+            uiOptions.IsDisplayCheckOutOption = false;
+            uiOptions.IsDisplayMainForm = true;
         }
     }
 }

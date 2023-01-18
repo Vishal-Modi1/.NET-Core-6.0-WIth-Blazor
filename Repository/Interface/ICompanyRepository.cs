@@ -9,7 +9,7 @@ namespace Repository.Interface
     {
         List<CompanyVM> ListAll();
 
-        List<CompanyVM> List(DatatableParams datatableParams);
+        List<CompanyVM> List(CompanyDatatableParams datatableParams);
 
         Company Edit(Company company);
 
@@ -22,5 +22,11 @@ namespace Repository.Interface
         bool UpdateImageName(int id, string logoName);
 
         List<DropDownValues> ListDropDownValuesByUserId(long userId);
+
+        List<DropDownValues> ListCityDropDownValues();
+
+        List<DropDownValues> ListStateDropDownValues();
+
+        void SetPropellerConfiguration(int id, bool value);
     }
 }

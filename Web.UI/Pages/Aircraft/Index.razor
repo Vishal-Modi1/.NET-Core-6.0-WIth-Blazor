@@ -18,12 +18,6 @@
         padding: 10px 20px;
     }
 
-    .k-listview-content {
-        /* display: grid;
-                    grid-template-columns: repeat(auto-fill, 180px);
-                    gap: 30px 20px;*/
-    }
-
     .k-card {
         border: 0;
         border-radius: 0;
@@ -54,9 +48,6 @@
 
     .custom-aircraft-item {
         box-sizing: border-box;
-        /* width: 100%;
-                                height: 100%;
-                                padding: 30px;*/
         background: #FEFEFE;
         box-shadow: 4.70946px 4.70946px 24.4892px rgb(0 0 0 / 18%);
         border-radius: 7.53514px;
@@ -106,222 +97,250 @@
 
     @@media (min-width:320px) { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
         .listview-item {
-            width: 100%;
+            width: 195px;
         }
     }
 
     @@media (min-width:480px) { /* smartphones, Android phones, landscape iPhone */
         .listview-item {
-            width: 100%;
+            width: 195px;
         }
     }
 
     @@media (min-width:600px) { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
         .listview-item {
-            width: 40%;
+            width: 195px;
+        }
+    }
+
+    @@media (width:768px) { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+        .listview-item {
+            width: 175px;
         }
     }
 
     @@media (min-width:801px) { /* tablet, landscape iPad, lo-res laptops ands desktops */
         .listview-item {
-            width: 22%;
+            width: 195px;
+        }
+    }
+
+    @@media (width:1024) { /* portrait tablets, portrait iPad, e-readers (Nook/Kindle), landscape 800x480 phones (Android) */
+        .listview-item {
+            width: 175px;
         }
     }
 
     @@media (min-width:1025px) { /* big landscape tablets, laptops, and desktops */
         .listview-item {
-            width: 22%;
+            width: 195px;
         }
     }
 
     @@media (min-width:1281px) { /* hi-res laptops and desktops */
         .listview-item {
-            width: 22%;
+            width: 195px;
         }
     }
 
-    .buttonViews {
-        border: none;
-        background-color: none;
-        height: 10px;
-        width: 50px;
-        background: transparent;
-    }
-
-     .buttonViews:focus {
-       
-        background: transparent;
+    @@media (min-width:1380px) { /* hi-res laptops and desktops */
+        .listview-item {
+            width: 195px;
+        }
     }
 </style>
 
-<PageTitle>Aircraft | Fly Manager </PageTitle>
-<div class="row">
-    <div class="col-12 d-flex justify-content-between">
-        <div>
-            <ComponentTitle Title="Aircrafts" Type="AdministrationTitle" />
+<PageTitle>Aircraft | Upflyte </PageTitle>
+<div class="@(string.IsNullOrWhiteSpace(ParentModuleName) ? "card p-3" : "")">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <ComponentTitle Title="Aircrafts" Type="AdministrationTitle" />
+            </div>
+            <div>
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
+                {
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                                   OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
+                        </TelerikButton>
+                    </div>
+                }
+            </div>
         </div>
-        <div>
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName))
-            {
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
-                               OnClick="() => AircraftCreateDialog(new AircraftDataVM())" Enabled="@(!isBusyAddButton)">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                        </TelerikLoader>
-                    </TelerikButton>
+    </div>
+
+<div>
+        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                    <span class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </span>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus" />
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus" />
+                        }
+                    </span>
                 </div>
-            }
-        </div>
-    </div>
+            </HeaderContent>
+            <ChildContent>
+                <div class="row my-0">
+
+                            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                            {
+                                <div class="col-md-4 my-auto mt-1 py-0">
+                                    <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
+                                                 ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                                 Placeholder="Select Company" ValueField="Id">
+                                    </TelerikComboBox>
+                                </div>
+                            }
+                            <div class="col-md-4 my-auto mt-1 py-0">
+                                <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" Class="common-bg" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
+                            </div>
+
+                            <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-4" : "col-md-8") my-auto mt-1 py-0 px-3" style="text-align:right">
+                                <span @onclick="@(e => ChangeView(true))" class="cursor-pointer gridview">
+                                    <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#3066f8" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
+                                </span>
+                                <span @onclick="@(e => ChangeView(false))" class="cursor-pointer listview">
+                                    <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == false ?   "#3066f8": "#ededed"  )" SecondaryColor="@(isDisplayGridView == false ? "white" : "black")"></CustomIcons>
+                                </span>
+                            </div>
+
+                        </div>
+            </ChildContent>
+        </CustomCollapseBar>
 </div>
-@*<hr class="hr-blue mt-1 mb-1" />*@
-<div class="row my-2">
-    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+
+    @if (isDisplayGridView)
     {
-        <div class="col-md-4">
-            <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
-                         ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Company" ValueField="Id">
-            </TelerikComboBox>
-        </div>
-    }
-    <div class="col-md-4">
-        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
-    </div>
-</div>
+        <TelerikListView @ref="dataListView" Pageable="true"
+                     Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
+                     OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
 
-<hr style="border:#EBECF3" />
-<div class="w-100" style="text-align:right">
-   
-    <TelerikButton OnClick="@(()=> ChangeView(true))" Class="buttonViews">
-        <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == true ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == true ?  "#0064D4" : "white")"></CustomIcons>
-    </TelerikButton>
+            <ListViewSettings>
+                <GridPagerSettings InputType="PagerInputType.Input"
+                               PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
 
-    <TelerikButton OnClick="@(()=> ChangeView(false))" Class="buttonViews">
-        <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView == false ?  "white" : "black")" SecondaryColor="@(isDisplayGridView == false ?  "#0064D4" : "white")"></CustomIcons>
-    </TelerikButton>
+                </GridPagerSettings>
+            </ListViewSettings>
 
-     <div class="col-md-3" style="float:right;margin-top:-7px">
-        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
-    </div>
-</div>
-<hr style="border:#EBECF3" />
-
-@if (isDisplayGridView)
-{
-    <TelerikListView @ref="dataListView" Pageable="true"
-                 Data="@airCraftsVM" TItem="AircraftDataVM" PageSize="@listViewPageSize"
-                 OnRead="@LoadListViewData" PageSizeChanged="@ListViewPageSizeChangedHandler">
-
-        <ListViewSettings>
-            <GridPagerSettings InputType="PagerInputType.Input"
-                           PageSizes="@pageSizeOptions" ButtonCount="5" Adaptive="true">
-
-            </GridPagerSettings>
-        </ListViewSettings>
-
-        <Template>
-            <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))">
-                <div class="k-card">
-                    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-                    <div class='status-circle' style="background-color:@context.Indicator"> </div>
-                    <div class="k-card-body d-flex justify-content-center">
-                        <h4 class="k-card-title">@context.TailNo</h4>
-                        <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
+            <Template>
+                <div class="listview-item" @onclick="@(() => OpenDetailPage(context.Id))">
+                    <div class="k-card">
+                        <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+                        <div class='status-circle' style="background-color:@context.Indicator"> </div>
+                        <div class="k-card-body d-flex justify-content-center">
+                            <span class="k-card-title" style="font-weight:normal;margin:0 0 0 0 !important">@context.TailNo</span>
+                            <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Template>
+        </TelerikListView>
+    }
+    else
+    {
+        <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
+                 Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-        </Template>
-    </TelerikListView>
-}
-else
-{
-    <TelerikGrid TItem="AircraftDataVM" OnRead="@LoadData" Pageable="true" @ref="@dataGridView"
-             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+            <GridSettings>
+                <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+            </GridSettings>
 
-        <GridSettings>
-            <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-        </GridSettings>
+            <GridColumns>
 
-        <GridColumns>
+                <GridColumn Context="dataItem" Title="Photo" Sortable="true" Width="8%">
+                    <Template>
+                        @{
+                            var data = dataItem as AircraftDataVM;
 
-            <GridColumn Context="dataItem" Title="Photo" Sortable="true">
-                <Template>
-                    @{
-                        var data = dataItem as AircraftDataVM;
+                            <div class="icon-container" style="height: 80%;width: 100%;">
+                                <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
+                                 src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
 
-                        <div class="icon-container" style="height: 80%;width: 100%;">
-                            <img class="rounded" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';"
-                             src="@data.ImagePath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
-
-                            <div class='status-circle' style="background-color:@data.Indicator"> </div>
-                        </div>
-                    }
-
-                </Template>
-            </GridColumn>
-
-            <GridColumn Field=@nameof(AircraftDataVM.TailNo) Context="dataItem" Title="Name">
-                <Template>
-                    @{
-                        var data = dataItem as AircraftDataVM;
-
-                        <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
-                    }
-
-                </Template>
-            </GridColumn>
-
-            <GridColumn Field="@nameof(AircraftDataVM.CompanyName)" Title="Company" Visible="@(isSuperAdmin && ParentModuleName != "Company")"></GridColumn>
-            <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make"></GridColumn>
-            <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model"></GridColumn>
-            <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category"></GridColumn>
-
-            <GridColumn Context="dataItem" Title="Actions" >
-                <Template>
-                    @{
-                        var data = dataItem as AircraftDataVM;
-
-                        <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
-                               ThemeColor="success">
-                            <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
-                        </TelerikButton>
-
-                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
-                        {
-                            <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
-                               ThemeColor="success" Enabled=!data.IsLoadingEditButton>
-
-                                <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
-                                   Visible="data.IsLoadingEditButton">
-                                </TelerikLoader>
-
-                            </TelerikButton>
+                                <div class='status-circle' style="background-color:@data.Indicator"> </div>
+                            </div>
                         }
 
-                        @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
-                        {
-                            <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
-                                <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                            </TelerikButton>
+                    </Template>
+                </GridColumn>
+
+                <GridColumn Field=@nameof(AircraftDataVM.TailNo) Context="dataItem" Title="Name">
+                    <Template>
+                        @{
+                            var data = dataItem as AircraftDataVM;
+
+                            <a href="javascript:void(0)" @onclick="@((ui) => OpenDetailPage(data.Id))">@data.TailNo</a>
                         }
-                    }
 
-                </Template>
-            </GridColumn>
+                    </Template>
+                </GridColumn>
 
-        </GridColumns>
-    </TelerikGrid>
+                <GridColumn Field="@nameof(AircraftDataVM.CompanyName)" Title="Company" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != "Company")"></GridColumn>
+                <GridColumn Field="@nameof(AircraftDataVM.MakeName)" Title="Make"></GridColumn>
+                <GridColumn Field="@nameof(AircraftDataVM.ModelName)" Title="Model"></GridColumn>
+                <GridColumn Field="@nameof(AircraftDataVM.Category)" Title="Category"></GridColumn>
 
-}
+                <GridColumn Context="dataItem" Title="Actions">
+                    <Template>
+                        @{
+                            var data = dataItem as AircraftDataVM;
+
+                            <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenDetailPage(data.Id)"
+                                   ThemeColor="success">
+                                <CustomIcons IconName="setting" PrimaryColor="white"></CustomIcons>
+                            </TelerikButton>
+
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, @moduleName))
+                            {
+                                bool isOwner = userId == data.OwnerId;
+                                bool isUnlocked = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || !data.IsLockedForUpdate;
+
+                                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftCreateDialog(data)"
+                                   ThemeColor="success" Enabled=@(!data.IsLoadingEditButton && isUnlocked)>
+
+                                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                                       Visible="data.IsLoadingEditButton">
+                                    </TelerikLoader>
+
+                                </TelerikButton>
+                            }
+
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, @moduleName))
+                            {
+                                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(data)">
+                                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                                </TelerikButton>
+                            }
+                        }
+
+                    </Template>
+                </GridColumn>
+
+            </GridColumns>
+        </TelerikGrid>
+
+    }
+</div>
 
 @if (isDisplayPopup)
 {
-    <CustomPopupComponent Title="@popupTitle"
+    <CustomPopupComponent Title="@popupTitle" 
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" Width="600px"
                       OnClose="@(()=> {isDisplayPopup = false;})">
@@ -357,4 +376,5 @@ else
         </Body>
     </CustomPopupComponent>
 }
+
 

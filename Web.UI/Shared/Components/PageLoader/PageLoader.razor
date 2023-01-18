@@ -1,7 +1,8 @@
 ﻿<TelerikLoaderContainer Visible="@isVisible">
     <Template>
-        <TelerikLoader Class="loader-indicator"  Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
-        </TelerikLoader>
+       @* <TelerikLoader Class="loader-indicator"  Type="@LoaderType.ConvergingSpinner" Size="@(ThemeConstants.Loader.Size.Large)">
+        </TelerikLoader>*@
+        <img src="/img/loader.gif" alt="Computer man" style="width:20%;height:20%;">
         <span>@loadingText</span>
     </Template>
 </TelerikLoaderContainer>
@@ -14,6 +15,7 @@
         width: 100%;
         height: 100%;
         z-index: 9999;
+
     }
 
     .loader-container {
@@ -26,6 +28,8 @@
     .loader-indicator > .k-loader-canvas > .k-loader-segment {
         background-color: @(loaderColor == null ? "#022254" : loaderColor) !important
     }
+
+
 
 </style>
 

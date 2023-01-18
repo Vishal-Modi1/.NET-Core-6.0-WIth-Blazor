@@ -23,9 +23,9 @@ namespace Web.UI.Pages.Account
 
             forgotPasswordVM.ResetURL = NavigationManager.BaseUri + "/ResetPassword?Token=";
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AccountService.ForgetPasswordAsync(dependecyParams, forgotPasswordVM);
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             forgotPasswordVM.Email = "";
 

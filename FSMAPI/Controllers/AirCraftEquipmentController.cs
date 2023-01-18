@@ -15,12 +15,12 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class AircraftEquipmentController : BaseAPIController
     {
-        private readonly IAirCraftEquipmentService _airCraftEquipmentService;
+        private readonly IAircraftEquipmentService _airCraftEquipmentService;
         private readonly JWTTokenGenerator _jWTTokenGenerator;
 
-        public AircraftEquipmentController(IAirCraftEquipmentService airCraftEquipmentService, IHttpContextAccessor httpContextAccessor)
+        public AircraftEquipmentController(IAircraftEquipmentService aircraftEquipmentService, IHttpContextAccessor httpContextAccessor)
         {
-            _airCraftEquipmentService = airCraftEquipmentService;
+            _airCraftEquipmentService = aircraftEquipmentService;
             _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
         }
 

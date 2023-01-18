@@ -19,7 +19,7 @@ namespace Web.UI.Pages.Aircraft
 
                 aircraftData.AircraftEquipmentTimesList.Add(new AircraftEquipmentTimeCreateVM()
                 {
-                    EquipmentName = ("Air Frame")
+                    EquipmentName = ("Hobbs Total")
                 });
 
                 for (int engineNo = 1; engineNo <= aircraftData.NoofEngines; engineNo++)

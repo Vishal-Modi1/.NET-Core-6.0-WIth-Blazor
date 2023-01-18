@@ -4,9 +4,8 @@
 @using DataModels.Constants;
 
 <style>
-    .addTag
-    {
-        margin:5px 0px 8px 0px
+    .addTag {
+        margin: 5px 0px 8px 0px
     }
 </style>
 <TelerikForm Model="@documentData" EditContext="@editContext" OnValidSubmit="@UploadFilesAsync">
@@ -22,38 +21,13 @@
             <input type="hidden" value="@documentData.Id" name="Id" />
             <div class="col-12">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-6" style="margin-bottom:20px;">
                         <label>Upload</label>
 
-                        <div image-container>
-                            <style>
-                                .drag-area {
-                                    width: 100%;
-                                    height: 106px;
-                                    background: #F8F8F8;
-                                    border: 0.5px dashed #606060;
-                                    border-radius: 8px;
-                                }
-
-                                .icon > svg {
-                                    width: 30;
-                                    height: 30;
-                                }
-
-                                .header {
-                                    font-style: normal;
-                                    font-weight: 300;
-                                    font-size: 12px;
-                                }
-                            </style>
-                            <label class="drag-area d-flex align-items-center k-cursor-pointer" for="documentImage">
-                                <div class="text-center mx-auto">
-                                    <div class="icon"><CustomIcons IconName="upload-cloud" /></div>
-                                    <header class="header">Drag and drop or <br /> browse to choose images</header>
-                                </div>
-                            </label>
-                            <InputFile Id="documentImage" style="display:none" OnChange="OnInputFileChangeAsync" Value="@documentData.DisplayName" accept="@supportedDocumentsFormat" />
-                        </div>
+                          <CustomFileUpload DisplayName="@documentData.DisplayName" IsFileAdded="@isFileAdded" supportedFormats="@supportedDocumentsFormat"
+                                              OnInputFileChangeCallback="@OnInputFileChangeAsync"
+                                              IsFileUploadHasError="@isFileUploadHasError">
+                            </CustomFileUpload>
 
                         @if (isFileUploadHasError)
                         {
@@ -61,7 +35,7 @@
                         }
                     </div>
 
-                    <div class="col-6">
+                    <div class="col-6" style="margin-bottom:20px;">
                         <label>Document Name</label>
                         <TelerikTextBox Id="displayName" @bind-Value="@documentData.DisplayName" PlaceHolder="Display Name"></TelerikTextBox>
                         <TelerikValidationMessage For="@(() => documentData.DisplayName)"></TelerikValidationMessage>
@@ -69,15 +43,20 @@
 
                     <div class="col-6">
                         <label>Document Tag</label>
-                        <TelerikMultiSelect @ref="@autoComplete" Data="@documentData.DocumentTagsList"
-                                            @bind-Value="@values" AutoClose="false" Placeholder="Search a tag..." TextField="TagName" ValueField="Id" />
+
+                        <MultiSelectWithAllCheckbox Data="@documentData.DocumentTagsList" SelectedData="@selectedTags"
+                                                    PlaceHolderText="Select Tags"
+                                                    UpdateParentListCallback="@UpdateSelectedDocumentTagData">
+                        </MultiSelectWithAllCheckbox>
+
                         <TelerikButton ButtonType="@ButtonType.Button" OnClick=@(args => OpenCreateTagDialogAsync())
                                        Class="btn k-btn-primary addTag" ThemeColor="primary">
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons>
                         </TelerikButton>
+
                     </div>
 
-                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                    @if (globalMembers.IsSuperAdmin && ParentModuleName != "Company")
                     {
                         <div class="col-6">
                             <label>Company</label>

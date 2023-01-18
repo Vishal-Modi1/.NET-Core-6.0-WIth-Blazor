@@ -1,0 +1,450 @@
+﻿@using DataModels.Enums
+@using DataModels.VM.AircraftEquipment
+@using DataModels.VM.Common
+@using System.Collections.ObjectModel
+@using System.ComponentModel
+@using DataModels.VM.Scheduler;
+@using DataModels.Entities;
+@using DataModels.VM;
+@using Web.UI.Shared.Components;
+@using Web.UI.Models.Shared;
+@using Web.UI.Models.Scheduler;
+
+@page "/SchedulerIndex"
+@inject IJSRuntime JSRunTime
+
+<style>
+    .k-scheduler .k-event {
+        padding: 0px;
+    }
+
+    .custom-appointment {
+        width: 100%;
+        height: 100%;
+    }
+
+    .schedule-popup div:hover {
+        color: #fff;
+        background-color: #000;
+        text-decoration: underline;
+    }
+
+</style>
+
+<PageTitle>Scheduler | Upflyte </PageTitle>
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between m-1">
+            <div class="col-md-2 d-flex">
+                <ComponentTitle Title="Scheduler" Type="AdministrationTitle" />
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+                <div class="col-md-12 d-flex justify-content-end">
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName))
+                    {
+                        <TelerikRadioGroup Data="@viewOptions" ValueField="@nameof(RadioButtonItem.Id)"
+                                       TextField="@nameof(RadioButtonItem.Text)" @bind-Value="@schedulerViewOption"
+                                       Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnschedulerViewOptionValueChange()"
+                                       LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
+
+                        <TelerikButton Class="btn k-btn-primary ms-3" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                                   Enabled="@(!isBusyAddButton)">
+
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+
+                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                            </TelerikLoader>
+
+                        </TelerikButton>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (schedulerType == Models.Enums.SchedulerType.Aircraft)
+{
+    <div>
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between">
+                    <span class="my-0">
+                        <CustomIcons IconName="search" /> Search
+                    </span>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus" />
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus" />
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+
+                <div class="row my-2">
+
+                    <div class="col-md-10 col-sm-10">
+
+                        <MultiSelectWithAllCheckbox Data="@multiSelectAircraftsList" SelectedData="@selectedAircraftList"
+                                                OnChangeEventCallback="@OnAircraftsListChange" PlaceHolderText="Select Aircrafts"
+                                                UpdateParentListCallback="@UpdateSelectedAircraftData">
+                        </MultiSelectWithAllCheckbox>
+
+                    </div>
+
+                    <div class="col-md-2 col-sm-2">
+
+                        <TelerikCheckBox Id="activeAircraftsDisplay"
+                                     Value="@isDisplayTodayActiveAircrafts"
+                                     ValueChanged="@((bool value) => DisplayActiveAircrafts(value))">
+                        </TelerikCheckBox>
+
+                        <label for="activeAircraftsDisplay">Today's Active Aircrafts</label>
+
+                    </div>
+
+                </div>
+
+            </ChildContent>
+        </CustomCollapseBar>
+    </div>
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+                  @ref="@scheduleRef"
+                  OnItemClick="@OnClickHandlerAsync"
+                  OnItemDoubleClick="@OnDoubleClickHandler"
+                  AllowCreate="true" AllowDelete="true" AllowUpdate="true"
+                  OnEdit="@EditHandler"
+                  DateChanged="@DateChangedHandler"
+                  IdField="@(nameof(SchedulerVM.Id))"
+                  StartField="@(nameof(SchedulerVM.StartTime))"
+                  EndField="@(nameof(SchedulerVM.EndTime))"
+                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
+                  ViewChanged="@ViewChangedHandler">
+
+        <ItemTemplate>
+            @{
+            var appt = context as SchedulerVM;
+
+            if (appt.AircraftSchedulerDetailsVM.IsCheckOut)
+            {
+                appt.Color = "#33ff81";
+            }
+            else
+            {
+                if (appt.AircraftSchedulerDetailsVM.CheckInTime != null)
+                {
+                    appt.Color = "#B8B8B8";
+                }
+                else
+                {
+                    appt.Color = "#007bff";
+                }
+            }
+
+            <div class="custom-appointment schedule-popup"
+             title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
+             data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
+             style="height:100%;background-color: @appt.Color"
+             data-aircraft="@appt.TailNo"
+                 @oncontextmenu:preventDefault="true"
+                 @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
+                <div style="font-size:12px;background-color: @appt.Color" class="k-event-template">@appt.DisplayTitle</div>
+            </div>
+        }
+    </ItemTemplate>
+
+    <SchedulerViews>
+        <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMonthView></SchedulerMonthView>
+        <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+    </SchedulerViews>
+
+    <SchedulerResources>
+        <SchedulerResource Field="AircraftId" TextField="Text" ValueField="Id" Data="@aircraftsResourceList"></SchedulerResource>
+    </SchedulerResources>
+    <SchedulerSettings>
+        <SchedulerGroupSettings Resources="@resources" Orientation="@SchedulerGroupOrientation.Vertical"></SchedulerGroupSettings>
+    </SchedulerSettings>
+
+</TelerikScheduler>
+}
+else if (schedulerType == Models.Enums.SchedulerType.Pilot)
+{
+    <div>
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between">
+                    <span class="my-0">
+                        <CustomIcons IconName="search" /> Search
+                    </span>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                            <CustomIcons IconName="minus" />
+                        }
+                        else
+                        {
+                            <CustomIcons IconName="plus" />
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+            <ChildContent>
+
+                <div class="row my-2">
+
+                    <div class="col-md-10 col-sm-10">
+
+                        <MultiSelectWithAllCheckbox Data="@multiSelectPilotsList" SelectedData="@selectedPilotsList"
+                                                OnChangeEventCallback="@OnPilotsListChange" PlaceHolderText="Select Pilots"
+                                                UpdateParentListCallback="@UpdateSelectedPilotData">
+                        </MultiSelectWithAllCheckbox>
+
+                    </div>
+
+                    <div class="col-md-2 col-sm-2">
+
+                        <TelerikCheckBox Id="activePilotDisplay"
+                                     Value="@isDisplayTodayActivePilots"
+                                     ValueChanged="@((bool value) => DisplayActivePilot(value))">
+                        </TelerikCheckBox>
+
+                        <label for="activePilotDisplay">Today's Active Pilots</label>
+
+                    </div>
+
+                </div>
+            </ChildContent>
+        </CustomCollapseBar>
+    </div>
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+                  @ref="@scheduleRef"
+                  OnItemClick="@OnClickHandlerAsync"
+                  OnItemDoubleClick="@OnDoubleClickHandler"
+                  AllowCreate="true" AllowDelete="true" AllowUpdate="true"
+                  OnEdit="@EditHandler"
+                  DateChanged="@DateChangedHandler"
+                  IdField="@(nameof(SchedulerVM.Id))"
+                  StartField="@(nameof(SchedulerVM.StartTime))"
+                  EndField="@(nameof(SchedulerVM.EndTime))"
+                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
+                  ViewChanged="@ViewChangedHandler">
+
+        <ItemTemplate>
+            @{
+            var appt = context as SchedulerVM;
+
+            if (appt.AircraftSchedulerDetailsVM.IsCheckOut)
+            {
+                appt.Color = "#33ff81";
+            }
+            else
+            {
+                if (appt.AircraftSchedulerDetailsVM.CheckInTime != null)
+                {
+                    appt.Color = "#B8B8B8";
+                }
+                else
+                {
+                    appt.Color = "#007bff";
+                }
+            }
+
+            <div class="custom-appointment schedule-popup"
+             title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
+             data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
+             style="height:100%;background-color: @appt.Color"
+             data-aircraft="@appt.TailNo"
+                 @oncontextmenu:preventDefault="true"
+                 @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
+                <div style="font-size:12px;background-color: @appt.Color" class="k-event-template">@appt.DisplayTitle</div>
+            </div>
+        }
+    </ItemTemplate>
+
+    <SchedulerViews>
+        <SchedulerDayView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerWeekView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMultiDayView NumberOfDays="@multiDayDaysCount" StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+        <SchedulerMonthView></SchedulerMonthView>
+        <SchedulerTimelineView StartTime="@dayStart" EndTime="@dayEnd" WorkDayStart="@workDayStart" WorkDayEnd="@workDayEnd" />
+    </SchedulerViews>
+
+    <SchedulerResources>
+        <SchedulerResource Field="Member1Id" TextField="Text" ValueField="Id" Data="@pilotsResourceList"></SchedulerResource>
+    </SchedulerResources>
+    <SchedulerSettings>
+        <SchedulerGroupSettings Resources="@pilotResources" Orientation="@SchedulerGroupOrientation.Vertical">
+        </SchedulerGroupSettings>
+    </SchedulerSettings>
+
+</TelerikScheduler>
+}
+else
+{
+    <TelerikScheduler Data="@dataSource" Date="@currentDate" Height="600px" View="@currentView"
+                  @ref="@scheduleRef"
+                  OnItemClick="@OnClickHandlerAsync"
+                  OnItemDoubleClick="@OnDoubleClickHandler"
+                  AllowCreate="true" AllowDelete="true" AllowUpdate="true"
+                  OnEdit="@EditHandler"
+                  DateChanged="@DateChangedHandler"
+                  IdField="@(nameof(SchedulerVM.Id))"
+                  StartField="@(nameof(SchedulerVM.StartTime))"
+                  EndField="@(nameof(SchedulerVM.EndTime))"
+                  DescriptionField="@(nameof(SchedulerVM.DisplayTitle))"
+                  TitleField="@(nameof(SchedulerVM.DisplayTitle))"
+                  IsAllDayField="@(nameof(SchedulerVM.IsAllDay))"
+                  ViewChanged="@ViewChangedHandler">
+
+        <ItemTemplate>
+
+            @{
+            try
+            {
+                var appt = context as SchedulerVM;
+                var flightCategory = Categories.Where(p => p.Id == appt.FlightCategoryId).First();
+
+                appt.Color = flightCategory.Color;
+
+                <div class="custom-appointment schedule-popup"
+             title="@appt.DisplayTitle" data-start="@appt.StartTime" data-end="@appt.EndTime"
+             data-member1="@appt.Member1" data-isAllowToCheckDetails="@appt.IsAllowToCheckDetails.ToString()"
+             style="height:100%;background-color: @appt.Color"
+             data-aircraft="@appt.TailNo"
+                 @oncontextmenu:preventDefault="true"
+                 @oncontextmenu="@( (MouseEventArgs e) => ShowContextMenu(e, appt) )">
+                <div style="font-size:12px;background-color: @appt.Color" class="k-event-template">@appt.DisplayTitle</div>
+                </div>
+
+            }
+            catch(Exception exc)
+            {
+                
+            }
+        }
+    </ItemTemplate>
+
+    <SchedulerViews>
+
+        <SchedulerMonthView>
+
+        </SchedulerMonthView>
+    </SchedulerViews>
+
+</TelerikScheduler>
+}
+
+<TelerikContextMenu Data="@menuItems" @ref="@contextMenu"
+                    TextField="Text" IconField="Icon" DisabledField="Disabled"
+                    OnClick="@( async (ContextMenuItem itm) => await OnContextMenuClickItem(itm) )">
+</TelerikContextMenu>
+
+<TelerikTooltip TargetSelector=".schedule-popup" ShowOn="@TooltipShowEvent.Hover" Position="TooltipPosition.Bottom">
+    <Template>
+
+        @{
+            var dataAttributes = context.DataAttributes;
+            var title = context.Title;
+            var isAllowToCheckDetails = Convert.ToBoolean(dataAttributes["isallowtocheckdetails"]);
+        }
+
+        <ul>
+            <li>Title: @title</li>
+            <li>Start Time: @(dataAttributes["start"])</li>
+            <li>End Time: @(dataAttributes["end"])</li>
+            <li>Aircraft: @(dataAttributes["aircraft"])</li>
+
+            @if (isAllowToCheckDetails)
+            {
+                <li>Member: @(dataAttributes["member1"])</li>
+            }
+        </ul>
+    </Template>
+</TelerikTooltip>
+
+@{
+    @if (isDisplayPopup)
+    {
+        <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+
+            <Body>
+
+                @if (operationType == OperationType.Create)
+                {
+                    <Create schedulerVM="@schedulerVM" uiOptions="@uiOptions" @ref="createScheduleRef"
+                InitializeValuesParentEvent="@InitializeValues"
+                OpenDialogParentEvent="@OpenDialog" DeleteParentEvent="@LoadDataAsync"
+                RefreshSchedulerDataSourceParentEvent="@RefreshSchedulerDataSourceAsync"
+                CloseDialogParentEvent="@CloseDialog" LoadDataParentEvent="@LoadDataAsync"
+                IsOpenFromContextMenu="@isOpenFromContextMenu"></Create>
+
+                }
+                else if (operationType == OperationType.UnCheckOut)
+                {
+                    <div>
+                        <p class="m-4"> Are you sure, You want to un-check out appointment ? </p>
+                        <div class="row d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-between">
+
+                                <TelerikButton Class="mx-1 btn k-btn-primary flex-fill" ThemeColor="info" OnClick="()=>UnCheckOutAppointment()" Enabled="@(!uiOptions.IsBusyUnCheckOutButton)">
+                                    Yes
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.IsBusyUnCheckOutButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+
+
+                                <TelerikButton Class="mx-1 btn k-btn-secondary flex-fill" ThemeColor="secondary" OnClick="()=>CloseDialog()">
+                                    No
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                else if (operationType == OperationType.Delete)
+                {
+                    <div>
+                        <p class="m-4"> Are you sure, You want to delete appointment ? </p>
+                        <div class="row d-flex justify-content-end">
+                            <div class="col-4 d-flex justify-content-between">
+
+                                <TelerikButton Class="btn k-btn-danger flex-fill mx-1" ThemeColor="error" OnClick="()=>DeleteAsync()" Enabled="@(!uiOptions.IsBusyDeleteButton)">
+                                    Yes
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="uiOptions.IsBusyDeleteButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+
+
+                                <TelerikButton Class="mr-1 btn k-btn-secondary flex-fill mx-1" ThemeColor="secondary" OnClick="()=>CloseDialog()">
+                                    No
+                                </TelerikButton>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </Body>
+
+        </CustomPopupComponent>
+    }
+}

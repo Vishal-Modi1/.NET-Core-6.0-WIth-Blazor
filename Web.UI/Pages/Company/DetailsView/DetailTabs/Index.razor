@@ -1,8 +1,26 @@
 ﻿@namespace Web.UI.Pages.Company.DetailsView.DetailTabs
 @using DataModels.Enums
 
-<div class="card m-3">
+@if (CompanyData != null && CompanyData.Id != 0)
+{
     <TelerikTabStrip Class="k-tabstrip-list">
+
+        @*  <TabStripTab>
+            <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+            <span class="mx-2">
+            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+            </span>
+            <span>Stats</span>
+            </div>
+            </HeaderTemplate>
+            <Content>
+
+            <Web.UI.Pages.Statistics.CompanyStatistics>
+            </Web.UI.Pages.Statistics.CompanyStatistics>
+
+            </Content>
+            </TabStripTab>*@
 
         @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, Module.User.ToString()))
         {
@@ -10,15 +28,17 @@
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
                         <span class="mx-2">
-                            <CustomIcons IconName="documents" PrimaryColor="#3066f8"></CustomIcons>
+                            <CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
                         </span>
                         <span>Users</span>
                     </div>
                 </HeaderTemplate>
                 <Content>
-                    <Web.UI.Pages.User.UsersList CompanyIdParam="@CompanyData.Id" ParentModuleName="@Module.Company.ToString()">
 
-                    </Web.UI.Pages.User.UsersList>
+                    <Web.UI.Pages.User.Index CompanyIdParam="@CompanyData.Id"
+                                     ParentModuleName="@Module.Company.ToString()">
+                    </Web.UI.Pages.User.Index>
+
                 </Content>
             </TabStripTab>
 
@@ -30,7 +50,7 @@
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
                         <span class="mx-2">
-                            <CustomIcons IconName="documents" PrimaryColor="#3066f8"></CustomIcons>
+                            <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
                         </span>
                         <span>Reservation</span>
                     </div>
@@ -50,7 +70,7 @@
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
                         <span class="mx-2">
-                            <CustomIcons IconName="documents" PrimaryColor="#3066f8"></CustomIcons>
+                            <CustomIcons IconName="document" PrimaryColor="#3066f8"></CustomIcons>
                         </span>
                         <span>Documents</span>
                     </div>
@@ -67,7 +87,7 @@
             <HeaderTemplate>
                 <div class="d-flex justify-content-center align-items-center">
                     <span class="mx-2">
-                        <CustomIcons IconName="documents" PrimaryColor="#3066f8"></CustomIcons>
+                        <CustomIcons IconName="aircraft" PrimaryColor="#3066f8"></CustomIcons>
                     </span>
                     <span>Aircrafts</span>
                 </div>
@@ -78,6 +98,24 @@
                 </Web.UI.Pages.Aircraft.Index>
             </Content>
         </TabStripTab>
-    </TelerikTabStrip>
 
-</div>
+        <TabStripTab>
+            <HeaderTemplate>
+                <div class="d-flex justify-content-center align-items-center">
+                    <span class="mx-2">
+                        <CustomIcons IconName="setting" PrimaryColor="#3066f8"></CustomIcons>
+                    </span>
+                    <span>Settings</span>
+                </div>
+            </HeaderTemplate>
+            <Content>
+
+                <Web.UI.Pages.Company.DetailsView.Settings.Index CompanyData="@CompanyData">
+                </Web.UI.Pages.Company.DetailsView.Settings.Index>
+
+            </Content>
+        </TabStripTab>
+
+      
+    </TelerikTabStrip>
+}

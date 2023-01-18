@@ -2,124 +2,85 @@
 
 @page "/administration"
 
-<PageTitle> Administration | Fly Manager  </PageTitle>
+<PageTitle> Administration | Upflyte  </PageTitle>
 
 <div id="container">
     <div class="card">
-        <TelerikTabStrip Class="k-tabstrip-list" @ref="@telerikTabStrip">
 
-            @foreach (var tab in menuItems)
-            {
-                string name = tab.Name;
+        @if (menuItems.Count() > 0)
+        {
+            <TelerikTabStrip Class="k-tabstrip-list">
 
-                @if (name == Module.Company.ToString())
+                @foreach (var tab in menuItems)
                 {
-                    <TabStripTab>
-                        <HeaderTemplate>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <span class="mx-2">
-                                    <CustomIcons IconName="@tab.Controller.ToLower()" PrimaryColor="#3066f8"></CustomIcons>
-                                </span>
-                                <span>@tab.DisplayName</span>
-                            </div>
-                        </HeaderTemplate>
-                        <Content>
-                            <Web.UI.Pages.Company.Index></Web.UI.Pages.Company.Index>
-                        </Content>
-                    </TabStripTab>
+                    string name = tab.Name;
+
+                    @if (name == Module.Company.ToString())
+                    {
+                        <TabStripTab>
+                            <HeaderTemplate>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <span class="mx-2">
+                                        <CustomIcons IconName="@tab.Controller.ToLower()" PrimaryColor="#3066f8"></CustomIcons>
+                                    </span>
+                                    <span>@tab.DisplayName</span>
+                                </div>
+                            </HeaderTemplate>
+                            <Content>
+                                <Web.UI.Pages.Company.Index></Web.UI.Pages.Company.Index>
+                            </Content>
+                        </TabStripTab>
+                    }
+                    else if (name == Module.User.ToString())
+                    {
+                        <TabStripTab>
+                            <HeaderTemplate>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <span class="mx-2">
+                                        <CustomIcons IconName="@tab.Controller.ToLower()" 
+                                        PrimaryColor="#3066f8"></CustomIcons>
+                                    </span>
+                                    <span>@tab.DisplayName</span>
+                                </div>
+
+                            </HeaderTemplate>
+                            <Content>
+                                <Web.UI.Pages.User.Index ParentModuleName="Administration"></Web.UI.Pages.User.Index>
+                            </Content>
+                        </TabStripTab>
+                    }
+                    else if (name == Module.UserRolePermission.ToString())
+                    {
+                        <TabStripTab>
+                            <HeaderTemplate>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <span class="mx-2">
+                                        <CustomIcons IconName="@tab.Controller.ToLower()" PrimaryColor="#3066f8"></CustomIcons>
+                                    </span>
+                                    <span>@tab.DisplayName</span>
+                                </div>
+                            </HeaderTemplate>
+                            <Content>
+                                <Web.UI.Pages.UserRolePermission.Index></Web.UI.Pages.UserRolePermission.Index>
+                            </Content>
+                        </TabStripTab>
+                    }
                 }
-                else if (name == Module.User.ToString())
-                {
-                    <TabStripTab>
-                        <HeaderTemplate>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <span class="mx-2">
-                                    <CustomIcons IconName="@tab.Controller.ToLower()" PrimaryColor="#3066f8"></CustomIcons>
-                                </span>
-                                <span>@tab.DisplayName</span>
-                            </div>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span class="mx-2">
+                                <CustomIcons IconName="instructor" PrimaryColor="#3066f8"></CustomIcons>
+                            </span>
+                            <span>Instructor Types</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <Web.UI.Pages.InstructorType.Index></Web.UI.Pages.InstructorType.Index>
+                    </Content>
+                </TabStripTab>
 
-                        </HeaderTemplate>
-                        <Content>
-                            <Web.UI.Pages.User.Index></Web.UI.Pages.User.Index>
-                        </Content>
-                    </TabStripTab>
-                }
-                else if (name == Module.UserRolePermission.ToString())
-                {
-                    <TabStripTab>
-                        <HeaderTemplate>
-                            <div class="d-flex justify-content-center align-items-center">
-                                <span class="mx-2">
-                                    <CustomIcons IconName="@tab.Controller.ToLower()" PrimaryColor="#3066f8"></CustomIcons>
-                                </span>
-                                <span>@tab.DisplayName</span>
-                            </div>
-                        </HeaderTemplate>
-                        <Content>
-                            <Web.UI.Pages.UserRolePermission.Index></Web.UI.Pages.UserRolePermission.Index>
-                        </Content>
-                    </TabStripTab>
-                }
-            }
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="mx-2">
-                            <CustomIcons IconName="instructor" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Instructor Types</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.InstructorType.Index></Web.UI.Pages.InstructorType.Index>
-                </Content>
-            </TabStripTab>
-
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-
-                        <span class="mx-2">
-                            <CustomIcons IconName="location" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Location</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.Location.Index></Web.UI.Pages.Location.Index>
-                </Content>
-            </TabStripTab>
-
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="mx-2">
-                            <CustomIcons IconName="make" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Make</span>
-
-                    </div>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.AircraftMake.Index></Web.UI.Pages.AircraftMake.Index>
-                </Content>
-            </TabStripTab>
-
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-
-                        <span class="mx-2">
-                            <CustomIcons IconName="model" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Model</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-                    <Web.UI.Pages.AircraftModel.Index></Web.UI.Pages.AircraftModel.Index>
-                </Content>
-            </TabStripTab>
-        </TelerikTabStrip>
+            </TelerikTabStrip>
+        }
     </div>
 </div>

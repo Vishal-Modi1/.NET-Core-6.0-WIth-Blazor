@@ -13,7 +13,7 @@ namespace Repository.Interface
 
         List<AircraftModel> List();
 
-        List<DropDownValues> ListDropDownValues();
+        List<DropDownValues> ListDropDownValues(int companyId);
 
         List<AircraftModelDataVM> List(DatatableParams datatableParams);
 

@@ -4,7 +4,7 @@ using DataModels.VM.AircraftEquipment;
 
 namespace Service.Interface
 {
-    public interface IAirCraftEquipmentService
+    public interface IAircraftEquipmentService
     {
         CurrentResponse Create(AircraftEquipmentsVM airCraftEquipmentsVM);
         CurrentResponse Edit(AircraftEquipmentsVM airCraftEquipmentsVM);

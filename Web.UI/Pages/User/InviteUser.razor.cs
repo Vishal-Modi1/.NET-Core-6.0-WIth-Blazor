@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Components;
 using DataModels.VM.User;
 using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
-using DataModels.Enums;
 
 namespace Web.UI.Pages.User
 {
@@ -12,17 +10,6 @@ namespace Web.UI.Pages.User
     {
         [Parameter] public InviteUserVM inviteUserVM { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
-
-        public bool isSuperAdmin = false;
-
-        protected override async Task OnInitializedAsync()
-        {
-            var user = (await AuthStat).User;
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-            isSuperAdmin = Convert.ToInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role)
-                             .Select(c => c.Value).SingleOrDefault()) == (int)UserRole.SuperAdmin;
-        }
 
         public void CloseDialog(bool isCancelled)
         {
@@ -48,7 +35,7 @@ namespace Web.UI.Pages.User
 
             ManageInviteUserResponse(response);
 
-            isBusySubmitButton = true;
+            isBusySubmitButton = false;
         }
 
         private bool ManageIsEmailExistResponse(CurrentResponse response)
@@ -65,7 +52,7 @@ namespace Web.UI.Pages.User
 
         private void ManageInviteUserResponse(CurrentResponse response)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

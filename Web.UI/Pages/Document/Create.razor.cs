@@ -13,9 +13,9 @@ namespace Web.UI.Pages.Document
     {
         [Parameter] public DocumentVM documentData { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+        [Parameter] public string ParentModuleName { get; set; }
 
-        TelerikMultiSelect<DocumentTagVM, int> autoComplete { get; set; }
-        List<int> values { get; set; }
+        List<long> selectedTags = new List<long>();
 
         string uploadedFilePath = "";
 
@@ -23,11 +23,11 @@ namespace Web.UI.Pages.Document
         public string SaveUrl => ToAbsoluteUrl("api/fileupload/save");
 
         public long maxFileSize = ConfigurationSettings.Instance.MaxDocumentUploadSize;
-        List<string> supportedDocumentsFormat = ConfigurationSettings.Instance.SupportedDocuments.Split(new String[] { ","}, StringSplitOptions.RemoveEmptyEntries).ToList();
+        string supportedDocumentsFormat = ConfigurationSettings.Instance.SupportedDocuments;
         int maxSizeInMB = 1;
         public EditContext editContext { get; set; }
         string errorMessage;
-        bool isFileUploadHasError;
+        bool isFileUploadHasError, isFileAdded;
         bool isDisplayChildPopup = false;
 
         //RadzenTemplateForm<DocumentVM> form;
@@ -44,7 +44,7 @@ namespace Web.UI.Pages.Document
 
             if (!string.IsNullOrWhiteSpace(documentData.Tags))
             {
-                values = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt32(p)).ToList();
+                selectedTags = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt64(p)).ToList();
             }
 
             editContext = new EditContext(documentData);
@@ -52,18 +52,24 @@ namespace Web.UI.Pages.Document
             maxSizeInMB = (int)ConfigurationSettings.Instance.MaxDocumentUploadSize / (1024 * 1024);
             errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
 
+            isFileAdded = !string.IsNullOrWhiteSpace(documentData.DisplayName);  
             base.OnInitialized();
+        }
+
+        void UpdateSelectedDocumentTagData(List<long> selectedData)
+        {
+            selectedTags = selectedData;
         }
 
         async void OnChange(int value)
         {
             documentData.CompanyId = value;
-             ChangeLoaderVisibilityAction(true);
+            ChangeLoaderVisibilityAction(true);
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
 
-             ChangeLoaderVisibilityAction(false);
+            ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
         }
 
@@ -120,13 +126,15 @@ namespace Web.UI.Pages.Document
             multiContent.Add(new StringContent(documentData.ModuleId.ToString()), "ModuleId");
             multiContent.Add(new StringContent(documentData.UserId.ToString()), "UserId");
             multiContent.Add(new StringContent(documentData.Type), "Type");
+            multiContent.Add(new StringContent(documentData.AircraftId.GetValueOrDefault().ToString()), "AircraftId");
+            multiContent.Add(new StringContent(documentData.IsPersonalDocument.ToString()), "IsPersonalDocument");
             multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
             multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
 
-            if (values != null)
+            if (selectedTags != null)
             {
-                multiContent.Add(new StringContent(String.Join(",", values)), "Tags");
+                multiContent.Add(new StringContent(String.Join(",", selectedTags)), "Tags");
             }
 
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
@@ -141,7 +149,7 @@ namespace Web.UI.Pages.Document
 
         private void ManageFileUploadResponse(CurrentResponse response, string summary)
         {
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -161,52 +169,64 @@ namespace Web.UI.Pages.Document
         async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             isFileUploadHasError = false;
+            isFileAdded = false;
             documentData.DisplayName = "";
             selectedFiles = e.GetMultipleFiles();
 
-            foreach (IBrowserFile file in selectedFiles)
+            try
             {
-                try
+                ChangeLoaderVisibilityAction(true);
+
+                string fileType = Path.GetExtension(e.File.Name);
+                if (!supportedDocumentsFormat.Contains(fileType))
                 {
-                    if (file.Size > maxFileSize)
-                    {
-                        errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
-                        
-                        uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, errorMessage);
-                        isFileUploadHasError = true;
-                        return;
-                    }
-
-                    errorMessage = "";
-
-                    Stream stream = file.OpenReadStream(maxFileSize);
-                    uploadedFilePath = Path.GetFullPath($"{UploadDirectories.RootDirectory}\\{UploadDirectories.TempDocument}\\") + file.Name;
-
-                    FileStream fs = File.Create(uploadedFilePath);
-
-                    await stream.CopyToAsync(fs);
-                    stream.Close();
-                    fs.Close();
-
-                    byte[] fileData = File.ReadAllBytes(uploadedFilePath);
-                    documentData.Size = Convert.ToInt64(fileData.Length / 1024);
-                    documentData.DisplayName = Path.GetFileName(uploadedFilePath);
-                    documentData.Type = Path.GetExtension(uploadedFilePath).Substring(1);
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "File type is not supported");
+                    isFileUploadHasError = false;
+                    ChangeLoaderVisibilityAction(false);
+                    return;
                 }
-                catch (Exception exc)
+
+                if (e.File.Size > maxFileSize)
                 {
-
+                    errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, errorMessage);
+                    isFileUploadHasError = false;
+                    ChangeLoaderVisibilityAction(false);
+                    return;
                 }
+
+                errorMessage = "";
+
+                Stream stream = e.File.OpenReadStream(maxFileSize);
+                uploadedFilePath = Path.GetFullPath($"{UploadDirectories.RootDirectory}\\{UploadDirectories.TempDocument}\\") + e.File.Name;
+
+                FileStream fs = File.Create(uploadedFilePath);
+
+                await stream.CopyToAsync(fs);
+                stream.Close();
+                fs.Close();
+
+                byte[] fileData = File.ReadAllBytes(uploadedFilePath);
+                documentData.Size = Convert.ToInt64(fileData.Length / 1024);
+                documentData.DisplayName = Path.GetFileName(uploadedFilePath);
+                documentData.Type = Path.GetExtension(uploadedFilePath).Substring(1); 
+                
+                isFileAdded = true;
+            }
+            catch (Exception ex)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, ex.ToString());
             }
 
-            this.StateHasChanged();
+            ChangeLoaderVisibilityAction(false);
+
         }
 
         public async Task OpenCreateTagDialogAsync()
         {
             popupTitle = "Create Tag";
             isDisplayChildPopup = true;
-                      
+
         }
 
         public void CloseDialog(bool reloadGrid)
@@ -221,7 +241,7 @@ namespace Web.UI.Pages.Document
             if (reloaList)
             {
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                documentData.DocumentTagsList = await DocumentService.GetDocumentTagsList(dependecyParams);
+                documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
             }
         }
     }

@@ -1,10 +1,14 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Outfit&display=swap");
-html, body, .selected-font {
-  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+﻿@import url("https://fonts.googleapis.com/css2?family=Readex+Pro&display=swap");
+/*html, body, .selected-font {
+    font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
+
 .k-drawer, .k-tabstrip-items {
-  font-family: Outfit, "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-family: 'Readex Pro','Helvetica Neue', Helvetica, Arial, sans-serif !important;
+}*/
+* {
+  font-family: "Readex Pro";
 }
 
 /*NEW COLOR PLATE*/
@@ -31,7 +35,7 @@ body {
 }
 
 hr {
-  border: 1px solid #eee;
+  border: 1px solid rgba(255, 255, 255, 0.5490196078);
 }
 
 .bg-primary-f {
@@ -83,8 +87,8 @@ form .row {
   margin-bottom: 16px;
 }
 
-.telerik-blazor.k-invalid input, .telerik-blazor.k-invalid button {
-  background: #ffd1d178;
+.telerik-blazor.k-invalid input, .telerik-blazor.k-invalid button, .telerik-blazor.k-invalid k-autocomplete {
+  background: rgba(255, 209, 209, 0.4705882353);
 }
 .telerik-blazor.k-invalid button {
   background: #ffd1d1;
@@ -100,14 +104,13 @@ form .row {
   height: 15px;
   border-radius: 50%;
   border: 2px solid white;
-  bottom: 0;
-  right: 0;
+  top: 0;
   position: absolute;
 }
 
 /*GLOBAL CLASSES*/
 .card, .k-card.telerik-blazor {
-  box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);
+  /*box-shadow: 5px 5px 26px rgba(0, 0, 0, 0.1);*/
   border-radius: 8px;
 }
 
@@ -168,7 +171,8 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-drawer-expanded .k-drawer.k-drawer-start {
-  border-right-width: 0;
+  border-right-width: medium;
+  border-right-color: lightgrey;
 }
 
 .k-drawer-left.k-drawer-mini .k-drawer {
@@ -193,16 +197,16 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 .user-face {
   padding: 34px;
-  font-size: 14px;
+  font-size: 12px;
   color: black !important;
 }
 
 .k-button.drawer-hamburger {
-  background: transparent;
+  background: transparent !important;
   color: #121D2D !important;
   border: 0;
   box-shadow: none;
-  padding: 34px;
+  padding: 0 34px 0 34px;
 }
 
 .telerik-blazor.k-drawer {
@@ -211,7 +215,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .telerik-blazor.k-drawer .k-drawer-item {
   border-left: 6px solid WHITE;
-  font-size: 14px;
+  font-size: 12px;
 }
 .telerik-blazor.k-drawer .k-drawer-item .selected-arrow {
   width: 0;
@@ -220,13 +224,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   right: 0;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #f5f7ff;
+  border-right: 10px solid rgb(245, 247, 255);
 }
 .telerik-blazor.k-drawer .menu-item-text-color {
   color: #121D2D;
 }
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: #3066f81c;
+  background-color: rgba(48, 102, 248, 0.0588235294);
   border-left: 6px solid #3066F8;
   /*Update class according */
 }
@@ -253,6 +257,10 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: white;
   border: 1px solid #022a6a !important;
   background-color: #022a6a !important;
+}
+.btn.k-btn-primary:focus {
+  outline: none !important;
+  box-shadow: 0 0 0px 2px rgba(62, 128, 237, 0.3);
 }
 .btn.k-btn-danger {
   color: white;
@@ -281,12 +289,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-button.k-button-Outline-secondary {
-  border-color: #979797 !important;
-  color: #979797 !important;
+  border: 1px solid #3066f8 !important;
+  color: #3066f8 !important;
 }
 .k-button.k-button-Outline-secondary:hover {
-  border-color: #979797 !important;
-  color: #979797 !important;
+  border: 1px solid #3066f8 !important;
+  color: white !important;
+  background-color: #3066f8 !important;
 }
 
 .login-button {
@@ -335,7 +344,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   cursor: pointer;
   border: none;
   background: none;
-  color: #FFFF;
+  color: white;
 }
 
 .hr-gray {
@@ -367,13 +376,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*Telerik Card Css*/
 .flight-info-card {
-  background: #EEF1F5;
   border: 2px solid #E0E0E0;
   border-radius: 8px;
 }
 .flight-info-card .k-card.telerik-blazor {
   height: 200px;
-  overflow-y: auto;
 }
 
 .card-fonts {
@@ -409,7 +416,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   /*padding: 15px;*/
 }
 .k-tabstrip-items .k-tabstrip-item.k-item .k-link {
-  font-size: 14px;
+  font-size: 12px;
   color: #111111 !important;
   border-right: 2px solid rgba(17, 17, 17, 0.141);
 }
@@ -421,7 +428,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .k-tabstrip-items .k-tabstrip-item.k-item.k-active .k-link {
   border-bottom: 4px solid #3066F8;
-  background: #3066f81c !important;
+  background: rgba(48, 102, 248, 0.0588235294) !important;
   /*color: $WHITE-TEXT !important;*/
 }
 
@@ -430,16 +437,16 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .invalid {
-  background-color: #FFD1D178;
+  background-color: rgba(255, 209, 209, 0.4705882353);
   border: 1px solid #FF0000;
 }
 
 .k-input-inner {
-  background-color: #3066f81c;
+  background-color: rgba(48, 102, 248, 0.0588235294);
 }
 
 .k-input-button, .k-input-button:hover {
-  background-color: #3066f842;
+  background-color: rgba(48, 102, 248, 0.2588235294);
 }
 
 .k-btn-grid-delete {
@@ -471,7 +478,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .component-title {
-  font-family: "Outfit";
+  font-family: "Readex Pro";
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -485,6 +492,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   height: 40px;
 }
 
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 1000px;
+    margin: 1.75rem auto;
+  }
+}
 /*Modal style*/
 .modal {
   position: fixed;
@@ -505,13 +518,19 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   background-color: #ffffff;
   border-radius: 20px 20px 12px 12px !important;
 }
+.modal .modal-dialog.modal-md-new {
+  width: 730px;
+}
+.modal .modal-dialog.modal-md-new .modal-content {
+  width: 730px;
+}
 .modal .modal-header {
   border-radius: 12px 12px 0 0 !important;
   height: 50px;
 }
 .modal .modal-content {
   border-radius: 12px !important;
-  background-color: #fff0;
+  background-color: rgba(255, 255, 255, 0);
   border: 0;
 }
 .modal .modal-backdrop.show {
@@ -539,7 +558,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 label, a,
 .text-14 {
-  font-size: 14px !important;
+  font-size: 12px !important;
 }
 
 .text-16 {
@@ -550,12 +569,144 @@ label, a,
   cursor: pointer !important;
 }
 
+th, td, span, p {
+  font-size: 12px !important;
+}
+
+.k-scheduler-row {
+  font-size: 12px !important;
+}
+
 /*TELERIK TEXTBOX INNER TEXT FONT SIZE & PLACEHOLDER SIZE*/
 .k-input-inner {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /*TOASTR CLASS*/
 .k-notification-group {
   z-index: 1060 !important;
+}
+
+.k-notification {
+  max-width: 400px;
+}
+
+.ap-title {
+  color: #042455;
+  background: #E3E3E3;
+}
+
+.ap-value {
+  color: #042455;
+  /*background: #F8F8F8;*/
+  border-bottom: 2px solid #E3E3E3;
+}
+
+.ad-text {
+  padding: 5px !important;
+}
+
+.nearby-weather-1 {
+  border-bottom: 2px solid #E3E3E3;
+}
+
+.common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
+  background: rgba(48, 102, 248, 0.0588235294) !important;
+}
+
+.k-input-md .k-input-button {
+  background-color: rgba(48, 102, 248, 0.3098039216) !important;
+}
+
+.weather-brify {
+  border: 1px solid #D9D9D9;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px;
+  max-width: 200px;
+}
+
+#collapseOne .card-body {
+  padding: 0px 7px 5px 5px !important;
+}
+
+/*Update all controll height*/
+.k-input {
+  height: 31px !important;
+}
+
+.k-multiselect {
+  height: auto !important;
+}
+
+.no-box-shadow {
+  box-shadow: none !important;
+}
+
+.k-calendar-sm.k-month-calendar, .k-calendar-sm .k-calendar-monthview {
+  --INTERNAL--kendo-calendar-cell-size: var( --kendo-calendar-sm-month-cell-size, 38px );
+}
+
+.highlightDates {
+  border: 1px solid rgba(21, 203, 55, 0.7) !important;
+  border-radius: 50%;
+}
+
+.k-calendar-custom-small {
+  width: 100% !important;
+}
+.k-calendar-custom-small .k-calendar-header {
+  width: 100% !important;
+  display: block !important;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview {
+  margin: 0 !important;
+  padding: 0 4px;
+  width: 100%;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview table {
+  border-spacing: 10px;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-td {
+  inline-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+  block-size: var(--INTERNAL--kendo-calendar-cell-size, 25px);
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-td .k-link {
+  border-radius: 50%;
+}
+.k-calendar-custom-small .k-calendar-view.k-calendar-monthview .k-calendar-table.k-month {
+  margin: 0 !important;
+}
+.k-calendar-custom-small .k-calendar-thead > .k-calendar-tr > .k-calendar-th, .k-calendar-custom-small .k-calendar-tbody > .k-calendar-tr > .k-calendar-th {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.profile-image-hover .highlight-hover {
+  background-color: transparent;
+  border: transparent;
+}
+
+.profile-image-hover:hover .highlight-hover {
+  padding: 5px 10px !important;
+  border-color: #3066f8 !important;
+  background-color: #3066f8 !important;
+  border-radius: 8px;
+}
+
+@media (max-width: 1440px) and (min-width: 1200px) {
+  .col-xl-2 {
+    width: 20% !important;
+  }
+  .col-xl-10 {
+    width: 80% !important;
+  }
+}
+@media (max-width: 2000px) and (min-width: 1441px) {
+  .col-xl-2 {
+    width: 20% !important;
+  }
+  .col-xl-10 {
+    width: 80% !important;
+  }
 }

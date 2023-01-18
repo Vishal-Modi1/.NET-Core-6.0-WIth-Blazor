@@ -1,0 +1,282 @@
+﻿@using DataModels.VM.Scheduler
+@using Web.UI.Pages.Common;
+
+@page "/Scheduler"
+
+<PageTitle> Scheduler | Upflyte  </PageTitle>
+
+<style>
+
+    /* The container */
+    .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* Hide the browser's default checkbox */
+        .container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: white;
+        border: 1px solid black;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input ~ .checkmark {
+        background-color: white;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container .checkmark:after {
+        left: 7px;
+        top: 3px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    .collapsebarcard {
+        border-radius: 0px;
+    }
+
+    @@media (max-width: 1441px) and (min-width: 1200px) {
+    .col-xl-2 {
+        flex: 0 0 auto;
+        width: 20%!important;
+    }
+
+    .col-xl-10 {
+        flex: 0 0 auto;
+        width: 80% !important;
+    }
+}
+</style>
+
+<div class="row my-0">
+    <div class="col-12 my-0 col-lg-3 col-md-12 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
+
+        <div class="p-0 m-0 mb-2">
+            <div class="p-0 m-0">
+                @*Calender start*@
+
+                <div class="">
+                    <TelerikCalendar Date="@currentDate" Class="k-calendar-sm k-calendar-custom-small" View="CalendarView.Month"
+                                     OnCellRender="@OnCellRenderHandler"
+                                     DateChanged="@OnCalendarDateChanged"
+                                     SelectionMode="@CalendarSelectionMode.Multiple">
+                    </TelerikCalendar>
+                </div>
+                @*Calender end*@
+                @*Category start*@
+
+                @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
+                {
+                    <CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white" CardClass="collapsebarcard"
+                                   OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                                   OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+                        <HeaderContent>
+                            <div class="d-flex justify-content-between">
+                                <span class="my-0" style="font-weight:bold">
+                                    Categories
+                                </span>
+                                <span>
+                                    <span class="mx-2 my-1" @onclick:stopPropagation="true" @onclick:preventDefault="true"
+                                      @onclick="() => OpenCreateCategoryDialogAsync(new FlightCategoryVM())">
+                                        <span>
+                                            @*manage plus icon click here in this span*@
+                                            <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
+                                        </span>
+                                    </span>
+
+                                    @if (isFilterBarVisible)
+                                    {
+                                        <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                                    }
+                                    else
+                                    {
+                                        <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                                    }
+                                </span>
+                            </div>
+
+                        </HeaderContent>
+
+                        <ChildContent>
+
+                            <div class="my-2 mx-1">
+
+                                @foreach (var item in flightCategories.Select((item, flightCategories) => new { item, flightCategories }))
+                                {
+                                    <div class="d-flex justify-content-between my-2">
+
+                                        <div>
+
+                                            <label class="container my-0" for="@item.item.Id">
+
+                                                <input type="checkbox" id="@item.item.Id" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item.item))"
+                                               style="height:18px;width:18px;accent-color:@item.item.Color;">@item.item.Name
+
+                                                @if (item.item.IsActive)
+                                                {
+                                                    <span class="checkmark" style="background-color:@item.item.Color;border-color:@item.item.Color"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="checkmark"></span>
+                                                }
+
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <span @onclick="() => OpenCreateCategoryDialogAsync(item.item)" style="cursor:pointer" class="my-2">
+                                                <CustomIcons IconName="grid-edit" PrimaryColor="blue"></CustomIcons>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <hr class="m-0" />
+                                }
+
+                            </div>
+                        </ChildContent>
+                    </CustomCollapseBar>
+                    @*Category end*@
+                }
+            </div>
+        </div>
+
+        <UpcomingFlights upcomingFlights="@upcomingFlights" IsForAircraft="false"></UpcomingFlights>
+
+    </div>
+
+    @{
+        string cssClass = isLeftBarVisible ? "col-lg-9 col-xl-10 ps-0" : "col-lg-12";
+    }
+    <div class="col-md-12 col-12 my-0 @cssClass">
+
+        <div class="cursor-pointer mb-2 d-flex">
+
+            <div class="col-2" @onclick=@(() => ToggleLeftPane())>
+                <FontLabel fontColor="#3066F8" fontSize="12px">
+                    <CustomIcons IconName="toggle-hamburg"></CustomIcons>
+                    Toggle Left Pane
+                </FontLabel>
+            </div>
+
+            @if (globalMembers.IsSuperAdmin && cureActiveTabIndex == 0)
+            {
+                <div class="col-md-10 d-flex justify-content-end">
+                    <div class="col-md-6 ">
+
+                        <TelerikComboBox Id=companyId Data="@companies" TextField="Name"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains" Class="common-bg"
+                                     Placeholder="Select Company" ValueField="Id"
+                                     Value="@companyId"
+                                     ValueExpression="@( () => companyId )"
+                                     ValueChanged="@( (int value) => GetScheduleData(value) )">
+                        </TelerikComboBox>
+
+                    </div>
+                </div>
+            }
+
+        </div>
+        <div id="container">
+            <div class="card">
+
+                <TelerikTabStrip Class="k-tabstrip-list"  ActiveTabIndexChanged="@TabChangedHandler">
+
+                    <TabStripTab>
+                        <HeaderTemplate>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <span class="mx-2">
+                                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="scheduler" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                                </span>
+                                <span>Scheduler</span>
+                            </div>
+                        </HeaderTemplate>
+                        <Content>
+                            <CascadingValue Value="@flightCategories" Name="categories">
+                                <Web.UI.Pages.Scheduler.SchedulerIndex @ref="@schedulerIndex" CompanyId="@companyId"></Web.UI.Pages.Scheduler.SchedulerIndex>
+                            </CascadingValue>
+
+                        </Content>
+                    </TabStripTab>
+
+                    <TabStripTab>
+                        <HeaderTemplate>
+                            <div class="d-flex justify-content-center align-items-center">
+
+                                <span class="mx-2">
+                                    <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
+                                </span>
+                                <span>Reservations</span>
+                            </div>
+                        </HeaderTemplate>
+                        <Content>
+                            <CascadingValue Value="@flightCategories" Name="categories">
+                                <Web.UI.Pages.Reservation.Index></Web.UI.Pages.Reservation.Index>
+                            </CascadingValue>
+                        </Content>
+                    </TabStripTab>
+
+                </TelerikTabStrip>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+
+            <CreateCategory flightCategory="@_flightCategory" Companies="@companies"  CloseDialogCallBack="@CloseDialog"></CreateCategory>
+
+
+        </Body>
+    </CustomPopupComponent>
+}

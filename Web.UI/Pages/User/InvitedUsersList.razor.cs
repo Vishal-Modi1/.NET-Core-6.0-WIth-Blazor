@@ -22,30 +22,25 @@ namespace Web.UI.Pages.User
         InviteUserVM userData;
 
         string moduleName = "User";
-        bool isSuperAdmin { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             userFilterVM = new UserFilterVM();
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
          
-            if(!_currentUserPermissionManager.IsAllowed(AuthStat,DataModels.Enums.PermissionType.View,moduleName))
+            if(!_currentUserPermissionManager.IsAllowed(AuthStat,PermissionType.View,moduleName))
             {
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
-
-            var user = (await AuthStat).User;
-            isSuperAdmin = Convert.ToUInt32(user.Claims.Where(c => c.Type == ClaimTypes.Role).First().Value) == (int)UserRole.SuperAdmin;
-        }
+         }
 
         async Task LoadData(GridReadEventArgs args)
         {
             isGridDataLoading = true;
 
-            DatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime");
+            UserDatatableParams datatableParams = new DatatableParams().Create(args, "StartDateTime").Cast<UserDatatableParams>();
             datatableParams.SearchText = searchText;
            
             pageSize = datatableParams.Length;
@@ -57,6 +52,11 @@ namespace Web.UI.Pages.User
             else
             {
                 datatableParams.CompanyId = userFilterVM.CompanyId;
+            }
+
+            if (userFilterVM.RoleId != 0)
+            {
+                datatableParams.RoleId = userFilterVM.RoleId;
             }
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -85,6 +85,10 @@ namespace Web.UI.Pages.User
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userData = await InviteUserService.GetDetailsAsync(dependecyParams, inviteUserDataVM.Id);
 
+            if(globalMembers.UserRole != UserRole.SuperAdmin)
+            {
+                userData.CompanyId = globalMembers.CompanyId;
+            }
 
             if (inviteUserDataVM.Id == 0)
             {
@@ -107,7 +111,7 @@ namespace Web.UI.Pages.User
 
             isBusyDeleteButton = false;
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

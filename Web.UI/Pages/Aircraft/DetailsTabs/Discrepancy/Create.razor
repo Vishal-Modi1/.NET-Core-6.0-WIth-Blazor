@@ -1,0 +1,75 @@
+﻿@namespace Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy
+@using DataModels.Enums
+
+<TelerikForm Model="@discrepancyData" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <CustomValidationSummary></CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@discrepancyData.Id" name="Id" />
+
+        <div class="row my-3">
+            <div class="col-12">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label>Reported User</label>
+                        <TelerikComboBox Id="reportedUserId" Data="@discrepancyData.UsersList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select User" ValueField="Id" Enabled="@(discrepancyData.Id == 0)"
+                                         @bind-Value="discrepancyData.ReportedByUserId">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => discrepancyData.ReportedByUserId)"></TelerikValidationMessage>
+                    </div>
+
+                    <div class="col-6">
+                        <label>Status</label>
+                        <TelerikComboBox Id="statusId" Data="@discrepancyData.StatusList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Status" ValueField="Id"
+                                         @bind-Value="discrepancyData.DiscrepancyStatusId">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => discrepancyData.DiscrepancyStatusId)"></TelerikValidationMessage>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Description</label>
+                        <TelerikTextArea Class="w-100" PlaceHolder="Enter description" AutoSize="true" @bind-Value="@discrepancyData.Description" />
+                        <TelerikValidationMessage For="@(() => discrepancyData.Description)"></TelerikValidationMessage>
+                    </div>
+                    <div class="col-6">
+                        <label>Action Taken</label>
+
+                        <TelerikTextArea Class="w-100" PlaceHolder="Enter action" AutoSize="true" @bind-Value="@discrepancyData.ActionTaken" />
+                        <TelerikValidationMessage For="@(() => discrepancyData.ActionTaken)"></TelerikValidationMessage>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+
+    </FormItems>
+    <FormButtons>
+        <div class="row mb-0">
+            <div class="col-md-12 text-right">
+
+                @if (discrepancyData.Id == 0 || globalMembers.UserRole == UserRole.SuperAdmin || globalMembers.UserRole == UserRole.Admin || globalMembers.UserRole == UserRole.Mechanic)
+                {
+                    <FormFooterComponent id="@discrepancyData.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                    </FormFooterComponent>
+                }
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>

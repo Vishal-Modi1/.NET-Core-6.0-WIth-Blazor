@@ -1,0 +1,137 @@
+﻿@namespace Web.UI.Pages.Company.DetailsView.Settings.AircraftModel
+@using DataModels.Enums
+@using DataModels.VM.AircraftModel
+@using Web.UI.Shared.Components;
+@layout TelerikLayout
+
+@page "/AircraftModel"
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between">
+            <div>
+                <ComponentTitle Title="Aircraft Models" Type="AdministrationTitle" />
+            </div>
+            <div>
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                {
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => AircraftModelCreateDialog(new AircraftModelDataVM())">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
+        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
+        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+            <HeaderContent>
+                <div class="d-flex justify-content-between" >
+                   <span class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </span>
+                    <span>
+                        @if (isFilterBarVisible)
+                        {
+                        <CustomIcons IconName="minus" />
+                        }
+                        else
+                        {
+                        <CustomIcons IconName="plus" />
+                        }
+                    </span>
+                </div>
+            </HeaderContent>
+           <ChildContent>
+            <div class="row my-2">
+                <div class="col-md-4">
+                    <TelerikTextBox Name="SearchText" OnChange="() => grid.Rebind()" PlaceHolder="Search Model" ValueChanged="@( (string value) => OnSearchValueChanges<AircraftModelDataVM>(value, grid) )" />
+                </div>
+            </div>
+            </ChildContent>
+        </CustomCollapseBar>
+</div>
+
+<TelerikGrid TItem="AircraftModelDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+
+    <GridSettings>
+        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+    </GridSettings>
+
+    <GridColumns>
+
+        <GridColumn Field="@nameof(AircraftModelDataVM.Name)" />
+
+        <GridCommandColumn Context="dataItem" Title="Action">
+            @{
+                AircraftModelDataVM aircraftModelDataVM = dataItem as AircraftModelDataVM;
+
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>AircraftModelCreateDialog(aircraftModelDataVM)"
+                           ThemeColor="success" Enabled=!aircraftModelDataVM.IsLoadingEditButton>
+
+                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="aircraftModelDataVM.IsLoadingEditButton">
+                    </TelerikLoader>
+
+                </TelerikButton>
+
+
+                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(aircraftModelDataVM)">
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                </TelerikButton>
+
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Create AircraftModel=@_aircraftModel CloseDialogCallBack="@CloseDialog"></Web.UI.Pages.Company.DetailsView.Settings.AircraftModel.Create>
+            }
+            else
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to remove <b> @_aircraftModel.Name </b>?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                            {
+                            }
+
+                            <TelerikButton Class="btn k-btn-danger" OnClick="() => DeleteAsync(_aircraftModel.Id)" Enabled="@(!isBusyDeleteButton)">
+                                Yes
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+
+                            <TelerikButton ThemeColor="secondary" Class="btn k-btn-secondary" OnClick="() => isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </Body>
+    </CustomPopupComponent>
+}

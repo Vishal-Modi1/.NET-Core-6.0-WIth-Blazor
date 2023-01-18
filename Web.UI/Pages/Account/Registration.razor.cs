@@ -18,8 +18,6 @@ namespace Web.UI.Pages.Account
 
         int currentStep = 0;
         bool isLoading, isValidToken, showError;
-        DependecyParams dependecyParams;
-
         string link;
 
         protected override Task OnInitializedAsync()
@@ -43,9 +41,9 @@ namespace Web.UI.Pages.Account
                     {
                         this.link = url[0];
 
-                        //uiNotification.DisplayInfoNotification(uiNotification.Instance, "Validating token ...");
+                        //globalMembers.UINotification.DisplayInfoNotification(globalMembers.UINotification.Instance, "Validating token ...");
 
-                        DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                        dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
                         CurrentResponse response = await AccountService.ValidateTokenAsync(dependecyParams, this.link);
                         await ManageResponseAsync(response);
                         showError = false;
@@ -83,13 +81,13 @@ namespace Web.UI.Pages.Account
         {
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
                 userVM = await UserService.GetMasterDetailsAsync(dependecyParams, true, link);
                 await GetCompanyDetails(dependecyParams);
 
                 isValidToken = true;
-               // uiNotification.DisplaySuccessNotification(uiNotification.Instance, response.Message);
+               // globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, response.Message);
             }
             else
             {
@@ -115,7 +113,7 @@ namespace Web.UI.Pages.Account
 
         async Task<bool> IsCompanyExistAsync()
         {
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.IsCompanyExistAsync(dependecyParams, companyData.Id, companyData.Name);
 
             bool isCompanyExist = ManageIsCompanyExistResponse(response, companyData.Name);
@@ -142,7 +140,7 @@ namespace Web.UI.Pages.Account
              ChangeLoaderVisibilityAction(true);
             base.StateHasChanged();
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
 
             if (!userVM.IsInvited)
             {
@@ -161,7 +159,7 @@ namespace Web.UI.Pages.Account
 
                 if (response == null)
                 {
-                    uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                    globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
                 }
                 else if (response.Status == System.Net.HttpStatusCode.OK)
                 {
@@ -176,7 +174,7 @@ namespace Web.UI.Pages.Account
                 }
                 else
                 {
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
                 }
             }
             else
@@ -200,7 +198,7 @@ namespace Web.UI.Pages.Account
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
         }
 
@@ -208,12 +206,12 @@ namespace Web.UI.Pages.Account
         {
             companyData.CreatedBy = userVM.Id;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             var response = await CompanyService.UpdateCreatedByAsync(dependecyParams, companyData.Id, userVM.Id);
 
             if (response == null)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
@@ -221,7 +219,7 @@ namespace Web.UI.Pages.Account
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
         }
@@ -244,7 +242,7 @@ namespace Web.UI.Pages.Account
 
             if (response == null)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
 
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
@@ -252,12 +250,12 @@ namespace Web.UI.Pages.Account
                 if (Convert.ToBoolean(response.Data))
                 {
                     isEmailExist = true;
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "Email is already exist!");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Email is already exist!");
                 }
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
             return isEmailExist;
@@ -269,19 +267,19 @@ namespace Web.UI.Pages.Account
 
             if (response == null)
             {
-                uiNotification.DisplayErrorNotification(uiNotification.Instance);
+                globalMembers.UINotification.DisplayErrorNotification(globalMembers.UINotification.Instance);
             }
             else if (response.Status == System.Net.HttpStatusCode.OK)
             {
                 if (Convert.ToBoolean(response.Data))
                 {
                     isCompanyExist = true;
-                    uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, "Company is already exist!");
+                    globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Company is already exist!");
                 }
             }
             else
             {
-                uiNotification.DisplayCustomErrorNotification(uiNotification.Instance, response.Message);
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
 
             return isCompanyExist;

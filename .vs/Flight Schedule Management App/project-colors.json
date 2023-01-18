@@ -65,7 +65,22 @@
       "ProjectGuid": "ae93494f-d59a-4d30-9dfd-c2fd4b69b9f8",
       "DisplayName": "Blazor.Services",
       "ColorIndex": 11
+    },
+    "11bbe62a-88d7-495c-9542-3ce755311253": {
+      "ProjectGuid": "11bbe62a-88d7-495c-9542-3ce755311253",
+      "DisplayName": "Web.UI",
+      "ColorIndex": 12
+    },
+    "7ced5c3f-7d4d-4cdd-a67e-e368a0dde7e6": {
+      "ProjectGuid": "7ced5c3f-7d4d-4cdd-a67e-e368a0dde7e6",
+      "DisplayName": "Utilities",
+      "ColorIndex": 13
+    },
+    "2e289f33-fea0-4925-b3ba-a3d325fc5ed5": {
+      "ProjectGuid": "2e289f33-fea0-4925-b3ba-a3d325fc5ed5",
+      "DisplayName": "PasswordDecryptor",
+      "ColorIndex": 14
     }
   },
-  "NextColorIndex": 12
+  "NextColorIndex": 15
 }

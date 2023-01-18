@@ -27,7 +27,7 @@ namespace Service.Interface
 
         CurrentResponse FindById(long id,bool isSuperAdmin, int? companyId);
 
-        CurrentResponse UpdateImageName(long id, string imageName);
+        CurrentResponse UpdateImageName(long id, string imageName, int companyId);
 
         CurrentResponse ListDropdownValuesByCompanyId(int companyId);
 
@@ -36,6 +36,8 @@ namespace Service.Interface
         CurrentResponse FindMyPreferencesById(long id);
 
         CurrentResponse GetMasterDetails(int roleId, bool isInvited, string token);
+
+        CurrentResponse UpdateArchiveStatus(long id, bool isArchive);
 
         CurrentResponse GetById(long id, int companyId);
     }

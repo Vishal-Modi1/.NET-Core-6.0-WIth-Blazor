@@ -38,17 +38,35 @@ namespace FSMAPI.Controllers
         [Route("getDetails")]
         public IActionResult GetDetails(long id, int companyId)
         {
-            if (companyId == 0)
-            {
-                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-                companyId = company == "" ? 0 : Convert.ToInt32(company);
-            }
-
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
             string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
-            CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
-            return APIResponse(response);
+            if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
+                return APIResponse(response);
+            }
+            else if (role.Replace(" ", "") == DataModels.Enums.UserRole.Admin.ToString())
+            {
+                if(_jWTTokenGenerator.GetCompanyId() != companyId)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
+                return APIResponse(response);
+            }
+            else 
+            {
+                if (_jWTTokenGenerator.GetCompanyId() != companyId || _jWTTokenGenerator.GetUserId() != id)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
+                return APIResponse(response);
+            }
         }
 
         [AllowAnonymous]
@@ -132,6 +150,15 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpGet]
+        [Route("updateArchiveStatus")]
+        public IActionResult UpdateArchiveStatus(long id, bool isArchive)
+        {
+            CurrentResponse response = _userService.UpdateArchiveStatus(id, isArchive);
+
+            return APIResponse(response);
+        }
+
         [HttpPost]
         [Route("list")]
         public IActionResult List(UserDatatableParams datatableParams)
@@ -160,15 +187,14 @@ namespace FSMAPI.Controllers
         [Route("findbyid")]
         public IActionResult FindById(long id)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int? companyIdValue = companyId == "" ? null : Convert.ToInt32(companyId);
+            int companyId = _jWTTokenGenerator.GetCompanyId();
 
             string role = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
             int roleId = role == "" ? 0 : Convert.ToInt32(role);
 
             bool isSuperAdmin = roleId == (int)DataModels.Enums.UserRole.SuperAdmin;
 
-            CurrentResponse response = _userService.FindById(id, isSuperAdmin, companyIdValue);
+            CurrentResponse response = _userService.FindById(id, isSuperAdmin, companyId);
 
             return APIResponse(response);
         }
@@ -186,6 +212,13 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvaluesbycompanyid")]
         public IActionResult ListDropDownValuesByCompanyId(int companyId)
         {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _userService.ListDropdownValuesByCompanyId(companyId);
 
             return APIResponse(response);
@@ -217,7 +250,7 @@ namespace FSMAPI.Controllers
 
             if (isFileUploaded)
             {
-                response = _userService.UpdateImageName(Convert.ToInt64(form["UserId"]), fileName);
+                response = _userService.UpdateImageName(Convert.ToInt64(form["UserId"]), fileName, Convert.ToInt32(companyId));
             }
 
             return APIResponse(response);

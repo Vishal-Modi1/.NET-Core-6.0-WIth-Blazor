@@ -45,15 +45,16 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                return _myContext.AirCrafts.Where(p => p.AircraftMakeId == id).Any();
+                return _myContext.Aircrafts.Where(p => p.AircraftMakeId == id).Any();
             }
         }
 
-        public List<DropDownValues> ListDropDownValues()
+        public List<DropDownValues> ListDropDownValues(int companyId)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownValues> aircraftMakeList = (from aircraftMake in _myContext.AircraftMakes
+                                                         where aircraftMake.CompanyId == companyId
                                                          select new DropDownValues()
                                                          {
                                                              Id = aircraftMake.Id,
@@ -68,10 +69,9 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
                 List<AircraftMakeDataVM> list;
 
-                string sql = $"EXEC dbo.GetAircraftMakesList '{ datatableParams.SearchText }', { pageNo }, {datatableParams.Length}," +
+                string sql = $"EXEC dbo.GetAircraftMakesList   { datatableParams.CompanyId},'{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length}," +
                     $"'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'";
 
                 list = _myContext.AircraftMakesList.FromSqlRaw<AircraftMakeDataVM>(sql).ToList();

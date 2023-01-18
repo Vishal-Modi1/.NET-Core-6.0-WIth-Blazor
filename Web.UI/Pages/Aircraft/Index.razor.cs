@@ -1,4 +1,5 @@
-﻿using DataModels.Enums;
+﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Aircraft;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
@@ -23,15 +24,20 @@ namespace Web.UI.Pages.Aircraft
         AircraftFilterVM aircraftFilterVM;
         List<AircraftDataVM> airCraftsVM;
         AircraftVM aircraftData;
+        long userId;
 
         string moduleName = "Aircraft";
-        bool isDisplayGridView = true;
+        public bool isDisplayGridView = true, isAllowEdit;
         int companyId; int listViewPageSize = Configuration.ConfigurationSettings.Instance.BlazorGridDefaultPagesize;
-        bool isSuperAdmin;
 
         protected override async Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);
+
+            if (ParentCompanyId != null)
+            {
+                companyId = ParentCompanyId.Value;
+            }
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, moduleName))
@@ -39,26 +45,23 @@ namespace Web.UI.Pages.Aircraft
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
+            SetSelectedMenuItem(moduleName);
+
+            userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
+
             aircraftFilterVM = new AircraftFilterVM();
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             aircraftFilterVM = await AircraftService.GetFiltersAsync(dependecyParams);
-
-            if (ParentCompanyId != null)
-            {
-                companyId = ParentCompanyId.Value;
-            }
-
-            isSuperAdmin = _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result;
 
             ChangeLoaderVisibilityAction(false);
         }
 
         private void OnCompanyValueChanges(int selectedValue)
         {
-            if (aircraftFilterVM.CompanyId != selectedValue)
+            if (companyId != selectedValue)
             {
+                companyId  = selectedValue;
                 RefreshGrid();
-                aircraftFilterVM.CompanyId = selectedValue;
             }
         }
 
@@ -150,9 +153,9 @@ namespace Web.UI.Pages.Aircraft
         {
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
             {
-                byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
+                byte[] encodedBytes = Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
                 var data = Encoding.Default.GetBytes(aircraftId.ToString());
-                NavigationManager.NavigateTo("AircraftDetails?AircraftId=" + System.Convert.ToBase64String(encodedBytes));
+                NavigationManager.NavigateTo("AircraftDetails?AircraftId=" + Convert.ToBase64String(encodedBytes));
             }
         }
 
@@ -161,7 +164,7 @@ namespace Web.UI.Pages.Aircraft
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await AircraftService.DeleteAsync(dependecyParams, id);
 
-            uiNotification.DisplayNotification(uiNotification.Instance, response);
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {

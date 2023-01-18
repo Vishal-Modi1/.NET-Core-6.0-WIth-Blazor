@@ -1,6 +1,7 @@
 ﻿using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -17,16 +18,19 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                List<SchedulerVM> companyDataList = (from aircraft in _myContext.AirCrafts
+                List<SchedulerVM> companyDataList = (from aircraft in _myContext.Aircrafts
                                                      join aircraftSchedules in _myContext.AircraftSchedules
                                                      on aircraft.Id equals aircraftSchedules.AircraftId
-                                                     join aircraftScheduleDetail in _myContext.AircraftScheduleDetails 
+                                                     join aircraftScheduleDetail in _myContext.AircraftScheduleDetails
                                                      on aircraftSchedules.Id equals aircraftScheduleDetail.AircraftScheduleId into asd
                                                      from details in asd.DefaultIfEmpty()
+                                                     join user in _myContext.Users
+                                                     on aircraftSchedules.Member1Id equals user.Id into u
+                                                     from userDetails in u.DefaultIfEmpty()
                                                      where aircraft.CompanyId == schedulerFilter.CompanyId && aircraftSchedules.IsActive == true
-                                                     && aircraftSchedules.StartDateTime.Date >= schedulerFilter.StartTime.Date
-                                                     && aircraftSchedules.EndDateTime.Date <= schedulerFilter.EndTime.Date
-                                                     && aircraftSchedules.IsDeleted == false
+                                                     && aircraftSchedules.StartDateTime >= schedulerFilter.StartTime
+                                                     && aircraftSchedules.EndDateTime <= schedulerFilter.EndTime
+                                                     && aircraftSchedules.IsDeleted == false 
                                                      select new SchedulerVM()
                                                      {
                                                          Id = aircraftSchedules.Id,
@@ -34,12 +38,18 @@ namespace Repository
                                                          StartTime = Convert.ToDateTime(aircraftSchedules.StartDateTime.ToString("yyyy-MM-dd HH:mm:ss")),
                                                          EndTime = aircraftSchedules.EndDateTime,
                                                          Comments = aircraftSchedules.Comments,
+                                                         FlightCategoryId = aircraftSchedules.FlightCategoryId,
                                                          AircraftId = aircraftSchedules.AircraftId,
-                                                         AircraftSchedulerDetailsVM = details == null ? 
-                                                         new AircraftSchedulerDetailsVM() : 
+                                                         TailNo = aircraft.TailNo,
+                                                         Member1Id = aircraftSchedules.Member1Id,
+                                                         Member1 = userDetails == null ? "" : (userDetails.FirstName + " " + userDetails.LastName),
+                                                         CompanyId = aircraft.CompanyId.GetValueOrDefault(),
+                                                         IsDeleted = aircraftSchedules.IsDeleted,
+                                                         AircraftSchedulerDetailsVM = details == null ?
+                                                         new AircraftSchedulerDetailsVM() :
                                                          new AircraftSchedulerDetailsVM()
                                                          {
-                                                             IsCheckOut =  details.IsCheckOut,
+                                                             IsCheckOut = details.IsCheckOut,
                                                              CheckInTime = details.CheckInTime,
                                                              CheckOutTime = details.CheckOutTime,
                                                              CheckInBy = details.CheckInBy,
@@ -60,23 +70,29 @@ namespace Repository
 
                 if (existingAppointment != null)
                 {
-                    existingAppointment.AircraftId = aircraftSchedule.AircraftId; 
-                    existingAppointment.SchedulActivityTypeId = aircraftSchedule.SchedulActivityTypeId; 
-                    existingAppointment.StartDateTime = aircraftSchedule.StartDateTime; 
-                    existingAppointment.EndDateTime = aircraftSchedule.EndDateTime; 
-                    existingAppointment.IsRecurring = aircraftSchedule.IsRecurring; 
-                    existingAppointment.Member1Id = aircraftSchedule.Member1Id; 
-                    existingAppointment.Member2Id = aircraftSchedule.Member2Id; 
-                    existingAppointment.InstructorId = aircraftSchedule.InstructorId; 
-                    existingAppointment.ScheduleTitle = aircraftSchedule.ScheduleTitle; 
-                    existingAppointment.FlightType = aircraftSchedule.FlightType; 
-                    existingAppointment.FlightRules = aircraftSchedule.FlightRules; 
-                    existingAppointment.Comments = aircraftSchedule.Comments; 
-                    existingAppointment.PrivateComments = aircraftSchedule.PrivateComments; 
-                    existingAppointment.FlightRoutes = aircraftSchedule.FlightRoutes; 
-                    existingAppointment.StandBy = aircraftSchedule.StandBy; 
-                    
-                    existingAppointment.UpdatedOn = aircraftSchedule.UpdatedOn; 
+                    existingAppointment.AircraftId = aircraftSchedule.AircraftId;
+                    existingAppointment.SchedulActivityTypeId = aircraftSchedule.SchedulActivityTypeId;
+                    existingAppointment.StartDateTime = aircraftSchedule.StartDateTime;
+                    existingAppointment.EndDateTime = aircraftSchedule.EndDateTime;
+                    existingAppointment.CompanyId = aircraftSchedule.CompanyId;
+                    existingAppointment.DepartureAirportId = aircraftSchedule.DepartureAirportId;
+                    existingAppointment.DepartureAirportName = aircraftSchedule.DepartureAirportName;
+                    existingAppointment.ArrivalAirportId = aircraftSchedule.ArrivalAirportId;
+                    existingAppointment.ArrivalAirportName = aircraftSchedule.ArrivalAirportName;
+                    existingAppointment.IsRecurring = aircraftSchedule.IsRecurring;
+                    existingAppointment.Member1Id = aircraftSchedule.Member1Id;
+                    existingAppointment.Member2Id = aircraftSchedule.Member2Id;
+                    existingAppointment.InstructorId = aircraftSchedule.InstructorId;
+                    existingAppointment.ScheduleTitle = aircraftSchedule.ScheduleTitle;
+                    existingAppointment.FlightType = aircraftSchedule.FlightType;
+                    existingAppointment.FlightRules = aircraftSchedule.FlightRules;
+                    existingAppointment.Comments = aircraftSchedule.Comments;
+                    existingAppointment.PrivateComments = aircraftSchedule.PrivateComments;
+                    existingAppointment.FlightRoutes = aircraftSchedule.FlightRoutes;
+                    existingAppointment.FlightCategoryId = aircraftSchedule.FlightCategoryId;
+                    existingAppointment.StandBy = aircraftSchedule.StandBy;
+
+                    existingAppointment.UpdatedOn = aircraftSchedule.UpdatedOn;
                     existingAppointment.UpdatedBy = aircraftSchedule.UpdatedBy;
                 }
 
@@ -107,7 +123,7 @@ namespace Repository
         {
             using (_myContext = new MyContext())
             {
-                bool isAircraftAvailable = _myContext.AircraftSchedules.Where(p=> p.Id != schedulerEndTimeDetailsVM.ScheduleId && 
+                bool isAircraftAvailable = _myContext.AircraftSchedules.Where(p => p.Id != schedulerEndTimeDetailsVM.ScheduleId &&
                 p.AircraftId == schedulerEndTimeDetailsVM.AircraftId && p.IsDeleted == false && p.IsActive == true
                 && ((p.StartDateTime > schedulerEndTimeDetailsVM.StartTime && p.StartDateTime < schedulerEndTimeDetailsVM.EndTime)
                 || (p.EndDateTime < schedulerEndTimeDetailsVM.EndTime && p.EndDateTime > schedulerEndTimeDetailsVM.StartTime)
@@ -146,20 +162,20 @@ namespace Repository
                 {
                     aircraftSchedule.IsDeleted = true;
                     aircraftSchedule.DeletedOn = DateTime.UtcNow;
-                    aircraftSchedule.DeletedBy = deletedBy; 
+                    aircraftSchedule.DeletedBy = deletedBy;
 
                     _myContext.SaveChanges();
                 }
             }
         }
 
-      
+
         #region ActivityType
-        public List<DropDownValues> ListActivityTypeDropDownValues(int roleId)
+        public List<DropDownLargeValues> ListActivityTypeDropDownValues(int roleId)
         {
             using (_myContext = new MyContext())
             {
-                List<DropDownValues> dropDownValues = new List<DropDownValues>();
+                List<DropDownLargeValues> dropDownValues = new List<DropDownLargeValues>();
 
                 UserRoleVsScheduleActivityType userRoleVsScheduleActivityType = (from userRoleActivitiy in _myContext.UserRoleVsScheduleActivityType
                                                                                  where userRoleActivitiy.UserRoleId == roleId
@@ -171,7 +187,7 @@ namespace Repository
 
                     dropDownValues = (from scheduleActivity in _myContext.ScheduleActivityTypes
                                       where scheduleActivityIds.Contains(scheduleActivity.Id)
-                                      select new DropDownValues()
+                                      select new DropDownLargeValues()
                                       {
                                           Id = scheduleActivity.Id,
                                           Name = scheduleActivity.Name,
@@ -182,6 +198,19 @@ namespace Repository
             }
         }
 
+        #endregion
+
+        #region Airport
+        public List<DropDownGuidValues> ListAirportDropDownValues()
+        {
+            using (_myContext = new MyContext())
+            {
+                string sql = $"EXEC dbo.GetAllAirportsList";
+                List<DropDownGuidValues> airportsList = _myContext.AirportsList.FromSqlRaw<DropDownGuidValues>(sql).ToList();
+
+                return airportsList;
+            }
+        }
         #endregion
     }
 }

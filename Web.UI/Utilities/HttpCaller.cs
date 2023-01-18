@@ -1,20 +1,20 @@
-﻿using Configuration;
-using DataModels.Constants;
+﻿using DataModels.Constants;
 using DataModels.VM.Common;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
+using DataModels.Models;
 
 namespace Web.UI.Utilities
 {
     public class HttpCaller : ComponentBase
     {
         private static AuthenticationStateProvider _authenticationStateProvider;
+        private CurrentResponse _response;
 
         public HttpCaller(AuthenticationStateProvider authenticationStateProvider = null)
         {
@@ -37,50 +37,15 @@ namespace Web.UI.Utilities
                 var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
-                }
+                ManageResponse(httpResponseMessage);
 
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-                if (response == null)
-                {
-                    response = GetDefaultResponse();
-                }
-
-                return response;
+                return _response;
             }
             catch (Exception exc)
             {
                 throw exc;
             }
         }
-
-        //public async Task<bool> IsTokenValid(IHttpClientFactory dependecyParams.HttpClientFactoryFactory, string token)
-        //{
-        //    try
-        //    {
-        //        var request = new HttpRequestMessage(HttpMethod.Get, $"account/IsTokenValid");
-        //        request.Headers.Clear();
-        //        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-        //        var client = dependecyParams.HttpClientFactoryFactory.CreateClient("FSMAPI");
-
-        //        HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
-
-        //        if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-        //        {
-        //            return false;
-        //        }
-
-        //        return true;
-        //    }
-        //    catch (Exception exc)
-        //    {
-        //        return false;
-        //    }
-        //}
 
         public async Task<CurrentResponse> PutAsync(DependecyParams dependecyParams)
         {
@@ -95,19 +60,9 @@ namespace Web.UI.Utilities
                 var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
-                }
+                ManageResponse(httpResponseMessage);
 
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-                if (response == null)
-                {
-                    response = GetDefaultResponse();
-                }
-
-                return response;
+                return _response;
             }
             catch (Exception exc)
             {
@@ -128,19 +83,9 @@ namespace Web.UI.Utilities
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
-                }
+                ManageResponse(httpResponseMessage);
 
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-                if (response == null)
-                {
-                    response = GetDefaultResponse();
-                }
-
-                return response;
+                return _response;
             }
             catch (Exception exc)
             {
@@ -148,10 +93,10 @@ namespace Web.UI.Utilities
             }
         }
 
-        private async Task ManageUnAuthorizedErrorAsync(IHttpClientFactory httpClientFactory)
-        {
-            throw new Exception(HttpStatusCode.Unauthorized.ToString());
-        }
+        //private async Task ManageUnAuthorizedErrorAsync(IHttpClientFactory httpClientFactory)
+        //{
+        //    throw new Exception(HttpStatusCode.Unauthorized.ToString());
+        //}
 
         public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams)
         {
@@ -161,24 +106,13 @@ namespace Web.UI.Utilities
                 request.Headers.Clear();
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
 
-
                 var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
-                }
+                ManageResponse(httpResponseMessage);
 
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-                if (response == null)
-                {
-                    response = GetDefaultResponse();
-                }
-
-                return response;
+                return _response;
             }
             catch (Exception exc)
             {
@@ -193,26 +127,15 @@ namespace Web.UI.Utilities
                 var request = new HttpRequestMessage(HttpMethod.Post, dependecyParams.URL);
                 request.Headers.Clear();
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", GetClaimValue(CustomClaimTypes.AccessToken, dependecyParams.AuthenticationStateProvider));
-
                 request.Content = fileContent;
 
                 var client = dependecyParams.HttpClientFactory.CreateClient("FSMAPI");
 
                 HttpResponseMessage httpResponseMessage = await client.SendAsync(request);
 
-                if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    await ManageUnAuthorizedErrorAsync(dependecyParams.HttpClientFactory);
-                }
+                ManageResponse(httpResponseMessage);
 
-                CurrentResponse response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
-
-                if (response == null)
-                {
-                    response = GetDefaultResponse();
-                }
-
-                return response;
+                return _response;
             }
             catch (Exception exc)
             {
@@ -235,13 +158,29 @@ namespace Web.UI.Utilities
             return claimValue;
         }
 
-        private CurrentResponse GetDefaultResponse()
+        private void ManageResponse(HttpResponseMessage httpResponseMessage)
         {
-            CurrentResponse response = new CurrentResponse();
-            response.Status = HttpStatusCode.BadRequest;
-            response.Message = "Something went Wrong!, Please try again later";
+            try
+            {
+                if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
+                {
+                    _response = JsonConvert.DeserializeObject<CurrentResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    _response = new CurrentResponse();
+                    _response.Status = httpResponseMessage.StatusCode;
+                    APIErrorResponse apiError = JsonConvert.DeserializeObject<APIErrorResponse>(httpResponseMessage.Content.ReadAsStringAsync().Result); 
 
-            return response;
+                    _response.Message = apiError.Message;
+                }
+            }
+            catch(Exception exc)
+            {
+                _response = new CurrentResponse();
+                _response.Status = HttpStatusCode.BadRequest;
+                _response.Message = "Something went Wrong!, Please try again later";
+            }
         }
     }
 }

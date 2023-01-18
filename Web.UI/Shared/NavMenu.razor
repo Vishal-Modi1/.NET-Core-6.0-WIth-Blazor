@@ -9,14 +9,14 @@
 
 </TelerikNotification>
 
-@if (menuItems != null)
+@if (globalMembers.MenuItems != null)
 {
-    <TelerikDrawer Data="@menuItems"
+    <TelerikDrawer Data="@globalMembers.MenuItems"
                @bind-Expanded="@isDrawerExpanded"
                MiniMode="true"
                Mode="@DrawerMode.Push"
                @ref="@drawerRef"
-               @bind-SelectedItem="@selectedItem">
+               @bind-SelectedItem="@globalMembers.SelectedItem">
         <Template>
             <div class="d-flex align-items-center k-drawer-top-header @(isDrawerExpanded ? "justify-content-start":"justify-content-center") " style="height:54px;">
                 <TelerikButton OnClick="@( () => drawerRef.ToggleAsync() )" Class="drawer-hamburger">
@@ -29,7 +29,7 @@
             {
             <div class="d-flex align-items-center justify-content-evenly" style="height:95px;">
                 <label class="d-flex flex-row user-face">
-                    <img src='@navigationHeaderModel.User.ImageName'
+                    <img src='@globalMembers.UserImagePath'
                      onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
                      style="height: 54px;width: 54px;border-radius:50px" />
                     <a href="/myprofile" style="text-decoration: none;"><div id="name" class="mx-2">@navigationHeaderModel.User.FirstName</div></a>
@@ -41,7 +41,7 @@
             <div class="d-flex align-items-center justify-content-center" style="height:95px;margin-top:25px">
                 <div>
                     <div class="d-flex justify-content-center">
-                        <img src='@navigationHeaderModel.User.ImageName'
+                        <img src='@globalMembers.UserImagePath'
                          onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
                          style="height: 54px;width: 54px;border-radius:50px" />
                     </div>
@@ -52,8 +52,13 @@
         <div class="k-drawer-items my-2">
             <ul>
 
-                @foreach (var item in menuItems)
+                @foreach (var item in globalMembers.MenuItems)
                     {
+                        if (item.DisplayName.ToLower() == "reservations")
+                        {
+                            continue;
+                        }
+
                         if (!item.IsAdministrationModule || (!navigationHeaderModel.IsSuperAdmin && item.Controller.ToLower() == Module.Company.ToString().ToLower()))
                         {
                             if (item.DisplayName == "Log out")
@@ -64,7 +69,7 @@
                         <li @onclick="@(() => NavigateToPageAsync(item))" @onclick:stopPropagation
                     class="k-drawer-item @(GetSelectedItemClass(item))
                                 @(isDrawerExpanded ? "":"d-flex justify-content-center")"
-                    style="white-space:nowrap">
+                    style="white-space:nowrap" title="@item.DisplayName">
 
                             <div class="px-2">
                                 <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="@item.Controller"
@@ -83,15 +88,15 @@
                                     <div class="menu-item-text-color">@item.DisplayName</div>
                                     }
                                 }
-                            @if (selectedItem != null && item.DisplayName == selectedItem.DisplayName)
+                            @if (globalMembers.SelectedItem != null && item.DisplayName == globalMembers.SelectedItem.DisplayName)
                                 {
                                 <div class="selected-arrow"></div>
                                 }
-
                         </li>
 
                         }
                     }
+
             </ul>
         </div>
 
@@ -106,21 +111,25 @@
 
                 </Web.UI.Shared.Components.PageLoader.PageLoader>
 
-                <CascadingValue IsFixed="true" Value="@UINotification">
+
+                <CascadingValue IsFixed="true" Value="@globalMembers">
 
                     <CascadingValue Value="@ChangeLoaderVisibility" TValue="Action<bool>">
 
                         <LeftHeader navigationHeaderModel="@navigationHeaderModel"></LeftHeader>
                         <TelerikRootComponent>
-                            <div class="@(IsMainContainerTransparent ? "ms-3 me-3 my-3 p-3" : "card ms-3 me-3 my-3 p-3")">
+                            <div class="@(IsMainContainerTransparent ? "p-3" : "card p-3")">
                                 @Body
                             </div>
                         </TelerikRootComponent>
+                    
                     </CascadingValue>
                 </CascadingValue>
             </div>
         </div>
     </DrawerContent>
 </TelerikDrawer>
+
+
 
 }

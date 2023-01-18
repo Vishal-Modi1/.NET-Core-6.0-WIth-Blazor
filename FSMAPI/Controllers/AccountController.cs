@@ -11,6 +11,7 @@ using DataModels.Constants;
 using Configuration;
 using DataModels.VM.User;
 using DataModels.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FSMAPI.Controllers
 {
@@ -28,10 +29,12 @@ namespace FSMAPI.Controllers
         private readonly IEmailTokenService _emailTokenService;
         private readonly ConfigurationSettings _configurationSettings;
         private readonly IMyAccountService _myAccountService;
+        private readonly ICompanyDateFormatService _companyDateFormatService;
 
         public AccountController(IAccountService accountService, IUserRolePermissionService userRolePermissionService,
             IUserService userService, ISendMailService sendMailService, IMyAccountService myAccountService,
-            IHttpContextAccessor httpContextAccessor, IEmailTokenService emailTokenService)
+            IHttpContextAccessor httpContextAccessor, IEmailTokenService emailTokenService,
+            ICompanyDateFormatService companyDateFormatService)
         {
             _accountService = accountService;
             _userService = userService;
@@ -42,6 +45,7 @@ namespace FSMAPI.Controllers
             _emailTokenService = emailTokenService;
             _configurationSettings = ConfigurationSettings.Instance;
             _myAccountService = myAccountService;
+            _companyDateFormatService = companyDateFormatService;
         }
 
         [HttpPost]
@@ -81,7 +85,7 @@ namespace FSMAPI.Controllers
             response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
             List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
-            string accessToken = _jWTTokenGenerator.Generate(user);
+            string accessToken = _jWTTokenGenerator.Generate(user, userTimeZone == null ? "": userTimeZone);
             string refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);
@@ -93,6 +97,8 @@ namespace FSMAPI.Controllers
                 //timeZone =  loginVM.TimeZone.Substring(1, loginVM.TimeZone.Length - 2);
                 timeZone = userTimeZone;
             }
+
+            string dateFormat = _companyDateFormatService.FindDateFormatByCompanyId(user.CompanyId.GetValueOrDefault());
 
             response.Data = new LoginResponseVM
             {
@@ -109,7 +115,8 @@ namespace FSMAPI.Controllers
                 UserPermissionList = userRolePermissionsList,
                 ImageURL = user.ImageName,
                 LocalTimeZone = timeZone,
-                CompanyId = user.CompanyId.GetValueOrDefault()
+                CompanyId = user.CompanyId.GetValueOrDefault(),
+                DateFormat = dateFormat
             };
 
             return response;
@@ -185,7 +192,39 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("activateaccount")]
+        [Route("getDetailsFromToken")]
+        [AllowAnonymous]
+        public IActionResult GetDetailsFromToken(string token)
+        {
+            try
+            {
+                JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                JwtSecurityToken jwtSecurityToken = handler.ReadJwtToken(token);
+
+                if (jwtSecurityToken == null || jwtSecurityToken.Claims.Count() == 0)
+                {
+                    return APIResponse(UnAuthorizedResponse.Response());
+                }
+
+                long userId = Convert.ToInt64(jwtSecurityToken.Claims.First(claim => claim.Type == CustomClaimTypes.UserId).Value);
+                int companyId = Convert.ToInt32(jwtSecurityToken.Claims.First(claim => claim.Type == CustomClaimTypes.CompanyId).Value);
+                string timezone = jwtSecurityToken.Claims.First(claim => claim.Type == CustomClaimTypes.TimeZone).Value;
+
+                CurrentResponse response = _userService.GetById(userId, companyId);
+
+                User user = (User)(response.Data);
+                response = GetDetails(response, user, timezone);
+
+                return APIResponse(response);
+            }
+            catch (Exception ex)
+            {
+                return APIResponse(UnAuthorizedResponse.Response());
+            }
+        }
+
+        [HttpGet]
+        [Route("activateAccount")]
         [AllowAnonymous]
         public IActionResult ActivateAccount(string token)
         {
@@ -219,7 +258,7 @@ namespace FSMAPI.Controllers
             user.RoleId = userVM.RoleId;
             user.RoleName = userVM.Role;
 
-            string accessToken = _jWTTokenGenerator.Generate(user);
+            string accessToken = _jWTTokenGenerator.Generate(user, "");
             refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);

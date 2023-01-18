@@ -17,7 +17,7 @@ namespace Repository.Interface
 
         void Delete(int id, long deletedBy);
 
-        List<DropDownValues> ListDropDownValues();
+        List<DropDownValues> ListDropDownValues(int companyId);
 
         Location FindByCondition(Expression<Func<Location, bool>> predicate);
     }

@@ -18,6 +18,7 @@ namespace DataModels.VM.Location
         public string AirportCode { get; set; }
         public long CreatedBy { get; set; }
         public long? UpdatedBy { get; set; }
+        public int CompanyId { get; set; }
         public List<DropDownValues> Timezones { get; set; }
         public int TotalRecords { get; set; }   
     }

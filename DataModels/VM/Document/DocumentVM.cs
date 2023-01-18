@@ -29,6 +29,10 @@ namespace DataModels.VM.Document
 
         public bool IsShareable { get; set; }
 
+        public long? AircraftId { get; set; }
+
+        public bool IsPersonalDocument { get; set; }
+
         public string Tags { get; set; }
 
         public DateTime? ExpirationDate { get; set; }
@@ -49,7 +53,7 @@ namespace DataModels.VM.Document
         public List<DropDownLargeValues> UsersList { get; set; }
         public List<DropDownValues> CompniesList { get; set; }
 
-        public List<DocumentTagVM> DocumentTagsList { get; set; }
+        public List<DropDownLargeValues> DocumentTagsList { get; set; }
 
         public long CreatedBy { get; set; }
 

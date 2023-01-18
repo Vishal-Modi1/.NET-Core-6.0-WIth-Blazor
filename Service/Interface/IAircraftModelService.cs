@@ -15,6 +15,6 @@ namespace Service.Interface
 
         CurrentResponse Edit(AircraftModel aircraftModel);
 
-        CurrentResponse ListDropDownValues();
+        CurrentResponse ListDropDownValues(int companyId);
     }
 }

@@ -11,7 +11,12 @@ namespace Repository.Interface
     {
         #region ActivityType
 
-        List<DropDownValues> ListActivityTypeDropDownValues(int roleId);
+        List<DropDownLargeValues> ListActivityTypeDropDownValues(int roleId);
+
+        #endregion
+
+        #region Airport
+        List<DropDownGuidValues> ListAirportDropDownValues();
 
         #endregion
 

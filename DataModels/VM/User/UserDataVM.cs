@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.User
 {
@@ -25,7 +26,13 @@ namespace DataModels.VM.User
         
         public bool IsActive { get; set; }
 
+        public bool IsArchive { get; set; }
+
+        public DateTime? ArchivedOn { get; set; }
+
         public string UserRole { get; set; }
+
+        public DateTime CreatedOn { get; set; }
 
         public int TotalRecords { get; set; }
     }

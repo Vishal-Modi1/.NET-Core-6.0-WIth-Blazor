@@ -44,6 +44,36 @@ namespace Repository
             return companyList;
         }
 
+        public List<DropDownValues> ListCityDropDownValues()
+        {
+            var data = (from company in _myContext.Companies
+                        group company by company.City into c
+                        select new DropDownValues()
+                        {
+                            Id = 1,
+                            Name = c.First().City
+                        }).ToList();
+
+            data = data.Where(p => p.Name != "").ToList();
+
+            return data;
+        }
+
+        public List<DropDownValues> ListStateDropDownValues()
+        {
+            List<DropDownValues> data = (from company in _myContext.Companies
+                                         group company by company.State into c
+                                         select new DropDownValues()
+                                         {
+                                             Id = 1,
+                                             Name = c.First().State
+                                         }).ToList();
+
+            data = data.Where(p => p.Name != "").ToList();
+
+            return data;
+        }
+
         public List<DropDownValues> ListDropDownValuesByUserId(long userId)
         {
             List<DropDownValues> companyList = (from company in _myContext.Companies
@@ -51,7 +81,7 @@ namespace Repository
                                                 on company.Id equals usercompany.CompanyId
                                                 where company.IsDeleted == false &&
                                                 usercompany.IsActive == true &&
-                                                usercompany.IsDeleted == false 
+                                                usercompany.IsDeleted == false
                                                 && usercompany.UserId == userId
                                                 select new DropDownValues()
                                                 {
@@ -96,9 +126,13 @@ namespace Repository
                 existingCompany.Website = company.Website;
                 existingCompany.PrimaryAirport = company.PrimaryAirport;
                 existingCompany.PrimaryServiceId = company.PrimaryServiceId;
+                existingCompany.State = company.State;
+                existingCompany.City = company.City;
+                existingCompany.Zipcode = company.Zipcode;
 
                 existingCompany.UpdatedBy = company.UpdatedBy;
                 existingCompany.UpdatedOn = company.UpdatedOn;
+
                 _myContext.SaveChanges();
             }
 
@@ -112,6 +146,7 @@ namespace Repository
             if (company != null)
             {
                 company.IsDeleted = true;
+                company.IsActive = false;
                 company.DeletedBy = deletedBy;
                 company.DeletedOn = DateTime.UtcNow;
 
@@ -119,12 +154,13 @@ namespace Repository
             }
         }
 
-        public List<CompanyVM> List(DatatableParams datatableParams)
+        public List<CompanyVM> List(CompanyDatatableParams datatableParams)
         {
-            //int pageNo = datatableParams.Start >= 10 ? ((datatableParams.Start / datatableParams.Length) + 1) : 1;
             List<CompanyVM> list;
 
-            string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, {datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}', {datatableParams.CompanyId}";
+            string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
+                $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
+                $" '{datatableParams.City}','{datatableParams.State}',{datatableParams.CompanyId}";
 
             list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
 
@@ -144,6 +180,18 @@ namespace Repository
             }
 
             return false;
+        }
+
+        public void SetPropellerConfiguration(int id, bool value)
+        {
+            Company existingCompany = _myContext.Companies.Where(p => p.Id == id).FirstOrDefault();
+
+            if (existingCompany != null)
+            {
+                existingCompany.IsDisplayPropeller = value;
+            }
+
+            _myContext.SaveChanges();
         }
     }
 }

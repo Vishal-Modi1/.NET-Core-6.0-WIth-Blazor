@@ -17,11 +17,11 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("response")]
-        public IActionResult APIResponse(CurrentResponse response)
+        protected IActionResult APIResponse(CurrentResponse response)
         {
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                _aPIError.Error = response.Message;
+                _aPIError.Message = response.Message;
                 return StatusCode((int)response.Status, JsonConvert.SerializeObject(_aPIError));
             }
 
