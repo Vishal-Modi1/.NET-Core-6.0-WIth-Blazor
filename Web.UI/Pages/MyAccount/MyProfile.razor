@@ -29,64 +29,65 @@
         color: #8A8C9B;
     }
 </style>
- <div class="row my-0">
-        <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
-            <div class="card p-0 no-box-shadow">
-                <div class="card-body p-0 ">
-                    <div>
-                        <div class="row d-flex justify-content-center align-items-start w-100 m-0 profile-image-hover" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(userVM.ImageName)'), url('../img/thumbnail-userprofile.png');">
-                            <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
+<div class="row my-0">
+    <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
+        <div class="card p-0 no-box-shadow">
+            <div class="card-body p-0 ">
+                <div>
+                    <div class="row d-flex justify-content-center align-items-start w-100 m-0 profile-image-hover" style="height: 150px;border-radius: 5px 5px 0 0;background-color:transparent;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url('@(userVM.ImageName)'), url('../img/thumbnail-userprofile.png');">
+                        <span class="d-flex justify-content-between mt-3 k-cursor-pointer">
 
-                                <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link  m-0 p-0 highlight-hover" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
-                                    <CustomIcons IconName="share-backward-line" PrimaryColor="#FFF" />
-                                </TelerikButton>
+                            <TelerikButton ThemeColor="light" Size="xs" Class="btn k-btn-link  m-0 p-0 highlight-hover" OnClick="@(() => NavigationManager.NavigateTo("/Aircraft"))">
+                                <CustomIcons IconName="share-backward-line" PrimaryColor="#FFF" />
+                            </TelerikButton>
 
-                                <label for="filePicker" class="k-cursor-pointer highlight-hover">
-                                    <CustomIcons IconName="edit-square" PrimaryColor="white" />
-                                    <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
-                                </label>
-                            </span>
-                        </div>
+                            <label for="filePicker" class="k-cursor-pointer highlight-hover">
+                                <CustomIcons IconName="edit-square" PrimaryColor="white" />
+                                <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
+                            </label>
+                        </span>
                     </div>
-                    <hr class="m-0" />
-                    <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
-                    <div class="d-flex justify-content-start  align-items-center">
-                            <span class="mx-2">
+                </div>
+                <hr class="m-0" />
+                <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
+                    <div class="d-flex justify-content-center  align-items-center">
+                        <span class="mx-2">
                             <CustomIcons IconName="user" PrimaryColor="black"></CustomIcons>
-                                 Personal Information
-                            <CustomIcons IconName="edit"  PrimaryColor="black"></CustomIcons>
-                            </span>
-                        @* <TelerikButton ThemeColor="info" Class="btn k-btn-primary mx-1 p-1 " Size="xs" OnClick="@(() => ())">
-                                Update
-                            </TelerikButton>*@
-                        </div>
-                    </div>
+                            Personal Information
 
-                    <hr class="m-0" />
-                    <div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">First Name :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.FirstName</FontLabel></div>
-                        </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Last Name :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.LastName</FontLabel></div>
-                        </div>
-                         <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">User Role :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Role</FontLabel></div>
-                          </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Email :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Email</FontLabel></div>
-                        </div>
-                         <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Mobile :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Phone</FontLabel></div>
-                        </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Date Of Birth :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">
+                            <TelerikButton ThemeColor="info" Class="btn k-btn-primary mx-1 p-1 " Size="xs" OnClick="@(() => OpenUpdateProfileDialog())">
+                                Update
+                            </TelerikButton>
+                        </span>
+                    </div>
+                </div>
+
+                <hr class="m-0" />
+                <div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">First Name :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.FirstName</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Last Name :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.LastName</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">User Role :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Role</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Email :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Email</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Mobile :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Phone</FontLabel></div>
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Date Of Birth :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start">
+                            <FontLabel fontColor="#042455">
                                 @{
                                     @if (userVM.DateofBirth != null)
                                     {
@@ -100,22 +101,22 @@
                                     }
 
                                 }
-                             </FontLabel>
-                              </div>
+                            </FontLabel>
                         </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Gender :</FontLabel></div>
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Gender</FontLabel></div>
-                         </div>
-                         <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
-                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Is Instructor :</FontLabel></div>
-                            <div class="col-6 d-flex justify-content-start">
+                    </div>
+                    <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Gender :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Gender</FontLabel></div>
+                    </div>
+         @*           <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Is Instructor :</FontLabel></div>
+                        <div class="col-6 d-flex justify-content-start">
                             <TelerikSwitch Enabled="false" Class="float-right" @bind-Value="@userVM.IsInstructor"></TelerikSwitch>
-                             </div>
                         </div>
+                    </div>*@
                     <hr class="m-0" />
                     <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
-                        <div class="d-flex justify-content-start  align-items-center">
+                        <div class="d-flex justify-content-center  align-items-center">
                             <span class="mx-2">
                                 <CustomIcons IconName="company" PrimaryColor="black"></CustomIcons>
                                 Company Information
@@ -129,16 +130,16 @@
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Company Name :</FontLabel></div>
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.CompanyName</FontLabel></div>
                         </div>
-                         <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Phone :</FontLabel></div>
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Phone</FontLabel></div>
                         </div>
-                        <div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
+                        @*<div class="row p-2 m-0 w-100 ap-value d-flex align-items-top border-0 text-break">
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Company Address :</FontLabel></div>
                             <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Country</FontLabel></div>
-                        </div>
+                        </div>*@
                     </div>
-                    <hr class="m-0" />
+@*                    <hr class="m-0" />
                     <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
                         <div class="d-flex justify-content-start  align-items-center">
                             <span class="mx-2">
@@ -165,19 +166,19 @@
                                 </TelerikLoader>
                             </TelerikButton>
                         </div>
-                    </div>
-                    </div>
-
+                    </div>*@
                 </div>
-              
+
             </div>
 
-           @* <UpcomingFlights upcomingFlights="@upcomingFlights"></UpcomingFlights>*@
-           
         </div>
+
+        @* <UpcomingFlights upcomingFlights="@upcomingFlights"></UpcomingFlights>*@
+
+    </div>
     <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
         <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
-    <div class="card">
+        <div class="card">
             <TelerikTabStrip Class="k-tabstrip-list">
 
                 <TabStripTab>
@@ -231,234 +232,234 @@
                 }
 
             </TelerikTabStrip>
-    </div>   
-    </div>
-        </div>
-@*<div class="row my-2">
-    <div class="col-md-12 col-lg-4 col-12 my-2">
-        <div class="card p-0"
-             style="height: 350px !important;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
-            <div class="card-body p-0">
-                <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;background-color:transparent;">
-
-                    <span class="d-flex justify-content-end mt-3 k-cursor-pointer">
-                    <label for="filePicker" class="k-cursor-pointer">
-                        <CustomIcons IconName="edit-square" PrimaryColor="white" />
-                        <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
-                    </label>
-                    </span>
-                       
-                    <img src="@userVM.ImageName" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
-                         style="height: 126px !important;width: 126px!important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
-                </div>
-                <div class="row bg-white d-flex align-items-center w-100 m-0" style="height: 200px;border-radius: 0 0 7px 7px;">
-                    <div class="col-12 text-center">
-                        <span>@userVM.FirstName  @userVM.LastName</span>
-                        <span>@userVM.Role</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12 col-lg-8 col-12 my-2">
-        <div class="card" style="height: 350px !important;">
-            <div class="card-body">
-                <ul class="nav nav-pills mb-3 d-flex" id="pills-tab" role="tablist">
-                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Personal Information"))">
-                        <button class="nav-link flex-fill @(currentActiveInfoTab == "Personal Information" ? "active" : "")" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                            <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
-                            Personal Information</span>
-                        </button>
-                    </li>
-                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Company Information"))">
-                        <button class="nav-link flex-fill @(currentActiveInfoTab == "Company Information" ? "active" : "")" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                            <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
-                            Company Information</span>
-                        </button>
-                    </li>
-                    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Aircraft Type"))">
-                        <button class="nav-link flex-fill @(currentActiveInfoTab == "Aircraft Type" ? "active" : "")" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
-                            <span class="mx-2"><CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
-                            Aircraft Type</span>
-                        </button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent" >
-                    <div class="tab-pane fade @(currentActiveInfoTab == "Personal Information" ? "show active" : "")" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <div class="row my-3">
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">First Name :</label>
-                                        <label for="inputFirstName" class="">@userVM.FirstName</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputLastName" class="col-form-label custom-label">Last Name :</label>
-                                        <label for="inputLastName" class="">@userVM.LastName</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">User role :</label>
-                                        <label for="inputFirstName" class="">@userVM.Role</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Email :</label>
-                                        <label for="inputFirstName" class="">@userVM.Email</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Mobile :</label>
-                                        <label for="inputFirstName" class="">@userVM.Phone</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Date of Birth :</label>
-                                        @{
-                                            @if (userVM.DateofBirth != null)
-                                            {
-                                                <label for="inputFirstName" class="">
-                                                    @userVM.DateofBirth.Value.ToShortDateString()
-                                                </label>
-                                            }
-                                            else
-                                            {
-                                                <label for="inputFirstName" class="">-</label>
-                                            }
-
-                                        }
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Is Instructor</label>
-                                        <label for="inputFirstName" class=""><TelerikSwitch Enabled="false" Class="float-right" @bind-Value="@userVM.IsInstructor"></TelerikSwitch></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Country :</label>
-                                        <label for="inputFirstName" class="">@userVM.Country</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="row g-3 align-items-center mx-2">
-                                    <div class="col-12">
-                                        <label for="inputFirstName" class="col-form-label custom-label">Gender :</label>
-                                        <label for="inputFirstName" class="">@userVM.Gender</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @if (true) //_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName)
-                        {
-                            <div class="row my-3">
-                                <div class="col-lg-12 d-flex justify-content-end mx-2">
-                                    <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenUpdateProfileDialog" ThemeColor="info" Class="btn k-btn-primary m-3" Enabled="@(!isBusySubmitButton)">
-                                        Update Details
-                                        <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
-                                        </TelerikLoader>
-                                    </TelerikButton>
-                                </div>
-                            </div>
-                        }
-
-                    </div>
-                    <div class="tab-pane fade @(currentActiveInfoTab == "Company Information" ? "show active" : "")" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <h3>Company Information</h3>
-                    </div>
-                    <div class="tab-pane fade @(currentActiveInfoTab == "Aircraft Type" ? "show active" : "")" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <h3>Aircraft Type</h3>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
+@*<div class="row my-2">
+    <div class="col-md-12 col-lg-4 col-12 my-2">
+    <div class="card p-0"
+    style="height: 350px !important;border: 0;background-repeat: no-repeat;background-size: 100% 100%;background-image: url(https://images.unsplash.com/photo-1531558506007-fe311a2f4729?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80);">
+    <div class="card-body p-0">
+    <div class="row d-flex justify-content-center align-items-center w-100 m-0" style="height: 150px;background-color:transparent;">
 
-<div class="card" style="margin-top:30px;">
-    <div class="card m-3">
-        <TelerikTabStrip Class="k-tabstrip-list">
+    <span class="d-flex justify-content-end mt-3 k-cursor-pointer">
+    <label for="filePicker" class="k-cursor-pointer">
+    <CustomIcons IconName="edit-square" PrimaryColor="white" />
+    <InputFile id="filePicker" accept="@supportedImagesFormats" style="display:none" OnChange="@OnInputFileChangeAsync"></InputFile>
+    </label>
+    </span>
 
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <span class="mx-2">
-                            <CustomIcons IconName="settings" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>My Preference</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-                    <MyPreference UserPreferencesList=@userVM.UserPreferences></MyPreference>
-                </Content>
-            </TabStripTab>
-
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
-            {
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="document" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Documents</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Document.Index ParentModuleName="User" IsPersonalDocument="true">
-                        </Web.UI.Pages.Document.Index>
-                    </Content>
-                </TabStripTab>
-            }
-
-            @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
-            {
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span class="mx-2">
-                                <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
-                            </span>
-                            <span>Reservation</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                        <Web.UI.Pages.Reservation.Index ParentModuleName="MyProfile" UserId="@userVM.Id">
-                        </Web.UI.Pages.Reservation.Index>
-                    </Content>
-                </TabStripTab>
-            }
-
-        </TelerikTabStrip>
+    <img src="@userVM.ImageName" onerror="this.onerror=null;this.src='../img/thumbnail-userprofile.png';"
+    style="height: 126px !important;width: 126px!important;border-radius: 100px;border: 5px solid white;padding: 0;position: relative;top: 30px;">
     </div>
-</div>*@
+    <div class="row bg-white d-flex align-items-center w-100 m-0" style="height: 200px;border-radius: 0 0 7px 7px;">
+    <div class="col-12 text-center">
+    <span>@userVM.FirstName  @userVM.LastName</span>
+    <span>@userVM.Role</span>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="col-md-12 col-lg-8 col-12 my-2">
+    <div class="card" style="height: 350px !important;">
+    <div class="card-body">
+    <ul class="nav nav-pills mb-3 d-flex" id="pills-tab" role="tablist">
+    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Personal Information"))">
+    <button class="nav-link flex-fill @(currentActiveInfoTab == "Personal Information" ? "active" : "")" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+    <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+    Personal Information</span>
+    </button>
+    </li>
+    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Company Information"))">
+    <button class="nav-link flex-fill @(currentActiveInfoTab == "Company Information" ? "active" : "")" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+    <span class="mx-2"><CustomIcons IconName="user" PrimaryColor="#3066f8"></CustomIcons>
+    Company Information</span>
+    </button>
+    </li>
+    <li class="nav-item flex-fill d-flex" role="presentation" @onclick="@(() => SetCurrentActiveInfoTab("Aircraft Type"))">
+    <button class="nav-link flex-fill @(currentActiveInfoTab == "Aircraft Type" ? "active" : "")" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+    <span class="mx-2"><CustomIcons IconName="userrolepermission" PrimaryColor="#3066f8"></CustomIcons>
+    Aircraft Type</span>
+    </button>
+    </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent" >
+    <div class="tab-pane fade @(currentActiveInfoTab == "Personal Information" ? "show active" : "")" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+    <div class="row my-3">
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">First Name :</label>
+    <label for="inputFirstName" class="">@userVM.FirstName</label>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputLastName" class="col-form-label custom-label">Last Name :</label>
+    <label for="inputLastName" class="">@userVM.LastName</label>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">User role :</label>
+    <label for="inputFirstName" class="">@userVM.Role</label>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="row my-3">
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">Email :</label>
+    <label for="inputFirstName" class="">@userVM.Email</label>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">Mobile :</label>
+    <label for="inputFirstName" class="">@userVM.Phone</label>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">Date of Birth :</label>
+    @{
+    @if (userVM.DateofBirth != null)
+    {
+    <label for="inputFirstName" class="">
+    @userVM.DateofBirth.Value.ToShortDateString()
+    </label>
+    }
+    else
+    {
+    <label for="inputFirstName" class="">-</label>
+    }
+
+    }
+
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="row my-3">
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">Is Instructor</label>
+    <label for="inputFirstName" class=""><TelerikSwitch Enabled="false" Class="float-right" @bind-Value="@userVM.IsInstructor"></TelerikSwitch></label>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">Country :</label>
+    <label for="inputFirstName" class="">@userVM.Country</label>
+    </div>
+    </div>
+    </div>
+    <div class="col-lg-4">
+    <div class="row g-3 align-items-center mx-2">
+    <div class="col-12">
+    <label for="inputFirstName" class="col-form-label custom-label">Gender :</label>
+    <label for="inputFirstName" class="">@userVM.Gender</label>
+    </div>
+    </div>
+    </div>
+    </div>
+    @if (true) //_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, @moduleName)
+    {
+    <div class="row my-3">
+    <div class="col-lg-12 d-flex justify-content-end mx-2">
+    <TelerikButton ButtonType="@ButtonType.Submit" OnClick="@OpenUpdateProfileDialog" ThemeColor="info" Class="btn k-btn-primary m-3" Enabled="@(!isBusySubmitButton)">
+    Update Details
+    <TelerikLoader Class="button-loader-indicator" ThemeColor="light" Visible="@isBusySubmitButton">
+    </TelerikLoader>
+    </TelerikButton>
+    </div>
+    </div>
+    }
+
+    </div>
+    <div class="tab-pane fade @(currentActiveInfoTab == "Company Information" ? "show active" : "")" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+    <h3>Company Information</h3>
+    </div>
+    <div class="tab-pane fade @(currentActiveInfoTab == "Aircraft Type" ? "show active" : "")" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+    <h3>Aircraft Type</h3>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <div class="card" style="margin-top:30px;">
+    <div class="card m-3">
+    <TelerikTabStrip Class="k-tabstrip-list">
+
+    <TabStripTab>
+    <HeaderTemplate>
+    <div class="d-flex justify-content-center align-items-center">
+    <span class="mx-2">
+    <CustomIcons IconName="settings" PrimaryColor="#3066f8"></CustomIcons>
+    </span>
+    <span>My Preference</span>
+    </div>
+    </HeaderTemplate>
+    <Content>
+    <MyPreference UserPreferencesList=@userVM.UserPreferences></MyPreference>
+    </Content>
+    </TabStripTab>
+
+    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Document"))
+    {
+    <TabStripTab>
+    <HeaderTemplate>
+    <div class="d-flex justify-content-center align-items-center">
+    <span class="mx-2">
+    <CustomIcons IconName="document" PrimaryColor="#3066f8"></CustomIcons>
+    </span>
+    <span>Documents</span>
+    </div>
+    </HeaderTemplate>
+    <Content>
+    <Web.UI.Pages.Document.Index ParentModuleName="User" IsPersonalDocument="true">
+    </Web.UI.Pages.Document.Index>
+    </Content>
+    </TabStripTab>
+    }
+
+    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.View, "Reservation"))
+    {
+    <TabStripTab>
+    <HeaderTemplate>
+    <div class="d-flex justify-content-center align-items-center">
+    <span class="mx-2">
+    <CustomIcons IconName="reservation" PrimaryColor="#3066f8"></CustomIcons>
+    </span>
+    <span>Reservation</span>
+    </div>
+    </HeaderTemplate>
+    <Content>
+    <Web.UI.Pages.Reservation.Index ParentModuleName="MyProfile" UserId="@userVM.Id">
+    </Web.UI.Pages.Reservation.Index>
+    </Content>
+    </TabStripTab>
+    }
+
+    </TelerikTabStrip>
+    </div>
+    </div>*@
 
 
 @if (isDisplayPopup)
