@@ -26,7 +26,7 @@
         <div class="d-flex justify-content-center">
 
             <FontLabel fontSize="12px">
-                @schedulerVM.StartTime.Format(schedulerVM.StartTime, globalMembers.DateFormat, false)
+                @schedulerVM.StartTime.SetCustomFormat(schedulerVM.StartTime, globalMembers.DateFormat, false)
                 </FontLabel>
 
         </div>
@@ -63,7 +63,7 @@
 
             <FontLabel fontSize="12px">
 
-                @schedulerVM.EndTime.Format(schedulerVM.EndTime, globalMembers.DateFormat, false)
+                @schedulerVM.EndTime.SetCustomFormat(schedulerVM.EndTime, globalMembers.DateFormat, false)
                 </FontLabel>
         </div>
 

@@ -52,7 +52,7 @@ namespace Service
 
             if (string.IsNullOrWhiteSpace(data))
             {
-                data = "MM-dd-yyyy hh:mm tt";
+                data = "MM-dd-yyyy$hh:mm tt";
             }
 
             return data;
