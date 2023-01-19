@@ -1,6 +1,8 @@
-﻿using DataModels.Entities;
+﻿using AutoMapper;
+using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
+using DataModels.VM.Weather;
 using Repository;
 using Repository.Interface;
 using Service.Interface;
@@ -16,10 +18,11 @@ namespace Service
     public class FlightTagService : BaseService, IFlightTagService
     {
         private readonly IFlightTagRepository _flightTagRepository;
-
-        public FlightTagService(IFlightTagRepository flightTagRepository)
+        private readonly IMapper _mapper;
+        public FlightTagService(IFlightTagRepository flightTagRepository, IMapper mapper)
         {
             _flightTagRepository = flightTagRepository;
+            _mapper = mapper;
         }
 
         public CurrentResponse Create(FlightTagVM flightTagVM)
@@ -100,9 +103,7 @@ namespace Service
         {
             FlightTag flightTag = new FlightTag();
 
-            flightTag.TagName = flightTagVM.TagName;
-            flightTag.IsActive = true;
-
+            flightTag =  _mapper.Map<FlightTag>(flightTagVM);
             flightTag.CreatedBy = flightTagVM.CreatedBy;
 
             if (flightTagVM.Id == 0)

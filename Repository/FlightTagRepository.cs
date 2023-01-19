@@ -50,7 +50,6 @@ namespace Repository
 
                                                 }).FirstOrDefault();
 
-
                 return flightTag;
             }
         }
@@ -67,7 +66,6 @@ namespace Repository
                                                     TagName = f.TagName,
 
                                                 }).ToList();
-
 
                 return listTags;
             }

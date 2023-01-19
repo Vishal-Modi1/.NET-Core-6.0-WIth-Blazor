@@ -45,7 +45,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(FlightTagVM flightTagVM)
         {
-            flightTagVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            flightTagVM.CreatedBy = _jWTTokenGenerator.GetUserId();
             CurrentResponse response = _flightTagService.Create(flightTagVM);
 
             return APIResponse(response);
