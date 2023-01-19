@@ -4,7 +4,7 @@ namespace Web.UI.Extensions
 {
     public static class DateHelper
     {
-        public static string Format(this DateTime dateTime, DateTime value, string format, bool isDisplayTime)
+        public static string SetCustomFormat(this DateTime dateTime, DateTime value, string format, bool isDisplayTime)
         {
             if (isDisplayTime)
             {

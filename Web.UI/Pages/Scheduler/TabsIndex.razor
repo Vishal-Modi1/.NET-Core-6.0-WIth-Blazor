@@ -143,7 +143,7 @@
 
                                 @foreach (var item in flightCategories.Select((item, flightCategories) => new { item, flightCategories }))
                                 {
-                                    <div class="d-flex justify-content-between my-2">
+                                    <div class="d-flex justify-content-between my-1">
 
                                         <div>
 
@@ -166,11 +166,11 @@
 
                                         <div>
                                             <span @onclick="() => OpenCreateCategoryDialogAsync(item.item)" style="cursor:pointer" class="my-2">
-                                                <CustomIcons IconName="grid-edit" PrimaryColor="blue"></CustomIcons>
+                                                <CustomIcons IconName="grid-edit" PrimaryColor="#3066f8"></CustomIcons>
                                             </span>
                                         </div>
                                     </div>
-                                    <hr class="m-0" />
+                                    <hr class="m-0" style="color:#808080f0 !important" />
                                 }
 
                             </div>
