@@ -162,7 +162,7 @@
                 <Template>
                     @{
                         DocumentDataVM value = dataItem as DocumentDataVM;
-                        <label> @value.CreatedOn.Format(value.CreatedOn, globalMembers.DateFormat, false)</label>
+                        <label> @value.CreatedOn.SetCustomFormat(value.CreatedOn, globalMembers.DateFormat, false)</label>
                     }
                 </Template>
             </GridColumn>
@@ -178,7 +178,7 @@
 
                         if (value.ExpirationDate != null)
                         {
-                            date = value.ExpirationDate.GetValueOrDefault().Format(value.ExpirationDate.GetValueOrDefault(), globalMembers.DateFormat, false);
+                            date = value.ExpirationDate.GetValueOrDefault().SetCustomFormat(value.ExpirationDate.GetValueOrDefault(), globalMembers.DateFormat, false);
                         }
 
                         <label>@date</label>

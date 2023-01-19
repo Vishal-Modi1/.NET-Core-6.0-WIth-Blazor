@@ -204,7 +204,7 @@
 
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
-                        <label> @value.StartDateTime.Format(value.StartDateTime, globalMembers.DateFormat, false)</label>
+                        <label> @value.StartDateTime.SetCustomFormat(value.StartDateTime, globalMembers.DateFormat, false)</label>
                     }
 
                 </Template>
@@ -216,7 +216,7 @@
 
                     @{
                         ReservationDataVM value = dataItem as ReservationDataVM;
-                        <label>  @value.EndDateTime.Format(value.EndDateTime, globalMembers.DateFormat, false)</label>
+                        <label>  @value.EndDateTime.SetCustomFormat(value.EndDateTime, globalMembers.DateFormat, false)</label>
                     }
 
                 </Template>
