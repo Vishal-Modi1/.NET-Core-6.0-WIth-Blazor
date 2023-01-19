@@ -50,6 +50,7 @@ namespace DataModels.Entities
         public string PrivateComments { get; set; }
         
         public bool StandBy { get; set; }
-
+        
+        public string FlightTagIds { get; set; }
     }
 }

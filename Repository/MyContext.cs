@@ -107,6 +107,8 @@ namespace Repository
 
         public DbSet<DocumentTag> DocumentTags { get; set; }
 
+        public DbSet<FlightTag> FlightTags { get; set; }
+
         public DbSet<SubscriptionPlan> SubscriptionPlans { get; set; }
 
         public DbSet<CompanyInfoService> CompanyServices { get; set; }

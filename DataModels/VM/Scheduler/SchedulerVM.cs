@@ -103,6 +103,8 @@ namespace DataModels.VM.Scheduler
 
         public Nullable<long> DeletedBy { get; set; }
 
+        public string FlightTagIds { get; set; }
+
         [NotMapped]
         public bool IsAllDay { get; set; }
         public string CssClass { get; set; }
@@ -119,6 +121,8 @@ namespace DataModels.VM.Scheduler
         public List<DropDownLargeValues> UsersList { get; set; }
         public List<DropDownLargeValues> Member1List { get; set; }
         public List<DropDownLargeValues> Member2List { get; set; }
+
+        public List<DropDownLargeValues> FlightTagsList { get; set; }
 
         public AircraftSchedulerDetailsVM AircraftSchedulerDetailsVM { get; set; }
 

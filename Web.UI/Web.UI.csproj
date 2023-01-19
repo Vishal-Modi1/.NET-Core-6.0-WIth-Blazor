@@ -188,4 +188,7 @@
   <ItemGroup>
     <Content Include="Shared\Styles\EmptyLayout.scss" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Schedules\" />
+  </ItemGroup>
 </Project>

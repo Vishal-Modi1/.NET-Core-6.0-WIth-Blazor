@@ -31,6 +31,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserPreferenceService, UserPreferenceService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IDocumentTagService, DocumentTagService>();
+            services.AddScoped<IFlightTagService, FlightTagService>();
             services.AddScoped<ISubscriptionPlanService, SubscriptionPlanService>();
             services.AddScoped<IModuleDetailsService, ModuleDetailsService>();
             services.AddScoped<IBillingHistoryService, BillingHistoryService>();
@@ -85,6 +86,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IUserPreferenceRepository, UserPreferenceRepository>();
             services.AddScoped<IDocumentRepository, DocumentRepository>();
             services.AddScoped<IDocumentTagRepository, DocumentTagRepository>();
+            services.AddScoped<IFlightTagRepository, FlightTagRepository>();
             services.AddScoped<ISubscriptionPlanRepository, SubscriptionPlanRepository>();
             services.AddScoped<IBillingHistoryRepository, BillingHistoryRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();

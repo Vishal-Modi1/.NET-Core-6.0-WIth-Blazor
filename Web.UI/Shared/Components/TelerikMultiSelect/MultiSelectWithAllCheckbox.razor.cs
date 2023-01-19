@@ -38,6 +38,7 @@ namespace Web.UI.Shared.Components.TelerikMultiSelect
         public void OnChange()
         {
             OnChangeEventCallback.InvokeAsync(SelectedData);
+            UpdateParentListCallback.InvokeAsync(SelectedData);
         }
     }
 }

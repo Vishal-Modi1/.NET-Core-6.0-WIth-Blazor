@@ -16,6 +16,7 @@ namespace FSMAPI.Utilities
             CreateMap<RadarMapConfigurationVM, RadarMapConfiguration>().ReverseMap();
             CreateMap<CompanyDateFormatVM, CompanyDateFormat>().ReverseMap();
             CreateMap<VFRMapConfigurationVM, VFRMapConfiguration>().ReverseMap();
+            CreateMap<FlightTagVM, FlightTag>().ReverseMap();
         }
     }
 }
