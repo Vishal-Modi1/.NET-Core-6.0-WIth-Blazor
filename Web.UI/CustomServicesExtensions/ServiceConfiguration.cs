@@ -44,6 +44,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<AircraftSchedulerService>();
             builder.Services.AddScoped<AircraftSchedulerDetailService>();
             builder.Services.AddScoped<ReservationService>();
+            builder.Services.AddScoped<FlightTagService>();
             builder.Services.AddScoped<DocumentService>();
             builder.Services.AddScoped<SubscriptionPlanService>();
             builder.Services.AddScoped<ModuleDetailsService>();

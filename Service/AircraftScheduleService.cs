@@ -27,13 +27,15 @@ namespace Service
         private readonly ISendMailService _sendMailService;
         private readonly IEmailConfigurationRepository _emailConfigurationRepository;
         private readonly IFlightCategoryRepository _flightCategoryRepository;
+        private readonly IFlightTagRepository _flightTagRepository;
 
         public AircraftScheduleService(IAircraftScheduleRepository aircraftScheduleRepository, IUserRepository userRepository,
             IAircraftRepository aircraftRepository, IAircraftScheduleDetailRepository aircraftScheduleDetailRepository,
             IAircraftEquipmentTimeRepository aircraftEquipmentTimeRepository, ICompanyRepository companyRepository,
             IAircraftScheduleHobbsTimeRepository aircraftScheduleHobbsTimeRepository,
             IUserPreferenceRepository userPreferenceRepository, IUserVSCompanyRepository userVSCompanyRepository,
-            IEmailConfigurationRepository emailConfigurationRepository, IFlightCategoryRepository flightCategoryRepository)
+            IEmailConfigurationRepository emailConfigurationRepository, IFlightCategoryRepository flightCategoryRepository,
+            IFlightTagRepository flightTagRepository)
         {
             _aircraftScheduleRepository = aircraftScheduleRepository;
             _userRepository = userRepository;
@@ -47,6 +49,7 @@ namespace Service
             _emailConfigurationRepository = emailConfigurationRepository;
             _flightCategoryRepository = flightCategoryRepository;
             _sendMailService = new SendMailService();
+            _flightTagRepository = flightTagRepository;
         }
 
         public CurrentResponse GetDetails(int roleId, int companyId, long id, long userId)
@@ -184,7 +187,7 @@ namespace Service
 
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
             schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);
-
+            schedulerVM.FlightTagsList = _flightTagRepository.ListDropDownValues();
         }
 
         public CurrentResponse ListActivityTypeDropDownValues(int roleId)
@@ -533,6 +536,7 @@ namespace Service
             aircraftSchedule.FlightRoutes = schedulerVM.FlightRoutes;
             aircraftSchedule.StandBy = schedulerVM.IsStandBy;
             aircraftSchedule.FlightCategoryId = schedulerVM.FlightCategoryId;
+            aircraftSchedule.FlightTagIds = schedulerVM.FlightTagIds;
             aircraftSchedule.IsActive = true;
 
             aircraftSchedule.CreatedBy = schedulerVM.CreatedBy;
@@ -578,6 +582,7 @@ namespace Service
             schedulerVM.InternalComments = aircraftSchedule.PrivateComments;
             schedulerVM.FlightRoutes = aircraftSchedule.FlightRoutes;
             schedulerVM.FlightCategoryId = aircraftSchedule.FlightCategoryId;
+            schedulerVM.FlightTagIds = aircraftSchedule.FlightTagIds;
             schedulerVM.IsStandBy = aircraftSchedule.StandBy;
             schedulerVM.CreatedBy = aircraftSchedule.CreatedBy;
 

@@ -439,6 +439,36 @@ namespace Web.UI.Pages.Scheduler
             isDisplayChildPopup = false;
             OpenDialog();
         }
+        
+        private async Task CloseChildDialogAsync()
+        {
+            isDisplayChildPopup = false;
+            OpenDialog();
+        }
+
+        public async Task CloseChildDialog(bool reloaList)
+        {
+            isDisplayChildPopup = false;
+
+            if (reloaList)
+            {
+                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+                schedulerVM.FlightTagsList = await FlightTagService.ListDropdownValues(dependecyParams);
+            }
+        }
+
+        private void UpdateSelectedFlightTagData(List<long> selectedData)
+        {
+            //selectedTags = selectedData;
+            schedulerVM.FlightTagIds = string.Join(",", selectedData);
+        }
+
+        public async Task OpenCreateTagDialogAsync()
+        {
+            popupTitle = "Create Tag";
+            isDisplayChildPopup = true;
+
+        }
 
         public async Task DeleteAsync()
         {
@@ -573,6 +603,14 @@ namespace Web.UI.Pages.Scheduler
             {
                 CloseDialog();
             }
+        }
+        
+        private List<long> GetFlightTagIds()
+        {
+            if (schedulerVM is not null && !string.IsNullOrEmpty(schedulerVM.FlightTagIds))
+                return schedulerVM.FlightTagIds.Split(",").Select(long.Parse).ToList();
+
+            return new List<long>();
         }
     }
 }

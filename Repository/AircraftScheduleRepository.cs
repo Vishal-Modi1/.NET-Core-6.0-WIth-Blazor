@@ -90,6 +90,7 @@ namespace Repository
                     existingAppointment.PrivateComments = aircraftSchedule.PrivateComments;
                     existingAppointment.FlightRoutes = aircraftSchedule.FlightRoutes;
                     existingAppointment.FlightCategoryId = aircraftSchedule.FlightCategoryId;
+                    existingAppointment.FlightTagIds = aircraftSchedule.FlightTagIds;
                     existingAppointment.StandBy = aircraftSchedule.StandBy;
 
                     existingAppointment.UpdatedOn = aircraftSchedule.UpdatedOn;

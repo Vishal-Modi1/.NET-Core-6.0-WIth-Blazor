@@ -1,0 +1,38 @@
+﻿@using DE = DataModels.Entities
+@using DataModels.VM.Scheduler
+
+
+<TelerikForm Model="@flightTagVM" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <input type="hidden" value="@flightTagVM.Id" name="Id" />
+
+        <div class="row">
+            <div class="col-md-12 align-items-center d-flex">
+                <label for="name" class="k-label k-form-label">Tag Name</label>
+            </div>
+            <div class="col-md-12">
+                <TelerikTextBox Id="name" @bind-Value="@flightTagVM.TagName" PlaceHolder="Tag Name"></TelerikTextBox>
+                <TelerikValidationMessage For="@(() => flightTagVM.TagName)"></TelerikValidationMessage>
+            </div>
+        </div>
+        <hr class="hr-gray mt-3 mb-3" />
+    </FormItems>
+    <FormButtons>
+        <div class="row">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@flightTagVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>
