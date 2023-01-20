@@ -64,6 +64,9 @@ namespace Repository
                                                         {
                                                             Id = aircraftSchedule.Id,
                                                             StartDate = aircraftSchedule.StartDateTime,
+                                                            EndDate = aircraftSchedule.EndDateTime,
+                                                            ArrivalAirport = aircraftSchedule.ArrivalAirportName,
+                                                            DepartureAirport = aircraftSchedule.DepartureAirportName,
                                                             Title = aircraftSchedule.ScheduleTitle,
                                                             Member1 = user.FirstName + " " + user.LastName,
                                                             TailNo = aircraft.TailNo,
@@ -93,6 +96,9 @@ namespace Repository
                                                         {
                                                             Id = aircraftSchedule.Id,
                                                             StartDate = aircraftSchedule.StartDateTime,
+                                                            EndDate = aircraftSchedule.EndDateTime,
+                                                            ArrivalAirport = aircraftSchedule.ArrivalAirportName,
+                                                            DepartureAirport = aircraftSchedule.DepartureAirportName,
                                                             Title = aircraftSchedule.ScheduleTitle,
                                                             Member1 = user.FirstName + " " + user.LastName,
                                                             TailNo = aircraft.TailNo,
@@ -123,6 +129,9 @@ namespace Repository
                                                         {
                                                             Id = aircraftSchedule.Id,
                                                             StartDate = aircraftSchedule.StartDateTime,
+                                                            EndDate = aircraftSchedule.EndDateTime,
+                                                            ArrivalAirport = aircraftSchedule.ArrivalAirportName,
+                                                            DepartureAirport = aircraftSchedule.DepartureAirportName,
                                                             Title = aircraftSchedule.ScheduleTitle,
                                                             Member1 = user.FirstName + " " + user.LastName,
                                                             TailNo = aircraft.TailNo,

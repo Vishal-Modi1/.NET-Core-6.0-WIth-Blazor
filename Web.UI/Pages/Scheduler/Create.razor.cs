@@ -465,9 +465,8 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task OpenCreateTagDialogAsync()
         {
-            popupTitle = "Create Tag";
+            childPopupTitle = "Create Tag";
             isDisplayChildPopup = true;
-
         }
 
         public async Task DeleteAsync()

@@ -69,112 +69,108 @@
         </ChildContent>
     </CustomCollapseBar>
 </div>
-<div style="position: relative; width:100%; min-height: 400px;">
 
-    <TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
-                 Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
+<TelerikGrid TItem="CompanyVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
+             Sortable="true" PageSize="@pageSize" PageSizeChanged="@PageSizeChangedHandler">
 
-        <GridSettings>
-            <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
-        </GridSettings>
+    <GridSettings>
+        <Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent></Web.UI.Shared.Components.TelerikGridPager.TelerikGridPagerComponent>
+    </GridSettings>
 
-        <GridColumns>
+    <GridColumns>
 
-            <GridColumn Context="dataItem" Title="Logo" Width="10%">
-                <Template>
-                    @{
-                        var data = dataItem as CompanyVM;
-                        <img class="rounded" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
-                             src="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
-                    }
-
-                </Template>
-            </GridColumn>
-
-            <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company" Width="25%">
-                <Template>
-                    @{
-                        var data = context as CompanyVM;
-                        <u> <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenCompanyDetailPage(data))">@data.Name</a></u>
-                    }
-                </Template>
-            </GridColumn>
-            <GridColumn Field="@nameof(CompanyVM.City)" Width="15%" />
-            <GridColumn Field="@nameof(CompanyVM.State)" Width="15%" />
-            
-            <GridColumn Field="@nameof(CompanyVM.CreatedOn)" Title="Created On" Width="15%">
-
-                <Template>
-
-                    @{
-                        var data = context as CompanyVM;
-                        <label> @data.CreatedOn.SetCustomFormat(data.CreatedOn,globalMembers.DateFormat,false) </label>
-                    }
-
-                </Template>
-
-            </GridColumn>
-
-              <GridColumn Field="@nameof(CompanyVM.UpdatedOn)" Title="Updated On" Width="15%">
-                         
-                <Template>
- 
-                    @{
-                        var data = context as CompanyVM;
-
-                        @if (data.UpdatedOn != null)
-                        {
-                            <label> @data.UpdatedOn.GetValueOrDefault().SetCustomFormat(data.UpdatedOn.GetValueOrDefault(),globalMembers.DateFormat,false) </label>
-                        }
-                        else
-                        {
-                            <label>-</label>
-                        }
-                    }
-
-                </Template>
-
-            </GridColumn>
-
-            <GridColumn Field="@nameof(CompanyVM.TotalAircrafts)" Title="Aicrafts" TextAlign="@ColumnTextAlign.Center" Width="10%" />
-            <GridColumn Field="@nameof(CompanyVM.TotalUsers)" Title="Users" TextAlign="@ColumnTextAlign.Center" Width="10%" />
-
-            <GridCommandColumn Context="dataItem" Title="Action">
+        <GridColumn Context="dataItem" Title="Logo" Width="10%">
+            <Template>
                 @{
-                    CompanyVM companyVM = dataItem as CompanyVM;
+                    var data = dataItem as CompanyVM;
+                    <img class="rounded" onerror="this.onerror=null;this.src='../img/company-default-logo.png';"
+                         src="@data.LogoPath" style="width: 45px; height: 45px; border-radius: 22px !important;" />
+                }
 
-                    <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenCompanyDetailPage(companyVM)">
-                        <CustomIcons IconName="settings" PrimaryColor="white"></CustomIcons>
-                    </TelerikButton>
+            </Template>
+        </GridColumn>
 
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+        <GridColumn Field="@nameof(CompanyVM.Name)" Title="Company" Width="25%">
+            <Template>
+                @{
+                    var data = context as CompanyVM;
+                    <u> <a href="javascript:void(0)" style="color:#1151F3" @onclick="@((ui) => OpenCompanyDetailPage(data))">@data.Name</a></u>
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field="@nameof(CompanyVM.City)" Width="15%" />
+        <GridColumn Field="@nameof(CompanyVM.State)" Width="15%" />
+
+        <GridColumn Field="@nameof(CompanyVM.CreatedOn)" Title="Created On" Width="15%">
+
+            <Template>
+
+                @{
+                    var data = context as CompanyVM;
+                    <label> @data.CreatedOn.SetCustomFormat(data.CreatedOn,globalMembers.DateFormat,false) </label>
+                }
+
+            </Template>
+
+        </GridColumn>
+
+        <GridColumn Field="@nameof(CompanyVM.UpdatedOn)" Title="Updated On" Width="15%">
+
+            <Template>
+
+                @{
+                    var data = context as CompanyVM;
+
+                    @if (data.UpdatedOn != null)
                     {
-                        <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>CompanyCreateDialog(companyVM)"
-                               ThemeColor="success" Enabled=!companyVM.IsLoadingEditButton>
-
-                            <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
-                                   Visible="companyVM.IsLoadingEditButton">
-                            </TelerikLoader>
-
-                        </TelerikButton>
+                        <label> @data.UpdatedOn.GetValueOrDefault().SetCustomFormat(data.UpdatedOn.GetValueOrDefault(),globalMembers.DateFormat,false) </label>
                     }
-
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                    else
                     {
-                        <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
-                            <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                        </TelerikButton>
+                        <label>-</label>
                     }
                 }
-            </GridCommandColumn>
 
-        </GridColumns>
+            </Template>
 
-    </TelerikGrid>
+        </GridColumn>
 
-</div>
+        <GridColumn Field="@nameof(CompanyVM.TotalAircrafts)" Title="Aicrafts" TextAlign="@ColumnTextAlign.Center" Width="10%" />
+        <GridColumn Field="@nameof(CompanyVM.TotalUsers)" Title="Users" TextAlign="@ColumnTextAlign.Center" Width="10%" />
 
+         <GridCommandColumn Context="dataItem" Title="Action" Width="20%" >
+            @{
+                CompanyVM companyVM = dataItem as CompanyVM;
+
+                <TelerikButton Class="btn k-btn-primary mx-1" OnClick="()=>OpenCompanyDetailPage(companyVM)">
+                    <CustomIcons IconName="settings" PrimaryColor="white"></CustomIcons> 
+                </TelerikButton>
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>CompanyCreateDialog(companyVM)"
+                           ThemeColor="success" Enabled=!companyVM.IsLoadingEditButton>
+
+                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                               Visible="companyVM.IsLoadingEditButton">
+                        </TelerikLoader>
+
+                    </TelerikButton>
+                }
+
+                @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                {
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(companyVM)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    </TelerikButton>
+                }
+            }
+        </GridCommandColumn>
+
+    </GridColumns>
+
+</TelerikGrid>
 
 @if (isDisplayPopup)
 {

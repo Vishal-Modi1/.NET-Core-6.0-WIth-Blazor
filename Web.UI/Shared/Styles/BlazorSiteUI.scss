@@ -237,14 +237,15 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 /*LEFT MENU NAV BAR*/
 .k-drawer-mini {
     .k-drawer.k-drawer-start {
-        border-right-width: 0;
+        border-right-width: thin;
+        border-right-color: #d3d3d3;
     }
 }
 
 .k-drawer-expanded {
     .k-drawer.k-drawer-start {
         border-right-width: thin;
-        border-right-color: lightgrey;
+        border-right-color: #d3d3d3;
     }
 }
 

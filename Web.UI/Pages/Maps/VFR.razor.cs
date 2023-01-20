@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 using Web.UI.Utilities;
 using DataModels.Entities;
 
-namespace Web.UI.Pages.Weather
+namespace Web.UI.Pages.Maps
 {
     partial class VFR
     {
