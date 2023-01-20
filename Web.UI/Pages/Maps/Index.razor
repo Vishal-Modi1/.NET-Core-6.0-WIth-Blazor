@@ -1,58 +1,59 @@
-﻿@page "/Weather"
+﻿@page "/Maps"
 
-<PageTitle>Weather | Upflyte </PageTitle>
+<PageTitle>Maps | Upflyte </PageTitle>
 <div id="container">
     <div class="card">
         <TelerikTabStrip Class="k-tabstrip-list">
 
-            <TabStripTab>
+             <TabStripTab>
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
                         <span class="mx-2">
-                            <CustomIcons IconName="weatherbriefings" PrimaryColor="#3066f8"></CustomIcons>
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="maps" PrimaryColor="#3066f8" />
                         </span>
-                        <span>Briefings</span>
+                        <span>Map</span>
                     </div>
                 </HeaderTemplate>
                 <Content>
-                    
-                    <Briefings></Briefings>
-                    
+                    <VFR />
                 </Content>
             </TabStripTab>
 
-            <TabStripTab>
-                <HeaderTemplate>
-                    <div class="d-flex justify-content-center align-items-center">
-
-                        <span class="mx-2">
-                            <CustomIcons IconName="weathercloud" PrimaryColor="#3066f8"></CustomIcons>
-                        </span>
-                        <span>Weather</span>
-                    </div>
-                </HeaderTemplate>
-                <Content>
-
-                    <Weather></Weather>
-
-                </Content>
-            </TabStripTab>
-            <TabStripTab>
+             <TabStripTab>
                 <HeaderTemplate>
                     <div class="d-flex justify-content-center align-items-center">
 
                         <span class="mx-2">
                             
-                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="radar" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="aircraft-live-tracking" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
 
                         </span>
-                        <span>Radar</span>
+                        <span>Tarcking</span>
                     </div>
                 </HeaderTemplate>
                 <Content>
-                    <Radar></Radar>
+                    <AircraftLiveTracker></AircraftLiveTracker>
                 </Content>
             </TabStripTab>
+
+            
+             <TabStripTab>
+                <HeaderTemplate>
+                    <div class="d-flex justify-content-center align-items-center">
+
+                        <span class="mx-2">
+                            
+                            <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="chart" PrimaryColor="#3066f8"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+
+                        </span>
+                        <span>Chart</span>
+                    </div>
+                </HeaderTemplate>
+                <Content>
+                   @* <AircraftLiveTracker></AircraftLiveTracker>*@
+                </Content>
+            </TabStripTab>
+           
         </TelerikTabStrip>
     </div>
 </div>

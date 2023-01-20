@@ -59,6 +59,7 @@ namespace Web.UI.Shared
 
             globalMembers.MenuItems.AddRange(await MenuService.ListMenuItemsAsync(AuthStat, AuthenticationStateProvider));
 
+            globalMembers.MenuItems.Add(new MenuItem() { Controller = "maps", DisplayName = "Maps" });
             globalMembers.MenuItems.Add(new MenuItem() { Controller = "weather", DisplayName = "Weather" });
             globalMembers.MenuItems.Add(new MenuItem() { Controller = "Logout", DisplayName = "Log out" });
 

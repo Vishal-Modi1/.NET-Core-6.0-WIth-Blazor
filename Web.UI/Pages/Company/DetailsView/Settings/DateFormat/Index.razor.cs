@@ -12,7 +12,6 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.DateFormat
     {
         [Parameter] public int CompanyId { get; set; }
         [Parameter] public int CompanyIdParam { get; set; }
-
         CompanyDateFormatVM companyDateFormat;
 
         string exampleDate = DateTime.Now.ToString();
@@ -47,7 +46,9 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.DateFormat
 
             if (response.Status == System.Net.HttpStatusCode.OK)
             {
+                var dateList = companyDateFormat.DateFormatsList;
                 companyDateFormat = JsonConvert.DeserializeObject<CompanyDateFormatVM>(response.Data.ToString());
+                companyDateFormat.DateFormatsList = dateList;
             }
 
             isBusySubmitButton = false;

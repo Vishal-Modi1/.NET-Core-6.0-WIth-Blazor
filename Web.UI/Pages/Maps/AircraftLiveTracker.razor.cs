@@ -3,7 +3,7 @@ using DataModels.VM.Weather;
 using Microsoft.JSInterop;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.Weather
+namespace Web.UI.Pages.Maps
 {
     partial class AircraftLiveTracker
     {
