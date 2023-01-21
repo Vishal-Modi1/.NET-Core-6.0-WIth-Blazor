@@ -16,15 +16,17 @@
         width: 150px !important;
     }
 </style>
-
+<span class="mr-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
+    <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="weathermenu" PrimaryColor="#3066f8"> </CustomIcons></FontLabel>
+                    </span>
 <div id="parent" style="position: relative">
     <div class="collapsebar" style="position:absolute;left:12px">
         <div class="row">
             <div class="py-2">
                 <span class="ma-2">
-                    <span class="mr-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
+                    @*<span class="mr-2" @onclick=@(() => {isFilterBarVisible = !isFilterBarVisible;})>
                         <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="weathermenu" PrimaryColor="white"> </CustomIcons></FontLabel>
-                    </span>
+                    </span>*@
                     @*     <span class="tb-icon-container">
                         <TelerikIcon Icon="zoom" Class="pt-1 px-1" />
                         <input placeholder="&nbsp;&nbsp;    search location" style="border-radius:100px;" />
@@ -105,11 +107,9 @@
             </div>
         </div>
     </div>
-    <div class="iframe">
-        <iframe style="height:@(aircraftLiveTrackerMapConfiguration.Height)px;
+        <iframe  class="iframe" style="height:@(aircraftLiveTrackerMapConfiguration.Height)px;
             width:@(aircraftLiveTrackerMapConfiguration.Width)px;" 
         id="aircraftLiveTrackerMap" src="@mapSrc"
         onforminput="@aircraftLiveTrackerMapConfiguration" frameborder="0">
         </iframe>
-    </div>
 </div>
