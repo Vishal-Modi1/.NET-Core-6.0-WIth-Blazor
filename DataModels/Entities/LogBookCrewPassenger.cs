@@ -2,7 +2,7 @@
 
 namespace DataModels.Entities
 {
-    public class LogBookCrewPassenger
+    public class LogBookCrewPassengerVM
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }

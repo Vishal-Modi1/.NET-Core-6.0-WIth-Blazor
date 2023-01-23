@@ -23,6 +23,7 @@ using Web.UI.Data.Airport;
 using Web.UI.Data.Discrepancy;
 using Web.UI.Data.Company.Settings;
 using Web.UI.Data.Weather;
+using Web.UI.Data.LogBook;
 
 namespace Web.UI.CustomServicesExtensions
 {
@@ -66,6 +67,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<BillingConfigurationService>();
             builder.Services.AddScoped<FlightCategoryService>();
             builder.Services.AddScoped<CompanyDateFormatService>();
+            builder.Services.AddScoped<LogBookService>();
         }
     }
 }

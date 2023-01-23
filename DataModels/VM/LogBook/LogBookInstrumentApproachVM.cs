@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataModels.Entities
+namespace DataModels.VM.LogBook
 {
     public class LogBookInstrumentApproachVM
     {

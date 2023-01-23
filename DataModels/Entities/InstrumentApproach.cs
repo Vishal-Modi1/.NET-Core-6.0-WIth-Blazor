@@ -1,8 +1,10 @@
-﻿namespace DataModels.Entities
+﻿using System;
+
+namespace DataModels.Entities
 {
     public class InstrumentApproach
     {
-        public int Id { get; set; }
+        public short Id { get; set; }
 
         public string Name { get; set; }
     }

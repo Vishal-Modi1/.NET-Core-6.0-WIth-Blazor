@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataModels.Entities
+namespace DataModels.VM.LogBook
 {
     public class LogBookFlightPhotoVM
     {

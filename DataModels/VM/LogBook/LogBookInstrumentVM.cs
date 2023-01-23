@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace DataModels.Entities
+namespace DataModels.VM.LogBook
 {
     public class LogBookInstrumentVM
     {
@@ -9,5 +10,7 @@ namespace DataModels.Entities
         public Int32 ActualInstrument { get; set; }
         public Int32 SimulatedInstrument { get; set; }
         public Int32 Holds { get; set; }
+
+        public List<LogBookInstrumentApproachVM> LogBookInstrumentApproachesVM { get; set; }
     }
 }

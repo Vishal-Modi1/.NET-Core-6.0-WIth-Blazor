@@ -155,6 +155,22 @@ namespace Repository
        
         public DbSet<CompanyDateFormat> CompaniesDateFormat { get; set; }
 
+        #region Logbook
+        public DbSet<LogBook> LogBooks { get; set; }
+
+        public DbSet<LogBookCrewPassengerVM> LogBookCrewPassengers { get; set; }
+
+        public DbSet<LogBookFlightPhotoVM> LogBookFlightPhotos { get; set; }
+
+        public DbSet<LogBookFlightTimeDetailVM> LogBookFlightTimeDetails { get; set; }
+
+        public DbSet<LogBookInstrumentVM> LogBookInstruments { get; set; }
+        public DbSet<LogBookInstrumentApproachVM> LogBookInstrumentApproaches { get; set; }
+        public DbSet<LogBookTrainingDetailVM> LogBookTrainingDetails { get; set; }
+        public DbSet<InstrumentApproach> InstrumentApproaches { get; set; }
+
+        #endregion
+
         //List Objects
 
         #region Data list

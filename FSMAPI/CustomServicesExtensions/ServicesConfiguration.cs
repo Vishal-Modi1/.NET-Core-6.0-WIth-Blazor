@@ -55,6 +55,8 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IRadarMapConfigurationService, RadarMapConfigurationService>();
             services.AddScoped<ICompanyDateFormatService, CompanyDateFormatService>();
             services.AddScoped<IVFRMapConfigurationService, VFRMapConfigurationService>();
+            services.AddScoped<ILogBookService, LogBookService>();
+
         }
 
         public static void AddCustomRepositories(this IServiceCollection services)
@@ -108,6 +110,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IRadarMapConfigurationRepository, RadarMapConfigurationRepository>();
             services.AddScoped<ICompanyDateFormatRepository, CompanyDateFormatRepository>();
             services.AddScoped<IVFRMapConfigurationRepository, VFRMapConfigurationRepository>();
+            services.AddScoped<ILogBookRepository, LogBookRepository>();
         }
     }
 }

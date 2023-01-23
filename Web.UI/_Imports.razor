@@ -12,7 +12,6 @@
 @using Telerik.Blazor.Components
 @using Microsoft.Extensions.Caching.Memory
 
-
 @using Web.UI.Extensions;
 
 @*Data Services*@
@@ -38,6 +37,7 @@
 @using Web.UI.Data.Discrepancy
 @using Web.UI.Data.Company.Settings
 @using Web.UI.Data.Weather
+@using Web.UI.Data.LogBook
 
 @using Web.UI.Shared.Components.DialogFooter;
 @using Web.UI.Shared.Components.CustomPopup;
@@ -93,5 +93,6 @@
 @inject BillingConfigurationService BillingConfigurationService
 @inject FlightCategoryService FlightCategoryService
 @inject CompanyDateFormatService CompanyDateFormatService
+@inject LogBookService LogBookService
 
 @inherits BaseClass
