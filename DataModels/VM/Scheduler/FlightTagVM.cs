@@ -16,6 +16,6 @@ namespace DataModels.VM.Scheduler
         public int  CompanyId { get; set; }
 
         public long CreatedBy { get; set; }
-        public long UpdatedBy { get; set; }
+        public long? UpdatedBy { get; set; }
     }
 }

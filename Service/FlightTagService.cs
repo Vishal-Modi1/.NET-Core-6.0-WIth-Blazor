@@ -102,9 +102,9 @@ namespace Service
         private FlightTag ToDataObject(FlightTagVM flightTagVM)
         {
             FlightTag flightTag = new FlightTag();
-
             flightTag =  _mapper.Map<FlightTag>(flightTagVM);
-
+            flightTag.IsActive= true;
+            
             if (flightTagVM.Id == 0)
             {
                 flightTag.CreatedOn = DateTime.UtcNow;

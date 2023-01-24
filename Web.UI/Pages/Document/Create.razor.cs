@@ -6,6 +6,8 @@ using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Telerik.Blazor.Components;
+using DataModels.Enums;
+using DataModels.VM.Scheduler;
 
 namespace Web.UI.Pages.Document
 {
@@ -224,9 +226,15 @@ namespace Web.UI.Pages.Document
 
         public async Task OpenCreateTagDialogAsync()
         {
-            popupTitle = "Create Tag";
-            isDisplayChildPopup = true;
-
+            if (globalMembers.IsSuperAdmin && documentData.CompanyId == 0)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Please select company.");
+            }
+            else
+            {
+                popupTitle = "Create Tag";
+                isDisplayChildPopup = true;
+            }
         }
 
         public void CloseDialog(bool reloadGrid)
