@@ -7,5 +7,7 @@ namespace DataModels.Entities
         public int Id { get; set; }
 
         public string TagName { get; set; }
+
+        public int CompanyId { get; set; }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using DataModels.Constants;
 using DataModels.VM.Common;
+using DataModels.VM.Company.Settings;
 using DataModels.VM.Document;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;
+using System.Data;
 
 namespace FSMAPI.Controllers
 {
@@ -46,6 +48,12 @@ namespace FSMAPI.Controllers
         public IActionResult Create(DocumentTagVM documentTagVM)
         {
             documentTagVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                documentTagVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _documentTagService.Create(documentTagVM);
 
             return APIResponse(response);

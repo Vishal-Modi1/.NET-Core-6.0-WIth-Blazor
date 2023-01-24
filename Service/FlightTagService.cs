@@ -104,7 +104,6 @@ namespace Service
             FlightTag flightTag = new FlightTag();
 
             flightTag =  _mapper.Map<FlightTag>(flightTagVM);
-            flightTag.CreatedBy = flightTagVM.CreatedBy;
 
             if (flightTagVM.Id == 0)
             {

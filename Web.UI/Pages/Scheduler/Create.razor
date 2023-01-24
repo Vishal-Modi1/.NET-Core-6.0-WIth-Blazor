@@ -136,17 +136,17 @@
                             <TelerikValidationMessage For="@(() => schedulerVM.ArrivalAirport)"></TelerikValidationMessage>
                         </div>
 
-                          <div class="col-6">
-                                <label>Flight Category</label>
-                                <TelerikComboBox Id=flightCategoryId Data="@schedulerVM.FlightCategoriesList" TextField="Name"
+                        <div class="col-6">
+                            <label>Flight Category</label>
+                            <TelerikComboBox Id=flightCategoryId Data="@schedulerVM.FlightCategoriesList" TextField="Name"
                                  Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                  Placeholder="Select Category" ValueField="Id"
                                  @bind-Value="@(schedulerVM.FlightCategoryId)">
 
-                                </TelerikComboBox>
+                            </TelerikComboBox>
 
-                                <TelerikValidationMessage For="@(() => schedulerVM.FlightCategoryId)"></TelerikValidationMessage>
-                            </div>
+                            <TelerikValidationMessage For="@(() => schedulerVM.FlightCategoryId)"></TelerikValidationMessage>
+                        </div>
 
                         @if (uiOptions.IsDisplayAircraftDropDown)
                         {
@@ -361,15 +361,15 @@
 {
     <EditEndTimeForm CloseDialogParentEvent=@CloseDialog IsOpenFromContextMenu=@IsOpenFromContextMenu
                  RefreshSchedulerDataSourceParentEvent=@RefreshSchedulerDataSourceParentEvent
-                 schedulerVM=@schedulerVM uiOptions="@uiOptions" HideEditEndTimeFormParentEvent=@HideEditEndTimeForm >
+                 schedulerVM=@schedulerVM uiOptions="@uiOptions" HideEditEndTimeFormParentEvent=@HideEditEndTimeForm>
     </EditEndTimeForm>
 }
 
 @if (uiOptions.IsDisplayCheckInForm)
 {
-     <EditCheckInForm CloseDialogParentEvent=@CloseDialog IsOpenFromContextMenu=@IsOpenFromContextMenu
+    <EditCheckInForm CloseDialogParentEvent=@CloseDialog IsOpenFromContextMenu=@IsOpenFromContextMenu
                  RefreshSchedulerDataSourceParentEvent=@RefreshSchedulerDataSourceParentEvent
-                 schedulerVM=@schedulerVM uiOptions="@uiOptions" CloseCheckInFormParentEvent=@CloseCheckInForm >
+                 schedulerVM=@schedulerVM uiOptions="@uiOptions" CloseCheckInFormParentEvent=@CloseCheckInForm>
     </EditCheckInForm>
 }
 @{
@@ -403,7 +403,6 @@
                         </div>
                     </div>
                 }
-
                 else if (operationType == OperationType.Delete)
                 {
                     <div>
@@ -429,9 +428,9 @@
                 {
                     <AirportDetails AirportDetailInfo="@airportDetails"></AirportDetails>
                 }
-                else
+                else if (operationType == OperationType.DocumentTagCreate)
                 {
-                    <Web.UI.Pages.Reservation.FlightTag.Create CloseDialogCallBack="@CloseChildDialog" />                    
+                    <Web.UI.Pages.Reservation.FlightTag.Create CloseDialogCallBack="@CloseChildDialog" CompanyId="@schedulerVM.CompanyId" />
                 }
             </Body>
         </CustomPopupComponent>

@@ -14,6 +14,7 @@
         ChangeCompany = 10,
         InviteUser = 11,
         UnCheckOut = 12,
-        Archive = 13
+        Archive = 13,
+        DocumentTagCreate = 14,
     }
 }
