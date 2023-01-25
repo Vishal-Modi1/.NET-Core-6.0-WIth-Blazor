@@ -181,8 +181,10 @@ namespace Service
             List<UserVSCompany> userVsRoleList = _userVSCompanyRepository.ListByCompanyId(companyId);
 
             List<long> instructorsList = userVsRoleList.Where(p => p.RoleId == (int)DataModels.Enums.UserRole.Instructors).Select(p => p.UserId).ToList();
+            List<long> pilotsList = userVsRoleList.Where(p => p.RoleId == (int)DataModels.Enums.UserRole.PilotRenter).Select(p => p.UserId).ToList();
 
-            schedulerVM.Member1List = schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
+            schedulerVM.Member1List = usersList.Where(p => pilotsList.Contains(p.Id)).ToList();
+            schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
             schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
 
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);

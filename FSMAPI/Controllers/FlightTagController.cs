@@ -1,5 +1,6 @@
 ﻿using DataModels.Constants;
 using DataModels.VM.Common;
+using DataModels.VM.Document;
 using DataModels.VM.Scheduler;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -46,6 +47,12 @@ namespace FSMAPI.Controllers
         public IActionResult Create(FlightTagVM flightTagVM)
         {
             flightTagVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                flightTagVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
             CurrentResponse response = _flightTagService.Create(flightTagVM);
 
             return APIResponse(response);

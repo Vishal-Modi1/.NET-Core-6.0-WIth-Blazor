@@ -9,7 +9,8 @@ namespace DataModels.VM.Document
         [Required(ErrorMessage = "Name is required")]
         public string TagName { get; set; }
 
+        public int  CompanyId { get; set; }
         public long CreatedBy { get; set; }
-        public long UpdatedBy { get; set; }
+        public long? UpdatedBy { get; set; }
     }
 }

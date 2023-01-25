@@ -13,6 +13,7 @@ using Web.UI.Models.Scheduler;
 using DataModels.VM.ExternalAPI.Airport;
 using Telerik.Blazor.Components;
 using Newtonsoft.Json;
+using Twilio.Http;
 
 namespace Web.UI.Pages.Scheduler
 {
@@ -39,7 +40,7 @@ namespace Web.UI.Pages.Scheduler
         public bool isAllowToDelete;
         AirportAPIFilter airportAPIFilter = new AirportAPIFilter();
         bool isValidAirportsSelected = false;
-        AirportDetailsViewModel airportDetails = new ();
+        AirportDetailsViewModel airportDetails = new();
 
         List<DropDownGuidValues> departureAirportList, arrivalAirpotList;
         List<RadioButtonItem> flightTypes { get; set; } = new List<RadioButtonItem>
@@ -129,7 +130,7 @@ namespace Web.UI.Pages.Scheduler
             bool isValid = true;
             isBusySubmitButton = true;
 
-            if(departureAirportList == null)
+            if (departureAirportList == null)
             {
                 return isValid;
             }
@@ -224,7 +225,7 @@ namespace Web.UI.Pages.Scheduler
         {
             if (IsOpenFromContextMenu)
             {
-               CloseDialog();
+                CloseDialog();
             }
             else
             {
@@ -233,7 +234,7 @@ namespace Web.UI.Pages.Scheduler
             }
         }
 
-       public void OpenForm()
+        public void OpenForm()
         {
             if (schedulerVM.ScheduleActivityId.GetValueOrDefault() != 0)
             {
@@ -439,7 +440,7 @@ namespace Web.UI.Pages.Scheduler
             isDisplayChildPopup = false;
             OpenDialog();
         }
-        
+
         private async Task CloseChildDialogAsync()
         {
             isDisplayChildPopup = false;
@@ -465,8 +466,16 @@ namespace Web.UI.Pages.Scheduler
 
         public async Task OpenCreateTagDialogAsync()
         {
-            childPopupTitle = "Create Tag";
-            isDisplayChildPopup = true;
+            if (schedulerVM.RoleId == (int)DataModels.Enums.UserRole.SuperAdmin && schedulerVM.CompanyId == 0)
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Please select company.");
+            }
+            else
+            {
+                childPopupTitle = "Create Tag";
+                isDisplayChildPopup = true;
+                operationType = OperationType.DocumentTagCreate;
+            }
         }
 
         public async Task DeleteAsync()
@@ -603,7 +612,7 @@ namespace Web.UI.Pages.Scheduler
                 CloseDialog();
             }
         }
-        
+
         private List<long> GetFlightTagIds()
         {
             if (schedulerVM is not null && !string.IsNullOrEmpty(schedulerVM.FlightTagIds))

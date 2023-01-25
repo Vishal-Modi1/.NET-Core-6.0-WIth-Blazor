@@ -10,9 +10,11 @@ namespace Web.UI.Pages.Document.DocumentTag
     {
         DocumentTagVM documentTagVM = new DocumentTagVM();
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
+        [Parameter] public int CompanyId { get; set; }
 
         public async Task Submit()
         {
+            documentTagVM.CompanyId = CompanyId;
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.SaveTagAsync(dependecyParams, documentTagVM);
 
