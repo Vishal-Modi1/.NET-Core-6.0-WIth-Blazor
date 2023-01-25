@@ -172,10 +172,7 @@
                       OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 
-            <Web.UI.Pages.Document.DocumentTag.Create CloseDialogCallBack="@CloseChildDialog">
-
-            </Web.UI.Pages.Document.DocumentTag.Create>
-
+            <Web.UI.Pages.Document.DocumentTag.Create CloseDialogCallBack="@CloseChildDialog" CompanyId="@documentData.CompanyId" />
         </Body>
     </CustomPopupComponent>
 }

@@ -1,6 +1,8 @@
-﻿using DataModels.Entities;
+﻿using AutoMapper;
+using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.Document;
+using DataModels.VM.Scheduler;
 using Repository.Interface;
 using Service.Interface;
 using System;
@@ -12,10 +14,12 @@ namespace Service
     public class DocumentTagService : BaseService, IDocumentTagService
     {
         private readonly IDocumentTagRepository _documentTagRepository;
+        private readonly IMapper _mapper;
 
-        public DocumentTagService(IDocumentTagRepository documentTagRepository)
+        public DocumentTagService(IDocumentTagRepository documentTagRepository, IMapper mapper)
         {
             _documentTagRepository = documentTagRepository;
+            _mapper = mapper;
         }
 
         public CurrentResponse Create(DocumentTagVM documentTagVM)
@@ -96,11 +100,8 @@ namespace Service
         private DocumentTag ToDataObject(DocumentTagVM documentTagVM)
         {
             DocumentTag documentTag = new DocumentTag();
-
-            documentTag.TagName = documentTagVM.TagName;
+            documentTag = _mapper.Map<DocumentTag>(documentTagVM);
             documentTag.IsActive = true;
-
-            documentTag.CreatedBy = documentTagVM.CreatedBy;
 
             if (documentTagVM.Id == 0)
             {
