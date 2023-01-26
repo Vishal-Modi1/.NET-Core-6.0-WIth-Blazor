@@ -31,6 +31,7 @@ namespace Web.UI.Pages.Reservation
         ReservationDataTableParams datatableParams;
         ReservationFilterVM reservationFilterVM = new ReservationFilterVM();
         SchedulerVM schedulerVM;
+        bool isAllowedToCreate;
 
         #endregion
 
@@ -68,6 +69,11 @@ namespace Web.UI.Pages.Reservation
             {
                 reservationFilterVM.CompanyId = CompanyId == null ? Convert.ToInt32(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.CompanyId).Result) : CompanyId.Value;
                 reservationFilterVM.Users = await UserService.ListDropDownValuesByCompanyId(dependecyParams, reservationFilterVM.CompanyId);
+            }
+
+            if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin || globalMembers.UserRole == DataModels.Enums.UserRole.PilotRenter)
+            {
+                isAllowedToCreate = true;
             }
         }
 

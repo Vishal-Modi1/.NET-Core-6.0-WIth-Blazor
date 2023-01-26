@@ -36,9 +36,16 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("listdropdownvalues")]
-        public IActionResult ListDropdownValues()
+        public IActionResult ListDropdownValuesByCompanyId(int companyId)
         {
-            CurrentResponse response = _documentTagService.ListDropDownValues();
+
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _documentTagService.ListDropDownValues(companyId);
 
             return APIResponse(response);
         }
@@ -47,7 +54,8 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(DocumentTagVM documentTagVM)
         {
-            documentTagVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            documentTagVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+           
             string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {

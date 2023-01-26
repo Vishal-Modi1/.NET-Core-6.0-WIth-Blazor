@@ -70,6 +70,7 @@ namespace Web.UI.Pages.Document
 
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
+            documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
 
             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
@@ -249,7 +250,7 @@ namespace Web.UI.Pages.Document
             if (reloaList)
             {
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
+                documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
             }
         }
     }

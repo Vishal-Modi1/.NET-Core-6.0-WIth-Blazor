@@ -35,9 +35,15 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("listdropdownvalues")]
-        public IActionResult ListDropdownValues()
+        public IActionResult ListDropdownValues(int companyId)
         {
-            CurrentResponse response = _flightTagService.ListDropDownValues();
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _flightTagService.ListDropDownValues(companyId);
 
             return APIResponse(response);
         }
@@ -47,6 +53,7 @@ namespace FSMAPI.Controllers
         public IActionResult Create(FlightTagVM flightTagVM)
         {
             flightTagVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+
             string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {

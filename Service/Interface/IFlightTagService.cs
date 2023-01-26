@@ -1,11 +1,5 @@
 ﻿using DataModels.VM.Common;
-using DataModels.VM.Document;
 using DataModels.VM.Scheduler;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.Interface
 {
@@ -15,6 +9,6 @@ namespace Service.Interface
 
         CurrentResponse Create(FlightTagVM flightTagVM);
 
-        CurrentResponse ListDropDownValues();
+        CurrentResponse ListDropDownValues(int companyId);
     }
 }

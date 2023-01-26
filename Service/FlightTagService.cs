@@ -29,7 +29,7 @@ namespace Service
         {
             try
             {
-                bool isFlightTagExist = IsTagExist(flightTagVM.TagName);
+                bool isFlightTagExist = IsTagExist(flightTagVM.TagName, flightTagVM.CompanyId);
 
                 if (isFlightTagExist)
                 {
@@ -69,11 +69,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListDropDownValues()
+        public CurrentResponse ListDropDownValues(int companyId)
         {
             try
             {
-                List<DropDownLargeValues> flightTagsList = _flightTagRepository.ListDropDownValues();
+                List<DropDownLargeValues> flightTagsList = _flightTagRepository.ListDropDownValues(companyId);
                 CreateResponse(flightTagsList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -87,9 +87,10 @@ namespace Service
             }
         }
 
-        public bool IsTagExist(string tag)
+        public bool IsTagExist(string tag, int companyId)
         {
-            FlightTagVM flightTag = _flightTagRepository.FindByCondition(p => p.TagName.ToLower() == tag.ToLower() && p.IsActive == true && p.IsDeleted == false);
+            FlightTagVM flightTag = _flightTagRepository.FindByCondition(p => p.TagName.ToLower() == tag.ToLower() && 
+            p.IsActive == true && p.IsDeleted == false && p.CompanyId == companyId);
 
             if (flightTag == null)
             {

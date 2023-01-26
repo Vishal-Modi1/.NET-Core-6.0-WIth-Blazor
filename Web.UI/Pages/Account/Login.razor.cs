@@ -37,7 +37,7 @@ namespace Web.UI.Pages.Account
             if(!firstRender)
             {
                 isDisplayLoader = false;
-                base.StateHasChanged();
+                StateHasChanged();
             }
 
             base.OnAfterRender(firstRender);

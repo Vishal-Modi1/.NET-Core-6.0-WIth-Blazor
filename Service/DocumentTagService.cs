@@ -26,7 +26,7 @@ namespace Service
         {
             try
             {
-                bool isDocumentTagExist = IsTagExist(documentTagVM.TagName);
+                bool isDocumentTagExist = IsTagExist(documentTagVM.TagName, documentTagVM.CompanyId);
 
                 if(isDocumentTagExist)
                 {
@@ -49,9 +49,10 @@ namespace Service
             }
         }
 
-        public bool IsTagExist(string tag)
+        public bool IsTagExist(string tag, int companyId)
         {
-            DocumentTagVM documentTag = _documentTagRepository.FindByCondition(p => p.TagName.ToLower() == tag.ToLower() && p.IsActive == true && p.IsDeleted == false);
+            DocumentTagVM documentTag = _documentTagRepository.FindByCondition(p => p.TagName.ToLower() == tag.ToLower() 
+            && p.IsActive == true && p.IsDeleted == false && p.CompanyId == companyId);
 
             if (documentTag == null)
             {
@@ -79,11 +80,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse ListDropDownValues()
+        public CurrentResponse ListDropDownValues(int companyId)
         {
             try
             {
-                List<DropDownLargeValues> documentTagsList = _documentTagRepository.ListDropDownValues();
+                List<DropDownLargeValues> documentTagsList = _documentTagRepository.ListDropDownValues(companyId);
                 CreateResponse(documentTagsList, HttpStatusCode.OK, "");
 
                 return _currentResponse;

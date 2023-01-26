@@ -80,9 +80,9 @@ namespace Web.UI.Data.Document
             return documentTagsVM;
         }
 
-        public async Task<List<DropDownLargeValues>> ListDropdownValues(DependecyParams dependecyParams)
+        public async Task<List<DropDownLargeValues>> ListDocumentTagDropdownValues(DependecyParams dependecyParams, int companyId)
         {
-            dependecyParams.URL = $"documenttag/listdropdownvalues";
+            dependecyParams.URL = $"documenttag/listdropdownvalues?companyId={companyId}";
 
             var response = await _httpCaller.GetAsync(dependecyParams);
 

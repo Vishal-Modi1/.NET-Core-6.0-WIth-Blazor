@@ -170,9 +170,8 @@ namespace Web.UI.Pages.Document
             {
                 documentData.CompanyId = CompanyIdParam.Value;
                 documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams,CompanyIdParam.Value);
+                documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, CompanyIdParam.Value);
             }
-
-            documentData.DocumentTagsList = await DocumentService.ListDropdownValues(dependecyParams);
 
             if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
             {

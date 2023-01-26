@@ -23,6 +23,6 @@ namespace Repository.Interface
 
         FlightTagVM FindByCondition(Expression<Func<FlightTag, bool>> predicate);
 
-        List<DropDownLargeValues> ListDropDownValues();
+        List<DropDownLargeValues> ListDropDownValues(int companyId);
     }
 }

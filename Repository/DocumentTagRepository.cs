@@ -76,11 +76,12 @@ namespace Repository
             }
         }
 
-        public List<DropDownLargeValues> ListDropDownValues()
+        public List<DropDownLargeValues> ListDropDownValues(int companyId)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownLargeValues> documentTagsList = (from documentTag in _myContext.DocumentTags
+                                                              where documentTag.CompanyId == companyId
                                                            select new DropDownLargeValues()
                                                            {
                                                                Id = documentTag.Id,
@@ -90,6 +91,7 @@ namespace Repository
                 return documentTagsList;
             }
         }
+
         public List<DocumentTag> Create(List<DocumentTag> documentTagsList)
         {
             using (_myContext = new MyContext())

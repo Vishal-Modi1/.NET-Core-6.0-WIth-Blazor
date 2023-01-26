@@ -1,10 +1,8 @@
 ﻿using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components.Authorization;
-using DataModels.VM.Common;
 using Newtonsoft.Json;
 using DataModels.VM.Account;
-using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+using DataModels.VM.Common;
 
 namespace Web.UI.Data.Account
 {

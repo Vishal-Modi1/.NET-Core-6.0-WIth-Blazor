@@ -21,22 +21,22 @@ namespace Web.UI.Pages.Company
         bool isAuthenticated = false;
 
         ReadOnlyCollection<TimeZoneInfo> timeZoneInfos = TimeZoneInfo.GetSystemTimeZones();
-        int? primaryServiceId;
+        int primaryServiceId;
         int zipcode;
 
         EditContext companyForm;
 
-        protected override Task OnParametersSetAsync()
-        {
-            primaryServiceId = companyData.PrimaryServiceId;
-            return base.OnParametersSetAsync();
-        }
+        //protected override Task OnParametersSetAsync()
+        //{
+        //    primaryServiceId = companyData.PrimaryServiceId;
+        //    return base.OnParametersSetAsync();
+        //}
 
         protected override Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
-            primaryServiceId = companyData.PrimaryServiceId;
+            //primaryServiceId = companyData.PrimaryServiceId;
 
             companyForm = new EditContext(companyData);
 
@@ -68,10 +68,10 @@ namespace Web.UI.Pages.Company
 
         async void GotoNextStep()
         {
-            if (!companyForm.Validate())
-            {
-               return;
-            }
+            //if (!companyForm.Validate())
+            //{
+            //   return;
+            //}
 
             GoToNext.Invoke();
         }

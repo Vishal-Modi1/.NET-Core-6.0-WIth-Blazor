@@ -13,7 +13,7 @@ namespace Web.UI.Shared.Components.TelerikMultiSelect
 
         bool IsAllSelected()
         {
-            return SelectedData.Count == Data.Count;
+            return SelectedData.Count == (Data == null ? 0 : Data.Count());
         }
 
         bool GetChecked(long id)

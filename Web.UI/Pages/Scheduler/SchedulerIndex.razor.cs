@@ -52,6 +52,7 @@ namespace Web.UI.Pages.Scheduler
 
         Create createScheduleRef;
         public bool isOpenFromContextMenu { get; set; }
+        bool isAllowedToCreate;
         public SchedulerType schedulerType { get; set; } = SchedulerType.Aircraft;
         public bool isDisplayTodayActivePilots { get; set; } = false;
         public bool isDisplayTodayActiveAircrafts { get; set; } = false;
@@ -90,6 +91,11 @@ namespace Web.UI.Pages.Scheduler
             schedulerVM = new SchedulerVM();
             aircraftsResourceList = new List<ResourceData>();
             pilotsResourceList = new List<ResourceData>();
+
+            if(globalMembers.IsSuperAdmin || globalMembers.IsAdmin || globalMembers.UserRole == DataModels.Enums.UserRole.PilotRenter)
+            {
+                isAllowedToCreate = true;
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -406,7 +412,7 @@ namespace Web.UI.Pages.Scheduler
 
         private async Task OpenCreateScheduleDialogAsync(DateTime? startTime = null, DateTime? endTime = null, long? aircraftId = null)
         {
-            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler"))
+            if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler") || !isAllowedToCreate)
             {
                 return;
             }

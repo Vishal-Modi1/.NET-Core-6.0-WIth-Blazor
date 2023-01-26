@@ -14,6 +14,8 @@ namespace Web.UI.Pages.Document.DocumentTag
 
         public async Task Submit()
         {
+            isBusySubmitButton = true;
+
             documentTagVM.CompanyId = CompanyId;
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.SaveTagAsync(dependecyParams, documentTagVM);
@@ -24,6 +26,8 @@ namespace Web.UI.Pages.Document.DocumentTag
             {
                 CloseDialog(true);
             }
+
+            isBusySubmitButton = false;
         }
 
         public void CloseDialog(bool reloadList)

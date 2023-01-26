@@ -189,7 +189,7 @@ namespace Service
 
             schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
             schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);
-            schedulerVM.FlightTagsList = _flightTagRepository.ListDropDownValues();
+            schedulerVM.FlightTagsList = _flightTagRepository.ListDropDownValues(companyId);
         }
 
         public CurrentResponse ListActivityTypeDropDownValues(int roleId)

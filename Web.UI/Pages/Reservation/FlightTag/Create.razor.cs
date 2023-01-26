@@ -14,6 +14,8 @@ namespace Web.UI.Pages.Reservation.FlightTag
 
         public async Task Submit()
         {
+            isBusySubmitButton = true;
+
             flightTagVM.CompanyId = CompanyId;
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await FlightTagService.SaveTagAsync(dependecyParams, flightTagVM);
@@ -24,6 +26,8 @@ namespace Web.UI.Pages.Reservation.FlightTag
             {
                 CloseDialog(true);
             }
+
+            isBusySubmitButton = false;
         }
 
         public void CloseDialog(bool reloadList)

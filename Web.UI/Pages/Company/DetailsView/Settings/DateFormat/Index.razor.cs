@@ -11,7 +11,6 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.DateFormat
     partial class Index
     {
         [Parameter] public int CompanyId { get; set; }
-        [Parameter] public int CompanyIdParam { get; set; }
         CompanyDateFormatVM companyDateFormat;
 
         string exampleDate = DateTime.Now.ToString();
@@ -30,15 +29,16 @@ namespace Web.UI.Pages.Company.DetailsView.Settings.DateFormat
         {
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             companyDateFormat = await CompanyDateFormatService.GetDefault(dependecyParams);
+            
             companyDateFormat.DateFormatsList = await CompanyDateFormatService.ListDropDownValues(dependecyParams);
-            companyDateFormat.CompanyId = CompanyIdParam;
+            companyDateFormat.CompanyId = CompanyId;
+
             SetDateValue();
         }
 
         public async Task Submit()
         {
             isBusySubmitButton = true;
-
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyDateFormatService.SetDefault(dependecyParams, companyDateFormat);
 

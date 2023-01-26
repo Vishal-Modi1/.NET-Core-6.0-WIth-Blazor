@@ -9,6 +9,6 @@ namespace Service.Interface
 
         CurrentResponse Create(DocumentTagVM documentTagVM);
 
-        CurrentResponse ListDropDownValues();
+        CurrentResponse ListDropDownValues(int companyId);
     }
 }

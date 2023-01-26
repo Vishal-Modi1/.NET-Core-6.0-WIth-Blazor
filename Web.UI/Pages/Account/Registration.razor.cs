@@ -22,7 +22,7 @@ namespace Web.UI.Pages.Account
 
         protected override Task OnInitializedAsync()
         {
-             ChangeLoaderVisibilityAction(true);
+            ChangeLoaderVisibilityAction(true);
             return base.OnInitializedAsync();
         }
 
@@ -72,7 +72,7 @@ namespace Web.UI.Pages.Account
 
                 }
 
-                 ChangeLoaderVisibilityAction(false);
+                ChangeLoaderVisibilityAction(false);
                 base.StateHasChanged();
             }
         }
@@ -137,7 +137,7 @@ namespace Web.UI.Pages.Account
 
         async Task SaveData()
         {
-             ChangeLoaderVisibilityAction(true);
+            ChangeLoaderVisibilityAction(true);
             base.StateHasChanged();
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -185,7 +185,7 @@ namespace Web.UI.Pages.Account
                 await ManageUserCreateResponseAsync(response);
             }
 
-             ChangeLoaderVisibilityAction(false);
+            ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
         }
 
@@ -221,7 +221,6 @@ namespace Web.UI.Pages.Account
             {
                 globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, response.Message);
             }
-
         }
 
         private void RefreshPage()

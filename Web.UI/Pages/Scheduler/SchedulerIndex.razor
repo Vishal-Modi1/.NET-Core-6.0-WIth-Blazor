@@ -48,15 +48,18 @@
                                        Layout="@RadioGroupLayout.Horizontal" OnChange="() => OnschedulerViewOptionValueChange()"
                                        LabelPosition="@RadioGroupLabelPosition.After"></TelerikRadioGroup>
 
-                        <TelerikButton Class="btn k-btn-primary ms-3" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
+                        @if (isAllowedToCreate)
+                        {
+                            <TelerikButton Class="btn k-btn-primary ms-3" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()"
                                    Enabled="@(!isBusyAddButton)">
 
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
 
-                            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                            </TelerikLoader>
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                                </TelerikLoader>
 
-                        </TelerikButton>
+                            </TelerikButton>
+                        }
                     }
                 </div>
             </div>

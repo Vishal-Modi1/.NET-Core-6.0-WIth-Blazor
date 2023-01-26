@@ -15,9 +15,9 @@ namespace Web.UI.Data.Reservation
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
-        public async Task<List<DropDownLargeValues>> ListDropdownValues(DependecyParams dependecyParams)
+        public async Task<List<DropDownLargeValues>> ListDropdownValues(DependecyParams dependecyParams, int companyId)
         {
-            dependecyParams.URL = $"flighttag/listdropdownvalues";
+            dependecyParams.URL = $"flighttag/listdropdownvalues?companyId={companyId}";
 
             var response = await _httpCaller.GetAsync(dependecyParams);
 

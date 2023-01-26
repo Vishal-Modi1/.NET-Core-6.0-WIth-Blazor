@@ -350,6 +350,7 @@ namespace Web.UI.Pages.Scheduler
                 schedulerVM.InstructorsList = schedulerVMData.InstructorsList;
                 schedulerVM.AircraftsList = schedulerVMData.AircraftsList;
                 schedulerVM.FlightCategoriesList = schedulerVMData.FlightCategoriesList;
+                schedulerVM.FlightTagsList = schedulerVMData.FlightTagsList;
             }
         }
 
@@ -454,7 +455,7 @@ namespace Web.UI.Pages.Scheduler
             if (reloaList)
             {
                 DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                schedulerVM.FlightTagsList = await FlightTagService.ListDropdownValues(dependecyParams);
+                schedulerVM.FlightTagsList = await FlightTagService.ListDropdownValues(dependecyParams, schedulerVM.CompanyId);
             }
         }
 

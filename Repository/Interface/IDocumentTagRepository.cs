@@ -19,6 +19,6 @@ namespace Repository.Interface
 
         DocumentTagVM FindByCondition(Expression<Func<DocumentTag, bool>> predicate);
 
-        List<DropDownLargeValues> ListDropDownValues();
+        List<DropDownLargeValues> ListDropDownValues(int companyId);
     }
 }

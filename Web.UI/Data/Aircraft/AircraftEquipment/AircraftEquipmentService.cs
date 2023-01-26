@@ -1,10 +1,8 @@
-﻿using Web.UI.Utilities;
+﻿using DataModels.VM.AircraftEquipment;
 using Microsoft.AspNetCore.Components.Authorization;
-using DataModels.VM.Common;
-using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using Microsoft.JSInterop;
-using DataModels.VM.AircraftEquipment;
+using Web.UI.Utilities;
+using DataModels.VM.Common;
 
 namespace Web.UI.Data.Aircraft.AircraftEquipment
 {

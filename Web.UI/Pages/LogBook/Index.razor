@@ -1,0 +1,21 @@
+﻿@page "/LogBook"
+@inject IJSRuntime JSRunTime
+
+<PageTitle>LogBook | Upflyte </PageTitle>
+
+<div class="row my-0">
+    <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
+        <div class="card p-0 no-box-shadow">
+            <div class="card-body p-0 ">
+               <p>testing</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
+        <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
+        <div class="card">
+           <Create logBookVM="new DataModels.VM.LogBook.LogBookVM()"></Create>
+        </div>
+    </div>
+</div>

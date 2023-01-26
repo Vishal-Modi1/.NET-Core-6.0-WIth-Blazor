@@ -87,11 +87,12 @@ namespace Repository
             }
         }
 
-        public List<DropDownLargeValues> ListDropDownValues()
+        public List<DropDownLargeValues> ListDropDownValues(int companyId)
         {
             using (_myContext = new MyContext())
             {
                 List<DropDownLargeValues> flightTagsList = (from flightTag in _myContext.FlightTags
+                                                            where flightTag.CompanyId == companyId
                                                               select new DropDownLargeValues()
                                                               {
                                                                   Id = flightTag.Id,

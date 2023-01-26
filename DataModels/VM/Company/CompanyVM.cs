@@ -33,7 +33,7 @@ namespace DataModels.VM.Company
         public string Website { get; set; }
         public string PrimaryAirport { get; set; }
         public short? PrimaryServiceId { get; set; }
-        public List<DropDownValues> PrimaryServicesList { get; set; }
+        public List<DropDownValues> PrimaryServicesList { get; set; } = new();
 
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Please enter 10 digits no")]
         public string ContactNo { get; set; }

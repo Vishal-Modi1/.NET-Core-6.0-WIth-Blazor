@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DataModels.VM.Common;
 
 namespace DataModels.VM.LogBook
 {
@@ -7,10 +7,11 @@ namespace DataModels.VM.LogBook
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }
-        public Int32 ActualInstrument { get; set; }
-        public Int32 SimulatedInstrument { get; set; }
-        public Int32 Holds { get; set; }
+        public short ActualInstrument { get; set; }
+        public short SimulatedInstrument { get; set; }
+        public short Holds { get; set; }
 
-        public List<LogBookInstrumentApproachVM> LogBookInstrumentApproachesVM { get; set; }
+        public List<DropDownSmallValues> Approaches { get; set; } = new ();
+        public List<LogBookInstrumentApproachVM> LogBookInstrumentApproachesList { get; set; } = new();
     }
 }

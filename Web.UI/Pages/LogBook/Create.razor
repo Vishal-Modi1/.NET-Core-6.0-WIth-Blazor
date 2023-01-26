@@ -1,0 +1,132 @@
+﻿@using DataModels.VM.LogBook;
+
+<TelerikForm Model="@logBookVM">
+
+    <FormValidation>
+        <CustomValidationSummary> </CustomValidationSummary>
+    </FormValidation>
+
+    <FormItems>
+        <div class="row">
+
+            <span>LogBook Entry</span>
+            <input type="hidden" value="@logBookVM.Id" name="Id" />
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-3" style="margin-bottom:20px;">
+                        <label>Date</label>
+
+                        <TelerikDatePicker @bind-Value="@logBookVM.Date" Id="date"></TelerikDatePicker>
+
+                    </div>
+
+                    <div class="col-3">
+                        <label>Departure Airport</label>
+                        <TelerikTextBox Id="departureAirport" @bind-Value="@logBookVM.Departure" PlaceHolder="Airport"></TelerikTextBox>
+                    </div>
+
+                    <div class="col-3">
+                        <label>Arrival Airport</label>
+                        <TelerikTextBox Id="arrivalAirport" @bind-Value="@logBookVM.Arrival" PlaceHolder="arrival"></TelerikTextBox>
+                    </div>
+
+                    <div class="col-3">
+                        <label>Aircrafts</label>
+                        <TelerikComboBox Id=aircraft Data="@logBookVM.AircraftsList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(logBookVM.AircraftId)">
+                        </TelerikComboBox>
+
+                        <TelerikValidationMessage For="@(() => logBookVM.AircraftId)"></TelerikValidationMessage>
+                    </div>
+
+                    <div class="col-2">
+                        <label>Total Time</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.TotalTime Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>PIC</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.PIC Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>SIC</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.SIC Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>Night</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.Night Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>Solo</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.Solo Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>Cross Country</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.CrossCountry Placeholder="Hours" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <span>TAKEOFFS & LANDINGS</span>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-2" style="margin-bottom:20px;">
+                        <label>Day Takeoffs</label>
+                        <TelerikNumericTextBox Id="dayTakeoffs" @bind-Value=@logBookVM.DayTakeoffs Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>Day Landings Full Stop</label>
+                        <TelerikNumericTextBox Id="nightTakeoffs" @bind-Value=@logBookVM.DayLandingsFullStop Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>Night Takeoffs</label>
+                        <TelerikNumericTextBox Id="nightTakeoffs" @bind-Value=@logBookVM.NightTakeoffs Placeholder="Hours" />
+                    </div>
+                    <div class="col-2">
+                        <label>Night Landings Full Stop</label>
+                        <TelerikNumericTextBox Id="nightLandingsFullStop" @bind-Value=@logBookVM.NightLandingsFullStop Placeholder="Hours" />
+                    </div>
+
+                    <div class="col-2">
+                        <label>All Landings</label>
+                        <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.AllLandings Placeholder="Hours" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+
+            <Instrument logBookVM="@logBookVM"></Instrument>
+
+        </div>
+
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton">
+                </FormFooterComponent>
+
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>
+

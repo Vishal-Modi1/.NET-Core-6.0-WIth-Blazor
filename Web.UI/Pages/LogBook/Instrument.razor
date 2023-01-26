@@ -1,0 +1,41 @@
+﻿<span>INSTRUMENT</span>
+<div class="col-12">
+    <div class="row">
+        <div class="col-4" style="margin-bottom:20px;">
+            <label>Actual Instrument</label>
+            <TelerikNumericTextBox Id="actualInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.ActualInstrument" Placeholder="Hours" />
+        </div>
+
+        <div class="col-4">
+            <label>Simulated Instrument</label>
+            <TelerikNumericTextBox Id="simulatedInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.SimulatedInstrument" Placeholder="Hours" />
+        </div>
+
+        <div class="col-4">
+            <label>Holds</label>
+            <TelerikNumericTextBox Id="holds" @bind-Value="@logBookVM.LogBookInstrumentVM.Holds" Placeholder="Hours" />
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-2">
+        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" 
+        Enabled="@(!isBusyAddButton)" OnClick="() => AddNewApproach()">
+            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+            </TelerikLoader>
+        </TelerikButton>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        @foreach (var item in logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList)
+        {
+            <InstrumentApproach LogBookInstrumentApproachVM="@item"></InstrumentApproach>
+        }
+
+    </div>
+</div>

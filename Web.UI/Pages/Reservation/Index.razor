@@ -20,7 +20,7 @@
                     <ComponentTitle Title="Reservations" Type="AdministrationTitle" />
                 </div>
                 <div>
-                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) && isAllowedToCreate)
                     {
                         <div class="col-md-4">
                             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => OpenCreateScheduleDialogAsync()" Enabled="@(!isBusyAddButton)">
