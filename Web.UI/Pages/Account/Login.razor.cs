@@ -19,7 +19,7 @@ namespace Web.UI.Pages.Account
 
         protected override Task OnInitializedAsync()
         {
-            isDisplayLoader = true;
+            ChangeLoaderVisibilityAction(true);
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("TokenExpired", out link);
@@ -36,7 +36,7 @@ namespace Web.UI.Pages.Account
         {
             if(!firstRender)
             {
-                isDisplayLoader = false;
+                ChangeLoaderVisibilityAction(false);
                 StateHasChanged();
             }
 

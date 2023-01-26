@@ -19,10 +19,11 @@ namespace Web.UI.Pages.Account
         int currentStep = 0;
         bool isLoading, isValidToken, showError;
         string link;
+        bool isDisplayLoader;
 
         protected override Task OnInitializedAsync()
         {
-            ChangeLoaderVisibilityAction(true);
+            isDisplayLoader = true;
             return base.OnInitializedAsync();
         }
 
@@ -72,7 +73,7 @@ namespace Web.UI.Pages.Account
 
                 }
 
-                ChangeLoaderVisibilityAction(false);
+                isDisplayLoader = false;
                 base.StateHasChanged();
             }
         }
@@ -137,7 +138,7 @@ namespace Web.UI.Pages.Account
 
         async Task SaveData()
         {
-            ChangeLoaderVisibilityAction(true);
+            isDisplayLoader = true;
             base.StateHasChanged();
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
@@ -185,8 +186,8 @@ namespace Web.UI.Pages.Account
                 await ManageUserCreateResponseAsync(response);
             }
 
-            ChangeLoaderVisibilityAction(false);
-            base.StateHasChanged();
+            isDisplayLoader = false;
+            //base.StateHasChanged();
         }
 
         private async Task ManageUserCreateResponseAsync(CurrentResponse response)
