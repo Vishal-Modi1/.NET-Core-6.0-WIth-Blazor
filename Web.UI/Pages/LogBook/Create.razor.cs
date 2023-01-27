@@ -6,5 +6,10 @@ namespace Web.UI.Pages.LogBook
     partial class Create
     {
         [Parameter] public LogBookVM logBookVM { get; set; }
+
+        void AddNewCrewPassenger()
+        {
+            logBookVM.LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());
+        }
     }
 }

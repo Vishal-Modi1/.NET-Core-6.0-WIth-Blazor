@@ -55,12 +55,14 @@ namespace DataModels.VM.LogBook
 
         public List<DropDownLargeValues> AircraftsList { get; set; } = new();
 
+        public List<DropDownLargeValues> CrewPassengersList { get; set; } = new();
+
         public LogBookTrainingDetailVM LogBookTrainingDetailVM { get; set; } = new();
 
         public LogBookInstrumentVM LogBookInstrumentVM { get; set; } = new();
         public LogBookFlightTimeDetailVM LogBookFlightTimeDetailVM { get; set; } = new();
 
-        public List<LogBookCrewPassengerVM> LogBookCrewPassengersVM { get; set; } = new();
+        public List<LogBookCrewPassengerVM> LogBookCrewPassengersList { get; set; } = new();
 
         public List<LogBookFlightPhotoVM> logBookFlightPhotosVM { get; set; } = new();
     }

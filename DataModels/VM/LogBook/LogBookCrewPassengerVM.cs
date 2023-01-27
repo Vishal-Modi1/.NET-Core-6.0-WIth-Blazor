@@ -7,6 +7,7 @@ namespace DataModels.VM.LogBook
         public long Id { get; set; }
         public long LogBookId { get; set; }
         public long CrewOrPassengerId { get; set; }
+        public string Name { get; set; }
         public string Role { get; set; }
         public bool IsDeleted { get; set; }
         public long DeletedBy { get; set; }

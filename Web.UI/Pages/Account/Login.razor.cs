@@ -20,6 +20,7 @@ namespace Web.UI.Pages.Account
         protected override Task OnInitializedAsync()
         {
             ChangeLoaderVisibilityAction(true);
+
             StringValues link;
             var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
             QueryHelpers.ParseQuery(uri.Query).TryGetValue("TokenExpired", out link);

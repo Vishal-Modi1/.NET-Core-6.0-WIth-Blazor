@@ -1,0 +1,16 @@
+﻿<div class="row">
+    <div class="col-2" style="margin-bottom:20px;">
+        <label>Member</label>
+        <TelerikTextBox Id="name" @bind-Value="@LogBookCrewPassengerVM.Name" Placeholder="Name"></TelerikTextBox>
+    </div>
+
+    <div class="col-2">
+        <label>Role</label>
+
+        <TelerikComboBox Id=approach Data="@CrewPassengersList" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Role" ValueField="Name" @bind-Value="@(LogBookCrewPassengerVM.Role)">
+        </TelerikComboBox>
+    </div>
+
+</div>

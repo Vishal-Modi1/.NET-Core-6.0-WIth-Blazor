@@ -113,6 +113,74 @@
 
         </div>
 
+        <div class="row">
+            <span>Route & Distance</span>
+            <div class="col-12" style="display:flex">
+                <div class="col-3">
+                    <label>Distance</label>
+                    <TelerikNumericTextBox Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
+                </div>
+
+                <div class="col-9">
+                    <label>Route</label>
+                    <TelerikTextBox Id="route" @bind-Value="@logBookVM.Route" PlaceHolder="Route"></TelerikTextBox>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <TimeDetails LogBookTimeDetails="@logBookVM.LogBookFlightTimeDetailVM"></TimeDetails>
+        </div>
+
+        <div class="row">
+            <span>Night Vision Goggles</span>
+            <div class="col-12" style="display:flex">
+                <div class="col-3">
+                    <label>NVG</label>
+                    <TelerikNumericTextBox Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
+                </div>
+
+                <div class="col-9">
+                    <label>NVG Operations</label>
+                    <TelerikNumericTextBox Id="nvgOperations" @bind-Value="@logBookVM.NVGOperations" Placeholder="NVG Operations"></TelerikNumericTextBox>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <span>Crew and Passenger</span>
+            <div class="col-md-2">
+                <TelerikButton ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline"
+                               Enabled="@(!isBusyAddButton)" OnClick="() => AddNewCrewPassenger()">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                </TelerikButton>
+            </div>
+        </div>
+
+        <div class="row">
+
+            @foreach (var item in logBookVM.LogBookCrewPassengersList)
+            {
+                <CrewPassenger LogBookCrewPassengerVM="@item"
+                           CrewPassengersList="@logBookVM.CrewPassengersList">
+                </CrewPassenger>
+            }
+
+        </div>
+
+          <div class="row">
+            <Photos ></Photos>
+        </div>
+
+          <div class="row">
+            <div class="col-12">
+                    <label>Comments</label>
+                    <TelerikTextBox Id="comments" @bind-Value="@logBookVM.Comments" Placeholder="Comments"></TelerikTextBox>
+                </div>
+        </div>
+
     </FormItems>
 
     <FormButtons>
