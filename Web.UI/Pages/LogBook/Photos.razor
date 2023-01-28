@@ -1,16 +1,23 @@
 ﻿@using Web.UI.Shared.Components.FileUploader;
-
-<span>
-    Flight Photos
-</span>
-
-<div>
+ 
+<div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => TriggerToggle())>
+    <span><FontLabel fontColor="#3066F8" fontSize="16px">Flight Photos</FontLabel></span>
+    <span>
+        <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+        @if (ShowBodyPart)
+        {
+            <CustomIcons IconName="minus" />
+        }
+        else
+        {
+            <CustomIcons IconName="plus" />
+        }
+    </span>
+</div>
+<div class="my-1 @(!ShowBodyPart ? "d-none":"")">
 
     <label>Aircraft Image</label>
-
-    <CustomFileUpload DisplayName="test" IsFileAdded="false" 
-    supportedFormats="@supportedImagesFormats">
+    <CustomFileUpload DisplayName="test" IsFileAdded="false"     supportedFormats="@supportedImagesFormats">
                   </CustomFileUpload>
-
 
 </div>

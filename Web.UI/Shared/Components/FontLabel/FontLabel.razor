@@ -1,4 +1,4 @@
-﻿<span style="font-size:@(fontSize)!important;color:@(fontColor)!important;" class="@(Class)">
+﻿<span style="font-size:@(fontSize)!important;color:@(fontColor)!important;font-weight:@fontWeight;" class="@(Class);">
     @ChildContent
 </span>
 
@@ -22,7 +22,13 @@
     public string fontColor { get; set; } = "black";
     
     /// <summary>
-    /// Set font color in pixel e.g. default is `black`
+    /// Set font weight in pixel e.g. default is `600s`
+    /// </summary>
+    [Parameter]
+    public string fontWeight { get; set; } = "400";
+    
+    /// <summary>
+    /// Set font class in pixel e.g. default is ``
     /// </summary>
     [Parameter]
     public string Class { get; set; } = "";

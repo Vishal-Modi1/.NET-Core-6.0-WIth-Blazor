@@ -1,41 +1,50 @@
-﻿<span>INSTRUMENT</span>
-<div class="col-12">
-    <div class="row">
-        <div class="col-4" style="margin-bottom:20px;">
+﻿<div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => TriggerToggle())>
+    <span><FontLabel fontColor="#3066F8" fontSize="16px">INSTRUMENT</FontLabel></span>
+    <span>
+        <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+        @if (ShowBodyPart)
+        {
+            <CustomIcons IconName="minus" />
+        }
+        else
+        {
+            <CustomIcons IconName="plus" />
+        }
+    </span>
+</div>
+<div class="col-12 py-1 @(!ShowBodyPart ? "d-none":"")">
+    <div class="row my-0">
+        <div class="col-3">
             <label>Actual Instrument</label>
             <TelerikNumericTextBox Id="actualInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.ActualInstrument" Placeholder="Hours" />
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
             <label>Simulated Instrument</label>
             <TelerikNumericTextBox Id="simulatedInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.SimulatedInstrument" Placeholder="Hours" />
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
             <label>Holds</label>
             <TelerikNumericTextBox Id="holds" @bind-Value="@logBookVM.LogBookInstrumentVM.Holds" Placeholder="Hours" />
         </div>
-    </div>
 
-    <div class="row">
-
-        <div class="col-md-2">
-        <TelerikButton ThemeColor="secondary" FillMode="Outline"  Class="mx-1 k-btn-secondary-outline"
-        Enabled="@(!isBusyAddButton)" OnClick="() => AddNewApproach()">
-            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-            </TelerikLoader>
-        </TelerikButton>
+        <div class="col-3 d-flex align-self-center">
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                           Enabled="@(!isBusyAddButton)" OnClick="() => AddNewApproach()">
+                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                </TelerikLoader>
+            </TelerikButton>
         </div>
     </div>
-
-
-    <div class="row">
-
-        @foreach (var item in logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList)
+    <div class="row my-0">
+        @if (logBookVM.LogBookInstrumentVM is not null && logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList.Any())
         {
-            <InstrumentApproach LogBookInstrumentApproachVM="@item"></InstrumentApproach>
+            @foreach (var item in logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList)
+            {
+                <InstrumentApproach LogBookInstrumentApproachVM="@item"></InstrumentApproach>
+            }
         }
-
     </div>
 </div>

@@ -336,6 +336,11 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*TOP HORIZONTAL HEADER END*/
 /*TelerikTabStrip START*/
+.k-tabstrip-list.logbook .k-tabstrip-content {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+}
 .k-tabstrip-list .k-tabstrip-items-wrapper {
   z-index: 0;
 }
@@ -715,4 +720,10 @@ th, td, span, p {
   .col-xl-10 {
     width: 80% !important;
   }
+}
+.logbook-header {
+  cursor: pointer;
+  background: #F8F8F8;
+  padding: 10px;
+  border-bottom: 1px solid #e1e1e1;
 }

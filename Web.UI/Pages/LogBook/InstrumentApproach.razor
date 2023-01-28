@@ -1,30 +1,29 @@
-﻿ <div class="row">
-        <div class="col-2" style="margin-bottom:20px;">
-            <label>Airport</label>
-             <TelerikTextBox Id="departureAirport" @bind-Value="@LogBookInstrumentApproachVM.Airport" PlaceHolder="Airport"></TelerikTextBox>
-        </div>
-
-        <div class="col-2">
-            <label>Approach</label>
-
-             <TelerikComboBox Id=approach Data="@Approaches" TextField="Name"
-                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                         Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(LogBookInstrumentApproachVM.InstrumentApproachId)">
-                        </TelerikComboBox>
-        </div>
-
-        <div class="col-2">
-            <label>Runway</label>
-            <TelerikTextBox Id="runway" @bind-Value="@LogBookInstrumentApproachVM.Runway" PlaceHolder="Runway" />
-        </div>
-
-          <div class="col-2">
-            <label>Circle To Land</label>
-            <TelerikCheckBox Id="holds" @bind-Value="@LogBookInstrumentApproachVM.IsCircleToLand" />
-        </div>
-
-          <div class="col-2">
-            <label>Comments</label>
-            <TelerikTextBox Id="comments" @bind-Value="@LogBookInstrumentApproachVM.Comments" PlaceHolder="Comments" />
-        </div>
+﻿<div class="row my-1">
+    <div class="col-2">
+        <label>Airport</label>
+        <TelerikTextBox Id="departureAirport" @bind-Value="@LogBookInstrumentApproachVM.Airport" PlaceHolder="Airport"></TelerikTextBox>
     </div>
+
+    <div class="col-2">
+        <label>Approach</label>
+
+        <TelerikComboBox Id=approach Data="@Approaches" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(LogBookInstrumentApproachVM.InstrumentApproachId)">
+        </TelerikComboBox>
+    </div>
+    <div class="col-2">
+        <label>Runway</label>
+        <TelerikTextBox Id="runway" @bind-Value="@LogBookInstrumentApproachVM.Runway" PlaceHolder="Runway" />
+    </div>
+
+    <div class="col-2">
+        <label>Circle To Land</label>
+        <TelerikCheckBox Id="holds" @bind-Value="@LogBookInstrumentApproachVM.IsCircleToLand" />
+    </div>
+
+    <div class="col-2">
+        <label>Comments</label>
+        <TelerikTextBox Id="comments" @bind-Value="@LogBookInstrumentApproachVM.Comments" PlaceHolder="Comments" />
+    </div>
+</div>

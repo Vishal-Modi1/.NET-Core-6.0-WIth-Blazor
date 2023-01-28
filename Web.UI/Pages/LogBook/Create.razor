@@ -7,17 +7,27 @@
     </FormValidation>
 
     <FormItems>
-        <div class="row">
-
-            <span>LogBook Entry</span>
+        <div class="row m-0">
+            <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_LogBookEntry())>
+                <span><FontLabel fontColor="#3066F8" fontSize="16px">LogBook Entry</FontLabel></span>
+                <span>
+                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    @if (isLogBookEntryVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
             <input type="hidden" value="@logBookVM.Id" name="Id" />
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-3" style="margin-bottom:20px;">
+            <div class="col-12 py-1 @(!isLogBookEntryVisible ? "d-none":"")">
+                <div class="row my-0">
+                    <div class="col-3">
                         <label>Date</label>
-
                         <TelerikDatePicker @bind-Value="@logBookVM.Date" Id="date"></TelerikDatePicker>
-
                     </div>
 
                     <div class="col-3">
@@ -36,7 +46,6 @@
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(logBookVM.AircraftId)">
                         </TelerikComboBox>
-
                         <TelerikValidationMessage For="@(() => logBookVM.AircraftId)"></TelerikValidationMessage>
                     </div>
 
@@ -69,26 +78,35 @@
                         <label>Cross Country</label>
                         <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.CrossCountry Placeholder="Hours" />
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <div class="row">
-
-            <span>TAKEOFFS & LANDINGS</span>
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-2" style="margin-bottom:20px;">
+        <div class="row m-0">
+            <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_TakeoffsLandings())>
+                <span><FontLabel fontColor="#3066F8" fontSize="16px">TAKEOFFS & LANDINGS</FontLabel></span>
+                <span>
+                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    @if (isTakeoffsLandingsVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
+            <div class="col-12 py-1 @(!isTakeoffsLandingsVisible ? "d-none":"")">
+                <div class="row my-0">
+                    <div class="col-2">
                         <label>Day Takeoffs</label>
                         <TelerikNumericTextBox Id="dayTakeoffs" @bind-Value=@logBookVM.DayTakeoffs Placeholder="Hours" />
                     </div>
-
                     <div class="col-2">
                         <label>Day Landings Full Stop</label>
                         <TelerikNumericTextBox Id="nightTakeoffs" @bind-Value=@logBookVM.DayLandingsFullStop Placeholder="Hours" />
                     </div>
-
                     <div class="col-2">
                         <label>Night Takeoffs</label>
                         <TelerikNumericTextBox Id="nightTakeoffs" @bind-Value=@logBookVM.NightTakeoffs Placeholder="Hours" />
@@ -97,25 +115,36 @@
                         <label>Night Landings Full Stop</label>
                         <TelerikNumericTextBox Id="nightLandingsFullStop" @bind-Value=@logBookVM.NightLandingsFullStop Placeholder="Hours" />
                     </div>
-
-                    <div class="col-2">
+                    <div class="col-4">
                         <label>All Landings</label>
                         <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.AllLandings Placeholder="Hours" />
                     </div>
                 </div>
-
             </div>
         </div>
 
-        <div class="row">
-
-            <Instrument logBookVM="@logBookVM"></Instrument>
-
+        <div class="row m-0">
+            <Instrument logBookVM="@logBookVM"
+                        ShowBodyPart="isInstrumentVisible"
+                        OnToggle="@(() => ToggleVisibility_Instrument())" />
         </div>
 
-        <div class="row">
-            <span>Route & Distance</span>
-            <div class="col-12" style="display:flex">
+        <div class="row m-0">
+            <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_RouteDistance())>
+                <span><FontLabel fontColor="#3066F8" fontSize="16px">Route & Distance</FontLabel></span>
+                <span>
+                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    @if (isRouteDistanceVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
+            <div class="row py-1 my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex">
                 <div class="col-3">
                     <label>Distance</label>
                     <TelerikNumericTextBox Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
@@ -128,13 +157,28 @@
             </div>
         </div>
 
-        <div class="row">
-            <TimeDetails LogBookTimeDetails="@logBookVM.LogBookFlightTimeDetailVM"></TimeDetails>
+        <div class="row m-0">
+            <TimeDetails LogBookTimeDetails="@logBookVM.LogBookFlightTimeDetailVM"
+                         ShowBodyPart="isStartEndVisible"
+                         OnToggle="@(() => ToggleVisibility_StartEnd())" />
         </div>
 
-        <div class="row">
-            <span>Night Vision Goggles</span>
-            <div class="col-12" style="display:flex">
+        <div class="row m-0">
+            <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_NightVisionGoggles())>
+                <span><FontLabel fontColor="#3066F8" fontSize="16px">Night Vision Goggles</FontLabel></span>
+                <span>
+                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    @if (isNightVisionGogglesVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
+            <div class="row py-1 my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex">
                 <div class="col-3">
                     <label>NVG</label>
                     <TelerikNumericTextBox Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
@@ -147,54 +191,83 @@
             </div>
         </div>
 
-        <div class="row">
-            <span>Crew and Passenger</span>
-            <div class="col-md-2">
-                <TelerikButton ThemeColor="secondary" FillMode="Outline" Class="mx-1 k-btn-secondary-outline"
-                               Enabled="@(!isBusyAddButton)" OnClick="() => AddNewCrewPassenger()">
-                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                    </TelerikLoader>
-                </TelerikButton>
+        <div class="row m-0">
+            <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_CrewPassagners())>
+                <span><FontLabel fontColor="#3066F8" fontSize="16px">Crew and Passenger</FontLabel></span>
+
+                <span>
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                                   Enabled="@(!isBusyAddButton)" OnClick="() => AddNewCrewPassenger()">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                        </TelerikLoader>
+                    </TelerikButton>
+                   
+                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    @if (isCrewPassagnersVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
             </div>
         </div>
-
-        <div class="row">
-
-            @foreach (var item in logBookVM.LogBookCrewPassengersList)
+        <div class="row m-0 @(!isCrewPassagnersVisible ? "d-none":"")">
+            @if (logBookVM.LogBookCrewPassengersList.Any())
             {
-                <CrewPassenger LogBookCrewPassengerVM="@item"
-                           CrewPassengersList="@logBookVM.CrewPassengersList">
-                </CrewPassenger>
-            }
-
-        </div>
-
-          <div class="row">
-            <Photos ></Photos>
-        </div>
-
-          <div class="row">
-            <div class="col-12">
-                    <label>Comments</label>
-                    <TelerikTextBox Id="comments" @bind-Value="@logBookVM.Comments" Placeholder="Comments"></TelerikTextBox>
+                <div class="col-12">
+                    @foreach (var item in logBookVM.LogBookCrewPassengersList)
+                    {
+                        <CrewPassenger LogBookCrewPassengerVM="@item"
+                               CrewPassengersList="@logBookVM.CrewPassengersList">
+                        </CrewPassenger>
+                    }
                 </div>
+            }
+            else
+            {
+                <div class="col-12">
+                    <span>No record found</span>
+                </div>
+            }
+        </div>
+
+        <div class="row m-0">
+            <Photos ShowBodyPart="isFlightPhotosVisible" OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
+        </div>
+
+        <div class="row m-0">
+            <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_Comments())>
+                <span><FontLabel fontColor="#3066F8" fontSize="16px">Comments</FontLabel></span>
+                <span>
+                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    @if (isCommentsVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
+            <div class="col-12 py-1 @(!isCommentsVisible ? "d-none":"")">
+                <TelerikTextBox Id="comments" @bind-Value="@logBookVM.Comments" Placeholder="Comments"></TelerikTextBox>
+            </div>
         </div>
 
     </FormItems>
 
     <FormButtons>
-
-        <div class="row">
+        <div class="row mx-0 my-1">
             <div class="col-md-12 text-right">
-
                 <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton">
                 </FormFooterComponent>
-
             </div>
         </div>
-
     </FormButtons>
-
 </TelerikForm>
 

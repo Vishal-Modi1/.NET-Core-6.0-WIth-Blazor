@@ -7,7 +7,7 @@
     <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
         <div class="card p-0 no-box-shadow">
             <div class="card-body p-0 ">
-               <p>testing</p>
+                <LogBookLeftPanel />
             </div>
         </div>
 
@@ -15,7 +15,79 @@
     <div class="col-md-12 col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
         <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
         <div class="card">
-           <Create logBookVM="new DataModels.VM.LogBook.LogBookVM()"></Create>
+            <TelerikTabStrip Class="k-tabstrip-list logbook" ActiveTabIndexChanged="@TabChangedHandler">
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Entries</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                            <Create logBookVM="new DataModels.VM.LogBook.LogBookVM()"></Create>
+                    </Content>
+                </TabStripTab>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Draft & Request</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <span>No Content</span>
+                    </Content>
+                </TabStripTab>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Reports</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <span>No Content</span>
+                    </Content>
+                </TabStripTab>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Logbook Aircraft</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <span>No Content</span>
+                    </Content>
+                </TabStripTab>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Setting</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <span>No Content</span>
+                    </Content>
+                </TabStripTab>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Import</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <span>No Content</span>
+                    </Content>
+                </TabStripTab>
+                <TabStripTab>
+                    <HeaderTemplate>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <span>Export</span>
+                        </div>
+                    </HeaderTemplate>
+                    <Content>
+                        <span>No Content</span>
+                    </Content>
+                </TabStripTab>
+            </TelerikTabStrip>
+           
         </div>
     </div>
 </div>
