@@ -1,7 +1,7 @@
 ﻿<div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => TriggerToggle())>
-    <span><FontLabel fontColor="#3066F8" fontSize="16px">Start & End</FontLabel></span>
+    <span><FontLabel fontColor="#3066F8">Start & End</FontLabel></span>
     <span>
-        <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+        <FontLabel fontColor="#042455">Configure</FontLabel>
         @if (ShowBodyPart)
         {
             <CustomIcons IconName="minus" />
@@ -12,44 +12,49 @@
         }
     </span>
 </div>
-<div class="row py-1 my-0 @(!ShowBodyPart ? "d-none":"")">
-    <div class="col-3">
-        <label>Hobbs Start</label>
-        <TelerikNumericTextBox Id="hobbsStart" @bind-Value="@LogBookTimeDetails.HobbsStart" Placeholder="Hobbs Start"></TelerikNumericTextBox>
+<div class="row py-1 my-0 @(!ShowBodyPart ? "d-none":"")" style="margin-bottom:16px !important;">
+
+    <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
+        <div class="col-3">
+            <label>Hobbs Start</label>
+            <TelerikNumericTextBox Id="hobbsStart" @bind-Value="@LogBookTimeDetails.HobbsStart" Placeholder="Hobbs Start"></TelerikNumericTextBox>
+        </div>
+
+        <div class="col-3">
+            <label>Hobbs End</label>
+            <TelerikNumericTextBox Id="hobbsEnd" @bind-Value="@LogBookTimeDetails.HobbsEnd" Placeholder="Hobbs End"></TelerikNumericTextBox>
+        </div>
+
+        <div class="col-3">
+            <label>Tach Start</label>
+            <TelerikNumericTextBox Id="tachStart" @bind-Value="@LogBookTimeDetails.TachStart" Placeholder="Tach Start"></TelerikNumericTextBox>
+        </div>
+
+        <div class="col-3">
+            <label>Tach End</label>
+            <TelerikNumericTextBox Id="tachEnd" @bind-Value="@LogBookTimeDetails.TachEnd" Placeholder="Tach End"></TelerikNumericTextBox>
+        </div>
     </div>
 
-    <div class="col-3">
-        <label>Hobbs End</label>
-        <TelerikNumericTextBox Id="hobbsEnd" @bind-Value="@LogBookTimeDetails.HobbsEnd" Placeholder="Hobbs End"></TelerikNumericTextBox>
-    </div>
+    <div class="row" style="margin-bottom:12px !important;">
+        <div class="col-3">
+            <label>Time Out</label>
+            <TelerikNumericTextBox Id="timeOut" @bind-Value="@LogBookTimeDetails.TimeOut" Placeholder="Time Out"></TelerikNumericTextBox>
+        </div>
 
-    <div class="col-3">
-        <label>Tach Start</label>
-        <TelerikNumericTextBox Id="tachStart" @bind-Value="@LogBookTimeDetails.TachStart" Placeholder="Tach Start"></TelerikNumericTextBox>
-    </div>
+        <div class="col-3">
+            <label>Time Off</label>
+            <TelerikNumericTextBox Id="timeOff" @bind-Value="@LogBookTimeDetails.TimeOff" Placeholder="Time Off"></TelerikNumericTextBox>
+        </div>
 
-    <div class="col-3">
-        <label>Tach End</label>
-        <TelerikNumericTextBox Id="tachEnd" @bind-Value="@LogBookTimeDetails.TachEnd" Placeholder="Tach End"></TelerikNumericTextBox>
-    </div>
+        <div class="col-3">
+            <label>Time On</label>
+            <TelerikNumericTextBox Id="timeOn" @bind-Value="@LogBookTimeDetails.TimeOn" Placeholder="Time On"></TelerikNumericTextBox>
+        </div>
 
-    <div class="col-3">
-        <label>Time Out</label>
-        <TelerikNumericTextBox Id="timeOut" @bind-Value="@LogBookTimeDetails.TimeOut" Placeholder="Time Out"></TelerikNumericTextBox>
+        <div class="col-3">
+            <label>On Duty</label>
+            <TelerikNumericTextBox Id="onDuty" @bind-Value="@LogBookTimeDetails.OnDuty" Placeholder="On Duty"></TelerikNumericTextBox>
+        </div>
     </div>
-
-    <div class="col-3">
-        <label>Time Off</label>
-        <TelerikNumericTextBox Id="timeOff" @bind-Value="@LogBookTimeDetails.TimeOff" Placeholder="Time Off"></TelerikNumericTextBox>
     </div>
-
-    <div class="col-3">
-        <label>Time On</label>
-        <TelerikNumericTextBox Id="timeOn" @bind-Value="@LogBookTimeDetails.TimeOn" Placeholder="Time On"></TelerikNumericTextBox>
-    </div>
-
-    <div class="col-3">
-        <label>On Duty</label>
-        <TelerikNumericTextBox Id="onDuty" @bind-Value="@LogBookTimeDetails.OnDuty" Placeholder="On Duty"></TelerikNumericTextBox>
-    </div>
-</div>

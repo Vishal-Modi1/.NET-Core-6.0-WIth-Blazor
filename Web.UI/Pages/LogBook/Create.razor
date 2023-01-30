@@ -1,5 +1,14 @@
 ﻿@using DataModels.VM.LogBook;
 
+<style>
+
+    .row-margin 
+    {
+        margin-bottom:
+    }
+
+</style>
+
 <TelerikForm Model="@logBookVM">
 
     <FormValidation>
@@ -9,9 +18,9 @@
     <FormItems>
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_LogBookEntry())>
-                <span><FontLabel fontColor="#3066F8" fontSize="16px">LogBook Entry</FontLabel></span>
+                <span><FontLabel fontColor="#3066F8">LogBook Entry</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    <FontLabel fontColor="#042455">Configure</FontLabel>
                     @if (isLogBookEntryVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -24,7 +33,7 @@
             </div>
             <input type="hidden" value="@logBookVM.Id" name="Id" />
             <div class="col-12 py-1 @(!isLogBookEntryVisible ? "d-none":"")">
-                <div class="row my-0">
+                <div class="row my-0" style="margin-bottom: 10px !important;margin-top: 8px !important;">
                     <div class="col-3">
                         <label>Date</label>
                         <TelerikDatePicker @bind-Value="@logBookVM.Date" Id="date"></TelerikDatePicker>
@@ -48,7 +57,9 @@
                         </TelerikComboBox>
                         <TelerikValidationMessage For="@(() => logBookVM.AircraftId)"></TelerikValidationMessage>
                     </div>
+                </div>
 
+                <div class="row my-0" style="margin-bottom:8px !important;">
                     <div class="col-2">
                         <label>Total Time</label>
                         <TelerikNumericTextBox Id="totalTime" @bind-Value=@logBookVM.TotalTime Placeholder="Hours" />
@@ -84,9 +95,9 @@
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_TakeoffsLandings())>
-                <span><FontLabel fontColor="#3066F8" fontSize="16px">TAKEOFFS & LANDINGS</FontLabel></span>
+                <span><FontLabel fontColor="#3066F8">TAKEOFFS & LANDINGS</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    <FontLabel fontColor="#042455">Configure</FontLabel>
                     @if (isTakeoffsLandingsVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -98,7 +109,7 @@
                 </span>
             </div>
             <div class="col-12 py-1 @(!isTakeoffsLandingsVisible ? "d-none":"")">
-                <div class="row my-0">
+                <div class="row my-0" style="margin-bottom: 8px !important;margin-top: 8px !important;">
                     <div class="col-2">
                         <label>Day Takeoffs</label>
                         <TelerikNumericTextBox Id="dayTakeoffs" @bind-Value=@logBookVM.DayTakeoffs Placeholder="Hours" />
@@ -123,7 +134,7 @@
             </div>
         </div>
 
-        <div class="row m-0">
+        <div class="row m-0" style="margin-top: 8px !important;margin-bottom: 10px !important;">
             <Instrument logBookVM="@logBookVM"
                         ShowBodyPart="isInstrumentVisible"
                         OnToggle="@(() => ToggleVisibility_Instrument())" />
@@ -131,9 +142,9 @@
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_RouteDistance())>
-                <span><FontLabel fontColor="#3066F8" fontSize="16px">Route & Distance</FontLabel></span>
+                <span><FontLabel fontColor="#3066F8">Route & Distance</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    <FontLabel fontColor="#042455">Configure</FontLabel>
                     @if (isRouteDistanceVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -144,7 +155,7 @@
                     }
                 </span>
             </div>
-            <div class="row py-1 my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex">
+            <div class="row py-1 my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex;margin-bottom:12px !important;">
                 <div class="col-3">
                     <label>Distance</label>
                     <TelerikNumericTextBox Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
@@ -165,9 +176,9 @@
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_NightVisionGoggles())>
-                <span><FontLabel fontColor="#3066F8" fontSize="16px">Night Vision Goggles</FontLabel></span>
+                <span><FontLabel fontColor="#3066F8">Night Vision Goggles</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    <FontLabel fontColor="#042455">Configure</FontLabel>
                     @if (isNightVisionGogglesVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -178,7 +189,7 @@
                     }
                 </span>
             </div>
-            <div class="row py-1 my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex">
+            <div class="row py-1 my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex;margin-bottom:16px !important">
                 <div class="col-3">
                     <label>NVG</label>
                     <TelerikNumericTextBox Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
@@ -193,7 +204,7 @@
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_CrewPassagners())>
-                <span><FontLabel fontColor="#3066F8" fontSize="16px">Crew and Passenger</FontLabel></span>
+                <span><FontLabel fontColor="#3066F8">Crew and Passenger</FontLabel></span>
 
                 <span>
                     <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
@@ -202,8 +213,8 @@
                         <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                         </TelerikLoader>
                     </TelerikButton>
-                   
-                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+
+                    <FontLabel fontColor="#042455">Configure</FontLabel>
                     @if (isCrewPassagnersVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -215,6 +226,7 @@
                 </span>
             </div>
         </div>
+
         <div class="row m-0 @(!isCrewPassagnersVisible ? "d-none":"")">
             @if (logBookVM.LogBookCrewPassengersList.Any())
             {
@@ -235,15 +247,15 @@
             }
         </div>
 
-        <div class="row m-0">
+        <div class="row m-0" style="margin-bottom:16px !important;">
             <Photos ShowBodyPart="isFlightPhotosVisible" OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
         </div>
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => ToggleVisibility_Comments())>
-                <span><FontLabel fontColor="#3066F8" fontSize="16px">Comments</FontLabel></span>
+                <span><FontLabel fontColor="#3066F8">Comments</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455" fontSize="16px">Configure</FontLabel>
+                    <FontLabel fontColor="#042455">Configure</FontLabel>
                     @if (isCommentsVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -254,7 +266,7 @@
                     }
                 </span>
             </div>
-            <div class="col-12 py-1 @(!isCommentsVisible ? "d-none":"")">
+            <div class="col-12 py-1 @(!isCommentsVisible ? "d-none":"")" style="margin-top:8px !important;">
                 <TelerikTextBox Id="comments" @bind-Value="@logBookVM.Comments" Placeholder="Comments"></TelerikTextBox>
             </div>
         </div>

@@ -23,7 +23,14 @@ namespace Web.UI.Pages.Dashboard
         {
             SetSelectedMenuItem("Dashboard");
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-            await LoadData();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if(firstRender)
+            {
+                await LoadData();
+            }
         }
 
         async Task LoadData()

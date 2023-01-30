@@ -16,6 +16,12 @@ namespace DataModels.VM.Reservation
         public DateTime CreatedOn { get; set; }
         public string TailNo { get; set; }
         public string CompanyName { get; set; }
+
+        public string ArrivalAirportName { get; set; }
+
+        public string DepartureAirportName { get; set; }
+
+        public decimal FlightHours { get; set; }
         public decimal? AirFrameTime { get; set; }
         public int TotalRecords { get; set; }
         public string Member1 { get; set; }
