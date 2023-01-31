@@ -2,7 +2,7 @@
 
 namespace DataModels.Entities
 {
-    public class LogBookFlightPhotoVM
+    public class LogBookFlightPhoto
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }

@@ -11,6 +11,7 @@ using DataModels.VM.Document;
 using DataModels.VM.EmailConfiguration;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Location;
+using DataModels.VM.LogBook;
 using DataModels.VM.Reservation;
 using DataModels.VM.SubscriptionPlan;
 using DataModels.VM.User;
@@ -158,15 +159,18 @@ namespace Repository
         #region Logbook
         public DbSet<LogBook> LogBooks { get; set; }
 
-        public DbSet<LogBookCrewPassengerVM> LogBookCrewPassengers { get; set; }
+        public DbSet<LogBookCrewPassenger> LogBookCrewPassengers { get; set; }
 
-        public DbSet<LogBookFlightPhotoVM> LogBookFlightPhotos { get; set; }
+        public DbSet<LogBookFlightPhoto> LogBookFlightPhotos { get; set; }
 
-        public DbSet<LogBookFlightTimeDetailVM> LogBookFlightTimeDetails { get; set; }
+        public DbSet<LogBookFlightTimeDetail> LogBookFlightTimeDetails { get; set; }
 
-        public DbSet<LogBookInstrumentVM> LogBookInstruments { get; set; }
-        public DbSet<LogBookInstrumentApproachVM> LogBookInstrumentApproaches { get; set; }
-        public DbSet<LogBookTrainingDetailVM> LogBookTrainingDetails { get; set; }
+        public DbSet<LogBookInstrument> LogBookInstruments { get; set; }
+
+        public DbSet<LogBookInstrumentApproach> LogBookInstrumentApproaches { get; set; }
+
+        public DbSet<LogBookTrainingDetail> LogBookTrainingDetails { get; set; }
+
         public DbSet<InstrumentApproach> InstrumentApproaches { get; set; }
 
         #endregion
@@ -207,6 +211,8 @@ namespace Repository
         public DbSet<UserRolePermissionDataVM> UserRolePermissionList { get; set; }
 
         public DbSet<DropDownGuidValues> AirportsList { get; set; }
+
+        public DbSet<LogBookVM> LogBookDetails { get; set; }
 
         #endregion
     }

@@ -2,7 +2,7 @@
 
 namespace DataModels.Entities
 {
-    public class LogBookInstrumentVM
+    public class LogBookInstrument
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }

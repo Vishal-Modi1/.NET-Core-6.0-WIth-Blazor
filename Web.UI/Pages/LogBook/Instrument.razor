@@ -30,7 +30,7 @@
         </div>
 
         <div class="col-3 d-flex align-self-center">
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" ButtonType="@ButtonType.Button"
                            Enabled="@(!isBusyAddButton)" OnClick="() => AddNewApproach()">
                 <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
                 <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
@@ -43,7 +43,7 @@
         {
             @foreach (var item in logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList)
             {
-                <InstrumentApproach LogBookInstrumentApproachVM="@item"></InstrumentApproach>
+                <InstrumentApproach LogBookInstrumentApproachVM="@item" Approaches="@Approaches"></InstrumentApproach>
             }
         }
     </div>

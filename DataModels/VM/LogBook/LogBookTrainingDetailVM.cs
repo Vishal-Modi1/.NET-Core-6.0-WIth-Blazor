@@ -6,10 +6,10 @@ namespace DataModels.VM.LogBook
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }
-        public Int16 DualGiven { get; set; }
-        public Int16 DualReceived { get; set; }
-        public Int16 SimulatedFlight { get; set; }
-        public Int16 GroundTraining { get; set; }
+        public short DualGiven { get; set; }
+        public short DualReceived { get; set; }
+        public short SimulatedFlight { get; set; }
+        public short GroundTraining { get; set; }
         public bool IsFlightReview { get; set; }
         public bool IsIPC { get; set; }
         public bool IsCheckRide { get; set; }

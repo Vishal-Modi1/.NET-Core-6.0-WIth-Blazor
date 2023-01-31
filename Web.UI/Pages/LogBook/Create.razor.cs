@@ -1,6 +1,8 @@
-﻿using DataModels.VM.LogBook;
+﻿using DataModels.VM.Common;
+using DataModels.VM.LogBook;
 using Microsoft.AspNetCore.Components;
 using System;
+using Web.UI.Utilities;
 
 namespace Web.UI.Pages.LogBook
 {
@@ -18,6 +20,34 @@ namespace Web.UI.Pages.LogBook
         bool isCrewPassagnersVisible = true;
         bool isFlightPhotosVisible = true;
         bool isCommentsVisible = true;
+
+        protected override Task OnInitializedAsync()
+        {
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            return base.OnInitializedAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if(firstRender)
+            {
+                logBookVM.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, globalMembers.CompanyId);
+                base.StateHasChanged();
+            }
+        }
+
+        public async Task Submit()
+        {
+            isBusySubmitButton = true;
+
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            CurrentResponse response = await LogBookService.SaveandUpdateAsync(dependecyParams, logBookVM);
+            
+            isBusySubmitButton = false;
+
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+        }
+
         void AddNewCrewPassenger()
         {
             logBookVM.LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());

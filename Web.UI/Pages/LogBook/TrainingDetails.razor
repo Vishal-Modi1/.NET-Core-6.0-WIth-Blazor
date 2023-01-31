@@ -1,0 +1,66 @@
+﻿<div class="logbook-header d-flex justify-content-between align-items-center" @onclick=@(() => TriggerToggle())>
+    <span><FontLabel fontColor="#3066F8">Start & End</FontLabel></span>
+    <span>
+        <FontLabel fontColor="#042455">Configure</FontLabel>
+        @if (ShowBodyPart)
+        {
+            <CustomIcons IconName="minus" />
+        }
+        else
+        {
+            <CustomIcons IconName="plus" />
+        }
+    </span>
+</div>
+<div class="row py-1 my-0 @(!ShowBodyPart ? "d-none":"")" style="margin-bottom:16px !important;">
+
+    <div class="row" style="margin-bottom:12px !important;">
+        <div class="col-3">
+            <label>Dual Given</label>
+            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.DualGiven"></TelerikNumericTextBox>
+        </div>
+
+        <div class="col-3">
+            <label>Dual Received</label>
+            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.DualReceived"></TelerikNumericTextBox>
+        </div>
+
+        <div class="col-3">
+            <label>Simulated Flight</label>
+            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.SimulatedFlight"></TelerikNumericTextBox>
+        </div>
+
+        <div class="col-3">
+            <label>Ground Training</label>
+            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.GroundTraining"></TelerikNumericTextBox>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
+
+        <div class="col-2">
+            <label>Check Ride</label>
+            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsCheckRide" />
+        </div>
+
+         <div class="col-2">
+            <label>FAA</label>
+            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsFAA" />
+        </div>
+
+         <div class="col-2">
+            <label>Flight Review</label>
+            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsFlightReview" />
+        </div>
+
+         <div class="col-2">
+            <label>IPC</label>
+            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsIPC" />
+        </div>
+
+         <div class="col-2">
+            <label>NVG Proficiency</label>
+            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsNVGProficiency" />
+        </div>
+    </div>
+</div>

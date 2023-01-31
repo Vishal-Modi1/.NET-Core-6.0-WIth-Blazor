@@ -1,4 +1,5 @@
 ﻿using DataModels.VM.Common;
+using DataModels.VM.LogBook;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
@@ -27,6 +28,21 @@ namespace Web.UI.Data.LogBook
             }
 
             return instrumentApproaches;
+        }
+
+        public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, LogBookVM logBookVM)
+        {
+            dependecyParams.JsonData = JsonConvert.SerializeObject(logBookVM);
+            dependecyParams.URL = "logBook/create";
+
+            if (logBookVM.Id > 0)
+            {
+                dependecyParams.URL = "logBook/edit";
+            }
+
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
+
+            return response;
         }
     }
 }

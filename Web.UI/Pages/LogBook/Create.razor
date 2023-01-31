@@ -1,15 +1,6 @@
 ﻿@using DataModels.VM.LogBook;
 
-<style>
-
-    .row-margin 
-    {
-        margin-bottom:
-    }
-
-</style>
-
-<TelerikForm Model="@logBookVM">
+<TelerikForm Model="@logBookVM" OnValidSubmit="@Submit">
 
     <FormValidation>
         <CustomValidationSummary> </CustomValidationSummary>
@@ -247,8 +238,12 @@
             }
         </div>
 
+         <div class="row m-0" style="margin-bottom:16px !important;">
+            <TrainingDetails LogBookTrainingDetailVM="@logBookVM.LogBookTrainingDetailVM" ShowBodyPart="isTrainingVisible" OnToggle="@(() => ToggleVisibility_Training())"></TrainingDetails>
+        </div>
+
         <div class="row m-0" style="margin-bottom:16px !important;">
-            <Photos ShowBodyPart="isFlightPhotosVisible" OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
+            <Photos ShowBodyPart="isFlightPhotosVisible"  OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
         </div>
 
         <div class="row m-0">

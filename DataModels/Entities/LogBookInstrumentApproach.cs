@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataModels.Entities
 {
-    public class LogBookInstrumentApproachVM
+    public class LogBookInstrumentApproach
     {
         public long Id { get; set; }
         public long LogBookInstrumentId { get; set; }

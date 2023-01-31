@@ -15,7 +15,7 @@ namespace Web.UI.Pages.InstructorType
         {
             isBusySubmitButton = true;
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await InstructorTypeService.SaveandUpdateAsync(dependecyParams, instructorTypeData);
 
             isBusySubmitButton = false;

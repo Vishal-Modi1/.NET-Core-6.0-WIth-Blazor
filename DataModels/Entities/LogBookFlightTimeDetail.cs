@@ -2,7 +2,7 @@
 
 namespace DataModels.Entities
 {
-    public class LogBookFlightTimeDetailVM
+    public class LogBookFlightTimeDetail
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }

@@ -64,6 +64,6 @@ namespace DataModels.VM.LogBook
 
         public List<LogBookCrewPassengerVM> LogBookCrewPassengersList { get; set; } = new();
 
-        public List<LogBookFlightPhotoVM> logBookFlightPhotosVM { get; set; } = new();
+        public List<LogBookFlightPhotoVM> logBookFlightPhotosList { get; set; } = new();
     }
 }

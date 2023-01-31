@@ -5,12 +5,13 @@ using DataModels.VM.Common;
 using FSMAPI.Utilities;
 using DataModels.Constants;
 using Microsoft.AspNetCore.Authorization;
+using DataModels.VM.LogBook;
 
 namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   
     public class LogBookController : BaseAPIController
     {
         private readonly ILogBookService _logBookService;
@@ -80,20 +81,16 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
-        //[HttpPost]
-        //[Route("create")]
-        //public IActionResult Create(CompanyVM companyVM)
-        //{
-        //    string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+        [HttpPost]
+        [Route("create")]
+        public IActionResult Create(LogBookVM logBookVM)
+        {
+            logBookVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+            logBookVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
 
-        //    if (!string.IsNullOrEmpty(loggedInUser))
-        //    {
-        //        companyVM.CreatedBy = Convert.ToInt64(loggedInUser);
-        //    }
-
-        //    CurrentResponse response = _logBookService.Create(companyVM);
-        //    return APIResponse(response);
-        //}
+            CurrentResponse response = _logBookService.Create(logBookVM);
+            return APIResponse(response);
+        }
 
         //[HttpPost]
         //[Route("edit")]
@@ -105,13 +102,13 @@ namespace FSMAPI.Controllers
         //    return APIResponse(response);
         //}
 
-        //[HttpGet]
-        //[Route("getDetails")]
-        //public IActionResult GetDetails(int id)
-        //{
-        //    CurrentResponse response = _logBookService.FindById(id);
-        //    return APIResponse(response);
-        //}
+        [HttpGet]
+        [Route("getDetails")]
+        public IActionResult GetDetails(long id)
+        {
+            CurrentResponse response = _logBookService.FindById(id);
+            return APIResponse(response);
+        }
 
         //[HttpDelete]
         //[Route("delete")]
@@ -161,7 +158,7 @@ namespace FSMAPI.Controllers
         //public IActionResult UpdateCreatedBy(int id, long createdBy)
         //{
         //    CurrentResponse response = _logBookService.UpdateCreatedBy(id, createdBy);
-            
+
         //    return APIResponse(response);
         //}
 
