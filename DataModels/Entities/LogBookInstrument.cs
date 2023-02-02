@@ -6,8 +6,8 @@ namespace DataModels.Entities
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }
-        public Int32 ActualInstrument { get; set; }
-        public Int32 SimulatedInstrument { get; set; }
-        public Int32 Holds { get; set; }
+        public short ActualInstrument { get; set; }
+        public short SimulatedInstrument { get; set; }
+        public short Holds { get; set; }
     }
 }

@@ -38,7 +38,6 @@ namespace Web.UI.Pages.Account
             if(!firstRender)
             {
                 ChangeLoaderVisibilityAction(false);
-                StateHasChanged();
             }
 
             base.OnAfterRender(firstRender);

@@ -67,7 +67,7 @@ namespace Repository
                 _myContext.SaveChanges();
 
                 //Logbook photos list
-                List<LogBookFlightPhoto> logBookFlightPhotosList = _mapper.Map<List<LogBookFlightPhoto>>(logBookVM.logBookFlightPhotosList);
+                List<LogBookFlightPhoto> logBookFlightPhotosList = _mapper.Map<List<LogBookFlightPhoto>>(logBookVM.LogBookFlightPhotosList);
                 logBookFlightPhotosList.ForEach(p => { p.LogBookId = logBook.Id; });
                 _myContext.LogBookFlightPhotos.AddRange(logBookFlightPhotosList);
                 _myContext.SaveChanges();
@@ -96,34 +96,54 @@ namespace Repository
         {
             try
             {
-                LogBookVM logBookVM;
+                LogBook logBook = _myContext.LogBooks.FirstOrDefault(p => p.Id == id);
 
-                _myContext.Database.OpenConnection();
+                if (logBook == null)
+                    return null;
 
-                var param = new SqlParameter("@id", id);
+                LogBookVM logBookVM = _mapper.Map<LogBookVM>(logBook);
 
-                var cmd = _myContext.Database.GetDbConnection().CreateCommand();
-                cmd.CommandText = $"dbo.GetLogBookDetailsById";
-                cmd.Parameters.Add(param);
+                LogBookTrainingDetail logBookTrainingDetail = _myContext.LogBookTrainingDetails.FirstOrDefault(p => p.LogBookId == id);
 
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                if (logBookTrainingDetail != null)
+                {
+                    logBookVM.LogBookTrainingDetailVM = _mapper.Map<LogBookTrainingDetailVM>(logBookTrainingDetail);
+                }
 
-                var reader = cmd.ExecuteReader();
+                LogBookInstrument logBookInstrument = _myContext.LogBookInstruments.FirstOrDefault(p => p.LogBookId == id);
 
-                var dt = new DataTable();
-                dt.Load(reader);
+                if (logBookInstrument != null)
+                {
+                    logBookVM.LogBookInstrumentVM = _mapper.Map<LogBookInstrumentVM>(logBookInstrument);
 
-                var rows = dt.AsEnumerable();
+                    List<LogBookInstrumentApproach> logBookInstrumentApproachesList =  _myContext.LogBookInstrumentApproaches.Where(p => p.LogBookInstrumentId == logBookInstrument.Id).ToList();
+                    logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList = _mapper.Map<List<LogBookInstrumentApproachVM>>(logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList);
+                }
 
-                // Read Blogs from the first result set
-                logBookVM = rows.Select(dr => new LogBookVM()).FirstOrDefault();
+                LogBookFlightTimeDetail logBookFlightTimeDetail = _myContext.LogBookFlightTimeDetails.FirstOrDefault(p => p.LogBookId == id);
 
+                if (logBookFlightTimeDetail != null)
+                {
+                    logBookVM.LogBookFlightTimeDetailVM = _mapper.Map<LogBookFlightTimeDetailVM>(logBookFlightTimeDetail);
+                }
+
+                List<LogBookCrewPassenger> logBookCrewPassengersList = _myContext.LogBookCrewPassengers.Where(p => p.LogBookId == logBook.Id).ToList();
+
+                if (logBookCrewPassengersList.Any())
+                {
+                    logBookVM.LogBookCrewPassengersList = _mapper.Map<List<LogBookCrewPassengerVM>>(logBookCrewPassengersList);
+                }
+
+                List<LogBookFlightPhoto> logBookFlightPhotosList = _myContext.LogBookFlightPhotos.Where(p => p.LogBookId == logBook.Id).ToList();
+
+                if (logBookFlightPhotosList.Any())
+                {
+                    logBookVM.LogBookFlightPhotosList = _mapper.Map<List<LogBookFlightPhotoVM>>(logBookFlightPhotosList);
+                }
 
                 return logBookVM;
-
-                _myContext.Database.CloseConnection();
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 return new LogBookVM();
             }

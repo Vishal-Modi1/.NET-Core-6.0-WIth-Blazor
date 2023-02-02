@@ -6,15 +6,15 @@ namespace DataModels.VM.LogBook
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }
-        public Int32 HobbsStart { get; set; }
-        public Int32 HobbsEnd { get; set; }
-        public Int32 TachStart { get; set; }
-        public Int32 TachEnd { get; set; }
-        public Int32 TimeOut { get; set; }
-        public Int32 TimeOff { get; set; }
-        public Int32 TimeOn { get; set; }
-        public Int32 TimeIn { get; set; }
-        public Int32 OnDuty { get; set; }
-        public Int32 OffDuty { get; set; }
+        public short HobbsStart { get; set; }
+        public short HobbsEnd { get; set; }
+        public short TachStart { get; set; }
+        public short TachEnd { get; set; }
+        public short TimeOut { get; set; }
+        public short TimeOff { get; set; }
+        public short TimeOn { get; set; }
+        public short TimeIn { get; set; }
+        public short OnDuty { get; set; }
+        public short OffDuty { get; set; }
     }
 }
