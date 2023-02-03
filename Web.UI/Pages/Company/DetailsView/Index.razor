@@ -138,7 +138,7 @@
 
     </div>
     <div class="col-md-12  col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
-        <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#3066F8" fontSize="12px"><CustomIcons IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
+            <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#0D89DD" fontSize="12px"><CustomIcons PrimaryColor="#0D89DD" IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane</FontLabel></div>
         <div class="card p-0  no-box-shadow">
             <div class="card-body p-0">
                 <Web.UI.Pages.Company.DetailsView.DetailTabs.Index CompanyData=@companyData />

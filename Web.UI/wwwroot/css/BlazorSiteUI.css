@@ -147,7 +147,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .main .content .left-header {
   max-height: 54px;
   min-height: 54px;
-  background-color: #022254;
+  background-color: #30AAFC;
   color: white;
 }
 
@@ -193,7 +193,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-drawer-top-header {
-  background-color: #022254;
+  background-color: #30AAFC;
 }
 
 .user-face {
@@ -251,13 +251,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: #FFFFFF !important;
 }
 .btn.k-btn-primary {
-  border: 1px solid #3066F8 !important;
-  background-color: #3066F8 !important;
+  border: 1px solid #03AAFC !important;
+  background-color: #03AAFC !important;
 }
 .btn.k-btn-primary:hover {
   color: white;
-  border: 1px solid #022a6a !important;
-  background-color: #022a6a !important;
+  border: 1px solid #0D89DD !important;
+  background-color: #0D89DD !important;
 }
 .btn.k-btn-primary:focus {
   outline: none !important;
@@ -305,13 +305,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*TOP HORIZONTAL HEADER START*/
 .header-profile-dropdown {
-  background-color: #022254 !important;
+  background-color: #30AAFC !important;
   color: white !important;
   border: none !important;
   box-shadow: none !important;
 }
 .header-profile-dropdown:hover {
-  background-color: #022254 !important;
+  background-color: #30AAFC !important;
 }
 
 .dropdown-menu {
@@ -439,7 +439,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-solid {
-  background-color: #FCFCFC !important;
+  background-color: #F1FAFD !important;
 }
 
 .invalid {
@@ -452,7 +452,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-button, .k-input-button:hover {
-  background-color: rgba(48, 102, 248, 0.2588235294);
+  background-color: #E6F1FD !important;
 }
 
 .k-btn-grid-delete {
@@ -621,7 +621,11 @@ th, td, span, p {
 }
 
 .k-input-md .k-input-button {
-  background-color: rgba(48, 102, 248, 0.3098039216) !important;
+  background-color: #E6F1FD !important;
+}
+
+.k-input-spinner button {
+  background-color: #E6F1FD !important;
 }
 
 .weather-brify {
@@ -726,4 +730,8 @@ th, td, span, p {
   background: #F8F8F8;
   padding: 10px;
   border-bottom: 1px solid #e1e1e1;
+}
+
+.textarea-height {
+  height: 60px !important;
 }

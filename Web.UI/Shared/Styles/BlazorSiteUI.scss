@@ -50,12 +50,12 @@ $BG-MENU-ITEM-TEXT-COLOR: #121D2D;
 /*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
 $BG-MENU-ITEM-SELECTED: #3066f80f;
 $BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
-$BG-MENU-TITLE-HEADER: #022254;
+$BG-MENU-TITLE-HEADER: #30AAFC;
 $BG-MENU-ITEM-HOVER: #eee;
 $BG-MAIN-MENU: WHITE;
 
-$BG-BTN-PRIMARY: $BG-LIGHT-BLUE;
-$BG-BTN-PRIMARY-HOVER: #022a6a;
+$BG-BTN-PRIMARY: #03AAFC;
+$BG-BTN-PRIMARY-HOVER: #0D89DD;
 $BG-BTN-DANGER: #EE0808;
 $BG-BTN-DANGER-HOVER: #CA2323;
 $BG-BTN-INFO: #008EA4;
@@ -565,7 +565,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-solid {
-    background-color: #FCFCFC !important;
+    background-color: #F1FAFD!important;
 }
 
 .invalid {
@@ -578,7 +578,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-button, .k-input-button:hover {
-    background-color: #3066f842;
+    background-color: #E6F1FD!important;
 }
 
 .k-btn-grid-delete {
@@ -754,7 +754,12 @@ th, td, span, p {
 }
 
 .k-input-md .k-input-button {
-    background-color: #3066f84f !important
+    background-color: #E6F1FD !important;
+}
+.k-input-spinner {
+    & button {
+        background-color: #E6F1FD !important;
+    }
 }
 
 .weather-brify {
@@ -875,4 +880,9 @@ th, td, span, p {
     background: #F8F8F8;
     padding: 10px;
     border-bottom: 1px solid #e1e1e1;
+}
+
+.textarea-height
+{
+    height:60px!important;
 }
