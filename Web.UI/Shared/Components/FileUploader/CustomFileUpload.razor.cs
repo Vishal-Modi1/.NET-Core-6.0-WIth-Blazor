@@ -9,7 +9,9 @@ namespace Web.UI.Shared.Components.FileUploader
         [Parameter] public bool IsFileUploadHasError { get; set; }
         [Parameter] public EventCallback<InputFileChangeEventArgs> OnInputFileChangeCallback { get; set; }
         [Parameter] public bool IsFileAdded {get;set;}
+        [Parameter] public bool IsAllowMultiple { get; set; } = false;
         [Parameter] public string supportedFormats { get; set; }
+
         async Task OnInputFileChangeAsync(InputFileChangeEventArgs e)
         {
             await OnInputFileChangeCallback.InvokeAsync(e);

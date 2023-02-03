@@ -6,12 +6,13 @@ using FSMAPI.Utilities;
 using DataModels.Constants;
 using Microsoft.AspNetCore.Authorization;
 using DataModels.VM.LogBook;
+using DataModels.Entities;
 
 namespace FSMAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+
     public class LogBookController : BaseAPIController
     {
         private readonly ILogBookService _logBookService;
@@ -90,6 +91,54 @@ namespace FSMAPI.Controllers
 
             CurrentResponse response = _logBookService.Create(logBookVM);
             return APIResponse(response);
+        }
+
+        [HttpPost]
+        [Route("uploadFlightPhotos")]
+        public async Task<IActionResult> UploadFlightPhotos()
+        {
+            try
+            {
+                if (!Request.HasFormContentType)
+                {
+                    return Ok(false);
+                }
+
+                IFormCollection form = Request.Form;
+
+                string companyId = _jWTTokenGenerator.GetCompanyId().ToString();
+                string userId = _jWTTokenGenerator.GetUserId().ToString();
+
+                long logBookId = Convert.ToInt64(form["LogBookId"]);
+
+                List<LogBookFlightPhoto> logBookFlightPhotosList = _logBookService.ListFlightPhotosByLogBookId(logBookId).OrderBy(p => p.Id).ToList();
+                string filePath = UploadDirectories.LogbookFlightPhoto + "\\" + companyId + "\\" + userId + "\\" + logBookId;
+
+                int i = 0;
+                foreach (var item in form.Files)
+                {
+                    i++;
+                    string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["LogBookId"]}_{i}.jpeg";
+                    bool isFileUploaded = await _fileUploader.UploadAsync(filePath, item, fileName);
+
+                    LogBookFlightPhoto logBookFlightPhoto = logBookFlightPhotosList.Skip(i - 1).Take(1).First();
+
+                    logBookFlightPhoto.Name = fileName;
+                }
+
+                logBookFlightPhotosList.RemoveAll(p => string.IsNullOrWhiteSpace(p.Name));
+
+                CurrentResponse response = new CurrentResponse();
+                response.Data = "false";
+
+                response = _logBookService.UpdateImagesName(logBookId, logBookFlightPhotosList);
+
+                return APIResponse(response);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         //[HttpPost]

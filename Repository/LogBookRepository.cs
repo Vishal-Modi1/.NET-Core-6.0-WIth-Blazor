@@ -2,8 +2,6 @@
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.LogBook;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -24,53 +22,27 @@ namespace Repository
             _mapper = mapper;
         }
 
-        public void Create(LogBookVM logBookVM)
+        public LogBookVM Create(LogBookVM logBookVM)
         {
             using var transaction = _myContext.Database.BeginTransaction();
 
             try
             {
-                //Logbook Details
-                LogBook logBook = _mapper.Map<LogBook>(logBookVM);
+                LogBook logBook = SaveLogBookDetails(logBookVM);
+                LogBookTrainingDetail logBookTrainingDetail = SaveLogBookTrainingDetails(logBook.Id,logBookVM.LogBookTrainingDetailVM);
+                LogBookFlightTimeDetail logBookFlightTimeDetail = SaveLogBookFlightTimeDetails(logBook.Id, logBookVM.LogBookFlightTimeDetailVM);
+                LogBookInstrument logBookInstrument = SaveLogBookInstrumentDetails(logBook.Id, logBookVM.LogBookInstrumentVM);
+                List<LogBookInstrumentApproach> logBookInstrumentApproachesList = SaveLogBookInstrumentApproachDetails(logBookInstrument.Id, logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList);
+                List<LogBookCrewPassenger> logBookCrewPassengersList = SaveLogBookCrewPassengers(logBook.Id, logBookVM.LogBookCrewPassengersList);
+                List<LogBookFlightPhoto> logBookFlightPhotosList = SaveLogBookFlightPhotos(logBook.Id, logBookVM.LogBookFlightPhotosList);
 
-                _myContext.LogBooks.Add(logBook);
-                _myContext.SaveChanges();
-
-                //Logbook training details
-                LogBookTrainingDetail logBookTrainingDetail = _mapper.Map<LogBookTrainingDetail>(logBookVM.LogBookTrainingDetailVM);
-                logBookTrainingDetail.LogBookId = logBook.Id;
-                _myContext.LogBookTrainingDetails.Add(logBookTrainingDetail);
-                _myContext.SaveChanges();
-
-                //Logbook instrument details
-                LogBookInstrument logBookInstrument = _mapper.Map<LogBookInstrument>(logBookVM.LogBookInstrumentVM);
-                logBookInstrument.LogBookId = logBook.Id;
-                _myContext.LogBookInstruments.Add(logBookInstrument);
-                _myContext.SaveChanges();
-
-                //Logbook instrument approaches details
-                List<LogBookInstrumentApproach> logBookInstrumentApproachesList = _mapper.Map<List<LogBookInstrumentApproach>>(logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList);
-                logBookInstrumentApproachesList.ForEach(p => { p.LogBookInstrumentId = logBookInstrument.Id; });
-                _myContext.LogBookInstrumentApproaches.AddRange(logBookInstrumentApproachesList);
-                _myContext.SaveChanges();
-
-                //Logbook flight time details
-                LogBookFlightTimeDetail logBookFlightTimeDetail = _mapper.Map<LogBookFlightTimeDetail>(logBookVM.LogBookFlightTimeDetailVM);
-                logBookFlightTimeDetail.LogBookId = logBook.Id;
-                _myContext.LogBookFlightTimeDetails.Add(logBookFlightTimeDetail);
-                _myContext.SaveChanges();
-
-                //Logbook passengers list
-                List<LogBookCrewPassenger> logBookCrewPassengersList = _mapper.Map<List<LogBookCrewPassenger>>(logBookVM.LogBookCrewPassengersList);
-                logBookCrewPassengersList.ForEach(p => { p.LogBookId = logBook.Id; });
-                _myContext.LogBookCrewPassengers.AddRange(logBookCrewPassengersList);
-                _myContext.SaveChanges();
-
-                //Logbook photos list
-                List<LogBookFlightPhoto> logBookFlightPhotosList = _mapper.Map<List<LogBookFlightPhoto>>(logBookVM.LogBookFlightPhotosList);
-                logBookFlightPhotosList.ForEach(p => { p.LogBookId = logBook.Id; });
-                _myContext.LogBookFlightPhotos.AddRange(logBookFlightPhotosList);
-                _myContext.SaveChanges();
+                logBookVM = _mapper.Map<LogBookVM>(logBook);
+                logBookVM.LogBookTrainingDetailVM = _mapper.Map<LogBookTrainingDetailVM>(logBookTrainingDetail);
+                logBookVM.LogBookFlightTimeDetailVM = _mapper.Map<LogBookFlightTimeDetailVM>(logBookFlightTimeDetail);
+                logBookVM.LogBookInstrumentVM = _mapper.Map<LogBookInstrumentVM>(logBookInstrument);
+                logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList = _mapper.Map<List<LogBookInstrumentApproachVM>>(logBookInstrumentApproachesList);
+                logBookVM.LogBookCrewPassengersList = _mapper.Map<List<LogBookCrewPassengerVM>>(logBookCrewPassengersList);
+                logBookVM.LogBookFlightPhotosList = _mapper.Map<List<LogBookFlightPhotoVM>>(logBookFlightPhotosList);
 
                 transaction.Commit();
             }
@@ -78,6 +50,12 @@ namespace Repository
             {
                 transaction.Rollback();
             }
+            finally
+            {
+
+            }
+
+            return logBookVM;
         }
 
         public List<DropDownSmallValues> ListInstrumentApproachesDropdownValues()
@@ -116,7 +94,7 @@ namespace Repository
                 {
                     logBookVM.LogBookInstrumentVM = _mapper.Map<LogBookInstrumentVM>(logBookInstrument);
 
-                    List<LogBookInstrumentApproach> logBookInstrumentApproachesList =  _myContext.LogBookInstrumentApproaches.Where(p => p.LogBookInstrumentId == logBookInstrument.Id).ToList();
+                    List<LogBookInstrumentApproach> logBookInstrumentApproachesList = _myContext.LogBookInstrumentApproaches.Where(p => p.LogBookInstrumentId == logBookInstrument.Id).ToList();
                     logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList = _mapper.Map<List<LogBookInstrumentApproachVM>>(logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList);
                 }
 
@@ -148,5 +126,126 @@ namespace Repository
                 return new LogBookVM();
             }
         }
+
+        #region flight photos
+
+        public List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logbookId)
+        {
+            List<LogBookFlightPhoto> existingLogBookFlightPhotosList = _myContext.LogBookFlightPhotos.Where(p => p.LogBookId == logbookId && !p.IsDeleted).ToList();
+
+            return existingLogBookFlightPhotosList;
+        }
+
+        public void UpdateImagesName(long logbookId, List<LogBookFlightPhoto> logBookFlightPhotosList)
+        {
+            List<LogBookFlightPhoto> existingLogBookFlightPhotosList = _myContext.LogBookFlightPhotos.Where(p => p.LogBookId == logbookId && !p.IsDeleted).ToList();
+
+            if (!existingLogBookFlightPhotosList.Any())
+            {
+                return;
+            }
+
+            foreach (LogBookFlightPhoto logBookFlightPhoto in existingLogBookFlightPhotosList)
+            {
+                logBookFlightPhoto.Name = existingLogBookFlightPhotosList.Where(p => p.Name == logBookFlightPhoto.Name).First().Name;
+            }
+
+            _myContext.SaveChanges();
+        }
+
+        #endregion
+
+
+        #region Save Detais
+        private LogBook SaveLogBookDetails(LogBookVM logBookVM)
+        {
+            //Logbook Details
+            LogBook logBook = _mapper.Map<LogBook>(logBookVM);
+            _myContext.LogBooks.Add(logBook);
+            _myContext.SaveChanges();
+
+            return logBook;
+        }
+
+        private LogBookTrainingDetail SaveLogBookTrainingDetails(long logbookId, LogBookTrainingDetailVM logBookTrainingDetailVM)
+        {
+            LogBookTrainingDetail logBookTrainingDetail = _mapper.Map<LogBookTrainingDetail>(logBookTrainingDetailVM);
+            logBookTrainingDetail.LogBookId = logbookId;
+            _myContext.LogBookTrainingDetails.Add(logBookTrainingDetail);
+            _myContext.SaveChanges();
+
+            return logBookTrainingDetail;
+        }
+
+        private LogBookInstrument SaveLogBookInstrumentDetails(long logbookId, LogBookInstrumentVM logBookInstrumentVM)
+        {
+            LogBookInstrument logBookInstrument = _mapper.Map<LogBookInstrument>(logBookInstrumentVM);
+            logBookInstrument.LogBookId = logbookId;
+            _myContext.LogBookInstruments.Add(logBookInstrument);
+            _myContext.SaveChanges();
+
+            return logBookInstrument;
+        }
+
+        private List<LogBookInstrumentApproach> SaveLogBookInstrumentApproachDetails(long logBookInstrumentId, List<LogBookInstrumentApproachVM> logBookInstrumentApproachesVMList)
+        {
+            if (logBookInstrumentApproachesVMList.Count() == 0)
+            {
+                return new();
+            }
+
+            List<LogBookInstrumentApproach> logBookInstrumentApproachesList = _mapper.Map<List<LogBookInstrumentApproach>>(logBookInstrumentApproachesVMList);
+
+            logBookInstrumentApproachesList.ForEach(p => { p.LogBookInstrumentId = logBookInstrumentId; });
+            _myContext.LogBookInstrumentApproaches.AddRange(logBookInstrumentApproachesList);
+            _myContext.SaveChanges();
+
+            return logBookInstrumentApproachesList;
+        }
+
+        private LogBookFlightTimeDetail SaveLogBookFlightTimeDetails(long logBookId,LogBookFlightTimeDetailVM logBookFlightTimeDetailVM)
+        {
+            LogBookFlightTimeDetail logBookFlightTimeDetail = _mapper.Map<LogBookFlightTimeDetail>(logBookFlightTimeDetailVM);
+            logBookFlightTimeDetail.LogBookId = logBookId;
+            _myContext.LogBookFlightTimeDetails.Add(logBookFlightTimeDetail);
+            _myContext.SaveChanges();
+
+            return logBookFlightTimeDetail;
+        }
+
+        private List<LogBookCrewPassenger> SaveLogBookCrewPassengers(long logBookId, List<LogBookCrewPassengerVM> logBookCrewPassengers)
+        {
+            if(logBookCrewPassengers.Count() == 0)
+            {
+                return new();
+            }
+
+            List<LogBookCrewPassenger> logBookCrewPassengersList = _mapper.Map<List<LogBookCrewPassenger>>(logBookCrewPassengers);
+
+            logBookCrewPassengersList.ForEach(p => { p.LogBookId = logBookId; });
+            _myContext.LogBookCrewPassengers.AddRange(logBookCrewPassengersList);
+            _myContext.SaveChanges();
+
+            return logBookCrewPassengersList;
+        }
+
+        private List<LogBookFlightPhoto> SaveLogBookFlightPhotos(long logBookId, List<LogBookFlightPhotoVM> logBookFlightPhotos)
+        {
+            if (logBookFlightPhotos.Count() == 0)
+            {
+                return new();
+            }
+
+            List<LogBookFlightPhoto> logBookFlightPhotosList = _mapper.Map<List<LogBookFlightPhoto>>(logBookFlightPhotos);
+
+            logBookFlightPhotosList.ForEach(p => { p.LogBookId = logBookId; });
+            _myContext.LogBookFlightPhotos.AddRange(logBookFlightPhotosList);
+            _myContext.SaveChanges();
+
+            return logBookFlightPhotosList;
+        }
+        #endregion
     }
 }
+
+

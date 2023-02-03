@@ -11,6 +11,10 @@ namespace Repository.Interface
 
         LogBookVM FindById(long id);
 
-        void Create(LogBookVM logBookVM);
+        LogBookVM Create(LogBookVM logBookVM);
+
+        List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logbookId);
+
+        void UpdateImagesName(long logbookId, List<LogBookFlightPhoto> logBookFlightPhotosList);
     }
 }

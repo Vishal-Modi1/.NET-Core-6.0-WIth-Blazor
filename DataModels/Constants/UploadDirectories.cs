@@ -9,5 +9,6 @@
         public const string TempDocument = "TempDocuments";
         public const string CompanyLogo = "CompanyLogos";
         public const string Discrepancy = "Discrepancies";
+        public const string LogbookFlightPhoto = "LogbookFlightPhotos";
     }
 }

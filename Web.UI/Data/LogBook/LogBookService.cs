@@ -44,5 +44,14 @@ namespace Web.UI.Data.LogBook
 
             return response;
         }
+
+        public async Task<CurrentResponse> UploadFlightPhotosAsync(DependecyParams dependecyParams, MultipartFormDataContent fileContent)
+        {
+            dependecyParams.URL = $"logBook/uploadFlightPhotos";
+
+            CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
+
+            return response;
+        }
     }
 }
