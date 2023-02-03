@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿ using AutoMapper;
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.LogBook;
@@ -29,7 +29,7 @@ namespace Repository
             try
             {
                 LogBook logBook = SaveLogBookDetails(logBookVM);
-                LogBookTrainingDetail logBookTrainingDetail = SaveLogBookTrainingDetails(logBook.Id,logBookVM.LogBookTrainingDetailVM);
+                LogBookTrainingDetail logBookTrainingDetail = SaveLogBookTrainingDetails(logBook.Id, logBookVM.LogBookTrainingDetailVM);
                 LogBookFlightTimeDetail logBookFlightTimeDetail = SaveLogBookFlightTimeDetails(logBook.Id, logBookVM.LogBookFlightTimeDetailVM);
                 LogBookInstrument logBookInstrument = SaveLogBookInstrumentDetails(logBook.Id, logBookVM.LogBookInstrumentVM);
                 List<LogBookInstrumentApproach> logBookInstrumentApproachesList = SaveLogBookInstrumentApproachDetails(logBookInstrument.Id, logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList);
@@ -56,6 +56,28 @@ namespace Repository
             }
 
             return logBookVM;
+        }
+
+
+
+        public List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId)
+        {
+            List<LogBookSummaryVM> logBookSummaries = (from logBook in _myContext.LogBooks
+                                                       join aircraft in _myContext.Aircrafts
+                                                       on logBook.AircraftId equals aircraft.Id
+                                                       where logBook.CompanyId == companyId
+                                                       && logBook.CreatedBy == userId
+                                                       orderby logBook.CreatedOn descending
+                                                       select new LogBookSummaryVM()
+                                                       {
+                                                           Id = logBook.Id,
+                                                           Arrival = logBook.Arrival,
+                                                           Departure = logBook.Departure,
+                                                           Date = logBook.Date,
+                                                           TailNo = aircraft.TailNo,
+                                                       }).Take(5).ToList();
+
+            return logBookSummaries;
         }
 
         public List<DropDownSmallValues> ListInstrumentApproachesDropdownValues()
@@ -203,7 +225,7 @@ namespace Repository
             return logBookInstrumentApproachesList;
         }
 
-        private LogBookFlightTimeDetail SaveLogBookFlightTimeDetails(long logBookId,LogBookFlightTimeDetailVM logBookFlightTimeDetailVM)
+        private LogBookFlightTimeDetail SaveLogBookFlightTimeDetails(long logBookId, LogBookFlightTimeDetailVM logBookFlightTimeDetailVM)
         {
             LogBookFlightTimeDetail logBookFlightTimeDetail = _mapper.Map<LogBookFlightTimeDetail>(logBookFlightTimeDetailVM);
             logBookFlightTimeDetail.LogBookId = logBookId;
@@ -215,7 +237,7 @@ namespace Repository
 
         private List<LogBookCrewPassenger> SaveLogBookCrewPassengers(long logBookId, List<LogBookCrewPassengerVM> logBookCrewPassengers)
         {
-            if(logBookCrewPassengers.Count() == 0)
+            if (logBookCrewPassengers.Count() == 0)
             {
                 return new();
             }

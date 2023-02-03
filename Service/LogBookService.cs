@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using DataModels.VM.LogBook;
 using DataModels.Entities;
+using DataModels.Constants;
 
 namespace Service
 {
@@ -43,6 +44,11 @@ namespace Service
             try
             {
                 LogBookVM logBookVM = _logBookRepository.FindById(id);
+
+                foreach (LogBookFlightPhotoVM item in logBookVM.LogBookFlightPhotosList)
+                {
+                    item.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.LogbookFlightPhoto}/{logBookVM.CompanyId}/{logBookVM.CreatedBy}/{id}/{item.Name}";
+                }
 
                 CreateResponse(logBookVM, HttpStatusCode.OK, "");
 
@@ -99,6 +105,25 @@ namespace Service
         public List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId)
         {
             return _logBookRepository.ListFlightPhotosByLogBookId(logBookId);
+        }
+
+        public CurrentResponse LogBookSummaries(long userId, int companyId)
+        {
+            try
+            {
+                List<LogBookSummaryVM> logBookSummaries = _logBookRepository.LogBookSummaries(userId, companyId);
+
+                CreateResponse(logBookSummaries, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
         }
     }
 }

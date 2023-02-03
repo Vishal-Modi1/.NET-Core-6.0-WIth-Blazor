@@ -11,6 +11,8 @@ namespace Web.UI.Pages.LogBook
     partial class Create
     {
         [Parameter] public LogBookVM logBookVM { get; set; }
+        [Parameter] public EventCallback RefreshSummaries { get; set; }
+        [Parameter] public List<DropDownLargeValues> AircraftsList { get; set; } = new();
 
         bool isLogBookEntryVisible = true;
         bool isTakeoffsLandingsVisible = true;
@@ -33,7 +35,7 @@ namespace Web.UI.Pages.LogBook
         {
             if (firstRender)
             {
-                logBookVM.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, globalMembers.CompanyId);
+                
                 base.StateHasChanged();
             }
         }
@@ -81,7 +83,14 @@ namespace Web.UI.Pages.LogBook
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
             isBusySubmitButton = false;
 
+            RefreshSummariesInfo();
+
             //ManageFileUploadResponse(response, "Flight Photos");
+        }
+
+        public void RefreshSummariesInfo()
+        {
+            RefreshSummaries.InvokeAsync();
         }
 
         void AddNewCrewPassenger()

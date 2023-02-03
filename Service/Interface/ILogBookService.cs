@@ -16,5 +16,7 @@ namespace Service.Interface
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId);
 
         CurrentResponse UpdateImagesName(long logBookId, List<LogBookFlightPhoto> logBookFlightPhotosList);
+
+        CurrentResponse LogBookSummaries(long userId, int companyId);
     }
 }

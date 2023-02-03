@@ -53,5 +53,35 @@ namespace Web.UI.Data.LogBook
 
             return response;
         }
+
+        public async Task<List<LogBookSummaryVM>> LogBookSummaries(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"logBook/logBookSummaries";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<LogBookSummaryVM> logBookSummaries = new List<LogBookSummaryVM>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                logBookSummaries = JsonConvert.DeserializeObject<List<LogBookSummaryVM>>(response.Data.ToString());
+            }
+
+            return logBookSummaries;
+        }
+
+        public async Task<LogBookVM> GetDetails(DependecyParams dependecyParams,long id)
+        {
+            dependecyParams.URL = $"logBook/getDetails?id={id}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            LogBookVM logBookVM = new LogBookVM();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                logBookVM = JsonConvert.DeserializeObject<LogBookVM>(response.Data.ToString());
+            }
+
+            return logBookVM;
+        }
     }
 }
