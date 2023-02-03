@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using DataModels.VM.LogBook;
+using DataModels.Entities;
 
 namespace Service
 {
@@ -22,7 +23,7 @@ namespace Service
             try
             {
                 logBook.CreatedOn = DateTime.UtcNow;
-                _logBookRepository.Create(logBook);
+                logBook =  _logBookRepository.Create(logBook);
 
                 CreateResponse(logBook, HttpStatusCode.OK, "Logbook added successfully");
 
@@ -73,6 +74,31 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+
+        public CurrentResponse UpdateImagesName(long logBookId, List<LogBookFlightPhoto> logBookFlightPhotosList)
+        {
+            try
+            {
+                _logBookRepository.UpdateImagesName(logBookId, logBookFlightPhotosList);
+
+                CreateResponse(true, HttpStatusCode.OK, "Logbook added successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId)
+        {
+            return _logBookRepository.ListFlightPhotosByLogBookId(logBookId);
         }
     }
 }

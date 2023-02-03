@@ -245,7 +245,7 @@
         </div>
 
         <div class="row m-0">
-            <Photos ShowBodyPart="isFlightPhotosVisible"  OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
+            <Photos ShowBodyPart="isFlightPhotosVisible" PhotosList="@logBookVM.LogBookFlightPhotosList"  OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
         </div>
 
         <div class="row m-0">

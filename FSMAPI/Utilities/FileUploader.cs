@@ -13,6 +13,17 @@ namespace FSMAPI.Utilities
 
         public async Task<bool> UploadAsync(string directoryName, IFormCollection form, string fileName)
         {
+            return await UploadFiles(directoryName, form.Files[0], fileName);
+        }
+
+        public async Task<bool> UploadAsync(string directoryName, IFormFile file, string fileName)
+        {
+            return await UploadFiles(directoryName, file, fileName);
+        }
+
+
+        private async Task<bool> UploadFiles(string directoryName, IFormFile file, string fileName)
+        {
             try
             {
                 string uploadsPath = Path.Combine(_webHostEnvironment.ContentRootPath, UploadDirectories.RootDirectory);
@@ -20,19 +31,16 @@ namespace FSMAPI.Utilities
 
                 Directory.CreateDirectory(uploadsPath + "\\" + directoryName);
 
-                foreach (var formFile in form.Files)
+                if (file.Length == 0)
                 {
-                    if (formFile.Length == 0)
-                    {
-                        continue;
-                    }
+                    return false;
+                }
 
-                    string filePath = Path.Combine(uploadsPath, directoryName, fileName);
+                string filePath = Path.Combine(uploadsPath, directoryName, fileName);
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
                 }
 
                 return true;
@@ -42,5 +50,6 @@ namespace FSMAPI.Utilities
                 return false;
             }
         }
+
     }
 }

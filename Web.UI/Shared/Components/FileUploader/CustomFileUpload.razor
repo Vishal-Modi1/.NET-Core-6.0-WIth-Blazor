@@ -47,7 +47,18 @@
 
         </span>
     </label>
-    <InputFile Id="documentImage" accept="@supportedFormats" style="display:none" OnChange="OnInputFileChangeAsync" Value="@DisplayName" />
+
+    @if (IsAllowMultiple)
+    {
+        <InputFile Id="documentImage" accept="@supportedFormats" style="display:none" OnChange="OnInputFileChangeAsync" Value="@DisplayName" multiple/>
+    }
+    else
+    {
+        <InputFile Id="documentImage" accept="@supportedFormats" style="display:none" OnChange="OnInputFileChangeAsync" Value="@DisplayName" />
+    }
+
+
+
 </div>
 
 
