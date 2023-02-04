@@ -18,7 +18,7 @@
 
 /*NEW COLOR PLATE*/
 $PRIMARY-COLOR: #042455;
-$SECONDARY-COLOR: #3066F8;
+$SECONDARY-COLOR: #03AAFC;
 $NEUTRAL-COLOR: #1F1F1F;
 /*$SOLID-COLOR: #9E27B0;*/
 $SOLID-COLOR: #438AFE;
@@ -44,13 +44,13 @@ $BUTTON-TEXT-VDARK: #042455;
 $DISABLED-TEXT-VDARK: #042455;
 
 $BG-DARK-BLUE: #022254;
-$BG-LIGHT-BLUE: #3066F8;
+$BG-LIGHT-BLUE: #03AAFC;
 $BG-MENU-ITEM: #0062FE;
 $BG-MENU-ITEM-TEXT-COLOR: #121D2D;
 /*$BG-MENU-ITEM-SELECTED: #d4ecf3;*/
-$BG-MENU-ITEM-SELECTED: #3066f80f;
-$BG-MENU-ITEM-SELECTED-L-BORDER: #3066F8;
-$BG-MENU-TITLE-HEADER: #30AAFC;
+$BG-MENU-ITEM-SELECTED: #03AAFC0f;
+$BG-MENU-ITEM-SELECTED-L-BORDER: #03AAFC;
+$BG-MENU-TITLE-HEADER: #1E374F;
 $BG-MENU-ITEM-HOVER: #eee;
 $BG-MAIN-MENU: WHITE;
 
@@ -61,7 +61,7 @@ $BG-BTN-DANGER-HOVER: #CA2323;
 $BG-BTN-INFO: #008EA4;
 $BG-BTN-INFO-HOVER: #17A2B8;
 $BG-SECONDARY: #979797;
-$BG-SECONDARY-BUTTON: #3066f8;
+$BG-SECONDARY-BUTTON: #03AAFC;
 /*$BG-BTN-SECONDARY:#022A6A;
 $BG-BTN-SUCCESS: #022A6A;
 $BG-BTN-DANGER: #022A6A;
@@ -322,7 +322,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             border-left: 6px solid $BG-MENU-ITEM-SELECTED-L-BORDER;
             /*Update class according */
             .menu-item-text-color {
-                color: #3066F8 !important;
+                color: #03AAFC !important;
             }
         }
 
@@ -331,7 +331,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             background-color: $BG-MENU-ITEM-HOVER;
 
             .menu-item-text-color {
-                color: #3066F8;
+                color: #03AAFC;
             }
         }
     }
@@ -531,7 +531,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
         .k-tabstrip-item.k-item:hover {
             background-color: $BG-MENU-ITEM-HOVER;
-            color: #3066F8 !important;
+            color: #03AAFC !important;
         }
     }
 }
@@ -557,7 +557,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
         }
 
         .k-link {
-            border-bottom: 4px solid #3066F8;
+            border-bottom: 4px solid #03AAFC;
             background: $BG-MENU-ITEM-SELECTED !important;
             /*color: $WHITE-TEXT !important;*/
         }
@@ -574,12 +574,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-inner {
-    background-color: #3066f80f;
+    background-color: #03AAFC0f;
 }
 
-.k-input-button, .k-input-button:hover {
+/*.k-input-button, .k-input-button:hover {
     background-color: #E6F1FD!important;
-}
+}*/
 
 .k-btn-grid-delete {
     background-color: $RED-COLOR !important;
@@ -750,17 +750,17 @@ th, td, span, p {
 }
 
 .common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
-    background: #3066f80f !important;
+    background: #03AAFC0f !important;
 }
 
-.k-input-md .k-input-button {
+/*.k-input-md .k-input-button {
     background-color: #E6F1FD !important;
 }
 .k-input-spinner {
     & button {
         background-color: #E6F1FD !important;
     }
-}
+}*/
 
 .weather-brify {
     border: 1px solid #D9D9D9;
@@ -844,8 +844,8 @@ th, td, span, p {
 .profile-image-hover:hover {
     .highlight-hover {
         padding: 5px 10px !important;
-        border-color: #3066f8 !important;
-        background-color: #3066f8 !important;
+        border-color: #03AAFC !important;
+        background-color: #03AAFC !important;
         border-radius: 8px;
     }
 }
@@ -882,6 +882,9 @@ th, td, span, p {
     border-bottom: 1px solid #e1e1e1;
 }
 
+.logbook-control-max-width{
+    width:auto;
+}
 .textarea-height
 {
     height:60px!important;

@@ -15,52 +15,50 @@
 <div class="row py-1 my-0 @(!ShowBodyPart ? "d-none":"")" style="margin-bottom:16px !important;">
 
     <div class="row" style="margin-bottom:12px !important;">
-        <div class="col-3">
+        <div class="col-2" />
+        <div class="col-2">
             <label>Dual Given</label>
-            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.DualGiven"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" @bind-Value="@LogBookTrainingDetailVM.DualGiven"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Dual Received</label>
-            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.DualReceived"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" @bind-Value="@LogBookTrainingDetailVM.DualReceived"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Simulated Flight</label>
-            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.SimulatedFlight"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" @bind-Value="@LogBookTrainingDetailVM.SimulatedFlight"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Ground Training</label>
-            <TelerikNumericTextBox @bind-Value="@LogBookTrainingDetailVM.GroundTraining"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" @bind-Value="@LogBookTrainingDetailVM.GroundTraining"></TelerikNumericTextBox>
         </div>
     </div>
 
     <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
-
+        <div class="col-2" />
         <div class="col-2">
-            <label>Check Ride</label>
-            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsCheckRide" />
+            <label>Check Ride<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsCheckRide" /></label>
         </div>
 
          <div class="col-2">
-            <label>FAA</label>
-            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsFAA" />
+            <label>FAA<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsFAA" /></label>
         </div>
 
          <div class="col-2">
-            <label>Flight Review</label>
-            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsFlightReview" />
+            <label>Flight Review<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsFlightReview" /></label>
         </div>
 
          <div class="col-2">
-            <label>IPC</label>
-            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsIPC" />
-        </div>
-
+            <label>IPC<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsIPC" /></label>
+        </div> 
+    </div>
+    <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
+        <div class="col-2" />
          <div class="col-2">
-            <label>NVG Proficiency</label>
-            <TelerikCheckBox Id="holds" @bind-Value="@LogBookTrainingDetailVM.IsNVGProficiency" />
+            <label>NVG Proficiency<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsNVGProficiency" /></label>
         </div>
     </div>
 </div>

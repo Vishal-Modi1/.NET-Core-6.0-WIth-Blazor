@@ -86,7 +86,7 @@
         background-color: #b1b1b138;
     }
 
-    .listview-item,.k-listview-item {
+    .listview-item, .k-listview-item {
         display: inline-block;
         margin: 10px;
         padding: 10px;
@@ -96,7 +96,7 @@
     }
 
     @@media (min-width:320px) { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
-        .k-listview-item{
+        .k-listview-item {
             width: 195px;
         }
     }
@@ -173,15 +173,15 @@
         </div>
     </div>
 
-<div>
-        <CustomCollapseBar Class="my-1"  IsFilterBarVisible="isFilterBarVisible" 
-        OnPanelCollapsed="@(() => {isFilterBarVisible = false;})" 
-        OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+    <div>
+        <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                           OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                           OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
             <HeaderContent>
-                <div class="d-flex justify-content-between" >
+                <div class="d-flex justify-content-between">
                     <span class="my-0">
-                    <CustomIcons IconName="search" /> Search
-                </span>
+                        <CustomIcons IconName="search" /> Search
+                    </span>
                     <span>
                         @if (isFilterBarVisible)
                         {
@@ -197,33 +197,33 @@
             <ChildContent>
                 <div class="row my-0">
 
-                            @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
-                            {
-                                <div class="col-md-4 my-auto mt-1 py-0">
-                                    <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
-                                                 ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
-                                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                                 Placeholder="Select Company" ValueField="Id">
-                                    </TelerikComboBox>
-                                </div>
-                            }
-                            <div class="col-md-4 my-auto mt-1 py-0">
-                                <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" Class="common-bg" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
-                            </div>
-
-                            <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-4" : "col-md-8") my-auto mt-1 py-0 px-3" style="text-align:right">
-                                <span @onclick="@(e => ChangeView(true))" class="cursor-pointer gridview">
-                                    <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#3066f8" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
-                                </span>
-                                <span @onclick="@(e => ChangeView(false))" class="cursor-pointer listview">
-                                    <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == false ?   "#3066f8": "#ededed"  )" SecondaryColor="@(isDisplayGridView == false ? "white" : "black")"></CustomIcons>
-                                </span>
-                            </div>
-
+                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                    {
+                        <div class="col-md-4 my-auto mt-1 py-0">
+                            <TelerikComboBox Id=companyId Data="@aircraftFilterVM.Companies" TextField="Name"
+                                         ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Company" ValueField="Id">
+                            </TelerikComboBox>
                         </div>
+                    }
+                    <div class="col-md-4 my-auto mt-1 py-0">
+                        <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" Class="common-bg" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
+                    </div>
+
+                    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-4" : "col-md-8") my-auto mt-1 py-0 px-3" style="text-align:right">
+                        <span @onclick="@(e => ChangeView(true))" class="cursor-pointer gridview">
+                            <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#03AAFC" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
+                        </span>
+                        <span @onclick="@(e => ChangeView(false))" class="cursor-pointer listview">
+                            <CustomIcons IconName="listview" PrimaryColor="@(isDisplayGridView == false ?   "#03AAFC": "#ededed"  )" SecondaryColor="@(isDisplayGridView == false ? "white" : "black")"></CustomIcons>
+                        </span>
+                    </div>
+
+                </div>
             </ChildContent>
         </CustomCollapseBar>
-</div>
+    </div>
 
     @if (isDisplayGridView)
     {
@@ -239,12 +239,12 @@
             </ListViewSettings>
 
             <Template>
-                    <div class="k-card" @onclick="@(() => OpenDetailPage(context.Id))">
-                        <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
-                        <div class='status-circle' style="background-color:@context.Indicator"> </div>
-                        <div class="k-card-body d-flex justify-content-center">
-                            <span class="k-card-title" style="font-weight:normal;margin:0 0 0 0 !important">@context.TailNo</span>
-                            <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
+                <div class="k-card" @onclick="@(() => OpenDetailPage(context.Id))">
+                    <img class="custom-aircraft-img" onerror="this.onerror=null;this.src='../img/thumbnail-aircraft.png';" src="@context.ImagePath" />
+                    <div class='status-circle' style="background-color:@context.Indicator"> </div>
+                    <div class="k-card-body d-flex justify-content-center">
+                        <span class="k-card-title" style="font-weight:normal;margin:0 0 0 0 !important">@context.TailNo</span>
+                        <span class="mx-2"><CustomIcons IconName="arrow-right" PrimaryColor="#042455" /></span>
                     </div>
                 </div>
             </Template>
@@ -338,7 +338,7 @@
 
 @if (isDisplayPopup)
 {
-    <CustomPopupComponent Title="@popupTitle" 
+    <CustomPopupComponent Title="@popupTitle"
                       HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
                       CloseOnOutsideClick="false" Width="600px"
                       OnClose="@(()=> {isDisplayPopup = false;})">

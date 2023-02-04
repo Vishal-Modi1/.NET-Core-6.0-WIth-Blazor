@@ -39,7 +39,7 @@ hr {
 }
 
 .bg-primary-f {
-  background-color: #3066F8;
+  background-color: #03AAFC;
 }
 
 .bg-secondary-f {
@@ -147,7 +147,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 .main .content .left-header {
   max-height: 54px;
   min-height: 54px;
-  background-color: #30AAFC;
+  background-color: #1E374F;
   color: white;
 }
 
@@ -193,7 +193,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-drawer-top-header {
-  background-color: #30AAFC;
+  background-color: #1E374F;
 }
 
 .user-face {
@@ -231,19 +231,19 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   color: #121D2D;
 }
 .telerik-blazor.k-drawer .selected-nav-item {
-  background-color: rgba(48, 102, 248, 0.0588235294);
-  border-left: 6px solid #3066F8;
+  background-color: rgba(3, 170, 252, 0.0588235294);
+  border-left: 6px solid #03AAFC;
   /*Update class according */
 }
 .telerik-blazor.k-drawer .selected-nav-item .menu-item-text-color {
-  color: #3066F8 !important;
+  color: #03AAFC !important;
 }
 .telerik-blazor.k-drawer .k-drawer-item:hover, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover {
   color: white !important;
   background-color: #eee;
 }
 .telerik-blazor.k-drawer .k-drawer-item:hover .menu-item-text-color, .telerik-blazor.k-drawer .k-drawer-item.k-state-hover .menu-item-text-color {
-  color: #3066F8;
+  color: #03AAFC;
 }
 
 .btn.edit-button {
@@ -290,13 +290,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-button.k-button-Outline-secondary {
-  border: 1px solid #3066f8 !important;
-  color: #3066f8 !important;
+  border: 1px solid #03AAFC !important;
+  color: #03AAFC !important;
 }
 .k-button.k-button-Outline-secondary:hover {
-  border: 1px solid #3066f8 !important;
+  border: 1px solid #03AAFC !important;
   color: white !important;
-  background-color: #3066f8 !important;
+  background-color: #03AAFC !important;
 }
 
 .login-button {
@@ -305,13 +305,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 
 /*TOP HORIZONTAL HEADER START*/
 .header-profile-dropdown {
-  background-color: #30AAFC !important;
+  background-color: #1E374F !important;
   color: white !important;
   border: none !important;
   box-shadow: none !important;
 }
 .header-profile-dropdown:hover {
-  background-color: #30AAFC !important;
+  background-color: #1E374F !important;
 }
 
 .dropdown-menu {
@@ -415,7 +415,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 .k-tabstrip-top .k-tabstrip-items-wrapper .k-tabstrip-item.k-item:hover {
   background-color: #eee;
-  color: #3066F8 !important;
+  color: #03AAFC !important;
 }
 
 .k-tabstrip-items {
@@ -433,8 +433,8 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
   border: 0 !important;
 }
 .k-tabstrip-items .k-tabstrip-item.k-item.k-active .k-link {
-  border-bottom: 4px solid #3066F8;
-  background: rgba(48, 102, 248, 0.0588235294) !important;
+  border-bottom: 4px solid #03AAFC;
+  background: rgba(3, 170, 252, 0.0588235294) !important;
   /*color: $WHITE-TEXT !important;*/
 }
 
@@ -448,13 +448,12 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-input-inner {
-  background-color: rgba(48, 102, 248, 0.0588235294);
+  background-color: rgba(3, 170, 252, 0.0588235294);
 }
 
-.k-input-button, .k-input-button:hover {
-  background-color: #E6F1FD !important;
-}
-
+/*.k-input-button, .k-input-button:hover {
+    background-color: #E6F1FD!important;
+}*/
 .k-btn-grid-delete {
   background-color: #c00 !important;
   border-color: #c00 !important;
@@ -617,17 +616,17 @@ th, td, span, p {
 }
 
 .common-bg, .common-bg > .k-input-inner, .common-bg > .k-input-button {
-  background: rgba(48, 102, 248, 0.0588235294) !important;
+  background: rgba(3, 170, 252, 0.0588235294) !important;
 }
 
-.k-input-md .k-input-button {
-  background-color: #E6F1FD !important;
+/*.k-input-md .k-input-button {
+    background-color: #E6F1FD !important;
 }
-
-.k-input-spinner button {
-  background-color: #E6F1FD !important;
-}
-
+.k-input-spinner {
+    & button {
+        background-color: #E6F1FD !important;
+    }
+}*/
 .weather-brify {
   border: 1px solid #D9D9D9;
   border-radius: 6px;
@@ -699,8 +698,8 @@ th, td, span, p {
 
 .profile-image-hover:hover .highlight-hover {
   padding: 5px 10px !important;
-  border-color: #3066f8 !important;
-  background-color: #3066f8 !important;
+  border-color: #03AAFC !important;
+  background-color: #03AAFC !important;
   border-radius: 8px;
 }
 
@@ -730,6 +729,10 @@ th, td, span, p {
   background: #F8F8F8;
   padding: 10px;
   border-bottom: 1px solid #e1e1e1;
+}
+
+.logbook-control-max-width {
+  width: auto;
 }
 
 .textarea-height {

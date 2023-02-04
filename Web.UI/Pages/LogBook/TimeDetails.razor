@@ -15,46 +15,48 @@
 <div class="row py-1 my-0 @(!ShowBodyPart ? "d-none":"")" style="margin-bottom:16px !important;">
 
     <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
-        <div class="col-3">
+        <div class="col-2" />
+        <div class="col-2">
             <label>Hobbs Start</label>
-            <TelerikNumericTextBox Id="hobbsStart" @bind-Value="@LogBookTimeDetails.HobbsStart" Placeholder="Hobbs Start"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="hobbsStart" @bind-Value="@LogBookTimeDetails.HobbsStart" Placeholder="Hobbs Start"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Hobbs End</label>
-            <TelerikNumericTextBox Id="hobbsEnd" @bind-Value="@LogBookTimeDetails.HobbsEnd" Placeholder="Hobbs End"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="hobbsEnd" @bind-Value="@LogBookTimeDetails.HobbsEnd" Placeholder="Hobbs End"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Tach Start</label>
-            <TelerikNumericTextBox Id="tachStart" @bind-Value="@LogBookTimeDetails.TachStart" Placeholder="Tach Start"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="tachStart" @bind-Value="@LogBookTimeDetails.TachStart" Placeholder="Tach Start"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Tach End</label>
-            <TelerikNumericTextBox Id="tachEnd" @bind-Value="@LogBookTimeDetails.TachEnd" Placeholder="Tach End"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="tachEnd" @bind-Value="@LogBookTimeDetails.TachEnd" Placeholder="Tach End"></TelerikNumericTextBox>
         </div>
     </div>
 
     <div class="row" style="margin-bottom:12px !important;">
-        <div class="col-3">
+        <div class="col-2" />
+        <div class="col-2">
             <label>Time Out</label>
-            <TelerikNumericTextBox Id="timeOut" @bind-Value="@LogBookTimeDetails.TimeOut" Placeholder="Time Out"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="timeOut" @bind-Value="@LogBookTimeDetails.TimeOut" Placeholder="Time Out"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Time Off</label>
-            <TelerikNumericTextBox Id="timeOff" @bind-Value="@LogBookTimeDetails.TimeOff" Placeholder="Time Off"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="timeOff" @bind-Value="@LogBookTimeDetails.TimeOff" Placeholder="Time Off"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Time On</label>
-            <TelerikNumericTextBox Id="timeOn" @bind-Value="@LogBookTimeDetails.TimeOn" Placeholder="Time On"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="timeOn" @bind-Value="@LogBookTimeDetails.TimeOn" Placeholder="Time On"></TelerikNumericTextBox>
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>On Duty</label>
-            <TelerikNumericTextBox Id="onDuty" @bind-Value="@LogBookTimeDetails.OnDuty" Placeholder="On Duty"></TelerikNumericTextBox>
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="onDuty" @bind-Value="@LogBookTimeDetails.OnDuty" Placeholder="On Duty"></TelerikNumericTextBox>
         </div>
     </div>
-    </div>
+</div>

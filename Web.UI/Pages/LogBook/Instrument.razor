@@ -14,22 +14,23 @@
 </div>
 <div class="col-12 py-1 @(!ShowBodyPart ? "d-none":"")">
     <div class="row my-0">
-        <div class="col-3">
+        <div class="col-2" />
+        <div class="col-2">
             <label>Actual Instrument</label>
-            <TelerikNumericTextBox Id="actualInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.ActualInstrument" Placeholder="Hours" />
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="actualInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.ActualInstrument" Placeholder="Hours" />
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Simulated Instrument</label>
-            <TelerikNumericTextBox Id="simulatedInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.SimulatedInstrument" Placeholder="Hours" />
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="simulatedInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.SimulatedInstrument" Placeholder="Hours" />
         </div>
 
-        <div class="col-3">
+        <div class="col-2">
             <label>Holds</label>
-            <TelerikNumericTextBox Id="holds" @bind-Value="@logBookVM.LogBookInstrumentVM.Holds" Placeholder="Hours" />
+            <TelerikNumericTextBox Class="logbook-control-max-width" Id="holds" @bind-Value="@logBookVM.LogBookInstrumentVM.Holds" Placeholder="Hours" />
         </div>
 
-        <div class="col-3 d-flex align-self-center">
+        <div class="col-2 d-flex align-items-end">
             <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" ButtonType="@ButtonType.Button"
                            Enabled="@(!isBusyAddButton)" OnClick="() => AddNewApproach()">
                 <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
@@ -39,6 +40,7 @@
         </div>
     </div>
     <div class="row my-0">
+        <div class="col-2" />
         @if (logBookVM.LogBookInstrumentVM is not null && logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList.Any())
         {
             @foreach (var item in logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList)
