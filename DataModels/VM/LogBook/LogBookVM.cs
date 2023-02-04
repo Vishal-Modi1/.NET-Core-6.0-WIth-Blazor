@@ -55,8 +55,6 @@ namespace DataModels.VM.LogBook
 
         public string Comments { get; set; }
 
-        public List<DropDownLargeValues> AircraftsList { get; set; } = new();
-
         public List<DropDownLargeValues> CrewPassengersList { get; set; } = new();
 
         public LogBookTrainingDetailVM LogBookTrainingDetailVM { get; set; } = new();

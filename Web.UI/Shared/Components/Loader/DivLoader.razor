@@ -1,0 +1,10 @@
+﻿<TelerikLoaderContainer Visible="@isVisible">
+    <Template>
+        <img src="/img/loader.gif" alt="Computer man" style="width:5%;height:5%;">
+    </Template>
+</TelerikLoaderContainer>
+
+@code
+{
+    [Parameter] public bool isVisible {  get;  set; } 
+}

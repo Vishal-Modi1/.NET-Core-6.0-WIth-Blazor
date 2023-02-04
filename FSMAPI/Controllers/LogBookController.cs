@@ -159,6 +159,14 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpGet]
+        [Route("logBookSummaries")]
+        public IActionResult LogBookSummaries()
+        {
+            CurrentResponse response = _logBookService.LogBookSummaries(_jWTTokenGenerator.GetUserId(), _jWTTokenGenerator.GetCompanyId());
+            return APIResponse(response);
+        }
+
         //[HttpDelete]
         //[Route("delete")]
         //public IActionResult Delete(int id)

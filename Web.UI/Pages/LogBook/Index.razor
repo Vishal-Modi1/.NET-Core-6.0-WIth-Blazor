@@ -3,11 +3,12 @@
 
 <PageTitle>LogBook | Upflyte </PageTitle>
 
+
 <div class="row my-0">
     <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
         <div class="card p-0 no-box-shadow">
             <div class="card-body p-0 ">
-                <LogBookLeftPanel />
+                <LogBookLeftPanel EditLogBook="@GetLogBookDetails" logBookSummaries="@logBookSummaries" />
             </div>
         </div>
 
@@ -23,7 +24,7 @@
                         </div>
                     </HeaderTemplate>
                     <Content>
-                            <Create logBookVM="new DataModels.VM.LogBook.LogBookVM()"></Create>
+                            <Create logBookVM="@logBookVM"  AircraftsList="@AircraftsList" RefreshSummaries=@RefreshSummaries></Create>
                     </Content>
                 </TabStripTab>
                 <TabStripTab>

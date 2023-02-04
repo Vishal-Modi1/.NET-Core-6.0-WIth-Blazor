@@ -16,5 +16,7 @@ namespace Repository.Interface
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logbookId);
 
         void UpdateImagesName(long logbookId, List<LogBookFlightPhoto> logBookFlightPhotosList);
+
+        List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId);
     }
 }

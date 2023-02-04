@@ -48,7 +48,7 @@
 
                     <div class="col-2">
                         <label>Aircrafts</label>
-                        <TelerikComboBox Class="logbook-control-max-width" Id=aircraft Data="@logBookVM.AircraftsList" TextField="Name"
+                        <TelerikComboBox Id=aircraft Data="@AircraftsList" TextField="Name"  Class="logbook-control-max-width"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(logBookVM.AircraftId)">
                         </TelerikComboBox>

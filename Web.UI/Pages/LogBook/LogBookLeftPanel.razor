@@ -9,6 +9,7 @@
             </span>
         </div>
     </div>
+
     <div class="card-body">
         <div class="p-0 d-flex justify-content-between align-items-center">
             <span>
@@ -50,50 +51,7 @@
             </span>
         </div>
     </div>
-    <div class="card-header">
-        <div class="p-0 d-flex justify-content-start align-items-center">
-            <span>January 2023</span>
-        </div>
-    </div>
-    <div class="card-body p-0">
-        @for (int i = 0; i < 5; i++)
-        {
-            <div class="p-2">
-                <div class="d-flex justify-content-between align-items-center logList">
-                    <span class="d-flex justify-content-between align-items-center">
-                        <span class="me-2">
-                            <CustomIcons IconName="folder-1" PrimaryColor="black" />
-                        </span>
-                        <span>
-                            <div>
-                                <FontLabel fontColor="#042455">KADS KDWH</FontLabel>
-                            </div>
-                            <div>
-                                <FontLabel fontColor="#555555">N958PT SR22</FontLabel>
-                            </div>
-                        </span>
-                    </span>
-                    <span class="d-flex justify-content-between align-items-center">
-                        <span>
-                            <div>
-                                <FontLabel fontSize="10px" fontColor="#042455">Jan 05, 2022</FontLabel>
-                            </div>
-                            <div>
-                                <FontLabel fontSize="10px" fontColor="#555555">2.1 Total</FontLabel>
-                            </div>
-                            <div>
-                                <FontLabel fontSize="10px" fontColor="#555555">1 Approach</FontLabel>
-                            </div>
-                        </span>
-                        <span class="ms-2">
-                            <CustomIcons IconName="cheveron-right" PrimaryColor="black" />
-                        </span>
-                    </span>
-                </div>
-            </div>
-            <hr class="m-0" />
-        }
-    </div>
+
     <div class="card-header">
         <div class="p-0 d-flex justify-content-start align-items-center">
             <span>Statistics</span>
@@ -173,6 +131,8 @@
             <span><CustomIcons IconName="cheveron-right" PrimaryColor="black" /></span>
         </div>
     </div>
+
+    <RecentLogBooks logBookSummaries=@logBookSummaries EditLogBook=@EditLogBookInfo></RecentLogBooks>
 </div>
 @code {
 
