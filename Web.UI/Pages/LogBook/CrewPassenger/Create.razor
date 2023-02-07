@@ -1,0 +1,47 @@
+﻿@using DataModels.VM.InstructorType
+
+<TelerikForm Model="@crewPassengerVM" OnValidSubmit="@Submit" Class="popup-content">
+
+    <FormValidation>
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6" style="margin-bottom:20px;">
+                        <label>Name</label>
+                        <TelerikTextBox Id="name" @bind-Value="@crewPassengerVM.Name" Placeholder="Name"></TelerikTextBox>
+                          <TelerikValidationMessage For="@(() => crewPassengerVM.Name)"></TelerikValidationMessage>
+                    </div>
+
+                    <div class="col-6" style="margin-bottom:20px;">
+                        <label>Email</label>
+                          <TelerikTextBox Id="email" @bind-Value="@crewPassengerVM.EmailId" Placeholder="Email"></TelerikTextBox>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      
+
+        <hr class="hr-gray mt-3 mb-3" />
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@crewPassengerVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+            </div>
+
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>
+

@@ -11,6 +11,9 @@ namespace Web.UI.Pages.LogBook
         public List<LogBookSummaryVM> logBookSummaries { get; set; } = new();
         public LogBookVM logBookVM { get; set; } = new();
         public List<DropDownLargeValues> AircraftsList { get; set; } = new();
+        public List<DropDownSmallValues> RolesList { get; set; } = new();
+        public List<DropDownLargeValues> PassengersList { get; set; } = new();
+        public List<DropDownLargeValues> UsersList { get; set; } = new();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -29,6 +32,9 @@ namespace Web.UI.Pages.LogBook
 
             logBookVM = new LogBookVM();
             AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, globalMembers.CompanyId);
+            RolesList = await LogBookService.ListPassengersRolesDropdownValues(dependecyParams);
+            PassengersList = await LogBookService.ListPassengersDropdownValuesByCompanyId(dependecyParams);
+            UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, globalMembers.CompanyId);
 
             ChangeLoaderVisibilityAction(false);
         }

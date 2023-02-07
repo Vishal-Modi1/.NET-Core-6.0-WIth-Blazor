@@ -173,6 +173,10 @@ namespace Repository
 
         public DbSet<InstrumentApproach> InstrumentApproaches { get; set; }
 
+        public DbSet<CrewPassenger> CrewPassengers { get; set; }
+        public DbSet<CrewPassengersRoles> CrewPassengersRoles { get; set; }
+
+
         #endregion
 
         //List Objects

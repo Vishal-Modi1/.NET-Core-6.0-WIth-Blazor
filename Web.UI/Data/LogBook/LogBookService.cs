@@ -15,6 +15,36 @@ namespace Web.UI.Data.LogBook
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
+        public async Task<List<DropDownSmallValues>> ListPassengersRolesDropdownValues(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"logBook/listPassengersRolesDropdownValues";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<DropDownSmallValues> passengersRoles = new List<DropDownSmallValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                passengersRoles = JsonConvert.DeserializeObject<List<DropDownSmallValues>>(response.Data.ToString());
+            }
+
+            return passengersRoles;
+        }
+
+        public async Task<List<DropDownLargeValues>> ListPassengersDropdownValuesByCompanyId(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"logBook/listPassengersDropdownValuesByCompanyId";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<DropDownLargeValues> passengersRoles = new List<DropDownLargeValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                passengersRoles = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
+            }
+
+            return passengersRoles;
+        }
+
         public async Task<List<DropDownSmallValues>> ListInstrumentApproachesDropdownValues(DependecyParams dependecyParams)
         {
             dependecyParams.URL = $"logBook/listInstrumentApproachesDropdownValues";
@@ -38,6 +68,21 @@ namespace Web.UI.Data.LogBook
             if (logBookVM.Id > 0)
             {
                 dependecyParams.URL = "logBook/edit";
+            }
+
+            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
+
+            return response;
+        }
+
+        public async Task<CurrentResponse> SaveandUpdateCrewPassengerAsync(DependecyParams dependecyParams, CrewPassengerVM crewPassengerVM)
+        {
+            dependecyParams.JsonData = JsonConvert.SerializeObject(crewPassengerVM);
+            dependecyParams.URL = "logBook/createCrewPassenger";
+
+            if (crewPassengerVM.Id > 0)
+            {
+                dependecyParams.URL = "logBook/createCrewPassenger";
             }
 
             CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
@@ -82,6 +127,14 @@ namespace Web.UI.Data.LogBook
             }
 
             return logBookVM;
+        }
+
+        public async Task<CurrentResponse> DeletePhotoAsync(DependecyParams dependecyParams, long id)
+        {
+            dependecyParams.URL = $"logBook/deletePhoto?photoId={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
+
+            return response;
         }
     }
 }

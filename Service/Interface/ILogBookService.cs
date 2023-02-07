@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Service.Interface
 {
-    public interface  ILogBookService
+    public interface ILogBookService
     {
         CurrentResponse ListInstrumentApproachesDropdownValues();
 
@@ -13,10 +13,27 @@ namespace Service.Interface
 
         CurrentResponse Create(LogBookVM logBook);
 
+        CurrentResponse Edit(LogBookVM logBookVM);
+
+        CurrentResponse LogBookSummaries(long userId, int companyId);
+
+        #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId);
 
         CurrentResponse UpdateImagesName(long logBookId, List<LogBookFlightPhoto> logBookFlightPhotosList);
 
-        CurrentResponse LogBookSummaries(long userId, int companyId);
+        CurrentResponse DeletePhoto(long id, long deletedBy);
+
+        #endregion
+
+        #region Crew Passengers
+
+        CurrentResponse ListPassengersRolesDropdownValues();
+
+        CurrentResponse ListPassengersDropdownValuesByCompanyId(int companyId);
+
+        CurrentResponse CreateCrewPassenger(CrewPassengerVM crewPassengerVM);
+
+        #endregion
     }
 }

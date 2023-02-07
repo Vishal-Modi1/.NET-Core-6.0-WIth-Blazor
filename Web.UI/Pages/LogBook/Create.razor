@@ -1,4 +1,5 @@
 ﻿@using DataModels.VM.LogBook;
+@using DataModels.Enums;
 
 <TelerikForm Model="@logBookVM" OnValidSubmit="@Submit">
 
@@ -6,9 +7,13 @@
         <CustomValidationSummary> </CustomValidationSummary>
     </FormValidation>
     <FormItems>
-        <div class="row mx-0 my-1">
+        <div class="row mx-0 my-1" style="margin-top:9px !important">
+
             <div class="col-md-12 d-flex justify-content-end">
-                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton">
+                <TelerikButton Class="btn k-btn-primary" ButtonType="@ButtonType.Button" ThemeColor="primary" OnClick="(() => AddEntry())">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                </TelerikButton>
+                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
                 </FormFooterComponent>
             </div>
         </div>
@@ -16,7 +21,7 @@
             <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_LogBookEntry())>
                 <span><FontLabel fontColor="#0D89DD">LogBook Entry</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455">Configure</FontLabel>
+                    @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
                     @if (isLogBookEntryVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -37,18 +42,18 @@
                     </div>
 
                     <div class="col-2">
-                        <label>Departure Airport</label>
-                        <TelerikTextBox Class="logbook-control-max-width" Id="departureAirport" @bind-Value="@logBookVM.Departure" PlaceHolder="Airport"></TelerikTextBox>
+                        <label>Departure</label>
+                        <TelerikTextBox Class="logbook-control-max-width" Id="departureAirport" @bind-Value="@logBookVM.Departure" Placeholder="Departure"></TelerikTextBox>
                     </div>
 
                     <div class="col-2">
-                        <label>Arrival Airport</label>
-                        <TelerikTextBox Class="logbook-control-max-width" Id="arrivalAirport" @bind-Value="@logBookVM.Arrival" PlaceHolder="arrival"></TelerikTextBox>
+                        <label>Arrival</label>
+                        <TelerikTextBox Class="logbook-control-max-width" Id="arrivalAirport" @bind-Value="@logBookVM.Arrival" Placeholder="Arrival"></TelerikTextBox>
                     </div>
 
                     <div class="col-2">
                         <label>Aircrafts</label>
-                        <TelerikComboBox Id=aircraft Data="@AircraftsList" TextField="Name"  Class="logbook-control-max-width"
+                        <TelerikComboBox Id=aircraft Data="@AircraftsList" TextField="Name" Class="logbook-control-max-width"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(logBookVM.AircraftId)">
                         </TelerikComboBox>
@@ -60,7 +65,7 @@
                     <div class="col-2" />
                     <div class="col-2">
                         <label>Total Time</label>
-                        <TelerikNumericTextBox Class="logbook-control-max-width"  Id="totalTime" @bind-Value=@logBookVM.TotalTime Placeholder="Hours" />
+                        <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.TotalTime Placeholder="Hours" />
                     </div>
 
                     <div class="col-2">
@@ -95,9 +100,9 @@
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_TakeoffsLandings())>
-                <span><FontLabel fontColor="#0D89DD">TAKEOFFS & LANDINGS</FontLabel></span>
+                <span><FontLabel fontColor="#0D89DD">Takeoffs & Landings</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455">Configure</FontLabel>
+                   @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
                     @if (isTakeoffsLandingsVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -127,7 +132,7 @@
                         <label>Night Landings Full Stop</label>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="nightLandingsFullStop" @bind-Value=@logBookVM.NightLandingsFullStop Placeholder="Hours" />
                     </div>
-                   
+
                 </div>
                 <div class="row my-0" style="margin-bottom: 8px !important;margin-top: 8px !important;">
                     <div class="col-2" />
@@ -149,7 +154,7 @@
             <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_RouteDistance())>
                 <span><FontLabel fontColor="#0D89DD">Route & Distance</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455">Configure</FontLabel>
+                   @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
                     @if (isRouteDistanceVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -184,7 +189,7 @@
             <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_NightVisionGoggles())>
                 <span><FontLabel fontColor="#0D89DD">Night Vision Goggles</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455">Configure</FontLabel>
+                   @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
                     @if (isNightVisionGogglesVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -215,15 +220,22 @@
 
                 <span>
                     <span @onclick:stopPropagation="true" @onclick:preventDefault="true">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"  
-                                       Enabled="@(!isBusyAddButton)" OnClick="() => AddNewCrewPassenger()">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                                       OnClick="() => SelectNewCrewPassenger()">
                             <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                    </span>
+
+                    <span @onclick:stopPropagation="true" @onclick:preventDefault="true">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                                       Enabled="@(!isBusyAddButton)" OnClick="() => AddNewCrewPassenger()">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> New Passenger
                             <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
                             </TelerikLoader>
                         </TelerikButton>
                     </span>
 
-                    <FontLabel fontColor="#042455">Configure</FontLabel>
+                   @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
                     @if (isCrewPassagnersVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -242,9 +254,10 @@
                 <div class="col-12">
                     @foreach (var item in logBookVM.LogBookCrewPassengersList)
                     {
-                        <CrewPassenger LogBookCrewPassengerVM="@item"
-                               CrewPassengersList="@logBookVM.CrewPassengersList">
-                        </CrewPassenger>
+                        <Web.UI.Pages.LogBook.CrewPassenger.CrewPassenger LogBookCrewPassengerVM="@item" RolesList="@RolesList"
+                                                                  PassengersList="@PassengersList" UsersList=@UsersList
+                                                                  CrewPassengersList="@logBookVM.CrewPassengersList">
+                        </Web.UI.Pages.LogBook.CrewPassenger.CrewPassenger>
                     }
                 </div>
             }
@@ -256,19 +269,19 @@
             }
         </div>
 
-         <div class="row m-0">
+        <div class="row m-0">
             <TrainingDetails LogBookTrainingDetailVM="@logBookVM.LogBookTrainingDetailVM" ShowBodyPart="isTrainingVisible" OnToggle="@(() => ToggleVisibility_Training())"></TrainingDetails>
         </div>
 
         <div class="row m-0">
-            <Photos ShowBodyPart="isFlightPhotosVisible" PhotosList="@logBookVM.LogBookFlightPhotosList"  OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
+            <Photos ShowBodyPart="isFlightPhotosVisible" PhotosList="@logBookVM.LogBookFlightPhotosList" OnToggle="@(() => ToggleVisibility_FlightPhotos())"></Photos>
         </div>
 
         <div class="row m-0">
             <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_Comments())>
                 <span><FontLabel fontColor="#0D89DD">Comments</FontLabel></span>
                 <span>
-                    <FontLabel fontColor="#042455">Configure</FontLabel>
+                   @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
                     @if (isCommentsVisible)
                     {
                         <CustomIcons IconName="minus" />
@@ -296,3 +309,21 @@
     </FormButtons>
 </TelerikForm>
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Web.UI.Pages.LogBook.CrewPassenger.Create crewPassengerVM=@(crewPassengerVM) 
+                CloseDialogCallBack="@CloseCrewPassengerDialog">
+                </Web.UI.Pages.LogBook.CrewPassenger.Create>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

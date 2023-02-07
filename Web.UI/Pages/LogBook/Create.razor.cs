@@ -12,7 +12,12 @@ namespace Web.UI.Pages.LogBook
     {
         [Parameter] public LogBookVM logBookVM { get; set; }
         [Parameter] public EventCallback RefreshSummaries { get; set; }
-        [Parameter] public List<DropDownLargeValues> AircraftsList { get; set; } = new();
+        [Parameter] public List<DropDownLargeValues> AircraftsList { get; set; } 
+        [Parameter] public List<DropDownSmallValues> RolesList { get; set; }
+        [Parameter] public List<DropDownLargeValues> PassengersList { get; set; }
+        [Parameter] public List<DropDownLargeValues> UsersList { get; set; }
+
+        public CrewPassengerVM crewPassengerVM { get; set; }
 
         bool isLogBookEntryVisible = true;
         bool isTakeoffsLandingsVisible = true;
@@ -31,20 +36,15 @@ namespace Web.UI.Pages.LogBook
             return base.OnInitializedAsync();
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        private void AddEntry()
         {
-            if (firstRender)
-            {
-                
-                base.StateHasChanged();
-            }
+            logBookVM = new LogBookVM();
         }
 
         public async Task Submit()
         {
             isBusySubmitButton = true;
 
-            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await LogBookService.SaveandUpdateAsync(dependecyParams, logBookVM);
 
             if (response.Status == HttpStatusCode.OK)
@@ -82,6 +82,7 @@ namespace Web.UI.Pages.LogBook
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
             isBusySubmitButton = false;
+            logBookVM = new LogBookVM();
 
             RefreshSummariesInfo();
 
@@ -93,10 +94,32 @@ namespace Web.UI.Pages.LogBook
             RefreshSummaries.InvokeAsync();
         }
 
-        void AddNewCrewPassenger()
+        async Task CloseCrewPassengerDialog(bool reloadPassengersList)
+        {
+            isDisplayPopup = false;
+
+            if (reloadPassengersList)
+            {
+                PassengersList = await LogBookService.ListPassengersDropdownValuesByCompanyId(dependecyParams);
+            }
+        }
+
+        void SelectNewCrewPassenger()
         {
             logBookVM.LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());
         }
+
+        void AddNewCrewPassenger()
+        {
+            isDisplayPopup = true;
+            crewPassengerVM = new CrewPassengerVM();
+            popupTitle = "Add new passenger";
+
+           // logBookVM.LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());
+        }
+
+
+        #region panels 
 
         void ToggleVisibility_LogBookEntry()
         {
@@ -146,5 +169,7 @@ namespace Web.UI.Pages.LogBook
         {
             isCommentsVisible = !isCommentsVisible;
         }
+
+        #endregion
     }
 }

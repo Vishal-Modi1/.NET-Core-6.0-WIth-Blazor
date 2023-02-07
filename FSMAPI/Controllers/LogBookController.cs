@@ -94,6 +94,17 @@ namespace FSMAPI.Controllers
         }
 
         [HttpPost]
+        [Route("edit")]
+        public IActionResult Edit(LogBookVM logBookVM)
+        {
+            logBookVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+            logBookVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+
+            CurrentResponse response = _logBookService.Edit(logBookVM);
+            return APIResponse(response);
+        }
+
+        [HttpPost]
         [Route("uploadFlightPhotos")]
         public async Task<IActionResult> UploadFlightPhotos()
         {
@@ -167,6 +178,17 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpDelete]
+        [Route("deletePhoto")]
+        public IActionResult DeletePhoto(long photoId)
+        {
+            long deletedBy = _jWTTokenGenerator.GetUserId();
+            CurrentResponse response = _logBookService.DeletePhoto(photoId, deletedBy);
+
+            return APIResponse(response);
+        }
+
+
         //[HttpDelete]
         //[Route("delete")]
         //public IActionResult Delete(int id)
@@ -228,14 +250,32 @@ namespace FSMAPI.Controllers
         //    return APIResponse(response);
         //}
 
-        //[HttpGet]
-        //[Route("listDropdownValuesbyUserId")]
-        //public IActionResult ListDropDownValuesByUserId(long userId)
-        //{
-        //    CurrentResponse response = _logBookService.ListDropDownValuesByUserId(userId);
+        [HttpGet]
+        [Route("listPassengersRolesDropdownValues")]
+        public IActionResult ListPassengersRolesDropdownValues()
+        {
+            CurrentResponse response = _logBookService.ListPassengersRolesDropdownValues();
 
-        //    return APIResponse(response);
-        //}
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listPassengersDropdownValuesByCompanyId")]
+        public IActionResult ListPassengersDropdownValuesByCompanyId()
+        {
+            CurrentResponse response = _logBookService.ListPassengersDropdownValuesByCompanyId(_jWTTokenGenerator.GetCompanyId());
+
+            return APIResponse(response);
+        }
+
+        [HttpPost]
+        [Route("createCrewPassenger")]  
+        public IActionResult Create(CrewPassengerVM crewPassengerVM)
+        {
+            crewPassengerVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            CurrentResponse response = _logBookService.CreateCrewPassenger(crewPassengerVM);
+            return APIResponse(response);
+        }
 
         //[HttpGet]
         //[Route("isDisplayPropeller")]

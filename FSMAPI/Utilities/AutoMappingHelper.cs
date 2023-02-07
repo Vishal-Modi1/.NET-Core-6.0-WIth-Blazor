@@ -27,6 +27,7 @@ namespace FSMAPI.Utilities
             CreateMap<LogBookFlightTimeDetailVM, LogBookFlightTimeDetail>().ReverseMap();
             CreateMap<LogBookFlightPhotoVM, LogBookFlightPhoto>().ReverseMap();
             CreateMap<LogBookCrewPassengerVM, LogBookCrewPassenger>().ReverseMap();
+            CreateMap<CrewPassengerVM, CrewPassenger>().ReverseMap();
         }
     }
 }

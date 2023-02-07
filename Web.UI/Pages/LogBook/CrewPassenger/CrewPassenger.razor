@@ -1,0 +1,35 @@
+﻿<div class="row" style="margin-bottom:7px !important;margin-top:7px !important">
+    <div class="col-2" />
+    <div class="col-2">
+        <label>Use system users</label>
+        <TelerikCheckBox Id=role @bind-Value="@(LogBookCrewPassengerVM.IsSystemMember)">
+        </TelerikCheckBox>
+    </div>
+    <div class="col-4">
+        <label>Crew Passenger</label>
+
+        @if (LogBookCrewPassengerVM.IsSystemMember)
+        {
+            <TelerikComboBox Id=user Data="@UsersList" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select User" ValueField="Id" @bind-Value="@(LogBookCrewPassengerVM.UserId)">
+            </TelerikComboBox>
+        }
+        else
+        {
+            <TelerikComboBox Id=user Data="@PassengersList" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Passenger" ValueField="Id" @bind-Value="@(LogBookCrewPassengerVM.CrewOrPassengerId)">
+            </TelerikComboBox>
+        }
+
+    </div>
+    <div class="col-2">
+        <label>Role</label>
+
+        <TelerikComboBox Id=role Data="@RolesList" TextField="Name"
+                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                         Placeholder="Select Role" ValueField="Id" @bind-Value="@(LogBookCrewPassengerVM.RoleId)">
+        </TelerikComboBox>
+    </div>
+</div>

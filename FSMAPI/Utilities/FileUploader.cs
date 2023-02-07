@@ -26,7 +26,7 @@ namespace FSMAPI.Utilities
         {
             try
             {
-                string uploadsPath = Path.Combine(_webHostEnvironment.ContentRootPath, UploadDirectories.RootDirectory);
+                string uploadsPath = Path.Combine(Configuration.ConfigurationSettings.Instance.UploadDirectoryPath, UploadDirectories.RootDirectory);
                 Directory.CreateDirectory(uploadsPath);
 
                 Directory.CreateDirectory(uploadsPath + "\\" + directoryName);

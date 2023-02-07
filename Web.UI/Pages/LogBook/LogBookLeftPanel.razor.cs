@@ -16,10 +16,7 @@ namespace Web.UI.Pages.LogBook
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private void AddEntry() 
-        { 
-        }
-
+        
         public async Task EditLogBookInfo(long id)
         {
             await EditLogBook.InvokeAsync(id);

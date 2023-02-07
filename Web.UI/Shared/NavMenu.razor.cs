@@ -116,7 +116,7 @@ namespace Web.UI.Shared
         public void ChangeLoaderVisibility(bool visible)
         {
             isDisplayPageLoader = visible;
-            StateHasChanged();
+            base.StateHasChanged();
         }
 
         public async Task NavigateToPageAsync(MenuItem item)

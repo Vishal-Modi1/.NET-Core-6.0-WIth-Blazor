@@ -12,11 +12,27 @@ namespace Repository.Interface
         LogBookVM FindById(long id);
 
         LogBookVM Create(LogBookVM logBookVM);
+        LogBookVM Edit(LogBookVM logBookVM);
 
+        List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId);
+
+        #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logbookId);
 
         void UpdateImagesName(long logbookId, List<LogBookFlightPhoto> logBookFlightPhotosList);
 
-        List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId);
+        void DeletePhoto(long id, long deletedBy);
+
+        #endregion
+
+        #region Crew Passengers
+
+        List<DropDownSmallValues> ListPassengersRolesDropdownValues();
+
+        List<DropDownLargeValues> ListPassengersDropdownValuesByCompanyId(int companyId);
+
+        CrewPassenger SaveCrewPassenger(CrewPassenger crewPassenger);
+
+        #endregion
     }
 }
