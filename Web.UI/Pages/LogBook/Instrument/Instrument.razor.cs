@@ -3,7 +3,7 @@ using DataModels.VM.LogBook;
 using DataModels.VM.Common;
 using Web.UI.Utilities;
 
-namespace Web.UI.Pages.LogBook
+namespace Web.UI.Pages.LogBook.Instrument
 {
     partial class Instrument
     {

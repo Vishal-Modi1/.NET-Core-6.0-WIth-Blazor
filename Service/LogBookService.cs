@@ -46,7 +46,7 @@ namespace Service
         {
             try
             {
-                logBookVM.CreatedOn = DateTime.UtcNow;
+                logBookVM.UpdatedOn = DateTime.UtcNow;
                 logBookVM = _logBookRepository.Edit(logBookVM);
 
                 CreateResponse(logBookVM, HttpStatusCode.OK, "Logbook updated successfully");
@@ -235,6 +235,24 @@ namespace Service
             {
                 _logBookRepository.DeleteLogBookCrewPassenger(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Passenger deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse DeleteLogBookInstrumentApproach(long id, long deletedBy)
+        {
+            try
+            {
+                _logBookRepository.DeleteLogBookInstrumentApproach(id, deletedBy);
+                CreateResponse(true, HttpStatusCode.OK, "Instrument approach deleted successfully.");
 
                 return _currentResponse;
             }

@@ -30,7 +30,8 @@ namespace Web.UI.Pages.LogBook
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             logBookSummaries = await LogBookService.LogBookSummaries(dependecyParams);
 
-            logBookVM = new LogBookVM();
+            ResetModel();
+            
             AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, globalMembers.CompanyId);
             RolesList = await LogBookService.ListPassengersRolesDropdownValues(dependecyParams);
             PassengersList = await LogBookService.ListPassengersDropdownValuesByCompanyId(dependecyParams);
@@ -43,9 +44,16 @@ namespace Web.UI.Pages.LogBook
         {
             ChangeLoaderVisibilityAction(true);
 
+            ResetModel();
             logBookSummaries = await LogBookService.LogBookSummaries(dependecyParams);
 
             ChangeLoaderVisibilityAction(false);
+        }
+
+        void ResetModel()
+        {
+            logBookVM = new LogBookVM();
+            logBookVM.Date = DateTime.Now;
         }
 
         void TabChangedHandler(int newIndex)

@@ -1,4 +1,5 @@
 ﻿@using DataModels.Enums;
+@using DataModels.VM.LogBook;
 
 <div class="row m-0">
     <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_CrewPassagners())>
@@ -41,8 +42,8 @@
             @foreach (var logBookCrewPassengerVM in LogBookCrewPassengersList)
             {
                 <div class="row" style="margin-bottom:7px !important;margin-top:7px !important">
-                    <div class="col-2" />
-                    <div class="col-2">
+                    <div class="col-1" />
+                    <div class="col-2 align-self-center">
                         <label>Use system users</label>
                         <TelerikCheckBox Id=role @bind-Value="@(logBookCrewPassengerVM.IsSystemMember)">
                         </TelerikCheckBox>
@@ -75,7 +76,7 @@
                         </TelerikComboBox>
                     </div>
 
-                    <div class="col-2">
+                    <div class="col-2 align-self-end">
 
                         <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" ButtonType="@ButtonType.Button" OnClick="()=>OpenDeleteDialog(logBookCrewPassengerVM)">
                             <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
@@ -102,7 +103,13 @@
                       OnClose="@(()=> {isDisplayPopup = false;})">
         <Body>
 
-            @if (operationType == OperationType.Delete)
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Web.UI.Pages.LogBook.CrewPassenger.Create crewPassengerVM=@(new CrewPassengerVM())
+                                                   CloseDialogCallBack="@CloseCrewPassengerDialog">
+                </Web.UI.Pages.LogBook.CrewPassenger.Create>
+            }
+            else if (operationType == OperationType.Delete)
             {
                 //Delete popup
                 <div>
@@ -111,6 +118,8 @@
                         <div class="col">
 
                             <TelerikButton Class="btn k-btn-danger" ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="()=>DeleteAsync()">
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
                                 Yes
                             </TelerikButton>
 

@@ -10,7 +10,7 @@ namespace DataModels.VM.LogBook
     {
         public long Id { get; set; }
 
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; }
 
         [Range(1, long.MaxValue, ErrorMessage = "Aircraft is required")]
         public long AircraftId { get; set; }

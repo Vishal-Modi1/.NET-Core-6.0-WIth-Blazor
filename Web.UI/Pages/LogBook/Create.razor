@@ -35,7 +35,7 @@
             <input type="hidden" value="@logBookVM.Id" name="Id" />
             <div class="col-12 py-1 @(!isLogBookEntryVisible ? "d-none":"")">
                 <div class="row my-0" style="margin-bottom: 10px !important;margin-top: 8px !important;">
-                    <div class="col-2" />
+                    <div class="col-1" />
                     <div class="col-2">
                         <div><label>Date</label></div>
                         <TelerikDatePicker Class="logbook-control-max-width" @bind-Value="@logBookVM.Date" Id="date"></TelerikDatePicker>
@@ -44,11 +44,13 @@
                     <div class="col-2">
                         <label>Departure</label>
                         <TelerikTextBox Class="logbook-control-max-width" Id="departureAirport" @bind-Value="@logBookVM.Departure" Placeholder="Departure"></TelerikTextBox>
+                         <TelerikValidationMessage For="@(() => logBookVM.Departure)"></TelerikValidationMessage>
                     </div>
 
                     <div class="col-2">
                         <label>Arrival</label>
                         <TelerikTextBox Class="logbook-control-max-width" Id="arrivalAirport" @bind-Value="@logBookVM.Arrival" Placeholder="Arrival"></TelerikTextBox>
+                         <TelerikValidationMessage For="@(() => logBookVM.Arrival)"></TelerikValidationMessage>
                     </div>
 
                     <div class="col-2">
@@ -62,7 +64,7 @@
                 </div>
 
                 <div class="row my-0" style="margin-bottom:8px !important;">
-                    <div class="col-2" />
+                    <div class="col-1" />
                     <div class="col-2">
                         <label>Total Time</label>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.TotalTime Placeholder="Hours" />
@@ -84,7 +86,7 @@
                     </div>
                 </div>
                 <div class="row my-0" style="margin-bottom:8px !important;">
-                    <div class="col-2" />
+                    <div class="col-1" />
                     <div class="col-2">
                         <label>Solo</label>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.Solo Placeholder="Hours" />
@@ -115,7 +117,7 @@
             </div>
             <div class="col-12 py-1 @(!isTakeoffsLandingsVisible ? "d-none":"")">
                 <div class="row my-0" style="margin-bottom: 8px !important;margin-top: 8px !important;">
-                    <div class="col-2" />
+                    <div class="col-1" />
                     <div class="col-2">
                         <label>Day Takeoffs</label>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="dayTakeoffs" @bind-Value=@logBookVM.DayTakeoffs Placeholder="Hours" />
@@ -135,7 +137,7 @@
 
                 </div>
                 <div class="row my-0" style="margin-bottom: 8px !important;margin-top: 8px !important;">
-                    <div class="col-2" />
+                    <div class="col-1" />
                     <div class="col-2">
                         <label>All Landings</label>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.AllLandings Placeholder="Hours" />
@@ -145,9 +147,9 @@
         </div>
 
         <div class="row m-0">
-            <Instrument logBookVM="@logBookVM"
-                        ShowBodyPart="isInstrumentVisible"
-                        OnToggle="@(() => ToggleVisibility_Instrument())" />
+            <Web.UI.Pages.LogBook.Instrument.Instrument logBookVM="@logBookVM"
+                                                        ShowBodyPart="isInstrumentVisible"
+                                                        OnToggle="@(() => ToggleVisibility_Instrument())" />
         </div>
 
         <div class="row m-0">
@@ -165,8 +167,8 @@
                     }
                 </span>
             </div>
-            <div class="row py-1 my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex;margin-bottom:12px !important;">
-                <div class="col-2" />
+            <div class="row my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex;margin-bottom:12px !important;">
+                <div class="col-1" />
                 <div class="col-2">
                     <label>Distance</label>
                     <TelerikNumericTextBox Class="logbook-control-max-width" Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
@@ -200,8 +202,8 @@
                     }
                 </span>
             </div>
-            <div class="row py-1 my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex;margin-bottom:16px !important">
-                <div class="col-2" />
+            <div class="row my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex;margin-bottom:16px !important">
+                <div class="col-1" />
                 <div class="col-2">
                     <label>NVG</label>
                     <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
@@ -246,7 +248,7 @@
                     }
                 </span>
             </div>
-            <div class="col-2" />
+            <div class="col-1" />
             <div class="col-8 py-1 @(!isCommentsVisible ? "d-none":"")" style="margin-top:8px !important;">
                 <TelerikTextBox Id="comments" @bind-Value="@logBookVM.Comments" Placeholder="Comments" Class="textarea-height"></TelerikTextBox>
             </div>
@@ -256,28 +258,10 @@
     <FormButtons>
         <div class="row mx-0 my-1">
             <div class="col-md-12 text-right">
-                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton">
+                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
                 </FormFooterComponent>
             </div>
         </div>
     </FormButtons>
 </TelerikForm>
 
-@if (isDisplayPopup)
-{
-    <CustomPopupComponent Title="@popupTitle"
-                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
-                      CloseOnOutsideClick="false"
-                      OnClose="@(()=> {isDisplayPopup = false;})">
-        <Body>
-
-            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
-            {
-                <Web.UI.Pages.LogBook.CrewPassenger.Create crewPassengerVM=@(new CrewPassengerVM())
-                                                   CloseDialogCallBack="@CloseCrewPassengerDialog">
-                </Web.UI.Pages.LogBook.CrewPassenger.Create>
-            }
-
-        </Body>
-    </CustomPopupComponent>
-}

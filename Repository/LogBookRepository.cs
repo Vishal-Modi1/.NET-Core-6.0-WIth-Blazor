@@ -51,6 +51,7 @@ namespace Repository
             catch (Exception ex)
             {
                 transaction.Rollback();
+                throw ex;
             }
             finally
             {
@@ -87,6 +88,7 @@ namespace Repository
             catch (Exception ex)
             {
                 transaction.Rollback();
+                throw ex;
             }
             finally
             {
@@ -151,7 +153,7 @@ namespace Repository
                 {
                     logBookVM.LogBookInstrumentVM = _mapper.Map<LogBookInstrumentVM>(logBookInstrument);
 
-                    List<LogBookInstrumentApproach> logBookInstrumentApproachesList = _myContext.LogBookInstrumentApproaches.Where(p => p.LogBookInstrumentId == logBookInstrument.Id).ToList();
+                    List<LogBookInstrumentApproach> logBookInstrumentApproachesList = _myContext.LogBookInstrumentApproaches.Where(p => p.LogBookInstrumentId == logBookInstrument.Id && !p.IsDeleted).ToList();
                     logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList = _mapper.Map<List<LogBookInstrumentApproachVM>>(logBookInstrumentApproachesList);
                 }
 
@@ -162,14 +164,14 @@ namespace Repository
                     logBookVM.LogBookFlightTimeDetailVM = _mapper.Map<LogBookFlightTimeDetailVM>(logBookFlightTimeDetail);
                 }
 
-                List<LogBookCrewPassenger> logBookCrewPassengersList = _myContext.LogBookCrewPassengers.Where(p => p.LogBookId == logBook.Id).ToList();
+                List<LogBookCrewPassenger> logBookCrewPassengersList = _myContext.LogBookCrewPassengers.Where(p => p.LogBookId == logBook.Id && !p.IsDeleted).ToList();
 
                 if (logBookCrewPassengersList.Any())
                 {
                     logBookVM.LogBookCrewPassengersList = _mapper.Map<List<LogBookCrewPassengerVM>>(logBookCrewPassengersList);
                 }
 
-                List<LogBookFlightPhoto> logBookFlightPhotosList = _myContext.LogBookFlightPhotos.Where(p => p.LogBookId == logBook.Id).ToList();
+                List<LogBookFlightPhoto> logBookFlightPhotosList = _myContext.LogBookFlightPhotos.Where(p => p.LogBookId == logBook.Id && !p.IsDeleted).ToList();
 
                 if (logBookFlightPhotosList.Any())
                 {
@@ -373,9 +375,33 @@ namespace Repository
             List<LogBookInstrumentApproach> logBookInstrumentApproachesList = _myContext.LogBookInstrumentApproaches.Where(p => p.LogBookInstrumentId == logBookInstrumentId).ToList();
 
             _mapper.Map(logBookInstrumentApproachesVMList, logBookInstrumentApproachesList);
+
+            var newList = logBookInstrumentApproachesVMList.Where(p => p.Id == 0).ToList();
+            logBookInstrumentApproachesVMList.RemoveAll(p => p.Id == 0);
+            logBookInstrumentApproachesList.RemoveAll(p => p.Id == 0);
+
+            if (newList.Any())
+            {
+                logBookInstrumentApproachesList.AddRange(SaveLogBookInstrumentApproachDetails(logBookInstrumentId, newList));
+            }
+
             _myContext.SaveChanges();
 
             return logBookInstrumentApproachesList;
+        }
+
+        public void DeleteLogBookInstrumentApproach(long id, long deletedBy)
+        {
+            LogBookInstrumentApproach logBookInstrumentApproach = _myContext.LogBookInstrumentApproaches.Where(p => p.Id == id).FirstOrDefault();
+
+            if (logBookInstrumentApproach != null)
+            {
+                logBookInstrumentApproach.IsDeleted = true;
+                logBookInstrumentApproach.DeletedBy = deletedBy;
+                logBookInstrumentApproach.DeletedOn = DateTime.UtcNow;
+
+                _myContext.SaveChanges();
+            }
         }
 
         private LogBookFlightTimeDetail UpdateLogBookFlightTimeDetails(long logBookId, LogBookFlightTimeDetailVM logBookFlightTimeDetailVM)
@@ -393,18 +419,19 @@ namespace Repository
             return logBookFlightTimeDetail;
         }
 
-        private List<LogBookCrewPassenger> UpdateLogBookCrewPassengers(long logBookId, List<LogBookCrewPassengerVM> logBookCrewPassengers)
+        private List<LogBookCrewPassenger> UpdateLogBookCrewPassengers(long logBookId, List<LogBookCrewPassengerVM> logBookCrewPassengersVMList)
         {
-            if (logBookCrewPassengers.Count() == 0)
+            if (logBookCrewPassengersVMList.Count() == 0)
             {
                 return new();
             }
 
             List<LogBookCrewPassenger> logBookCrewPassengersList = _myContext.LogBookCrewPassengers.Where(p => p.LogBookId == logBookId).ToList();
 
-            _mapper.Map(logBookCrewPassengers, logBookCrewPassengersList);
+            _mapper.Map(logBookCrewPassengersVMList, logBookCrewPassengersList);
 
-            var newList = logBookCrewPassengers.Where(p => p.Id == 0).ToList();
+            var newList = logBookCrewPassengersVMList.Where(p => p.Id == 0).ToList();
+            logBookCrewPassengersList.RemoveAll(p => p.Id == 0);
             logBookCrewPassengersList.RemoveAll(p => p.Id == 0);
 
             if (newList.Any())
@@ -417,16 +444,27 @@ namespace Repository
             return logBookCrewPassengersList;
         }
 
-        private List<LogBookFlightPhoto> UpdateLogBookFlightPhotos(long logBookId, List<LogBookFlightPhotoVM> logBookFlightPhotos)
+        private List<LogBookFlightPhoto> UpdateLogBookFlightPhotos(long logBookId, List<LogBookFlightPhotoVM> logBookFlightPhotosVMList)
         {
-            if (logBookFlightPhotos.Count() == 0)
+            if (logBookFlightPhotosVMList.Count() == 0)
             {
                 return new();
             }
 
             List<LogBookFlightPhoto> logBookFlightPhotosList = _myContext.LogBookFlightPhotos.Where(p => p.LogBookId == logBookId).ToList();
 
-            _mapper.Map(logBookFlightPhotos, logBookFlightPhotosList);
+            _mapper.Map(logBookFlightPhotosVMList, logBookFlightPhotosList);
+
+            var newList = logBookFlightPhotosVMList.Where(p => p.Id == 0).ToList();
+            logBookFlightPhotosList.RemoveAll(p => p.Id == 0);
+            logBookFlightPhotosList.RemoveAll(p => p.Id == 0);
+
+            if (newList.Any())
+            {
+                logBookFlightPhotosList.AddRange(SaveLogBookFlightPhotos(logBookId, newList));
+            }
+
+
             _myContext.SaveChanges();
 
             return logBookFlightPhotosList;

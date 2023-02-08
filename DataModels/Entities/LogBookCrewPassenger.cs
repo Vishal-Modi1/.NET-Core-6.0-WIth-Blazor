@@ -6,7 +6,7 @@ namespace DataModels.Entities
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }
-        public long CrewOrPassengerId { get; set; }
+        public long? CrewOrPassengerId { get; set; }
         public long? UserId { get; set; }
         public short RoleId { get; set; }
         public bool IsSystemMember { get; set; }

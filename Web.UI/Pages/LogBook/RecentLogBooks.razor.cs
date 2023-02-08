@@ -1,5 +1,6 @@
 ﻿using DataModels.VM.LogBook;
 using Microsoft.AspNetCore.Components;
+using Utilities;
 using Web.UI.Utilities;
 
 namespace Web.UI.Pages.LogBook
@@ -11,7 +12,7 @@ namespace Web.UI.Pages.LogBook
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if(firstRender)
+            if (firstRender)
             {
                 //await LoadData();
             }
@@ -23,6 +24,12 @@ namespace Web.UI.Pages.LogBook
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             logBookSummaries = await LogBookService.LogBookSummaries(dependecyParams);
+
+            logBookSummaries.ForEach(x =>
+            {
+                x.Date = DateConverter.ToLocal(x.Date, globalMembers.Timezone);
+
+            });
 
             ChangeLoaderVisibilityAction(false);
         }

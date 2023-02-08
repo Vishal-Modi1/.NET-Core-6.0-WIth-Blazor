@@ -137,6 +137,15 @@ namespace Web.UI.Data.LogBook
             return response;
         }
 
+        public async Task<CurrentResponse> DeleteLogBookInstrumentApproachAsync(DependecyParams dependecyParams, long id)
+        {
+            dependecyParams.URL = $"logBook/deleteLogBookInstrumentApproach?instrumentApproachId={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
+
+            return response;
+        }
+
+
         public async Task<CurrentResponse> DeleteLogBookCrewPassengerAsync(DependecyParams dependecyParams, long id)
         {
             dependecyParams.URL = $"logBook/deleteLogBookCrewPassenger?logBookCrewPassengerId={id}";

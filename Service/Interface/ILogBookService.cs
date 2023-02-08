@@ -9,6 +9,8 @@ namespace Service.Interface
     {
         CurrentResponse ListInstrumentApproachesDropdownValues();
 
+        CurrentResponse DeleteLogBookInstrumentApproach(long id, long deletedBy);
+
         CurrentResponse FindById(long id);
 
         CurrentResponse Create(LogBookVM logBook);

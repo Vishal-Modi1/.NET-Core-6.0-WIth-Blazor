@@ -51,6 +51,11 @@ namespace Web.UI.Pages.LogBook
                 logBookVM = JsonConvert.DeserializeObject<LogBookVM>(response.Data.ToString());
                 await UploadImages(response, eixstingPhotosDetails);
             }
+            else
+            {
+                globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+                isBusySubmitButton = false;
+            }
         }
 
         public async Task UploadImages(CurrentResponse response, List<LogBookFlightPhotoVM> eixstingPhotosDetails)
@@ -66,6 +71,11 @@ namespace Web.UI.Pages.LogBook
 
                     LogBookFlightPhotoVM eixstingPhotoDetails = eixstingPhotosDetails.Where(p => p.DisplayName == logBookFlightPhotoVM.DisplayName).First();
 
+                    if(eixstingPhotoDetails.ImageData == null)
+                    {
+                        continue;
+                    }
+
                     multiContent.Add(new StringContent(logBookFlightPhotoVM.Id.ToString()), "Id");
                     multiContent.Add(new StringContent(logBookFlightPhotoVM.DisplayName), "DisplayName");
 
@@ -79,27 +89,14 @@ namespace Web.UI.Pages.LogBook
             }
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+            
             isBusySubmitButton = false;
-            logBookVM = new LogBookVM();
-
             RefreshSummariesInfo();
-
-            //ManageFileUploadResponse(response, "Flight Photos");
         }
 
         public void RefreshSummariesInfo()
         {
             RefreshSummaries.InvokeAsync();
-        }
-
-        async Task CloseCrewPassengerDialog(bool reloadPassengersList)
-        {
-            isDisplayPopup = false;
-
-            if (reloadPassengersList)
-            {
-                PassengersList = await LogBookService.ListPassengersDropdownValuesByCompanyId(dependecyParams);
-            }
         }
 
         #region panels 

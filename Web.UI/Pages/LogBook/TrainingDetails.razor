@@ -1,5 +1,5 @@
 ﻿<div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => TriggerToggle())>
-    <span><FontLabel fontColor="#0D89DD">Start & End</FontLabel></span>
+    <span><FontLabel fontColor="#0D89DD">Training Details</FontLabel></span>
     <span>
         @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
         @if (ShowBodyPart)
@@ -12,10 +12,10 @@
         }
     </span>
 </div>
-<div class="row py-1 my-0 @(!ShowBodyPart ? "d-none":"")" style="margin-bottom:16px !important;">
+<div class="row my-0 @(!ShowBodyPart ? "d-none":"")" style="margin-bottom:16px !important;">
 
     <div class="row" style="margin-bottom:12px !important;">
-        <div class="col-2" />
+        <div class="col-1" />
         <div class="col-2">
             <label>Dual Given</label>
             <TelerikNumericTextBox Class="logbook-control-max-width" @bind-Value="@LogBookTrainingDetailVM.DualGiven"></TelerikNumericTextBox>
@@ -38,7 +38,7 @@
     </div>
 
     <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
-        <div class="col-2" />
+        <div class="col-1" />
         <div class="col-2">
             <label>Check Ride<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsCheckRide" /></label>
         </div>
@@ -56,7 +56,7 @@
         </div> 
     </div>
     <div class="row" style="margin-top:8px !important;margin-bottom:12px !important;">
-        <div class="col-2" />
+        <div class="col-1" />
          <div class="col-2">
             <label>NVG Proficiency<TelerikCheckBox Id="holds"  @bind-Value="@LogBookTrainingDetailVM.IsNVGProficiency" /></label>
         </div>

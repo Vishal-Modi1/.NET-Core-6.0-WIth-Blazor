@@ -25,15 +25,6 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
             return base.OnInitializedAsync();
         }
 
-        async Task OpenDeleteDialog(LogBookCrewPassengerVM selectedPhoto)
-        {
-            isDisplayPopup = true;
-            operationType = OperationType.Delete;
-            popupTitle = "Delete Crew & Passenger";
-
-            logBookCrewPassenger = selectedPhoto;
-        }
-
         void SelectNewCrewPassenger()
         {
             LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());
@@ -44,6 +35,8 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
             isDisplayPopup = true;
             crewPassengerVM = new CrewPassengerVM();
             popupTitle = "Add new passenger";
+
+            operationType = OperationType.Create;
         }
 
         void ToggleVisibility_CrewPassagners()
@@ -51,10 +44,27 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
             isCrewPassagnersVisible = !isCrewPassagnersVisible;
         }
 
+        async Task OpenDeleteDialog(LogBookCrewPassengerVM selectedPhoto)
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete Crew & Passenger";
+
+            logBookCrewPassenger = selectedPhoto;
+        }
+
+        async Task CloseCrewPassengerDialog(bool reloadPassengersList)
+        {
+            isDisplayPopup = false;
+
+            if (reloadPassengersList)
+            {
+                PassengersList = await LogBookService.ListPassengersDropdownValuesByCompanyId(dependecyParams);
+            }
+        }
+
         async Task DeleteAsync()
         {
-
-
             if (logBookCrewPassenger.Id > 0)
             {
                 isBusyDeleteButton = true;
@@ -64,7 +74,6 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
 
                 if (response.Status == System.Net.HttpStatusCode.OK)
                 {
-                    isDisplayPopup = false;
                     LogBookCrewPassengersList.Remove(logBookCrewPassenger);
                     globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
                 }
@@ -75,6 +84,7 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
                 globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "Passenger deleted successfully");
             }
 
+            isDisplayPopup = false;
         }
     }
 }
