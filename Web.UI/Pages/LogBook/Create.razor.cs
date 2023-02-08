@@ -17,7 +17,6 @@ namespace Web.UI.Pages.LogBook
         [Parameter] public List<DropDownLargeValues> PassengersList { get; set; }
         [Parameter] public List<DropDownLargeValues> UsersList { get; set; }
 
-        public CrewPassengerVM crewPassengerVM { get; set; }
 
         bool isLogBookEntryVisible = true;
         bool isTakeoffsLandingsVisible = true;
@@ -26,7 +25,6 @@ namespace Web.UI.Pages.LogBook
         bool isRouteDistanceVisible = true;
         bool isStartEndVisible = true;
         bool isNightVisionGogglesVisible = true;
-        bool isCrewPassagnersVisible = true;
         bool isFlightPhotosVisible = true;
         bool isCommentsVisible = true;
 
@@ -104,21 +102,6 @@ namespace Web.UI.Pages.LogBook
             }
         }
 
-        void SelectNewCrewPassenger()
-        {
-            logBookVM.LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());
-        }
-
-        void AddNewCrewPassenger()
-        {
-            isDisplayPopup = true;
-            crewPassengerVM = new CrewPassengerVM();
-            popupTitle = "Add new passenger";
-
-           // logBookVM.LogBookCrewPassengersList.Add(new LogBookCrewPassengerVM());
-        }
-
-
         #region panels 
 
         void ToggleVisibility_LogBookEntry()
@@ -153,11 +136,6 @@ namespace Web.UI.Pages.LogBook
         void ToggleVisibility_NightVisionGoggles()
         {
             isNightVisionGogglesVisible = !isNightVisionGogglesVisible;
-        }
-
-        void ToggleVisibility_CrewPassagners()
-        {
-            isCrewPassagnersVisible = !isCrewPassagnersVisible;
         }
 
         void ToggleVisibility_FlightPhotos()

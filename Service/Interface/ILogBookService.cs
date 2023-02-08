@@ -34,6 +34,8 @@ namespace Service.Interface
 
         CurrentResponse CreateCrewPassenger(CrewPassengerVM crewPassengerVM);
 
+        CurrentResponse DeleteLogBookCrewPassenger(long id, long deletedBy);
+
         #endregion
     }
 }

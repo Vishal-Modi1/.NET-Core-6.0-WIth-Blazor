@@ -229,6 +229,24 @@ namespace Service
             }
         }
 
+        public CurrentResponse DeleteLogBookCrewPassenger(long id, long deletedBy)
+        {
+            try
+            {
+                _logBookRepository.DeleteLogBookCrewPassenger(id, deletedBy);
+                CreateResponse(true, HttpStatusCode.OK, "Passenger deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         #endregion
     }
 }

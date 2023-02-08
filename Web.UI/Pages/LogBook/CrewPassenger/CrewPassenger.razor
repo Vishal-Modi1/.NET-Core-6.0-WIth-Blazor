@@ -1,35 +1,128 @@
-﻿<div class="row" style="margin-bottom:7px !important;margin-top:7px !important">
-    <div class="col-2" />
-    <div class="col-2">
-        <label>Use system users</label>
-        <TelerikCheckBox Id=role @bind-Value="@(LogBookCrewPassengerVM.IsSystemMember)">
-        </TelerikCheckBox>
-    </div>
-    <div class="col-4">
-        <label>Crew Passenger</label>
+﻿@using DataModels.Enums;
 
-        @if (LogBookCrewPassengerVM.IsSystemMember)
-        {
-            <TelerikComboBox Id=user Data="@UsersList" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select User" ValueField="Id" @bind-Value="@(LogBookCrewPassengerVM.UserId)">
-            </TelerikComboBox>
-        }
-        else
-        {
-            <TelerikComboBox Id=user Data="@PassengersList" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Passenger" ValueField="Id" @bind-Value="@(LogBookCrewPassengerVM.CrewOrPassengerId)">
-            </TelerikComboBox>
-        }
+<div class="row m-0">
+    <div class="logbook-header d-flex justify-content-between align-items-center my-1" @onclick=@(() => ToggleVisibility_CrewPassagners())>
+        <span><FontLabel fontColor="#0D89DD">Crew and Passenger</FontLabel></span>
 
-    </div>
-    <div class="col-2">
-        <label>Role</label>
+        <span>
+            <span @onclick:stopPropagation="true" @onclick:preventDefault="true">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                               OnClick="() => SelectNewCrewPassenger()">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                </TelerikButton>
+            </span>
 
-        <TelerikComboBox Id=role Data="@RolesList" TextField="Name"
-                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                         Placeholder="Select Role" ValueField="Id" @bind-Value="@(LogBookCrewPassengerVM.RoleId)">
-        </TelerikComboBox>
+            <span @onclick:stopPropagation="true" @onclick:preventDefault="true">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                               Enabled="@(!isBusyAddButton)" OnClick="() => AddNewCrewPassenger()">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> New Passenger
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                </TelerikButton>
+            </span>
+
+            @*<FontLabel fontColor="#042455">Configure</FontLabel>*@
+            @if (isCrewPassagnersVisible)
+            {
+                <CustomIcons IconName="minus" />
+            }
+            else
+            {
+                <CustomIcons IconName="plus" />
+            }
+        </span>
     </div>
 </div>
+
+<div class="row m-0 @(!isCrewPassagnersVisible ? "d-none":"")">
+    @if (LogBookCrewPassengersList.Any())
+    {
+        <div class="col-12">
+            @foreach (var logBookCrewPassengerVM in LogBookCrewPassengersList)
+            {
+                <div class="row" style="margin-bottom:7px !important;margin-top:7px !important">
+                    <div class="col-2" />
+                    <div class="col-2">
+                        <label>Use system users</label>
+                        <TelerikCheckBox Id=role @bind-Value="@(logBookCrewPassengerVM.IsSystemMember)">
+                        </TelerikCheckBox>
+                    </div>
+                    <div class="col-4">
+                        <label>Crew Passenger</label>
+
+                        @if (logBookCrewPassengerVM.IsSystemMember)
+                        {
+                            <TelerikComboBox Id=user Data="@UsersList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select User" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.UserId)">
+                            </TelerikComboBox>
+                        }
+                        else
+                        {
+                            <TelerikComboBox Id=user Data="@PassengersList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Passenger" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.CrewOrPassengerId)">
+                            </TelerikComboBox>
+                        }
+
+                    </div>
+                    <div class="col-2">
+                        <label>Role</label>
+
+                        <TelerikComboBox Id=role Data="@RolesList" TextField="Name"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Role" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.RoleId)">
+                        </TelerikComboBox>
+                    </div>
+
+                    <div class="col-2">
+
+                        <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" ButtonType="@ButtonType.Button" OnClick="()=>OpenDeleteDialog(logBookCrewPassengerVM)">
+                            <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                        </TelerikButton>
+                    </div>
+                </div>
+
+            }
+        </div>
+    }
+    else
+    {
+        <div class="col-12">
+            <span>No record found</span>
+        </div>
+    }
+</div>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete the pessanger?</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <TelerikButton Class="btn k-btn-danger" ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="()=>DeleteAsync()">
+                                Yes
+                            </TelerikButton>
+
+                            <TelerikButton Class="btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

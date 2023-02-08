@@ -461,6 +461,20 @@ namespace Repository
             return crewPassenger;
         }
 
+        public void DeleteLogBookCrewPassenger(long id, long deletedBy)
+        {
+            LogBookCrewPassenger logBookCrewPassenger = _myContext.LogBookCrewPassengers.Where(p => p.Id == id).FirstOrDefault();
+
+            if (logBookCrewPassenger != null)
+            {
+                logBookCrewPassenger.IsDeleted = true;
+                logBookCrewPassenger.DeletedBy = deletedBy;
+                logBookCrewPassenger.DeletedOn = DateTime.UtcNow;
+
+                _myContext.SaveChanges();
+            }
+        }
+
         #endregion
 
     }

@@ -188,6 +188,16 @@ namespace FSMAPI.Controllers
             return APIResponse(response);
         }
 
+        [HttpDelete]
+        [Route("deleteLogBookCrewPassenger")]
+        public IActionResult DeleteLogBookCrewPassenger(long logBookCrewPassengerId)
+        {
+            long deletedBy = _jWTTokenGenerator.GetUserId();
+            CurrentResponse response = _logBookService.DeleteLogBookCrewPassenger(logBookCrewPassengerId, deletedBy);
+
+            return APIResponse(response);
+        }
+
 
         //[HttpDelete]
         //[Route("delete")]

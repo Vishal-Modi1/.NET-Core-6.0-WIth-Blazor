@@ -33,6 +33,7 @@ namespace Repository.Interface
 
         CrewPassenger SaveCrewPassenger(CrewPassenger crewPassenger);
 
+        void DeleteLogBookCrewPassenger(long id, long deletedBy);
         #endregion
     }
 }
