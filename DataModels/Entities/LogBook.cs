@@ -16,35 +16,35 @@ namespace DataModels.Entities
 
         public string Arrival { get; set; }
 
-        public Int16 TotalTime { get; set; }
+        public double TotalTime { get; set; }
 
-        public Int16 PIC { get; set; }
+        public double PIC { get; set; }
 
-        public Int16 SIC { get; set; }
+        public double SIC { get; set; }
 
-        public Int16 Night { get; set; }
+        public double Night { get; set; }
 
-        public Int16 Solo { get; set; }
+        public double Solo { get; set; }
 
-        public Int16 CrossCountry { get; set; }
+        public double CrossCountry { get; set; }
 
-        public Int16 NVG { get; set; }
+        public double NVG { get; set; }
 
-        public Int16 NVGOperations { get; set; }
+        public double NVGOperations { get; set; }
 
         public string Route { get; set; }
 
-        public int Distance { get; set; }
+        public double Distance { get; set; }
 
-        public Int16 DayTakeoffs { get; set; }
+        public short DayTakeoffs { get; set; }
 
-        public Int16 DayLandingsFullStop { get; set; }
+        public short DayLandingsFullStop { get; set; }
 
-        public Int16 NightTakeoffs { get; set; }
+        public short NightTakeoffs { get; set; }
 
-        public Int16 NightLandingsFullStop { get; set; }
+        public short NightLandingsFullStop { get; set; }
 
-        public Int16 AllLandings { get; set; }
+        public short AllLandings { get; set; }
 
         public string Comments { get; set; }
     }

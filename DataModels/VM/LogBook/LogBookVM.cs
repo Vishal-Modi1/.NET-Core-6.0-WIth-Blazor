@@ -23,25 +23,25 @@ namespace DataModels.VM.LogBook
         [Required(ErrorMessage = "Arrival airport is required")]
         public string Arrival { get; set; }
 
-        public short TotalTime { get; set; }
+        public double TotalTime { get; set; }
 
-        public short PIC { get; set; }
+        public double PIC { get; set; }
 
-        public short SIC { get; set; }
+        public double SIC { get; set; }
 
-        public short Night { get; set; }
+        public double Night { get; set; }
 
-        public short Solo { get; set; }
+        public double Solo { get; set; }
 
-        public short CrossCountry { get; set; }
+        public double CrossCountry { get; set; }
 
-        public short NVG { get; set; }
+        public double NVG { get; set; }
 
-        public short NVGOperations { get; set; }
+        public double NVGOperations { get; set; }
 
         public string Route { get; set; }
 
-        public int Distance { get; set; }
+        public double Distance { get; set; }
 
         public short DayTakeoffs { get; set; }
 

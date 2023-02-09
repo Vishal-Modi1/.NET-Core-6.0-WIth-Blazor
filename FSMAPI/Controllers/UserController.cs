@@ -49,11 +49,8 @@ namespace FSMAPI.Controllers
             }
             else if (role.Replace(" ", "") == DataModels.Enums.UserRole.Admin.ToString())
             {
-                if(_jWTTokenGenerator.GetCompanyId() != companyId)
-                {
-                    return APIResponse(UnAuthorizedResponse.Response());
-                }
-
+                companyId = _jWTTokenGenerator.GetCompanyId();
+                
                 CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
                 return APIResponse(response);
             }

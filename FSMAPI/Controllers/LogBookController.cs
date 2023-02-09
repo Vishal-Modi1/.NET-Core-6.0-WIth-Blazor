@@ -76,7 +76,7 @@ namespace FSMAPI.Controllers
 
                 long logBookId = Convert.ToInt64(form["LogBookId"]);
 
-                List<LogBookFlightPhoto> logBookFlightPhotosList = _logBookService.ListFlightPhotosByLogBookId(logBookId).OrderBy(p => p.Id).ToList();
+                List<LogBookFlightPhoto> logBookFlightPhotosList = _logBookService.ListFlightPhotosByLogBookId(logBookId).Where(p=> string.IsNullOrWhiteSpace(p.Name)).OrderBy(p => p.Id).ToList();
                 string filePath = UploadDirectories.LogbookFlightPhoto + "\\" + companyId + "\\" + userId + "\\" + logBookId;
 
                 int i = 0;

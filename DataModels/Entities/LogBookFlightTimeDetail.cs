@@ -6,15 +6,15 @@ namespace DataModels.Entities
     {
         public long Id { get; set; }
         public long LogBookId { get; set; }
-        public short HobbsStart { get; set; }
-        public short HobbsEnd { get; set; }
-        public short TachStart { get; set; }
-        public short TachEnd { get; set; }
-        public short TimeOut { get; set; }
-        public short TimeOff { get; set; }
-        public short TimeOn { get; set; }
-        public short TimeIn { get; set; }
-        public short OnDuty { get; set; }
-        public short OffDuty { get; set; }
+        public double HobbsStart { get; set; }
+        public double HobbsEnd { get; set; }
+        public double TachStart { get; set; }
+        public double TachEnd { get; set; }
+        public double TimeOut { get; set; }
+        public double TimeOff { get; set; }
+        public double TimeOn { get; set; }
+        public double TimeIn { get; set; }
+        public double OnDuty { get; set; }
+        public double OffDuty { get; set; }
     }
 }
