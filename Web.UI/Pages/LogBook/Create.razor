@@ -42,19 +42,19 @@
                     </div>
 
                     <div class="col-2">
-                        <label>Departure</label>
+                        <div><label>Departure</label></div>
                         <TelerikTextBox Class="logbook-control-max-width" Id="departureAirport" @bind-Value="@logBookVM.Departure" Placeholder="Departure"></TelerikTextBox>
                          <TelerikValidationMessage For="@(() => logBookVM.Departure)"></TelerikValidationMessage>
                     </div>
 
                     <div class="col-2">
-                        <label>Arrival</label>
+                        <div><label>Arrival</label></div>
                         <TelerikTextBox Class="logbook-control-max-width" Id="arrivalAirport" @bind-Value="@logBookVM.Arrival" Placeholder="Arrival"></TelerikTextBox>
                          <TelerikValidationMessage For="@(() => logBookVM.Arrival)"></TelerikValidationMessage>
                     </div>
 
                     <div class="col-2">
-                        <label>Aircrafts</label>
+                        <div><label>Aircrafts</label></div>
                         <TelerikComboBox Id=aircraft Data="@AircraftsList" TextField="Name" Class="logbook-control-max-width"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Aircraft" ValueField="Id" @bind-Value="@(logBookVM.AircraftId)">
@@ -66,34 +66,34 @@
                 <div class="row my-0" style="margin-bottom:8px !important;">
                     <div class="col-1" />
                     <div class="col-2">
-                        <label>Total Time</label>
+                        <div><label>Total Time</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.TotalTime Placeholder="Hours" />
                     </div>
 
                     <div class="col-2">
-                        <label>PIC</label>
+                        <div><label>PIC</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.PIC Placeholder="Hours" />
                     </div>
 
                     <div class="col-2">
-                        <label>SIC</label>
+                        <div><label>SIC</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.SIC Placeholder="Hours" />
                     </div>
 
                     <div class="col-2">
-                        <label>Night</label>
+                        <div><label>Night</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.Night Placeholder="Hours" />
                     </div>
                 </div>
                 <div class="row my-0" style="margin-bottom:8px !important;">
                     <div class="col-1" />
                     <div class="col-2">
-                        <label>Solo</label>
+                        <div><label>Solo</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.Solo Placeholder="Hours" />
                     </div>
 
                     <div class="col-2">
-                        <label>Cross Country</label>
+                        <div><label>Cross Country</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.CrossCountry Placeholder="Hours" />
                     </div>
                 </div>
@@ -119,19 +119,19 @@
                 <div class="row my-0" style="margin-bottom: 8px !important;margin-top: 8px !important;">
                     <div class="col-1" />
                     <div class="col-2">
-                        <label>Day Takeoffs</label>
+                        <div><label>Day Takeoffs</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="dayTakeoffs" @bind-Value=@logBookVM.DayTakeoffs Placeholder="Hours" />
                     </div>
                     <div class="col-2">
-                        <label>Day Landings Full Stop</label>
+                        <div><label>Day Landings Full Stop</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="nightTakeoffs" @bind-Value=@logBookVM.DayLandingsFullStop Placeholder="Hours" />
                     </div>
                     <div class="col-2">
-                        <label>Night Takeoffs</label>
+                        <div><label>Night Takeoffs</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="nightTakeoffs" @bind-Value=@logBookVM.NightTakeoffs Placeholder="Hours" />
                     </div>
                     <div class="col-2">
-                        <label>Night Landings Full Stop</label>
+                        <div><label>Night Landings Full Stop</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="nightLandingsFullStop" @bind-Value=@logBookVM.NightLandingsFullStop Placeholder="Hours" />
                     </div>
 
@@ -139,7 +139,7 @@
                 <div class="row my-0" style="margin-bottom: 8px !important;margin-top: 8px !important;">
                     <div class="col-1" />
                     <div class="col-2">
-                        <label>All Landings</label>
+                        <div><label>All Landings</label></div>
                         <TelerikNumericTextBox Class="logbook-control-max-width" Id="totalTime" @bind-Value=@logBookVM.AllLandings Placeholder="Hours" />
                     </div>
                 </div>
@@ -170,12 +170,12 @@
             <div class="row my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex;margin-bottom:12px !important;">
                 <div class="col-1" />
                 <div class="col-2">
-                    <label>Distance</label>
+                    <div><label>Distance</label></div>
                     <TelerikNumericTextBox Class="logbook-control-max-width" Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
                 </div>
 
                 <div class="col-2">
-                    <label>Route</label>
+                    <div><label>Route</label></div>
                     <TelerikTextBox Id="route" Class="logbook-control-max-width" @bind-Value="@logBookVM.Route" PlaceHolder="Route"></TelerikTextBox>
                 </div>
             </div>
@@ -205,12 +205,12 @@
             <div class="row my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex;margin-bottom:16px !important">
                 <div class="col-1" />
                 <div class="col-2">
-                    <label>NVG</label>
+                  <div><label>NVG</label></div>
                     <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
                 </div>
 
                 <div class="col-2">
-                    <label>NVG Operations</label>
+                    <div><label>NVG Operations</label></div>
                     <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvgOperations" @bind-Value="@logBookVM.NVGOperations" Placeholder="NVG Operations"></TelerikNumericTextBox>
                 </div>
             </div>

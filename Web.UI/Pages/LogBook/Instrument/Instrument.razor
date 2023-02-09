@@ -16,18 +16,18 @@
     <div class="row my-0">
         <div class="col-1" />
         <div class="col-2">
-            <label>Actual Instrument</label>
+           <div> <label>Actual Instrument</label></div>
             <TelerikNumericTextBox Class="logbook-control-max-width" Id="actualInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.ActualInstrument" Placeholder="Hours" />
             <TelerikValidationMessage For="@(() => logBookVM.LogBookInstrumentVM.ActualInstrument)"></TelerikValidationMessage>
         </div>
 
         <div class="col-2">
-            <label>Simulated Instrument</label>
+           <div> <label>Simulated Instrument</label></div>
             <TelerikNumericTextBox Class="logbook-control-max-width" Id="simulatedInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.SimulatedInstrument" Placeholder="Hours" />
         </div>
 
         <div class="col-2">
-            <label>Holds</label>
+          <div>  <label>Holds</label></div>
             <TelerikNumericTextBox Class="logbook-control-max-width" Id="holds" @bind-Value="@logBookVM.LogBookInstrumentVM.Holds" Placeholder="Hours" />
         </div>
 

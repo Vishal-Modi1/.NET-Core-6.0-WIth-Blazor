@@ -26,8 +26,9 @@
         }
     </span>
 </div>
-<div class="my-1 @(!ShowBodyPart ? "d-none":"")">
+<div class="row my-1 @(!ShowBodyPart ? "d-none":"")">
 
+     
     <div class="my-2 d-flex justify-content-start">
 
         @if (PhotosList.Any())
@@ -50,9 +51,12 @@
 
     </div>
 
+    <div class="col-1" />
+    <div class="col-8" >
     <CustomFileUpload DisplayName="test" OnInputFileChangeCallback="@OnFileChanged"
                       IsFileAdded="false" IsAllowMultiple="true" supportedFormats="@supportedImagesFormats">
     </CustomFileUpload>
+    </div>
 
 </div>
 

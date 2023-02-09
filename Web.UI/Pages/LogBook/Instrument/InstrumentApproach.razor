@@ -9,12 +9,12 @@
         <div class="col-1" />
 
         <div class="col-2">
-            <label>Airport</label>
+           <div> <label>Airport</label></div>
             <TelerikTextBox Id="departureAirport" @bind-Value="@logBookInstrumentApproachVM.Airport" Placeholder="Airport"></TelerikTextBox>
         </div>
 
         <div class="col-2">
-            <label>Approach</label>
+          <div>  <label>Approach</label></div>
 
             <TelerikComboBox Id=approach Data="@Approaches" TextField="Name"
                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
@@ -26,17 +26,17 @@
         </div>
 
         <div class="col-2">
-            <label>Runway</label>
+           <div> <label>Runway</label></div>
             <TelerikTextBox Id="runway" @bind-Value="@logBookInstrumentApproachVM.Runway" Placeholder="Runway" />
         </div>
 
         <div class="col-2 align-self-center">
-            <label>Circle To Land</label>
+           <div> <label>Circle To Land</label></div>
             <TelerikCheckBox Id="holds" @bind-Value="@logBookInstrumentApproachVM.IsCircleToLand" />
         </div>
 
         <div class="col-2">
-            <label>Comments</label>
+          <div>  <label>Comments</label></div>
             <TelerikTextBox Id="comments" @bind-Value="@logBookInstrumentApproachVM.Comments" Placeholder="Comments" />
         </div>
 
