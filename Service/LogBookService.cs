@@ -105,11 +105,11 @@ namespace Service
             }
         }
 
-        public CurrentResponse LogBookSummaries(long userId, int companyId)
+        public CurrentResponse LogBookSummaries(long userId, int companyId, string role)
         {
             try
             {
-                List<LogBookSummaryVM> logBookSummaries = _logBookRepository.LogBookSummaries(userId, companyId);
+                List<LogBookSummaryVM> logBookSummaries = _logBookRepository.LogBookSummaries(userId, companyId, role);
 
                 CreateResponse(logBookSummaries, HttpStatusCode.OK, "");
 

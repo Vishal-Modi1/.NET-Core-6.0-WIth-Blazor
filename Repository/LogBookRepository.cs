@@ -2,6 +2,7 @@
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.LogBook;
+using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
@@ -97,23 +98,16 @@ namespace Repository
 
             return logBookVM;
         }
-        public List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId)
-        {
-            List<LogBookSummaryVM> logBookSummaries = (from logBook in _myContext.LogBooks
-                                                       join aircraft in _myContext.Aircrafts
-                                                       on logBook.AircraftId equals aircraft.Id
-                                                       where logBook.CompanyId == companyId
-                                                       && logBook.CreatedBy == userId
-                                                       orderby logBook.CreatedOn descending
-                                                       select new LogBookSummaryVM()
-                                                       {
-                                                           Id = logBook.Id,
-                                                           Arrival = logBook.Arrival,
-                                                           Departure = logBook.Departure,
-                                                           Date = logBook.Date,
-                                                           TailNo = aircraft.TailNo,
-                                                       }).Take(5).ToList();
 
+        public List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId, string role)
+        {
+
+            List<LogBookSummaryVM> logBookSummaries;
+
+            string sql = $"EXEC dbo.GetRecentLogBookSummaries { userId }, { companyId }, '{role}'";
+
+            logBookSummaries = _myContext.LogBookSummaries.FromSqlRaw<LogBookSummaryVM>(sql).ToList();
+            
             return logBookSummaries;
         }
 
@@ -338,7 +332,7 @@ namespace Repository
         private LogBookTrainingDetail UpdateLogBookTrainingDetails(long logbookId, LogBookTrainingDetailVM logBookTrainingDetailVM)
         {
             LogBookTrainingDetail logBookTrainingDetail = _myContext.LogBookTrainingDetails.Where(p => p.LogBookId == logbookId).FirstOrDefault();
-           
+
             if (logBookTrainingDetail == null)
             {
                 return logBookTrainingDetail;
@@ -475,9 +469,10 @@ namespace Repository
 
         public List<DropDownSmallValues> ListPassengersRolesDropdownValues()
         {
-            List<DropDownSmallValues> passengerRoles = _myContext.CrewPassengersRoles.Select(p => new DropDownSmallValues() { 
-            Id = p.Id,
-            Name = p.Name
+            List<DropDownSmallValues> passengerRoles = _myContext.CrewPassengersRoles.Select(p => new DropDownSmallValues()
+            {
+                Id = p.Id,
+                Name = p.Name
             }).ToList();
 
             return passengerRoles;
@@ -486,7 +481,7 @@ namespace Repository
         public List<DropDownLargeValues> ListPassengersDropdownValuesByCompanyId(int companyId)
         {
             List<CrewPassenger> crewPassengersList = _myContext.CrewPassengers.Where(p => p.CompanyId == companyId).ToList();
-            List<DropDownLargeValues> passengersList = crewPassengersList.Select(p => new DropDownLargeValues() { Id = p.Id, Name = p.Name}).ToList() ;
+            List<DropDownLargeValues> passengersList = crewPassengersList.Select(p => new DropDownLargeValues() { Id = p.Id, Name = p.Name }).ToList();
 
             return passengersList;
         }

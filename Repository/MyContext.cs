@@ -189,7 +189,11 @@ namespace Repository
         public DbSet<AircraftModelDataVM> AircraftModelsList { get; set; }
 
         public DbSet<UserDataVM> UserSearchList { get; set; }
+        
         public DbSet<CompanyVM> CompanyData { get; set; }
+
+        public DbSet<LogBookSummaryVM> LogBookSummaries { get; set; }
+
         public DbSet<InviteUserDataVM> InviteUserData { get; set; }
 
         public DbSet<ReservationDataVM> ReservationDataVM { get; set; }

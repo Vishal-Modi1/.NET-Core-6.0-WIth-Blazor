@@ -39,6 +39,11 @@ namespace Web.UI.Pages.LogBook
             logBookVM = new LogBookVM();
         }
 
+
+        void test()
+        {
+
+        }
         public async Task Submit()
         {
             isBusySubmitButton = true;

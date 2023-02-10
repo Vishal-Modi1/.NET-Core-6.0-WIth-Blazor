@@ -16,7 +16,7 @@ namespace Repository.Interface
         LogBookVM Create(LogBookVM logBookVM);
         LogBookVM Edit(LogBookVM logBookVM);
 
-        List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId);
+        List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId, string role);
 
         #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logbookId);

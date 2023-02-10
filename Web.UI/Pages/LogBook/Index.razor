@@ -17,18 +17,22 @@
         <div class="cursor-pointer mb-2" @onclick=@(() => ToggleLeftPane())><FontLabel fontColor="#0D89DD" fontSize="12px"><CustomIcons IconName="toggle-hamburg" PrimaryColor="#0D89DD"></CustomIcons> Toggle Left Pane</FontLabel></div>
         <div class="card">
             <TelerikTabStrip Class="k-tabstrip-list logbook" ActiveTabIndexChanged="@TabChangedHandler">
-                <TabStripTab>
-                    <HeaderTemplate>
-                        <div class="d-flex justify-content-center align-items-center">
-                            <span>Entries</span>
-                        </div>
-                    </HeaderTemplate>
-                    <Content>
-                            <Create logBookVM="@logBookVM"  AircraftsList="@AircraftsList" 
-                            RolesList="@RolesList" PassengersList="@PassengersList" UsersList=@UsersList
-                            RefreshSummaries=@RefreshSummaries></Create>
-                    </Content>
-                </TabStripTab>
+
+                @if (!globalMembers.IsSuperAdmin)
+                {
+                    <TabStripTab>
+                        <HeaderTemplate>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <span>Entries</span>
+                            </div>
+                        </HeaderTemplate>
+                        <Content>
+                            <Create logBookVM="@logBookVM" AircraftsList="@AircraftsList"
+                                RolesList="@RolesList" PassengersList="@PassengersList" UsersList=@UsersList
+                                RefreshSummaries=@RefreshSummaries></Create>
+                        </Content>
+                    </TabStripTab>
+                }
                 <TabStripTab>
                     <HeaderTemplate>
                         <div class="d-flex justify-content-center align-items-center">
@@ -90,7 +94,7 @@
                     </Content>
                 </TabStripTab>
             </TelerikTabStrip>
-           
+
         </div>
     </div>
 </div>

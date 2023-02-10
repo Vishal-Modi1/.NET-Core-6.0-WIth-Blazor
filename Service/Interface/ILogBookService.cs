@@ -17,7 +17,7 @@ namespace Service.Interface
 
         CurrentResponse Edit(LogBookVM logBookVM);
 
-        CurrentResponse LogBookSummaries(long userId, int companyId);
+        CurrentResponse LogBookSummaries(long userId, int companyId, string role);
 
         #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId);

@@ -118,7 +118,9 @@ namespace FSMAPI.Controllers
         [Route("logBookSummaries")]
         public IActionResult LogBookSummaries()
         {
-            CurrentResponse response = _logBookService.LogBookSummaries(_jWTTokenGenerator.GetUserId(), _jWTTokenGenerator.GetCompanyId());
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            CurrentResponse response = _logBookService.LogBookSummaries(_jWTTokenGenerator.GetUserId(), _jWTTokenGenerator.GetCompanyId(), role);
+            
             return APIResponse(response);
         }
 
