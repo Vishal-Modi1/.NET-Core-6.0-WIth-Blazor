@@ -33,67 +33,67 @@
             }
         </span>
     </div>
-</div>
-
-<div class="row m-0 @(!isCrewPassagnersVisible ? "d-none":"")">
-    @if (LogBookCrewPassengersList.Any())
-    {
-        <div class="col-12">
-            @foreach (var logBookCrewPassengerVM in LogBookCrewPassengersList)
+    <div class="col-12 py-1 @(!isCrewPassagnersVisible ? "d-none":"")">
+            @if (LogBookCrewPassengersList.Any())
             {
-                <div class="row" style="margin-bottom:7px !important;margin-top:7px !important">
-                    <div class="col-1" />
-                    <div class="col-2 align-self-center">
-                        <label>Use system users</label>
-                        <TelerikCheckBox Id=role @bind-Value="@(logBookCrewPassengerVM.IsSystemMember)">
-                        </TelerikCheckBox>
-                    </div>
-                    <div class="col-4">
-                        <label>Crew Passenger</label>
+                <div class="col-12">
+                    @foreach (var logBookCrewPassengerVM in LogBookCrewPassengersList)
+                    {
+                        <div class="row" style="margin-bottom:7px !important;margin-top:7px !important">
+                            <div class="col-1" />
+                            <div class="col-2 align-self-center">
+                                <label>Use system users</label>
+                                <TelerikCheckBox Id=role @bind-Value="@(logBookCrewPassengerVM.IsSystemMember)">
+                                </TelerikCheckBox>
+                            </div>
+                            <div class="col-4">
+                                <label>Crew Passenger</label>
 
-                        @if (logBookCrewPassengerVM.IsSystemMember)
-                        {
-                            <TelerikComboBox Id=user Data="@UsersList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select User" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.UserId)">
-                            </TelerikComboBox>
-                        }
-                        else
-                        {
-                            <TelerikComboBox Id=user Data="@PassengersList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Passenger" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.CrewOrPassengerId)">
-                            </TelerikComboBox>
-                        }
+                                @if (logBookCrewPassengerVM.IsSystemMember)
+                                {
+                                    <TelerikComboBox Id=user Data="@UsersList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select User" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.UserId)">
+                                    </TelerikComboBox>
+                                }
+                                else
+                                {
+                                    <TelerikComboBox Id=user Data="@PassengersList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Passenger" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.CrewOrPassengerId)">
+                                    </TelerikComboBox>
+                                }
 
-                    </div>
-                    <div class="col-2">
-                        <label>Role</label>
+                            </div>
+                            <div class="col-2">
+                                <label>Role</label>
 
-                        <TelerikComboBox Id=role Data="@RolesList" TextField="Name"
-                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
-                                 Placeholder="Select Role" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.RoleId)">
-                        </TelerikComboBox>
-                    </div>
+                                <TelerikComboBox Id=role Data="@RolesList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Role" ValueField="Id" @bind-Value="@(logBookCrewPassengerVM.RoleId)">
+                                </TelerikComboBox>
+                            </div>
 
-                    <div class="col-2 align-self-end">
+                            <div class="col-2 align-self-end">
 
-                        <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" ButtonType="@ButtonType.Button" OnClick="()=>OpenDeleteDialog(logBookCrewPassengerVM)">
-                            <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                        </TelerikButton>
-                    </div>
+                                <TelerikButton Class="btn k-btn-grid-delete mx-2 flex-fill" ThemeColor="error" ButtonType="@ButtonType.Button" OnClick="()=>OpenDeleteDialog(logBookCrewPassengerVM)">
+                                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                                </TelerikButton>
+                            </div>
+                        </div>
+
+                    }
                 </div>
-
             }
-        </div>
-    }
-    else
-    {
-        <div class="col-12">
-            <span>No record found</span>
-        </div>
-    }
+            else
+            {
+                <div class="col-12">
+                    <span>No record found</span>
+                </div>
+            }
+    </div>
 </div>
+
 
 @if (isDisplayPopup)
 {

@@ -165,7 +165,8 @@
                 }
             </span>
         </div>
-        <div class="row my-0 @(!isRouteDistanceVisible ? "d-none":"")" style="display:flex;margin-bottom:12px !important;">
+        <div class="col-12 py-1">
+            <div class="row my-0 @(!isRouteDistanceVisible ? "d-none":"")">
             <div class="col-1" />
             <div class="col-2">
                 <div><label>Distance</label></div>
@@ -176,6 +177,7 @@
                 <div><label>Route</label></div>
                 <TelerikTextBox Width="100%" Id="route" Class="logbook-control-max-width" @bind-Value="@logBookVM.Route" PlaceHolder="Route"></TelerikTextBox>
             </div>
+        </div>
         </div>
     </div>
 
@@ -200,16 +202,18 @@
                 }
             </span>
         </div>
-        <div class="row my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex;margin-bottom:16px !important">
-            <div class="col-1" />
-            <div class="col-2">
-                <div><label>NVG</label></div>
-                <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
-            </div>
+        <div class="col-12 py-1">
+            <div class="row my-0 @(!isNightVisionGogglesVisible ? "d-none":"")" style="display:flex;margin-bottom:16px !important">
+                <div class="col-1" />
+                <div class="col-2">
+                    <div><label>NVG</label></div>
+                    <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvg" @bind-Value="@logBookVM.NVG" Placeholder="NVG"></TelerikNumericTextBox>
+                </div>
 
-            <div class="col-2">
-                <div><label>NVG Operations</label></div>
-                <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvgOperations" @bind-Value="@logBookVM.NVGOperations" Placeholder="NVG Operations"></TelerikNumericTextBox>
+                <div class="col-2">
+                    <div><label>NVG Operations</label></div>
+                    <TelerikNumericTextBox Class="logbook-control-max-width" Id="nvgOperations" @bind-Value="@logBookVM.NVGOperations" Placeholder="NVG Operations"></TelerikNumericTextBox>
+                </div>
             </div>
         </div>
     </div>
