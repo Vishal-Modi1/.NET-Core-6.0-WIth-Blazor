@@ -18,7 +18,7 @@
         <div class="card">
             <TelerikTabStrip Class="k-tabstrip-list logbook" ActiveTabIndexChanged="@TabChangedHandler">
 
-                @if (!globalMembers.IsSuperAdmin)
+                @if (globalMembers.IsSuperAdmin)
                 {
                     <TabStripTab>
                         <HeaderTemplate>
