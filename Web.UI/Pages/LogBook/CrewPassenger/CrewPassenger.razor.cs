@@ -44,13 +44,20 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
             isCrewPassagnersVisible = !isCrewPassagnersVisible;
         }
 
-        async Task OpenDeleteDialog(LogBookCrewPassengerVM selectedPhoto)
+        async Task OpenDeleteDialog(LogBookCrewPassengerVM selectedPassenger)
         {
-            isDisplayPopup = true;
-            operationType = OperationType.Delete;
-            popupTitle = "Delete Crew & Passenger";
+            logBookCrewPassenger = selectedPassenger;
 
-            logBookCrewPassenger = selectedPhoto;
+            if (selectedPassenger.Id == 0)
+            {
+                await DeleteAsync();
+            }
+            else
+            {
+                isDisplayPopup = true;
+                operationType = OperationType.Delete;
+                popupTitle = "Delete Instrument Approach";
+            }
         }
 
         async Task CloseCrewPassengerDialog(bool reloadPassengersList)
@@ -81,7 +88,6 @@ namespace Web.UI.Pages.LogBook.CrewPassenger
             else
             {
                 LogBookCrewPassengersList.Remove(logBookCrewPassenger);
-                globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "Passenger deleted successfully");
             }
 
             isDisplayPopup = false;

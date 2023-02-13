@@ -59,9 +59,11 @@ namespace DataModels.VM.LogBook
 
         public LogBookTrainingDetailVM LogBookTrainingDetailVM { get; set; } = new();
 
+        [ValidateComplexType]
         public LogBookInstrumentVM LogBookInstrumentVM { get; set; } = new();
         public LogBookFlightTimeDetailVM LogBookFlightTimeDetailVM { get; set; } = new();
 
+        [ValidateComplexType]
         public List<LogBookCrewPassengerVM> LogBookCrewPassengersList { get; set; } = new();
 
         public List<LogBookFlightPhotoVM> LogBookFlightPhotosList { get; set; } = new();
