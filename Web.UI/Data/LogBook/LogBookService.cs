@@ -15,6 +15,24 @@ namespace Web.UI.Data.LogBook
             _httpCaller = new HttpCaller(authenticationStateProvider);
         }
 
+        public async Task<List<LogBookDataVM>> ListAsync(DependecyParams dependecyParams, DatatableParams datatableParams)
+        {
+            try
+            {
+                dependecyParams.URL = "logBook/list";
+                dependecyParams.JsonData = JsonConvert.SerializeObject(datatableParams);
+                CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
+
+                List<LogBookDataVM> discrepanciesList = JsonConvert.DeserializeObject<List<LogBookDataVM>>(response.Data.ToString());
+
+                return discrepanciesList;
+            }
+            catch (Exception exc)
+            {
+                return new List<LogBookDataVM>();
+            }
+        }
+
         public async Task<List<DropDownSmallValues>> ListPassengersRolesDropdownValues(DependecyParams dependecyParams)
         {
             dependecyParams.URL = $"logBook/listPassengersRolesDropdownValues";

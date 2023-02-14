@@ -62,6 +62,24 @@ namespace Service
             }
         }
 
+        public CurrentResponse List(LogBookDatatableParams datatableParams)
+        {
+            try
+            {
+                List<LogBookDataVM> logbooksList = _logBookRepository.List(datatableParams);
+                CreateResponse(logbooksList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
         public CurrentResponse FindById(long id)
         {
             try

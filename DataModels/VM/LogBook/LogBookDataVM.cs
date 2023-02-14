@@ -1,13 +1,19 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataModels.VM.LogBook
 {
     public class LogBookDataVM
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string TailNo { get; set; }
 
         public DateTime Date { get; set; }
+
+        public int TotalRecords { get; set; }
+
+        [NotMapped]
+        public bool IsLoadingEditButton { get; set; }
     }
 }

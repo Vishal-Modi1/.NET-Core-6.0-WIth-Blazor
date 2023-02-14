@@ -221,6 +221,7 @@ namespace Repository
         public DbSet<DropDownGuidValues> AirportsList { get; set; }
 
         public DbSet<LogBookVM> LogBookDetails { get; set; }
+        public DbSet<LogBookDataVM> LogBooksList { get; set; }
 
         #endregion
     }
