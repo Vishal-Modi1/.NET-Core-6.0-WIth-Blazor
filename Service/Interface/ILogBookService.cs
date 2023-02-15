@@ -17,6 +17,8 @@ namespace Service.Interface
 
         CurrentResponse Edit(LogBookVM logBookVM);
 
+        CurrentResponse List(LogBookDatatableParams datatableParams);
+
         CurrentResponse LogBookSummaries(long userId, int companyId, string role);
 
         #region flight photos

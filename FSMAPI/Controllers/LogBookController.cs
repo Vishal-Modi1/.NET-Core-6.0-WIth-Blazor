@@ -106,6 +106,23 @@ namespace FSMAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("list")]
+        public IActionResult List(LogBookDatatableParams datatableParams)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                datatableParams.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                datatableParams.UserId = _jWTTokenGenerator.GetUserId();
+            }
+
+            CurrentResponse response = _logBookService.List(datatableParams);
+
+            return APIResponse(response);
+        }
+
         [HttpGet]
         [Route("getDetails")]
         public IActionResult GetDetails(long id)

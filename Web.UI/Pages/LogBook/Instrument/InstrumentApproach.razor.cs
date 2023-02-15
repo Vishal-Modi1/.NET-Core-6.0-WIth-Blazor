@@ -21,11 +21,18 @@ namespace Web.UI.Pages.LogBook.Instrument
 
         async Task OpenDeleteDialog(LogBookInstrumentApproachVM selectedApproach)
         {
-            isDisplayPopup = true;
-            operationType = OperationType.Delete;
-            popupTitle = "Delete Instrument Approach";
-
             instrumentApproach = selectedApproach;
+
+            if (selectedApproach.Id == 0)
+            {
+                await DeleteAsync();
+            }
+            else
+            {
+                isDisplayPopup = true;
+                operationType = OperationType.Delete;
+                popupTitle = "Delete Instrument Approach";
+            }
         }
 
         async Task DeleteAsync()
@@ -33,14 +40,14 @@ namespace Web.UI.Pages.LogBook.Instrument
             if (instrumentApproach.Id > 0)
             {
                 isBusyDeleteButton = true;
-                   
+
                 CurrentResponse response = await LogBookService.DeleteLogBookInstrumentApproachAsync(dependecyParams, instrumentApproach.Id);
 
                 isBusyDeleteButton = false;
 
                 if (response.Status == System.Net.HttpStatusCode.OK)
                 {
-                    isDisplayPopup = false;
+
                     logBookInstrumentApproachesVMList.Remove(instrumentApproach);
                     globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
                 }
@@ -48,8 +55,9 @@ namespace Web.UI.Pages.LogBook.Instrument
             else
             {
                 logBookInstrumentApproachesVMList.Remove(instrumentApproach);
-                globalMembers.UINotification.DisplaySuccessNotification(globalMembers.UINotification.Instance, "Passenger deleted successfully");
             }
+
+            isDisplayPopup = false;
         }
     }
 }

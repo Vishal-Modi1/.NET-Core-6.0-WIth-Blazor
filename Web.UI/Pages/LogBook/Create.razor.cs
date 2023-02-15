@@ -40,21 +40,49 @@ namespace Web.UI.Pages.LogBook
         }
 
 
-        void test()
-        {
-
-        }
         public async Task Submit()
         {
-            isBusySubmitButton = true;
+            bool isPendingInsturmentArea = false;
+            bool isPendingCrewPassengerArea = false;
 
+            if (logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList.
+                Any(p=>p.InstrumentApproachId == 0 || string.IsNullOrWhiteSpace(p.Airport))
+                )
+            {
+                isPendingInsturmentArea=true;
+            }
+
+            if (logBookVM.LogBookCrewPassengersList.Any(p=>p.RoleId == 0))
+            {
+                isPendingCrewPassengerArea = true;
+            }
+
+            string message = "";
+
+            if(isPendingInsturmentArea)
+            {
+                message = "Airport and Approach is required fiel in intrument approach.";
+            }
+
+            if (isPendingCrewPassengerArea)
+            {
+                message += " Passenger and role is required.";
+            }
+
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, message);
+                return;
+            }
+
+            isBusySubmitButton = true;
             CurrentResponse response = await LogBookService.SaveandUpdateAsync(dependecyParams, logBookVM);
 
             if (response.Status == HttpStatusCode.OK)
             {
-                List<LogBookFlightPhotoVM> eixstingPhotosDetails = logBookVM.LogBookFlightPhotosList;
+                List<LogBookFlightPhotoVM> existingPhotosDetails = logBookVM.LogBookFlightPhotosList;
                 logBookVM = JsonConvert.DeserializeObject<LogBookVM>(response.Data.ToString());
-                await UploadImages(response, eixstingPhotosDetails);
+                await UploadImages(response, existingPhotosDetails);
             }
             else
             {

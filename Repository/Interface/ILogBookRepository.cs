@@ -12,10 +12,9 @@ namespace Repository.Interface
         void DeleteLogBookInstrumentApproach(long id, long deletedBy);
 
         LogBookVM FindById(long id);
-
         LogBookVM Create(LogBookVM logBookVM);
         LogBookVM Edit(LogBookVM logBookVM);
-
+        List<LogBookDataVM> List(LogBookDatatableParams datatableParams);
         List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId, string role);
 
         #region flight photos

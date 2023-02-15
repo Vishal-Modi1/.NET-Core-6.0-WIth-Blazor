@@ -2,6 +2,7 @@
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.LogBook;
+using DataModels.VM.User;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
@@ -97,6 +98,20 @@ namespace Repository
             }
 
             return logBookVM;
+        }
+
+        public List<LogBookDataVM> List(LogBookDatatableParams datatableParams)
+        {
+            List<LogBookDataVM> list;
+
+            string sql = $"EXEC dbo.GetLogBooksList '{ datatableParams.SearchText }', " +
+                $"{ datatableParams.Start }, {datatableParams.Length},'" +
+                $"{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
+                $" {datatableParams.CompanyId}";
+
+            list = _myContext.LogBooksList.FromSqlRaw<LogBookDataVM>(sql).ToList();
+
+            return list;
         }
 
         public List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId, string role)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using DataModels.VM.Common;
 
 namespace DataModels.VM.LogBook
@@ -12,6 +13,8 @@ namespace DataModels.VM.LogBook
         public double Holds { get; set; }
 
         public List<DropDownSmallValues> Approaches { get; set; } = new ();
+
+        [ValidateComplexType]
         public List<LogBookInstrumentApproachVM> LogBookInstrumentApproachesList { get; set; } = new();
     }
 }
