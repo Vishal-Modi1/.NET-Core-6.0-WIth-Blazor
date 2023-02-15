@@ -754,6 +754,6 @@ th, td, span, p {
 }
 
 .flight-image-delete-btn {
-  height: 25px;
-  width: 25px;
+  max-height: 25px;
+  max-width: 100px;
 }
