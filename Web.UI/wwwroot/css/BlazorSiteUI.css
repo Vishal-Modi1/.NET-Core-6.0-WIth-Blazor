@@ -493,7 +493,7 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
 }
 
 .k-loader-container {
-  z-index: 100;
+  z-index: 1056;
 }
 
 .component-title {
