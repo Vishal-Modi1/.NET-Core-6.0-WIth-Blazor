@@ -14,11 +14,17 @@ namespace Service
     public class LogBookService : BaseService, ILogBookService
     {
         private readonly ILogBookRepository _logBookRepository;
+        private readonly ICompanyRepository _companyRepository;
+        private readonly IAircraftRepository _aircraftRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public LogBookService(ILogBookRepository logBookRepository, IMapper mapper)
+        public LogBookService(ILogBookRepository logBookRepository, IUserRepository userRepository,
+            IAircraftRepository aircraftRepository, IMapper mapper)
         {
             _logBookRepository = logBookRepository;
+            _userRepository = userRepository;
+            _aircraftRepository = aircraftRepository;
             _mapper = mapper;
         }
 
@@ -75,6 +81,39 @@ namespace Service
             catch (Exception exc)
             {
                 CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse GetFiltersValue(string role, int companyId)
+        {
+            try
+            {
+                LogBookFilterVM logBookFilter = new LogBookFilterVM();
+
+                if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+                {
+                    logBookFilter.Companies = _companyRepository.ListDropDownValues();
+                }
+                else 
+                {
+                    if (role.Replace(" ", "") != DataModels.Enums.UserRole.Admin.ToString())
+                    {
+                        logBookFilter.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
+                    }
+
+                    logBookFilter.AircraftsList = _aircraftRepository.ListDropDownValuesByCompanyId(companyId);
+                }
+
+                CreateResponse(logBookFilter, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new LogBookFilterVM(), HttpStatusCode.InternalServerError, exc.ToString());
 
                 return _currentResponse;
             }

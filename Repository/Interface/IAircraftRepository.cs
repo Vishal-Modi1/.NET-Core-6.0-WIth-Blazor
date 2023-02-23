@@ -28,7 +28,7 @@ namespace Repository.Interface
 
         List<DropDownValues> ListFlightSimulatorClassDropDownValues();
 
-        List<DropDownLargeValues> ListDropDownValues(int companyId);
+        List<DropDownLargeValues> ListDropDownValuesByCompanyId(int companyId);
 
         bool UpdateStatus(long id, byte statusId);
 

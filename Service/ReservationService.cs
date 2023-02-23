@@ -52,7 +52,7 @@ namespace Service
                 ReservationFilterVM reservationFilterVM = new ReservationFilterVM();
 
                 reservationFilterVM.Companies = _companyRepository.ListDropDownValues();
-                reservationFilterVM.Aircrafts = _aircraftRepository.ListDropDownValues(companyId);
+                reservationFilterVM.Aircrafts = _aircraftRepository.ListDropDownValuesByCompanyId(companyId);
 
                 reservationFilterVM.DepartureAirportsList = _aircraftScheduleRepository.ListAirportDropDownValues();
                 reservationFilterVM.ArrivalAirportsList = _aircraftScheduleRepository.ListAirportDropDownValues();

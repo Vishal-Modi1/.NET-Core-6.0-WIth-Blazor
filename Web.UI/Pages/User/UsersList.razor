@@ -69,7 +69,7 @@
 
                 </div>
 
-                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
+                @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
                 {
                     <div class="col-md-4">
 

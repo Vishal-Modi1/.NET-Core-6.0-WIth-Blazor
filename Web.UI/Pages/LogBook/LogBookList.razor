@@ -12,23 +12,92 @@
                 <ComponentTitle Title="LogBooks" Type="AdministrationTitle" />
             </div>
             <div>
-               @* @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-                {
+                @* @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
+                    {
                     <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                        </TelerikButton>
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    </TelerikButton>
                     </div>
-                }*@
+                    }*@
 
-                 <div class="col-md-4">
-                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CreateLogBook(0)">
-                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                        </TelerikButton>
-                    </div>
+                <div class="col-md-4">
+                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CreateLogBook(0)">
+                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    </TelerikButton>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
+<div>
+    <CustomCollapseBar Class="my-1" IsFilterBarVisible="isFilterBarVisible"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+        <HeaderContent>
+            <div class="d-flex justify-content-between">
+                <span class="my-0">
+                    <CustomIcons IconName="search" /> Search
+                </span>
+                <span>
+                    @if (isFilterBarVisible)
+                    {
+                        <CustomIcons IconName="minus" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="plus" />
+                    }
+                </span>
+            </div>
+        </HeaderContent>
+        <ChildContent>
+            <div class="row my-2">
+
+              @*  <div class="col-md-4">
+                    <TelerikTextBox Name="SearchText" PlaceHolder="Search User" Class="common-bg" ValueChanged="@( (string value) => OnSearchValueChanges<LogBookDataVM>(value, grid) )" />
+                </div>
+*@
+
+                @if (globalMembers.IsSuperAdmin)
+                {
+                    <div class="col-md-4">
+
+                        <TelerikComboBox Id=companyId Data="@logBookFilterVM.Companies" TextField="Name"
+                                     ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Company" ValueField="Id" Class="common-bg">
+                        </TelerikComboBox>
+
+                    </div>
+                }
+
+                <div class="col-md-4">
+
+                    <TelerikComboBox Id=userId Data="@logBookFilterVM.UsersList" TextField="Name"
+                                     ValueChanged="@( (long value) => OnUserValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select User" ValueField="Id" Class="common-bg">
+                    </TelerikComboBox>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <TelerikComboBox Id=aircraftId Data="@logBookFilterVM.AircraftsList" TextField="Name"
+                                     ValueChanged="@( (long value) => OnAircraftValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Aircraft" ValueField="Id" Class="common-bg">
+                    </TelerikComboBox>
+
+                </div>
+
+            </div>
+
+        </ChildContent>
+    </CustomCollapseBar>
 </div>
 
 <TelerikGrid TItem="LogBookDataVM" OnRead="@LoadData" Pageable="true" @ref="@grid"
@@ -43,29 +112,29 @@
         <GridColumn Field="@nameof(LogBookDataVM.TailNo)" Width="15%" />
         <GridColumn Field="@nameof(LogBookDataVM.Date)" Width="15%" />
 
-         <GridCommandColumn Context="dataItem" Title="Action" Width="20%" >
+        <GridCommandColumn Context="dataItem" Title="Action" Width="20%">
             @{
                 LogBookDataVM logBookDataVM = dataItem as LogBookDataVM;
 
-            //    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
-              //  {
-                    <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>CreateLogBook(logBookDataVM.Id)"
+                //    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
+                //  {
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>CreateLogBook(logBookDataVM.Id)"
                            ThemeColor="success" Enabled=!logBookDataVM.IsLoadingEditButton>
 
-                        <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
-                        <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                    <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
                                Visible="logBookDataVM.IsLoadingEditButton">
-                        </TelerikLoader>
+                    </TelerikLoader>
 
-                    </TelerikButton>
-              //  }
+                </TelerikButton>
+                //  }
 
-            //    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-           //     {
-                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(logBookDataVM)">
-                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                    </TelerikButton>
-            //    }
+                //    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
+                //     {
+                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(logBookDataVM)">
+                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                </TelerikButton>
+                //    }
             }
         </GridCommandColumn>
 

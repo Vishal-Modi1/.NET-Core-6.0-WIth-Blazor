@@ -12,5 +12,9 @@ namespace DataModels.VM.LogBook
         public DateTime Date { get; set; }
 
         public string TailNo { get; set; }
+
+        public string UserName { get; set; }    
+
+        public string CompanyName { get; set; }
     }
 }

@@ -145,7 +145,7 @@ namespace Repository
             }
         }
 
-        public List<DropDownLargeValues> ListDropDownValues(int companyId)
+        public List<DropDownLargeValues> ListDropDownValuesByCompanyId(int companyId)
         {
             using (_myContext = new MyContext())
             {

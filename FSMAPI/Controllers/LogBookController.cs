@@ -124,6 +124,17 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
+        [Route("getfilters")]
+        public IActionResult GetFilters()
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            CurrentResponse response = _logBookService.GetFiltersValue(role, _jWTTokenGenerator.GetCompanyId());
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
         [Route("getDetails")]
         public IActionResult GetDetails(long id)
         {

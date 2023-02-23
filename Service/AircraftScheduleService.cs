@@ -187,7 +187,7 @@ namespace Service
             schedulerVM.Member2List = usersList.Where(p => !instructorsList.Contains(p.Id)).ToList();
             schedulerVM.InstructorsList = usersList.Where(p => instructorsList.Contains(p.Id)).ToList();
 
-            schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValues(companyId);
+            schedulerVM.AircraftsList = _aircraftRepository.ListDropDownValuesByCompanyId(companyId);
             schedulerVM.FlightCategoriesList = _flightCategoryRepository.ListDropDownValuesByCompanyId(companyId);
             schedulerVM.FlightTagsList = _flightTagRepository.ListDropDownValues(companyId);
         }

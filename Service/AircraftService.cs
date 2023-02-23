@@ -212,7 +212,7 @@ namespace Service
         {
             try
             {
-                List<DropDownLargeValues> aircraftList = _aircraftRepository.ListDropDownValues(companyId);
+                List<DropDownLargeValues> aircraftList = _aircraftRepository.ListDropDownValuesByCompanyId(companyId);
                 CreateResponse(aircraftList, HttpStatusCode.OK, "");
 
                 return _currentResponse;

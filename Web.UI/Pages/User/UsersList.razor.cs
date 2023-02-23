@@ -34,9 +34,8 @@ namespace Web.UI.Pages.User
                 NavigationManager.NavigateTo("/Dashboard");
             }
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             userFilterVM = await UserService.GetFiltersAsync(dependecyParams);
-
           }
 
         private void OnCompanyValueChanges(int selectedValue)

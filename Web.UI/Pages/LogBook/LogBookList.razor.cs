@@ -31,10 +31,9 @@ namespace Web.UI.Pages.LogBook
 
             datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<LogBookDatatableParams>();
 
-
             datatableParams.UserId = logBookFilterVM.UserId;
+            datatableParams.AircraftId = logBookFilterVM.AircraftId;
 
-            datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
 
@@ -53,6 +52,33 @@ namespace Web.UI.Pages.LogBook
         void CreateLogBook(long id)
         {
 
+        }
+
+        private void OnCompanyValueChanges(int selectedValue)
+        {
+            if (logBookFilterVM.CompanyId != selectedValue)
+            {
+                grid.Rebind();
+                logBookFilterVM.CompanyId = selectedValue;
+            }
+        }
+
+        private void OnAircraftValueChanges(long selectedValue)
+        {
+            if (logBookFilterVM.AircraftId != selectedValue)
+            {
+                grid.Rebind();
+                logBookFilterVM.AircraftId = selectedValue;
+            }
+        }
+
+        private void OnUserValueChanges(long selectedValue)
+        {
+            if (logBookFilterVM.UserId != selectedValue)
+            {
+                grid.Rebind();
+                logBookFilterVM.UserId = selectedValue;
+            }
         }
 
         void OpenDeleteDialog(LogBookDataVM logBookDataVM)
