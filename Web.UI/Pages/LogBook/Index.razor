@@ -3,7 +3,6 @@
 
 <PageTitle>LogBook | Upflyte </PageTitle>
 
-
 <div class="row my-0">
     <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
         <div class="card p-0 no-box-shadow">
@@ -34,14 +33,16 @@
                     </TabStripTab>
                 }
 
-                 <TabStripTab>
+                <TabStripTab >
                         <HeaderTemplate>
                             <div class="d-flex justify-content-center align-items-center">
                                 <span>LogBooks</span>
                             </div>
                         </HeaderTemplate>
                         <Content>
-                            <LogBookList ></LogBookList>
+                            <div Class="logbook-2">
+                                <LogBookList></LogBookList>
+                            </div>
                         </Content>
                     </TabStripTab>
 

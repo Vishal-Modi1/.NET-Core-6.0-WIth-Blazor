@@ -450,7 +450,13 @@ html, body, app, .k-drawer-container, .k-drawer-content, .main {
             padding-right: 0 !important;
             padding-top: 0 !important;
         }
+
+        .k-tabstrip-content:has(.logbook-2) {
+            padding: 1rem 1rem !important;
+        }
     }
+
+
 
     .k-tabstrip-items-wrapper {
         z-index: 0;
