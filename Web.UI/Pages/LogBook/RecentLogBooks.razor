@@ -13,8 +13,8 @@
     @foreach (LogBookSummaryVM logBookSummaryVM in logBookSummaries)
     {
         <div class="p-2" @onclick="@(() => EditLogBookInfo(logBookSummaryVM.Id))" style="cursor:pointer">
-            <div class="d-flex justify-content-between align-items-center logList">
-                <span class="d-flex justify-content-between align-items-center">
+            <div class="row d-flex justify-content-between align-items-center logList">
+                <span class="col-5 d-flex justify-content-between align-items-center">
 
                     <span>
                         <div>
@@ -26,7 +26,7 @@
                     </span>
                 </span>
 
-                <span class="d-flex justify-content-between align-items-center">
+                <span class="col-7 d-flex justify-content-between align-items-center">
                     <span>
 
                         @if (globalMembers.IsSuperAdmin)
