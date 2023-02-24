@@ -170,19 +170,19 @@ namespace Service
             }
         }
 
-        public CurrentResponse GetFiltersValue(int? companyId)
+        public CurrentResponse GetFiltersValue(int companyId)
         {
             try
             {
                 DocumentFilterVM documentFilterVM = new DocumentFilterVM();
 
-                if (companyId == null)
+                if (companyId == 0)
                 {
                     documentFilterVM.Companies = _companyRepository.ListDropDownValues();
                 }
                 else
                 {
-                    documentFilterVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId.Value);
+                    documentFilterVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
                 }
 
                 documentFilterVM.ModulesList = _moduleDetailsRepository.ListDropDownValues();

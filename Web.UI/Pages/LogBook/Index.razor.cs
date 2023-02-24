@@ -63,6 +63,11 @@ namespace Web.UI.Pages.LogBook
 
         async Task GetLogBookDetails(long id)
         {
+            if(cureActiveTabIndex != 0)
+            {
+                cureActiveTabIndex = 0;
+            }
+
             ChangeLoaderVisibilityAction(true);
 
             logBookVM = await LogBookService.GetDetails(dependecyParams, id);

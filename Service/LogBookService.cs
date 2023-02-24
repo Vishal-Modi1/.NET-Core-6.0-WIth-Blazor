@@ -20,12 +20,14 @@ namespace Service
         private readonly IMapper _mapper;
 
         public LogBookService(ILogBookRepository logBookRepository, IUserRepository userRepository,
-            IAircraftRepository aircraftRepository, IMapper mapper)
+            IAircraftRepository aircraftRepository, ICompanyRepository companyRepository,
+            IMapper mapper)
         {
             _logBookRepository = logBookRepository;
             _userRepository = userRepository;
             _aircraftRepository = aircraftRepository;
             _mapper = mapper;
+            _companyRepository = companyRepository;
         }
 
         public CurrentResponse Create(LogBookVM logBookVM)
@@ -68,6 +70,33 @@ namespace Service
             }
         }
 
+        public CurrentResponse GetFiltersValue(int companyId)
+        {
+            try
+            {
+                LogBookFilterVM logBookFilterVM = new LogBookFilterVM();
+
+                if (companyId == 0)
+                {
+                    logBookFilterVM.Companies = _companyRepository.ListDropDownValues();
+                }
+                else
+                {
+                    logBookFilterVM.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
+                }
+
+                CreateResponse(logBookFilterVM, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(new LogBookFilterVM(), HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
         public CurrentResponse List(LogBookDatatableParams datatableParams)
         {
             try
@@ -92,13 +121,13 @@ namespace Service
             {
                 LogBookFilterVM logBookFilter = new LogBookFilterVM();
 
-                if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+                if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
                 {
                     logBookFilter.Companies = _companyRepository.ListDropDownValues();
                 }
-                else 
+                else
                 {
-                    if (role.Replace(" ", "") != DataModels.Enums.UserRole.Admin.ToString())
+                    if (role.Replace(" ", "") == DataModels.Enums.UserRole.Admin.ToString())
                     {
                         logBookFilter.UsersList = _userRepository.ListDropdownValuesbyCompanyId(companyId);
                     }
@@ -125,9 +154,12 @@ namespace Service
             {
                 LogBookVM logBookVM = _logBookRepository.FindById(id);
 
-                foreach (LogBookFlightPhotoVM item in logBookVM.LogBookFlightPhotosList)
+                if (logBookVM != null)
                 {
-                    item.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.LogbookFlightPhoto}/{logBookVM.CompanyId}/{logBookVM.CreatedBy}/{id}/{item.Name}";
+                    foreach (LogBookFlightPhotoVM item in logBookVM.LogBookFlightPhotosList)
+                    {
+                        item.ImagePath = $"{Configuration.ConfigurationSettings.Instance.UploadDirectoryPath}/{UploadDirectories.LogbookFlightPhoto}/{logBookVM.CompanyId}/{logBookVM.CreatedBy}/{id}/{item.Name}";
+                    }
                 }
 
                 CreateResponse(logBookVM, HttpStatusCode.OK, "");
@@ -207,7 +239,7 @@ namespace Service
             return _logBookRepository.ListFlightPhotosByLogBookId(logBookId);
         }
 
-       public CurrentResponse DeletePhoto(long id, long deletedBy)
+        public CurrentResponse DeletePhoto(long id, long deletedBy)
         {
             try
             {
@@ -233,7 +265,7 @@ namespace Service
         {
             try
             {
-                List<DropDownSmallValues> passengersRoles =  _logBookRepository.ListPassengersRolesDropdownValues();
+                List<DropDownSmallValues> passengersRoles = _logBookRepository.ListPassengersRolesDropdownValues();
                 CreateResponse(passengersRoles, HttpStatusCode.OK, "");
 
                 return _currentResponse;
@@ -310,6 +342,24 @@ namespace Service
             {
                 _logBookRepository.DeleteLogBookInstrumentApproach(id, deletedBy);
                 CreateResponse(true, HttpStatusCode.OK, "Instrument approach deleted successfully.");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(false, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse Delete(long id, long deletedBy)
+        {
+            try
+            {
+                _logBookRepository.Delete(id, deletedBy);
+                CreateResponse(true, HttpStatusCode.OK, "LogBook deleted successfully.");
 
                 return _currentResponse;
             }

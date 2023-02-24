@@ -16,30 +16,35 @@
     <div class="row my-0">
         <div class="col-1" />
         <div class="col-2">
-           <div> <label>Actual Instrument</label></div>
+            a
+            <div> <label>Actual Instrument</label></div>
             <TelerikNumericTextBox Class="logbook-control-max-width" Id="actualInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.ActualInstrument" Placeholder="Hours" />
-          
+
         </div>
 
         <div class="col-2">
-           <div> <label>Simulated Instrument</label></div>
+            <div> <label>Simulated Instrument</label></div>
             <TelerikNumericTextBox Class="logbook-control-max-width" Id="simulatedInstrument" @bind-Value="@logBookVM.LogBookInstrumentVM.SimulatedInstrument" Placeholder="Hours" />
-              <TelerikValidationMessage For="@(() => logBookVM.LogBookInstrumentVM.SimulatedInstrument)"></TelerikValidationMessage>
+            <TelerikValidationMessage For="@(() => logBookVM.LogBookInstrumentVM.SimulatedInstrument)"></TelerikValidationMessage>
         </div>
 
         <div class="col-2">
-          <div>  <label>Holds</label></div>
+            <div>  <label>Holds</label></div>
             <TelerikNumericTextBox Class="logbook-control-max-width" Id="holds" @bind-Value="@logBookVM.LogBookInstrumentVM.Holds" Placeholder="Hours" />
         </div>
 
-        <div class="col-2 d-flex align-items-end">
-            <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" ButtonType="@ButtonType.Button"
+        @if (!globalMembers.IsSuperAdmin)
+        {
+            <div class="col-2 d-flex align-items-end">
+                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" ButtonType="@ButtonType.Button"
                            Enabled="@(!isBusyAddButton)" OnClick="() => AddNewApproach()">
-                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
-                </TelerikLoader>
-            </TelerikButton>
-        </div>
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+                    </TelerikLoader>
+                </TelerikButton>
+            </div>
+        }
+
     </div>
 
     @if (logBookVM.LogBookInstrumentVM is not null && logBookVM.LogBookInstrumentVM.LogBookInstrumentApproachesList.Any())

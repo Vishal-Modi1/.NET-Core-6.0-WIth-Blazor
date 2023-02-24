@@ -2,7 +2,6 @@
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.LogBook;
-using DataModels.VM.User;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
@@ -107,7 +106,7 @@ namespace Repository
             string sql = $"EXEC dbo.GetLogBooksList '{ datatableParams.SearchText }', " +
                 $"{ datatableParams.Start }, {datatableParams.Length},'" +
                 $"{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
-                $" {datatableParams.CompanyId}";
+                $" {datatableParams.CompanyId},{datatableParams.UserId},{datatableParams.AircraftId} ";
 
             list = _myContext.LogBooksList.FromSqlRaw<LogBookDataVM>(sql).ToList();
 
@@ -136,6 +135,20 @@ namespace Repository
                                                     }).ToList();
 
             return approaches;
+        }
+
+        public void Delete(long id, long deletedBy)
+        {
+            LogBook logBook = _myContext.LogBooks.Where(p => p.Id == id).FirstOrDefault();
+
+            if (logBook != null)
+            {
+                logBook.IsDeleted = true;
+                logBook.DeletedOn = DateTime.UtcNow;
+                logBook.DeletedBy = deletedBy;
+
+                _myContext.SaveChanges();
+            }
         }
 
         public LogBookVM FindById(long id)

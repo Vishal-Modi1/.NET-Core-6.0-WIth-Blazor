@@ -16,7 +16,7 @@ namespace Service.Interface
         CurrentResponse List(DocumentDatatableParams datatableParams);
         CurrentResponse Delete(Guid id, long deletedBy);
         DocumentVM FindById(Guid id);
-        CurrentResponse GetFiltersValue(int? companyId);
+        CurrentResponse GetFiltersValue(int companyId);
         CurrentResponse FindByCondition(Expression<Func<Document, bool>> predicate);
         CurrentResponse UpdateTotalDownloads(Guid id);
         CurrentResponse UpdateTotalShares(Guid id);

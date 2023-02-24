@@ -1,18 +1,30 @@
 ﻿@using DataModels.VM.LogBook;
 @using DataModels.Enums;
 
-<EditForm Model="@logBookVM" OnValidSubmit="@Submit" >
+<EditForm Model="@logBookVM" OnValidSubmit="@Submit">
 
     <CustomValidationSummary> </CustomValidationSummary>
 
     <div class="row mx-0 my-1" style="margin-top:9px !important">
 
         <div class="col-md-12 d-flex justify-content-end">
-            <TelerikButton Class="btn k-btn-primary" ButtonType="@ButtonType.Button" ThemeColor="primary" OnClick="(() => AddEntry())">
-                <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add New
-            </TelerikButton>
-            <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
-            </FormFooterComponent>
+
+            @if (!globalMembers.IsSuperAdmin)
+            {
+                <TelerikButton Class="btn k-btn-primary" ButtonType="@ButtonType.Button" ThemeColor="primary" OnClick="(() => AddEntry())">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add New
+                </TelerikButton>
+
+                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
+                </FormFooterComponent>
+
+                @if (logBookVM.Id > 0)
+                {
+                    <TelerikButton Class="btn k-btn-danger" ButtonType="@ButtonType.Button" ThemeColor="primary" OnClick="(() => OpenDeleteLogBookDialog())">
+                        <CustomIcons IconName="delete" PrimaryColor="White"></CustomIcons> Delete
+                    </TelerikButton>
+                }
+            }
         </div>
     </div>
     <div class="row m-0">
@@ -167,17 +179,17 @@
         </div>
         <div class="col-12 py-1">
             <div class="row my-0 @(!isRouteDistanceVisible ? "d-none":"")">
-            <div class="col-1" />
-            <div class="col-2">
-                <div><label>Distance</label></div>
-                <TelerikNumericTextBox Class="logbook-control-max-width" Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
-            </div>
+                <div class="col-1" />
+                <div class="col-2">
+                    <div><label>Distance</label></div>
+                    <TelerikNumericTextBox Class="logbook-control-max-width" Id="distance" @bind-Value="@logBookVM.Distance" Placeholder="Distance"></TelerikNumericTextBox>
+                </div>
 
-            <div class="col-4">
-                <div><label>Route</label></div>
-                <TelerikTextBox Width="100%" Id="route" Class="logbook-control-max-width" @bind-Value="@logBookVM.Route" PlaceHolder="Route"></TelerikTextBox>
+                <div class="col-4">
+                    <div><label>Route</label></div>
+                    <TelerikTextBox Width="100%" Id="route" Class="logbook-control-max-width" @bind-Value="@logBookVM.Route" PlaceHolder="Route"></TelerikTextBox>
+                </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -258,9 +270,60 @@
 
     <div class="row mx-0 my-1" style="float:right">
         <div class="col-md-12 text-right">
-            <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
-            </FormFooterComponent>
+
+            @if (!globalMembers.IsSuperAdmin)
+            {
+                <TelerikButton Class="btn k-btn-primary" ButtonType="@ButtonType.Button" ThemeColor="primary" OnClick="(() => AddEntry())">
+                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add New
+                </TelerikButton>
+
+                <FormFooterComponent id="@logBookVM.Id" IsSubmitButtonLoading="@isBusySubmitButton" IsHideCancelButton="true">
+                </FormFooterComponent>
+
+                @if (logBookVM.Id > 0)
+                {
+                    <TelerikButton Class="btn k-btn-danger" ButtonType="@ButtonType.Button" ThemeColor="primary" OnClick="(() => OpenDeleteLogBookDialog())">
+                        <CustomIcons IconName="delete" PrimaryColor="White"></CustomIcons> Delete
+                    </TelerikButton>
+                }
+            }
         </div>
     </div>
 </EditForm>
 
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete the logbook</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <TelerikButton Class="btn k-btn-danger" Enabled="@(!isBusyDeleteButton)"
+                            ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="()=>DeleteAsync()">
+                                Yes <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                                       Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                               
+                            </TelerikButton>
+
+                            <TelerikButton Class="btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

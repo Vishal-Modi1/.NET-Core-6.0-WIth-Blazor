@@ -9,6 +9,11 @@ namespace DataModels.VM.LogBook
 
         public string TailNo { get; set; }
 
+        public string CompanyName { get; set; }
+
+        public string UserName { get; set; }
+        public double TotalTime{ get; set; }
+
         public DateTime Date { get; set; }
 
         public int TotalRecords { get; set; }

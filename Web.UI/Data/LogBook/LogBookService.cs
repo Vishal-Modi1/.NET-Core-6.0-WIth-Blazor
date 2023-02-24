@@ -117,6 +117,22 @@ namespace Web.UI.Data.LogBook
             return response;
         }
 
+        public async Task<LogBookFilterVM> GetFiltersAsync(DependecyParams dependecyParams)
+        {
+            dependecyParams.URL = $"logBook/getfilters";
+
+            var response = await _httpCaller.GetAsync(dependecyParams);
+
+            LogBookFilterVM logBookFilterVM = new LogBookFilterVM();
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                logBookFilterVM = JsonConvert.DeserializeObject<LogBookFilterVM>(response.Data.ToString());
+            }
+
+            return logBookFilterVM;
+        }
+
         public async Task<List<LogBookSummaryVM>> LogBookSummaries(DependecyParams dependecyParams)
         {
             dependecyParams.URL = $"logBook/logBookSummaries";
@@ -145,6 +161,14 @@ namespace Web.UI.Data.LogBook
             }
 
             return logBookVM;
+        }
+
+        public async Task<CurrentResponse> DeleteAsync(DependecyParams dependecyParams, long id)
+        {
+            dependecyParams.URL = $"logBook/delete?id={id}";
+            CurrentResponse response = await _httpCaller.DeleteAsync(dependecyParams);
+
+            return response;
         }
 
         public async Task<CurrentResponse> DeletePhotoAsync(DependecyParams dependecyParams, long id)

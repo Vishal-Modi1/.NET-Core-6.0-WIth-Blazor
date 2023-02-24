@@ -14,7 +14,7 @@
     {
         <div class="p-2" @onclick="@(() => EditLogBookInfo(logBookSummaryVM.Id))" style="cursor:pointer">
             <div class="row d-flex justify-content-between align-items-center logList">
-                <span class="col-5 d-flex justify-content-between align-items-center">
+                <span class="col-6 d-flex justify-content-between align-items-center">
 
                     <span>
                         <div>
@@ -26,15 +26,15 @@
                     </span>
                 </span>
 
-                <span class="col-7 d-flex justify-content-between align-items-center">
+                <span class="col-6 d-flex justify-content-between align-items-center">
                     <span>
 
                         @if (globalMembers.IsSuperAdmin)
                         {
                              <div>
-                                @if (logBookSummaryVM.CompanyName.Length > 12)
+                                @if (logBookSummaryVM.CompanyName.Length > 8)
                                 {
-                                    <FontLabel fontColor="#45cf10">@(logBookSummaryVM.CompanyName.Substring(0,12) + "...") </FontLabel>
+                                    <FontLabel fontColor="#45cf10">@(logBookSummaryVM.CompanyName.Substring(0,8) + "...") </FontLabel>
                                 }
                                 else
                                 {
@@ -45,9 +45,9 @@
                         else if (globalMembers.IsAdmin)
                         {
                             <div>
-                                @if (logBookSummaryVM.UserName.Length > 12)
+                                @if (logBookSummaryVM.UserName.Length > 8)
                                 {
-                                    <FontLabel fontColor="#45cf10">@(logBookSummaryVM.UserName.Substring(0,12) + "...") </FontLabel>
+                                    <FontLabel fontColor="#45cf10">@(logBookSummaryVM.UserName.Substring(0,8) + "...") </FontLabel>
                                 }
                                 else
                                 {

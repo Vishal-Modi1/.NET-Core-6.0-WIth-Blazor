@@ -12,20 +12,15 @@
                 <ComponentTitle Title="LogBooks" Type="AdministrationTitle" />
             </div>
             <div>
-                @* @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, moduleName) || true)
-                    {
-                    <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CompanyCreateDialog(new CompanyVM())">
-                    <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                    </TelerikButton>
-                    </div>
-                    }*@
 
-                <div class="col-md-4">
-                    <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => CreateLogBook(0)">
-                        <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
-                    </TelerikButton>
-                </div>
+                @if (!globalMembers.IsSuperAdmin)
+                {
+                    <div class="col-md-4">
+                        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => EditLogBookInfo(0)">
+                            <CustomIcons IconName="add" PrimaryColor="White"></CustomIcons> Add
+                        </TelerikButton>
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -55,10 +50,10 @@
         <ChildContent>
             <div class="row my-2">
 
-              @*  <div class="col-md-4">
+                @*  <div class="col-md-4">
                     <TelerikTextBox Name="SearchText" PlaceHolder="Search User" Class="common-bg" ValueChanged="@( (string value) => OnSearchValueChanges<LogBookDataVM>(value, grid) )" />
-                </div>
-*@
+                    </div>
+                *@
 
                 @if (globalMembers.IsSuperAdmin)
                 {
@@ -110,7 +105,18 @@
     <GridColumns>
 
         <GridColumn Field="@nameof(LogBookDataVM.TailNo)" Width="15%" />
-        <GridColumn Field="@nameof(LogBookDataVM.Date)" Width="15%" />
+        <GridCommandColumn Width="15%" Context="dataItem" Title="Date">
+
+            @{
+                LogBookDataVM logBookDataVM = dataItem as LogBookDataVM;
+                <label>@logBookDataVM.Date.SetCustomFormat(logBookDataVM.Date, globalMembers.DateFormat, false) </label>
+            }
+
+        </GridCommandColumn>
+
+        <GridColumn Field="@nameof(LogBookDataVM.CompanyName)" Title="Company" Width="15%" Visible="@globalMembers.IsSuperAdmin" />
+        <GridColumn Field="@nameof(LogBookDataVM.UserName)" Title="Created by" Width="15%" Visible="@(globalMembers.IsSuperAdmin || globalMembers.IsAdmin)" />
+        <GridColumn Field="@nameof(LogBookDataVM.TotalTime)" Title="Total time (hours)" Width="15%" Visible="@(globalMembers.IsSuperAdmin || globalMembers.IsAdmin)" />
 
         <GridCommandColumn Context="dataItem" Title="Action" Width="20%">
             @{
@@ -118,7 +124,7 @@
 
                 //    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
                 //  {
-                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>CreateLogBook(logBookDataVM.Id)"
+                <TelerikButton Class="btn k-btn-grid-edit mx-1" OnClick="()=>EditLogBookInfo(logBookDataVM.Id)"
                            ThemeColor="success" Enabled=!logBookDataVM.IsLoadingEditButton>
 
                     <CustomIcons IconName="grid-edit" PrimaryColor="white"></CustomIcons>
@@ -129,15 +135,52 @@
                 </TelerikButton>
                 //  }
 
-                //    @if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Delete, moduleName))
-                //     {
-                <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteDialog(logBookDataVM)">
-                    <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
-                </TelerikButton>
-                //    }
+                @if (!globalMembers.IsSuperAdmin)
+                {
+                    <TelerikButton Class="btn k-btn-grid-delete mx-1" ThemeColor="error" OnClick="()=>OpenDeleteLogBookDialog(logBookDataVM)">
+                        <CustomIcons IconName="grid-delete" PrimaryColor="white"></CustomIcons>
+                    </TelerikButton>
+                }
             }
         </GridCommandColumn>
 
     </GridColumns>
 
 </TelerikGrid>
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="600px"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Delete)
+            {
+                //Delete popup
+                <div>
+                    <p class="mb-4">Are you sure, You want to delete the logbook</p>
+                    <div class="row" style="text-align:right">
+                        <div class="col">
+
+                            <TelerikButton Class="btn k-btn-danger" Enabled="@(!isBusyDeleteButton)"
+                                   ButtonType="@ButtonType.Button" ThemeColor="error" OnClick="()=>DeleteAsync()">
+                                Yes
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light"
+                                       Visible="@isBusyDeleteButton">
+                                </TelerikLoader>
+                            </TelerikButton>
+
+                            <TelerikButton Class="btn k-btn-secondary" ThemeColor="secondary" OnClick="()=>isDisplayPopup = false">
+                                No
+                            </TelerikButton>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

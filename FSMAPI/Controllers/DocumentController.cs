@@ -31,14 +31,7 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            string value = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
-            int? companyId = null;
-
-            if(!string.IsNullOrWhiteSpace(value))
-            {
-                companyId = Convert.ToInt32(value);
-            }
-
+            int companyId = _jWTTokenGenerator.GetCompanyId();
             CurrentResponse response = _documentService.GetFiltersValue(companyId);
 
             return APIResponse(response);

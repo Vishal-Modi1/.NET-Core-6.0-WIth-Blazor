@@ -23,6 +23,8 @@ namespace Service.Interface
 
         CurrentResponse LogBookSummaries(long userId, int companyId, string role);
 
+        CurrentResponse Delete(long id, long deletedBy);
+
         #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId);
 
@@ -41,6 +43,8 @@ namespace Service.Interface
         CurrentResponse CreateCrewPassenger(CrewPassengerVM crewPassengerVM);
 
         CurrentResponse DeleteLogBookCrewPassenger(long id, long deletedBy);
+
+
 
         #endregion
     }

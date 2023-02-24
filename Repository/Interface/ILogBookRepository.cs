@@ -9,6 +9,8 @@ namespace Repository.Interface
     {
         List<DropDownSmallValues> ListInstrumentApproachesDropdownValues();
 
+        void Delete(long id, long deletedBy);
+
         void DeleteLogBookInstrumentApproach(long id, long deletedBy);
 
         LogBookVM FindById(long id);

@@ -1,4 +1,5 @@
-﻿using DataModels.VM.Common;
+﻿using DataModels.Enums;
+using DataModels.VM.Common;
 using DataModels.VM.LogBook;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
@@ -125,6 +126,30 @@ namespace Web.UI.Pages.LogBook
             
             isBusySubmitButton = false;
             RefreshSummariesInfo();
+        }
+
+        void OpenDeleteLogBookDialog()
+        {
+            isDisplayPopup = true;
+            operationType = OperationType.Delete;
+            popupTitle = "Delete LogBook";
+        }
+
+        async Task DeleteAsync()
+        {
+            isBusyDeleteButton = true;
+
+            CurrentResponse response = await LogBookService.DeleteAsync(dependecyParams, logBookVM.Id);
+
+            isBusyDeleteButton = false;
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                isDisplayPopup = false;
+                RefreshSummariesInfo();
+            }
+
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
         }
 
         public void RefreshSummariesInfo()

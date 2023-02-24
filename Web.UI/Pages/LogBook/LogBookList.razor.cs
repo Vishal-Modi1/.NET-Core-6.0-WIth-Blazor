@@ -11,10 +11,13 @@ namespace Web.UI.Pages.LogBook
 {
     partial class LogBookList
     {
+        [Parameter] public EventCallback<long> EditLogBook { get; set; }
+        [Parameter] public EventCallback RefreshSummaries { get; set; }
         [CascadingParameter] public TelerikGrid<LogBookDataVM> grid { get; set; }
         LogBookDatatableParams datatableParams;
         LogBookFilterVM logBookFilterVM;
         IList<LogBookDataVM> data;
+        LogBookDataVM selectedLogBook;
 
         protected override async Task OnInitializedAsync()
         {
@@ -22,7 +25,7 @@ namespace Web.UI.Pages.LogBook
             logBookFilterVM = new LogBookFilterVM();
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            //logBookFilterVM = await LogBookService.GetFiltersAsync(dependecyParams);
+            logBookFilterVM = await LogBookService.GetFiltersAsync(dependecyParams);
         }
 
         async Task LoadData(GridReadEventArgs args)
@@ -33,6 +36,7 @@ namespace Web.UI.Pages.LogBook
 
             datatableParams.UserId = logBookFilterVM.UserId;
             datatableParams.AircraftId = logBookFilterVM.AircraftId;
+            datatableParams.CompanyId = logBookFilterVM.CompanyId;
 
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
@@ -49,17 +53,14 @@ namespace Web.UI.Pages.LogBook
             isGridDataLoading = false;
         }
 
-        void CreateLogBook(long id)
-        {
-
-        }
-
-        private void OnCompanyValueChanges(int selectedValue)
+        private async void OnCompanyValueChanges(int selectedValue)
         {
             if (logBookFilterVM.CompanyId != selectedValue)
             {
-                grid.Rebind();
                 logBookFilterVM.CompanyId = selectedValue;
+                grid.Rebind();
+                logBookFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, selectedValue);
+                logBookFilterVM.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, selectedValue);
             }
         }
 
@@ -67,8 +68,8 @@ namespace Web.UI.Pages.LogBook
         {
             if (logBookFilterVM.AircraftId != selectedValue)
             {
-                grid.Rebind();
                 logBookFilterVM.AircraftId = selectedValue;
+                grid.Rebind();
             }
         }
 
@@ -76,18 +77,40 @@ namespace Web.UI.Pages.LogBook
         {
             if (logBookFilterVM.UserId != selectedValue)
             {
-                grid.Rebind();
                 logBookFilterVM.UserId = selectedValue;
+                grid.Rebind();
             }
         }
 
-        void OpenDeleteDialog(LogBookDataVM logBookDataVM)
+        void OpenDeleteLogBookDialog(LogBookDataVM logBook)
         {
             isDisplayPopup = true;
-
             operationType = OperationType.Delete;
-            //_companyData = companyVM;
             popupTitle = "Delete LogBook";
+
+            selectedLogBook = logBook;
+        }
+
+        async Task DeleteAsync()
+        {
+            isBusyDeleteButton = true;
+
+            CurrentResponse response = await LogBookService.DeleteAsync(dependecyParams, selectedLogBook.Id);
+
+            isBusyDeleteButton = false;
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                isDisplayPopup = false;
+                await RefreshSummaries.InvokeAsync();
+            }
+
+            globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
+        }
+
+        public async Task EditLogBookInfo(long id)
+        {
+            await EditLogBook.InvokeAsync(id);
         }
     }
 }

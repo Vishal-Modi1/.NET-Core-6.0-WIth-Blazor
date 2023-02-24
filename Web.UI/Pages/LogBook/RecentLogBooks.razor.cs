@@ -36,11 +36,6 @@ namespace Web.UI.Pages.LogBook
 
         public async Task EditLogBookInfo(long id)
         {
-            if(globalMembers.IsSuperAdmin)
-            {
-                return;
-            }
-
             await EditLogBook.InvokeAsync(id);
         }
     }
