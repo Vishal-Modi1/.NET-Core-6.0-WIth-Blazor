@@ -7,7 +7,7 @@
     <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
         <div class="card p-0 no-box-shadow">
             <div class="card-body p-0 ">
-                <LogBookLeftPanel EditLogBook="@GetLogBookDetails" logBookSummaries="@logBookSummaries" />
+                <LogBookLeftPanel EditLogBook="@EditLogBook" logBookSummaries="@logBookSummaries" />
             </div>
         </div>
 
@@ -39,7 +39,7 @@
                     </HeaderTemplate>
                     <Content>
                         <div Class="logbook-2">
-                            <LogBookList EditLogBook="@GetLogBookDetails" RefreshSummaries=@RefreshSummaries></LogBookList>
+                            <LogBookList EditLogBook="@EditLogBook" RefreshSummaries=@RefreshSummaries></LogBookList>
                         </div>
                     </Content>
                 </TabStripTab>

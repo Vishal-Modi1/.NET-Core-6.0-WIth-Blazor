@@ -210,7 +210,8 @@
                             </div>
                         </HeaderTemplate>
                         <Content>
-                            <Web.UI.Pages.LogBook.LogBookList ParentModuleName="@Module.MyProfile.ToString()" UserIdParam="@userVM.Id">
+                            <Web.UI.Pages.LogBook.LogBookList EditLogBook="EditLogBookInfo"
+                            ParentModuleName="@Module.MyProfile.ToString()" UserIdParam="@userVM.Id">
                             </Web.UI.Pages.LogBook.LogBookList>
                         </Content>
                     </TabStripTab>

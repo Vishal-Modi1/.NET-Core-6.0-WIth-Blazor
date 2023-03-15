@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using DataModels.VM.Account;
 using Newtonsoft.Json;
 using Microsoft.JSInterop;
+using Web.UI.Models.Constants;
 using DataModels.Constants;
 
 namespace Web.UI.Pages.Scheduler
@@ -126,7 +127,7 @@ namespace Web.UI.Pages.Scheduler
             }
    
             var base64EncodedBytes = Convert.FromBase64String(link[0]);
-            string scheduleId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+            string scheduleId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace(UpflyteConstant.QuesryString, "");
 
 
             SchedulerVM schedulerVM = await AircraftSchedulerService.GetDetailsAsync(dependecyParams, Convert.ToInt64(scheduleId));

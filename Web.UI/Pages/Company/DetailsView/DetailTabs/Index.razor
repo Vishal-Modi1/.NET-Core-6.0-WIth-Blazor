@@ -126,7 +126,8 @@
             </div>
         </HeaderTemplate>
         <Content>
-            <Web.UI.Pages.LogBook.LogBookList ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
+            <Web.UI.Pages.LogBook.LogBookList EditLogBook="EditLogBookInfo"
+            ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
             </Web.UI.Pages.LogBook.LogBookList>
         </Content>
     </TabStripTab>

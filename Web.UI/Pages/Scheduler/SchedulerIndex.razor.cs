@@ -16,6 +16,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.JSInterop;
 using Web.UI.Models.Enums;
+using Web.UI.Models.Constants;
 using DataModels.Entities;
 
 namespace Web.UI.Pages.Scheduler
@@ -137,7 +138,7 @@ namespace Web.UI.Pages.Scheduler
             }
 
             var base64EncodedBytes = Convert.FromBase64String(link[0]);
-            string scheduleId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+            string scheduleId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace(UpflyteConstant.QuesryString, "");
 
             ChangeLoaderVisibilityAction(true);
 

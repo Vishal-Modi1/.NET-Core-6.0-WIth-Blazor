@@ -6,6 +6,7 @@ using System.Text;
 using Telerik.Blazor.Components;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
+using Web.UI.Models.Constants;
 
 namespace Web.UI.Pages.Company
 {
@@ -102,7 +103,7 @@ namespace Web.UI.Pages.Company
 
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
             {
-                byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(companyData.Id.ToString() + "FlyManager");
+                byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(companyData.Id.ToString() + UpflyteConstant.QuesryString);
                 var data = Encoding.Default.GetBytes(companyData.Id.ToString());
                 NavigationManager.NavigateTo("CompanyDetails?CompanyId=" + System.Convert.ToBase64String(encodedBytes));
             }

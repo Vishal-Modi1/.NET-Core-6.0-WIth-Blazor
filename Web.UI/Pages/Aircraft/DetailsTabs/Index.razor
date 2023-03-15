@@ -83,7 +83,10 @@
             </div>
         </HeaderTemplate>
         <Content>
-            <Web.UI.Pages.LogBook.LogBookList ParentModuleName="@Module.Aircraft.ToString()" AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId.GetValueOrDefault()">
+            <Web.UI.Pages.LogBook.LogBookList EditLogBook="EditLogBookInfo"
+            ParentModuleName="@Module.Aircraft.ToString()" 
+            AircraftIdParam="@aircraftData.Id"
+            CompanyIdParam="@aircraftData.CompanyId.GetValueOrDefault()">
             </Web.UI.Pages.LogBook.LogBookList>
         </Content>
     </TabStripTab>

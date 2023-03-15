@@ -10,6 +10,7 @@ using Web.UI.Utilities;
 using System.Text;
 using DataModels.VM.Company;
 using Web.UI.Models.Shared;
+using Web.UI.Models.Constants;
 
 namespace Web.UI.Shared
 {
@@ -156,7 +157,7 @@ namespace Web.UI.Shared
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             companyData.PrimaryServicesList = await CompanyService.ListCompanyServiceDropDownValues(dependecyParams);
 
-            byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(id.ToString() + "FlyManager");
+            byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(id.ToString() + UpflyteConstant.QuesryString);
             var data = Encoding.Default.GetBytes(id.ToString());
             NavigationManager.NavigateTo("CompanyDetails?CompanyId=" + System.Convert.ToBase64String(encodedBytes));
         }

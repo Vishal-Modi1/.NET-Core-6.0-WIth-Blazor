@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Net;
 using Web.UI.Utilities;
 using DataModels.VM.Reservation;
+using Web.UI.Models.Constants;
 using Utilities;
 
 namespace Web.UI.Pages.Company.DetailsView
@@ -43,7 +44,7 @@ namespace Web.UI.Pages.Company.DetailsView
             }
 
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-            CompanyId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+            CompanyId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace(UpflyteConstant.QuesryString, "");
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.GetDetailsAsync(dependecyParams, Convert.ToInt32(CompanyId));

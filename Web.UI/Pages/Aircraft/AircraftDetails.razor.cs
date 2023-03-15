@@ -14,6 +14,7 @@ using System.Net;
 using Microsoft.AspNetCore.Components.Forms;
 using DataModels.VM.Reservation;
 using Utilities;
+using Web.UI.Models.Constants;
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -105,7 +106,7 @@ namespace Web.UI.Pages.Aircraft
             }
 
             var base64EncodedBytes = System.Convert.FromBase64String(link[0]);
-            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace("FlyManager", "");
+            AircraftId = System.Text.Encoding.UTF8.GetString(base64EncodedBytes).Replace(UpflyteConstant.QuesryString, "");
 
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, Convert.ToInt64(AircraftId));
         }

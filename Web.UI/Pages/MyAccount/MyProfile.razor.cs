@@ -3,6 +3,7 @@ using DataModels.VM.User;
 using Microsoft.AspNetCore.Components.Forms;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
+using Web.UI.Models.Constants;
 
 namespace Web.UI.Pages.MyAccount
 {
@@ -161,6 +162,12 @@ namespace Web.UI.Pages.MyAccount
             }
 
              ChangeLoaderVisibilityAction(false);
+        }
+
+        public async Task EditLogBookInfo(long id)
+        {
+            byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(id.ToString() + UpflyteConstant.QuesryString);
+            NavigationManager.NavigateTo("LogBook?LogBookId=" + System.Convert.ToBase64String(encodedBytes));
         }
     }
 }

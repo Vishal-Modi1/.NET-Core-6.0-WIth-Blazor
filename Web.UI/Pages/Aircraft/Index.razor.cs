@@ -7,6 +7,8 @@ using System.Text;
 using Telerik.Blazor.Components;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
+using Web.UI.Models.Constants;
+
 
 namespace Web.UI.Pages.Aircraft
 {
@@ -153,7 +155,7 @@ namespace Web.UI.Pages.Aircraft
         {
             if (_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Edit, moduleName))
             {
-                byte[] encodedBytes = Encoding.UTF8.GetBytes(aircraftId.ToString() + "FlyManager");
+                byte[] encodedBytes = Encoding.UTF8.GetBytes(aircraftId.ToString() + UpflyteConstant.QuesryString);
                 var data = Encoding.Default.GetBytes(aircraftId.ToString());
                 NavigationManager.NavigateTo("AircraftDetails?AircraftId=" + Convert.ToBase64String(encodedBytes));
             }
