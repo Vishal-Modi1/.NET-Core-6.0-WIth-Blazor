@@ -116,6 +116,20 @@
             </Content>
         </TabStripTab>
 
+         <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
+                <span class="mx-2">
+                    <CustomIcons IconName="logbook" PrimaryColor="#03AAFC"></CustomIcons>
+                </span>
+                <span>LogBook</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.LogBook.LogBookList ParentModuleName="@Module.Company.ToString()" CompanyIdParam="@CompanyData.Id">
+            </Web.UI.Pages.LogBook.LogBookList>
+        </Content>
+    </TabStripTab>
       
     </TelerikTabStrip>
 }

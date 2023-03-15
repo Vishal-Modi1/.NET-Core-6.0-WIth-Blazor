@@ -35,6 +35,7 @@ namespace Service
             try
             {
                 logBookVM.CreatedOn = DateTime.UtcNow;
+                logBookVM.IsActive = true;
                 logBookVM = _logBookRepository.Create(logBookVM);
 
                 CreateResponse(logBookVM, HttpStatusCode.OK, "Logbook added successfully");

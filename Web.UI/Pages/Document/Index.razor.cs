@@ -38,7 +38,6 @@ namespace Web.UI.Pages.Document
         DocumentDataVM documentDataVM; DependecyParams dependecyParams;
         DocumentDatatableParams datatableParams;
 
-
         protected override async Task OnInitializedAsync()
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
@@ -71,7 +70,7 @@ namespace Web.UI.Pages.Document
             datatableParams.AircraftId = AircraftIdParam;
             datatableParams.IsFromMyProfile = IsPersonalDocument.GetValueOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(ParentModuleName) && ParentModuleName != Module.Company.ToString())
+            if (ParentModuleName != Module.Company.ToString())
             {
                 datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
             }

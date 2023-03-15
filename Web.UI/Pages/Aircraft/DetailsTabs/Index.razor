@@ -1,165 +1,180 @@
 ﻿@using DataModels.Enums
 
-    <TelerikTabStrip @bind-ActiveTabIndex="@activeTabIndex" Class="k-tabstrip-list">
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <CustomIcons IconName="FlightAircraftTime"
-                                 IsTransparent="@(IsTabSelectedFlag(0))"
+<TelerikTabStrip @bind-ActiveTabIndex="@activeTabIndex" Class="k-tabstrip-list">
+    <TabStripTab>
+        <HeaderTemplate>
+            <span class="mx-2">
+                <CustomIcons IconName="FlightAircraftTime"
+                             IsTransparent="@(IsTabSelectedFlag(0))"
                              PrimaryColor="#03AAFC" SecondaryColor="#CCCCCC00"></CustomIcons>
-                </span>
-                <span>Aircraft Times</span>
-            </HeaderTemplate>
-            <Content>
-                <AircraftEquipmentsTimes AircraftData=@aircraftData></AircraftEquipmentsTimes>
-            </Content>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="wrench" IsTransparent="@(IsTabSelectedFlag(1))"
+            </span>
+            <span>Aircraft Times</span>
+        </HeaderTemplate>
+        <Content>
+            <AircraftEquipmentsTimes AircraftData=@aircraftData></AircraftEquipmentsTimes>
+        </Content>
+    </TabStripTab>
+    <TabStripTab>
+        <HeaderTemplate>
+            <span class="mx-2">
+                <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="wrench" IsTransparent="@(IsTabSelectedFlag(1))"
                                                                  PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Equipment</span>
-            </HeaderTemplate>
-            <Content>
-                <Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index AircraftId=@aircraftData.Id CreatedBy=@aircraftData.CreatedBy>
+            </span>
+            <span>Equipment</span>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index AircraftId=@aircraftData.Id CreatedBy=@aircraftData.CreatedBy>
 
-                </Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index>
-            </Content>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <CustomIcons IconName="reservation" IsTransparent="@(IsTabSelectedFlag(2))"
+            </Web.UI.Pages.Aircraft.DetailsTabs.AircraftEquipment.Index>
+        </Content>
+    </TabStripTab>
+    <TabStripTab>
+        <HeaderTemplate>
+            <span class="mx-2">
+                <CustomIcons IconName="reservation" IsTransparent="@(IsTabSelectedFlag(2))"
                              PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></CustomIcons>
-                </span>
-                <span>Reservation</span>
-            </HeaderTemplate>
-            <Content>
-                <Web.UI.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@aircraftData.Id" >
+            </span>
+            <span>Reservation</span>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Reservation.Index ParentModuleName="Aircraft" AircraftId="@aircraftData.Id">
 
-                </Web.UI.Pages.Reservation.Index>
+            </Web.UI.Pages.Reservation.Index>
 
-            </Content>
-        </TabStripTab>
-        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Flightdocument" IsTransparent="@(IsTabSelectedFlag(3))"
+        </Content>
+    </TabStripTab>
+    <TabStripTab>
+        <HeaderTemplate>
+            <span class="mx-2">
+                <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Flightdocument" IsTransparent="@(IsTabSelectedFlag(3))"
                                                                  PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Documents</span>
-            </HeaderTemplate>
-            <Content>
-                <Web.UI.Pages.Document.Index ParentModuleName="Aircraft" AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId">
+            </span>
+            <span>Documents</span>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Document.Index ParentModuleName="Aircraft" AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId">
 
-                </Web.UI.Pages.Document.Index>
-            </Content>
-        </TabStripTab>
+            </Web.UI.Pages.Document.Index>
+        </Content>
+    </TabStripTab>
 
-               <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="discrepancy" IsTransparent="@(IsTabSelectedFlag(3))"
+    <TabStripTab>
+        <HeaderTemplate>
+            <span class="mx-2">
+                <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="discrepancy" IsTransparent="@(IsTabSelectedFlag(3))"
                                                                  PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Discrepancies</span>
-            </HeaderTemplate>
-            <Content>
-                <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.Index AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId.GetValueOrDefault()">
+            </span>
+            <span>Discrepancies</span>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.Index AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId.GetValueOrDefault()">
 
-                </Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.Index>
-            </Content>
-        </TabStripTab>
+            </Web.UI.Pages.Aircraft.DetailsTabs.Discrepancy.Index>
+        </Content>
+    </TabStripTab>
 
-@*        <TabStripTab>
-            <HeaderTemplate>
+    <TabStripTab>
+        <HeaderTemplate>
+            <div class="d-flex justify-content-center align-items-center">
                 <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Maintenance" IsTransparent="@(IsTabSelectedFlag(4))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+                    <CustomIcons IconName="logbook" PrimaryColor="#03AAFC"></CustomIcons>
                 </span>
-                <span>Maintenance</span>
-            </HeaderTemplate>
+                <span>LogBook</span>
+            </div>
+        </HeaderTemplate>
+        <Content>
+            <Web.UI.Pages.LogBook.LogBookList ParentModuleName="@Module.Aircraft.ToString()" AircraftIdParam="@aircraftData.Id" CompanyIdParam="@aircraftData.CompanyId.GetValueOrDefault()">
+            </Web.UI.Pages.LogBook.LogBookList>
+        </Content>
+    </TabStripTab>
+
+    @*        <TabStripTab>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Maintenance" IsTransparent="@(IsTabSelectedFlag(4))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Maintenance</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Financials" IsTransparent="@(IsTabSelectedFlag(5))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Financials</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Financials" IsTransparent="@(IsTabSelectedFlag(5))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Financials</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Performance" IsTransparent="@(IsTabSelectedFlag(6))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Performance</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Performance" IsTransparent="@(IsTabSelectedFlag(6))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Performance</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Settings" IsTransparent="@(IsTabSelectedFlag(7))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Setting</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Settings" IsTransparent="@(IsTabSelectedFlag(7))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Setting</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Crew" IsTransparent="@(IsTabSelectedFlag(8))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Crew</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Crew" IsTransparent="@(IsTabSelectedFlag(8))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Crew</span>
+        </HeaderTemplate>
         </TabStripTab>*@@*        <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Maintenance" IsTransparent="@(IsTabSelectedFlag(4))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Maintenance</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Maintenance" IsTransparent="@(IsTabSelectedFlag(4))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Maintenance</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Financials" IsTransparent="@(IsTabSelectedFlag(5))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Financials</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Financials" IsTransparent="@(IsTabSelectedFlag(5))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Financials</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Performance" IsTransparent="@(IsTabSelectedFlag(6))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Performance</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Performance" IsTransparent="@(IsTabSelectedFlag(6))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Performance</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Settings" IsTransparent="@(IsTabSelectedFlag(7))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Setting</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Settings" IsTransparent="@(IsTabSelectedFlag(7))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Setting</span>
+        </HeaderTemplate>
         </TabStripTab>
         <TabStripTab>
-            <HeaderTemplate>
-                <span class="mx-2">
-                    <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Crew" IsTransparent="@(IsTabSelectedFlag(8))"
-                                                                     PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
-                </span>
-                <span>Crew</span>
-            </HeaderTemplate>
+        <HeaderTemplate>
+        <span class="mx-2">
+        <Web.UI.Shared.Components.CustomIcon.CustomIcons IconName="Crew" IsTransparent="@(IsTabSelectedFlag(8))"
+        PrimaryColor="#03AAFC" SecondaryColor="#03AAFC"></Web.UI.Shared.Components.CustomIcon.CustomIcons>
+        </span>
+        <span>Crew</span>
+        </HeaderTemplate>
         </TabStripTab>*@
-    </TelerikTabStrip>
+</TelerikTabStrip>

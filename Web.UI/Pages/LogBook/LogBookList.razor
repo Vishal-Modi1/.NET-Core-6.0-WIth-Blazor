@@ -55,7 +55,7 @@
                     </div>
                 *@
 
-                @if (globalMembers.IsSuperAdmin)
+                @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
                 {
                     <div class="col-md-4">
 
@@ -68,26 +68,31 @@
                     </div>
                 }
 
-                <div class="col-md-4">
+                @if ((globalMembers.IsSuperAdmin || globalMembers.IsAdmin) && ParentModuleName != Module.MyProfile.ToString())
+                {
+                    <div class="col-md-4">
 
-                    <TelerikComboBox Id=userId Data="@logBookFilterVM.UsersList" TextField="Name"
+                        <TelerikComboBox Id=userId Data="@logBookFilterVM.UsersList" TextField="Name"
                                      ValueChanged="@( (long value) => OnUserValueChanges(value) )"
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                      Placeholder="Select User" ValueField="Id" Class="common-bg">
-                    </TelerikComboBox>
+                        </TelerikComboBox>
 
-                </div>
+                    </div>
+                }
 
+                @if (ParentModuleName != Module.Aircraft.ToString())
+                {
+                    <div class="col-md-4">
 
-                <div class="col-md-4">
-
-                    <TelerikComboBox Id=aircraftId Data="@logBookFilterVM.AircraftsList" TextField="Name"
+                        <TelerikComboBox Id=aircraftId Data="@logBookFilterVM.AircraftsList" TextField="Name"
                                      ValueChanged="@( (long value) => OnAircraftValueChanges(value) )"
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                      Placeholder="Select Aircraft" ValueField="Id" Class="common-bg">
-                    </TelerikComboBox>
+                        </TelerikComboBox>
 
-                </div>
+                    </div>
+                }
 
             </div>
 
@@ -114,9 +119,14 @@
 
         </GridCommandColumn>
 
-        <GridColumn Field="@nameof(LogBookDataVM.CompanyName)" Title="Company" Width="15%" Visible="@globalMembers.IsSuperAdmin" />
-        <GridColumn Field="@nameof(LogBookDataVM.UserName)" Title="Created by" Width="15%" Visible="@(globalMembers.IsSuperAdmin || globalMembers.IsAdmin)" />
-        <GridColumn Field="@nameof(LogBookDataVM.TotalTime)" Title="Total time (hours)" Width="15%" Visible="@(globalMembers.IsSuperAdmin || globalMembers.IsAdmin)" />
+        <GridColumn Field="@nameof(LogBookDataVM.CompanyName)" Title="Company" Width="15%" Visible="@(globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())" />
+        <GridColumn Field="@nameof(LogBookDataVM.UserName)" Title="Created by" Width="15%" Visible="@((globalMembers.IsSuperAdmin || globalMembers.IsAdmin) && ParentModuleName != Module.MyProfile.ToString())" />
+        <GridColumn Field="@nameof(LogBookDataVM.Airport)" Title="Airport" Width="15%" />
+        <GridColumn Field="@nameof(LogBookDataVM.DayTakeoffs)" Title="Day Takeoffs" Width="15%" TextAlign="@ColumnTextAlign.Center" />
+        <GridColumn Field="@nameof(LogBookDataVM.NightTakeoffs)" Title="Night Takeoffs" Width="15%" TextAlign="@ColumnTextAlign.Center" />
+        <GridColumn Field="@nameof(LogBookDataVM.DayLandingsFullStop)" Title="Day Landings" Width="15%" TextAlign="@ColumnTextAlign.Center" />
+        <GridColumn Field="@nameof(LogBookDataVM.NightLandingsFullStop)" Title="Night Landings" Width="15%" TextAlign="@ColumnTextAlign.Center" />
+        <GridColumn Field="@nameof(LogBookDataVM.TotalTime)" Title="Total time (hours)" Width="15%" TextAlign="@ColumnTextAlign.Center" />
 
         <GridCommandColumn Context="dataItem" Title="Action" Width="20%">
             @{

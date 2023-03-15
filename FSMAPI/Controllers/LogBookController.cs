@@ -125,7 +125,11 @@ namespace FSMAPI.Controllers
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
                 datatableParams.CompanyId = _jWTTokenGenerator.GetCompanyId();
-                //datatableParams.UserId = _jWTTokenGenerator.GetUserId();
+            }
+
+            if(role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString() && role.Replace(" ", "") != DataModels.Enums.UserRole.Admin.ToString())
+            {
+                datatableParams.UserId = _jWTTokenGenerator.GetUserId();
             }
 
             CurrentResponse response = _logBookService.List(datatableParams);

@@ -11,9 +11,19 @@ namespace Web.UI.Pages.LogBook
 {
     partial class LogBookList
     {
+        #region Params
+        [Parameter] public string ParentModuleName { get; set; }
+        [Parameter] public int? CompanyIdParam { get; set; }
+        [Parameter] public long? UserIdParam { get; set; }
+        [Parameter] public long? AircraftIdParam { get; set; }
+        [Parameter] public bool? IsPersonalDocument { get; set; }
+
         [Parameter] public EventCallback<long> EditLogBook { get; set; }
         [Parameter] public EventCallback RefreshSummaries { get; set; }
         [CascadingParameter] public TelerikGrid<LogBookDataVM> grid { get; set; }
+
+        #endregion
+
         LogBookDatatableParams datatableParams;
         LogBookFilterVM logBookFilterVM;
         IList<LogBookDataVM> data;
@@ -25,7 +35,15 @@ namespace Web.UI.Pages.LogBook
             logBookFilterVM = new LogBookFilterVM();
 
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            logBookFilterVM = await LogBookService.GetFiltersAsync(dependecyParams);
+
+            if (ParentModuleName == Module.Company.ToString())
+            {
+                await GetDropDownValuesByCompanyId(CompanyIdParam.Value);
+            }
+            else
+            {
+                logBookFilterVM = await LogBookService.GetFiltersAsync(dependecyParams);
+            }
         }
 
         async Task LoadData(GridReadEventArgs args)
@@ -34,9 +52,7 @@ namespace Web.UI.Pages.LogBook
 
             datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<LogBookDatatableParams>();
 
-            datatableParams.UserId = logBookFilterVM.UserId;
-            datatableParams.AircraftId = logBookFilterVM.AircraftId;
-            datatableParams.CompanyId = logBookFilterVM.CompanyId;
+            SetFilterValues();
 
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
@@ -53,15 +69,43 @@ namespace Web.UI.Pages.LogBook
             isGridDataLoading = false;
         }
 
+        private void SetFilterValues()
+        {
+            if (ParentModuleName == Module.MyProfile.ToString())
+            {
+                logBookFilterVM.UserId = UserIdParam.Value;
+            }
+
+            if (ParentModuleName == Module.Aircraft.ToString())
+            {
+                logBookFilterVM.AircraftId = AircraftIdParam.Value;
+            }
+
+            if (ParentModuleName == Module.Company.ToString())
+            {
+                logBookFilterVM.CompanyId = CompanyIdParam.Value;
+            }
+
+            datatableParams.UserId = logBookFilterVM.UserId;
+            datatableParams.AircraftId = logBookFilterVM.AircraftId;
+            datatableParams.CompanyId = logBookFilterVM.CompanyId;
+        }
+
         private async void OnCompanyValueChanges(int selectedValue)
         {
             if (logBookFilterVM.CompanyId != selectedValue)
             {
                 logBookFilterVM.CompanyId = selectedValue;
                 grid.Rebind();
-                logBookFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, selectedValue);
-                logBookFilterVM.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, selectedValue);
+
+                await GetDropDownValuesByCompanyId(selectedValue);
             }
+        }
+
+        private async Task GetDropDownValuesByCompanyId(int companyId)
+        {
+            logBookFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, companyId);
+            logBookFilterVM.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, companyId);
         }
 
         private void OnAircraftValueChanges(long selectedValue)

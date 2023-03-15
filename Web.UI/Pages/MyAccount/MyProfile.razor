@@ -108,7 +108,7 @@
                         <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#8A8C9B">Gender :</FontLabel></div>
                         <div class="col-6 d-flex justify-content-start"><FontLabel fontColor="#042455">@userVM.Gender</FontLabel></div>
                     </div>
-     
+
                     <hr class="m-0" />
                     <div class="row d-flex justify-content-between d-flex align-items-center  my-1">
                         <div class="d-flex justify-content-center  align-items-center">
@@ -172,7 +172,7 @@
                             </div>
                         </HeaderTemplate>
                         <Content>
-                            <Web.UI.Pages.Document.Index ParentModuleName="User" IsPersonalDocument="true">
+                            <Web.UI.Pages.Document.Index ParentModuleName="@Module.MyProfile.ToString()" IsPersonalDocument="true">
                             </Web.UI.Pages.Document.Index>
                         </Content>
                     </TabStripTab>
@@ -190,8 +190,28 @@
                             </div>
                         </HeaderTemplate>
                         <Content>
-                            <Web.UI.Pages.Reservation.Index ParentModuleName="MyProfile" UserId="@userVM.Id">
+                            <Web.UI.Pages.Reservation.Index ParentModuleName="@Module.MyProfile.ToString()" UserId="@userVM.Id">
                             </Web.UI.Pages.Reservation.Index>
+                        </Content>
+                    </TabStripTab>
+                }
+
+                @*pending to add logbook permission*@
+
+                @if (!globalMembers.IsSuperAdmin)
+                {
+                    <TabStripTab>
+                        <HeaderTemplate>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <span class="mx-2">
+                                    <CustomIcons IconName="logbook" PrimaryColor="#03AAFC"></CustomIcons>
+                                </span>
+                                <span>LogBook</span>
+                            </div>
+                        </HeaderTemplate>
+                        <Content>
+                            <Web.UI.Pages.LogBook.LogBookList ParentModuleName="@Module.MyProfile.ToString()" UserIdParam="@userVM.Id">
+                            </Web.UI.Pages.LogBook.LogBookList>
                         </Content>
                     </TabStripTab>
                 }
