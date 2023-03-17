@@ -106,6 +106,7 @@ namespace Repository
             string sql = $"EXEC dbo.GetLogBooksList '{ datatableParams.SearchText }', " +
                 $"{ datatableParams.Start }, {datatableParams.Length},'" +
                 $"{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
+                $"'{datatableParams.DepartureAirpot}','{datatableParams.ArrivalAirpot}'," +
                 $" {datatableParams.CompanyId},{datatableParams.UserId},{datatableParams.AircraftId} ";
 
             list = _myContext.LogBooksList.FromSqlRaw<LogBookDataVM>(sql).ToList();
@@ -206,6 +207,22 @@ namespace Repository
             {
                 return new LogBookVM();
             }
+        }
+
+        public List<DropDownStringValues> ListDepartureAirportsDropDownValuesByCompanyId(int companyId)
+        {
+            List<DropDownStringValues> departAirportsList = _myContext.LogBooks.Where(p => p.CompanyId == companyId).GroupBy(p => p.Departure).Select(p =>
+                new DropDownStringValues() { Id = p.Key, Name = p.Key }).ToList();
+
+            return departAirportsList;
+        }
+
+        public List<DropDownStringValues> ListArrivalAirportsDropDownValuesByCompanyId(int companyId)
+        {
+            List<DropDownStringValues> arrivalAirportsList = _myContext.LogBooks.Where(p => p.CompanyId == companyId).GroupBy(p => p.Arrival).Select(p =>
+                new DropDownStringValues() { Id = p.Key, Name = p.Key }).ToList();
+
+            return arrivalAirportsList;
         }
 
         #region flight photos

@@ -9,5 +9,11 @@ namespace DataModels.VM.LogBook
         public long UserId { get; set; }
         public List<DropDownLargeValues> AircraftsList { get; set; } = new();
         public long AircraftId { get; set; }
+
+        public List<DropDownStringValues> DepartureAirpotsList { get; set; } = new();
+        public List<DropDownStringValues> ArrivalAirpotsList { get; set; } = new();
+
+        public string DepartureAirpot { get; set; }
+        public string ArrivalAirpot { get; set; }
     }
 }

@@ -11,6 +11,7 @@
         Document = 8,
         SubscriptionPlan = 9,
         BillingHistory = 10,
+        LogBook = 11,
         MyProfile = 100,
 
         // Super Admin Modules Oly

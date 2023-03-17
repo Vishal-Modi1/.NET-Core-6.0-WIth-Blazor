@@ -134,6 +134,8 @@ namespace Service
                     }
 
                     logBookFilter.AircraftsList = _aircraftRepository.ListDropDownValuesByCompanyId(companyId);
+                    logBookFilter.DepartureAirpotsList = _logBookRepository.ListDepartureAirportsDropDownValuesByCompanyId(companyId);
+                    logBookFilter.ArrivalAirpotsList = _logBookRepository.ListArrivalAirportsDropDownValuesByCompanyId(companyId);
                 }
 
                 CreateResponse(logBookFilter, HttpStatusCode.OK, "");
@@ -183,6 +185,44 @@ namespace Service
                 List<DropDownSmallValues> approachesLIst = _logBookRepository.ListInstrumentApproachesDropdownValues();
 
                 CreateResponse(approachesLIst, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse ListDepartureAirportsDropDownValuesByCompanyId(int companyId)
+        {
+            try
+            {
+                List<DropDownStringValues> departAirportsList = _logBookRepository.ListDepartureAirportsDropDownValuesByCompanyId(companyId);
+
+                CreateResponse(departAirportsList, HttpStatusCode.OK, "");
+
+                return _currentResponse;
+            }
+
+            catch (Exception exc)
+            {
+                CreateResponse(null, HttpStatusCode.InternalServerError, exc.ToString());
+
+                return _currentResponse;
+            }
+        }
+
+        public CurrentResponse ListArrivalAirportsDropDownValuesByCompanyId(int companyId)
+        {
+            try
+            {
+                List<DropDownStringValues> arrivalAirportsList = _logBookRepository.ListArrivalAirportsDropDownValuesByCompanyId(companyId);
+
+                CreateResponse(arrivalAirportsList, HttpStatusCode.OK, "");
 
                 return _currentResponse;
             }

@@ -57,7 +57,7 @@
 
                 @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
                 {
-                    <div class="col-md-4">
+                    <div class="col-md-3 my-1">
 
                         <TelerikComboBox Id=companyId Data="@logBookFilterVM.Companies" TextField="Name"
                                      ValueChanged="@( (int value) => OnCompanyValueChanges(value) )"
@@ -70,7 +70,7 @@
 
                 @if ((globalMembers.IsSuperAdmin || globalMembers.IsAdmin) && ParentModuleName != Module.MyProfile.ToString())
                 {
-                    <div class="col-md-4">
+                    <div class="col-md-3 my-1">
 
                         <TelerikComboBox Id=userId Data="@logBookFilterVM.UsersList" TextField="Name"
                                      ValueChanged="@( (long value) => OnUserValueChanges(value) )"
@@ -83,7 +83,7 @@
 
                 @if (ParentModuleName != Module.Aircraft.ToString())
                 {
-                    <div class="col-md-4">
+                    <div class="col-md-3 my-1">
 
                         <TelerikComboBox Id=aircraftId Data="@logBookFilterVM.AircraftsList" TextField="Name"
                                      ValueChanged="@( (long value) => OnAircraftValueChanges(value) )"
@@ -93,6 +93,27 @@
 
                     </div>
                 }
+
+                <div class="col-md-3 my-1">
+
+                    <TelerikComboBox Id=departureAirport Data="@logBookFilterVM.DepartureAirpotsList" TextField="Name"
+                                     ValueChanged="@((string value) => OnDepartureAirportValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Departure" ValueField="Name" Class="common-bg">
+                    </TelerikComboBox>
+
+                </div>
+
+
+                <div class="col-md-3 my-1">
+
+                    <TelerikComboBox Id=arrivalAirport Data="@logBookFilterVM.ArrivalAirpotsList" TextField="Name"
+                                     ValueChanged="@((string value) => OnArrivalAirportValueChanges(value) )"
+                                     Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                     Placeholder="Select Arrival" ValueField="Name" Class="common-bg">
+                    </TelerikComboBox>
+
+                </div>
 
             </div>
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Newtonsoft.Json;
 using Web.UI.Utilities;
 using Web.UI.Models.Constants;
+using DataModels.Enums;
 
 namespace Web.UI.Pages.MyAccount
 {
@@ -164,9 +165,10 @@ namespace Web.UI.Pages.MyAccount
              ChangeLoaderVisibilityAction(false);
         }
 
-        public async Task EditLogBookInfo(long id)
+        public void EditLogBookInfo(long id)
         {
             byte[] encodedBytes = System.Text.Encoding.UTF8.GetBytes(id.ToString() + UpflyteConstant.QuesryString);
+            globalMembers.SelectedItem = globalMembers.MenuItems.Where(p => p.DisplayName.ToLower() == Module.LogBook.ToString()).First();
             NavigationManager.NavigateTo("LogBook?LogBookId=" + System.Convert.ToBase64String(encodedBytes));
         }
     }

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Service.Interface;
-using DataModels.VM.Company;
-using DataModels.VM.Common;
-using FSMAPI.Utilities;
-using DataModels.Constants;
-using Microsoft.AspNetCore.Authorization;
-using DataModels.VM.LogBook;
+﻿using DataModels.Constants;
 using DataModels.Entities;
+using DataModels.VM.Common;
+using DataModels.VM.LogBook;
+using FSMAPI.Utilities;
+using Microsoft.AspNetCore.Mvc;
+using Service.Interface;
 
 namespace FSMAPI.Controllers
 {
@@ -144,6 +142,38 @@ namespace FSMAPI.Controllers
             string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
 
             CurrentResponse response = _logBookService.GetFiltersValue(role, _jWTTokenGenerator.GetCompanyId());
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listDepartureAirportsDropDownValuesByCompanyId")]
+        public IActionResult ListDepartureAirportsDropDownValuesByCompanyId(int companyId)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _logBookService.ListDepartureAirportsDropDownValuesByCompanyId(companyId);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listArrivalAirportsDropDownValuesByCompanyId")]
+        public IActionResult ListArrivalAirportsDropDownValuesByCompanyId(int companyId)
+        {
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _logBookService.ListArrivalAirportsDropDownValuesByCompanyId(companyId);
 
             return APIResponse(response);
         }

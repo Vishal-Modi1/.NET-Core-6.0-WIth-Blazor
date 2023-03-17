@@ -19,6 +19,9 @@ namespace Repository.Interface
         List<LogBookDataVM> List(LogBookDatatableParams datatableParams);
         List<LogBookSummaryVM> LogBookSummaries(long userId, int companyId, string role);
 
+        List<DropDownStringValues> ListDepartureAirportsDropDownValuesByCompanyId(int companyId);
+        List<DropDownStringValues> ListArrivalAirportsDropDownValuesByCompanyId(int companyId);
+
         #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logbookId);
 

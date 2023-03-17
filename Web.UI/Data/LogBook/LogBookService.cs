@@ -195,5 +195,35 @@ namespace Web.UI.Data.LogBook
 
             return response;
         }
+
+        public async Task<List<DropDownStringValues>> ListDepartureAirportsDropDownValuesByCompanyId(DependecyParams dependecyParams, int companyId)
+        {
+            dependecyParams.URL = $"logBook/listDepartureAirportsDropDownValuesByCompanyId?companyId={companyId}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<DropDownStringValues> departAirportsList = new List<DropDownStringValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                departAirportsList = JsonConvert.DeserializeObject<List<DropDownStringValues>>(response.Data.ToString());
+            }
+
+            return departAirportsList;
+        }
+
+        public async Task<List<DropDownStringValues>> ListArrivalAirportsDropDownValuesByCompanyId(DependecyParams dependecyParams, int companyId)
+        {
+            dependecyParams.URL = $"logBook/listArrivalAirportsDropDownValuesByCompanyId?companyId={companyId}";
+
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+            List<DropDownStringValues> arrivalAirportsList = new List<DropDownStringValues>();
+
+            if (response != null && response.Data != null && response.Status == System.Net.HttpStatusCode.OK)
+            {
+                arrivalAirportsList = JsonConvert.DeserializeObject<List<DropDownStringValues>>(response.Data.ToString());
+            }
+
+            return arrivalAirportsList;
+        }
     }
 }

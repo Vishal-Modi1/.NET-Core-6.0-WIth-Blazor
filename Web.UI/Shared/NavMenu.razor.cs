@@ -147,6 +147,7 @@ namespace Web.UI.Shared
             {
                 return string.Empty;
             }
+
             return globalMembers.SelectedItem.DisplayName.ToLowerInvariant().Equals(item.DisplayName.ToLowerInvariant()) ? "selected-nav-item" : "";
         }
 

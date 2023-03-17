@@ -25,6 +25,9 @@ namespace Service.Interface
 
         CurrentResponse Delete(long id, long deletedBy);
 
+        CurrentResponse ListArrivalAirportsDropDownValuesByCompanyId(int companyId);
+        CurrentResponse ListDepartureAirportsDropDownValuesByCompanyId(int companyId);
+
         #region flight photos
         List<LogBookFlightPhoto> ListFlightPhotosByLogBookId(long logBookId);
 

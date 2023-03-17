@@ -70,12 +70,11 @@ namespace Web.UI.Pages.Document
             datatableParams.AircraftId = AircraftIdParam;
             datatableParams.IsFromMyProfile = IsPersonalDocument.GetValueOrDefault();
 
-            if (ParentModuleName != Module.Company.ToString())
+            if (string.IsNullOrWhiteSpace(ParentModuleName))
             {
-                datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
+                datatableParams.CompanyId = documentFilterVM.CompanyId;
             }
-
-            if (ParentModuleName == Module.Company.ToString())
+            else if (ParentModuleName == Module.Company.ToString())
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }
@@ -83,9 +82,9 @@ namespace Web.UI.Pages.Document
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }
-            else
+            else if(ParentModuleName != Module.Company.ToString())
             {
-                datatableParams.CompanyId = documentFilterVM.CompanyId;
+                datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
             }
 
             datatableParams.UserId = documentFilterVM.UserId;

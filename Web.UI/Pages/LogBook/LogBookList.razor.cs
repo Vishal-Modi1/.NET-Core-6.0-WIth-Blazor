@@ -89,6 +89,9 @@ namespace Web.UI.Pages.LogBook
             datatableParams.UserId = logBookFilterVM.UserId;
             datatableParams.AircraftId = logBookFilterVM.AircraftId;
             datatableParams.CompanyId = logBookFilterVM.CompanyId;
+
+            datatableParams.DepartureAirpot = logBookFilterVM.DepartureAirpot;
+            datatableParams.ArrivalAirpot = logBookFilterVM.ArrivalAirpot;
         }
 
         private async void OnCompanyValueChanges(int selectedValue)
@@ -104,8 +107,12 @@ namespace Web.UI.Pages.LogBook
 
         private async Task GetDropDownValuesByCompanyId(int companyId)
         {
-            logBookFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, companyId);
             logBookFilterVM.AircraftsList = await AircraftService.ListDropdownValuesByCompanyId(dependecyParams, companyId);
+            logBookFilterVM.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, companyId);
+            logBookFilterVM.DepartureAirpotsList = await LogBookService.ListDepartureAirportsDropDownValuesByCompanyId(dependecyParams, companyId);
+            logBookFilterVM.ArrivalAirpotsList = await LogBookService.ListArrivalAirportsDropDownValuesByCompanyId(dependecyParams, companyId);
+
+            base.StateHasChanged();
         }
 
         private void OnAircraftValueChanges(long selectedValue)
@@ -113,6 +120,24 @@ namespace Web.UI.Pages.LogBook
             if (logBookFilterVM.AircraftId != selectedValue)
             {
                 logBookFilterVM.AircraftId = selectedValue;
+                grid.Rebind();
+            }
+        }
+
+        private void OnDepartureAirportValueChanges(string selectedValue)
+        {
+            if (logBookFilterVM.DepartureAirpot != selectedValue)
+            {
+                logBookFilterVM.DepartureAirpot = selectedValue;
+                grid.Rebind();
+            }
+        }
+
+        private void OnArrivalAirportValueChanges(string selectedValue)
+        {
+            if (logBookFilterVM.ArrivalAirpot != selectedValue)
+            {
+                logBookFilterVM.ArrivalAirpot = selectedValue;
                 grid.Rebind();
             }
         }
