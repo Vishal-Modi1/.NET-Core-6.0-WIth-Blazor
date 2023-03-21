@@ -13,6 +13,7 @@ namespace Service
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
         private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly INOAARadarMapConfigurationRepository _nOAARadarMapConfigurationRepository;
         private readonly IVFRMapConfigurationRepository _vFRMapConfigurationRepository;
         private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
@@ -20,13 +21,15 @@ namespace Service
         public WindyMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
             aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
             IRadarMapConfigurationRepository radarMapConfigurationRepository,
-            IWindyMapConfigurationRepository windyMapConfigurationRepository, IVFRMapConfigurationRepository vFRMapConfigurationRepository)
+            IWindyMapConfigurationRepository windyMapConfigurationRepository, IVFRMapConfigurationRepository vFRMapConfigurationRepository, 
+            INOAARadarMapConfigurationRepository nOAARadarMapConfigurationRepository)
         {
             _windyMapConfigurationRepository = windyMapConfigurationRepository;
             _radarMapConfigurationRepository = radarMapConfigurationRepository;
             _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _mapper = mapper;
             _vFRMapConfigurationRepository = vFRMapConfigurationRepository;
+            _nOAARadarMapConfigurationRepository = nOAARadarMapConfigurationRepository;
         }
 
         public CurrentResponse FindByUserId(long userId)
@@ -65,6 +68,7 @@ namespace Service
                     _radarMapConfigurationRepository.SetDefault(windyMapConfiguration.UserId, windyMapConfiguration.Height, windyMapConfiguration.Width);
                     _vFRMapConfigurationRepository.SetDefault(windyMapConfiguration.UserId, windyMapConfiguration.Height, windyMapConfiguration.Width);
                     _aircraftLiveTrackerMapConfigurationRepository.SetDefault(windyMapConfiguration.UserId, windyMapConfiguration.Height, windyMapConfiguration.Width);
+                    _nOAARadarMapConfigurationRepository.SetDefault(windyMapConfiguration.UserId, windyMapConfiguration.Height, windyMapConfiguration.Width);
                 }
 
                 windyMapConfigurationVM = _mapper.Map<WindyMapConfigurationVM>(windyMapConfiguration);

@@ -2,6 +2,7 @@
 using DataModels.Entities;
 using DataModels.VM.Common;
 using DataModels.VM.Weather;
+using Repository;
 using Repository.Interface;
 using Service.Interface;
 using System;
@@ -9,7 +10,7 @@ using System.Net;
 
 namespace Service
 {
-    public class RadarMapConfigurationService : BaseService, IRadarMapConfigurationService
+    public class NOAARadarMapConfigurationService : BaseService, INOAARadarMapConfigurationService
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
         private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
@@ -18,10 +19,11 @@ namespace Service
         private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
 
-        public RadarMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
+        public NOAARadarMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
             aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
             IRadarMapConfigurationRepository radarMapConfigurationRepository,
-            IWindyMapConfigurationRepository windyMapConfigurationRepository, IVFRMapConfigurationRepository vFRMapConfigurationRepository, INOAARadarMapConfigurationRepository nOAARadarMapConfigurationRepository)
+            IWindyMapConfigurationRepository windyMapConfigurationRepository, IVFRMapConfigurationRepository vFRMapConfigurationRepository,
+            INOAARadarMapConfigurationRepository nOAARadarMapConfigurationRepository)
         {
             _radarMapConfigurationRepository = radarMapConfigurationRepository;
             _windyMapConfigurationRepository = windyMapConfigurationRepository;
@@ -35,15 +37,15 @@ namespace Service
         {
             try
             {
-                RadarMapConfigurationVM radarMapConfigurationVM = new();
-                RadarMapConfiguration data = _radarMapConfigurationRepository.FindByCondition(p => p.UserId == userId);
+                NOAARadarMapConfigurationVM noaaradarMapConfigurationVM = new();
+                NOAARadarMapConfiguration data = _nOAARadarMapConfigurationRepository.FindByCondition(p => p.UserId == userId);
 
                 if (data is not null)
                 {
-                    radarMapConfigurationVM = _mapper.Map<RadarMapConfigurationVM>(data);
+                    noaaradarMapConfigurationVM = _mapper.Map<NOAARadarMapConfigurationVM>(data);
                 }
 
-                CreateResponse(radarMapConfigurationVM, HttpStatusCode.OK, "");
+                CreateResponse(noaaradarMapConfigurationVM, HttpStatusCode.OK, "");
 
                 return _currentResponse;
             }
@@ -55,22 +57,22 @@ namespace Service
             }
         }
 
-        public CurrentResponse SetDefault(RadarMapConfigurationVM radarMapConfigurationVM)
+        public CurrentResponse SetDefault(NOAARadarMapConfigurationVM nOAARadarMapConfigurationVM)
         {
             try
             {
-                RadarMapConfiguration radarMapConfiguration = _mapper.Map<RadarMapConfiguration>(radarMapConfigurationVM);
-                _radarMapConfigurationRepository.SetDefault(radarMapConfiguration);
+                NOAARadarMapConfiguration noaaRadarMapConfiguration = _mapper.Map<NOAARadarMapConfiguration>(nOAARadarMapConfigurationVM);
+                _nOAARadarMapConfigurationRepository.SetDefault(noaaRadarMapConfiguration);
                 
-                if (radarMapConfigurationVM.IsApplyToAll)
+                if (nOAARadarMapConfigurationVM.IsApplyToAll)
                 {
-                    _aircraftLiveTrackerMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
-                    _windyMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
-                    _vFRMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
-                    _nOAARadarMapConfigurationRepository.SetDefault(radarMapConfiguration.UserId, radarMapConfiguration.Height, radarMapConfiguration.Width);
+                    _aircraftLiveTrackerMapConfigurationRepository.SetDefault(noaaRadarMapConfiguration.UserId, noaaRadarMapConfiguration.Height, noaaRadarMapConfiguration.Width);
+                    _windyMapConfigurationRepository.SetDefault(noaaRadarMapConfiguration.UserId, noaaRadarMapConfiguration.Height, noaaRadarMapConfiguration.Width);
+                    _vFRMapConfigurationRepository.SetDefault(noaaRadarMapConfiguration.UserId, noaaRadarMapConfiguration.Height, noaaRadarMapConfiguration.Width);
+                    _radarMapConfigurationRepository.SetDefault(noaaRadarMapConfiguration.UserId, noaaRadarMapConfiguration.Height, noaaRadarMapConfiguration.Width);
                 }
-                
-                radarMapConfigurationVM = _mapper.Map<RadarMapConfigurationVM>(radarMapConfiguration);
+
+                nOAARadarMapConfigurationVM = _mapper.Map<NOAARadarMapConfigurationVM>(noaaRadarMapConfiguration);
 
                 CreateResponse(true, HttpStatusCode.OK, "Default value updated");
 

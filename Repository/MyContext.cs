@@ -142,6 +142,8 @@ namespace Repository
 
         public DbSet<WindyMapConfiguration> WindyMapConfigurations{ get; set; }
 
+        public DbSet<NOAARadarMapConfiguration> NOAARadarMapConfigurations { get; set; } 
+
         public DbSet<RadarMapConfiguration> RadarMapConfigurations { get; set; } 
         
         public DbSet<VFRMapConfiguration> VFRMapConfigurations { get; set; }

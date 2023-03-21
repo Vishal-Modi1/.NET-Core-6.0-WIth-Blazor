@@ -53,6 +53,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IFlightCategoryService, FlightCategoryService>();
             services.AddScoped<IAircraftLiveTrackerMapConfigurationService, AircraftLiveTrackerMapConfigurationService>();
             services.AddScoped<IRadarMapConfigurationService, RadarMapConfigurationService>();
+            services.AddScoped<INOAARadarMapConfigurationService, NOAARadarMapConfigurationService>();
             services.AddScoped<ICompanyDateFormatService, CompanyDateFormatService>();
             services.AddScoped<IVFRMapConfigurationService, VFRMapConfigurationService>();
             services.AddScoped<ILogBookService, LogBookService>();
@@ -108,6 +109,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IFlightCategoryRepository, FlightCategoryRepository>();
             services.AddScoped<IAircraftLiveTrackerMapConfigurationRepository, AircraftLiveTrackerMapConfigurationRepository>();
             services.AddScoped<IRadarMapConfigurationRepository, RadarMapConfigurationRepository>();
+            services.AddScoped<INOAARadarMapConfigurationRepository, NOAARadarMapConfigurationRepository>();
             services.AddScoped<ICompanyDateFormatRepository, CompanyDateFormatRepository>();
             services.AddScoped<IVFRMapConfigurationRepository, VFRMapConfigurationRepository>();
             services.AddScoped<ILogBookRepository, LogBookRepository>();

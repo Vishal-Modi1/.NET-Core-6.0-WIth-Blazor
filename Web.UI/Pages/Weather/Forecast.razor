@@ -1,0 +1,25 @@
+﻿<style>
+    /* enable absolute position for the icon */
+    .tb-icon-container {
+        position: relative;
+    }
+
+        /* position icon over textbox */
+        .tb-icon-container .k-icon {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0.5em;
+        }
+
+    .comp-full-width {
+        width: 150px !important;
+    }
+</style>
+<span class="mr-2" @onclick=@(() => LoadMap())>
+    <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="refresh" PrimaryColor="#03AAFC"> </CustomIcons></FontLabel>
+</span>
+<div id="parent" style="position: relative">
+    <iframe class="iframe" style="min-height: 80vh;height:100%;width:100%;" id="forecastMap" src="@mapSrc" frameborder="0">
+    </iframe>
+</div>

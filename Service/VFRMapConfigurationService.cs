@@ -18,6 +18,7 @@ namespace Service
     {
         private readonly IAircraftLiveTrackerMapConfigurationRepository _aircraftLiveTrackerMapConfigurationRepository;
         private readonly IRadarMapConfigurationRepository _radarMapConfigurationRepository;
+        private readonly INOAARadarMapConfigurationRepository _nOAARadarMapConfigurationRepository;
         private readonly IVFRMapConfigurationRepository _vFRMapConfigurationRepository;
         private readonly IWindyMapConfigurationRepository _windyMapConfigurationRepository;
         private readonly IMapper _mapper;
@@ -25,13 +26,15 @@ namespace Service
         public VFRMapConfigurationService(IAircraftLiveTrackerMapConfigurationRepository
             aircraftLiveTrackerMapConfigurationRepository, IMapper mapper,
             IVFRMapConfigurationRepository vFRMapConfigurationRepository,
-            IWindyMapConfigurationRepository windyMapConfigurationRepository, IRadarMapConfigurationRepository radarMapConfigurationRepository)
+            IWindyMapConfigurationRepository windyMapConfigurationRepository, IRadarMapConfigurationRepository radarMapConfigurationRepository,
+            INOAARadarMapConfigurationRepository nOAARadarMapConfigurationRepository)
         {
             _vFRMapConfigurationRepository = vFRMapConfigurationRepository;
             _radarMapConfigurationRepository = radarMapConfigurationRepository;
             _windyMapConfigurationRepository = windyMapConfigurationRepository;
             _aircraftLiveTrackerMapConfigurationRepository = aircraftLiveTrackerMapConfigurationRepository;
             _mapper = mapper;
+            _nOAARadarMapConfigurationRepository = nOAARadarMapConfigurationRepository;
         }
 
         public CurrentResponse FindByUserId(long userId)
@@ -70,6 +73,7 @@ namespace Service
                     _aircraftLiveTrackerMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
                     _windyMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
                     _radarMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
+                    _nOAARadarMapConfigurationRepository.SetDefault(vFRMapConfiguration.UserId, vFRMapConfiguration.Height, vFRMapConfiguration.Width);
                 }
 
                 vFRMapConfigurationVM = _mapper.Map<VFRMapConfigurationVM>(vFRMapConfiguration);

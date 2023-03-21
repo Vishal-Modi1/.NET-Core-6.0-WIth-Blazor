@@ -205,6 +205,31 @@ export function LoadRadarMap(src) {
     $('#radarMap').attr("src", src);
 }
 
+export function LoadNOAARadarMap(src) {
+
+    $('#noaaradarMap').attr("src", src);
+}
+export function LoadOutlookTempMap(src) {
+
+    $('#outlooktempMap').attr("src", src);
+}
+export function LoadOutlookPrecipitationMap(src) {
+
+    $('#outlookprecipitationMap').attr("src", src);
+}
+export function LoadForecastMap(src) {
+
+    $('#forecastMap').attr("src", src);
+}
+export function LoadCONUSViewMap(src) {
+
+    $('#conusviewMap').attr("src", src);
+}
+export function LoadDailyWXMap(src) {
+
+    $('#dailywxMap').attr("src", src);
+}
+
 export function LoadVFRMap(src) {
 
     $('#vFRMap').attr("src", src);

@@ -62,6 +62,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<AirTrafficControlCenterService>();
             builder.Services.AddScoped<WindyMapConfigurationService>();
             builder.Services.AddScoped<RadarMapConfigurationService>();
+            builder.Services.AddScoped<NOAARadarMapConfigurationService>();
             builder.Services.AddScoped<VFRMapConfigurationService>();
             builder.Services.AddScoped<AircraftLiveTrackerMapConfigurationService>();
             builder.Services.AddScoped<BillingConfigurationService>();
