@@ -46,12 +46,16 @@ namespace DataModels.VM.Document
         [Range(1, int.MaxValue, ErrorMessage = "Document type is required")]
         public int ModuleId { get; set; }
 
+        public long? DocumentDirectoryId { get; set; }
+
         [NotMapped]
         public bool IsFromParentModule { get; set; }
 
         public List<DropDownValues> ModulesList { get; set; }
         public List<DropDownLargeValues> UsersList { get; set; }
         public List<DropDownValues> CompniesList { get; set; }
+
+        public List<DropDownLargeValues> DocumentDirectoriesList { get; set; }
 
         public List<DropDownLargeValues> DocumentTagsList { get; set; }
 

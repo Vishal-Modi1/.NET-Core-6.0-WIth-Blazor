@@ -74,6 +74,11 @@ namespace FSMAPI.Controllers
                 documentVM.ExpirationDate = Convert.ToDateTime(form["ExpirationDate"].ToString());
             }
 
+            if (!string.IsNullOrWhiteSpace(form["DirectoryId"].ToString()))
+            {
+                documentVM.DocumentDirectoryId = Convert.ToInt64(form["DirectoryId"].ToString());
+            }
+
             documentVM.IsShareable = Convert.ToBoolean(form["IsShareable"]);
             
             if (Convert.ToBoolean(form["IsShareable"]))
@@ -136,16 +141,16 @@ namespace FSMAPI.Controllers
         //[Route("create")]
         private CurrentResponse Create(DocumentVM documentVM)
         {
-            documentVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            documentVM.CreatedBy = _jWTTokenGenerator.GetUserId();
 
             if (documentVM.CompanyId == 0)
             {
-                documentVM.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
+                documentVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
             }
 
             if (documentVM.UserId == 0)
             {
-                documentVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                documentVM.UserId = _jWTTokenGenerator.GetUserId();
             }
 
             CurrentResponse response = _documentService.Create(documentVM);
@@ -157,16 +162,16 @@ namespace FSMAPI.Controllers
         //[Route("edit")]
         private CurrentResponse Edit(DocumentVM documentVM)
         {
-            documentVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            documentVM.UpdatedBy = _jWTTokenGenerator.GetUserId();
 
             if (documentVM.CompanyId == 0)
             {
-                documentVM.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
+                documentVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
             }
 
             if (documentVM.UserId == 0)
             {
-                documentVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                documentVM.UserId = _jWTTokenGenerator.GetUserId();
             }
 
             CurrentResponse response = _documentService.Edit(documentVM);

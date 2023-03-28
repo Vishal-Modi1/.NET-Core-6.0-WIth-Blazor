@@ -9,6 +9,7 @@ using DataModels.Enums;
 using Telerik.Blazor.Components;
 using DataModels.Constants;
 using Utilities;
+using Web.UI.Pages.Document.DocumentDirectory;
 
 namespace Web.UI.Pages.Document
 {
@@ -21,7 +22,7 @@ namespace Web.UI.Pages.Document
         [Parameter] public long? AircraftIdParam { get; set; }
         [Parameter] public bool? IsPersonalDocument { get; set; }
         [CascadingParameter] public TelerikGrid<DocumentDataVM> grid { get; set; }
-       
+
         private DotNetObjectReference<Index>? objRef;
 
         #endregion
@@ -37,6 +38,7 @@ namespace Web.UI.Pages.Document
         DocumentVM documentData;
         DocumentDataVM documentDataVM; DependecyParams dependecyParams;
         DocumentDatatableParams datatableParams;
+        DocumentDirectoryLeftPanel documentDirectoryLeftPanel;
 
         protected override async Task OnInitializedAsync()
         {
@@ -64,8 +66,33 @@ namespace Web.UI.Pages.Document
         {
             isGridDataLoading = true;
 
-            datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
+            if (datatableParams == null)
+            {
+                datatableParams = new DatatableParams().Create(args, "DisplayName").Cast<DocumentDatatableParams>();
+            }
 
+            SetFiltersValue();
+
+            data = await DocumentService.ListAsync(dependecyParams, datatableParams);
+            args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
+            args.Data = data;
+
+            data.ToList().ForEach(p =>
+            {
+                p.CreatedOn = DateConverter.ToLocal(p.CreatedOn, globalMembers.Timezone);
+            });
+
+            isGridDataLoading = false;
+        }
+
+        private async void RefreshGrid(long? id)
+        {
+            datatableParams.DocumentDirectoryId = id;
+            grid.Rebind();
+        }
+
+        private void SetFiltersValue()
+        {
             datatableParams.ModuleId = documentFilterVM.ModuleId;
             datatableParams.AircraftId = AircraftIdParam;
             datatableParams.IsFromMyProfile = IsPersonalDocument.GetValueOrDefault();
@@ -78,11 +105,11 @@ namespace Web.UI.Pages.Document
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }
-            else if(ParentModuleName == Module.Aircraft.ToString())
+            else if (ParentModuleName == Module.Aircraft.ToString())
             {
                 datatableParams.CompanyId = CompanyIdParam.GetValueOrDefault();
             }
-            else if(ParentModuleName != Module.Company.ToString())
+            else if (ParentModuleName != Module.Company.ToString())
             {
                 datatableParams.ModuleId = (int)((Module)Enum.Parse(typeof(Module), ParentModuleName));
             }
@@ -90,20 +117,9 @@ namespace Web.UI.Pages.Document
             datatableParams.UserId = documentFilterVM.UserId;
             datatableParams.DocumentType = documentFilterVM.DocumentType;
 
-            datatableParams.UserRole = await _currentUserPermissionManager.GetRole(AuthStat);
+            datatableParams.UserRole = globalMembers.UserRole;
             datatableParams.SearchText = searchText;
             pageSize = datatableParams.Length;
-
-            data = await DocumentService.ListAsync(dependecyParams, datatableParams);
-            args.Total = data.Count() > 0 ? data[0].TotalRecords : 0;
-            args.Data = data;
-
-            data.ToList().ForEach(p =>
-            {
-                p.CreatedOn = DateConverter.ToLocal(p.CreatedOn, globalMembers.Timezone);
-            });
-
-            isGridDataLoading = false;
         }
 
         private async Task OnCompanyValueChanges(int selectedValue)
@@ -169,13 +185,16 @@ namespace Web.UI.Pages.Document
                 documentData.CompanyId = CompanyIdParam.Value;
                 documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams,CompanyIdParam.Value);
                 documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, CompanyIdParam.Value);
+                documentData.DocumentDirectoriesList = await DocumentDirectoryService.ListDropDownValuesByCompanyId(dependecyParams, CompanyIdParam.Value);
             }
 
-            if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+            if (globalMembers.IsAdmin)
             {
                 documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
+                documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
+                documentData.DocumentDirectoriesList = await DocumentDirectoryService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
             }
-            else if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+            else if (globalMembers.IsSuperAdmin)
             {
                 documentData.CompniesList = await CompanyService.ListDropDownValues(dependecyParams);
             }
@@ -183,6 +202,8 @@ namespace Web.UI.Pages.Document
             {
                 var user = (await AuthStat).User;
                 documentData.UserId = Convert.ToInt64(user.Claims.Where(c => c.Type == CustomClaimTypes.UserId).First().Value);
+                documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
+                documentData.DocumentDirectoriesList = await DocumentDirectoryService.ListDropDownValuesByCompanyId(dependecyParams, CompanyIdParam.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(ParentModuleName))
@@ -203,7 +224,6 @@ namespace Web.UI.Pages.Document
             documentData.AircraftId = AircraftIdParam;
             documentData.IsPersonalDocument = IsPersonalDocument.GetValueOrDefault();
 
-
             isDisplayPopup = true;
         }
 
@@ -215,7 +235,7 @@ namespace Web.UI.Pages.Document
 
             isBusyDeleteButton = false;
 
-            if (response.Status == System.Net.HttpStatusCode.OK)
+            if (response.Status == HttpStatusCode.OK)
             {
                 await CloseDialog(true);
             }
@@ -308,6 +328,7 @@ namespace Web.UI.Pages.Document
             if (reloadGrid)
             {
                 grid.Rebind();
+                await documentDirectoryLeftPanel.LoadData();
             }
         }
 

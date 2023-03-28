@@ -68,9 +68,10 @@ namespace Web.UI.Pages.Document
             documentData.CompanyId = value;
             ChangeLoaderVisibilityAction(true);
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
             documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
+            documentData.DocumentDirectoriesList = await DocumentDirectoryService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
 
             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
@@ -128,6 +129,7 @@ namespace Web.UI.Pages.Document
             multiContent.Add(new StringContent(documentData.DisplayName), "DisplayName");
             multiContent.Add(new StringContent(documentData.ModuleId.ToString()), "ModuleId");
             multiContent.Add(new StringContent(documentData.UserId.ToString()), "UserId");
+            multiContent.Add(new StringContent(documentData.DocumentDirectoryId == null ? "" : documentData.DocumentDirectoryId.ToString()), "DirectoryId");
             multiContent.Add(new StringContent(documentData.Type), "Type");
             multiContent.Add(new StringContent(documentData.AircraftId.GetValueOrDefault().ToString()), "AircraftId");
             multiContent.Add(new StringContent(documentData.IsPersonalDocument.ToString()), "IsPersonalDocument");

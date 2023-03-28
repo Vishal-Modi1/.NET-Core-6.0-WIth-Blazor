@@ -24,10 +24,10 @@
                     <div class="col-6" style="margin-bottom:20px;">
                         <label>Upload</label>
 
-                          <CustomFileUpload DisplayName="@documentData.DisplayName" IsFileAdded="@isFileAdded" supportedFormats="@supportedDocumentsFormat"
-                                              OnInputFileChangeCallback="@OnInputFileChangeAsync"
-                                              IsFileUploadHasError="@isFileUploadHasError">
-                            </CustomFileUpload>
+                        <CustomFileUpload DisplayName="@documentData.DisplayName" IsFileAdded="@isFileAdded" supportedFormats="@supportedDocumentsFormat"
+                                          OnInputFileChangeCallback="@OnInputFileChangeAsync"
+                                          IsFileUploadHasError="@isFileUploadHasError">
+                        </CustomFileUpload>
 
                         @if (isFileUploadHasError)
                         {
@@ -41,7 +41,7 @@
                         <TelerikValidationMessage For="@(() => documentData.DisplayName)"></TelerikValidationMessage>
                     </div>
 
-                      @if (globalMembers.IsSuperAdmin && ParentModuleName != "Company")
+                    @if (globalMembers.IsSuperAdmin && ParentModuleName != "Company")
                     {
                         <div class="col-6">
                             <label>Company</label>
@@ -72,8 +72,8 @@
 
                     </div>
 
-                  
-                    @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)
+
+                    @if (globalMembers.IsSuperAdmin || globalMembers.IsAdmin)
                     {
                         <div class="col-6">
                             <label>User</label>
@@ -102,6 +102,16 @@
                             <TelerikValidationMessage For="@(() => documentData.ModuleId)"></TelerikValidationMessage>
                         </div>
                     }
+
+                    <div class="col-6">
+                        <label>Directory</label>
+                        <TelerikComboBox Id=directory Data="@documentData.DocumentDirectoriesList" TextField="Name"
+                                         Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                         Placeholder="Select Module" ValueField="Id" @bind-Value="@(documentData.DocumentDirectoryId)">
+                        </TelerikComboBox>
+
+                    </div>
+
                     <div class="col-6">
                         <div class="row">
                             <div class="col-12">

@@ -5,6 +5,7 @@
 @using Configuration;
 @using Web.UI.Utilities;
 @using Web.UI.Shared.Components;
+@using GlobalUtilities.Extensions;
 
 @layout TelerikLayout
 
@@ -69,7 +70,7 @@
 
                 </div>
 
-                @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result && ParentModuleName != Module.Company.ToString())
+                @if (globalMembers.IsSuperAdmin && ParentModuleName != Module.Company.ToString())
                 {
                     <div class="col-md-4">
 

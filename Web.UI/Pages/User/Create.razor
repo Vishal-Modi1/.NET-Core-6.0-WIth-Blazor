@@ -71,7 +71,7 @@
 
                 <div class="col-md-6 align-items-center d-flex">
 
-                    @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result || _currentUserPermissionManager.IsValidUser(AuthStat, UserRole.Admin).Result)))
+                    @if (!userData.IsFromMyProfile || (userData.IsFromMyProfile && (globalMembers.IsAdmin || globalMembers.IsSuperAdmin)))
                     {
                         <label for="roleId" class="k-label k-form-label">User Role</label>
                     }
@@ -106,7 +106,7 @@
 
                     @if (!userData.IsFromMyProfile)
                     {
-                        @if (_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result)
+                        @if (globalMembers.IsSuperAdmin)
                         {
                             <TelerikComboBox Id=companyId Data="@userData.Companies" TextField="Name"
                                      Filterable="true" FilterOperator="@StringFilterOperator.Contains"

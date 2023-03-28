@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using DataModels.Constants;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoMapper;
 
 namespace Service
 {
@@ -19,8 +20,9 @@ namespace Service
         private readonly ICompanyRepository _companyRepository;
         private readonly IDocumentTagRepository _documentTagRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public DocumentService(IDocumentRepository documentRepository,
+        public DocumentService(IDocumentRepository documentRepository, IMapper mapper,
             IModuleDetailsRepository moduleDetailsRepository, IUserRepository userRepository,
             ICompanyRepository companyRepository, IDocumentTagRepository documentTagRepository)
         {
@@ -29,6 +31,7 @@ namespace Service
             _companyRepository = companyRepository;
             _documentTagRepository = documentTagRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public CurrentResponse Create(DocumentVM documentVM)
@@ -339,20 +342,22 @@ namespace Service
 
         private DocumentVM ToBusinessObject(Document document)
         {
-            DocumentVM documentVM = new DocumentVM();
+            //DocumentVM documentVM = new DocumentVM();
 
-            documentVM.Id = document.Id;
-            documentVM.Name = document.Name;
-            documentVM.DisplayName = document.DisplayName;
-            documentVM.ExpirationDate = document.ExpirationDate;
-            documentVM.CompanyId = document.CompanyId;
-            documentVM.UserId = document.UserId;
-            documentVM.ModuleId = document.ModuleId;
-            documentVM.Type = document.Type;
-            documentVM.TotalDownloads = document.TotalDownloads;
-            documentVM.TotalShares = document.TotalShares;
-            documentVM.LastShareDate = document.LastShareDate;
-            documentVM.IsShareable = document.IsShareable;
+            //documentVM.Id = document.Id;
+            //documentVM.Name = document.Name;
+            //documentVM.DisplayName = document.DisplayName;
+            //documentVM.ExpirationDate = document.ExpirationDate;
+            //documentVM.CompanyId = document.CompanyId;
+            //documentVM.UserId = document.UserId;
+            //documentVM.ModuleId = document.ModuleId;
+            //documentVM.Type = document.Type;
+            //documentVM.TotalDownloads = document.TotalDownloads;
+            //documentVM.TotalShares = document.TotalShares;
+            //documentVM.LastShareDate = document.LastShareDate;
+            //documentVM.IsShareable = document.IsShareable;
+
+            DocumentVM documentVM = _mapper.Map<DocumentVM>(document);
 
             if (!string.IsNullOrWhiteSpace(document.TagIds))
             {
@@ -367,25 +372,25 @@ namespace Service
 
         private Document ToDataObject(DocumentVM documentVM)
         {
-            Document document = new Document();
+            Document document = _mapper.Map<Document>(documentVM);
 
-            document.Id = documentVM.Id;
-            document.Name = documentVM.Name == null ? "" : documentVM.Name;
-            document.DisplayName = documentVM.DisplayName == null ? "" : documentVM.DisplayName;
-            document.ExpirationDate = documentVM.ExpirationDate;
-            document.CompanyId = documentVM.CompanyId;
-            document.UserId = documentVM.UserId;
-            document.ModuleId = documentVM.ModuleId;
-            document.Type = documentVM.Type == null ? "" : documentVM.Type;
-            document.Size = documentVM.Size;
-            document.IsActive = true;
-            document.LastShareDate = documentVM.LastShareDate;
-            document.IsShareable = documentVM.IsShareable;
-            document.AircraftId = documentVM.AircraftId;
-            document.IsPersonalDocument = documentVM.IsPersonalDocument;
+            //document.Id = documentVM.Id;
+            //document.Name = documentVM.Name == null ? "" : documentVM.Name;
+            //document.DisplayName = documentVM.DisplayName == null ? "" : documentVM.DisplayName;
+            //document.ExpirationDate = documentVM.ExpirationDate;
+            //document.CompanyId = documentVM.CompanyId;
+            //document.UserId = documentVM.UserId;
+            //document.ModuleId = documentVM.ModuleId;
+            //document.Type = documentVM.Type == null ? "" : documentVM.Type;
+            //document.Size = documentVM.Size;
+            //document.IsActive = true;
+            //document.LastShareDate = documentVM.LastShareDate;
+            //document.IsShareable = documentVM.IsShareable;
+            //document.AircraftId = documentVM.AircraftId;
+            //document.IsPersonalDocument = documentVM.IsPersonalDocument;
 
-            document.CreatedBy = documentVM.CreatedBy;
-           
+            //document.CreatedBy = documentVM.CreatedBy;
+
             if (documentVM.Id == Guid.Empty)
             {
                 document.CreatedOn = DateTime.UtcNow;

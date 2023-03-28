@@ -1,0 +1,119 @@
+﻿@using DataModels.VM.Document.DocumentDirectory
+@using DataModels.Enums;
+
+<style>
+    .tb-icon-container {
+        position: relative;
+    }
+
+        /* these rules position the icon. Update with your own selector if you add HTML elements for click events */
+        .tb-icon-container .k-icon {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            padding: 0.65rem 0;
+            left: 0.5em;
+        }
+
+        /* no floating label */
+        .tb-icon-container input.k-textbox,
+        /* for the floating label */
+        .tb-icon-container .k-textbox input,
+        .tb-icon-container .k-state-empty .k-label {
+            padding-left: 2em;
+        }
+
+        /* this rule also positions the icon for the floating label scenario, tweak it with your own selectors if you use other HTML */
+        .tb-icon-container.with-label .k-icon {
+            top: 0.5em;
+        }
+</style>
+
+<div class="p-0 no-box-shadow" style="height: 100vh;">
+
+    <CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white" CardClass="collapsebarcard"
+                       OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                       OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+        <HeaderContent>
+            <div class="d-flex justify-content-between">
+                <span class="my-0" style="font-weight:bold">
+                    Directories
+                </span>
+                <span>
+                    <span class="mx-2 my-1" @onclick:stopPropagation="true" @onclick:preventDefault="true"
+                          @onclick="() => OpenCreateDocumentDirectoryDialog(new DocumentDirectorySummaryVM())">
+                        <span>
+                            <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
+                        </span>
+                    </span>
+
+                    @if (isFilterBarVisible)
+                    {
+                        <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                    }
+                    else
+                    {
+                        <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                    }
+                </span>
+
+            </div>
+
+        </HeaderContent>
+
+        <ChildContent>
+
+            <div class="card-body p-0">
+
+                @foreach (DocumentDirectorySummaryVM documentDirectoryVM in documentDirectories)
+                {
+                    <div class="p-2" style="cursor:pointer">
+                        <div class="row d-flex justify-content-between align-items-center logList">
+                            <span class="col-6 d-flex justify-content-between align-items-center">
+
+                                <span>
+                                    <div>
+                                        <FontLabel fontColor="#d61ad3">@documentDirectoryVM.Name (@documentDirectoryVM.TotalDocuments)</FontLabel>
+                                    </div>
+                                </span>
+
+                                <div>
+                                    <span @onclick="() => OpenCreateDocumentDirectoryDialog(documentDirectoryVM)" style="cursor:pointer" class="my-2">
+                                        <CustomIcons IconName="grid-edit" PrimaryColor="#03AAFC"></CustomIcons>
+                                    </span>
+                                </div>
+
+                                <span @onclick="() => RefreshGrid(documentDirectoryVM.Id)" style="cursor:pointer" class="my-2">
+                                    <CustomIcons IconName="cheveron-right" PrimaryColor="black" />
+                                </span>
+
+                            </span>
+
+                        </div>
+                    </div>
+                    <hr class="m-0" />
+                }
+            </div>
+
+        </ChildContent>
+
+    </CustomCollapseBar>
+
+</div>
+
+
+@if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Web.UI.Pages.Document.DocumentDirectory.Create documentDirectory=@_documentDirectoryVM CloseDialogCallBack="@CloseDialog" />
+            }
+
+        </Body>
+    </CustomPopupComponent>
+}

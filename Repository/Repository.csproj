@@ -33,6 +33,7 @@
     <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\DataModels\DataModels.csproj" />
     <ProjectReference Include="..\DataModels\DataModels.csproj" />
+    <ProjectReference Include="..\Utilities\GlobalUtilities.csproj" />
   </ItemGroup>
 
 </Project>

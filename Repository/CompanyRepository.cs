@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DataModels.VM.Company;
 using DataModels.VM.Common;
+using Microsoft.Data.SqlClient;
+using GlobalUtilities.Extensions;
 
 namespace Repository
 {
@@ -158,11 +160,20 @@ namespace Repository
         {
             List<CompanyVM> list;
 
-            string sql = $"EXEC dbo.GetCompaniesList '{ datatableParams.SearchText }', { datatableParams.Start }, " +
-                $"{datatableParams.Length},'{datatableParams.SortOrderColumn}','{datatableParams.OrderType}'," +
-                $" '{datatableParams.City}','{datatableParams.State}',{datatableParams.CompanyId}";
+            var param = new SqlParameter[] {
+                        new SqlParameter() {ParameterName = "@SearchValue",Value = datatableParams.SearchText == null ? "": datatableParams.SearchText},
+                        new SqlParameter() {ParameterName = "@PageNo",Value = datatableParams.Start},
+                        new SqlParameter() {ParameterName = "@PageSize",Value = datatableParams.Length},
+                        new SqlParameter() {ParameterName = "@SortColumn",Value = datatableParams.SortOrderColumn},
+                        new SqlParameter() {ParameterName = "@SortOrder",Value = datatableParams.OrderType},
+                        new SqlParameter() {ParameterName = "@City",Value = datatableParams.City.EmptyStringIfNull()},
+                        new SqlParameter() {ParameterName = "@State",Value = datatableParams.State.EmptyStringIfNull()},
+                        new SqlParameter() {ParameterName = "@CompanyId",Value = datatableParams.CompanyId}
+            };
 
-            list = _myContext.CompanyData.FromSqlRaw<CompanyVM>(sql).ToList();
+            string sql = "[dbo].[GetCompaniesList] @SearchValue, @PageNo, @PageSize, @SortColumn, @SortOrder, @City, @State, @CompanyId";
+
+            list = _myContext.CompanyData.FromSqlRaw(sql, param).ToList();
 
             return list;
         }

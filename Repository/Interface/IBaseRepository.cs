@@ -18,6 +18,6 @@ namespace Repository.Interface
 
         TEntity GetById(byte id);
 
-        TEntity Create(TEntity entity);
+        abstract TEntity Create(TEntity entity);
     }
 }

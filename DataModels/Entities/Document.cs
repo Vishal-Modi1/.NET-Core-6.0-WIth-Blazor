@@ -9,7 +9,7 @@ namespace DataModels.Entities
 
         public string Name { get; set; }
 
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = "";
         
         public string Type { get; set; }
 
@@ -27,6 +27,8 @@ namespace DataModels.Entities
         public int CompanyId { get; set; }
 
         public long UserId { get; set; }
+
+        public long? DocumentDirectoryId { get; set; }
 
         public long? AircraftId { get; set; }
 

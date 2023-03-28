@@ -211,7 +211,7 @@
                         <TelerikTextBox Name="SearchText" PlaceHolder="Search Aircraft" Class="common-bg" @bind-Value="@searchText" OnChange="@(args =>  RefreshGrid())" />
                     </div>
 
-                    <div class="@(_currentUserPermissionManager.IsValidUser(AuthStat, UserRole.SuperAdmin).Result ? "col-md-4" : "col-md-8") my-auto mt-1 py-0 px-3" style="text-align:right">
+                    <div class="@(globalMembers.IsSuperAdmin ? "col-md-4" : "col-md-8") my-auto mt-1 py-0 px-3" style="text-align:right">
                         <span @onclick="@(e => ChangeView(true))" class="cursor-pointer gridview">
                             <CustomIcons IconName="gridview" PrimaryColor="@(isDisplayGridView ? "#03AAFC" :  "#ededed")" SecondaryColor="@(isDisplayGridView ? "white" :  "black" )"></CustomIcons>
                         </span>

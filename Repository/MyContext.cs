@@ -8,6 +8,7 @@ using DataModels.VM.Common;
 using DataModels.VM.Company;
 using DataModels.VM.Discrepancy;
 using DataModels.VM.Document;
+using DataModels.VM.Document.DocumentDirectory;
 using DataModels.VM.EmailConfiguration;
 using DataModels.VM.InstructorType;
 using DataModels.VM.Location;
@@ -158,6 +159,8 @@ namespace Repository
        
         public DbSet<CompanyDateFormat> CompaniesDateFormat { get; set; }
 
+        public DbSet<DocumentDirectory> DocumentDirectories { get; set; }
+
         #region Logbook
         public DbSet<LogBook> LogBooks { get; set; }
 
@@ -201,6 +204,10 @@ namespace Repository
         public DbSet<ReservationDataVM> ReservationDataVM { get; set; }
 
         public DbSet<DocumentDataVM> DocumentDataVM { get; set; }
+
+        public DbSet<DocumentDirectoryVM> DocumentDirectoryVM { get; set; }
+
+        public DbSet<DocumentDirectorySummaryVM> DocumentDirectorySummaryVM { get; set; }
 
         public DbSet<AircraftDataVM> AircraftDataVMs { get; set; }
 

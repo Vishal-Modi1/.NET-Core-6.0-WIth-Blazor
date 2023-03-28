@@ -57,6 +57,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<ICompanyDateFormatService, CompanyDateFormatService>();
             services.AddScoped<IVFRMapConfigurationService, VFRMapConfigurationService>();
             services.AddScoped<ILogBookService, LogBookService>();
+            services.AddScoped<IDocumentDirectoryService, DocumentDirectoryService>();
 
         }
 
@@ -113,6 +114,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<ICompanyDateFormatRepository, CompanyDateFormatRepository>();
             services.AddScoped<IVFRMapConfigurationRepository, VFRMapConfigurationRepository>();
             services.AddScoped<ILogBookRepository, LogBookRepository>();
+            services.AddScoped<IDocumentDirectoryRepository, DocumentDirectoryRepository>();
         }
     }
 }

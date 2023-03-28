@@ -11,5 +11,7 @@ namespace DataModels.VM.Document
         public long? AircraftId { get; set; }
 
         public string DocumentType { get; set; }
+
+        public long? DocumentDirectoryId { get; set; }
     }
 }

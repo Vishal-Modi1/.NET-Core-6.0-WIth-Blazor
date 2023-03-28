@@ -12,7 +12,7 @@ namespace Repository
 			_dbContext = dbContext;
 		}
 
-        public TEntity Create(TEntity entity)
+        public virtual TEntity Create(TEntity entity)
         {
 			_dbContext.Set<TEntity>().Add(entity);
 			_dbContext.SaveChanges();

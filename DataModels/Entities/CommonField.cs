@@ -4,9 +4,9 @@ namespace DataModels.Entities
 {
     public class CommonField
     {
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public long CreatedBy { get; set; }
-        public System.DateTime CreatedOn { get; set; }
+        public System.DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public Nullable<System.DateTime> UpdatedOn { get; set; }
         public Nullable<long> UpdatedBy { get; set; }
         public bool IsDeleted { get; set; }

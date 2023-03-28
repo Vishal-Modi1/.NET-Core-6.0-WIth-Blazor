@@ -7,15 +7,11 @@ using System.Linq.Expressions;
 
 namespace Repository.Interface
 {
-    public interface IDocumentRepository
+    public interface IDocumentRepository : IBaseRepository<Document>
     {
-        Document Create(Document document);
-
         Document Edit(Document document);
 
         bool UpdateDocumentName(Guid id, string name);
-
-        Document FindByCondition(Expression<Func<Document, bool>> predicate);
 
         List<DocumentDataVM> List(DocumentDatatableParams datatableParams);
 

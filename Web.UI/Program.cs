@@ -6,13 +6,16 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Diagnostics;
 //using Syncfusion.Blazor;
 using System.Net;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Telerik.Reporting.Services;
+using Telerik.Reporting.Cache.File;
 
 var builder = WebApplication.CreateBuilder(args);
 var _configurationSettings = ConfigurationSettings.Instance;
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages().AddNewtonsoftJson();
 builder.Services.AddServerSideBlazor();
 
 // Add Telerik Blazor server side services
@@ -60,8 +63,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddScoped<CookieAuthenticationEvents>();
 
 // Add this new line
-
 builder.Services.AddMemoryCache();
+
+// Telerik report configuration
+builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp => new ReportServiceConfiguration
+{
+    ReportingEngineConfiguration = ConfigurationSettings.Instance.Configuration,
+    HostAppId = "Upflyte",
+    Storage = new FileStorage(),
+    ReportSourceResolver = new UriReportSourceResolver(Path.Combine(sp.GetService<IWebHostEnvironment>().WebRootPath, "Reports"))
+}); ;
+
 
 var app = builder.Build();
 

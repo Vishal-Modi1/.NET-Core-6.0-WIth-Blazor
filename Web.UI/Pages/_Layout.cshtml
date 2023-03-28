@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="Web.UI.styles.css" rel="stylesheet" />
+
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://kendo.cdn.telerik.com/2022.3.913/js/kendo.all.min.js"></script>
+<script src="/api/reports/resources/js/telerikReportViewer"></script>
+
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2022.3.913/styles/kendo.default-main.min.css" />
     <!-- Choose only one of the themes -->
     <!--
         <link rel="stylesheet" href="_content/Telerik.UI.for.Blazor/css/kendo-theme-default/all.css" />
@@ -51,10 +58,17 @@
         <a class="dismiss">🗙</a>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    @*<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>*@
     @*<script src="_content/Telerik.UI.for.Blazor/js/telerik-blazor.js" defer></script>*@
     <script src="https://blazor.cdn.telerik.com/blazor/4.0.0/telerik-blazor.min.js"></script>
     @* <script src="https://blazor.cdn.telerik.com/blazor/3.5.0/telerik-blazor.min.js" defer></script>*@
+
+    
+@* Or this one if using the Telerik.WebReportDesigner.Blazor.Trial package 
+@*<script src="_content/Telerik.WebReportDesigner.Blazor.Trial/telerikWebReportDesignerInterop.js" defer>*@
+
+    <script src="_content/Telerik.ReportViewer.Blazor/interop.js" defer> </script>
 
     <script src="_framework/blazor.server.js"></script>
 

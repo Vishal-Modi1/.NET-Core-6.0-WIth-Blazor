@@ -37,6 +37,11 @@ namespace Configuration
 
         #endregion
 
+        public IConfiguration Configuration
+        {
+            get => configuration;
+        }
+
         public string APIURL
         {
             get => configuration.GetValue<string>("APIURL");

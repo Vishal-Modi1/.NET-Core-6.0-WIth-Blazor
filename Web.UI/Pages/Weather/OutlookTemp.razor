@@ -16,10 +16,8 @@
         width: 150px !important;
     }
 </style>
-<span class="mr-2" @onclick=@(() => LoadMap())>
-    <FontLabel Class="text-white cursor-pointer"><CustomIcons IconName="refresh" PrimaryColor="#03AAFC"> </CustomIcons></FontLabel>
-</span>
+
 <div id="parent" style="position: relative">
-    <iframe class="iframe" style="min-height: 80vh;height:100%;width:100%;" id="outlooktempMap" src="@mapSrc" frameborder="0">
-    </iframe>
+    <img class="iframe" style="min-height: 80vh;height:100%;width:100%;" id="outlooktempMap" src="https://www.cpc.ncep.noaa.gov/products/predictions/610day/610temp.new.gif" frameborder="0" />
+   
 </div>

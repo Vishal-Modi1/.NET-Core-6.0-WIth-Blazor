@@ -69,6 +69,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<FlightCategoryService>();
             builder.Services.AddScoped<CompanyDateFormatService>();
             builder.Services.AddScoped<LogBookService>();
+            builder.Services.AddScoped<DocumentDirectoryService>();
         }
     }
 }

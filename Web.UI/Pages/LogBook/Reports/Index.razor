@@ -1,0 +1,28 @@
+﻿@using Web.UI.Shared.Components;
+@using Telerik.ReportViewer.Blazor;
+
+@page "/reports"
+<style>
+    #rv1 {
+        position: relative;
+        width: 1200px;
+        height: 600px;
+    }
+</style>
+
+@{
+
+    var paramter = new Dictionary<string, object>();
+    paramter.Add("UserId", globalMembers.UserId);
+}
+
+<ReportViewer ViewerId="rv1"
+              ServiceUrl="/api/reports"
+              ReportSource="@(new ReportSourceOptions()
+                              {
+                                    Report = "LogBook.trdp",
+                                    Parameters = paramter
+                              })"
+              Parameters="@(new ParametersOptions { Editors = new EditorsOptions { MultiSelect = EditorType.ComboBox , SingleSelect = EditorType.ComboBox } })"
+              ScaleMode="@(ScaleMode.Specific)"
+              Scale="1.0" />

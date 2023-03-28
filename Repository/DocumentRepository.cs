@@ -1,158 +1,138 @@
-﻿using DataModels.Entities;
+﻿using AutoMapper;
+using DataModels.Entities;
 using DataModels.VM.Document;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
+using GlobalUtilities.Extensions;
 
 namespace Repository
 {
-    public class DocumentRepository : IDocumentRepository
+    public class DocumentRepository : BaseRepository<Document>, IDocumentRepository
     {
-        private MyContext _myContext;
+        private readonly MyContext _myContext;
+        private readonly IMapper _mapper;
 
-        public Document Create(Document document)
+        public DocumentRepository(MyContext dbContext, IMapper mapper)
+            : base(dbContext)
         {
-            using (_myContext = new MyContext())
-            {
-                document.Id = Guid.NewGuid();
+            this._myContext = dbContext;
+            _mapper = mapper;
+        }
 
-                _myContext.Documents.Add(document);
-                _myContext.SaveChanges();
+        public override Document Create(Document document)
+        {
+            document.Id = Guid.NewGuid();
 
-                return document;
-            }
+            _myContext.Documents.Add(document);
+            _myContext.SaveChanges();
+
+            return document;
         }
 
         public Document Edit(Document document)
         {
-            using (_myContext = new MyContext())
+            Document existingDocument = _myContext.Documents.Where(p => p.Id == document.Id).FirstOrDefault();
+
+            if (existingDocument == null)
             {
-                Document existingDocument = _myContext.Documents.Where(p=>p.Id == document.Id).FirstOrDefault();
-
-                if(existingDocument == null)
-                {
-                    return document;
-                }
-
-                existingDocument.Name = document.Name;
-                existingDocument.DisplayName = document.DisplayName;
-                existingDocument.ExpirationDate = document.ExpirationDate;
-                existingDocument.UpdatedOn = document.UpdatedOn;
-                existingDocument.UpdatedBy = document.UpdatedBy;
-                existingDocument.Type = document.Type;
-                existingDocument.ModuleId = document.ModuleId;
-                existingDocument.CompanyId = document.CompanyId;
-                existingDocument.UserId = document.UserId;
-                existingDocument.TagIds = document.TagIds;
-                existingDocument.LastShareDate = document.LastShareDate;
-                existingDocument.IsShareable = document.IsShareable;
-
-                _myContext.SaveChanges();
-
                 return document;
             }
+
+            _mapper.Map(document, existingDocument);
+            _myContext.SaveChanges();
+
+            return document;
         }
 
         public bool UpdateDocumentName(Guid id, string name)
         {
-            using (_myContext = new MyContext())
+            Document existingDocument = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+
+            if (existingDocument != null)
             {
-                Document existingDocument = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+                existingDocument.Name = name;
+                _myContext.SaveChanges();
 
-                if (existingDocument != null)
-                {
-                    existingDocument.Name = name;
-                    _myContext.SaveChanges();
-
-                    return true;
-                }
-
-                return false;
+                return true;
             }
-        }
 
-        public Document FindByCondition(Expression<Func<Document, bool>> predicate)
-        {
-            using (_myContext = new MyContext())
-            {
-                Document existingDocument = _myContext.Documents.Where(predicate).FirstOrDefault();
-                
-                return existingDocument;
-            }
+            return false;
         }
 
         public List<DocumentDataVM> List(DocumentDatatableParams datatableParams)
         {
-            using (_myContext = new MyContext())
-            {
-                List<DocumentDataVM> list;
+            List<DocumentDataVM> list;
 
-                string sql = $"EXEC dbo.GetDocumentsList @RoleId = {(short)datatableParams.UserRole}, @SearchValue = '{datatableParams.SearchText }'," +
-                    $"@PageNo = { datatableParams.Start }, " +
-                    $"@PageSize = {datatableParams.Length}, @SortColumn = '{datatableParams.SortOrderColumn}',@SortOrder = '{datatableParams.OrderType}', " +
-                    $"@IsPersonalDocument = {datatableParams.IsFromMyProfile},@CompanyId = {datatableParams.CompanyId},@ModuleId = {datatableParams.ModuleId}," +
-                    $"@UserId = {datatableParams.UserId},@AircraftId = {datatableParams.AircraftId.GetValueOrDefault()}, @DocumentType = '{datatableParams.DocumentType}'";
+            var param = new SqlParameter[] {
+                        new SqlParameter() { ParameterName = "@RoleId", Value = (short)datatableParams.UserRole},
+                        new SqlParameter() {ParameterName = "@SearchValue",Value = datatableParams.SearchText.EmptyStringIfNull()},
+                        new SqlParameter() {ParameterName = "@PageNo",Value = datatableParams.Start},
+                        new SqlParameter() {ParameterName = "@PageSize",Value = datatableParams.Length},
+                        new SqlParameter() {ParameterName = "@SortColumn",Value = datatableParams.SortOrderColumn},
+                        new SqlParameter() {ParameterName = "@SortOrder",Value = datatableParams.OrderType},
+                        new SqlParameter() {ParameterName = "@IsPersonalDocument",Value = datatableParams.IsFromMyProfile},
+                        new SqlParameter() {ParameterName = "@CompanyId",Value = datatableParams.CompanyId},
+                        new SqlParameter() {ParameterName = "@ModuleId",Value = datatableParams.ModuleId},
+                        new SqlParameter() {ParameterName = "@UserId",Value = datatableParams.UserId},
+                        new SqlParameter() {ParameterName = "@AircraftId",Value = datatableParams.AircraftId == null ? 0: datatableParams.AircraftId},
+                        new SqlParameter() {ParameterName = "@DocumentType",Value = datatableParams.DocumentType.EmptyStringIfNull()},
+                        new SqlParameter() {ParameterName = "@DocumentDirectoryId",Value = datatableParams.DocumentDirectoryId == null ? DBNull.Value : datatableParams.DocumentDirectoryId},
+            };
 
-                list = _myContext.DocumentDataVM.FromSqlRaw<DocumentDataVM>(sql).ToList();
+            string sql = "[dbo].[GetDocumentsList] @RoleId, @SearchValue,@PageNo,@PageSize,@SortColumn, @SortOrder, @IsPersonalDocument, @CompanyId, @ModuleId, @UserId, @AircraftId, @DocumentType, @DocumentDirectoryId";
 
-                return list;
-            }
+            list = _myContext.DocumentDataVM.FromSqlRaw(sql,param).ToList();
+
+            return list;
         }
 
         public void Delete(Guid id, long deletedBy)
         {
-            using (_myContext = new MyContext())
+            Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+
+            if (document != null)
             {
-                Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+                document.IsDeleted = true;
+                document.DeletedBy = deletedBy;
+                document.DeletedOn = DateTime.UtcNow;
 
-                if (document != null)
-                {
-                    document.IsDeleted = true;
-                    document.DeletedBy = deletedBy;
-                    document.DeletedOn = DateTime.UtcNow;
-
-                    _myContext.SaveChanges();
-                }
+                _myContext.SaveChanges();
             }
         }
 
         public long UpdateTotalDownloads(Guid id)
         {
-            using (_myContext = new MyContext())
+            Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+
+            if (document != null)
             {
-                Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+                document.TotalDownloads = document.TotalDownloads.GetValueOrDefault() + 1;
+                _myContext.SaveChanges();
 
-                if (document != null)
-                {
-                    document.TotalDownloads = document.TotalDownloads.GetValueOrDefault() + 1;
-                    _myContext.SaveChanges();
-
-                    return Convert.ToInt64(document.TotalDownloads);
-                }
-
-                return 0;
+                return Convert.ToInt64(document.TotalDownloads);
             }
+
+            return 0;
         }
 
         public long UpdateTotalShares(Guid id)
         {
-            using (_myContext = new MyContext())
+            Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+
+            if (document != null)
             {
-                Document document = _myContext.Documents.Where(p => p.Id == id).FirstOrDefault();
+                document.TotalShares = document.TotalShares.GetValueOrDefault() + 1;
+                _myContext.SaveChanges();
 
-                if (document != null)
-                {
-                    document.TotalShares = document.TotalShares.GetValueOrDefault() + 1;
-                    _myContext.SaveChanges();
-
-                    return Convert.ToInt64(document.TotalShares);
-                }
-
-                return 0;
+                return Convert.ToInt64(document.TotalShares);
             }
+
+            return 0;
         }
     }
 }

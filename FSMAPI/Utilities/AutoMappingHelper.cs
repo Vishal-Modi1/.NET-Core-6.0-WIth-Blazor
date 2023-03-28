@@ -2,6 +2,7 @@
 using DataModels.Entities;
 using DataModels.VM.Company.Settings;
 using DataModels.VM.Document;
+using DataModels.VM.Document.DocumentDirectory;
 using DataModels.VM.LogBook;
 using DataModels.VM.Scheduler;
 using DataModels.VM.Weather;
@@ -29,6 +30,9 @@ namespace FSMAPI.Utilities
             CreateMap<LogBookFlightPhotoVM, LogBookFlightPhoto>().ReverseMap();
             CreateMap<LogBookCrewPassengerVM, LogBookCrewPassenger>().ReverseMap();
             CreateMap<CrewPassengerVM, CrewPassenger>().ReverseMap();
+            CreateMap<DocumentDirectoryVM, DocumentDirectory>().ReverseMap();
+            CreateMap<DocumentVM, Document>().ReverseMap();
+            CreateMap<Document, Document>().ReverseMap();
         }
     }
 }

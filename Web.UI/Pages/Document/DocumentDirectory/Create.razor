@@ -1,0 +1,53 @@
+﻿@using DataModels.VM.Document
+@using DataModels.Enums
+@using DataModels.VM.Common;
+@using DataModels.Constants;
+
+<style>
+    .addTag {
+        margin: 5px 0px 8px 0px
+    }
+</style>
+<TelerikForm Model="@documentDirectory" OnValidSubmit="@Save">
+
+    <FormValidation>
+
+        <CustomValidationSummary> </CustomValidationSummary>
+
+    </FormValidation>
+
+    <FormItems>
+
+        <div class="row my-3">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Directory Name</label>
+                      
+                        <TelerikTextBox Id="name" @bind-Value="@documentDirectory.Name" PlaceHolder="Directory Name"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => documentDirectory.Name)"></TelerikValidationMessage>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="hr-gray mt-3 mb-3" />
+    </FormItems>
+
+    <FormButtons>
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+
+                <FormFooterComponent id="@documentDirectory.Id" IsSubmitButtonLoading="@isBusySubmitButton" CloseDialogCallBack="@CloseDialog">
+                </FormFooterComponent>
+            </div>
+        </div>
+
+    </FormButtons>
+
+</TelerikForm>
+

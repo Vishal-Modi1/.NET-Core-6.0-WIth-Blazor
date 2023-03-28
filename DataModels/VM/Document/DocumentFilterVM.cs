@@ -16,6 +16,5 @@ namespace DataModels.VM.Document
         public long UserId { get; set; }
 
         public string DocumentType { get; set; }
-
     }
 }

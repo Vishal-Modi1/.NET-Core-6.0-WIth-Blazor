@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Web.UI.Extensions
+namespace GlobalUtilities.Extensions
 {
     public static class DateHelper
     {

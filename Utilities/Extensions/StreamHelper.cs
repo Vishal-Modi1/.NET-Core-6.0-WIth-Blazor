@@ -1,4 +1,4 @@
-﻿namespace Web.UI.Extensions
+﻿namespace GlobalUtilities.Extensions
 {
     public static class StreamHelper
     {
