@@ -12,20 +12,28 @@
 }
 
 <div class="row my-0">
-       <div class="col-md-12 col-lg-3 col-12 my-0 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
-        <div class="card p-0 no-box-shadow">
-            <div class="card-body p-0 ">
-                <Web.UI.Pages.Document.DocumentDirectory.DocumentDirectoryLeftPanel 
-                RefreshGridCallBack="@RefreshGrid"  @ref=documentDirectoryLeftPanel />
+    <div class="col-12 my-0 col-lg-3 col-md-12 col-xl-2 @(isLeftBarVisible ? "":"d-none")">
+
+        <div class="p-0 m-0 mb-2">
+            <div class="p-0 m-0">
+
+                <Web.UI.Pages.Document.DocumentDirectory.DocumentDirectoryLeftPanel RefreshGridCallBack="@RefreshGrid" @ref=documentDirectoryLeftPanel />
             </div>
         </div>
 
     </div>
-    <div class="col-md-12  col-12 my-0 @(isLeftBarVisible ? "col-lg-9 ps-0 col-xl-10":"col-lg-12")">
+
+    @{
+        string cssClass = isLeftBarVisible ? "col-lg-9 col-xl-10 ps-0" : "col-lg-12";
+    }
+
+    <div class="col-md-12 col-12 my-0 @cssClass">
         <div class="cursor-pointer  mb-2" @onclick=@(() => ToggleLeftPane())>
+           
             <FontLabel fontColor="#0D89DD" fontSize="12px">
                 <CustomIcons PrimaryColor="#0D89DD" IconName="toggle-hamburg"></CustomIcons> Toggle Left Pane
             </FontLabel>
+
         </div>
         <div class="card p-0  no-box-shadow">
             <div class="card-body p-0">
