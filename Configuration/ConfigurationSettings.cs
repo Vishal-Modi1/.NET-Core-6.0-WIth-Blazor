@@ -117,6 +117,16 @@ namespace Configuration
             get => configuration.GetValue<string>("AirportAPIURL");
         }
 
+        public string SwaggerUserName
+        {
+            get => configuration.GetValue<string>("SwaggerUserName");
+        }
+
+        public string SwaggerPassword
+        {
+            get => configuration.GetValue<string>("SwaggerPassword");
+        }
+
         public MailSettingConfig MailSetting
         {
             get => MailSettingConfig.Instance;

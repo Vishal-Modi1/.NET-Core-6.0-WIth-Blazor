@@ -167,8 +167,6 @@ builder.Services.AddCustomServices();
 
 //Repositories
 builder.Services.AddCustomRepositories();
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -186,6 +184,7 @@ Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.UserProfileImag
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.Document);
 Directory.CreateDirectory(uploadsPath + "\\" + UploadDirectories.CompanyLogo);
 
+app.UseSwaggerAuthorized();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 
@@ -208,9 +207,7 @@ app.UseDirectoryBrowser(new DirectoryBrowserOptions
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
 app.UseIpRateLimiting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
