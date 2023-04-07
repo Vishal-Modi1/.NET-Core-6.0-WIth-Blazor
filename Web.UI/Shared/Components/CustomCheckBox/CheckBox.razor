@@ -1,0 +1,30 @@
+﻿@*@if (IsSelected)
+{
+    <input type="checkbox" id=@Id checked="checked" @onchange="(e => CheckboxChangedAsync(e, item.item))"
+       style="height:18px;width:18px;">
+}
+else
+{
+    <input type="checkbox" id=@Id @onchange="(e => CheckboxChangedAsync(e, item.item))"
+       style="height:18px;width:18px;">
+}
+
+@code {
+
+    [Parameter] public bool IsSelected { get; set; }
+
+    [Parameter] public string Id { get; set; }
+
+    [Parameter] public EventCallback<EventCallBackArg> CheckboxChangedCallBack { get; set; }
+
+    public async Task CheckboxChangedAsync(ChangeEventArgs e, DropDownLargeValues selectedValue, bool isFromModalPopup = false)
+        {
+            selectedValue.IsSelected = (bool)e.Value;
+
+            if (isFromModalPopup)
+                return;
+
+            await RefreshGrid();
+        }
+}
+*@

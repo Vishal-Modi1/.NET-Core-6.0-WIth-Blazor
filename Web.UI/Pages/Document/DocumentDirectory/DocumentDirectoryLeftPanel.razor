@@ -67,7 +67,7 @@
 
                 @foreach (DocumentDirectorySummaryVM documentDirectoryVM in documentDirectories)
                 {
-                    <div class="p-2" style="cursor:pointer" @onclick="() => RefreshGrid(documentDirectoryVM.Id)" style="cursor:pointer">
+                    <div class="p-2" style="cursor:pointer" @onclick="() => RefreshGrid(documentDirectoryVM.DocumentDirectoryId)">
                         <div class="row d-flex justify-content-between align-items-center logList">
                             <span class="d-flex justify-content-between align-items-center">
 

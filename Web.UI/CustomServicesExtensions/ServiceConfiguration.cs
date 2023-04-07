@@ -70,6 +70,7 @@ namespace Web.UI.CustomServicesExtensions
             builder.Services.AddScoped<CompanyDateFormatService>();
             builder.Services.AddScoped<LogBookService>();
             builder.Services.AddScoped<DocumentDirectoryService>();
+            builder.Services.AddScoped<DocumentTagService>();
         }
     }
 }

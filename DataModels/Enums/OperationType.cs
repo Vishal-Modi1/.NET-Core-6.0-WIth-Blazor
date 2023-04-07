@@ -16,5 +16,6 @@
         UnCheckOut = 12,
         Archive = 13,
         DocumentTagCreate = 14,
+        DocumentTagFilter = 15,
     }
 }

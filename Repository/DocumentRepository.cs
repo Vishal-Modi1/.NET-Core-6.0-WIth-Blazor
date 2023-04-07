@@ -68,25 +68,30 @@ namespace Repository
         {
             List<DocumentDataVM> list;
 
-            var param = new SqlParameter[] {
-                        new SqlParameter() { ParameterName = "@RoleId", Value = (short)datatableParams.UserRole},
-                        new SqlParameter() {ParameterName = "@SearchValue",Value = datatableParams.SearchText.EmptyStringIfNull()},
-                        new SqlParameter() {ParameterName = "@PageNo",Value = datatableParams.Start},
-                        new SqlParameter() {ParameterName = "@PageSize",Value = datatableParams.Length},
-                        new SqlParameter() {ParameterName = "@SortColumn",Value = datatableParams.SortOrderColumn},
-                        new SqlParameter() {ParameterName = "@SortOrder",Value = datatableParams.OrderType},
-                        new SqlParameter() {ParameterName = "@IsPersonalDocument",Value = datatableParams.IsFromMyProfile},
-                        new SqlParameter() {ParameterName = "@CompanyId",Value = datatableParams.CompanyId},
-                        new SqlParameter() {ParameterName = "@ModuleId",Value = datatableParams.ModuleId},
-                        new SqlParameter() {ParameterName = "@UserId",Value = datatableParams.UserId},
-                        new SqlParameter() {ParameterName = "@AircraftId",Value = datatableParams.AircraftId == null ? 0: datatableParams.AircraftId},
-                        new SqlParameter() {ParameterName = "@DocumentType",Value = datatableParams.DocumentType.EmptyStringIfNull()},
-                        new SqlParameter() {ParameterName = "@DocumentDirectoryId",Value = datatableParams.DocumentDirectoryId == null ? DBNull.Value : datatableParams.DocumentDirectoryId},
-            };
+            //var param = new SqlParameter[] {
+            //            new SqlParameter() { ParameterName = "@RoleId", Value = (short)datatableParams.UserRole},
+            //            new SqlParameter() {ParameterName = "@SearchValue",Value = datatableParams.SearchText.EmptyStringIfNull()},
+            //            new SqlParameter() {ParameterName = "@PageNo",Value = datatableParams.Start},
+            //            new SqlParameter() {ParameterName = "@PageSize",Value = datatableParams.Length},
+            //            new SqlParameter() {ParameterName = "@SortColumn",Value = datatableParams.SortOrderColumn},
+            //            new SqlParameter() {ParameterName = "@SortOrder",Value = datatableParams.OrderType},
+            //            new SqlParameter() {ParameterName = "@IsPersonalDocument",Value = datatableParams.IsFromMyProfile},
+            //            new SqlParameter() {ParameterName = "@CompanyId",Value = datatableParams.CompanyId},
+            //            new SqlParameter() {ParameterName = "@ModuleId",Value = datatableParams.ModuleId},
+            //            new SqlParameter() {ParameterName = "@UserId",Value = datatableParams.UserId},
+            //            new SqlParameter() {ParameterName = "@AircraftId",Value = datatableParams.AircraftId == null ? 0: datatableParams.AircraftId},
+            //            new SqlParameter() {ParameterName = "@DocumentType",Value = datatableParams.DocumentType.EmptyStringIfNull()},
+            //            new SqlParameter() {ParameterName = "@DocumentTagIds",Value = datatableParams.TagIds.EmptyStringIfNull()}
+            //};
 
-            string sql = "[dbo].[GetDocumentsList] @RoleId, @SearchValue,@PageNo,@PageSize,@SortColumn, @SortOrder, @IsPersonalDocument, @CompanyId, @ModuleId, @UserId, @AircraftId, @DocumentType, @DocumentDirectoryId";
+            string sql = $"[dbo].[GetDocumentsList] @RoleId = {(short)datatableParams.UserRole}, @SearchValue = '{datatableParams.SearchText.EmptyStringIfNull()}'" +
+                $",@PageNo = {datatableParams.Start},@PageSize = {datatableParams.Length},@SortColumn = '{datatableParams.SortOrderColumn}', @SortOrder = '{datatableParams.OrderType}'," +
+                $" @IsPersonalDocument = {datatableParams.IsFromMyProfile},@IsIgnoreTagFilter = {datatableParams.IsIgnoreTagFilter}, @IncludeDocumentsWithoutTags = {datatableParams.IncludeDocumentsWithoutTags}" +
+                $",@CompanyId = {datatableParams.CompanyId}, @ModuleId = {datatableParams.ModuleId}, @UserId = {datatableParams.UserId}" +
+                $", @AircraftId = {datatableParams.AircraftId.GetValueOrDefault()}, @DocumentType = '{datatableParams.DocumentType.EmptyStringIfNull()}'," +
+                $" @DocumentTagIds = '{datatableParams.TagIds.EmptyStringIfNull()}'";
 
-            list = _myContext.DocumentDataVM.FromSqlRaw(sql,param).ToList();
+            list = _myContext.DocumentDataVM.FromSqlRaw(sql).ToList();
 
             return list;
         }

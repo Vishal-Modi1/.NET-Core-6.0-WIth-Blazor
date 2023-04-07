@@ -1,0 +1,83 @@
+﻿
+<div class="row my-2 mx-1">
+
+    <div class="col-4 mb-3">
+        <label class="container px-0 my-0 d-flex align-center" for="selectAllCheckbox">
+
+            @if (LeftPanel.selectAllValue)
+            {
+                <input type="checkbox" id="selectAllCheckbox" checked="checked" @onchange="(e => LeftPanel.ValueChanged((bool)e.Value, true))"
+                   style="height:18px;width:18px;">
+            }
+            else
+            {
+                <input type="checkbox" id="selectAllCheckbox" @onchange="(e => LeftPanel.ValueChanged((bool)e.Value, true))"
+                   style="height:18px;width:18px;">
+            }
+            &nbsp; All
+        </label>
+    </div>
+    <div class="col-4 mb-3">
+
+        <label class="container px-0 my-0 d-flex align-center " for="includeDocumentsWithoutTagsLeft">
+
+            @if (LeftPanel.includeDocumentsWithoutTags)
+            {
+                <input type="checkbox" id="includeDocumentsWithoutTagsLeft" checked="checked" @onchange="(e => LeftPanel.IncludeDocumentsWithoutTagsCheckboxChangedAsync((bool)e.Value, true))"
+                   style="height:18px;width:18px;">
+            }
+            else
+            {
+                <input type="checkbox" id="includeDocumentsWithoutTagsLeft" @onchange="(e => LeftPanel.IncludeDocumentsWithoutTagsCheckboxChangedAsync((bool)e.Value, true))"
+                   style="height:18px;width:18px;">
+            }
+            &nbsp; Documents Without Tags
+        </label>
+
+    </div>
+
+    @foreach (var item in LeftPanel.documentTagsList.Select((item, flightCategories) => new { item, flightCategories }))
+    {
+        <div class="col-4 mb-3">
+
+            <label class="container px-0 my-0 d-flex align-center" for="@item.item.Id">
+
+                @if (item.item.IsSelected)
+                {
+                    <input type="checkbox" id="@item.item.Id" checked="checked" @onchange="(e => LeftPanel.CheckboxChangedAsync(e, item.item, true))"
+                   style="height:18px;width:18px;">
+                }
+                else
+                {
+                    <input type="checkbox" id="@item.item.Id" @onchange="(e => LeftPanel.CheckboxChangedAsync(e, item.item, true))"
+                   style="height:18px;width:18px;">
+                }
+
+                &nbsp; @item.item.TagName (@item.item.TotalDocuments) &nbsp; 
+
+                @if (item.item.IsAllowToEdit)
+                {
+                    <span @onclick:stopPropagation="true" @onclick:preventDefault="true" @onclick="() => LeftPanel.OpenCreateDocumentTagDialog(item.item, true)" style="cursor:pointer">
+                        <CustomIcons IconName="grid-edit" PrimaryColor="#03AAFC"></CustomIcons>
+                    </span>
+                }
+            </label>
+
+        </div>
+    }
+
+</div>
+
+<div class="row">
+    <hr class="hr-gray mt-3 mb-3">
+    <div class="col d-flex justify-content-end">
+        <TelerikButton Class="btn k-btn-primary" ThemeColor="primary" OnClick="() => Filter()" Enabled="@(!isBusyAddButton)">
+            <CustomIcons IconName="search" PrimaryColor="White"></CustomIcons> Filter
+            <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyAddButton">
+            </TelerikLoader>
+        </TelerikButton>
+    </div>
+</div>
+
+
+

@@ -3,6 +3,7 @@
     public class DocumentDirectorySummaryVM
     {
         public long Id { get; set; }
+        public long? DocumentDirectoryId { get; set; }
 
         public string Name { get; set; }
 

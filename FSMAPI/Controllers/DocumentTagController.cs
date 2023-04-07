@@ -26,19 +26,26 @@ namespace FSMAPI.Controllers
         }
 
         [HttpGet]
-        [Route("list")]
-        public IActionResult List()
+        [Route("listByCompanyId")]
+        public IActionResult List(int companyId)
         {
-            CurrentResponse response = _documentTagService.List();
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+
+             long userId = _jWTTokenGenerator.GetUserId();
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                companyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _documentTagService.ListByCompanyId(companyId, userId, role);
 
             return APIResponse(response);
         }
 
         [HttpGet]
-        [Route("listdropdownvalues")]
+        [Route("listDropdownValues")]
         public IActionResult ListDropdownValuesByCompanyId(int companyId)
         {
-
             string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
@@ -63,6 +70,32 @@ namespace FSMAPI.Controllers
             }
 
             CurrentResponse response = _documentTagService.Create(documentTagVM);
+
+            return APIResponse(response);
+        }
+
+        [HttpPost]
+        [Route("edit")]
+        public IActionResult Edit(DocumentTagVM documentTagVM)
+        {
+            documentTagVM.UpdatedBy = _jWTTokenGenerator.GetUserId();
+
+            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
+            {
+                documentTagVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            }
+
+            CurrentResponse response = _documentTagService.Edit(documentTagVM);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("findById")]
+        public IActionResult FindById(int id)
+        {
+            CurrentResponse response = _documentTagService.FindById(id);
 
             return APIResponse(response);
         }

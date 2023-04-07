@@ -6,18 +6,19 @@ namespace Repository.Interface
 {
     public interface IBaseRepository<TEntity>
     {
-        List<TEntity> SearchFor(Expression<Func<TEntity, bool>> predicate);
+        abstract List<TEntity> SearchFor(Expression<Func<TEntity, bool>> predicate);
 
-        List<TEntity> ListAll();
+        abstract List<TEntity> ListAll();
 
-        TEntity FindByCondition(Expression<Func<TEntity, bool>> predicate);
+        abstract TEntity FindByCondition(Expression<Func<TEntity, bool>> predicate);
 
-        TEntity GetById(long id);
+        abstract TEntity GetById(long id);
 
-        TEntity GetById(int id);
+        abstract TEntity GetById(int id);
 
-        TEntity GetById(byte id);
+        abstract TEntity GetById(byte id);
 
         abstract TEntity Create(TEntity entity);
     }
 }
+ 

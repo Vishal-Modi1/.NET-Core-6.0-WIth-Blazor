@@ -17,6 +17,7 @@ namespace Web.UI.Pages.Document
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
 
+        DocumentTagVM _documentTagVM { get; set; }
         List<long> selectedTags = new List<long>();
 
         string uploadedFilePath = "";
@@ -44,6 +45,9 @@ namespace Web.UI.Pages.Document
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             string token = _currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result;
 
+            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
+            //selectedTags = documentData.DocumentVsDocumentTags.Select(p => Convert.ToInt64(p.DocumentTagId)).ToList();
+
             if (!string.IsNullOrWhiteSpace(documentData.Tags))
             {
                 selectedTags = documentData.Tags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => Convert.ToInt64(p)).ToList();
@@ -54,7 +58,7 @@ namespace Web.UI.Pages.Document
             maxSizeInMB = (int)ConfigurationSettings.Instance.MaxDocumentUploadSize / (1024 * 1024);
             errorMessage = $"File size exceeds maximum limit {maxSizeInMB} MB.";
 
-            isFileAdded = !string.IsNullOrWhiteSpace(documentData.DisplayName);  
+            isFileAdded = !string.IsNullOrWhiteSpace(documentData.DisplayName);
             base.OnInitialized();
         }
 
@@ -68,10 +72,9 @@ namespace Web.UI.Pages.Document
             documentData.CompanyId = value;
             ChangeLoaderVisibilityAction(true);
 
-            dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             documentData.UsersList = await UserService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
-            documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
-            documentData.DocumentDirectoriesList = await DocumentDirectoryService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
+            documentData.DocumentTagsList = await DocumentTagService.ListDropdownValues(dependecyParams, documentData.CompanyId);
+            //    documentData.DocumentDirectoriesList = await DocumentDirectoryService.ListDropDownValuesByCompanyId(dependecyParams, documentData.CompanyId);
 
             ChangeLoaderVisibilityAction(false);
             base.StateHasChanged();
@@ -136,6 +139,7 @@ namespace Web.UI.Pages.Document
             multiContent.Add(new StringContent(documentData.Size.ToString()), "Size");
             multiContent.Add(new StringContent(documentData.ExpirationDate.ToString()), "ExpirationDate");
             multiContent.Add(new StringContent(documentData.LastShareDate.ToString()), "LastShareDate");
+            multiContent.Add(new StringContent(documentData.CreatedBy.ToString()), "CreatedBy");
 
             if (selectedTags != null)
             {
@@ -144,7 +148,6 @@ namespace Web.UI.Pages.Document
 
             multiContent.Add(new StringContent(documentData.IsShareable.ToString()), "IsShareable");
 
-            DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await DocumentService.UploadDocumentAsync(dependecyParams, multiContent);
 
             isBusySubmitButton = false;
@@ -214,8 +217,8 @@ namespace Web.UI.Pages.Document
                 byte[] fileData = File.ReadAllBytes(uploadedFilePath);
                 documentData.Size = Convert.ToInt64(fileData.Length / 1024);
                 documentData.DisplayName = Path.GetFileName(uploadedFilePath);
-                documentData.Type = Path.GetExtension(uploadedFilePath).Substring(1); 
-                
+                documentData.Type = Path.GetExtension(uploadedFilePath).Substring(1);
+
                 isFileAdded = true;
             }
             catch (Exception ex)
@@ -229,15 +232,26 @@ namespace Web.UI.Pages.Document
 
         public async Task OpenCreateTagDialogAsync()
         {
-            if (globalMembers.IsSuperAdmin && documentData.CompanyId == 0)
+            ChangeLoaderVisibilityAction(true);
+
+            operationType = OperationType.Create;
+            childPopupTitle = "Create Tag";
+
+            _documentTagVM = new DocumentTagVM();
+
+            if (globalMembers.IsSuperAdmin)
             {
-                globalMembers.UINotification.DisplayCustomErrorNotification(globalMembers.UINotification.Instance, "Please select company.");
+                _documentTagVM.CompniesList = await CompanyService.ListDropDownValues(dependecyParams);
             }
             else
             {
-                popupTitle = "Create Tag";
-                isDisplayChildPopup = true;
+                _documentTagVM.CompanyId = globalMembers.CompanyId;
             }
+
+            isDisplayChildPopup = true;
+            ChangeLoaderVisibilityAction(false);
+
+            base.StateHasChanged();
         }
 
         public void CloseDialog(bool reloadGrid)
@@ -251,8 +265,7 @@ namespace Web.UI.Pages.Document
 
             if (reloaList)
             {
-                DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-                documentData.DocumentTagsList = await DocumentService.ListDocumentTagDropdownValues(dependecyParams, documentData.CompanyId);
+                documentData.DocumentTagsList = await DocumentTagService.ListDropdownValues(dependecyParams, documentData.CompanyId);
             }
         }
     }

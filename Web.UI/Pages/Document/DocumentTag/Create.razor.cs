@@ -3,22 +3,22 @@ using Web.UI.Extensions;
 using DataModels.VM.Document;
 using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
+using Telerik.Blazor.Components;
+using Telerik.Blazor;
 
 namespace Web.UI.Pages.Document.DocumentTag
 {
     public partial class Create
     {
-        DocumentTagVM documentTagVM = new DocumentTagVM();
+        [Parameter] public DocumentTagVM documentTagVM { get; set; }
         [Parameter] public EventCallback<bool> CloseDialogCallBack { get; set; }
-        [Parameter] public int CompanyId { get; set; }
 
         public async Task Submit()
         {
             isBusySubmitButton = true;
 
-            documentTagVM.CompanyId = CompanyId;
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
-            CurrentResponse response = await DocumentService.SaveTagAsync(dependecyParams, documentTagVM);
+            CurrentResponse response = await DocumentTagService.SaveandUpdateAsync(dependecyParams, documentTagVM);
 
             globalMembers.UINotification.DisplayNotification(globalMembers.UINotification.Instance, response);
 

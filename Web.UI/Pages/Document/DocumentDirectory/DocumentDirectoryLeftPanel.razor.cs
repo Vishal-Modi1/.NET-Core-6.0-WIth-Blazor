@@ -40,7 +40,7 @@ namespace Web.UI.Pages.Document.DocumentDirectory
             popupTitle = "Create Directory";
 
             _documentDirectoryVM = new DocumentDirectoryVM(); 
-            _documentDirectoryVM.Id = documentDirectorySummary.Id;
+            _documentDirectoryVM.Id = documentDirectorySummary.DocumentDirectoryId.GetValueOrDefault();
             _documentDirectoryVM.Name = documentDirectorySummary.Name;
             _documentDirectoryVM.CompanyId = documentDirectorySummary.CompanyId;
         }

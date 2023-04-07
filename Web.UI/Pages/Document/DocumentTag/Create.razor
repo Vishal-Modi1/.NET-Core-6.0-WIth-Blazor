@@ -12,15 +12,52 @@
 
         <input type="hidden" value="@documentTagVM.Id" name="Id" />
 
-        <div class="row">
-            <div class="col-md-12 align-items-center d-flex">
-                <label for="name" class="k-label k-form-label">Tag Name</label>
+        @if (@documentTagVM.Id > 0)
+        {
+            <div class="alert alert-warning" role="alert" style="padding-bottom:0px !important">
+                <p>The tag name you are attempting to rename is currently being used by other users.</p>
             </div>
-            <div class="col-md-12">
+        }
+
+        @if (globalMembers.IsSuperAdmin && !documentTagVM.IsGlobalTag)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <label>Company</label>
+                    <TelerikComboBox Id=companyId Data="@documentTagVM.CompniesList" TextField="Name" Enabled="@(documentTagVM.Id == 0)"
+                                 Filterable="true" FilterOperator="@StringFilterOperator.Contains"
+                                 Placeholder="Select Company" ValueField="Id"
+                                 @bind-Value="@documentTagVM.CompanyId">
+                    </TelerikComboBox>
+
+                    <TelerikValidationMessage For="@(() => documentTagVM.CompanyId)"></TelerikValidationMessage>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-12">
+                <label>Tag Name</label>
+
                 <TelerikTextBox Id="name" @bind-Value="@documentTagVM.TagName" PlaceHolder="Tag Name"></TelerikTextBox>
                 <TelerikValidationMessage For="@(() => documentTagVM.TagName)"></TelerikValidationMessage>
             </div>
         </div>
+
+        @if (globalMembers.IsSuperAdmin)
+        {
+            <div class="row">
+                <div class="col-12">
+
+                    <label class="container px-0 my-0  d-flex align-center" for="isGlobalTag">
+                        <input type="checkbox" id="isGlobalTag" @bind="@documentTagVM.IsGlobalTag" style="height:18px;width:18px;">
+                        &nbsp; Is Global Tag
+                    </label>
+
+                </div>
+            </div>
+        }
+
         <hr class="hr-gray mt-3 mb-3" />
     </FormItems>
     <FormButtons>

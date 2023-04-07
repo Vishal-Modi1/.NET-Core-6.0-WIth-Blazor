@@ -45,9 +45,10 @@ namespace Service
                     document.LastShareDate = null;
                 }
 
-                document.TagIds = GetDocumentTagIds(documentVM.Tags, documentVM.CreatedBy);
-
                 document = _documentRepository.Create(document);
+                List<DocumentVsDocumentTag> tags = GetDocumentTags(documentVM.Tags, document.Id);
+                _documentTagRepository.Create(tags, document.Id);
+
                 CreateResponse(document, HttpStatusCode.OK, "Document details added successfully");
 
                 return _currentResponse;
@@ -60,39 +61,19 @@ namespace Service
             }
         }
 
-        private string GetDocumentTagIds(string documentTags, long createdBy)
+        private List<DocumentVsDocumentTag> GetDocumentTags(string documentTags, Guid documentId)
         {
             string ids = "";
 
+            List<DocumentVsDocumentTag> tags = new List<DocumentVsDocumentTag>();
             string[] listTags = documentTags.Split(",",StringSplitOptions.RemoveEmptyEntries);
 
-            List<DocumentTagVM> existingTagsList = _documentTagRepository.ListByCondition(p => p.IsActive == true && p.IsDeleted == false && listTags.Contains(p.TagName));
-
-            List<DocumentTag> documentTagsList = new List<DocumentTag>();
-
-            foreach (string tagName in listTags)
+            foreach (string tag in listTags)
             {
-                if(existingTagsList.Where(p=>p.TagName == tagName).Count() > 0)
-                {
-                    continue;
-                }
-
-                DocumentTag documentTag = new DocumentTag();
-
-                documentTag.TagName = tagName;
-                documentTag.CreatedOn = DateTime.UtcNow;
-                documentTag.CreatedBy = createdBy;
-                documentTag.IsActive = true;
-                documentTagsList.Add(documentTag);
+                tags.Add(new DocumentVsDocumentTag() { DocumentId = documentId,DocumentTagId = Convert.ToInt32(tag)});
             }
 
-             _documentTagRepository.Create(documentTagsList);
-
-            existingTagsList = _documentTagRepository.ListByCondition(p => p.IsActive == true && p.IsDeleted == false  && listTags.Contains(p.TagName));
-
-            ids = String.Join("," ,existingTagsList.Select(p => p.Id));
-
-            return ids;
+            return tags;
         }
 
         public CurrentResponse Edit(DocumentVM documentVM)
@@ -101,8 +82,9 @@ namespace Service
             {
                 Document document = ToDataObject(documentVM);
 
-                document.TagIds = GetDocumentTagIds(documentVM.Tags, documentVM.UpdatedBy.GetValueOrDefault());
                 document = _documentRepository.Edit(document);
+                List<DocumentVsDocumentTag> tags = GetDocumentTags(documentVM.Tags, document.Id);
+                _documentTagRepository.Create(tags, document.Id);
                 CreateResponse(document, HttpStatusCode.OK, "Document details updated successfully");
 
                 return _currentResponse;
@@ -342,30 +324,15 @@ namespace Service
 
         private DocumentVM ToBusinessObject(Document document)
         {
-            //DocumentVM documentVM = new DocumentVM();
-
-            //documentVM.Id = document.Id;
-            //documentVM.Name = document.Name;
-            //documentVM.DisplayName = document.DisplayName;
-            //documentVM.ExpirationDate = document.ExpirationDate;
-            //documentVM.CompanyId = document.CompanyId;
-            //documentVM.UserId = document.UserId;
-            //documentVM.ModuleId = document.ModuleId;
-            //documentVM.Type = document.Type;
-            //documentVM.TotalDownloads = document.TotalDownloads;
-            //documentVM.TotalShares = document.TotalShares;
-            //documentVM.LastShareDate = document.LastShareDate;
-            //documentVM.IsShareable = document.IsShareable;
 
             DocumentVM documentVM = _mapper.Map<DocumentVM>(document);
+            documentVM.DocumentVsDocumentTags = _documentTagRepository.ListDocumentVsDocumentTagsByDocumentId(documentVM.Id);
 
-            if (!string.IsNullOrWhiteSpace(document.TagIds))
+            if(documentVM.DocumentVsDocumentTags != null)
             {
-                List<int> listTagIds = document.TagIds.Split(",").Select(p => Convert.ToInt32(p)).ToList();
-                List<DocumentTagVM> documentTags = _documentTagRepository.ListByCondition(p => p.IsActive == true && p.IsDeleted == false && listTagIds.Contains(p.Id));
-
-               documentVM.Tags = String.Join(",",documentTags.Select(p => p.TagName).ToList());
+                documentVM.Tags = String.Join(",", documentVM.DocumentVsDocumentTags.Select(p => p.DocumentTagId).ToList());
             }
+            
 
             return documentVM;
         }
@@ -373,24 +340,6 @@ namespace Service
         private Document ToDataObject(DocumentVM documentVM)
         {
             Document document = _mapper.Map<Document>(documentVM);
-
-            //document.Id = documentVM.Id;
-            //document.Name = documentVM.Name == null ? "" : documentVM.Name;
-            //document.DisplayName = documentVM.DisplayName == null ? "" : documentVM.DisplayName;
-            //document.ExpirationDate = documentVM.ExpirationDate;
-            //document.CompanyId = documentVM.CompanyId;
-            //document.UserId = documentVM.UserId;
-            //document.ModuleId = documentVM.ModuleId;
-            //document.Type = documentVM.Type == null ? "" : documentVM.Type;
-            //document.Size = documentVM.Size;
-            //document.IsActive = true;
-            //document.LastShareDate = documentVM.LastShareDate;
-            //document.IsShareable = documentVM.IsShareable;
-            //document.AircraftId = documentVM.AircraftId;
-            //document.IsPersonalDocument = documentVM.IsPersonalDocument;
-
-            //document.CreatedBy = documentVM.CreatedBy;
-
             if (documentVM.Id == Guid.Empty)
             {
                 document.CreatedOn = DateTime.UtcNow;

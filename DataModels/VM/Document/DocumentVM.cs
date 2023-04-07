@@ -1,4 +1,5 @@
 ﻿using DataModels.CustomValidations;
+using DataModels.Entities;
 using DataModels.VM.Common;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,6 @@ namespace DataModels.VM.Document
         public bool IsPersonalDocument { get; set; }
 
         public string Tags { get; set; }
-
         public DateTime? ExpirationDate { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Company is required")]
@@ -48,14 +48,15 @@ namespace DataModels.VM.Document
 
         public long? DocumentDirectoryId { get; set; }
 
-        [NotMapped]
         public bool IsFromParentModule { get; set; }
+
+        public List<DocumentVsDocumentTag> DocumentVsDocumentTags { get; set; }
 
         public List<DropDownValues> ModulesList { get; set; }
         public List<DropDownLargeValues> UsersList { get; set; }
         public List<DropDownValues> CompniesList { get; set; }
 
-        public List<DropDownLargeValues> DocumentDirectoriesList { get; set; }
+      //  public List<DropDownLargeValues> DocumentDirectoriesList { get; set; }
 
         public List<DropDownLargeValues> DocumentTagsList { get; set; }
 

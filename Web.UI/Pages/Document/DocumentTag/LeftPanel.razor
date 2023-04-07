@@ -1,0 +1,157 @@
+﻿@using DataModels.Enums
+@using DataModels.VM.Common
+@using DataModels.VM.Document
+
+<CustomCollapseBar IsFilterBarVisible="isFilterBarVisible" HeaderClass="bg-white" CardClass="collapsebarcard"
+                   OnPanelCollapsed="@(() => {isFilterBarVisible = false;})"
+                   OnPanelExpanded="@(() => {isFilterBarVisible = true;})">
+    <HeaderContent>
+        <div class="d-flex justify-content-between">
+            <span class="my-0" style="font-weight:bold">
+                Tags
+            </span>
+            <span>
+                <span class="mx-2 my-1" @onclick:stopPropagation="true" @onclick:preventDefault="true"
+                      @onclick="() => OpenCreateDocumentTagDialog(new DocumentTagDataVM())">
+                    <span>
+                        <CustomIcons IconName="plus" PrimaryColor="black"> </CustomIcons>
+                    </span>
+                </span>
+
+                @if (isFilterBarVisible)
+                {
+                    <CustomIcons IconName="arrow-up" PrimaryColor="black" />
+                }
+                else
+                {
+                    <CustomIcons IconName="arrow-down" PrimaryColor="black" />
+                }
+            </span>
+        </div>
+
+    </HeaderContent>
+
+    <ChildContent>
+
+        <div class="my-2 mx-1">
+
+            <div class="d-flex justify-content-between my-1">
+
+                <label class="container px-0 my-0 d-flex align-center " for="selectAllCheckbox">
+
+                    @if (selectAllValue)
+                    {
+                        <input type="checkbox" id="selectAllCheckboxLeft" checked="checked" @onchange="(e => ValueChanged((bool)e.Value))"
+                           style="height:18px;width:18px;">
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="selectAllCheckboxLeft" @onchange="(e => ValueChanged((bool)e.Value))"
+                           style="height:18px;width:18px;">
+                    }
+                    &nbsp; All
+                </label>
+            </div>
+            <hr class="m-0" style="color:#808080f0 !important" />
+
+            <div class="d-flex justify-content-between my-1">
+
+                <label class="container px-0 my-0 d-flex align-center " for="includeDocumentsWithoutTagsLeft">
+
+                    @if (includeDocumentsWithoutTags)
+                    {
+                        <input type="checkbox" id="includeDocumentsWithoutTagsLeft" checked="checked" @onchange="(e => IncludeDocumentsWithoutTagsCheckboxChangedAsync((bool)e.Value))"
+                           style="height:18px;width:18px;">
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="includeDocumentsWithoutTagsLeft" @onchange="(e => IncludeDocumentsWithoutTagsCheckboxChangedAsync((bool)e.Value))"
+                           style="height:18px;width:18px;">
+                    }
+                    &nbsp; Documents Without Tags
+                </label>
+
+            </div>
+            <hr class="m-0" style="color:#808080f0 !important" />
+
+            @foreach (var item in documentTagsList.Select((item, flightCategories) => new { item, flightCategories }))
+            {
+                @if (item.flightCategories < 5)
+                {
+                    <div class="d-flex justify-content-between my-1">
+                        <label class="container px-0 my-0  d-flex align-center " for="@item.item.Id">
+
+                            @if (item.item.IsSelected)
+                            {
+                                <input type="checkbox" id="@("left" + item.item.Id)" checked="checked" @onchange="(e => CheckboxChangedAsync(e, item.item))"
+                           style="height:18px;width:18px;">
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="@("left" + item.item.Id)" @onchange="(e => CheckboxChangedAsync(e, item.item))"
+                           style="height:18px;width:18px;">
+                            }
+
+                            &nbsp; @item.item.TagName (@item.item.TotalDocuments)
+                        </label>
+
+                        @if (item.item.IsAllowToEdit)
+                        {
+                            <div>
+                                <span @onclick="() => OpenCreateDocumentTagDialog(item.item)" style="cursor:pointer" class="my-2">
+                                    <CustomIcons IconName="grid-edit" PrimaryColor="#03AAFC"></CustomIcons>
+                                </span>
+                            </div>
+                        }
+                    </div>
+                    <hr class="m-0" style="color:#808080f0 !important" />
+                }
+            }
+
+            <div class="d-flex justify-content-end my-1">
+                <div>
+                    <span @onclick="() => OpenDocumentTagFilterDialog()" style="cursor:pointer;color:#0D89DD" class="my-2">
+                        <u> View All</u>
+
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </ChildContent>
+</CustomCollapseBar>
+
+
+@if (isDisplayChildPopup)
+{
+    <CustomPopupComponent Title="@childPopupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="400px"
+                      OnClose="@(()=> {isDisplayChildPopup = false;})">
+        <Body>
+
+             <Web.UI.Pages.Document.DocumentTag.Create CloseDialogCallBack="@CloseDialog"
+                                                  documentTagVM="@_documentTagVM" />
+        </Body>
+    </CustomPopupComponent>
+}
+else if (isDisplayPopup)
+{
+    <CustomPopupComponent Title="@popupTitle"
+                      HeaderCssClass=@CustomPopupComponent.GetHeaderCssClass(operationType)
+                      CloseOnOutsideClick="false" Width="@popupWidth"
+                      OnClose="@(()=> {isDisplayPopup = false;})">
+        <Body>
+
+            @if (operationType == OperationType.Create || operationType == OperationType.Edit)
+            {
+                <Web.UI.Pages.Document.DocumentTag.Create CloseDialogCallBack="@CloseDialog"
+                                                  documentTagVM="@_documentTagVM" />
+            }
+            else
+            {
+                <Web.UI.Pages.Document.DocumentTag.TagsListFilter LeftPanel="this" />
+            }
+        </Body>
+    </CustomPopupComponent>
+}

@@ -32,15 +32,9 @@ namespace Repository
             }
 
             existingDocumentDirectory = _mapper.Map<DocumentDirectory>(documentDirectory);
-
-            //existingDocumentDirectory.Name = documentDirectory.Name;
-            //existingDocumentDirectory.CompanyId = documentDirectory.CompanyId;
-            //existingDocumentDirectory.UpdatedBy = documentDirectory.UpdatedBy;
-            //existingDocumentDirectory.UpdatedOn = documentDirectory.UpdatedOn;
-
             _myContext.SaveChanges();
 
-            return documentDirectory;
+            return existingDocumentDirectory;
         }
 
         public List<DocumentDirectorySummaryVM> ListWithCountByComapnyId(int companyId)

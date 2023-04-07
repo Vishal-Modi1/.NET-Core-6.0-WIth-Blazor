@@ -48,6 +48,8 @@ namespace Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<DocumentVsDocumentTag>(p => p.HasKey(p => new { p.DocumentTagId, p.DocumentId }));
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -108,6 +110,9 @@ namespace Repository
         public DbSet<Document> Documents { get; set; }
 
         public DbSet<DocumentTag> DocumentTags { get; set; }
+        public DbSet<DocumentTagDataVM> DocumentTagDataList { get; set; }    
+
+        public DbSet<DocumentVsDocumentTag> DocumentVsDocumentTags { get; set; }
 
         public DbSet<FlightTag> FlightTags { get; set; }
 

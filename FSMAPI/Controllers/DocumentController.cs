@@ -63,8 +63,9 @@ namespace FSMAPI.Controllers
             documentVM.Tags = form["Tags"].ToString();
             documentVM.AircraftId = Convert.ToInt64(form["AircraftId"].ToString());
             documentVM.IsPersonalDocument = Convert.ToBoolean(form["IsPersonalDocument"]);
+            documentVM.CreatedBy = Convert.ToInt64(form["CreatedBy"]);
 
-            if(documentVM.AircraftId == 0)
+            if (documentVM.AircraftId == 0)
             {
                 documentVM.AircraftId = null;
             }

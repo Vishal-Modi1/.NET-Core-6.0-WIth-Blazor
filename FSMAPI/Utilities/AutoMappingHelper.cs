@@ -33,6 +33,7 @@ namespace FSMAPI.Utilities
             CreateMap<DocumentDirectoryVM, DocumentDirectory>().ReverseMap();
             CreateMap<DocumentVM, Document>().ReverseMap();
             CreateMap<Document, Document>().ReverseMap();
+            CreateMap<DocumentTag, DocumentTag>().ReverseMap();
         }
     }
 }

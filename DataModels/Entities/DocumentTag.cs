@@ -8,6 +8,6 @@ namespace DataModels.Entities
 
         public string TagName { get; set; }
 
-        public int CompanyId { get; set; }
+        public int? CompanyId { get; set; }
     }
 }

@@ -17,17 +17,17 @@ namespace Repository
 			this._dbContext = dbContext;
 		}
 
-		public List<TEntity> SearchFor(Expression<Func<TEntity, bool>> predicate)
+		public virtual List<TEntity> SearchFor(Expression<Func<TEntity, bool>> predicate)
 		{
 			return _dbContext.Set<TEntity>().Where(predicate).ToList(); ;
 		}
 
-		public List<TEntity> ListAll()
+		public virtual List<TEntity> ListAll()
 		{
 			return _dbContext.Set<TEntity>().ToList(); 
 		}
 
-		public TEntity GetById(long id)
+		public virtual TEntity GetById(long id)
 		{
 			TEntity entity = _dbContext.Set<TEntity>().Find(id);
 			if (entity != null)
@@ -38,7 +38,7 @@ namespace Repository
 			return entity;
 		}
 
-		public TEntity GetById(int id)
+		public virtual TEntity GetById(int id)
 		{
 			TEntity entity = _dbContext.Set<TEntity>().Find(id);
 			if (entity != null)
@@ -49,7 +49,7 @@ namespace Repository
 			return entity;
 		}
 
-		public TEntity GetById(byte id)
+		public virtual TEntity GetById(byte id)
 		{
 			TEntity entity = _dbContext.Set<TEntity>().Find(id);
 			if (entity != null)
@@ -60,7 +60,7 @@ namespace Repository
 			return entity;
 		}
 
-		public TEntity FindByCondition(Expression<Func<TEntity, bool>> predicate)
+		public virtual TEntity FindByCondition(Expression<Func<TEntity, bool>> predicate)
         {
 			TEntity entity = _dbContext.Set<TEntity>().Where(predicate).FirstOrDefault();
 

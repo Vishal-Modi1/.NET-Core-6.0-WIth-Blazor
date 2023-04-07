@@ -12,6 +12,10 @@ namespace DataModels.VM.Document
 
         public string DocumentType { get; set; }
 
-        public long? DocumentDirectoryId { get; set; }
+        public string TagIds { get; set; }
+
+        public bool IsIgnoreTagFilter { get; set; }
+
+        public bool IncludeDocumentsWithoutTags { get; set; }
     }
 }

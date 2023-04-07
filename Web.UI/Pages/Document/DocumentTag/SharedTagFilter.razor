@@ -1,0 +1,83 @@
+﻿@using DataModels.Enums;
+@using DataModels.VM.Common;
+@using DataModels.VM.Document;
+@using Microsoft.AspNetCore.Components;
+@using Web.UI.Models.Document;
+@using Web.UI.Utilities;
+
+<h3>SharedTagFilter</h3>
+
+@code {
+
+    [Parameter] public EventCallback<TagFilterParamteres> RefreshGridCallBack { get; set; }
+
+    public List<DropDownLargeValues> documentTagsList { get; set; }
+    public TagFilterParamteres tagFilterParamteres = new TagFilterParamteres();
+    public bool includeDocumentsWithoutTags { get; set; } = true;
+
+    public async void CloseDialog(bool refreshList)
+    {
+        isDisplayPopup = false;
+
+        if (refreshList)
+        {
+            await LoadData();
+        }
+    }
+
+    public async Task CheckboxChangedAsync(ChangeEventArgs e, DropDownLargeValues selectedValue)
+    {
+        selectedValue.IsSelected = (bool)e.Value;
+        await RefreshGrid();
+    }
+
+    public async Task IncludeDocumentsWithoutTagsCheckboxChangedAsync(bool value)
+    {
+        includeDocumentsWithoutTags = value;
+        tagFilterParamteres.IncludeDocumentsWithoutTags = value;
+
+        await RefreshGrid();
+    }
+
+    public bool selectAllValue
+    {
+        get
+        {
+            tagFilterParamteres.IsIgnoreTagFilter = documentTagsList.All(eq => eq.IsSelected) && includeDocumentsWithoutTags;
+            return tagFilterParamteres.IsIgnoreTagFilter;
+        }
+    }
+
+    public async void ValueChanged(bool value)
+    {
+        documentTagsList.ForEach(eq =>
+        {
+            eq.IsSelected = value;
+        });
+
+        includeDocumentsWithoutTags = value;
+        tagFilterParamteres.IncludeDocumentsWithoutTags = value;
+
+        await RefreshGrid();
+    }
+
+    public async Task RefreshGrid()
+    {
+        tagFilterParamteres.TagIds = string.Join(",", documentTagsList.Where(p => p.IsSelected).Select(p => p.Id).ToList());
+        isDisplayPopup = false;
+        await RefreshGridCallBack.InvokeAsync(tagFilterParamteres);
+
+        base.StateHasChanged();
+    }
+
+    public async Task LoadData()
+    {
+        ChangeLoaderVisibilityAction(true);
+
+        documentTagsList = await DocumentTagService.ListDropdownValues(dependecyParams, globalMembers.CompanyId);
+        documentTagsList.ForEach(p => { p.IsSelected = true; });
+
+        ChangeLoaderVisibilityAction(false);
+    }
+
+}

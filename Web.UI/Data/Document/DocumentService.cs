@@ -64,38 +64,6 @@ namespace Web.UI.Data.Document
             return documentVM;
         }
 
-        public async Task<List<DocumentTagVM>> GetDocumentTagsList(DependecyParams dependecyParams)
-        {
-            dependecyParams.URL = $"documenttag/list";
-
-            var response = await _httpCaller.GetAsync(dependecyParams);
-
-            List<DocumentTagVM> documentTagsVM = new List<DocumentTagVM>();
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                documentTagsVM = JsonConvert.DeserializeObject<List<DocumentTagVM>>(response.Data.ToString());
-            }
-
-            return documentTagsVM;
-        }
-
-        public async Task<List<DropDownLargeValues>> ListDocumentTagDropdownValues(DependecyParams dependecyParams, int companyId)
-        {
-            dependecyParams.URL = $"documenttag/listdropdownvalues?companyId={companyId}";
-
-            var response = await _httpCaller.GetAsync(dependecyParams);
-
-            List<DropDownLargeValues> documentTagsVM = new List<DropDownLargeValues>();
-
-            if (response.Status == System.Net.HttpStatusCode.OK)
-            {
-                documentTagsVM = JsonConvert.DeserializeObject<List<DropDownLargeValues>>(response.Data.ToString());
-            }
-
-            return documentTagsVM;
-        }
-
         public async Task<CurrentResponse> SaveandUpdateAsync(DependecyParams dependecyParams, DocumentVM documentVM)
         {
             dependecyParams.JsonData = JsonConvert.SerializeObject(documentVM);
@@ -143,22 +111,6 @@ namespace Web.UI.Data.Document
             dependecyParams.URL = $"document/uploadfile";
 
             CurrentResponse response = await _httpCaller.PostFileAsync(dependecyParams, fileContent);
-
-            return response;
-        }
-
-        public async Task<CurrentResponse> SaveTagAsync(DependecyParams dependecyParams, DocumentTagVM documentTagVM)
-        {
-            dependecyParams.JsonData = JsonConvert.SerializeObject(documentTagVM);
-
-            dependecyParams.URL = "documenttag/create";
-
-            if (documentTagVM.Id > 0)
-            {
-                dependecyParams.URL = "documenttag/edit";
-            }
-
-            CurrentResponse response = await _httpCaller.PostAsync(dependecyParams);
 
             return response;
         }

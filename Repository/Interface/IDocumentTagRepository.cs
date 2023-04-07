@@ -7,18 +7,20 @@ using System.Linq.Expressions;
 
 namespace Repository.Interface
 {
-    public interface IDocumentTagRepository
+    public interface IDocumentTagRepository : IBaseRepository<DocumentTag>
     {
-        List<DocumentTagVM> List();
+        List<DocumentTagDataVM> ListByCompanyId(int companyId, long userId);
 
-        DocumentTag Create(DocumentTag documentTag);
-
-        List<DocumentTag> Create(List<DocumentTag> documentTagsList);
+        List<DocumentVsDocumentTag> Create(List<DocumentVsDocumentTag> documentTagsList, Guid documentId);
 
         List<DocumentTagVM> ListByCondition(Expression<Func<DocumentTag, bool>> predicate);
 
         DocumentTagVM FindByCondition(Expression<Func<DocumentTag, bool>> predicate);
 
+        DocumentTag Edit(DocumentTag documentTag);
+
         List<DropDownLargeValues> ListDropDownValues(int companyId);
+
+        List<DocumentVsDocumentTag> ListDocumentVsDocumentTagsByDocumentId(Guid documentId);
     }
 }

@@ -21,6 +21,9 @@ namespace DataModels.VM.Common
         public long Id { get; set; }
 
         public string Name { get; set; }
+
+        // for multiselect 
+        public bool IsSelected { get; set; }
     }
 
     public class DropDownGuidValues

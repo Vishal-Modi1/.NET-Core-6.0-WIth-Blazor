@@ -5,10 +5,14 @@ namespace Service.Interface
 {
     public interface IDocumentTagService
     {
-        CurrentResponse List();
+        CurrentResponse ListByCompanyId(int companyId, long userId, string role);
 
         CurrentResponse Create(DocumentTagVM documentTagVM);
 
+        CurrentResponse Edit(DocumentTagVM documentTagVM);
+
         CurrentResponse ListDropDownValues(int companyId);
+
+        CurrentResponse FindById(int id);
     }
 }

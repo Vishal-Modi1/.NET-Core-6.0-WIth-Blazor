@@ -35,8 +35,7 @@ namespace DataModels.Entities
         public bool IsPersonalDocument { get; set; }
 
         public bool IsShareable { get; set; }
-        public int ModuleId { get; set; }
 
-        public string TagIds { get; set; }
+        public int ModuleId { get; set; }
     }
 }
