@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using DataModels.VM.Reservation;
-using Utilities;
+using GlobalUtilities;
 
 namespace Web.UI.Pages.Common
 {

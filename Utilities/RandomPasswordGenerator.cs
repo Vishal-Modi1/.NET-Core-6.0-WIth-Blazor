@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Utilities
+namespace GlobalUtilities
 {
     public class RandomPasswordGenerator
     {

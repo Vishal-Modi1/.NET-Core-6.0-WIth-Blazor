@@ -3,7 +3,7 @@ using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Components;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Models.Scheduler;
 using Web.UI.Utilities;
 

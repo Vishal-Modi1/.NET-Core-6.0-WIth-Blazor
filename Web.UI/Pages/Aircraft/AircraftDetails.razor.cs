@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 using System.Net;
 using Microsoft.AspNetCore.Components.Forms;
 using DataModels.VM.Reservation;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Models.Constants;
 
 namespace Web.UI.Pages.Aircraft

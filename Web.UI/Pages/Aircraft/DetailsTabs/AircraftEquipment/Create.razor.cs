@@ -1,7 +1,7 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.AircraftEquipment;
 using Microsoft.AspNetCore.Components;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Utilities;
 using DataModels.Constants;
 

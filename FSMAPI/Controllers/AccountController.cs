@@ -6,7 +6,7 @@ using DataModels.VM.Account;
 using DataModels.VM.Common;
 using DataModels.VM.UserRolePermission;
 using DataModels.Entities;
-using Utilities;
+using GlobalUtilities;
 using DataModels.Constants;
 using Configuration;
 using DataModels.VM.User;

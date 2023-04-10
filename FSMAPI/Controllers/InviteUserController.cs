@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Service.Interface;
 using System.Security.Claims;
-using Utilities;
+using GlobalUtilities;
 
 namespace FSMAPI.Controllers
 {

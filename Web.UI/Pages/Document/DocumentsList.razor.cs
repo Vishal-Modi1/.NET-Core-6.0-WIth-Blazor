@@ -9,7 +9,7 @@ using Telerik.Blazor.Components;
 using DataModels.Constants;
 using Web.UI.Pages.Document.DocumentDirectory;
 using Web.UI.Extensions;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Models.Document;
 
 namespace Web.UI.Pages.Document

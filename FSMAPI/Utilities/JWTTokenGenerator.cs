@@ -6,7 +6,7 @@ using Configuration;
 using DataModels.Constants;
 using DataModels.Enums;
 using DataModels.Entities;
-using Utilities;
+using GlobalUtilities;
 
 namespace FSMAPI.Utilities
 {

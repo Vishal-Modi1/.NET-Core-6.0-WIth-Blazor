@@ -1,6 +1,6 @@
 ﻿using DataModels.VM.LogBook;
 using Microsoft.AspNetCore.Components;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Utilities;
 
 namespace Web.UI.Pages.LogBook

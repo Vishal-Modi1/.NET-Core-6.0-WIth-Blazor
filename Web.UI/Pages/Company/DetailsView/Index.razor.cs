@@ -11,7 +11,7 @@ using System.Net;
 using Web.UI.Utilities;
 using DataModels.VM.Reservation;
 using Web.UI.Models.Constants;
-using Utilities;
+using GlobalUtilities;
 
 namespace Web.UI.Pages.Company.DetailsView
 {

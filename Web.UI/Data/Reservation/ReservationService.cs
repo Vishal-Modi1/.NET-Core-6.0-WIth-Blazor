@@ -87,5 +87,20 @@ namespace Web.UI.Data.Reservation
 
             return list;
         }
+
+        private async Task<List<DropDownValues>> ListReservationTypes(DependecyParams dependecyParams)
+        {
+            List<DropDownValues> list = new List<DropDownValues>();
+
+            dependecyParams.URL = $"reservation/listReservationTypes";
+            CurrentResponse response = await _httpCaller.GetAsync(dependecyParams);
+
+            if (response.Status == System.Net.HttpStatusCode.OK)
+            {
+                list = JsonConvert.DeserializeObject<List<DropDownValues>>(response.Data.ToString());
+            }
+
+            return list;
+        }
     }
 }

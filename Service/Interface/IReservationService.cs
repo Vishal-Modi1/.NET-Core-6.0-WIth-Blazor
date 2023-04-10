@@ -1,6 +1,7 @@
 ﻿using DataModels.VM.Common;
 using DataModels.VM.Reservation;
 using System;
+using System.Collections.Generic;
 
 namespace Service.Interface
 {
@@ -15,5 +16,7 @@ namespace Service.Interface
         CurrentResponse ListUpcomingFlightsByCompanyId(int companyId, DateTime userTime);
 
         CurrentResponse ListUpcomingFlightsByAircraftId(long aircraftId, DateTime userTime);
+
+        List<DropDownValues> ListReservationTypes();
     }
 }

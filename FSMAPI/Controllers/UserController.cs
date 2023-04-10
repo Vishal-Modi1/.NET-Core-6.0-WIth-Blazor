@@ -1,4 +1,4 @@
-﻿using Utilities;
+﻿using GlobalUtilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Interface;

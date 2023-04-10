@@ -115,10 +115,10 @@
 
                     <div class="col-md-3 my-1">
 
-                        <TelerikComboBox Id=reservationType Data="@reservationTypeFilter" TextField="Name" Class="common-bg"
+                        <TelerikComboBox Id=reservationType Data="@reservationFilterVM.ReservationTypeFilter" TextField="Name" Class="common-bg"
                                          Filterable="true" FilterOperator="@StringFilterOperator.Contains"
                                          Placeholder="Select Reservation Type" ValueField="Id"
-                                         @bind-Value="@reservationFilterTypeId"
+                                         @bind-Value="@reservationFilterVM.ReservationTypeFilterId"
                                          OnChange="() => grid.Rebind()">
                         </TelerikComboBox>
 

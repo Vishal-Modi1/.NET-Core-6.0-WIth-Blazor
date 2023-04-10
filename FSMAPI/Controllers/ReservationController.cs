@@ -1,11 +1,14 @@
 ﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.Reservation;
 using FSMAPI.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Service;
 using Service.Interface;
-using Utilities;
+using System.Reflection;
+using GlobalUtilities;
 
 namespace FSMAPI.Controllers
 {
@@ -94,6 +97,16 @@ namespace FSMAPI.Controllers
             }
 
             CurrentResponse response = _reservationService.ListUpcomingFlightsByCompanyId(companyId, userTime);
+
+            return APIResponse(response);
+        }
+
+        [HttpGet]
+        [Route("listReservationTypes")]
+        public IActionResult ListReservationTypes()
+        {
+            BaseService baseService = new BaseService();
+            CurrentResponse response = baseService.CreateResponse(_reservationService.ListReservationTypes(), System.Net.HttpStatusCode.OK, "");
 
             return APIResponse(response);
         }

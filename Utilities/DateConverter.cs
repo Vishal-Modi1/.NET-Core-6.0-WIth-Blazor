@@ -1,6 +1,6 @@
 ﻿using TimeZoneConverter;
 
-namespace Utilities
+namespace GlobalUtilities
 {
     public static class DateConverter
     {

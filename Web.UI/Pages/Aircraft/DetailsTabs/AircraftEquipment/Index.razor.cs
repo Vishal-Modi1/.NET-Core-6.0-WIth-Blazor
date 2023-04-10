@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Web.UI.Extensions;
 using DataModels.VM.Common;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Utilities;
 using DataModels.Constants;
 using DataModels.Enums;

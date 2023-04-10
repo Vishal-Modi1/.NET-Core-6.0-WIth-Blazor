@@ -2,7 +2,7 @@
 using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Utilities;
 using DataModels.VM.Reservation;
 using DataModels.VM.Common;

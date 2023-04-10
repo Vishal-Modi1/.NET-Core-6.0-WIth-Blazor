@@ -45,7 +45,7 @@ namespace Service
             try
             {
                 aircraftEquipment = _aircraftEquipementRepository.Edit(aircraftEquipment);
-                CreateResponse(aircraftEquipment, HttpStatusCode.OK, "Aircraft Equipment updated successfully");
+                CreateResponse(aircraftEquipment, HttpStatusCode.OK, "Aircraft equipment updated successfully");
 
                 return _currentResponse;
             }
@@ -70,12 +70,13 @@ namespace Service
 
             return _currentResponse;
         }
+
         public CurrentResponse Delete(int id, long deletedBy)
         {
             try
             {
                 _aircraftEquipementRepository.Delete(id, deletedBy);
-                CreateResponse(true, HttpStatusCode.OK, "Aircraft Equipment is deleted successfully.");
+                CreateResponse(true, HttpStatusCode.OK, "Aircraft equipment is deleted successfully.");
 
                 return _currentResponse;
             }

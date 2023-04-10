@@ -8,7 +8,7 @@ using DataModels.VM.Scheduler;
 using DataModels.Enums;
 using DataModels.Constants;
 using Telerik.Blazor.Components;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Models.Scheduler;
 using DataModels.Entities;
 
@@ -17,7 +17,7 @@ namespace Web.UI.Pages.Reservation
     partial class Index
     {
         #region Params
-        
+
         [Parameter] public long UserId { get; set; }
         [Parameter] public long? AircraftId { get; set; }
         [Parameter] public string ParentModuleName { get; set; }
@@ -39,21 +39,17 @@ namespace Web.UI.Pages.Reservation
 
         public DateTime? startDate, endDate;
         IList<ReservationDataVM> data;
-        int reservationFilterTypeId;
         DependecyParams dependecyParams;
 
         #endregion
 
         string moduleName = "Reservation";
         UIOptions uiOptions = new UIOptions();
-        List<DropDownValues> reservationTypeFilter;
         bool isDisplayMyFlightsOnly;
 
         protected override async Task OnInitializedAsync()
         {
-            isDisplayMyFlightsOnly = (!globalMembers.IsSuperAdmin && !globalMembers.IsAdmin);
-
-            GetReservationTypeFilter();
+            isDisplayMyFlightsOnly = !globalMembers.IsSuperAdmin && !globalMembers.IsAdmin;
 
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
 
@@ -82,10 +78,6 @@ namespace Web.UI.Pages.Reservation
 
             if (!_currentUserPermissionManager.IsAllowed(AuthStat, PermissionType.Create, "Scheduler"))
             {
-                //await DialogService.OpenAsync<UnAuthorized>("UnAuthorized",
-                //  new Dictionary<string, object>() { { "UnAuthorizedMessage", "You are not authorized to create new reservation. Please contact to your administartor" } },
-                //  new DialogOptions() { Width = "410px", Height = "165px" });
-
                 return;
             }
 
@@ -114,23 +106,6 @@ namespace Web.UI.Pages.Reservation
             isBusyAddButton = false;
             isDisplayPopup = true;
             popupTitle = "Schedule Appointment";
-        }
-
-        private void GetReservationTypeFilter()
-        {
-            reservationTypeFilter = new List<DropDownValues>();
-            List<ReservationType> reservationFilterList = Enum.GetValues(typeof(ReservationType))
-                           .Cast<ReservationType>()
-                           .ToList();
-
-            foreach (ReservationType reservationFilter in reservationFilterList)
-            {
-                reservationTypeFilter.Add(new DropDownValues()
-                {
-                    Id = ((int)reservationFilter),
-                    Name = reservationFilter.ToString()
-                });
-            }
         }
 
         async void GetUsersList(int value)
@@ -162,10 +137,7 @@ namespace Web.UI.Pages.Reservation
             datatableParams.ArrivalAirportId = reservationFilterVM.ArrivalAirportId;
             datatableParams.DepartureAirportId = reservationFilterVM.DepartureAirportId;
 
-            if (reservationFilterTypeId != 0)
-            {
-                datatableParams.ReservationType = (ReservationType)reservationFilterTypeId;
-            }
+            datatableParams.ReservationType = (ReservationType)reservationFilterVM.ReservationTypeFilterId;
 
             if (ParentModuleName == Module.Company.ToString())
             {
@@ -181,7 +153,7 @@ namespace Web.UI.Pages.Reservation
                 datatableParams.UserId = reservationFilterVM.UserId;
             }
 
-            if(!globalMembers.IsSuperAdmin && isDisplayMyFlightsOnly)
+            if (!globalMembers.IsSuperAdmin && isDisplayMyFlightsOnly)
             {
                 datatableParams.UserId = globalMembers.UserId;
             }
@@ -203,7 +175,7 @@ namespace Web.UI.Pages.Reservation
                 datatableParams.AircraftId = AircraftId;
             }
 
-           await LoadDataAsync(args);
+            await LoadDataAsync(args);
         }
 
         public async Task LoadDataAsync(GridReadEventArgs args)
@@ -315,8 +287,8 @@ namespace Web.UI.Pages.Reservation
 
         public async void DisplayMyFlights(bool value)
         {
-           isDisplayMyFlightsOnly = value;
-           ReloadData();
+            isDisplayMyFlightsOnly = value;
+            ReloadData();
         }
 
         public void InitializeValues()

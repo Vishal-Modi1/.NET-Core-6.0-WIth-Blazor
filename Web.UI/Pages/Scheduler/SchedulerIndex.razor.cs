@@ -5,7 +5,7 @@ using DataModels.VM.Scheduler;
 using DataModels.VM.UserPreference;
 using Web.UI.Utilities;
 using Microsoft.AspNetCore.Components;
-using Utilities;
+using GlobalUtilities;
 using Telerik.Blazor;
 using Telerik.Blazor.Components;
 using Web.UI.Data.AircraftSchedule;

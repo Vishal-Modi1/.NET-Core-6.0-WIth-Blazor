@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Linq.Expressions;
-using Utilities;
+using GlobalUtilities;
 using System.Linq;
 using DataModels.Enums;
 

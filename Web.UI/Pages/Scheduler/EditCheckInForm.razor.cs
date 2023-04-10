@@ -5,7 +5,7 @@ using DataModels.VM.Discrepancy;
 using DataModels.VM.Scheduler;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Models.Scheduler;
 using Web.UI.Utilities;
 

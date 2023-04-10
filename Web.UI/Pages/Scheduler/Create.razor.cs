@@ -5,7 +5,7 @@ using DataModels.VM.Common;
 using DataModels.VM.AircraftEquipment;
 using DataModels.Entities;
 using DataModels.Enums;
-using Utilities;
+using GlobalUtilities;
 using DataModels.Constants;
 using Web.UI.Models.Shared;
 using Microsoft.AspNetCore.Components.Forms;

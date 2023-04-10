@@ -3,7 +3,7 @@ using DataModels.VM.Common;
 using DataModels.VM.Discrepancy;
 using Microsoft.AspNetCore.Components;
 using Telerik.Blazor.Components;
-using Utilities;
+using GlobalUtilities;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
 

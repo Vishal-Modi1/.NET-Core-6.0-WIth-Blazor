@@ -1,11 +1,15 @@
 ﻿using DataModels.Constants;
+using DataModels.Enums;
 using DataModels.VM.Common;
 using DataModels.VM.Reservation;
+using GlobalUtilities;
 using Repository.Interface;
 using Service.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Reflection;
 
 namespace Service
 {
@@ -56,6 +60,7 @@ namespace Service
 
                 reservationFilterVM.DepartureAirportsList = _aircraftScheduleRepository.ListAirportDropDownValues();
                 reservationFilterVM.ArrivalAirportsList = _aircraftScheduleRepository.ListAirportDropDownValues();
+                reservationFilterVM.ReservationTypeFilter = ListReservationTypes();
 
                 CreateResponse(reservationFilterVM, HttpStatusCode.OK, "");
 
@@ -134,6 +139,28 @@ namespace Service
 
                 return _currentResponse;
             }
+        }
+
+        public List<DropDownValues> ListReservationTypes()
+        {
+            List<DropDownValues> reservationTypes = new List<DropDownValues>();
+            List<ReservationType> reservationFilterList = Enum.GetValues(typeof(ReservationType))
+                           .Cast<ReservationType>()
+                           .ToList();
+
+            foreach (ReservationType reservationFilter in reservationFilterList)
+            {
+                var data = reservationFilter.GetType();
+                MemberInfo[] memberInfo = data.GetMember(reservationFilter.ToString());
+
+                reservationTypes.Add(new DropDownValues()
+                {
+                    Id = ((int)reservationFilter),
+                    Name = DiscriptionAttributeReader.GetDisplayText(memberInfo)
+                });
+            }
+
+            return reservationTypes;
         }
     }
 }

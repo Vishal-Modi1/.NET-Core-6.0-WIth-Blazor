@@ -3,7 +3,7 @@ using DataModels.VM.LogBook;
 using DataModels.VM.Common;
 using Web.UI.Extensions;
 using Web.UI.Utilities;
-using Utilities;
+using GlobalUtilities;
 using Microsoft.AspNetCore.Components;
 using DataModels.Enums;
 
