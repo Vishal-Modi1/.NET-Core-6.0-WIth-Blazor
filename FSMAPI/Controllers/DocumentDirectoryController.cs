@@ -14,21 +14,21 @@ namespace FSMAPI.Controllers
     public class DocumentDirectoryController : BaseAPIController
     {
         private readonly IDocumentDirectoryService _documentDirectoryService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public DocumentDirectoryController(IDocumentDirectoryService documentDirectoryService,
            IHttpContextAccessor httpContextAccessor)
         {
             _documentDirectoryService = documentDirectoryService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("create")]
         public IActionResult Create(DocumentDirectoryVM documentDirectoryVM)
         {
-            documentDirectoryVM.CreatedBy = _jWTTokenGenerator.GetUserId();
-            documentDirectoryVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            documentDirectoryVM.CreatedBy = _jWTTokenManager.GetUserId();
+            documentDirectoryVM.CompanyId = _jWTTokenManager.GetCompanyId();
 
             CurrentResponse response = _documentDirectoryService.Create(documentDirectoryVM);
 
@@ -39,8 +39,8 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(DocumentDirectoryVM documentDirectoryVM)
         {
-            documentDirectoryVM.UpdatedBy = _jWTTokenGenerator.GetUserId();
-            documentDirectoryVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            documentDirectoryVM.UpdatedBy = _jWTTokenManager.GetUserId();
+            documentDirectoryVM.CompanyId = _jWTTokenManager.GetCompanyId();
 
             CurrentResponse response = _documentDirectoryService.Edit(documentDirectoryVM);
 
@@ -51,7 +51,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            CurrentResponse response = _documentDirectoryService.Delete(id, _jWTTokenGenerator.GetUserId());
+            CurrentResponse response = _documentDirectoryService.Delete(id, _jWTTokenManager.GetUserId());
 
             return APIResponse(response);
         }
@@ -60,7 +60,7 @@ namespace FSMAPI.Controllers
         [Route("listWithCountByComapnyId")]
         public IActionResult ListWithCountByComapnyId()
         {
-            CurrentResponse response = _documentDirectoryService.ListWithCountByComapnyId(_jWTTokenGenerator.GetCompanyId());
+            CurrentResponse response = _documentDirectoryService.ListWithCountByComapnyId(_jWTTokenManager.GetCompanyId());
 
             return APIResponse(response);
         }
@@ -78,7 +78,7 @@ namespace FSMAPI.Controllers
         [Route("listDropDownValuesByCompanyId")]
         public IActionResult ListDropDownValuesByCompanyId()
         {
-            CurrentResponse response = _documentDirectoryService.ListDropDownValuesByCompanyId(_jWTTokenGenerator.GetCompanyId());
+            CurrentResponse response = _documentDirectoryService.ListDropDownValuesByCompanyId(_jWTTokenManager.GetCompanyId());
 
             return APIResponse(response);
         }

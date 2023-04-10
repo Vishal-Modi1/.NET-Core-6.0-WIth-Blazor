@@ -16,19 +16,19 @@ namespace FSMAPI.Controllers
     public class AircraftEquipmentController : BaseAPIController
     {
         private readonly IAircraftEquipmentService _airCraftEquipmentService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public AircraftEquipmentController(IAircraftEquipmentService aircraftEquipmentService, IHttpContextAccessor httpContextAccessor)
         {
             _airCraftEquipmentService = aircraftEquipmentService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("create")]
         public IActionResult Create(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
-            airCraftEquipmentsVM.CreatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftEquipmentsVM.CreatedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftEquipmentService.Create(airCraftEquipmentsVM);
 
             return APIResponse(response);
@@ -38,7 +38,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftEquipmentsVM airCraftEquipmentsVM)
         {
-            airCraftEquipmentsVM.UpdatedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftEquipmentsVM.UpdatedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _airCraftEquipmentService.Edit(airCraftEquipmentsVM);
 
             return APIResponse(response);
@@ -48,7 +48,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId)); 
+            long deletedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId)); 
             
             CurrentResponse response = _airCraftEquipmentService.Delete(id, deletedBy);
 

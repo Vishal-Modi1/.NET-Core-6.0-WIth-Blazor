@@ -14,13 +14,13 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class AircraftSchedulerDetailController : BaseAPIController
     {
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly IAircraftScheduleDetailService _aircraftScheduleDetailService;
 
         public AircraftSchedulerDetailController(IAircraftScheduleDetailService aircraftScheduleDetailService, IHttpContextAccessor httpContextAccessor)
         {
             _aircraftScheduleDetailService = aircraftScheduleDetailService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]
@@ -39,7 +39,7 @@ namespace FSMAPI.Controllers
             AircraftSchedulerDetailsVM aircraftScheduleDetailVM = new AircraftSchedulerDetailsVM();
             aircraftScheduleDetailVM.AircraftScheduleId = scheduleId;
 
-            aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            aircraftScheduleDetailVM.CheckOutBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleDetailService.CheckOut(aircraftScheduleDetailVM);
 
             return APIResponse(response);
@@ -58,7 +58,7 @@ namespace FSMAPI.Controllers
         [Route("checkin")]
         public IActionResult CheckIn(AircraftEquipmentTimeRequestVM aircraftEquipmentTimeRequestVM)
         {
-            long checkInBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long checkInBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftScheduleDetailService.CheckIn(aircraftEquipmentTimeRequestVM.Data, checkInBy);
 
             return APIResponse(response);

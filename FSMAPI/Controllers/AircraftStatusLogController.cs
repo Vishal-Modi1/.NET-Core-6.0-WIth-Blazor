@@ -14,13 +14,13 @@ namespace FSMAPI.Controllers
     public class AircraftStatusLogController : BaseAPIController
     {
         private readonly IAircraftStatusLogService _aircraftStatusLogService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public AircraftStatusLogController(IAircraftStatusLogService aircraftStatusLogService,
             IHttpContextAccessor httpContextAccessor)
         {
             _aircraftStatusLogService = aircraftStatusLogService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -37,7 +37,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(AircraftStatusLogVM aircraftStatusLog)
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
@@ -53,7 +53,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftStatusLogVM aircraftStatusLog)
         {
-            aircraftStatusLog.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            aircraftStatusLog.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftStatusLogService.Edit(aircraftStatusLog);
 
             return APIResponse(response);
@@ -71,7 +71,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _aircraftStatusLogService.Delete(id, deletedBy);
 
             return APIResponse(response);

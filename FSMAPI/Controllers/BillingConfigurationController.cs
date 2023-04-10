@@ -14,12 +14,12 @@ namespace FSMAPI.Controllers
     public class BillingConfigurationController : BaseAPIController
     {
         private readonly IBillingConfigurationService _billingConfigurationService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public BillingConfigurationController(IBillingConfigurationService BillingConfigurationService, IHttpContextAccessor httpContextAccessor)
         {
             _billingConfigurationService = BillingConfigurationService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -36,7 +36,7 @@ namespace FSMAPI.Controllers
         [Route("getDefault")]
         public IActionResult GetDefault(int companyId = 0)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") ==  DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
@@ -46,7 +46,7 @@ namespace FSMAPI.Controllers
             }
             else
             {
-                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string companyIdValue = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 CurrentResponse response = _billingConfigurationService.FindByUserId(Convert.ToInt32(companyIdValue));
 
                 return APIResponse(response);

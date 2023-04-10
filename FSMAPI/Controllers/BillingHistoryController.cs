@@ -15,27 +15,27 @@ namespace FSMAPI.Controllers
     public class BillingHistoryController : BaseAPIController
     {
         private readonly IBillingHistoryService _billingHistoryService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public BillingHistoryController(IBillingHistoryService billingHistoryService, IHttpContextAccessor httpContextAccessor)
         {
             _billingHistoryService = billingHistoryService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("list")]
         public IActionResult List(BillingHistoryDatatableParams datatableParams)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != UserRole.SuperAdmin.ToString())
             {
-                datatableParams.CompanyId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId));
+                datatableParams.CompanyId = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId));
 
                 if (role.Replace(" ", "") != UserRole.Admin.ToString())
                 {
-                    datatableParams.UserId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                    datatableParams.UserId = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
                 }
             }
 

@@ -58,6 +58,7 @@ namespace FSMAPI.CustomServicesExtensions
             services.AddScoped<IVFRMapConfigurationService, VFRMapConfigurationService>();
             services.AddScoped<ILogBookService, LogBookService>();
             services.AddScoped<IDocumentDirectoryService, DocumentDirectoryService>();
+            services.AddScoped<IDashboardService, DashboardService>();
 
         }
 

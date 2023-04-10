@@ -14,19 +14,19 @@ namespace FSMAPI.Controllers
     public class UserAirTrafficControlCenterController : BaseAPIController
     {
         private readonly IUserAirTrafficControlCenterService _userAirTrafficControlCenterService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public UserAirTrafficControlCenterController(IUserAirTrafficControlCenterService userAirTrafficControlCenterService, IHttpContextAccessor httpContextAccessor)
         {
             _userAirTrafficControlCenterService = userAirTrafficControlCenterService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]
         [Route("setDefault")]
         public IActionResult SetDefault(int userAirTrafficControlCenterId)
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
 
             UserAirTrafficControlCenter userAirTrafficControl = new UserAirTrafficControlCenter();
             userAirTrafficControl.UserId = Convert.ToInt64(loggedInUser);
@@ -42,7 +42,7 @@ namespace FSMAPI.Controllers
         [Route("getDefault")]
         public IActionResult GetDefault()
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
             CurrentResponse response = _userAirTrafficControlCenterService.FindByUserId(Convert.ToInt64(loggedInUser));
             
             return APIResponse(response);

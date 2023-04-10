@@ -20,7 +20,7 @@ namespace FSMAPI.Controllers
         private readonly ISendMailService _sendMailService;
         private readonly RandomPasswordGenerator _randomPasswordGenerator;
         private readonly RandomTextGenerator _randomTextGenerator;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly FileUploader _fileUploader;
 
         public UserController(IUserService userService, ISendMailService sendMailService,
@@ -30,7 +30,7 @@ namespace FSMAPI.Controllers
             _sendMailService = sendMailService;
             _randomPasswordGenerator = new RandomPasswordGenerator();
             _randomTextGenerator = new RandomTextGenerator();
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
         }
 
@@ -38,8 +38,8 @@ namespace FSMAPI.Controllers
         [Route("getDetails")]
         public IActionResult GetDetails(long id, int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
-            string roleId = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
+            string roleId = _jWTTokenManager.GetClaimValue(ClaimTypes.Role);
             int roleIdValue = roleId == "" ? 0 : Convert.ToInt32(roleId);
 
             if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
@@ -49,14 +49,14 @@ namespace FSMAPI.Controllers
             }
             else if (role.Replace(" ", "") == DataModels.Enums.UserRole.Admin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
                 
                 CurrentResponse response = _userService.GetDetails(id, companyId, roleIdValue);
                 return APIResponse(response);
             }
             else 
             {
-                if (_jWTTokenGenerator.GetCompanyId() != companyId || _jWTTokenGenerator.GetUserId() != id)
+                if (_jWTTokenManager.GetCompanyId() != companyId || _jWTTokenManager.GetUserId() != id)
                 {
                     return APIResponse(UnAuthorizedResponse.Response());
                 }
@@ -84,7 +84,7 @@ namespace FSMAPI.Controllers
         {
             string password = _randomPasswordGenerator.Generate();
 
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
@@ -112,7 +112,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(UserVM userVM)
         {
-            userVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            userVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _userService.Edit(userVM);
             return APIResponse(response);
@@ -132,7 +132,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _userService.Delete(id, deletedBy);
 
             return APIResponse(response);
@@ -162,7 +162,7 @@ namespace FSMAPI.Controllers
         {
             if (datatableParams.CompanyId == 0)
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 datatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
             }
 
@@ -184,9 +184,9 @@ namespace FSMAPI.Controllers
         [Route("findbyid")]
         public IActionResult FindById(long id)
         {
-            int companyId = _jWTTokenGenerator.GetCompanyId();
+            int companyId = _jWTTokenManager.GetCompanyId();
 
-            string role = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            string role = _jWTTokenManager.GetClaimValue(ClaimTypes.Role);
             int roleId = role == "" ? 0 : Convert.ToInt32(role);
 
             bool isSuperAdmin = roleId == (int)DataModels.Enums.UserRole.SuperAdmin;
@@ -209,11 +209,11 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvaluesbycompanyid")]
         public IActionResult ListDropDownValuesByCompanyId(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _userService.ListDropdownValuesByCompanyId(companyId);
@@ -230,7 +230,7 @@ namespace FSMAPI.Controllers
                 return Ok(false);
             }
 
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             IFormCollection form = Request.Form;
 
             string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["UserId"]}.jpeg";

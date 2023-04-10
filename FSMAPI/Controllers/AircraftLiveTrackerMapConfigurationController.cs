@@ -14,19 +14,19 @@ namespace FSMAPI.Controllers
     public class AircraftLiveTrackerMapConfigurationController : BaseAPIController
     {
         private readonly IAircraftLiveTrackerMapConfigurationService _aircraftLiveTrackerMapConfigurationService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public AircraftLiveTrackerMapConfigurationController(IAircraftLiveTrackerMapConfigurationService AircraftLiveTrackerMapConfigurationService, IHttpContextAccessor httpContextAccessor)
         {
             _aircraftLiveTrackerMapConfigurationService = AircraftLiveTrackerMapConfigurationService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("setDefault")]
         public IActionResult SetDefault(AircraftLiveTrackerMapConfigurationVM aircraftLiveTrackerMapConfigurationVM)
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
             aircraftLiveTrackerMapConfigurationVM.UserId = Convert.ToInt64(loggedInUser);
             CurrentResponse response = _aircraftLiveTrackerMapConfigurationService.SetDefault(aircraftLiveTrackerMapConfigurationVM);
 
@@ -38,7 +38,7 @@ namespace FSMAPI.Controllers
         [Route("getDefault")]
         public IActionResult GetDefault()
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
             CurrentResponse response = _aircraftLiveTrackerMapConfigurationService.FindByUserId(Convert.ToInt64(loggedInUser));
             
             return APIResponse(response);

@@ -14,13 +14,13 @@ namespace FSMAPI.Controllers
     public class SubscriptionPlanController : BaseAPIController
     {
         private readonly ISubscriptionPlanService _subscriptionPlanService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public SubscriptionPlanController(ISubscriptionPlanService subscriptionPlanService,
             IHttpContextAccessor httpContextAccessor)
         {
             _subscriptionPlanService = subscriptionPlanService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -36,7 +36,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(SubscriptionPlanVM subscriptionPlanVM)
         {
-            subscriptionPlanVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            subscriptionPlanVM.CreatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _subscriptionPlanService.Create(subscriptionPlanVM);
            
@@ -47,7 +47,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(SubscriptionPlanVM subscriptionPlanVM)
         {
-            subscriptionPlanVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            subscriptionPlanVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
          
             CurrentResponse response = _subscriptionPlanService.Edit(subscriptionPlanVM);
            
@@ -66,7 +66,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _subscriptionPlanService.Delete(id, deletedBy);
 
@@ -86,7 +86,7 @@ namespace FSMAPI.Controllers
         [Route("buyplan")]
         public IActionResult UpdateStatus(int id)
         {
-            long userId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long userId = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _subscriptionPlanService.BuyPlan(id, userId);
 
             return APIResponse(response);

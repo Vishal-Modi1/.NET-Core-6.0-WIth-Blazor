@@ -14,19 +14,19 @@ namespace FSMAPI.Controllers
     public class FlightCategoryController : BaseAPIController
     {
         private readonly IFlightCategoryService _flightCategoryService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public FlightCategoryController(IFlightCategoryService flightCategoryService, IHttpContextAccessor httpContextAccessor)
         {
             _flightCategoryService = flightCategoryService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]
         [Route("listdropdownvalues")]
         public IActionResult ListDropDownValues()
         {
-            CurrentResponse response = _flightCategoryService.ListDropDownValues(_jWTTokenGenerator.GetCompanyId());
+            CurrentResponse response = _flightCategoryService.ListDropDownValues(_jWTTokenManager.GetCompanyId());
 
             return APIResponse(response);
         }
@@ -35,11 +35,11 @@ namespace FSMAPI.Controllers
         [Route("listAll")]
         public IActionResult ListAll(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _flightCategoryService.ListByCompanyId(companyId);
@@ -51,11 +51,11 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(FlightCategoryVM flightCategory)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                flightCategory.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                flightCategory.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _flightCategoryService.Create(flightCategory);
@@ -67,11 +67,11 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(FlightCategoryVM flightCategory)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                flightCategory.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                flightCategory.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _flightCategoryService.Edit(flightCategory);

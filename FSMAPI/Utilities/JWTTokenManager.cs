@@ -10,20 +10,20 @@ using GlobalUtilities;
 
 namespace FSMAPI.Utilities
 {
-    public class JWTTokenGenerator
+    public class JWTTokenManager
     {
         private readonly ConfigurationSettings _configurationSettings;
         private readonly HttpContext _httpContext;
         private readonly RandomTextGenerator _randomTextGenerator;
 
-        public JWTTokenGenerator(HttpContext httpContext)
+        public JWTTokenManager(HttpContext httpContext)
         {
             _configurationSettings = ConfigurationSettings.Instance;
             _httpContext = httpContext;
             _randomTextGenerator = new RandomTextGenerator();
         }
 
-        public string Generate(User user, string timezone)
+        public string GenerateToken(User user, string timezone)
         {
             List<Claim> claims = new List<Claim>
             {

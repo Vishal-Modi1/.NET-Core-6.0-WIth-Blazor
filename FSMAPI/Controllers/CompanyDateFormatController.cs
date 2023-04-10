@@ -14,23 +14,23 @@ namespace FSMAPI.Controllers
     public class CompanyDateFormatController : BaseAPIController
     {
         private readonly ICompanyDateFormatService _companyDateFormatService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public CompanyDateFormatController(ICompanyDateFormatService CompanyDateFormatService, IHttpContextAccessor httpContextAccessor)
         {
             _companyDateFormatService = CompanyDateFormatService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("setDefault")]
         public IActionResult SetDefault(CompanyDateFormatVM companyDateFormatVM)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyDateFormatVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                companyDateFormatVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _companyDateFormatService.SetDefault(companyDateFormatVM);
@@ -43,11 +43,11 @@ namespace FSMAPI.Controllers
         [Route("getDefault")]
         public IActionResult GetDefault(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _companyDateFormatService.FindByCompanyId(companyId);

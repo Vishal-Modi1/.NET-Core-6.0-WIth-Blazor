@@ -18,12 +18,12 @@ namespace FSMAPI.Controllers
     public class ReservationController : BaseAPIController
     {
         private readonly IReservationService _reservationService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public ReservationController(IReservationService reservationService, IHttpContextAccessor httpContextAccessor)
         {
               _reservationService = reservationService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -32,7 +32,7 @@ namespace FSMAPI.Controllers
         {
             if (datatableParams.CompanyId == 0)
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 datatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
             }
 
@@ -45,7 +45,7 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters(int roleId)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _reservationService.GetFiltersValue(roleId, CompanyId);
@@ -57,13 +57,13 @@ namespace FSMAPI.Controllers
         [Route("listUpcomingFlightsByUserId")]
         public IActionResult ListUpcomingFlightsByUserId(long userId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
-            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
+            string timezone = _jWTTokenManager.GetClaimValue(CustomClaimTypes.TimeZone);
             DateTime userTime = DateConverter.ToLocal(DateTime.UtcNow, timezone);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                userId = _jWTTokenGenerator.GetUserId();
+                userId = _jWTTokenManager.GetUserId();
             }
 
             CurrentResponse response = _reservationService.ListUpcomingFlightsByUserId(userId, userTime);
@@ -75,7 +75,7 @@ namespace FSMAPI.Controllers
         [Route("listUpcomingFlightsByAircraftId")]
         public IActionResult ListUpcomingFlightsByAircraftId(long aircraftId)
         {
-            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            string timezone = _jWTTokenManager.GetClaimValue(CustomClaimTypes.TimeZone);
             DateTime userTime = DateConverter.ToLocal(DateTime.UtcNow, timezone);
 
             CurrentResponse response = _reservationService.ListUpcomingFlightsByAircraftId(aircraftId, userTime);
@@ -87,13 +87,13 @@ namespace FSMAPI.Controllers
         [Route("listUpcomingFlightsByCompanyId")]
         public IActionResult ListUpcomingFlightsByCompanyId(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
-            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
+            string timezone = _jWTTokenManager.GetClaimValue(CustomClaimTypes.TimeZone);
             DateTime userTime =  DateConverter.ToLocal(DateTime.UtcNow, timezone);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _reservationService.ListUpcomingFlightsByCompanyId(companyId, userTime);

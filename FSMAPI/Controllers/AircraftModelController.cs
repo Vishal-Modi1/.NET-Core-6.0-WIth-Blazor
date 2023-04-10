@@ -12,23 +12,23 @@ namespace FSMAPI.Controllers
     public class AircraftModelController : BaseAPIController
     {
         private readonly IAircraftModelService _aircraftModelService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public AircraftModelController(IAircraftModelService aircraftModelService, IHttpContextAccessor httpContextAccessor)
         {
             _aircraftModelService = aircraftModelService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("create")]
         public IActionResult Create(AircraftModel aircraftModel)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                aircraftModel.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                aircraftModel.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _aircraftModelService.Create(aircraftModel);
@@ -59,11 +59,11 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvalues")]
         public IActionResult ListDropDownValues(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _aircraftModelService.ListDropDownValues(companyId);
@@ -84,11 +84,11 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftModel aircraftModel)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                aircraftModel.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                aircraftModel.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _aircraftModelService.Edit(aircraftModel);

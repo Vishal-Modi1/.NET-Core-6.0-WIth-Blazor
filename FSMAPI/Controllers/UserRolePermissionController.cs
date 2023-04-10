@@ -16,12 +16,12 @@ namespace FSMAPI.Controllers
     public class UserRolePermissionController : BaseAPIController
     {
         private readonly IUserRolePermissionService _userRolePermissionService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public UserRolePermissionController(IUserRolePermissionService userRolePermissionService, IHttpContextAccessor httpContextAccessor)
         {
             _userRolePermissionService = userRolePermissionService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
 
@@ -29,11 +29,11 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(UserRolePermissionDatatableParams datatableParams)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                int companyId = _jWTTokenGenerator.GetCompanyId();
+                int companyId = _jWTTokenManager.GetCompanyId();
                 if (companyId != datatableParams.CompanyId && datatableParams.CompanyId != 0)
                 {
                     return APIResponse(UnAuthorizedResponse.Response());
@@ -51,9 +51,9 @@ namespace FSMAPI.Controllers
         [Route("listbyroleid")]
         public IActionResult ListByRoleId()
         {
-            string roleIdClaim = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            string roleIdClaim = _jWTTokenManager.GetClaimValue(ClaimTypes.Role);
 
-            int companyId = _jWTTokenGenerator.GetCompanyId();
+            int companyId = _jWTTokenManager.GetCompanyId();
             int roleId = roleIdClaim == "" ? 0 : Convert.ToInt32(roleIdClaim);
 
             CurrentResponse response = _userRolePermissionService.GetByRoleId(roleId, companyId);
@@ -65,7 +65,7 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            string roleIdClaim = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            string roleIdClaim = _jWTTokenManager.GetClaimValue(ClaimTypes.Role);
             int roleId = roleIdClaim == "" ? 0 : Convert.ToInt32(roleIdClaim);
 
             CurrentResponse response = _userRolePermissionService.GetFiltersValue(roleId);
@@ -77,7 +77,7 @@ namespace FSMAPI.Controllers
         [Route("updatepermission")]
         public IActionResult UpdatePermission(int id, bool isAllow)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
@@ -95,13 +95,13 @@ namespace FSMAPI.Controllers
         [Route("updatepermissions")]
         public IActionResult UpdatePermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
                 if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
                 {
-                    int companyId = _jWTTokenGenerator.GetCompanyId();
+                    int companyId = _jWTTokenManager.GetCompanyId();
                     if (companyId != userRolePermissionFilterVM.CompanyId && userRolePermissionFilterVM.CompanyId != 0)
                     {
                         return APIResponse(UnAuthorizedResponse.Response());
@@ -125,7 +125,7 @@ namespace FSMAPI.Controllers
         [Route("updatemobileapppermission")]
         public IActionResult UpdateMobileAppPermission(int id, bool isAllow)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
@@ -143,13 +143,13 @@ namespace FSMAPI.Controllers
         [Route("updatemobileapppermissions")]
         public IActionResult UpdateMobileAppPermissions(UserRolePermissionFilterVM userRolePermissionFilterVM)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString() )
             {
                 if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
                 {
-                    int companyId = _jWTTokenGenerator.GetCompanyId();
+                    int companyId = _jWTTokenManager.GetCompanyId();
                     if (companyId != userRolePermissionFilterVM.CompanyId && userRolePermissionFilterVM.CompanyId != 0)
                     {
                         return APIResponse(UnAuthorizedResponse.Response());

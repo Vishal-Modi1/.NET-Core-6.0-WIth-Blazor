@@ -13,20 +13,20 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class UserPreferenceController : BaseAPIController
     {
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly IUserPreferenceService _userPreferenceService;
 
         public UserPreferenceController( IHttpContextAccessor httpContextAccessor, IUserPreferenceService userPreferenceService)
         {
             _userPreferenceService = userPreferenceService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("create")]
         public IActionResult Create(UserPreferenceVM userPreferenceVM)
         {
-            userPreferenceVM.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            userPreferenceVM.UserId = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _userPreferenceService.Create(userPreferenceVM);
 

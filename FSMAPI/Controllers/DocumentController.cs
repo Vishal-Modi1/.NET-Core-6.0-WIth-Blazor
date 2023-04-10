@@ -14,7 +14,7 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class DocumentController : BaseAPIController
     {
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly FileUploader _fileUploader;
         private readonly IDocumentService _documentService;
 
@@ -22,7 +22,7 @@ namespace FSMAPI.Controllers
             IDocumentService documentService,
             IWebHostEnvironment webHostEnvironment)
         {
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
             _documentService = documentService;
         }
@@ -31,7 +31,7 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            int companyId = _jWTTokenGenerator.GetCompanyId();
+            int companyId = _jWTTokenManager.GetCompanyId();
             CurrentResponse response = _documentService.GetFiltersValue(companyId);
 
             return APIResponse(response);
@@ -48,7 +48,7 @@ namespace FSMAPI.Controllers
 
             IFormCollection form = Request.Form;
 
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
 
             DocumentVM documentVM = new DocumentVM();
 
@@ -142,16 +142,16 @@ namespace FSMAPI.Controllers
         //[Route("create")]
         private CurrentResponse Create(DocumentVM documentVM)
         {
-            documentVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+            documentVM.CreatedBy = _jWTTokenManager.GetUserId();
 
             if (documentVM.CompanyId == 0)
             {
-                documentVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                documentVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             if (documentVM.UserId == 0)
             {
-                documentVM.UserId = _jWTTokenGenerator.GetUserId();
+                documentVM.UserId = _jWTTokenManager.GetUserId();
             }
 
             CurrentResponse response = _documentService.Create(documentVM);
@@ -163,16 +163,16 @@ namespace FSMAPI.Controllers
         //[Route("edit")]
         private CurrentResponse Edit(DocumentVM documentVM)
         {
-            documentVM.UpdatedBy = _jWTTokenGenerator.GetUserId();
+            documentVM.UpdatedBy = _jWTTokenManager.GetUserId();
 
             if (documentVM.CompanyId == 0)
             {
-                documentVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                documentVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             if (documentVM.UserId == 0)
             {
-                documentVM.UserId = _jWTTokenGenerator.GetUserId();
+                documentVM.UserId = _jWTTokenManager.GetUserId();
             }
 
             CurrentResponse response = _documentService.Edit(documentVM);
@@ -184,7 +184,7 @@ namespace FSMAPI.Controllers
         [Route("getDetails")]
         public IActionResult GetDetails(Guid id)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _documentService.GetDetails(id, companyIdValue);
@@ -197,14 +197,14 @@ namespace FSMAPI.Controllers
         {
             if (datatableParams.CompanyId == 0 && datatableParams.UserRole != DataModels.Enums.UserRole.SuperAdmin)
             {
-                string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 datatableParams.CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
             }
 
             if (datatableParams.UserId == 0 && datatableParams.UserRole != DataModels.Enums.UserRole.SuperAdmin &&
                 datatableParams.UserRole != DataModels.Enums.UserRole.Admin && datatableParams.AircraftId.GetValueOrDefault() == 0 )
             {
-                datatableParams.UserId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                datatableParams.UserId = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             }
 
             CurrentResponse response = _documentService.List(datatableParams);
@@ -216,7 +216,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(Guid id)
         {
-            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _documentService.Delete(id, deletedBy);
 
             return APIResponse(response);

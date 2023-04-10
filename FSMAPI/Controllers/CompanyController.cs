@@ -14,14 +14,14 @@ namespace FSMAPI.Controllers
     public class CompanyController : BaseAPIController
     {
         private readonly ICompanyService _companyService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly FileUploader _fileUploader;
 
         public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor,
              IWebHostEnvironment webHostEnvironment)
         {
             _companyService = companyService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
         }
 
@@ -29,7 +29,7 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _companyService.GetFiltersValue();
@@ -41,7 +41,7 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(CompanyDatatableParams datatableParams)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(companyId))
             {
@@ -86,7 +86,7 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(CompanyVM companyVM)
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
@@ -101,7 +101,7 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(CompanyVM companyVM)
         {
-            companyVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            companyVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _companyService.Edit(companyVM);
             return APIResponse(response);
@@ -120,7 +120,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _companyService.Delete(id, deletedBy);
 
@@ -136,7 +136,7 @@ namespace FSMAPI.Controllers
                 return Ok(false);
             }
 
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             IFormCollection form = Request.Form;
 
             string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["CompanyId"]}.jpeg";
@@ -201,7 +201,7 @@ namespace FSMAPI.Controllers
         [Route("setPropellerConfiguration")]
         public IActionResult SetPropellerConfiguration(bool value, int companyId = 0)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") == DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
@@ -211,7 +211,7 @@ namespace FSMAPI.Controllers
             }
             else
             {
-                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string companyIdValue = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 CurrentResponse response = _companyService.SetPropellerConfiguration(Convert.ToInt32(companyIdValue), value);
 
                 return APIResponse(response);

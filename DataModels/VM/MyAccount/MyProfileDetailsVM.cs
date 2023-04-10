@@ -2,6 +2,7 @@
 using DataModels.VM.User;
 using DataModels.VM.Reservation;
 using System.Collections.Generic;
+using DataModels.VM.MobileAppVM;
 
 namespace DataModels.VM.MyAccount
 {
@@ -12,15 +13,5 @@ namespace DataModels.VM.MyAccount
         public DocumentDetails DocumentDetails { get; set; }
 
         public ReservationDetails ReservationDetails { get; set; }
-    }
-
-    public class DocumentDetails
-    {
-        public List<DocumentDataVM> DocumentDataListVM { get; set; }
-    }
-
-    public class ReservationDetails
-    {
-        public List<ReservationDataVM> ReservationDataListVM { get; set; }
     }
 }

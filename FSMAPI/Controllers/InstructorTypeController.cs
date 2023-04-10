@@ -14,12 +14,12 @@ namespace FSMAPI.Controllers
     public class InstructorTypeController : BaseAPIController
     {
         private readonly IInstructorTypeService _instructorTypeService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public InstructorTypeController(IInstructorTypeService instructorTypeService, IHttpContextAccessor httpContextAccessor)
         {
             _instructorTypeService = instructorTypeService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -59,7 +59,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _instructorTypeService.Delete(id, deletedBy);
 

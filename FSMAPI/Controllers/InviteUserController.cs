@@ -18,7 +18,7 @@ namespace FSMAPI.Controllers
     public class InviteUserController : BaseAPIController
     {
         private readonly IInviteUserService _inviteUserService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly RandomTextGenerator _randomTextGenerator;
         private readonly ISendMailService _sendMailService;
         private readonly ICompanyService _companyService;
@@ -27,7 +27,7 @@ namespace FSMAPI.Controllers
             IHttpContextAccessor httpContextAccessor, ICompanyService companyService)
         {
             _inviteUserService = inviteUser;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _randomTextGenerator = new RandomTextGenerator();
             _sendMailService = sendMailService;
             _companyService = companyService;
@@ -37,7 +37,7 @@ namespace FSMAPI.Controllers
         [Route("getdetails")]
         public IActionResult GetDetails(long id)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            string role = _jWTTokenManager.GetClaimValue(ClaimTypes.Role);
             int roleId = Convert.ToInt32(role);
 
             CurrentResponse response = _inviteUserService.GetDetails(roleId, id);
@@ -58,7 +58,7 @@ namespace FSMAPI.Controllers
         {
             if (inviteUserVM.CompanyId == 0)
             {
-                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string company = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 inviteUserVM.CompanyId = Convert.ToInt32(company);
             }
 
@@ -71,7 +71,7 @@ namespace FSMAPI.Controllers
                 return APIResponse(response);
             }
 
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(ClaimTypes.Role);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(ClaimTypes.Role);
             long userId = Convert.ToInt64(loggedInUser);
 
             inviteUserVM.InvitedBy = userId;
@@ -113,7 +113,7 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(UserDatatableParams datatableParams)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
 
             if (!string.IsNullOrWhiteSpace(companyId))
             {
@@ -129,7 +129,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _inviteUserService.Delete(id, deletedBy);
 
             return APIResponse(response);

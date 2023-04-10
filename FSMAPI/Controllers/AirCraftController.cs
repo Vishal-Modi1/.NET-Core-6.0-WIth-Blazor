@@ -16,7 +16,7 @@ namespace FSMAPI.Controllers
     {
         private readonly IAircraftService _aircraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly FileUploader _fileUploader;
 
         public AircraftController(IAircraftService airCraftService,
@@ -25,7 +25,7 @@ namespace FSMAPI.Controllers
         {
             _aircraftService = airCraftService;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
         }
 
@@ -33,7 +33,7 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _aircraftService.GetFiltersValue(companyIdValue);
@@ -45,11 +45,11 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(AircraftDatatableParams aircraftDatatableParams)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                int companyId = _jWTTokenGenerator.GetCompanyId();
+                int companyId = _jWTTokenManager.GetCompanyId();
                 if (companyId != aircraftDatatableParams.CompanyId && aircraftDatatableParams.CompanyId != 0)
                 {
                     return APIResponse(UnAuthorizedResponse.Response());
@@ -67,11 +67,11 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(AircraftVM airCraftVM)
         {
-            airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftVM.CreatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             if (airCraftVM.OwnerId == 0)
             {
-                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             }
 
             CurrentResponse response = _aircraftService.Create(airCraftVM);
@@ -83,11 +83,11 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(AircraftVM airCraftVM)
         {
-            airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            airCraftVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             if (airCraftVM.OwnerId == 0)
             {
-                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+                airCraftVM.OwnerId = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             }
 
             CurrentResponse response = _aircraftService.Edit(airCraftVM);
@@ -99,7 +99,7 @@ namespace FSMAPI.Controllers
         [Route("getDetails")]
         public IActionResult GetDetails(long id)
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
             CurrentResponse response = _aircraftService.GetDetails(id, companyIdValue);
 
@@ -112,7 +112,7 @@ namespace FSMAPI.Controllers
         {
             if (companyId == 0)
             {
-                string company = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string company = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 companyId = company == "" ? 0 : Convert.ToInt32(company);
             }
 
@@ -124,7 +124,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _aircraftService.Delete(id, deletedBy);
 
@@ -142,7 +142,7 @@ namespace FSMAPI.Controllers
 
             IFormCollection form = Request.Form;
 
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
 
             string fileName = $"{DateTime.UtcNow.ToString("yyyyMMddHHMMss")}_{form["AircraftId"]}.jpeg";
 
@@ -177,7 +177,7 @@ namespace FSMAPI.Controllers
         [Route("listDropdownValues")]
         public IActionResult ListAircraftDropdownValues()
         {
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyIdValue = companyId == "" ? 0 : Convert.ToInt32(companyId);
 
             CurrentResponse response = _aircraftService.ListAircraftDropdownValues(companyIdValue);
@@ -191,7 +191,7 @@ namespace FSMAPI.Controllers
         {
             if (companyId == 0)
             {
-                string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+                string companyIdValue = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
                 companyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);
             }
 
@@ -223,7 +223,7 @@ namespace FSMAPI.Controllers
         [Route("createaircraftequipment")]
         public IActionResult CreateAircraftEquipment(List<AircraftEquipmentTimeCreateVM> aircraftEquipmentTimeVM)
         {
-            long createdBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long createdBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             if (aircraftEquipmentTimeVM.Count > 0)
             {

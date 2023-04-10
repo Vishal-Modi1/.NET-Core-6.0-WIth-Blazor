@@ -16,7 +16,7 @@ namespace FSMAPI.Controllers
         private readonly IDiscrepancyService _discrepancyService;
         private readonly IDiscrepancyHistoryService _discrepancyHistoryService;
         private readonly IDiscrepancyStatusService _discrepancyStatusService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public DiscrepancyController(IDiscrepancyService discrepancyService,
             IDiscrepancyStatusService discrepancyStatusService,
@@ -24,7 +24,7 @@ namespace FSMAPI.Controllers
         {
             _discrepancyService = discrepancyService;
             _discrepancyStatusService = discrepancyStatusService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _discrepancyHistoryService = discrepancyHistoryService;
         }
 
@@ -41,9 +41,9 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(DiscrepancyVM discrepancyVM)
         {
-            discrepancyVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            discrepancyVM.CreatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
-            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            string timezone = _jWTTokenManager.GetClaimValue(CustomClaimTypes.TimeZone);
             CurrentResponse response = _discrepancyService.Create(discrepancyVM, timezone);
 
             return APIResponse(response);
@@ -53,9 +53,9 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(DiscrepancyVM discrepancyVM)
         {
-            discrepancyVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            discrepancyVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
-            string timezone = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.TimeZone);
+            string timezone = _jWTTokenManager.GetClaimValue(CustomClaimTypes.TimeZone);
             CurrentResponse response = _discrepancyService.Edit(discrepancyVM, timezone);
 
             return APIResponse(response);

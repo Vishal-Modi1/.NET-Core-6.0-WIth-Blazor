@@ -8,6 +8,7 @@ using DataModels.VM.Document;
 using System.Collections.Generic;
 using DataModels.Entities;
 using DataModels.VM.Reservation;
+using DataModels.VM.MobileAppVM;
 
 namespace Service
 {

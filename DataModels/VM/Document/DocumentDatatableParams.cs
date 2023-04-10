@@ -14,8 +14,8 @@ namespace DataModels.VM.Document
 
         public string TagIds { get; set; }
 
-        public bool IsIgnoreTagFilter { get; set; }
+        public bool IsIgnoreTagFilter { get; set; } = true;
 
-        public bool IncludeDocumentsWithoutTags { get; set; }
+        public bool IncludeDocumentsWithoutTags { get; set; } = true;
     }
 }

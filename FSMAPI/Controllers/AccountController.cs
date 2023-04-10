@@ -23,7 +23,7 @@ namespace FSMAPI.Controllers
         private readonly IAccountService _accountService;
         private readonly IUserService _userService;
         private readonly ISendMailService _sendMailService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly RandomTextGenerator _randomTextGenerator;
         private readonly IUserRolePermissionService _userRolePermissionService;
         private readonly IEmailTokenService _emailTokenService;
@@ -39,7 +39,7 @@ namespace FSMAPI.Controllers
             _accountService = accountService;
             _userService = userService;
             _sendMailService = sendMailService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _randomTextGenerator = new RandomTextGenerator();
             _userRolePermissionService = userRolePermissionService;
             _emailTokenService = emailTokenService;
@@ -85,8 +85,8 @@ namespace FSMAPI.Controllers
             response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
             List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
-            string accessToken = _jWTTokenGenerator.Generate(user, userTimeZone == null ? "": userTimeZone);
-            string refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
+            string accessToken = _jWTTokenManager.GenerateToken(user, userTimeZone == null ? "": userTimeZone);
+            string refreshToken = _jWTTokenManager.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);
 
@@ -245,7 +245,7 @@ namespace FSMAPI.Controllers
                 return APIResponse(response);
             }
 
-            string companyId = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int? companyIdValue = companyId == "" ? null : Convert.ToInt32(companyId);
 
             response = _userService.FindById(userId,false, companyIdValue);
@@ -258,8 +258,8 @@ namespace FSMAPI.Controllers
             user.RoleId = userVM.RoleId;
             user.RoleName = userVM.Role;
 
-            string accessToken = _jWTTokenGenerator.Generate(user, "");
-            refreshToken = _jWTTokenGenerator.RefreshTokenGenerate();
+            string accessToken = _jWTTokenManager.GenerateToken(user, "");
+            refreshToken = _jWTTokenManager.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);
 

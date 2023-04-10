@@ -15,13 +15,13 @@ namespace FSMAPI.Controllers
     public class FlightTagController : BaseAPIController
     {
         private readonly IFlightTagService _flightTagService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public FlightTagController(IFlightTagService flightTagService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _flightTagService = flightTagService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]
@@ -37,10 +37,10 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvalues")]
         public IActionResult ListDropdownValues(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _flightTagService.ListDropDownValues(companyId);
@@ -52,12 +52,12 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(FlightTagVM flightTagVM)
         {
-            flightTagVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+            flightTagVM.CreatedBy = _jWTTokenManager.GetUserId();
 
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                flightTagVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                flightTagVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _flightTagService.Create(flightTagVM);

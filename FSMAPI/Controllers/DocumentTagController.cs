@@ -16,25 +16,25 @@ namespace FSMAPI.Controllers
     public class DocumentTagController : BaseAPIController
     {
         private readonly IDocumentTagService _documentTagService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public DocumentTagController(IDocumentTagService documentTagService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _documentTagService = documentTagService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]
         [Route("listByCompanyId")]
         public IActionResult List(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
-             long userId = _jWTTokenGenerator.GetUserId();
+             long userId = _jWTTokenManager.GetUserId();
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _documentTagService.ListByCompanyId(companyId, userId, role);
@@ -46,10 +46,10 @@ namespace FSMAPI.Controllers
         [Route("listDropdownValues")]
         public IActionResult ListDropdownValuesByCompanyId(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _documentTagService.ListDropDownValues(companyId);
@@ -61,12 +61,12 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(DocumentTagVM documentTagVM)
         {
-            documentTagVM.CreatedBy = _jWTTokenGenerator.GetUserId();
+            documentTagVM.CreatedBy = _jWTTokenManager.GetUserId();
            
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                documentTagVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                documentTagVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _documentTagService.Create(documentTagVM);
@@ -78,12 +78,12 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(DocumentTagVM documentTagVM)
         {
-            documentTagVM.UpdatedBy = _jWTTokenGenerator.GetUserId();
+            documentTagVM.UpdatedBy = _jWTTokenManager.GetUserId();
 
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                documentTagVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                documentTagVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _documentTagService.Edit(documentTagVM);

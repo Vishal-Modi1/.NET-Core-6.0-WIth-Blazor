@@ -9,10 +9,10 @@ namespace FSMAPI.Controllers
     [ApiController]
     public class BaseAPIController : ControllerBase
     {
-        private readonly APIErrorResponse _aPIError;
+        private readonly APIErrorResponse _apiError;
         public BaseAPIController()
         {
-            _aPIError = new APIErrorResponse();
+            _apiError = new APIErrorResponse();
         }
 
         [HttpGet]
@@ -21,8 +21,8 @@ namespace FSMAPI.Controllers
         {
             if (response.Status != System.Net.HttpStatusCode.OK)
             {
-                _aPIError.Message = response.Message;
-                return StatusCode((int)response.Status, JsonConvert.SerializeObject(_aPIError));
+                _apiError.Message = response.Message;
+                return StatusCode((int)response.Status, JsonConvert.SerializeObject(_apiError));
             }
 
             return Ok(response);

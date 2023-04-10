@@ -16,11 +16,11 @@ namespace FSMAPI.Controllers
     public class MyAccountController : BaseAPIController
     {
         private readonly IMyAccountService _myAccountService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public MyAccountController(IMyAccountService myAccountService, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _myAccountService = myAccountService;
         }
 
@@ -46,10 +46,10 @@ namespace FSMAPI.Controllers
         
         public IActionResult MyProfileDetails()
         {
-            string companyIdValue = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.CompanyId);
+            string companyIdValue = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int companyId = companyIdValue == "" ? 0 : Convert.ToInt32(companyIdValue);
-            long id = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            int roleId = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(ClaimTypes.Role));
+            long id = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
+            int roleId = Convert.ToInt32(_jWTTokenManager.GetClaimValue(ClaimTypes.Role));
 
             CurrentResponse response = _myAccountService.GetMyProfileDetails(companyId, roleId, id);
 

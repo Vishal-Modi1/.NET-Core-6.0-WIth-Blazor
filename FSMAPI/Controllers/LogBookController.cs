@@ -14,14 +14,14 @@ namespace FSMAPI.Controllers
     public class LogBookController : BaseAPIController
     {
         private readonly ILogBookService _logBookService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly FileUploader _fileUploader;
 
         public LogBookController(ILogBookService logBookService, IHttpContextAccessor httpContextAccessor,
              IWebHostEnvironment webHostEnvironment)
         {
             _logBookService = logBookService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
         }
 
@@ -38,8 +38,8 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(LogBookVM logBookVM)
         {
-            logBookVM.CreatedBy = _jWTTokenGenerator.GetUserId();
-            logBookVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            logBookVM.CreatedBy = _jWTTokenManager.GetUserId();
+            logBookVM.CompanyId = _jWTTokenManager.GetCompanyId();
 
             CurrentResponse response = _logBookService.Create(logBookVM);
             return APIResponse(response);
@@ -49,8 +49,8 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(LogBookVM logBookVM)
         {
-            logBookVM.UpdatedBy = _jWTTokenGenerator.GetUserId();
-            logBookVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            logBookVM.UpdatedBy = _jWTTokenManager.GetUserId();
+            logBookVM.CompanyId = _jWTTokenManager.GetCompanyId();
 
             CurrentResponse response = _logBookService.Edit(logBookVM);
             return APIResponse(response);
@@ -60,7 +60,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            long deletedBy = _jWTTokenGenerator.GetUserId();
+            long deletedBy = _jWTTokenManager.GetUserId();
             CurrentResponse response = _logBookService.Delete(id, deletedBy);
 
             return APIResponse(response);
@@ -79,8 +79,8 @@ namespace FSMAPI.Controllers
 
                 IFormCollection form = Request.Form;
 
-                string companyId = _jWTTokenGenerator.GetCompanyId().ToString();
-                string userId = _jWTTokenGenerator.GetUserId().ToString();
+                string companyId = _jWTTokenManager.GetCompanyId().ToString();
+                string userId = _jWTTokenManager.GetUserId().ToString();
 
                 long logBookId = Convert.ToInt64(form["LogBookId"]);
 
@@ -118,16 +118,16 @@ namespace FSMAPI.Controllers
         [Route("list")]
         public IActionResult List(LogBookDatatableParams datatableParams)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                datatableParams.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                datatableParams.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             if(role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString() && role.Replace(" ", "") != DataModels.Enums.UserRole.Admin.ToString())
             {
-                datatableParams.UserId = _jWTTokenGenerator.GetUserId();
+                datatableParams.UserId = _jWTTokenManager.GetUserId();
             }
 
             CurrentResponse response = _logBookService.List(datatableParams);
@@ -139,9 +139,9 @@ namespace FSMAPI.Controllers
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
-            CurrentResponse response = _logBookService.GetFiltersValue(role, _jWTTokenGenerator.GetCompanyId());
+            CurrentResponse response = _logBookService.GetFiltersValue(role, _jWTTokenManager.GetCompanyId());
 
             return APIResponse(response);
         }
@@ -150,11 +150,11 @@ namespace FSMAPI.Controllers
         [Route("listDepartureAirportsDropDownValuesByCompanyId")]
         public IActionResult ListDepartureAirportsDropDownValuesByCompanyId(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _logBookService.ListDepartureAirportsDropDownValuesByCompanyId(companyId);
@@ -166,11 +166,11 @@ namespace FSMAPI.Controllers
         [Route("listArrivalAirportsDropDownValuesByCompanyId")]
         public IActionResult ListArrivalAirportsDropDownValuesByCompanyId(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _logBookService.ListArrivalAirportsDropDownValuesByCompanyId(companyId);
@@ -190,8 +190,8 @@ namespace FSMAPI.Controllers
         [Route("logBookSummaries")]
         public IActionResult LogBookSummaries()
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
-            CurrentResponse response = _logBookService.LogBookSummaries(_jWTTokenGenerator.GetUserId(), _jWTTokenGenerator.GetCompanyId(), role);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
+            CurrentResponse response = _logBookService.LogBookSummaries(_jWTTokenManager.GetUserId(), _jWTTokenManager.GetCompanyId(), role);
 
             return APIResponse(response);
         }
@@ -200,7 +200,7 @@ namespace FSMAPI.Controllers
         [Route("deletePhoto")]
         public IActionResult DeletePhoto(long photoId)
         {
-            long deletedBy = _jWTTokenGenerator.GetUserId();
+            long deletedBy = _jWTTokenManager.GetUserId();
             CurrentResponse response = _logBookService.DeletePhoto(photoId, deletedBy);
 
             return APIResponse(response);
@@ -210,7 +210,7 @@ namespace FSMAPI.Controllers
         [Route("deleteLogBookInstrumentApproach")]
         public IActionResult DeleteLogBookInstrumentApproach(long instrumentApproachId)
         {
-            long deletedBy = _jWTTokenGenerator.GetUserId();
+            long deletedBy = _jWTTokenManager.GetUserId();
             CurrentResponse response = _logBookService.DeleteLogBookInstrumentApproach(instrumentApproachId, deletedBy);
 
             return APIResponse(response);
@@ -220,7 +220,7 @@ namespace FSMAPI.Controllers
         [Route("deleteLogBookCrewPassenger")]
         public IActionResult DeleteLogBookCrewPassenger(long logBookCrewPassengerId)
         {
-            long deletedBy = _jWTTokenGenerator.GetUserId();
+            long deletedBy = _jWTTokenManager.GetUserId();
             CurrentResponse response = _logBookService.DeleteLogBookCrewPassenger(logBookCrewPassengerId, deletedBy);
 
             return APIResponse(response);
@@ -239,7 +239,7 @@ namespace FSMAPI.Controllers
         [Route("listPassengersDropdownValuesByCompanyId")]
         public IActionResult ListPassengersDropdownValuesByCompanyId()
         {
-            CurrentResponse response = _logBookService.ListPassengersDropdownValuesByCompanyId(_jWTTokenGenerator.GetCompanyId());
+            CurrentResponse response = _logBookService.ListPassengersDropdownValuesByCompanyId(_jWTTokenManager.GetCompanyId());
 
             return APIResponse(response);
         }
@@ -248,7 +248,7 @@ namespace FSMAPI.Controllers
         [Route("createCrewPassenger")]
         public IActionResult Create(CrewPassengerVM crewPassengerVM)
         {
-            crewPassengerVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+            crewPassengerVM.CompanyId = _jWTTokenManager.GetCompanyId();
             CurrentResponse response = _logBookService.CreateCrewPassenger(crewPassengerVM);
             return APIResponse(response);
         }

@@ -14,12 +14,12 @@ namespace FSMAPI.Controllers
     public class LocationController : BaseAPIController
     {
         private readonly ILocationService _locationService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public LocationController(ILocationService locationService, IHttpContextAccessor httpContextAccessor)
         {
             _locationService = locationService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
@@ -44,11 +44,11 @@ namespace FSMAPI.Controllers
         [Route("listdropdownvalues")]
         public IActionResult ListDropDownValues(int companyId)
         {
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                companyId = _jWTTokenGenerator.GetCompanyId();
+                companyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _locationService.ListDropDownValues(companyId);
@@ -60,8 +60,8 @@ namespace FSMAPI.Controllers
         [Route("create")]
         public IActionResult Create(LocationVM locationVM)
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (!string.IsNullOrEmpty(loggedInUser))
             {
@@ -70,7 +70,7 @@ namespace FSMAPI.Controllers
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                locationVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                locationVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _locationService.Create(locationVM);
@@ -81,12 +81,12 @@ namespace FSMAPI.Controllers
         [Route("edit")]
         public IActionResult Edit(LocationVM locationVM)
         {
-            locationVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
-            string role = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.RoleName);
+            locationVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
+            string role = _jWTTokenManager.GetClaimValue(CustomClaimTypes.RoleName);
 
             if (role.Replace(" ", "") != DataModels.Enums.UserRole.SuperAdmin.ToString())
             {
-                locationVM.CompanyId = _jWTTokenGenerator.GetCompanyId();
+                locationVM.CompanyId = _jWTTokenManager.GetCompanyId();
             }
 
             CurrentResponse response = _locationService.Edit(locationVM);
@@ -105,7 +105,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(int id)
         {
-            long deletedBy = Convert.ToInt32(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt32(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
 
             CurrentResponse response = _locationService.Delete(id, deletedBy);
 

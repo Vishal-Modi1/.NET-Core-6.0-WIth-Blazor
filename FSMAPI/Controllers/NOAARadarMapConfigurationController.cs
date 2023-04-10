@@ -14,19 +14,19 @@ namespace FSMAPI.Controllers
     public class NOAARadarMapConfigurationController : BaseAPIController
     {
         private readonly INOAARadarMapConfigurationService _nOAARadarMapConfigurationService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
 
         public NOAARadarMapConfigurationController(INOAARadarMapConfigurationService nOAARadarMapConfigurationService, IHttpContextAccessor httpContextAccessor)
         {
             _nOAARadarMapConfigurationService = nOAARadarMapConfigurationService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
         [Route("setDefault")]
         public IActionResult SetDefault(NOAARadarMapConfigurationVM nOAARadarMapConfigurationVM)
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
             nOAARadarMapConfigurationVM.UserId = Convert.ToInt64(loggedInUser);
             CurrentResponse response = _nOAARadarMapConfigurationService.SetDefault(nOAARadarMapConfigurationVM);
 
@@ -38,7 +38,7 @@ namespace FSMAPI.Controllers
         [Route("getDefault")]
         public IActionResult GetDefault()
         {
-            string loggedInUser = _jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId);
+            string loggedInUser = _jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId);
             CurrentResponse response = _nOAARadarMapConfigurationService.FindByUserId(Convert.ToInt64(loggedInUser));
             
             return APIResponse(response);

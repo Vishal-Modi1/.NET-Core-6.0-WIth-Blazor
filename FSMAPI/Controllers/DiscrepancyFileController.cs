@@ -16,7 +16,7 @@ namespace FSMAPI.Controllers
     {
         private readonly IDiscrepancyFileService _discrepancyFileService;
         private readonly IDiscrepancyService _discrepancyService;
-        private readonly JWTTokenGenerator _jWTTokenGenerator;
+        private readonly JWTTokenManager _jWTTokenManager;
         private readonly FileUploader _fileUploader;
 
         public DiscrepancyFileController(IDiscrepancyFileService discrepancyFileService,
@@ -24,7 +24,7 @@ namespace FSMAPI.Controllers
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _discrepancyFileService = discrepancyFileService;
-            _jWTTokenGenerator = new JWTTokenGenerator(httpContextAccessor.HttpContext);
+            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _fileUploader = new FileUploader(webHostEnvironment);
             _discrepancyService = discrepancyService;
         }
@@ -92,7 +92,7 @@ namespace FSMAPI.Controllers
 
         private CurrentResponse Create(DiscrepancyFileVM discrepancyFileVM)
         {
-            discrepancyFileVM.CreatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            discrepancyFileVM.CreatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _discrepancyFileService.Create(discrepancyFileVM);
 
             return response;
@@ -100,7 +100,7 @@ namespace FSMAPI.Controllers
 
         private CurrentResponse Edit(DiscrepancyFileVM discrepancyFileVM)
         {
-            discrepancyFileVM.UpdatedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            discrepancyFileVM.UpdatedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _discrepancyFileService.Edit(discrepancyFileVM);
 
             return response;
@@ -110,7 +110,7 @@ namespace FSMAPI.Controllers
         [Route("delete")]
         public IActionResult Delete(long id)
         {
-            long deletedBy = Convert.ToInt64(_jWTTokenGenerator.GetClaimValue(CustomClaimTypes.UserId));
+            long deletedBy = Convert.ToInt64(_jWTTokenManager.GetClaimValue(CustomClaimTypes.UserId));
             CurrentResponse response = _discrepancyFileService.Delete(id, deletedBy);
 
             return APIResponse(response);
