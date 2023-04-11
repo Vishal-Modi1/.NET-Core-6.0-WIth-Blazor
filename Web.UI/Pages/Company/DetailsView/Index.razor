@@ -6,6 +6,11 @@
 
 <PageTitle>Company Details | Upflyte </PageTitle>
 
+@if(companyData == null)
+{
+    return;
+}
+
 <style>
     .nav-item {
         border-right: 2px solid rgba(17, 17, 17, 0.3);

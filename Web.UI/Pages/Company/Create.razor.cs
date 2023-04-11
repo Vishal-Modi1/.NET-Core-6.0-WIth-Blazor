@@ -36,7 +36,7 @@ namespace Web.UI.Pages.Company
         {
             _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
             isAuthenticated = !string.IsNullOrWhiteSpace(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.AccessToken).Result);
-            //primaryServiceId = companyData.PrimaryServiceId;
+            primaryServiceId = companyData.PrimaryServiceId == null ? 0 : (int)companyData.PrimaryServiceId;
 
             companyForm = new EditContext(companyData);
 
@@ -47,7 +47,7 @@ namespace Web.UI.Pages.Company
         {
             isBusySubmitButton = true;
 
-            companyData.PrimaryServiceId = primaryServiceId == null ? null : (short)primaryServiceId;
+            companyData.PrimaryServiceId = primaryServiceId == 0 ? null : (short)primaryServiceId;
             DependecyParams dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             CurrentResponse response = await CompanyService.SaveandUpdateAsync(dependecyParams, companyData);
 
