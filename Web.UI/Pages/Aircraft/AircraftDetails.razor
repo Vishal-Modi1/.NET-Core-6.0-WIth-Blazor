@@ -45,9 +45,22 @@
                                 <CustomIcons IconName="aircraft" PrimaryColor="#03AAFC"></CustomIcons>
                                 Aircraft information
                             </span>
-                            <TelerikButton ThemeColor="info" Class="btn k-btn-primary mx-1 p-1 " Size="xs" OnClick="@(() => AircraftEditDialog())">
+
+                            @if (isAllowToEdit)
+                            {
+                                <TelerikButton Class="btn k-btn-primary" ThemeColor="primary"
+                                   OnClick="() => AircraftEditDialog()" Enabled="@(!isBusyEditButton)">
+                                    Update
+                                    <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyEditButton">
+                                    </TelerikLoader>
+                                </TelerikButton>
+                            }
+
+                         @*   <TelerikButton ThemeColor="info" Class="btn k-btn-primary mx-1 p-1 " Size="xs" Enabled=!isBusyEditButton OnClick="@(() => AircraftEditDialog())">
                                 Update
-                            </TelerikButton>
+                                <TelerikLoader Class="button-loader-indicator" Size="sm" ThemeColor="light" Visible="@isBusyEditButton">
+                            </TelerikLoader>
+                            </TelerikButton>*@
                         </div>
                     </div>
 
@@ -81,7 +94,11 @@
                             <div class="col-6 d-flex justify-content-start cursor-pointer">
                                 <span @onclick=@(OpenStatusUpdateDialog)>
                                     @(aircraftData.AircraftStatusList?.Where(p => p.Id == aircraftData.AircraftStatusId).FirstOrDefault()?.Name)
-                                    <CustomIcons IconName="grid-edit" PrimaryColor="#03AAFC"></CustomIcons>
+
+                                    @if (isAllowToEdit)
+                                    {
+                                        <CustomIcons IconName="grid-edit" PrimaryColor="#03AAFC"></CustomIcons>
+                                    }
                                 </span>
                             </div>
                         </div>

@@ -31,17 +31,18 @@ namespace Web.UI.Pages.Aircraft
         string fileName = "";
         protected override Task OnInitializedAsync()
         {
-            _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-            
             isAircraftImageChanged = false;
             aircraftData.IsEquipmentTimesListChanged = false;
 
             SetDropdownValues();
 
-            long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-            bool isOwner = userId == aircraftData.OwnerId;
-
+            bool isOwner = globalMembers.UserId == aircraftData.OwnerId;
             isAllowToLock = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || aircraftData.Id == 0;
+
+            if(!globalMembers.IsAdmin && !globalMembers.IsSuperAdmin)
+            {
+                aircraftData.OwnerId = globalMembers.UserId;
+            }
 
             OnCategoryDropDownValueChange(aircraftData.AircraftCategoryId, true);
             OnCompanyValueChange(aircraftData.CompanyId);

@@ -27,15 +27,15 @@ namespace Web.UI.Pages.Aircraft
 
         public bool isDataLoaded = false, isBusy = false, isUpdateButtonBusy = false, isDisplayLoader;
         string moduleName = "Aircraft";
-        public bool isAllowToEdit, isUnLocked;
-        DataModels.Enums.UserRole userRole;
+        public bool isAllowToEdit;
         string modelWidth = "600px";
         public List<UpcomingFlight> upcomingFlights = new();
-        
+
         protected override Task OnInitializedAsync()
         {
             dependecyParams = DependecyParamsCreator.Create(HttpClient, "", "", AuthenticationStateProvider);
             ChangeLoaderVisibilityAction(true);
+
             SetSelectedMenuItem(moduleName);
             return base.OnInitializedAsync();
         }
@@ -44,9 +44,6 @@ namespace Web.UI.Pages.Aircraft
         {
             if (firstRender)
             {
-                _currentUserPermissionManager = CurrentUserPermissionManager.GetInstance(MemoryCache);
-                userRole = _currentUserPermissionManager.GetRole(AuthStat).Result;
-
                 await SetAircraftData();
 
                 try
@@ -64,17 +61,8 @@ namespace Web.UI.Pages.Aircraft
 
                 }
 
-                long userId = Convert.ToInt64(_currentUserPermissionManager.GetClaimValue(AuthStat, CustomClaimTypes.UserId).Result);
-                bool isCreator = userId == aircraftData.CreatedBy;
-
-                bool isOwner = userId == aircraftData.OwnerId;
-
-                if (globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isCreator)
-                {
-                    isAllowToEdit = true;
-                }
-
-                isUnLocked = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || !aircraftData.IsLock;
+                bool isOwner = globalMembers.UserId == aircraftData.OwnerId;
+                isAllowToEdit = globalMembers.IsAdmin || globalMembers.IsSuperAdmin || isOwner || aircraftData.Id == 0 || !aircraftData.IsLock;
 
                 SetCompanyName();
                 await LoadUpcomingFlights();
@@ -90,7 +78,6 @@ namespace Web.UI.Pages.Aircraft
             upcomingFlights.ForEach(p =>
             {
                 p.StartDate = DateConverter.ToLocal(p.StartDate, globalMembers.Timezone);
-
             });
         }
 
@@ -113,16 +100,16 @@ namespace Web.UI.Pages.Aircraft
 
         async Task AircraftEditDialog()
         {
-            isBusy = true;
+            isBusyEditButton = true;
+
             operationType = OperationType.Edit;
-            popupTitle = "Edit Aircraft Details";
+            popupTitle = "Update Aircraft Details";
             modelWidth = "600px";
 
             aircraftData = await AircraftService.GetDetailsAsync(dependecyParams, aircraftData.Id);
 
             SetCompanyName();
 
-            isBusy = false;
             isDisplayPopup = true;
         }
 
