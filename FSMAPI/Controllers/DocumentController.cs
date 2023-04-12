@@ -14,16 +14,12 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class DocumentController : BaseAPIController
     {
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly FileUploader _fileUploader;
         private readonly IDocumentService _documentService;
 
         public DocumentController(IHttpContextAccessor httpContextAccessor,
             IDocumentService documentService,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment) : base(httpContextAccessor, webHostEnvironment)
         {
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
             _documentService = documentService;
         }
 

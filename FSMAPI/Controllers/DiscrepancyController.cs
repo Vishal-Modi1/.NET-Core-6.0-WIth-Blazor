@@ -16,15 +16,14 @@ namespace FSMAPI.Controllers
         private readonly IDiscrepancyService _discrepancyService;
         private readonly IDiscrepancyHistoryService _discrepancyHistoryService;
         private readonly IDiscrepancyStatusService _discrepancyStatusService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public DiscrepancyController(IDiscrepancyService discrepancyService,
             IDiscrepancyStatusService discrepancyStatusService,
            IHttpContextAccessor httpContextAccessor, IDiscrepancyHistoryService discrepancyHistoryService)
+            : base(httpContextAccessor)
         {
             _discrepancyService = discrepancyService;
             _discrepancyStatusService = discrepancyStatusService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _discrepancyHistoryService = discrepancyHistoryService;
         }
 

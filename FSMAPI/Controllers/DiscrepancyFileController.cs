@@ -16,16 +16,13 @@ namespace FSMAPI.Controllers
     {
         private readonly IDiscrepancyFileService _discrepancyFileService;
         private readonly IDiscrepancyService _discrepancyService;
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly FileUploader _fileUploader;
 
         public DiscrepancyFileController(IDiscrepancyFileService discrepancyFileService,
             IDiscrepancyService discrepancyService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+            : base(httpContextAccessor, webHostEnvironment)
         {
             _discrepancyFileService = discrepancyFileService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
             _discrepancyService = discrepancyService;
         }
 

@@ -19,32 +19,24 @@ namespace FSMAPI.Controllers
     [ApiController]
     public class AccountController : BaseAPIController
     {
-
         private readonly IAccountService _accountService;
         private readonly IUserService _userService;
         private readonly ISendMailService _sendMailService;
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly RandomTextGenerator _randomTextGenerator;
         private readonly IUserRolePermissionService _userRolePermissionService;
         private readonly IEmailTokenService _emailTokenService;
-        private readonly ConfigurationSettings _configurationSettings;
-        private readonly IMyAccountService _myAccountService;
         private readonly ICompanyDateFormatService _companyDateFormatService;
 
         public AccountController(IAccountService accountService, IUserRolePermissionService userRolePermissionService,
-            IUserService userService, ISendMailService sendMailService, IMyAccountService myAccountService,
+            IUserService userService, ISendMailService sendMailService, 
             IHttpContextAccessor httpContextAccessor, IEmailTokenService emailTokenService,
             ICompanyDateFormatService companyDateFormatService)
+            : base(httpContextAccessor)
         {
             _accountService = accountService;
             _userService = userService;
             _sendMailService = sendMailService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _randomTextGenerator = new RandomTextGenerator();
             _userRolePermissionService = userRolePermissionService;
             _emailTokenService = emailTokenService;
-            _configurationSettings = ConfigurationSettings.Instance;
-            _myAccountService = myAccountService;
             _companyDateFormatService = companyDateFormatService;
         }
 
@@ -70,7 +62,7 @@ namespace FSMAPI.Controllers
 
         [HttpGet]
         [Route("changecompany")]
-        
+
         public IActionResult ChangeCompany(long userId, int companyId, string timezone)
         {
             CurrentResponse response = _userService.GetById(userId, companyId);
@@ -85,7 +77,7 @@ namespace FSMAPI.Controllers
             response = _userRolePermissionService.GetByRoleId(user.RoleId, user.CompanyId);
             List<UserRolePermissionDataVM> userRolePermissionsList = (List<UserRolePermissionDataVM>)(response.Data);
 
-            string accessToken = _jWTTokenManager.GenerateToken(user, userTimeZone == null ? "": userTimeZone);
+            string accessToken = _jWTTokenManager.GenerateToken(user, userTimeZone == null ? "" : userTimeZone);
             string refreshToken = _jWTTokenManager.RefreshTokenGenerate();
 
             SaveRefreshToken(refreshToken, user.Id);
@@ -248,7 +240,7 @@ namespace FSMAPI.Controllers
             string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
             int? companyIdValue = companyId == "" ? null : Convert.ToInt32(companyId);
 
-            response = _userService.FindById(userId,false, companyIdValue);
+            response = _userService.FindById(userId, false, companyIdValue);
 
             UserVM userVM = (UserVM)(response.Data);
 

@@ -16,12 +16,11 @@ namespace FSMAPI.Controllers
     public class AircraftEquipmentController : BaseAPIController
     {
         private readonly IAircraftEquipmentService _airCraftEquipmentService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public AircraftEquipmentController(IAircraftEquipmentService aircraftEquipmentService, IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
             _airCraftEquipmentService = aircraftEquipmentService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

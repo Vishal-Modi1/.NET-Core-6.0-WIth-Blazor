@@ -10,12 +10,11 @@ namespace FSMAPI.Controllers
     public class ModuleDetailsController : BaseAPIController
     {
         private readonly IModuleDetailsService _moduleDetailsService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public ModuleDetailsController(IModuleDetailsService moduleDetailsService, IHttpContextAccessor httpContextAccessor)
+        public ModuleDetailsController(IModuleDetailsService moduleDetailsService, 
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _moduleDetailsService = moduleDetailsService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]

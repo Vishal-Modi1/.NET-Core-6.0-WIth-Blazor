@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class NOAARadarMapConfigurationController : BaseAPIController
     {
         private readonly INOAARadarMapConfigurationService _nOAARadarMapConfigurationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public NOAARadarMapConfigurationController(INOAARadarMapConfigurationService nOAARadarMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public NOAARadarMapConfigurationController(INOAARadarMapConfigurationService 
+            nOAARadarMapConfigurationService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _nOAARadarMapConfigurationService = nOAARadarMapConfigurationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

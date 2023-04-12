@@ -18,12 +18,11 @@ namespace FSMAPI.Controllers
     public class ReservationController : BaseAPIController
     {
         private readonly IReservationService _reservationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public ReservationController(IReservationService reservationService, IHttpContextAccessor httpContextAccessor)
+        public ReservationController(IReservationService reservationService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
               _reservationService = reservationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class UserAirTrafficControlCenterController : BaseAPIController
     {
         private readonly IUserAirTrafficControlCenterService _userAirTrafficControlCenterService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public UserAirTrafficControlCenterController(IUserAirTrafficControlCenterService userAirTrafficControlCenterService, IHttpContextAccessor httpContextAccessor)
+        public UserAirTrafficControlCenterController(IUserAirTrafficControlCenterService 
+            userAirTrafficControlCenterService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _userAirTrafficControlCenterService = userAirTrafficControlCenterService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]

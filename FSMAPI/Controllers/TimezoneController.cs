@@ -12,13 +12,11 @@ namespace FSMAPI.Controllers
     public class TimezoneController : BaseAPIController
     {
         private readonly ITimezoneService _TimezoneService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public TimezoneController(ITimezoneService TimezoneService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _TimezoneService = TimezoneService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]

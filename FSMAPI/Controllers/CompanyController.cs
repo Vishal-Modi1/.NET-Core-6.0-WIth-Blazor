@@ -14,23 +14,19 @@ namespace FSMAPI.Controllers
     public class CompanyController : BaseAPIController
     {
         private readonly ICompanyService _companyService;
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly FileUploader _fileUploader;
 
-        public CompanyController(ICompanyService companyService, IHttpContextAccessor httpContextAccessor,
-             IWebHostEnvironment webHostEnvironment)
+        public CompanyController(ICompanyService companyService,
+            IHttpContextAccessor httpContextAccessor)
+            : base(httpContextAccessor)
         {
             _companyService = companyService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpGet]
         [Route("getfilters")]
         public IActionResult GetFilters()
         {
-            string companyId = _jWTTokenManager.GetClaimValue(CustomClaimTypes.CompanyId);
-            int CompanyId = companyId == "" ? 0 : Convert.ToInt32(companyId);
+            int CompanyId = _jWTTokenManager.GetCompanyId();
 
             CurrentResponse response = _companyService.GetFiltersValue();
 
@@ -165,7 +161,7 @@ namespace FSMAPI.Controllers
         public IActionResult UpdateCreatedBy(int id, long createdBy)
         {
             CurrentResponse response = _companyService.UpdateCreatedBy(id, createdBy);
-            
+
             return APIResponse(response);
         }
 

@@ -14,14 +14,13 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class AircraftSchedulerController : BaseAPIController
     {
-        private readonly JWTTokenManager _jWTTokenManager;
         private readonly IAircraftScheduleService _aircraftScheduleService;
         private ExternalAPICaller _externalAPICaller { get; set; }
 
-        public AircraftSchedulerController(IAircraftScheduleService aircraftScheduleService, IHttpContextAccessor httpContextAccessor)
+        public AircraftSchedulerController(IAircraftScheduleService aircraftScheduleService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _aircraftScheduleService = aircraftScheduleService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _externalAPICaller = new ExternalAPICaller();
         }
 

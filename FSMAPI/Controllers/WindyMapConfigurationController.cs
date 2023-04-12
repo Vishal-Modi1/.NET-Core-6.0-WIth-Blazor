@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class WindyMapConfigurationController : BaseAPIController
     {
         private readonly IWindyMapConfigurationService _windyMapConfigurationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public WindyMapConfigurationController(IWindyMapConfigurationService WindyMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public WindyMapConfigurationController(IWindyMapConfigurationService WindyMapConfigurationService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _windyMapConfigurationService = WindyMapConfigurationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

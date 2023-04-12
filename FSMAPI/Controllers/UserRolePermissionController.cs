@@ -16,12 +16,11 @@ namespace FSMAPI.Controllers
     public class UserRolePermissionController : BaseAPIController
     {
         private readonly IUserRolePermissionService _userRolePermissionService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public UserRolePermissionController(IUserRolePermissionService userRolePermissionService, IHttpContextAccessor httpContextAccessor)
+        public UserRolePermissionController(IUserRolePermissionService userRolePermissionService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _userRolePermissionService = userRolePermissionService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
 

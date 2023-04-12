@@ -14,15 +14,12 @@ namespace FSMAPI.Controllers
     public class LogBookController : BaseAPIController
     {
         private readonly ILogBookService _logBookService;
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly FileUploader _fileUploader;
 
-        public LogBookController(ILogBookService logBookService, IHttpContextAccessor httpContextAccessor,
-             IWebHostEnvironment webHostEnvironment)
+        public LogBookController(ILogBookService logBookService, 
+            IHttpContextAccessor httpContextAccessor,
+             IWebHostEnvironment webHostEnvironment) : base(httpContextAccessor, webHostEnvironment)
         {
             _logBookService = logBookService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpGet]

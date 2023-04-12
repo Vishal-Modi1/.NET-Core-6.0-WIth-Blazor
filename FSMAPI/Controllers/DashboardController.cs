@@ -15,12 +15,11 @@ namespace FSMAPI.Controllers
     public class DashboardController : BaseAPIController
     {
         private readonly IDashboardService _dashboardService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public DashboardController(IDashboardService dashboardService, IHttpContextAccessor httpContextAccessor)
+        public DashboardController(IDashboardService dashboardService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _dashboardService = dashboardService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         /// <summary>

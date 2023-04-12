@@ -16,13 +16,12 @@ namespace FSMAPI.Controllers
     public class DocumentTagController : BaseAPIController
     {
         private readonly IDocumentTagService _documentTagService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public DocumentTagController(IDocumentTagService documentTagService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+            : base(httpContextAccessor, webHostEnvironment)
         {
             _documentTagService = documentTagService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]

@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class FlightCategoryController : BaseAPIController
     {
         private readonly IFlightCategoryService _flightCategoryService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public FlightCategoryController(IFlightCategoryService flightCategoryService, IHttpContextAccessor httpContextAccessor)
+        public FlightCategoryController(IFlightCategoryService flightCategoryService, 
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _flightCategoryService = flightCategoryService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]

@@ -16,17 +16,14 @@ namespace FSMAPI.Controllers
     {
         private readonly IAircraftService _aircraftService;
         private readonly IAircraftEquipementTimeService _aircraftEquipementTimeService;
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly FileUploader _fileUploader;
 
         public AircraftController(IAircraftService airCraftService,
              IAircraftEquipementTimeService aircraftEquipementTimeService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+            : base(httpContextAccessor, webHostEnvironment)
         {
             _aircraftService = airCraftService;
             _aircraftEquipementTimeService = aircraftEquipementTimeService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpGet]

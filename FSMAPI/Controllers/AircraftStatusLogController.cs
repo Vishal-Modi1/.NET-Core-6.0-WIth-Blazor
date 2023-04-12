@@ -14,13 +14,11 @@ namespace FSMAPI.Controllers
     public class AircraftStatusLogController : BaseAPIController
     {
         private readonly IAircraftStatusLogService _aircraftStatusLogService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public AircraftStatusLogController(IAircraftStatusLogService aircraftStatusLogService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _aircraftStatusLogService = aircraftStatusLogService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

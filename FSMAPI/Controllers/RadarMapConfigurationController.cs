@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class RadarMapConfigurationController : BaseAPIController
     {
         private readonly IRadarMapConfigurationService _radarMapConfigurationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public RadarMapConfigurationController(IRadarMapConfigurationService RadarMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public RadarMapConfigurationController(IRadarMapConfigurationService RadarMapConfigurationService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _radarMapConfigurationService = RadarMapConfigurationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

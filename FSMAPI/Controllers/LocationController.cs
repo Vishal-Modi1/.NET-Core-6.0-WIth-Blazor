@@ -14,12 +14,10 @@ namespace FSMAPI.Controllers
     public class LocationController : BaseAPIController
     {
         private readonly ILocationService _locationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public LocationController(ILocationService locationService, IHttpContextAccessor httpContextAccessor)
+        public LocationController(ILocationService locationService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _locationService = locationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

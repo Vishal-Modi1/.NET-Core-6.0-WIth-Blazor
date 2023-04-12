@@ -16,11 +16,11 @@ namespace FSMAPI.Controllers
     public class MyAccountController : BaseAPIController
     {
         private readonly IMyAccountService _myAccountService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public MyAccountController(IMyAccountService myAccountService, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+        public MyAccountController(IMyAccountService myAccountService,
+            IHttpContextAccessor httpContextAccessor, 
+            IWebHostEnvironment webHostEnvironment) : base(httpContextAccessor, webHostEnvironment)
         {
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _myAccountService = myAccountService;
         }
 

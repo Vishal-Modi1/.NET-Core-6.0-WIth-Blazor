@@ -15,13 +15,12 @@ namespace FSMAPI.Controllers
     public class FlightTagController : BaseAPIController
     {
         private readonly IFlightTagService _flightTagService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public FlightTagController(IFlightTagService flightTagService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+            : base(httpContextAccessor, webHostEnvironment)
         {
             _flightTagService = flightTagService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpGet]

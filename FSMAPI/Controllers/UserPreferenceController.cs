@@ -13,13 +13,12 @@ namespace FSMAPI.Controllers
     [Authorize]
     public class UserPreferenceController : BaseAPIController
     {
-        private readonly JWTTokenManager _jWTTokenManager;
         private readonly IUserPreferenceService _userPreferenceService;
 
-        public UserPreferenceController( IHttpContextAccessor httpContextAccessor, IUserPreferenceService userPreferenceService)
+        public UserPreferenceController( IHttpContextAccessor httpContextAccessor,
+            IUserPreferenceService userPreferenceService) : base(httpContextAccessor)
         {
             _userPreferenceService = userPreferenceService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

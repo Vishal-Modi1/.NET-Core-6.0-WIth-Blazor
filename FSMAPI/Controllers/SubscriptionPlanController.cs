@@ -14,13 +14,11 @@ namespace FSMAPI.Controllers
     public class SubscriptionPlanController : BaseAPIController
     {
         private readonly ISubscriptionPlanService _subscriptionPlanService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public SubscriptionPlanController(ISubscriptionPlanService subscriptionPlanService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _subscriptionPlanService = subscriptionPlanService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

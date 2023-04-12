@@ -20,18 +20,15 @@ namespace FSMAPI.Controllers
         private readonly ISendMailService _sendMailService;
         private readonly RandomPasswordGenerator _randomPasswordGenerator;
         private readonly RandomTextGenerator _randomTextGenerator;
-        private readonly JWTTokenManager _jWTTokenManager;
-        private readonly FileUploader _fileUploader;
 
         public UserController(IUserService userService, ISendMailService sendMailService,
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
+            : base(httpContextAccessor, webHostEnvironment)
         {
             _userService = userService;
             _sendMailService = sendMailService;
             _randomPasswordGenerator = new RandomPasswordGenerator();
             _randomTextGenerator = new RandomTextGenerator();
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
-            _fileUploader = new FileUploader(webHostEnvironment);
         }
 
         [HttpGet]

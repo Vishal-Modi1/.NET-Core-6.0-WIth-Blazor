@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class AircraftLiveTrackerMapConfigurationController : BaseAPIController
     {
         private readonly IAircraftLiveTrackerMapConfigurationService _aircraftLiveTrackerMapConfigurationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public AircraftLiveTrackerMapConfigurationController(IAircraftLiveTrackerMapConfigurationService AircraftLiveTrackerMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public AircraftLiveTrackerMapConfigurationController(IAircraftLiveTrackerMapConfigurationService 
+            AircraftLiveTrackerMapConfigurationService, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _aircraftLiveTrackerMapConfigurationService = AircraftLiveTrackerMapConfigurationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

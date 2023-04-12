@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class VFRMapConfigurationController : BaseAPIController
     {
         private readonly IVFRMapConfigurationService _vFRMapConfigurationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public VFRMapConfigurationController(IVFRMapConfigurationService vFRMapConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public VFRMapConfigurationController(IVFRMapConfigurationService vFRMapConfigurationService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _vFRMapConfigurationService = vFRMapConfigurationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

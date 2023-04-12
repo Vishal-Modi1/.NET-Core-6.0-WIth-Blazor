@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class InstructorTypeController : BaseAPIController
     {
         private readonly IInstructorTypeService _instructorTypeService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public InstructorTypeController(IInstructorTypeService instructorTypeService, IHttpContextAccessor httpContextAccessor)
+        public InstructorTypeController(IInstructorTypeService instructorTypeService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _instructorTypeService = instructorTypeService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

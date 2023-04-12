@@ -15,12 +15,11 @@ namespace FSMAPI.Controllers
     public class BillingHistoryController : BaseAPIController
     {
         private readonly IBillingHistoryService _billingHistoryService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public BillingHistoryController(IBillingHistoryService billingHistoryService, IHttpContextAccessor httpContextAccessor)
+        public BillingHistoryController(IBillingHistoryService billingHistoryService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _billingHistoryService = billingHistoryService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

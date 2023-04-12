@@ -14,13 +14,11 @@ namespace FSMAPI.Controllers
     public class DocumentDirectoryController : BaseAPIController
     {
         private readonly IDocumentDirectoryService _documentDirectoryService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
         public DocumentDirectoryController(IDocumentDirectoryService documentDirectoryService,
-           IHttpContextAccessor httpContextAccessor)
+           IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _documentDirectoryService = documentDirectoryService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

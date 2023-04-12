@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class CompanyDateFormatController : BaseAPIController
     {
         private readonly ICompanyDateFormatService _companyDateFormatService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public CompanyDateFormatController(ICompanyDateFormatService CompanyDateFormatService, IHttpContextAccessor httpContextAccessor)
+        public CompanyDateFormatController(ICompanyDateFormatService CompanyDateFormatService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _companyDateFormatService = CompanyDateFormatService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]

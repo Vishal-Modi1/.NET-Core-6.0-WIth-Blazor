@@ -18,16 +18,14 @@ namespace FSMAPI.Controllers
     public class InviteUserController : BaseAPIController
     {
         private readonly IInviteUserService _inviteUserService;
-        private readonly JWTTokenManager _jWTTokenManager;
         private readonly RandomTextGenerator _randomTextGenerator;
         private readonly ISendMailService _sendMailService;
         private readonly ICompanyService _companyService;
 
         public InviteUserController(IInviteUserService inviteUser, ISendMailService sendMailService,
-            IHttpContextAccessor httpContextAccessor, ICompanyService companyService)
+            IHttpContextAccessor httpContextAccessor, ICompanyService companyService) : base(httpContextAccessor)
         {
             _inviteUserService = inviteUser;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
             _randomTextGenerator = new RandomTextGenerator();
             _sendMailService = sendMailService;
             _companyService = companyService;

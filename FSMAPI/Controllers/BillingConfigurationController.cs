@@ -14,12 +14,11 @@ namespace FSMAPI.Controllers
     public class BillingConfigurationController : BaseAPIController
     {
         private readonly IBillingConfigurationService _billingConfigurationService;
-        private readonly JWTTokenManager _jWTTokenManager;
 
-        public BillingConfigurationController(IBillingConfigurationService BillingConfigurationService, IHttpContextAccessor httpContextAccessor)
+        public BillingConfigurationController(IBillingConfigurationService BillingConfigurationService,
+            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
         {
             _billingConfigurationService = BillingConfigurationService;
-            _jWTTokenManager = new JWTTokenManager(httpContextAccessor.HttpContext);
         }
 
         [HttpPost]
